@@ -401,13 +401,14 @@ class SelesaiInspeksi extends React.Component {
 
     selesai=()=>{
         const navigation = this.props.navigation;
-        const resetAction = StackActions.reset({
-            index: 0,            
-			actions: [NavigationActions.navigate({ 
-                routeName: 'MainMenu'
-            })]
-        });
-        navigation.dispatch(resetAction);
+        let routeName = 'MainMenu';
+        Promise.all([
+            navigation.dispatch(
+                StackActions.reset({
+                    index:0,
+                    actions:[NavigationActions.navigate({ routeName : routeName})]
+                })
+            )]).then(() => navigation.navigate('Inspection')).then(() => navigation.navigate('Riwayat'))
     }
 
     colorTextScore(param){

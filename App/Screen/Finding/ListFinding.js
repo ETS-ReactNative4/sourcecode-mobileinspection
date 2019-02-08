@@ -165,18 +165,7 @@ export default class ListFinding extends Component {
   render() {
     return (
       <Container style={{ flex: 1 }}>
-        {/* <MapView
-          region={{
-            latitude: -2.20774997752764,
-            longitude: 105.382951073678996,
-            latitudeDelta: 0.09,
-            longitudeDelta: 0.09
-          }} style={{ flex: 1 }}>
-          <Geojson geojson={layer} />
-        </MapView> */}
-
         <Content style={styles.container} >
-
           <Text style={{ fontSize: 16, fontWeight: 'bold', paddingHorizontal: 16 }}>
             Belum Ada Batas Waktu
           </Text>

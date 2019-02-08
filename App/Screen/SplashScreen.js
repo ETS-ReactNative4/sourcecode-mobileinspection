@@ -66,10 +66,7 @@ class SplashScreen extends Component {
     }
 
     async componentDidMount() {   
-
-        // let data = TaskServices.getAllData('TR_IMAGE');
-        // alert(JSON.stringify(data))
-
+        
         var isAllGrandted = await getPermission();
         if (isAllGrandted === true) {
             this.makeFolder()

@@ -1,10 +1,12 @@
 import React from 'react';
+import { Alert } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 import HomeScreen from './HomeScreen';
 import FindingScreen from '../Finding/FindingScreen';
 import InspectionScreen from '../Inspeksi/InspectionScreen';
 import EbccValidationScreen from '../Ebcc/EbccValidationScreen';
 import MoreScreen from '../More/MoreScreen';
+
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -50,12 +52,6 @@ EbccValidationStack.navigationOptions = {
   tabBarLabel: 'Ebcc Val',
 };
 
-const route = 'HomeStack';
-// const navigation = this.props.navigation;
-// const param = navigation.getParam('inspeksi');
-// if (param == 'inspeksi') {
-//   route = 'InspectionStack'
-// }
 export default (
   MainTabNavigator = createBottomTabNavigator({
     HomeStack,
@@ -64,9 +60,7 @@ export default (
     EbccValidationStack,
     MoreStack
   }, {
-      initialRouteName: route,
       navigationOptions: ({ navigation }) => ({
-
         tabBarIcon: ({ focused, horizontal, tintColor }) => {
           const { routeName } = navigation.state;
           let iconName;

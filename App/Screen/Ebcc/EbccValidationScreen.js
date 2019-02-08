@@ -37,7 +37,7 @@ export default class FindingScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Image source={require('../../Images/coming_soon.png')} />
+        <Image style={{width:300, height: 220}}source={require('../../Images/img-cooming-soon-1.png')} />
       </View>
     )
   }

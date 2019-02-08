@@ -80,7 +80,7 @@ export default class MoreScreen extends Component {
           />
 
           {/*Profile*/}
-          <TouchableOpacity style={styles.marginCard}>
+          {/* <TouchableOpacity style={styles.marginCard}>
             <CardView cardElevation={2} cardMaxElevation={2} cornerRadius={10}>
               <View style={styles.sectionCardView}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }} >
@@ -92,10 +92,10 @@ export default class MoreScreen extends Component {
                 </View>
               </View>
             </CardView>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           {/*Games*/}
-          <TouchableOpacity style={styles.marginCard}>
+          {/* <TouchableOpacity style={styles.marginCard}>
             <CardView cardElevation={2} cardMaxElevation={2} cornerRadius={10}>
               <View style={styles.sectionCardView}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }} >
@@ -107,10 +107,10 @@ export default class MoreScreen extends Component {
                 </View>
               </View>
             </CardView>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           {/*Rangking*/}
-          <TouchableOpacity style={styles.marginCard}>
+          {/* <TouchableOpacity style={styles.marginCard}>
             <CardView cardElevation={2} cardMaxElevation={2} cornerRadius={10}>
               <View style={styles.sectionCardView}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }} >
@@ -122,10 +122,10 @@ export default class MoreScreen extends Component {
                 </View>
               </View>
             </CardView>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           {/*Mini Dashboard*/}
-          <TouchableOpacity style={styles.marginCard}>
+          {/* <TouchableOpacity style={styles.marginCard}>
             <CardView cardElevation={2} cardMaxElevation={2} cornerRadius={10}>
               <View style={styles.sectionCardView}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }} >
@@ -137,10 +137,10 @@ export default class MoreScreen extends Component {
                 </View>
               </View>
             </CardView>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           {/*Help*/}
-          <TouchableOpacity style={styles.marginCard}>
+          {/* <TouchableOpacity style={styles.marginCard}>
             <CardView cardElevation={2} cardMaxElevation={2} cornerRadius={10}>
               <View style={styles.sectionCardView}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }} >
@@ -152,10 +152,10 @@ export default class MoreScreen extends Component {
                 </View>
               </View>
             </CardView>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           {/*Contact Center*/}
-          <TouchableOpacity style={styles.marginCard}>
+          {/* <TouchableOpacity style={styles.marginCard}>
             <CardView cardElevation={2} cardMaxElevation={2} cornerRadius={10}>
               <View style={styles.sectionCardView}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }} >
@@ -167,7 +167,7 @@ export default class MoreScreen extends Component {
                 </View>
               </View>
             </CardView>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           {/*Sign Out*/}
           <TouchableOpacity style={styles.marginCard} onPress={() => { this.setState({ showConfirm: true }) }}>

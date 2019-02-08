@@ -1,5 +1,5 @@
 
-
+'use strict';
 import React, { Component } from 'react';
 import {
     StyleSheet,
@@ -8,7 +8,7 @@ import {
     KeyboardAvoidingView,
     Keyboard,
     StatusBar,
-    ImageBackground, Alert, BackHandler
+    ImageBackground, BackHandler
 } from 'react-native';
 
 import HandleBack from '../Component/Back'
@@ -82,8 +82,10 @@ class Login extends Component {
         if(TaskServices.getTotalData('TR_LOGIN') > 0){
             let data = TaskServices.getAllData('TR_LOGIN')[0]
             if(param.USER_AUTH_CODE !== data.USER_AUTH_CODE){
+                console.log('beda')
                 this.resetMobileSync(param, data.ACCESS_TOKEN)
             }else{
+                console.log('sama')
                 TaskServices.deleteAllData('TR_LOGIN');         
                 this.insertUser(param);
                 this.navigateScreen('MainMenu');
@@ -109,6 +111,7 @@ class Login extends Component {
         })
         .then((data) => { 
             // alert(data)
+            console.log(data)
             this.deleteAllTableAndFolder(param)   
         });
     }
@@ -156,8 +159,7 @@ class Login extends Component {
 
     onLogin(username, password) {
         Keyboard.dismiss();
-        var Imei = this.get_IMEI_Number();     
-        // this.resetMobileSync('')
+        var Imei = this.get_IMEI_Number();    
         this.props.authRequest({
             username: username,
             password: password,
@@ -169,6 +171,7 @@ class Login extends Component {
     state = {
         logOut: false,
     };
+
     onBack = () => {
         if (this.state.logOut) {
             BackHandler.exitApp();

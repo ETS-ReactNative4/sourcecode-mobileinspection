@@ -2,7 +2,7 @@
 import Colors from '../../../Constant/Colors'
 
 const btnBiasa = {
-    width:70,
+    width:'22%', //70
     borderWidth:1,
     borderColor:'#C8C8C8',
     backgroundColor: '#D8D8D8',
@@ -14,7 +14,7 @@ const btnBiasa = {
 }
 
 const btnBaik = {
-    width:70,
+    width:'22%',
     backgroundColor: Colors.brand,
     borderRadius: 25, 
     margin:5,  
@@ -24,7 +24,7 @@ const btnBaik = {
 }
 
 const btnSedang ={
-    width:70,
+    width:'22%',
     backgroundColor: '#feb236',
     borderRadius: 25, 
     margin:5,  
@@ -35,7 +35,7 @@ const btnSedang ={
 }
 
 const btnKurang ={
-    width:70,
+    width:'22%',
     backgroundColor: '#ff7b25',
     borderRadius: 25, 
     margin:5,  
@@ -46,7 +46,7 @@ const btnKurang ={
 }
 
 const btnRehab ={
-    width:70,
+    width:'22%',
     backgroundColor: 'red',
     borderRadius: 25, 
     margin:5,  

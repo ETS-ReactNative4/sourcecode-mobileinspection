@@ -203,7 +203,13 @@ class PilihBlok extends Component {
                 <Text style={{ color: Colors.brand, textAlign: 'center', paddingHorizontal: 25, marginBottom: 10, fontSize: 16, fontWeight: 'bold', alignSelf: 'center' }}>Pastikan kamu telah berada di lokasi yang benar</Text>
                 <View style={styles.containerMap}>
                     <MapView
-                        style={styles.map}>
+                        style={styles.map}
+                        initialRegion={{
+                            latitude:this.state.latitude,
+                            longitude:this.state.longitude,
+                            latitudeDelta:0.015,
+                            longitudeDelta:0.0121
+                        }}>
                         <Geojson geojson={alcatraz} />
                         <Marker
                             coordinate={{

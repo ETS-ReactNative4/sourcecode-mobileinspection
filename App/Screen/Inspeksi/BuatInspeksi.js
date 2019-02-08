@@ -26,6 +26,7 @@ import Autocomplete from 'react-native-autocomplete-input';
 import { utils } from 'redux-saga';
 var uuid = require('react-native-uuid');
 import Geojson from 'react-native-geojson';
+import Entypo from 'react-native-vector-icons/Entypo';
 
 const indonesia = require('../../Data/indonesia-province-simple.json')
 const kaltim = require('../../Data/kalimantantimur.json')
@@ -60,35 +61,8 @@ class BuatInspeksiRedesign extends Component {
             fontSize: 18,
             fontWeight: '400',
             marginHorizontal: 12
-        },
-        // headerRight: (
-        //     <TouchableOpacity onPress={() => params.inbox()}>
-        //       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingRight: 12 }}>
-        //         <Image style={{ width: 28, height: 28 }} source={require('../../Images/icon/loc.png')} />
-        //       </View>
-        //     </TouchableOpacity>
-        // )
+        }
     };  
-
-    // static navigationOptions = ({ navigation }) => ({
-    //     headerStyle: {
-    //         backgroundColor: Colors.tintColor
-    //     },
-    //     title: 'Buat Inspeksi',
-    //     headerTintColor: '#fff',
-    //     headerTitleStyle: {
-    //         flex: 1,
-    //         fontSize: 18,
-    //         fontWeight: '400'
-    //     },
-    //     headerRight: (
-    //         <TouchableOpacity onPress={() => {}}>
-    //             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingRight: 16 }}>
-    //                 <IconLoc name='location-arrow' size={20} color='white' />
-    //             </View>
-    //         </TouchableOpacity>
-    //     ),
-    // });
 
     constructor(props) {
         super(props);        
@@ -149,16 +123,15 @@ class BuatInspeksiRedesign extends Component {
     }
 
     _keyboardDidShow () {
-        // this.setState({showBtn : false})
     // alert('Keyboard Shown');
     }
 
     _keyboardDidHide () {
-        // this.setState({showBtn : true})
     // alert('Keyboard Hidden');
     }
 
     componentDidMount() {
+        this.props.navigation.setParams({ getData: this.state.inspeksiHeader })
         let data = TaskService.getAllData('TM_BLOCK');
         data.map(item=>{
             let statusBlok= this.getStatusBlok(item.WERKS_AFD_BLOCK_CODE);
@@ -179,20 +152,23 @@ class BuatInspeksiRedesign extends Component {
     }
 
     insertTrackLokasi(blokInsCode, lat, lon){
-        var trInsCode = `T${this.state.dataLogin[0].USER_AUTH_CODE}${getTodayDate('YYMMDDHHmmss')}`;
-        var today = getTodayDate('YYYY-MM-DD HH:mm:ss');
-        data = {
-            TRACK_INSPECTION_CODE: trInsCode,
-            BLOCK_INSPECTION_CODE: blokInsCode,
-            DATE_TRACK: today,
-            LAT_TRACK: lat.toString(),
-            LONG_TRACK: lon.toString(),
-            INSERT_USER: this.state.dataLogin[0].USER_AUTH_CODE,
-            INSERT_TIME: today,
-            STATUS_SYNC: 'N'
+        try {
+            var trInsCode = `T${this.state.dataLogin[0].USER_AUTH_CODE}${getTodayDate('YYMMDDHHmmss')}`;
+            var today = getTodayDate('YYYY-MM-DD HH:mm:ss');
+            data = {
+                TRACK_INSPECTION_CODE: trInsCode,
+                BLOCK_INSPECTION_CODE: blokInsCode,
+                DATE_TRACK: today,
+                LAT_TRACK: lat.toString(),
+                LONG_TRACK: lon.toString(),
+                INSERT_USER: this.state.dataLogin[0].USER_AUTH_CODE,
+                INSERT_TIME: today,
+                STATUS_SYNC: 'N'
+            }
+            TaskService.saveData('TM_INSPECTION_TRACK', data)
+        } catch (error) {
+            alert('insert track lokasi buat inspeksi '+ error)
         }
-        TaskService.saveData('TM_INSPECTION_TRACK', data)
-        // alert('ok')
     }
 
     hideAndShowBaris(param){
@@ -281,8 +257,6 @@ class BuatInspeksiRedesign extends Component {
     }
 
     insertDB(param) {
-        // var USER_AUTH = this.state.dataLogin[0].USER_AUTH_CODE;
-        // var blok_inspection_code_h = `I${USER_AUTH}${getTodayDate('YYMMDDHHmmss')}`
 
         let inspectionDate = getTodayDate('YYYY-MM-DD HH:mm:ss');
         let idInspection = `B${this.state.dataLogin[0].USER_AUTH_CODE}${getTodayDate('YYMMDDHHmmss')}`
@@ -333,16 +307,19 @@ class BuatInspeksiRedesign extends Component {
 
 
         //for track
-        let time = TaskService.getAllData('TM_TIME_TRACK')[0]
-        let id = setInterval(()=> this.getLocation2(this.state.blokInspeksiCode), 10000);
-        this.setState({intervalId:id})
+        let time = TaskService.getAllData('TM_TIME_TRACK')[0];
+        let duration = 10000
+        // if(time !== undefined){
+        //     duration = parseFloat(time.DESC);
+        // }
+        let id = setInterval(()=> this.getLocation2(this.state.blokInspeksiCode), duration);
 
         this.props.navigation.navigate('TakeFotoBaris', {
             inspeksiHeader: modelInspeksiH,
             dataUsual: params,
-            statusBlok: param,//this.getStatusBlok(this.state.werksAfdBlokCode),
+            statusBlok: param,
             waktu: getTodayDate('YYYY-MM-DD  HH:mm:ss'),
-            intervalId: this.state.intervalId,
+            intervalId: id,
             dataInspeksi: model
         });
     }

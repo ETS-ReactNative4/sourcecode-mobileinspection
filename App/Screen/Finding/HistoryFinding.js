@@ -75,23 +75,45 @@ export default class HistoryFinding extends Component {
     this.props.navigation.navigate('DetailFinding', { ID: id, images: test })
   }
 
+  getEstateName(werks) {
+    try {
+      let data = TaskServices.findBy2('TM_EST', 'WERKS', werks);
+      return data.EST_NAME;
+    } catch (error) {
+      return '';
+    }
+  }
+
+  getBlokName(blockCode) {
+    try {
+      let data = TaskServices.findBy2('TM_BLOCK', 'BLOCK_CODE', blockCode);
+      return data.BLOCK_NAME;
+    } catch (error) {
+      return ''
+    }
+  }
+
+  getStatusBlok(werk_afd_blok_code) {
+    try {
+      let data = TaskServices.findBy2('TM_LAND_USE', 'WERKS_AFD_BLOCK_CODE', werk_afd_blok_code);
+      return data.MATURITY_STATUS;
+    } catch (error) {
+      return ''
+    }
+  }
+
   _renderItem = (item, idx) => {
     const image = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', item.FINDING_CODE);
-    const BLOCK_NAME = TaskServices.findBy2('TM_BLOCK', 'BLOCK_CODE', item.BLOCK_CODE)
-    const MATURITY_STATUS = TaskServices.findBy2('TM_LAND_USE', 'BLOCK_CODE', item.BLOCK_CODE)
-    // console.log(JSON.stringify(MATURITY_STATUS));
-
     let INSERT_TIME = "" + item.INSERT_TIME;
-    console.log('INSERT_TIME : ' + INSERT_TIME)
     Moment.locale();
-
-    const EST_NAME = TaskServices.findBy2('TM_EST', 'WERKS', item.WERKS)
     let showImage;
     if (image == undefined) {
       showImage = <Image style={{ alignItems: 'stretch', width: 65, height: 65, borderRadius: 10 }} source={require('../../Images/background.png')} />
     } else {
       showImage = <Image style={{ alignItems: 'stretch', width: 65, height: 65, borderRadius: 10 }} source={{ uri: "file://" + image.IMAGE_PATH_LOCAL }} />
     }
+    let werkAfdBlokCode = `${item.WERKS}${item.AFD_CODE}${item.BLOCK_CODE}`;
+    let lokasi = `${this.getBlokName(item.BLOCK_CODE)}/${this.getStatusBlok(werkAfdBlokCode)}/${this.getEstateName(item.WERKS)}`
     return (
       <TouchableOpacity
         style={styles.sectionCardView}
@@ -100,7 +122,7 @@ export default class HistoryFinding extends Component {
       >
         {showImage}
         <View style={styles.sectionDesc} >
-          <Text style={{ fontSize: 12, color: 'black' }}>Lokasi : <Text style={{ color: 'grey' }}>{BLOCK_NAME.BLOCK_NAME}/{MATURITY_STATUS.MATURITY_STATUS}/{EST_NAME.EST_NAME}</Text></Text>
+          <Text style={{ fontSize: 12, color: 'black' }}>Lokasi : <Text style={{ color: 'grey' }}>{lokasi}</Text></Text>
           <Text style={{ fontSize: 12, color: 'black' }}>Tanggal dibuat : <Text style={{ color: 'grey' }}>{changeFormatDate(INSERT_TIME, "YYYY-MM-DD hh-mm-ss")}</Text></Text>
           <Text style={{ fontSize: 12, color: 'black' }}>Kategori : <Text style={{ color: 'grey' }}>{this.getCategoryName(item.FINDING_CATEGORY)}</Text ></Text>
           <Text style={{ fontSize: 12, color: 'black' }}>Status : <Text style={{ color: this.getColor(item.STATUS) }}>{item.STATUS}</Text ></Text>
@@ -109,8 +131,13 @@ export default class HistoryFinding extends Component {
     );
   }
 
-  render() {
-    const nav = this.props.navigation;
+  _renderNoData() {
+    return (
+      <Image style={{justifyContent: 'center', alignSelf:'center', marginTop: 120, width:300, height: 220}}source={require('../../Images/img-no-data.png')} />
+    )
+  }
+
+  _renderData() {
     return (
       <ScrollView style={styles.container}>
         <View style={{ paddingTop: 4, paddingRight: 16, paddingLeft: 16, paddingBottom: 16 }}>
@@ -119,6 +146,19 @@ export default class HistoryFinding extends Component {
           </View>
         </View>
       </ScrollView >
+    )
+  }
+
+  render() {
+    const nav = this.props.navigation;
+    let show;
+    if(this.state.data.length > 0){
+      show = this._renderData()
+    }else{
+      show = this._renderNoData()
+    }
+    return (
+      <View style ={{flex:1}}>{show}</View>
     )
   }
 }

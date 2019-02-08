@@ -94,8 +94,7 @@ class FilterScreen extends React.Component {
             valBatasWaktu: this.state.valBatasWaktu,
             userAuth: this.state.valUserAuthCode,
             valAssignto: this.state.valAssignto
-        })
-        // console.log(JSON.stringify(arrData));
+        });
         this.props.navigation.state.params._changeFilterList(arrData);
         this.props.navigation.goBack();
     };

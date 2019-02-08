@@ -25,6 +25,9 @@ import TakeFotoSelfie from '../Screen/Inspeksi/TakePhotoSelfie';
 import KondisiBarisAkhir from '../Screen/Inspeksi/KondisiBarisAkhir';
 import SelesaiInspeksi from '../Screen/Inspeksi/SelesaiInspeksi';
 import DetailBaris from '../Screen/Inspeksi/DetailBaris';
+import Step1Finding from '../Screen/Inspeksi/Step1Finding';
+import Step2Finding from '../Screen/Inspeksi/Step2Finding';
+import TakeFotoFinding from '../Screen/Inspeksi/TakeFotoFinding';
 
 
 import SyncScreen from '../Screen/Sync';
@@ -58,8 +61,10 @@ const main = createStackNavigator({
     },
 
     //finding
-    FormStep1: {screen: FormStep1},
-    FormStep2: {screen: FormStep2},
+    Step1Finding: {screen: Step1Finding},
+    Step2Finding: {screen: Step2Finding},
+    TakeFotoFinding: {screen: TakeFotoFinding},
+    
     DetailFinding: { screen: DetailFindingScreen },
     BuktiKerja: { screen: BuktiKerja },
     TakeFotoBukti: { screen: TakeFotoBukti },

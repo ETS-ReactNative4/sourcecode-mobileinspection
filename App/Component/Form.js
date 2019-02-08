@@ -5,9 +5,15 @@ import {
   View,
   TextInput,
   TouchableOpacity ,
-  KeyboardAvoidingView,
+  NetInfo,
   Keyboard, Alert, Image
 } from 'react-native';
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp,
+    listenOrientationChange as loc,
+    removeOrientationListener as rol
+  } from 'react-native-responsive-screen';
 import PropTypes from 'prop-types';
 
 class Form extends Component{
@@ -39,61 +45,83 @@ class Form extends Component{
     
     onBtnClick(props){
         Keyboard.dismiss();
-        switch(true){
-            case this.state.strEmail === '':
-                this.makeAlert('Email tidak boleh kosong');
+        if(this.isNetworkConnected()){
+            switch(true){
+                case this.state.strEmail === '':
+                    this.makeAlert('Email tidak boleh kosong');
+                    break;
+                case this.state.strPassword === '':
+                    this.makeAlert('Password tidak boleh kosong');
+                default:
+                    props.onBtnClick({
+                        ...this.state
+                    });
                 break;
-            case this.state.strPassword === '':
-                this.makeAlert('Password tidak boleh kosong');
-            default:
-                props.onBtnClick({
-                    ...this.state
-                });
-            break;
+            }
+        } else {
+            this.makeAlert('Kamu tidak terhubung koneksi Internet');
         }
+    }    
+
+    isNetworkConnected() {
+        return NetInfo.getConnectionInfo().then(reachability => {
+            if (reachability === 'unknown') {
+                return new Promise(resolve => {
+                    const handleFirstConnectivityChangeIOS = isConnected => {
+                        NetInfo.isConnected.removeEventListener('connectionChange', handleFirstConnectivityChangeIOS);
+                        resolve(isConnected);
+                    };
+                    NetInfo.isConnected.addEventListener('connectionChange', handleFirstConnectivityChangeIOS);
+                });
+            }
+            reachability = reachability.toLowerCase();
+            return (reachability !== 'none' && reachability !== 'unknown');
+        });
     }
 
     render(){
         
 		const props = this.props;
         return(
-            <View style={styles.container}>
+            // <KeyboardAvoidingView style={{flex:1}}>
+                <View style={styles.container}>
 
-                {/* <Text style={[styles.tapText,{marginLeft:20, marginRight:20}]}>PT TRIPUTRA ARGO PERSADA</Text>
-                <Text style={[styles.appText, {marginLeft:20, marginRight:20}]}>Mobile Inspection</Text> */}
-                <Image source={require('../Images/logo_mobile_inspection.png')} style={{ width: 300, height: 100, resizeMode: 'stretch', marginBottom: 30}} />
+                    {/* <Text style={[styles.tapText,{marginLeft:20, marginRight:20}]}>PT TRIPUTRA ARGO PERSADA</Text>
+                    <Text style={[styles.appText, {marginLeft:20, marginRight:20}]}>Mobile Inspection</Text> */}
+                    <Image source={require('../Images/logo_mobile_inspection.png')} style={{ width: 300, height: 100, resizeMode: 'stretch', marginBottom: 30}} />
 
-                <View style={styles.sectionInput}>
-                    <Image source={require('../Images/icon/ic_login.png')} style={styles.iconInput} />
-                    <TextInput
-                        style={styles.inputBox}
-                        underlineColorAndroid='rgba(0,0,0,0)'
-                        placeholder="Email"
-                        placeholderTextColor="#51a977"
-                        selectionColor="#51a977"
-                        keyboardType="email-address"
-                        onChangeText={(strEmail) => { this.setState({ strEmail: strEmail }) }}
-                        value={this.state.strEmail}
-                        onSubmitEditing={() => this.password.focus()} />
+                    <View style={styles.sectionInput}>
+                        <Image source={require('../Images/icon/ic_login.png')} style={styles.iconInput} />
+                        <TextInput
+                            style={styles.inputBox}
+                            underlineColorAndroid='rgba(0,0,0,0)'
+                            placeholder="Email"
+                            placeholderTextColor="#51a977"
+                            selectionColor="#51a977"
+                            keyboardType="email-address"
+                            onChangeText={(strEmail) => { this.setState({ strEmail: strEmail }) }}
+                            value={this.state.strEmail}
+                            onSubmitEditing={() => this.password.focus()} />
+                    </View>
+
+                    <View style={styles.sectionInput}>
+                        <Image source={require('../Images/icon/ic_password.png')} style={styles.iconInput} />
+                        <TextInput style={styles.inputBox}
+                            underlineColorAndroid='rgba(0,0,0,0)'
+                            placeholder="Password"
+                            secureTextEntry={true}
+                            placeholderTextColor="#51a977"
+                            onChangeText={(strPassword) => { this.setState({ strPassword: strPassword }) }}
+                            value={this.state.strPassword}
+                            ref={(input) => this.password = input} />
+                    </View>
+
+                    <TouchableOpacity style={[styles.button,{marginTop:20}]}
+                        onPress={() => this.onBtnClick(props)}>
+                        <Text style={styles.buttonText}>Login</Text>
+                    </TouchableOpacity>     
                 </View>
-
-                <View style={styles.sectionInput}>
-                    <Image source={require('../Images/icon/ic_password.png')} style={styles.iconInput} />
-                    <TextInput style={styles.inputBox}
-                        underlineColorAndroid='rgba(0,0,0,0)'
-                        placeholder="Password"
-                        secureTextEntry={true}
-                        placeholderTextColor="#51a977"
-                        onChangeText={(strPassword) => { this.setState({ strPassword: strPassword }) }}
-                        value={this.state.strPassword}
-                        ref={(input) => this.password = input} />
-                </View>
-                
-                <TouchableOpacity style={[styles.button,{marginTop:20}]}
-                    onPress={() => this.onBtnClick(props)}>
-                    <Text style={styles.buttonText}>Login</Text>
-                </TouchableOpacity>     
-            </View>
+            // </KeyboardAvoidingView>    
             
         );
     }
@@ -104,11 +132,10 @@ export default Form
 const styles = StyleSheet.create({
 
     container: {
-        flexGrow: 10,
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop:200
+        marginTop:wp('70%')//200
     },
     tapText: {
         height: 41,
@@ -121,8 +148,8 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
     },
     sectionInput: {
-        width: 280,
-        height: 48,
+        width: wp('75%'),//280,
+        height: hp('6.7%'), //48
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
@@ -135,7 +162,7 @@ const styles = StyleSheet.create({
     },
     iconInput: {
         padding: 10,
-        marginLeft: 80,
+        marginLeft: 100,
         height: 25,
         width: 25,
         resizeMode: 'stretch',
@@ -151,8 +178,8 @@ const styles = StyleSheet.create({
 
     },
     button: {
-        width: 280,
-        height: 48,
+        width: wp('75%'), //280,
+        height: hp('6.7%'), //48
         backgroundColor: '#068D0D',
         borderRadius: 25,
         marginVertical: 10,

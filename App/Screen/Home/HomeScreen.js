@@ -1,6 +1,6 @@
 import React from 'react';
 import { ImageBackground, StatusBar, TouchableOpacity, View, ScrollView, Image, StyleSheet } from 'react-native';
-import { Container, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body, Right } from 'native-base';
+import { Container, Content, Card, CardItem, Thumbnail, Text, Left, Body } from 'native-base';
 import { connect } from 'react-redux'
 import Icons from 'react-native-vector-icons/MaterialIcons'
 import Colors from '../../Constant/Colors'
@@ -11,7 +11,11 @@ import RegionAction from '../../Redux/RegionRedux'
 import Moment from 'moment';
 import R, { isEmpty } from 'ramda';
 var RNFS = require('react-native-fs');
+import { changeFormatDate } from '../../Lib/Utils';
+import Carousel from 'react-native-carousel-view'
+import FastImage from 'react-native-fast-image'
 import { dirPhotoInspeksiBaris, dirPhotoInspeksiSelfie, dirPhotoTemuan, dirPhotoKategori } from '../../Lib/dirStorage';
+import { deleteFile } from 'realm';
 
 class HomeScreen extends React.Component {
 
@@ -48,44 +52,46 @@ class HomeScreen extends React.Component {
     super(props);
 
     this.state = {
-      // user: TaskServices.getAllData('TR_LOGIN'),
       data: [],
-      // images,
-      // bukti
       thumnailImage: '',
-      dataMore7Hari: [],
-      dataMore7HariHeader: [],
-      dataMore7HariDetail: [],
-      dataMore7HariBaris: []
+      loadAll: true
     }
   }
 
   willFocus = this.props.navigation.addListener(
     'willFocus',
     () => {
-      this._initData();// this._changeFilterList();
+      if(this.state.loadAll){
+        this._initData()
+      }
     }
   )
 
   componentWillUnmount() {
-    this.willFocus.remove();
+    this.willFocus.remove()
   }
 
   componentDidMount() {
+
     RNFS.copyFile(TaskServices.getPath(), 'file:///storage/emulated/0/MobileInspection/data.realm');
-    // this._changeFilterList();
     this._deleteFinding();
     this._deleteInspeksiHeader();
 
-    
     RNFS.mkdir(dirPhotoInspeksiBaris);
     RNFS.mkdir(dirPhotoInspeksiSelfie);
     RNFS.mkdir(dirPhotoTemuan);
     RNFS.mkdir(dirPhotoKategori);
   }
 
+  _changeFilterList = data => {
+    if (data != undefined) {
+        this.setState({loadAll: false});
+        this._initFilterData(data);
+    }
+  }
+
   _initData() {
-    this.setState({ data: this._filterHome() })
+    this.setState({ data: this._filterHome()});
   }
 
   _filterHome() {
@@ -94,16 +100,11 @@ class HomeScreen extends React.Component {
     const ref_role = login[0].REFFERENCE_ROLE;
     const loc_code = login[0].LOCATION_CODE;
 
-    console.log("USER AUTH CODE : " + user_auth);
-    console.log("REFFERENCE ROLE : " + ref_role);
-    console.log("LOCATION CODE : " + loc_code);
-
     var finding = TaskServices.getAllData('TR_FINDING');
     var findingSorted = finding.sorted('INSERT_TIME', true);
     var findingFilter;
 
     if (ref_role == 'REGION_CODE') {
-      // findingFilter = findingSorted.filtered(`WERKS CONTAINS[c] "${region_code}"`);
       var estate = TaskServices.getAllData('TM_EST');
       var estateFilter = estate.filtered(`REGION_CODE = "${loc_code}"`);
 
@@ -134,169 +135,11 @@ class HomeScreen extends React.Component {
     } else {
       findingFilter = finding.sorted('INSERT_TIME', true);
     }
-
-    this.setState({ data: findingFilter })
-  }
-
-  _getStatus() {
-    if (this.state.data.PROGRESS == 100) {
-      return "After"
-    } else if (this.state.data.PROGRESS == 0) {
-      return "Before"
-    }
-  }
-
-  _deleteFinding() {
-    var data = TaskServices.query('TR_FINDING', 'PROGRESS = 100');
-    var dataMore7Hari = []
-    var dataNoDate = []
-    var now = Moment(new Date())
-
-    data.map(item => {
-      if (isEmpty(item.DUE_DATE)) {
-        dataNoDate.push(item)
-      } else {
-        var diff = Moment(new Date(item.DUE_DATE)).diff(now, 'day');
-        if (diff > 7) {
-          this.setState({ dataMore7Hari: dataMore7Hari.push(item) })
-        }
-      }
-    })
-
-    // console.log("Data Query Splash : " + JSON.stringify(this.state.dataMore7Hari));
-    let allData = this.state.dataMore7Hari;
-    if (this.state.dataMore7Hari.length > 0) {
-      this.state.dataMore7Hari.map(item => {
-        let indexData = R.findIndex(R.propEq('FINDING_CODE', item.FINDING_CODE))(allData);
-        this._deleteImageFinding(item.FINDING_CODE);
-        TaskServices.deleteRecord('TR_FINDING', indexData);
-      });
-    }
-  }
-
-  _deleteInspeksiHeader() {
-    var data = TaskServices.getAllData('TR_BLOCK_INSPECTION_H');
-    // console.log("TR_BLOCK_INSPECTION_H : " + JSON.stringify(data));
-    var dataMore7Hari = [];
-    var dataNoDate = [];
-    var now = Moment(new Date());
-
-    data.map(item => {
-      // console.log("INSERT_TIME : " + item.INSERT_TIME);
-      if (isEmpty(item.INSERT_TIME)) {
-        dataNoDate.push(item)
-      } else {
-        var diff = Moment(new Date(item.INSERT_TIME)).diff(now, 'day');
-        if (diff > 7) {
-          this.setState({ dataMore7HariHeader: dataMore7Hari.push(item) })
-        }
-      }
-    })
-
-    // console.log("Data Query Inspection Header : " + JSON.stringify(this.state.dataMore7HariHeader));
-    let allData = this.state.dataMore7HariHeader;
-    if (this.state.dataMore7HariHeader.length > 0) {
-      this.state.dataMore7HariHeader.map(item => {
-        let indexData = R.findIndex(R.propEq('TR_BLOCK_INSPECTION_H', item.BLOCK_INSPECTION_CODE))(allData);
-        this._deleteInspeksiDetail(item.BLOCK_INSPECTION_CODE);
-        this._deleteImageInspeksi(item.BLOCK_INSPECTION_CODE);
-        this._deleteInspeksiBaris(item.BLOCK_INSPECTION_CODE)
-        TaskServices.deleteRecord('TR_BLOCK_INSPECTION_H', indexData);
-      });
-    }
-  }
-
-  _deleteInspeksiDetail(BLOCK_INSPECTION_CODE) {
-    let allData = TaskServices.findBy2('TR_BLOCK_INSPECTION_D', 'BLOCK_INSPECTION_CODE', BLOCK_INSPECTION_CODE);
-    let indexData = R.findIndex(R.propEq('TR_BLOCK_INSPECTION_D', BLOCK_INSPECTION_CODE))(allData);
-    TaskServices.deleteRecord('TR_BLOCK_INSPECTION_D', indexData);
-  }
-
-  _deleteInspeksiBaris(BLOCK_INSPECTION_CODE) {
-    let allData = TaskServices.findBy2('TR_BARIS_INSPECTION', 'BLOCK_INSPECTION_CODE', BLOCK_INSPECTION_CODE);
-    let indexData = R.findIndex(R.propEq('TR_BARIS_INSPECTION', BLOCK_INSPECTION_CODE))(allData);
-    TaskServices.deleteRecord('TR_BARIS_INSPECTION', indexData);
-  }
-
-  _deleteImageFinding(TR_CODE) {
-    let allData = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', FINDING_CODE);
-    let indexData = R.findIndex(R.propEq('TR_IMAGE', TR_CODE))(allData);
-    this.deleteImageFileTemuan(allData.IMAGE_PATH_LOCAL);
-    TaskServices.deleteRecord('TR_IMAGE', indexData);
-  }
-
-  _deleteImageInspeksi(TR_CODE) {
-    let allData = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', BLOCK_INSPECTION_CODE);
-    let indexData = R.findIndex(R.propEq('TR_IMAGE', TR_CODE))(allData);
-    this.deleteImageFileInspeksi(allData.IMAGE_PATH_LOCAL);
-    TaskServices.deleteRecord('TR_IMAGE', indexData);
-  }
-
-  deleteImageFileTemuan(filepath) {
-    RNFS.exists(filepath)
-      .then((result) => {
-        console.log("file exists: ", result);
-        if (result) {
-          return RNFS.unlink(filepath)
-            .then(() => {
-              console.log('FILE DELETED');
-            })
-            // `unlink` will throw an error, if the item to unlink does not exist
-            .catch((err) => {
-              console.log(err.message);
-            });
-        }
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
-  }
-
-  deleteImageFileInspeksi(filepath) {
-    RNFS.exists(filepath)
-      .then((result) => {
-        console.log("file exists: ", result);
-        if (result) {
-          return RNFS.unlink(filepath)
-            .then(() => {
-              console.log('FILE DELETED');
-            })
-            // `unlink` will throw an error, if the item to unlink does not exist
-            .catch((err) => {
-              console.log(err.message);
-            });
-        }
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
-  }
-
-  _changeFilterList = data => {
-    // console.log("Data Filter Home : " + JSON.stringify(data));
-    if (data == undefined) {
-      this._initData();
-      console.log("Masuk Default")
-    } else {
-      this._initFilterData(data);
-      console.log("Masuk Filter")
-    }
+    return findingFilter;
   }
 
   _initFilterData(dataFilter) {
-    // console.log("Array Data Filter : " + JSON.stringify(dataFilter));
     dataFilter.map(item => {
-
-      // console.log("Data Filter Ba : " + item.ba);
-      // console.log("Data Filter User Auth : " + item.userAuth);
-      // console.log("Data Filter Status : " + item.status);
-      // console.log("Data Filter Start Batas Waktu : " + item.stBatasWaktu);
-      // console.log("Data Filter End Batas Waktu : " + item.endBatasWaktu);
-      // console.log("Data Filter Val Batas Waktu : " + item.valBatasWaktu);
-      // console.log("Data Filter Val Assignto : " + item.valAssignto);
-
-
-      // let oldContacts = realm.objects('Contact').filtered('age > 2');
       let ba = item.ba;
       let userAuth = item.userAuth;
       let status = item.status;
@@ -309,7 +152,6 @@ class HomeScreen extends React.Component {
       let varUserAuth = ' AND INSERT_USER = ' + `"${userAuth}"`
       let varStatus = ' AND STATUS = ' + `"${status}"`
       let varInsertTime = ' AND INSERT_TIME >= ' + `"${stBatasWaktu}"` + ' AND INSERT_TIME <= ' + `"${endBatasWaktu}"`
-      // console.log("Query All : " + (varBa + varUserAuth + varStatus + varInsertTime));
 
       let stBa;
       if (ba == 'Pilih Lokasi') {
@@ -348,6 +190,104 @@ class HomeScreen extends React.Component {
       this.setState({ data });
     })
   }
+
+  _getStatus() {
+    if (this.state.data.PROGRESS == 100) {
+      return "After"
+    } else if (this.state.data.PROGRESS == 0) {
+      return "Before"
+    }
+  }
+
+  _deleteFinding() {
+    var data = TaskServices.query('TR_FINDING', 'PROGRESS = 100');
+    var now = Moment(new Date())
+    if(data !== undefined){
+      if(data !== undefined){
+        data.map(item => {
+          if(item.DUE_DATE !== ''){
+            let dueDate = item.DUE_DATE;
+            if(dueDate.includes(' ')){
+              dueDate = dueDate.substring(0, dueDate.indexOf(' '))
+            }
+            var diff = Moment(new Date(dueDate)).diff(now, 'day');
+            if (diff < -7) {
+                this.deleteImage(item.FINDING_CODE)
+                this.deleteData('TR_FINDING', 'FINDING_CODE', item.FINDING_CODE);
+            }
+          }            
+        });
+      }
+    }
+  }  
+
+  _deleteInspeksiHeader() {
+    var data = TaskServices.getAllData('TR_BLOCK_INSPECTION_H');
+    var now = Moment(new Date());
+    if(data != undefined){
+      data.map(item => {
+        if(item.INSERT_TIME !== ''){
+          let insertTime = item.INSERT_TIME;
+          if(insertTime.includes(' ')){
+            insertTime = insertTime.substring(0, insertTime.indexOf(' '))
+          }
+          var diff = Moment(new Date(insertTime)).diff(now, 'day');
+          if (diff < -7) {            
+              this.deleteImage(item.BLOCK_INSPECTION_CODE);
+              this.deleteDetailInspeksi(item.BLOCK_INSPECTION_CODE)         
+              this.deleteData('TR_BLOCK_INSPECTION_H', 'BLOCK_INSPECTION_CODE', item.BLOCK_INSPECTION_CODE);
+              this.deleteData('TR_BARIS_INSPECTION', 'ID_INSPECTION', item.ID_INSPECTION); 
+          }
+        }
+      });
+    }    
+  }  
+
+  deleteImage(trCode){
+    let dataImage = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', trCode);
+    if(dataImage !== undefined){
+      this.deleteImageFile(`file://${dataImage.IMAGE_PATH_LOCAL}`);
+      this.deleteData('TR_IMAGE', 'IMAGE_CODE', dataImage.IMAGE_CODE);
+    }
+  }
+
+  deleteDetailInspeksi(blokInsCode){
+    let data = TaskServices.findBy('TR_BLOCK_INSPECTION_D', 'BLOCK_INSPECTION_CODE', blokInsCode);
+    if(data !== undefined){
+      data.map(item => {
+        this.deleteData('TR_BLOCK_INSPECTION_D', 'BLOCK_INSPECTION_CODE_D', item.BLOCK_INSPECTION_CODE_D);
+      });
+    }
+  }
+
+  deleteData(table, whereClause, value){ 
+    let allData = TaskServices.getAllData(table);
+    if(allData !== undefined && allData.length > 0){
+        let indexData = R.findIndex(R.propEq(whereClause, value))(allData);
+        if(indexData >= 0){
+          TaskServices.deleteRecord(table, indexData);
+      }
+    }
+  }  
+
+  deleteImageFile(filepath) {
+    RNFS.exists(filepath)
+      .then((result) => {
+        if (result) {
+          return RNFS.unlink(filepath)
+            .then(() => {
+              console.log('FILE DELETED');
+            })
+            .catch((err) => {
+              console.log(err.message);
+            });
+        }
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }
+
 
   getColor(param) {
     switch (param) {
@@ -406,11 +346,110 @@ class HomeScreen extends React.Component {
 
   getStatusBlok(werk_afd_blok_code) {
     try {
-      let data = TaskService.findBy2('TM_LAND_USE', 'WERKS_AFD_BLOCK_CODE', werk_afd_blok_code);
+      let data = TaskServices.findBy2('TM_LAND_USE', 'WERKS_AFD_BLOCK_CODE', werk_afd_blok_code);
       return data.MATURITY_STATUS;
     } catch (error) {
       return ''
     }
+  }
+
+  getWerksAfdBlokCode(blockCode){
+    try {
+        let data = TaskServices.findBy2('TM_BLOCK', 'BLOCK_CODE', blockCode);
+        return data.WERKS_AFD_BLOCK_CODE;            
+    } catch (error) {
+        return ''
+    }
+  }
+
+  getStatusImage(status) {
+    if (status == 'SEBELUM') {
+        return "Before"
+    } else if ('SESUDAH') {
+        return "After"
+    }
+  }
+
+  renderCarousel = (item, status) => {
+    let sources;
+    if(status == 'BARU'){
+      sources = require('../../Images/icon/ic_new_timeline.png')
+    }else if(status == 'SELESAI'){
+      sources = require('../../Images/icon/ic_done_timeline.png')
+    }else{
+      sources = require('../../Images/icon/ic_inprogress_timeline.png')
+    }
+    return (
+        <View style={{flex: 1}}>
+            {status == 'SELESAI' &&
+              <View style={{
+                  backgroundColor: 'rgba(91, 90, 90, 0.7)', width: 70,
+                  padding: 3, position: 'absolute', top: 0, right: 10, zIndex: 1, alignItems: 'center',
+                  margin: 10, borderRadius: 25,
+              }}>
+                  <Text style={{ fontSize: 10, marginBottom: 5, color: 'white' }}>{this.getStatusImage(item.STATUS_IMAGE)}</Text>
+              </View>}
+            <FastImage style={{height: 200}}
+                source={{
+                    uri: "file://" + item.IMAGE_PATH_LOCAL,
+                    priority: FastImage.priority.normal,
+                }} />
+
+            <View style={{
+                flexDirection: 'row',
+                backgroundColor: this.getColor(status), 
+                width: '100%', height: 35,
+                position: 'absolute', bottom: 0,
+                paddingLeft: 18
+            }}>
+                <Image style={{ marginTop: 2, height: 28, width: 28 }} source={sources}></Image>
+                <Text style={{ marginLeft: 12, color: 'white', fontSize: 14 }}>{status}</Text>
+            </View>
+        </View>
+    )
+  }
+
+  renderImage = (images, status) =>{
+    let sources;
+    if(status == 'BARU'){
+      sources = require('../../Images/icon/ic_new_timeline.png')
+    }else if(status == 'SELESAI'){
+      sources = require('../../Images/icon/ic_done_timeline.png')
+    }else{
+      sources = require('../../Images/icon/ic_inprogress_timeline.png')
+    }
+    return (
+      <View style={{ height: 200 }}>
+        <ImageSlider                                    
+            images={images}
+            customSlide={({ index, item, style, width }) => (
+                <View key={index} style={[style, { backgroundColor: 'yellow' }]}>
+                    <View style={{
+                        backgroundColor: 'rgba(91, 90, 90, 0.7)', width: 70,
+                        padding: 3, position: 'absolute', top: 0, right: 10, zIndex: 1, alignItems: 'center',
+                        margin: 10, borderRadius: 25,
+                    }}>
+                        <Text style={{ fontSize: 10, marginBottom: 5, color: 'white' }}>{this.getStatusImage(item.STATUS_IMAGE)}</Text>
+                    </View>
+                    <FastImage style={{ alignItems: 'center', width: '100%', height: '100%' }}
+                        source={{
+                            uri: 'file://' + item.IMAGE_PATH_LOCAL,
+                            priority: FastImage.priority.normal,
+                        }} />
+                    <View style={{
+                        flexDirection: 'row',
+                        backgroundColor: this.getColor(status), 
+                        width: '100%', height: 35,
+                        position: 'absolute', bottom: 0
+                    }}>
+                        <Image style={{ marginTop: 2, height: 28, width: 28 }} source={sources}></Image>
+                        <Text style={{ marginLeft: 10, color: 'white', fontSize: 14, marginTop: 8 }}>{status}</Text>
+                    </View>
+                </View>
+            )}
+        />
+      </View>
+    )    
   }
 
   _renderItem = (item, index) => {
@@ -418,66 +457,77 @@ class HomeScreen extends React.Component {
     const nav = this.props.navigation
     const INSERT_USER = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', item.INSERT_USER);
     let user = INSERT_USER == undefined ? 'User belum terdaftar. Hubungi Admin.' : INSERT_USER.FULLNAME
-
     Moment.locale();
-    let dtInsertTime = Moment(this.state.data.INSERT_TIME).format('LLL');
-    let batasWaktu = item.DUE_DATE == '' ? 'Batas waktu belum ditentukan' : Moment(item.DUE_DATE).format('LL');
-    
-    const image = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', item.FINDING_CODE);
-    let sources = image == undefined ? require('../../Images/background.png') : { uri: "file://" + image.IMAGE_PATH_LOCAL }
+    let dtInsertTime = Moment(changeFormatDate("" + item.INSERT_TIME, "YYYY-MM-DD hh-mm-ss")).format('LLL');
+    let batasWaktu = item.DUE_DATE == '' ? 'Batas waktu belum ditentukan' : Moment(item.DUE_DATE).format('LL');  
 
+    const image = TaskServices.findBy('TR_IMAGE', 'TR_CODE', item.FINDING_CODE);
+    let sources = image == undefined ? require('../../Images/img-no-picture.png') : { uri: "file://" + image.IMAGE_PATH_LOCAL }
+
+    let werkAfdBlockCode = this.getWerksAfdBlokCode(item.BLOCK_CODE)
+    let lokasiBlok = `${this.getBlokName(item.BLOCK_CODE)}/${this.getStatusBlok(werkAfdBlockCode)}/${this.getEstateName(item.WERKS)}`
+    let status = item.STATUS;
     return (
       <View key={index}>
-        <TouchableOpacity style={{ marginTop: 12 }} key={item.id} onPress={() => { nav.navigate('DetailFinding', { ID: item.FINDING_CODE }) }}>
           <Card >
             <CardItem>
               <Left>
-                <Thumbnail style={{ borderColor: 'grey', borderWidth: 0.5, height: 48, width: 48 }} source={require('../../Images/img_no_photo.jpg')} />
+                <Thumbnail style={{ borderColor: 'grey', borderWidth: 0.5, height: 48, width: 48 }} source={require('../../Images/ic-orang.png')} />
                 <Body>
                   <Text style={{ fontSize: 14 }}>{user}</Text>
                   <Text style={{ fontSize: 12 }}>{dtInsertTime}</Text>
                 </Body>
               </Left>
             </CardItem>
-            <CardItem cardBody>
-              <ImageBackground source={sources} style={{ height: 210, width: null, flex: 1, flexDirection: 'column-reverse' }} >
+            <CardItem cardBody>              
+              {image == undefined && <ImageBackground source={require('../../Images/img-no-picture.png')} style={{ height: 210, width: null, flex: 1, flexDirection: 'column-reverse' }} >
                 <View style={{ alignContent: 'center', paddingTop: 2, paddingLeft: 12, flexDirection: 'row', height: 42, backgroundColor: this.getColor(item.STATUS) }} >
                   <Image style={{ marginTop: 2, height: 28, width: 28 }} source={require('../../Images/icon/ic_new_timeline.png')}></Image>
                   <Text style={{ marginLeft: 12, color: 'white', fontSize: 14 }}>{item.STATUS}</Text>
                 </View>
-              </ImageBackground>
+              </ImageBackground>} 
+              {image && 
+                <View style={{
+                    flex: 1,
+                    height: 200,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <Carousel
+                      height={200}
+                      hideIndicators={status == 'SELESAI' ? false : true}
+                      indicatorOffset={10}
+                      animate={false}
+                      delay={1000}
+                      indicatorSize={15}
+                      indicatorColor="white">
+                      {image.map(item =>this.renderCarousel(item, status))}
+                  </Carousel>
+                </View>}          
             </CardItem>
-            <CardItem>
-              <Body>
-                <Text style={{fontSize: 14}}>Lokasi : {this.getBlokName(item.BLOCK_CODE)}/{this.getEstateName(`${item.WERKS}${item.AFD_CODE}${item.BLOCK_CODE}`)}/{this.getEstateName(item.WERKS)}</Text>
-                <Text style={{ marginTop: 6, fontSize: 14 }}>Kategori : {this.getCategoryName(item.FINDING_CATEGORY)}</Text>
-                <Text style={{ marginTop: 6, fontSize: 14 }}>Ditugaskan kepada : {this.getContactName(item.ASSIGN_TO)}</Text>
-                <View style={{ flex: 1, flexDirection: 'row' }}>
-                  <Text style={{ marginTop: 6, fontSize: 14 }}>Batas Waktu : </Text>
-                  <Text style={{ marginTop: 6, color: this.getColor(batasWaktu), fontSize: 14 }}>{batasWaktu}</Text>
-                </View>
-              </Body>
+            <CardItem>              
+              <TouchableOpacity style ={{flex: 1}} onPress={() => { nav.navigate('DetailFinding', { ID: item.FINDING_CODE }) }}>
+                <Body>
+                  <Text style={{fontSize: 14}}>Lokasi : {lokasiBlok}</Text>
+                  <Text style={{ marginTop: 6, fontSize: 14 }}>Kategori : {this.getCategoryName(item.FINDING_CATEGORY)}</Text>
+                  <Text style={{ marginTop: 6, fontSize: 14 }}>Ditugaskan kepada : {this.getContactName(item.ASSIGN_TO)}</Text>
+                  <View style={{ flex: 1, flexDirection: 'row' }}>
+                    <Text style={{ marginTop: 6, fontSize: 14 }}>Batas Waktu : </Text>
+                    <Text style={{ marginTop: 6, color: this.getColor(batasWaktu), fontSize: 14 }}>{batasWaktu}</Text>
+                  </View>
+                </Body>
+              </TouchableOpacity>                
             </CardItem>
           </Card>
-        </TouchableOpacity>
       </View>
     );
   }
 
-  _validasiData(param) {
-    if (param == 0) {
-      return this._renderNoData();
-    } else {
-      return this._renderData();
-    }
-  }
-
   _renderNoData() {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'stretch', alignContent: 'center' }}>
-        <Text style={{ fontSize: 16, alignSelf: 'center', marginTop: 200 }}>'Belum ada temuan di area Kamu'</Text>
-      </View>
-    )
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', alignContent: 'center' }}>
+        <Image style={{ marginTop: 110, width: 250, height: 180 }} source={require('../../Images/img-belum-ada-data.png')} />
+      </View>)
   }
 
   _renderData() {
@@ -493,6 +543,12 @@ class HomeScreen extends React.Component {
   }
 
   render() {
+    let show;
+    if (this.state.data.length > 0) {
+      show = this._renderData()
+    } else {
+      show = this._renderNoData()
+    }
     return (
       <Container style={{ padding: 16 }}>
         <Content>
@@ -506,7 +562,7 @@ class HomeScreen extends React.Component {
               </TouchableOpacity>
             </View>
           </View>
-          {this._validasiData(this.state.data.length)}
+          {show}
         </Content>
       </Container >
     )

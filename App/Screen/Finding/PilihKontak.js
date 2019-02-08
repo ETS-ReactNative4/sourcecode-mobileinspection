@@ -3,23 +3,11 @@
 
 import React, { Component } from 'react';
 import { View, TextInput, Text, StyleSheet, ListView, TouchableOpacity, Alert } from 'react-native';
-import PropTypes from 'prop-types';
-import Colors from '../../Constant/Colors'
 import TaskServices from '../../Database/TaskServices';
 
 var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
 class PilihKontak extends Component {
-
-  //   static propTypes = {
-  // 		onSelect: PropTypes.func,
-  //   };
-
-  //   // Defaults for props
-  // 	static defaultProps = {
-  // 		onSelect: () => {},
-  //   };
-
   constructor(props) {
     super(props);
 
@@ -29,19 +17,6 @@ class PilihKontak extends Component {
       user: null
     };
   };
-
-  // static navigationOptions = {
-  //   headerStyle: {
-  //       backgroundColor: Colors.tintColor
-  //   },
-  //   title: 'Pilih Kontak',
-  //   headerTintColor: '#fff',
-  //   headerTitleStyle: {
-  //       flex: 1,
-  //       fontSize: 18,
-  //       fontWeight: '400'
-  //   },
-  // };
 
   static navigationOptions = {
     header: null
@@ -59,28 +34,39 @@ class PilihKontak extends Component {
     const werks = navigation.getParam('werks');
     const withAfd = werks + afdCode;
 
-    console.log(withAfd)
+    const login = TaskServices.getAllData('TR_LOGIN')
 
-    let data = TaskServices.query('TR_CONTACT', `REF_ROLE = "AFD_CODE" AND LOCATION_CODE = "${withAfd}" AND USER_ROLE CONTAINS[c] "ASISTEN"`);
+    let dataUser = TaskServices.query('TR_CONTACT', `USER_AUTH_CODE = "${login[0].USER_AUTH_CODE}"`);
+    console.log(JSON.stringify(dataUser));
+    let data = TaskServices.query('TR_CONTACT', `REF_ROLE = "AFD_CODE" AND LOCATION_CODE = "${withAfd}" AND USER_ROLE CONTAINS[c] "ASISTEN" AND USER_AUTH_CODE != "${login[0].USER_AUTH_CODE}"`);
     console.log(JSON.stringify(data));
-    let data1 = TaskServices.query('TR_CONTACT', `REF_ROLE = "BA_CODE" AND LOCATION_CODE = "${werks}" AND USER_ROLE CONTAINS[c] "ASISTEN"`);
+    let data1 = TaskServices.query('TR_CONTACT', `REF_ROLE = "BA_CODE" AND LOCATION_CODE = "${werks}" AND USER_ROLE CONTAINS[c] "ASISTEN" AND USER_AUTH_CODE != "${login[0].USER_AUTH_CODE}"`);
     console.log(JSON.stringify(data1));
 
     let arr = [];
-    for (var i = 0; i < data.length; i++) {
+    for (var i = 0; i < dataUser.length; i++) {
       arr.push({
-        userAuth: data[i].USER_AUTH_CODE,
-        fullName: data[i].FULLNAME,
-        userRole: data[i].USER_ROLE,
+        userAuth: dataUser[i].USER_AUTH_CODE,
+        fullName: dataUser[i].FULLNAME,
+        userRole: dataUser[i].USER_ROLE,
+      });
+    }
+    console.log("Array User: " + JSON.stringify(arr));
+
+    for (var j = 0; j < data.length; j++) {
+      arr.push({
+        userAuth: data[j].USER_AUTH_CODE,
+        fullName: data[j].FULLNAME,
+        userRole: data[j].USER_ROLE,
       });
     }
     console.log("Array : " + JSON.stringify(arr));
 
-    for (var j = 0; j < data1.length; j++) {
+    for (var k = 0; k < data1.length; k++) {
       arr.push({
-        userAuth: data[j].USER_AUTH_CODE,
-        fullName: data[j].FULLNAME,
-        userRole: data[j].USER_ROLE
+        userAuth: data[k].USER_AUTH_CODE,
+        fullName: data[k].FULLNAME,
+        userRole: data[k].USER_ROLE
       })
     }
     console.log("Array Update : " + JSON.stringify(arr));

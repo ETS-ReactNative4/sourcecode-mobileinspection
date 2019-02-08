@@ -8,13 +8,29 @@ const TaskServices = {
   },
 
   saveData: async function (table, obj) {
-    var saved = null;
-    console.log('Save Data : ' + table + ' ' + JSON.stringify(obj));
+    try {      
+      console.log('Save Data : ' + table + ' ' + JSON.stringify(obj));
+      await RealmSchemas.write(() => {
+        RealmSchemas.create(table, obj, true);
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  },
 
-    await RealmSchemas.write(() => {
-      saved = RealmSchemas.create(table, obj);
-    })
-    return saved;
+  insertSameObject: async function (table, obj) {
+    try {      
+      // var saved = null;
+      console.log('Save Data : ' + table + ' ' + JSON.stringify(obj));
+
+      await RealmSchemas.write(() => {
+        RealmSchemas.create(table, obj);
+        // saved = RealmSchemas.create(table, obj);
+      })
+      // return saved;
+    } catch (error) {
+      console.log(error)
+    }
   },
 
   updatedDataNew: function (table, primary_key, obj) {
@@ -196,7 +212,7 @@ const TaskServices = {
       data.EST_CODE = param.EST_CODE;
       data.WERKS = param.WERKS;
       data.AFD_CODE = param.AFD_CODE;
-      data.BLOCK_CODE = param.AFD_NAME;
+      data.BLOCK_CODE = param.BLOCK_CODE;
       data.BLOCK_NAME = param.BLOCK_NAME;
       data.WERKS_AFD_CODE = param.WERKS_AFD_CODE;
       data.LATITUDE_BLOCK = param.LATITUDE_BLOCK;
@@ -226,7 +242,7 @@ const TaskServices = {
   updateLandUse: function(param, index){
     let data = RealmSchemas.objects('TM_LAND_USE')[index];
     RealmSchemas.write(() => {
-      data.NATIONAL = param.REGION_CODE;
+      data.NATIONAL = param.NATIONAL;
       data.REGION_CODE = param.REGION_CODE;
       data.COMP_CODE = param.COMP_CODE;
       data.WERKS = param.WERKS;
@@ -235,7 +251,7 @@ const TaskServices = {
       data.AFD_CODE = param.AFD_CODE;
       data.AFD_NAME = param.AFD_NAME;
       data.WERKS_AFD_CODE = param.WERKS_AFD_CODE;
-      data.BLOCK_CODE = param.AFD_NAME;
+      data.BLOCK_CODE = param.BLOCK_CODE;
       data.BLOCK_NAME = param.BLOCK_NAME;
       data.LAND_USE_CODE = param.LAND_USE_CODE;
       data.LAND_USE_NAME = param.LAND_USE_NAME;
@@ -260,10 +276,10 @@ const TaskServices = {
   updateComp: function(param, index){
     let data = RealmSchemas.objects('TM_COMP')[index];
     RealmSchemas.write(() => {
-      data.NATIONAL = param.REGION_CODE;
-      data.REGION_CODE = param.COMP_CODE;
-      data.COMP_NAME = param.EST_CODE;
-      data.ADDRESS = param.EST_NAME;
+      data.NATIONAL = param.NATIONAL;
+      data.REGION_CODE = param.REGION_CODE;
+      data.COMP_NAME = param.COMP_NAME;
+      data.ADDRESS = param.ADDRESS;
     });
   },
 
@@ -304,7 +320,7 @@ const TaskServices = {
   updateParamTrack: function(param, index){
     let data = RealmSchemas.objects('TM_TIME_TRACK')[index];
     RealmSchemas.write(() => {
-      data.PARAMATER_GROUP = param.PARAMATER_GROUP;
+      data.PARAMETER_GROUP = param.PARAMETER_GROUP;
       data.PARAMETER_NAME = param.PARAMETER_NAME;
       data.DESC = param.DESC;
       data.NO_URUT = param.NO_URUT;

@@ -12,25 +12,28 @@ import { getTodayDate } from '../../Lib/Utils'
 
 class KondisiBaris1 extends Component {
 
-    static navigationOptions = ({ navigation }) => ({
-        headerStyle: {
-            backgroundColor: Colors.tintColor
-        },
-        title: 'Kondisi Baris',
-        headerTintColor: '#fff',
-        headerTitleStyle: {
-            flex: 1,
-            fontSize: 18,
-            fontWeight: '400'
-        },
-        headerRight: (
-            <TouchableOpacity onPress={() => navigation.navigate('FindingFormNavigator', { inspeksiHeader: this.state.inspeksiHeader })}>
-                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingRight: 16 }}>
-                    <Entypo name='flashlight' size={24} color='white' />
-                </View>
-            </TouchableOpacity>
-        ),
-    });
+    static navigationOptions = ({ navigation }) => {        
+        const { params = {} } = navigation.state;
+        return {
+            headerStyle: {
+                backgroundColor: Colors.tintColor
+            },
+            title: 'Kondisi Baris',
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+                flex: 1,
+                fontSize: 18,
+                fontWeight: '400'
+            },
+            headerRight: (
+                <TouchableOpacity onPress={() => {navigation.navigate('Step1Finding', {data: params.getData})}}>
+                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingRight: 16 }}>
+                        <Entypo name='flashlight' size={24} color='white' />
+                    </View>
+                </TouchableOpacity>
+            ),
+        }        
+    };
 
     constructor(props) {
         super(props);
@@ -58,6 +61,10 @@ class KondisiBaris1 extends Component {
             dataInspeksi
 
         }
+    }
+
+    componentDidMount(){
+        this.props.navigation.setParams({ getData: this.state.inspeksiHeader })
     }
 
     insertDB() {
@@ -222,7 +229,7 @@ class KondisiBaris1 extends Component {
         return (
             <ScrollView style={styles.mainContainer}>
                 {/*STEPPER*/}
-                <View style={{ flexDirection: 'row', marginLeft: 20, marginRight: 20, marginTop: 10 }}>
+                <View style={{ flexDirection: 'row', marginLeft: 20, marginRight: 20, marginTop: 10, justifyContent: 'center', alignItems: 'center' }}>
                     <View style={styles.containerStepper}>
                         <View style={[styles.stepperNumber, { backgroundColor: Colors.brand }]}>
                             <Text style={styles.stepperNumberText}>1</Text>

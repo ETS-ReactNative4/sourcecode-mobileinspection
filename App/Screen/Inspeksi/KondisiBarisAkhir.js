@@ -164,10 +164,25 @@ class KondisiBarisAkhir extends Component{
         );
     }
 
-    changeColorSlide(){          
-        // this.props.navigation.navigate('SelesaiInspeksi');    
+    has2Row(){        
         let total = TaskService.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION).length;
-        if(total >= 1){
+        if(this.state.from !== 'history'){
+            if(total >= 1){
+                return true
+            }else{
+                return false
+            }
+        }else{
+            if(total >= 2){
+                return true
+            }else{
+                return false
+            }
+        }
+    }
+
+    changeColorSlide(){           
+        if(this.has2Row() >= 1){
             this.setState({fulFillMandatory:true})
             if(!this.state.switchLanjut){
                 btn = {
@@ -291,8 +306,6 @@ class KondisiBarisAkhir extends Component{
         let dataInspeksi = TaskService.getAllData('TR_BARIS_INSPECTION')
         let indexData = R.findIndex(R.propEq('ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION))(dataInspeksi);
         TaskService.updateScoreInspeksi(param, indexData);
-
-        // barisPembagi.map(item=>{TaskService.updateInspectionHScore(item.BLOCK_INSPECTION_CODE, param) })
         
         let val = this.calculateBaris()
         TaskService.updateInspectionHScore(this.state.inspeksiHeader.BLOCK_INSPECTION_CODE, val)
@@ -500,12 +513,17 @@ class KondisiBarisAkhir extends Component{
             
             if(this.state.from !== 'history'){
                 //for track
+                // alert('delete interval '+ this.state.intervalId)
                 clearInterval(this.state.intervalId)
-                let time = TaskService.getAllData('TM_TIME_TRACK')[0]
-                let id = setInterval(()=> this.getLocation2(blokInspectionCode), 10000);
-                this.setState({intervalId: id})
-                this.navigateScreen('TakeFotoBaris', params, modelInspeksi, model);
             }
+
+            let time = TaskService.getAllData('TM_TIME_TRACK')[0];
+            let duration = 10000
+            // if(time !== undefined){
+            //     duration = parseFloat(time.DESC);
+            // }
+            let id = setInterval(()=> this.getLocation2(blokInspectionCode), duration);
+            this.navigateScreen('TakeFotoBaris', params, modelInspeksi, model, id);
             
         }        
         
@@ -530,7 +548,28 @@ class KondisiBarisAkhir extends Component{
         );
     }
 
-    navigateScreen(screenName, params, inspeksiH, dataInspeksi) {
+    insertTrackLokasi(blokInsCode, lat, lon){
+        try {            
+            var trInsCode = `T${this.state.dataUsual.USER_AUTH}${getTodayDate('YYMMDDHHmmss')}`;
+            var today = getTodayDate('YYYY-MM-DD HH:mm:ss');
+            data = {
+                TRACK_INSPECTION_CODE: trInsCode,
+                BLOCK_INSPECTION_CODE: blokInsCode,
+                DATE_TRACK: today,
+                LAT_TRACK: lat.toString(),
+                LONG_TRACK: lon.toString(),
+                INSERT_USER: this.state.dataUsual.USER_AUTH,
+                INSERT_TIME: today,
+                STATUS_SYNC: 'N'
+            }
+            TaskService.saveData('TM_INSPECTION_TRACK', data)
+            // alert('insert')
+        } catch (error) {
+            alert('insert track lokasi baris akhir inspeksi '+ error)
+        }
+    }
+
+    navigateScreen(screenName, params, inspeksiH, dataInspeksi, intervalId) {
         const navigation = this.props.navigation;
         const resetAction = StackActions.reset({
             index: 0,            
@@ -539,7 +578,7 @@ class KondisiBarisAkhir extends Component{
                 inspeksiHeader: inspeksiH, 
                 from: 'kondisiBaris', 
                 statusBlok:this.state.statusBlok,
-                intervalId: this.state.intervalId,
+                intervalId: intervalId,
                 dataInspeksi: dataInspeksi,
              } 
             })]

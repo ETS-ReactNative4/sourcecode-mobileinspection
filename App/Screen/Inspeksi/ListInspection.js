@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Image} from 'react-native';
 import ActionButton from 'react-native-action-button';
 import Colors from '../../Constant/Colors'
 import TaskServices from '../../Database/TaskServices'
-import { NavigationActions, StackActions  } from 'react-navigation';
+import { NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux';
 import InspeksiAction from '../../Redux/InspeksiRedux';
 import {getTodayDate} from '../../Lib/Utils';
 import Icon2 from 'react-native-vector-icons/MaterialIcons'
 
 import { ProgressDialog } from 'react-native-simple-dialogs';
+import { Container, Content } from 'native-base';
 
 class ListInspection extends Component {
   
@@ -71,25 +72,22 @@ class ListInspection extends Component {
 
   actionButtonClick() {
     // this.props.navigation.navigate('FormInspection');
-    // this.loadData();
     this.props.navigation.dispatch(NavigationActions.navigate({ routeName: 'BuatInspeksi'}));
   }
 
   render() {
     return (
-      // <View>
-        // <ActionButton buttonColor={Colors.tintColor} onPress={() => this.actionButtonClick()}></ActionButton>
+      <Container style={{flex:1, justifyContent:'center', alignItems:'center',  alignContent:'center'}}>
+        <Content>
+        <Image style={{marginTop:120,alignItems:'center', width:300, height: 220}}source={require('../../Images/img-cooming-soon-1.png')} />
+        </Content>
+        
         <ActionButton style={{ marginEnd: -10, marginBottom: -10 }}
           buttonColor={Colors.tintColor}
           onPress={() => { this.actionButtonClick() }}
           icon={<Icon2 color = 'white' name='edit' size={25} />}>
-        </ActionButton>
-      //   <ProgressDialog
-      //       visible={this.state.fetching}
-      //       activityIndicatorSize="large"
-      //       message="Loading..."
-      //   />    
-      // </View>
+        </ActionButton>   
+      </Container>
         
     )
   }

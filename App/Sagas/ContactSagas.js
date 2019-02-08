@@ -3,21 +3,21 @@ import ContactActions from '../Redux/ContactRedux';
 import TaskServices from '../Database/TaskServices'
 
 export function* getContact(api, action) {
-    const { data } = action;
-    const response = yield call(api.getContact, data);    
+    try {
+        const { data } = action;
+        const response = yield call(api.getContact, data);    
 
-    if (typeof atob !== 'undefined') {
-        console.log(response);
-        console.log('^^^ GET ALL CONTACT ^^^');
+        if (typeof atob !== 'undefined') {
+            console.log(response);
+            console.log('^^^ GET ALL CONTACT ^^^');
+        }
+        if (response.data.status && response.data.data.length > 0) {
+            yield put(ContactActions.contactSuccess(response.data));
+        } else {
+            yield put(ContactActions.contactFailure(response.problem));
+        }
+    } catch (error) {
+        alert(error)
     }
-    if (response.data.status && response.data.data.length > 0) {
-        yield put(ContactActions.contactSuccess(response.data));
-
-        // response.data.data.map(item => {
-        //     TaskServices.saveData('TR_CONTACT', item);
-        // })
-
-    } else {
-        yield put(ContactActions.contactFailure(response.problem));
-    }
+    
 }

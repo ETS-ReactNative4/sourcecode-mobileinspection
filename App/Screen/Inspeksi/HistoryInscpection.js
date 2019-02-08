@@ -193,15 +193,11 @@ export default class HistoryInspection extends Component {
         
       }
 
-      let id = setInterval(()=> this.getLocation2(dataBaris.BLOCK_INSPECTION_CODE), 10000);
-      this.setState({intervalId:id})
-
       this.props.navigation.dispatch(NavigationActions.navigate({ routeName: 'KondisiBarisAkhir', params: { 
         inspeksiHeader: modelInspeksiH, 
         statusBlok:dataBaris.STATUS_BLOCK,
         dataInspeksi: data,
         dataUsual: dataUsual,
-        intervalId: id,
         from: 'history' }}));
 
     }else{
@@ -210,49 +206,33 @@ export default class HistoryInspection extends Component {
     
   }
 
-  getLocation2(blokInsCode) {
-    navigator.geolocation.getCurrentPosition(
-        (position) => {
-            var lat = parseFloat(position.coords.latitude);
-            var lon = parseFloat(position.coords.longitude);
-            this.insertTrackLokasi(blokInsCode, lat, lon)               
-        },
-        (error) => {
-            // this.setState({ error: error.message, fetchingLocation: false })
-            let message = error && error.message ? error.message : 'Terjadi kesalahan ketika mencari lokasi anda !';
-            if (error && error.message == "No location provider available.") {
-                message = "Mohon nyalakan GPS anda terlebih dahulu.";
-            }
-            // console.log(message);
-        }, // go here if error while fetch location
-        { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
-    );
+  _renderNoData() {
+    return (
+      <Image style={{justifyContent: 'center', alignSelf:'center', marginTop: 120, width:300, height: 220}}source={require('../../Images/img-no-data.png')} />
+    )
   }
 
-  insertTrackLokasi(blokInsCode, lat, lon){
-    var trInsCode = `T${this.state.dataLogin[0].USER_AUTH_CODE}${getTodayDate('YYMMDDHHmmss')}`;
-    var today = getTodayDate('YYYY-MM-DD HH:mm:ss');
-    data = {
-        TRACK_INSPECTION_CODE: trInsCode,
-        BLOCK_INSPECTION_CODE: blokInsCode,
-        DATE_TRACK: today,
-        LAT_TRACK: lat.toString(),
-        LONG_TRACK: lon.toString(),
-        INSERT_USER: this.state.dataLogin[0].USER_AUTH_CODE,
-        INSERT_TIME: today,
-        STATUS_SYNC: 'N'
-    }
-    TaskService.saveData('TM_INSPECTION_TRACK', data)
-    //alert('ok')
+  _renderData() {
+    return (
+      <ScrollView style={styles.container}>
+      <View>
+          {this.state.data.map((data, idx) => this.renderList(data, idx))}
+      </View>
+    </ScrollView >
+    )
   }
 
   render() {
+    let show;
+    if(this.state.data.length > 0){
+      show = this._renderData()
+    } else{
+      show = this._renderNoData()
+    }
     return (  
-      <ScrollView style={styles.container}>
-        <View>
-            {this.state.data.map((data, idx) => this.renderList(data, idx))}
-        </View>
-      </ScrollView >
+      <View style={{flex: 1}}>
+        {show}
+      </View>
     )
   }
 }
