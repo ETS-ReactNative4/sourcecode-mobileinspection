@@ -13,6 +13,7 @@ import R, { isEmpty } from 'ramda';
 var RNFS = require('react-native-fs');
 import { changeFormatDate } from '../../Lib/Utils';
 import Carousel from 'react-native-carousel-view'
+import SwiperSlider from 'react-native-swiper'
 import FastImage from 'react-native-fast-image'
 import { dirPhotoInspeksiBaris, dirPhotoInspeksiSelfie, dirPhotoTemuan, dirPhotoKategori } from '../../Lib/dirStorage';
 import { deleteFile } from 'realm';
