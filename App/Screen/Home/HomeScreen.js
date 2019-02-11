@@ -17,6 +17,8 @@ import FastImage from 'react-native-fast-image'
 import { dirPhotoInspeksiBaris, dirPhotoInspeksiSelfie, dirPhotoTemuan, dirPhotoKategori } from '../../Lib/dirStorage';
 import { deleteFile } from 'realm';
 
+var { height, width } = Dimensions.get('window')
+
 class HomeScreen extends React.Component {
 
   static navigationOptions = ({ navigation }) => ({
@@ -61,7 +63,7 @@ class HomeScreen extends React.Component {
   willFocus = this.props.navigation.addListener(
     'willFocus',
     () => {
-      if(this.state.loadAll){
+      if (this.state.loadAll) {
         this._initData()
       }
     }
@@ -85,13 +87,13 @@ class HomeScreen extends React.Component {
 
   _changeFilterList = data => {
     if (data != undefined) {
-        this.setState({loadAll: false});
-        this._initFilterData(data);
+      this.setState({ loadAll: false });
+      this._initFilterData(data);
     }
   }
 
   _initData() {
-    this.setState({ data: this._filterHome()});
+    this.setState({ data: this._filterHome() });
   }
 
   _filterHome() {
@@ -202,73 +204,73 @@ class HomeScreen extends React.Component {
   _deleteFinding() {
     var data = TaskServices.query('TR_FINDING', 'PROGRESS = 100');
     var now = Moment(new Date())
-    if(data !== undefined){
-      if(data !== undefined){
+    if (data !== undefined) {
+      if (data !== undefined) {
         data.map(item => {
-          if(item.DUE_DATE !== ''){
+          if (item.DUE_DATE !== '') {
             let dueDate = item.DUE_DATE;
-            if(dueDate.includes(' ')){
+            if (dueDate.includes(' ')) {
               dueDate = dueDate.substring(0, dueDate.indexOf(' '))
             }
             var diff = Moment(new Date(dueDate)).diff(now, 'day');
             if (diff < -7) {
-                this.deleteImage(item.FINDING_CODE)
-                this.deleteData('TR_FINDING', 'FINDING_CODE', item.FINDING_CODE);
+              this.deleteImage(item.FINDING_CODE)
+              this.deleteData('TR_FINDING', 'FINDING_CODE', item.FINDING_CODE);
             }
-          }            
+          }
         });
       }
     }
-  }  
+  }
 
   _deleteInspeksiHeader() {
     var data = TaskServices.getAllData('TR_BLOCK_INSPECTION_H');
     var now = Moment(new Date());
-    if(data != undefined){
+    if (data != undefined) {
       data.map(item => {
-        if(item.INSERT_TIME !== ''){
+        if (item.INSERT_TIME !== '') {
           let insertTime = item.INSERT_TIME;
-          if(insertTime.includes(' ')){
+          if (insertTime.includes(' ')) {
             insertTime = insertTime.substring(0, insertTime.indexOf(' '))
           }
           var diff = Moment(new Date(insertTime)).diff(now, 'day');
-          if (diff < -7) {            
-              this.deleteImage(item.BLOCK_INSPECTION_CODE);
-              this.deleteDetailInspeksi(item.BLOCK_INSPECTION_CODE)         
-              this.deleteData('TR_BLOCK_INSPECTION_H', 'BLOCK_INSPECTION_CODE', item.BLOCK_INSPECTION_CODE);
-              this.deleteData('TR_BARIS_INSPECTION', 'ID_INSPECTION', item.ID_INSPECTION); 
+          if (diff < -7) {
+            this.deleteImage(item.BLOCK_INSPECTION_CODE);
+            this.deleteDetailInspeksi(item.BLOCK_INSPECTION_CODE)
+            this.deleteData('TR_BLOCK_INSPECTION_H', 'BLOCK_INSPECTION_CODE', item.BLOCK_INSPECTION_CODE);
+            this.deleteData('TR_BARIS_INSPECTION', 'ID_INSPECTION', item.ID_INSPECTION);
           }
         }
       });
-    }    
-  }  
+    }
+  }
 
-  deleteImage(trCode){
+  deleteImage(trCode) {
     let dataImage = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', trCode);
-    if(dataImage !== undefined){
+    if (dataImage !== undefined) {
       this.deleteImageFile(`file://${dataImage.IMAGE_PATH_LOCAL}`);
       this.deleteData('TR_IMAGE', 'IMAGE_CODE', dataImage.IMAGE_CODE);
     }
   }
 
-  deleteDetailInspeksi(blokInsCode){
+  deleteDetailInspeksi(blokInsCode) {
     let data = TaskServices.findBy('TR_BLOCK_INSPECTION_D', 'BLOCK_INSPECTION_CODE', blokInsCode);
-    if(data !== undefined){
+    if (data !== undefined) {
       data.map(item => {
         this.deleteData('TR_BLOCK_INSPECTION_D', 'BLOCK_INSPECTION_CODE_D', item.BLOCK_INSPECTION_CODE_D);
       });
     }
   }
 
-  deleteData(table, whereClause, value){ 
+  deleteData(table, whereClause, value) {
     let allData = TaskServices.getAllData(table);
-    if(allData !== undefined && allData.length > 0){
-        let indexData = R.findIndex(R.propEq(whereClause, value))(allData);
-        if(indexData >= 0){
-          TaskServices.deleteRecord(table, indexData);
+    if (allData !== undefined && allData.length > 0) {
+      let indexData = R.findIndex(R.propEq(whereClause, value))(allData);
+      if (indexData >= 0) {
+        TaskServices.deleteRecord(table, indexData);
       }
     }
-  }  
+  }
 
   deleteImageFile(filepath) {
     RNFS.exists(filepath)
@@ -353,103 +355,103 @@ class HomeScreen extends React.Component {
     }
   }
 
-  getWerksAfdBlokCode(blockCode){
+  getWerksAfdBlokCode(blockCode) {
     try {
-        let data = TaskServices.findBy2('TM_BLOCK', 'BLOCK_CODE', blockCode);
-        return data.WERKS_AFD_BLOCK_CODE;            
+      let data = TaskServices.findBy2('TM_BLOCK', 'BLOCK_CODE', blockCode);
+      return data.WERKS_AFD_BLOCK_CODE;
     } catch (error) {
-        return ''
+      return ''
     }
   }
 
   getStatusImage(status) {
     if (status == 'SEBELUM') {
-        return "Before"
+      return "Before"
     } else if ('SESUDAH') {
-        return "After"
+      return "After"
     }
   }
 
   renderCarousel = (item, status) => {
     let sources;
-    if(status == 'BARU'){
+    if (status == 'BARU') {
       sources = require('../../Images/icon/ic_new_timeline.png')
-    }else if(status == 'SELESAI'){
+    } else if (status == 'SELESAI') {
       sources = require('../../Images/icon/ic_done_timeline.png')
-    }else{
+    } else {
       sources = require('../../Images/icon/ic_inprogress_timeline.png')
     }
     return (
-        <View style={{flex: 1}}>
-            {status == 'SELESAI' &&
-              <View style={{
-                  backgroundColor: 'rgba(91, 90, 90, 0.7)', width: 70,
-                  padding: 3, position: 'absolute', top: 0, right: 10, zIndex: 1, alignItems: 'center',
-                  margin: 10, borderRadius: 25,
-              }}>
-                  <Text style={{ fontSize: 10, marginBottom: 5, color: 'white' }}>{this.getStatusImage(item.STATUS_IMAGE)}</Text>
-              </View>}
-            <FastImage style={{height: 200}}
-                source={{
-                    uri: "file://" + item.IMAGE_PATH_LOCAL,
-                    priority: FastImage.priority.normal,
-                }} />
+      <View style={{ flex: 1 }}>
+        {status == 'SELESAI' &&
+          <View style={{
+            backgroundColor: 'rgba(91, 90, 90, 0.7)', width: 70,
+            padding: 3, position: 'absolute', top: 0, right: 10, zIndex: 1, alignItems: 'center',
+            margin: 10, borderRadius: 25,
+          }}>
+            <Text style={{ fontSize: 10, marginBottom: 5, color: 'white' }}>{this.getStatusImage(item.STATUS_IMAGE)}</Text>
+          </View>}
+        <FastImage style={{ height: 200 }}
+          source={{
+            uri: "file://" + item.IMAGE_PATH_LOCAL,
+            priority: FastImage.priority.normal,
+          }} />
 
-            <View style={{
-                flexDirection: 'row',
-                backgroundColor: this.getColor(status), 
-                width: '100%', height: 35,
-                position: 'absolute', bottom: 0,
-                paddingLeft: 18
-            }}>
-                <Image style={{ marginTop: 2, height: 28, width: 28 }} source={sources}></Image>
-                <Text style={{ marginLeft: 12, color: 'white', fontSize: 14 }}>{status}</Text>
-            </View>
+        <View style={{
+          flexDirection: 'row',
+          backgroundColor: this.getColor(status),
+          width: '100%', height: 35,
+          position: 'absolute', bottom: 0,
+          paddingLeft: 18
+        }}>
+          <Image style={{ marginTop: 2, height: 28, width: 28 }} source={sources}></Image>
+          <Text style={{ marginLeft: 12, color: 'white', fontSize: 14 }}>{status}</Text>
         </View>
+      </View>
     )
   }
 
-  renderImage = (images, status) =>{
+  renderImage = (images, status) => {
     let sources;
-    if(status == 'BARU'){
+    if (status == 'BARU') {
       sources = require('../../Images/icon/ic_new_timeline.png')
-    }else if(status == 'SELESAI'){
+    } else if (status == 'SELESAI') {
       sources = require('../../Images/icon/ic_done_timeline.png')
-    }else{
+    } else {
       sources = require('../../Images/icon/ic_inprogress_timeline.png')
     }
     return (
       <View style={{ height: 200 }}>
-        <ImageSlider                                    
-            images={images}
-            customSlide={({ index, item, style, width }) => (
-                <View key={index} style={[style, { backgroundColor: 'yellow' }]}>
-                    <View style={{
-                        backgroundColor: 'rgba(91, 90, 90, 0.7)', width: 70,
-                        padding: 3, position: 'absolute', top: 0, right: 10, zIndex: 1, alignItems: 'center',
-                        margin: 10, borderRadius: 25,
-                    }}>
-                        <Text style={{ fontSize: 10, marginBottom: 5, color: 'white' }}>{this.getStatusImage(item.STATUS_IMAGE)}</Text>
-                    </View>
-                    <FastImage style={{ alignItems: 'center', width: '100%', height: '100%' }}
-                        source={{
-                            uri: 'file://' + item.IMAGE_PATH_LOCAL,
-                            priority: FastImage.priority.normal,
-                        }} />
-                    <View style={{
-                        flexDirection: 'row',
-                        backgroundColor: this.getColor(status), 
-                        width: '100%', height: 35,
-                        position: 'absolute', bottom: 0
-                    }}>
-                        <Image style={{ marginTop: 2, height: 28, width: 28 }} source={sources}></Image>
-                        <Text style={{ marginLeft: 10, color: 'white', fontSize: 14, marginTop: 8 }}>{status}</Text>
-                    </View>
-                </View>
-            )}
+        <ImageSlider
+          images={images}
+          customSlide={({ index, item, style, width }) => (
+            <View key={index} style={[style, { backgroundColor: 'yellow' }]}>
+              <View style={{
+                backgroundColor: 'rgba(91, 90, 90, 0.7)', width: 70,
+                padding: 3, position: 'absolute', top: 0, right: 10, zIndex: 1, alignItems: 'center',
+                margin: 10, borderRadius: 25,
+              }}>
+                <Text style={{ fontSize: 10, marginBottom: 5, color: 'white' }}>{this.getStatusImage(item.STATUS_IMAGE)}</Text>
+              </View>
+              <FastImage style={{ alignItems: 'center', width: '100%', height: '100%' }}
+                source={{
+                  uri: 'file://' + item.IMAGE_PATH_LOCAL,
+                  priority: FastImage.priority.normal,
+                }} />
+              <View style={{
+                flexDirection: 'row',
+                backgroundColor: this.getColor(status),
+                width: '100%', height: 35,
+                position: 'absolute', bottom: 0
+              }}>
+                <Image style={{ marginTop: 2, height: 28, width: 28 }} source={sources}></Image>
+                <Text style={{ marginLeft: 10, color: 'white', fontSize: 14, marginTop: 8 }}>{status}</Text>
+              </View>
+            </View>
+          )}
         />
       </View>
-    )    
+    )
   }
 
   _renderItem = (item, index) => {
@@ -459,7 +461,7 @@ class HomeScreen extends React.Component {
     let user = INSERT_USER == undefined ? 'User belum terdaftar. Hubungi Admin.' : INSERT_USER.FULLNAME
     Moment.locale();
     let dtInsertTime = Moment(changeFormatDate("" + item.INSERT_TIME, "YYYY-MM-DD hh-mm-ss")).format('LLL');
-    let batasWaktu = item.DUE_DATE == '' ? 'Batas waktu belum ditentukan' : Moment(item.DUE_DATE).format('LL');  
+    let batasWaktu = item.DUE_DATE == '' ? 'Batas waktu belum ditentukan' : Moment(item.DUE_DATE).format('LL');
 
     const image = TaskServices.findBy('TR_IMAGE', 'TR_CODE', item.FINDING_CODE);
     let sources = image == undefined ? require('../../Images/img-no-picture.png') : { uri: "file://" + image.IMAGE_PATH_LOCAL }
@@ -469,31 +471,43 @@ class HomeScreen extends React.Component {
     let status = item.STATUS;
     return (
       <View key={index}>
-          <Card >
-            <CardItem>
-              <Left>
-                <Thumbnail style={{ borderColor: 'grey', borderWidth: 0.5, height: 48, width: 48 }} source={require('../../Images/ic-orang.png')} />
-                <Body>
-                  <Text style={{ fontSize: 14 }}>{user}</Text>
-                  <Text style={{ fontSize: 12 }}>{dtInsertTime}</Text>
-                </Body>
-              </Left>
-            </CardItem>
-            <CardItem cardBody>              
-              {image == undefined && <ImageBackground source={require('../../Images/img-no-picture.png')} style={{ height: 210, width: null, flex: 1, flexDirection: 'column-reverse' }} >
-                <View style={{ alignContent: 'center', paddingTop: 2, paddingLeft: 12, flexDirection: 'row', height: 42, backgroundColor: this.getColor(item.STATUS) }} >
-                  <Image style={{ marginTop: 2, height: 28, width: 28 }} source={require('../../Images/icon/ic_new_timeline.png')}></Image>
-                  <Text style={{ marginLeft: 12, color: 'white', fontSize: 14 }}>{item.STATUS}</Text>
-                </View>
-              </ImageBackground>} 
-              {image && 
-                <View style={{
-                    flex: 1,
-                    height: 200,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <Carousel
+        <Card >
+          <CardItem>
+            <Left>
+              <Thumbnail style={{ borderColor: 'grey', borderWidth: 0.5, height: 48, width: 48 }} source={require('../../Images/ic-orang.png')} />
+              <Body>
+                <Text style={{ fontSize: 14 }}>{user}</Text>
+                <Text style={{ fontSize: 12 }}>{dtInsertTime}</Text>
+              </Body>
+            </Left>
+          </CardItem>
+          <CardItem cardBody>
+            {image == undefined && <ImageBackground source={require('../../Images/img-no-picture.png')} style={{ height: 210, width: null, flex: 1, flexDirection: 'column-reverse' }} >
+              <View style={{ alignContent: 'center', paddingTop: 2, paddingLeft: 12, flexDirection: 'row', height: 42, backgroundColor: this.getColor(item.STATUS) }} >
+                <Image style={{ marginTop: 2, height: 28, width: 28 }} source={require('../../Images/icon/ic_new_timeline.png')}></Image>
+                <Text style={{ marginLeft: 12, color: 'white', fontSize: 14 }}>{item.STATUS}</Text>
+              </View>
+            </ImageBackground>}
+            {image &&
+              <View style={{
+                flex: 1,
+                height: 200,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+                <SwiperSlider
+                  autoplay={false}
+                  width={width}
+                  // width={this.state.swiperWidth} style={styles.wrapper}
+                  height={200}
+                  // renderPagination={this._renderPagination}
+                  paginationStyle={{
+                    bottom: -23, left: null, right: 10
+                  }}
+                  loop={false}>
+                  {image.map(item => this.renderCarousel(item, status))}
+                </SwiperSlider>
+                {/* <Carousel
                       height={200}
                       hideIndicators={status == 'SELESAI' ? false : true}
                       indicatorOffset={10}
@@ -502,23 +516,23 @@ class HomeScreen extends React.Component {
                       indicatorSize={15}
                       indicatorColor="white">
                       {image.map(item =>this.renderCarousel(item, status))}
-                  </Carousel>
-                </View>}          
-            </CardItem>
-            <CardItem>              
-              <TouchableOpacity style ={{flex: 1}} onPress={() => { nav.navigate('DetailFinding', { ID: item.FINDING_CODE }) }}>
-                <Body>
-                  <Text style={{fontSize: 14}}>Lokasi : {lokasiBlok}</Text>
-                  <Text style={{ marginTop: 6, fontSize: 14 }}>Kategori : {this.getCategoryName(item.FINDING_CATEGORY)}</Text>
-                  <Text style={{ marginTop: 6, fontSize: 14 }}>Ditugaskan kepada : {this.getContactName(item.ASSIGN_TO)}</Text>
-                  <View style={{ flex: 1, flexDirection: 'row' }}>
-                    <Text style={{ marginTop: 6, fontSize: 14 }}>Batas Waktu : </Text>
-                    <Text style={{ marginTop: 6, color: this.getColor(batasWaktu), fontSize: 14 }}>{batasWaktu}</Text>
-                  </View>
-                </Body>
-              </TouchableOpacity>                
-            </CardItem>
-          </Card>
+                  </Carousel> */}
+              </View>}
+          </CardItem>
+          <CardItem>
+            <TouchableOpacity style={{ flex: 1 }} onPress={() => { nav.navigate('DetailFinding', { ID: item.FINDING_CODE }) }}>
+              <Body>
+                <Text style={{ fontSize: 14 }}>Lokasi : {lokasiBlok}</Text>
+                <Text style={{ marginTop: 6, fontSize: 14 }}>Kategori : {this.getCategoryName(item.FINDING_CATEGORY)}</Text>
+                <Text style={{ marginTop: 6, fontSize: 14 }}>Ditugaskan kepada : {this.getContactName(item.ASSIGN_TO)}</Text>
+                <View style={{ flex: 1, flexDirection: 'row' }}>
+                  <Text style={{ marginTop: 6, fontSize: 14 }}>Batas Waktu : </Text>
+                  <Text style={{ marginTop: 6, color: this.getColor(batasWaktu), fontSize: 14 }}>{batasWaktu}</Text>
+                </View>
+              </Body>
+            </TouchableOpacity>
+          </CardItem>
+        </Card>
       </View>
     );
   }

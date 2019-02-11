@@ -45,39 +45,37 @@ class Form extends Component{
     
     onBtnClick(props){
         Keyboard.dismiss();
-        if(this.isNetworkConnected()){
-            switch(true){
-                case this.state.strEmail === '':
-                    this.makeAlert('Email tidak boleh kosong');
-                    break;
-                case this.state.strPassword === '':
-                    this.makeAlert('Password tidak boleh kosong');
-                default:
-                    props.onBtnClick({
-                        ...this.state
-                    });
-                break;
+        NetInfo.isConnected.fetch().then(isConnected => {
+            console.log('First, is ' + (isConnected ? 'online' : 'offline'));
+            if (isConnected) {
+                switch (true) {
+                    case this.state.strEmail === '':
+                        this.makeAlert('Email tidak boleh kosong');
+                        break;
+                    case this.state.strPassword === '':
+                        this.makeAlert('Password tidak boleh kosong');
+                    default:
+                        props.onBtnClick({
+                            ...this.state
+                        });
+                        break;
+                }
+            } else {
+                alert('Tidak Ada Koneksi Internet');
             }
-        } else {
-            this.makeAlert('Kamu tidak terhubung koneksi Internet');
-        }
-    }    
-
-    isNetworkConnected() {
-        return NetInfo.getConnectionInfo().then(reachability => {
-            if (reachability === 'unknown') {
-                return new Promise(resolve => {
-                    const handleFirstConnectivityChangeIOS = isConnected => {
-                        NetInfo.isConnected.removeEventListener('connectionChange', handleFirstConnectivityChangeIOS);
-                        resolve(isConnected);
-                    };
-                    NetInfo.isConnected.addEventListener('connectionChange', handleFirstConnectivityChangeIOS);
-                });
-            }
-            reachability = reachability.toLowerCase();
-            return (reachability !== 'none' && reachability !== 'unknown');
         });
-    }
+        function handleFirstConnectivityChange(isConnected) {
+            console.log('Then, is ' + (isConnected ? 'online' : 'offline'));
+            NetInfo.isConnected.removeEventListener(
+                'connectionChange',
+                handleFirstConnectivityChange
+            );
+        }
+        NetInfo.isConnected.addEventListener(
+            'connectionChange',
+            handleFirstConnectivityChange
+        );
+    }    
 
     render(){
         

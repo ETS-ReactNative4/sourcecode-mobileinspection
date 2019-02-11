@@ -68,15 +68,15 @@ class Login extends Component {
         this.state.logOut = itemId
     }
 
-    componentWillReceiveProps(newProps) {
-        if (!isNil(newProps.auth)) {
-            this.setState({ fetching: newProps.auth.fetching });
-        }
-        if (!isNil(newProps.auth.user)) {
-            this.checkUser(newProps.auth.user)
+    // componentWillReceiveProps(newProps) {
+    //     if (!isNil(newProps.auth)) {
+    //         this.setState({ fetching: newProps.auth.fetching });
+    //     }
+    //     if (!isNil(newProps.auth.user)) {
+    //         this.checkUser(newProps.auth.user)
 
-        }
-    }
+    //     }
+    // }
 
     checkUser(param){
         if(TaskServices.getTotalData('TR_LOGIN') > 0){
@@ -167,6 +167,46 @@ class Login extends Component {
         });
     }
 
+    fetchingLogin(username, password) {
+        this.setState({
+            fetching: true
+        });
+
+        this.postLogin(username, password);
+
+        setTimeout(() => {
+            this.setState({
+                fetching: false
+            });
+        }, 3000);
+    }
+
+    postLogin(username, password) {
+        fetch(link, {
+            method: 'POST',
+            headers: {
+                'Cache-Control': 'no-cache',
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password })
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                if (data.status == true) {
+                    this.insertUser(data.data);
+                } else {
+                    if (data.message == 'Request Timeout') {
+                        alert('Masalah jaringan coba lagi');
+                    } else {
+                        alert('Username atau Password Salah');
+                    }
+                }
+            });
+    }
+
     //Add By Aminju 20/01/2019 15:45
     state = {
         logOut: false,
@@ -197,7 +237,7 @@ class Login extends Component {
                         {/* <Logo/> */}
 
                         <Form
-                            onBtnClick={data => { this.onLogin(data.strEmail, data.strPassword) }} />
+                            onBtnClick={data => { this.fetchingLogin(data.strEmail, data.strPassword) }} />
                         <View style={styles.footerView}>
                             <Text style={styles.footerText}>{'\u00A9'} 2018 Copyrights PT Triputra Agro Persada</Text>
                         </View>
