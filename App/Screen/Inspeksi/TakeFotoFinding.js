@@ -30,7 +30,7 @@ class TakeFoto extends Component{
     const { params = {} } = navigation.state;
     return {
       headerStyle: {
-        backgroundColor: Colors.tintColor
+        backgroundColor: Colors.tintColorPrimary
       },
       title: 'Ambil Foto',
       headerTintColor: '#fff',

@@ -13,6 +13,7 @@ import { NavigationActions, StackActions } from 'react-navigation';
 import { getTodayDate } from '../../Lib/Utils'
 import R from 'ramda';
 
+import ModalAlert from '../../Component/ModalAlert'
 
 class KondisiBaris2 extends Component {
 
@@ -20,7 +21,7 @@ class KondisiBaris2 extends Component {
         const { params = {} } = navigation.state;
         return {
             headerStyle: {
-                backgroundColor: Colors.tintColor
+                backgroundColor: Colors.tintColorPrimary
             },
             title: 'Kondisi Baris',
             headerTintColor: '#fff',
@@ -143,6 +144,12 @@ class KondisiBaris2 extends Component {
             showTipa: false,
             showKastrasi: false,
             showSanitasi: false,
+
+            //Add Modal Alert by Aminju 
+            title: 'Title',
+            message: 'Message',
+            showModal: false,
+            icon: ''
 
         }
     }
@@ -313,28 +320,73 @@ class KondisiBaris2 extends Component {
         //titi panen jika switch on wajib dipilih
         //TBM3 kastrasi dan sanitasi mandatory
         //
+        let title = 'Inputan Tidak Lengkap'
         if (this.state.piringan == '') {
-            alert('Piringan belim dipilih');
+            // alert('Piringan belim dipilih');
+            this.setState({
+                showModal: true, title: title, message: 'Eh Piringan belum diisi loh. Itu wajib diisi yak',
+                icon: require('../../Images/ic-inputan-tidak-lengkap.png')
+            });
         } else if (this.state.sarKul == '') {
-            alert('Pasar Pikul belim dipilih');
+            // alert('Pasar Pikul belim dipilih');
+            this.setState({
+                showModal: true, title: title, message: 'Eh Pasar Pikul belum diisi loh. Itu wajib diisi yak',
+                icon: require('../../Images/ic-inputan-tidak-lengkap.png')
+            });
         } else if ((this.state.statusBlok == 'TM' || this.state.statusBlok == 'TBM 3') && this.state.TPH == '') {
-            alert('TPH belum dipilih')
+            // alert('TPH belum dipilih')
+            this.setState({
+                showModal: true, title: title, message: 'Eh TPH belum diisi loh. Itu wajib diisi yak',
+                icon: require('../../Images/ic-inputan-tidak-lengkap.png')
+            });
         } else if (this.state.TPH == '' && this.state.switchTPH == true) {
-            alert('TPH belim dipilih');
+            // alert('TPH belim dipilih');
+            this.setState({
+                showModal: true, title: title, message: 'Eh TPH belum diisi loh. Itu wajib diisi yak',
+                icon: require('../../Images/ic-inputan-tidak-lengkap.png')
+            });
         } else if (this.state.GWG == '') {
-            alert('Gawangan belim dipilih');
+            // alert('Gawangan belim dipilih');
+            this.setState({
+                showModal: true, title: title, message: 'Eh Gawangan belum diisi loh. Itu wajib diisi yak',
+                icon: require('../../Images/ic-inputan-tidak-lengkap.png')
+            });
         } else if (this.state.PRUN == '' && this.state.statusBlok == 'TM') {
-            alert('Prunning belim dipilih');
+            // alert('Prunning belim dipilih');
+            this.setState({
+                showModal: true, title: title, message: 'Eh Prunning belum diisi loh. Itu wajib diisi yak',
+                icon: require('../../Images/ic-inputan-tidak-lengkap.png')
+            });
         } else if (this.state.TIPA == '' && this.state.switchTIPA == true) {
-            alert('Titi Panen belim dipilih');
+            // alert('Titi Panen belim dipilih');
+            this.setState({
+                showModal: true, title: title, message: 'Eh Titi Panen belum diisi loh. Itu wajib diisi yak',
+                icon: require('../../Images/ic-inputan-tidak-lengkap.png')
+            });
         } else if (this.state.KASTRASI == '' && this.state.statusBlok == 'TBM 3') {
-            alert('Kastrasi belum dipilih')
+            // alert('Kastrasi belum dipilih')
+            this.setState({
+                showModal: true, title: title, message: 'Eh Kastrasi belum diisi loh. Itu wajib diisi yak',
+                icon: require('../../Images/ic-inputan-tidak-lengkap.png')
+            });
         } else if (this.state.SANITASI == '' && this.state.statusBlok == 'TBM 3') {
-            alert('Sanitasi belum dipilih')
+            // alert('Sanitasi belum dipilih')
+            this.setState({
+                showModal: true, title: title, message: 'Eh Sanitasi belum diisi loh. Itu wajib diisi yak',
+                icon: require('../../Images/ic-inputan-tidak-lengkap.png')
+            });
         } else if (this.kodisiPemupukanIsOn() && this.state.PENABUR == '') {
-            alert('Sistem Penaburan belum dipilih')
+            // alert('Sistem Penaburan belum dipilih')
+            this.setState({
+                showModal: true, title: title, message: 'Eh Sistem Penaburan belum diisi loh. Itu wajib diisi yak',
+                icon: require('../../Images/ic-inputan-tidak-lengkap.png')
+            });
         } else if (this.kodisiPemupukanIsOn() && this.state.PUPUK == '') {
-            alert('Kondisi Pupuk belum dipilih')
+            // alert('Kondisi Pupuk belum dipilih')
+            this.setState({
+                showModal: true, title: title, message: 'Eh Kondisi Pupuk belum diisi loh. Itu wajib diisi yak',
+                icon: require('../../Images/ic-inputan-tidak-lengkap.png')
+            });
         } else {
             this.insertDB();
         }
@@ -496,8 +548,15 @@ class KondisiBaris2 extends Component {
         return (
             <ScrollView style={styles.mainContainer}>
 
+                <ModalAlert
+                    icon={this.state.icon}
+                    visible={this.state.showModal}
+                    onPressCancel={() => this.setState({ showModal: false })}
+                    title={this.state.title}
+                    message={this.state.message} />
+
                 {/*STEPPER*/}
-                <View style={{ flexDirection: 'row', marginLeft: 20, marginRight: 20, marginTop: 10, justifyContent: 'center', alignItems: 'center'}}>
+                <View style={{ flexDirection: 'row', marginLeft: 20, marginRight: 20, marginTop: 10, justifyContent: 'center', alignItems: 'center' }}>
                     <View style={styles.containerStepper}>
                         <View style={[styles.stepperNumber, { backgroundColor: Colors.brand }]}>
                             <Text style={styles.stepperNumberText}>1</Text>
@@ -608,13 +667,13 @@ class KondisiBaris2 extends Component {
                                 <Text style={{ color: 'grey' }}>TPH</Text>
 
                                 <Switch
-                                    thumbTintColor={this.state.switchTPH ? Colors.brand: 'red'}                                    
+                                    thumbTintColor={this.state.switchTPH ? Colors.brand : 'red'}
                                     onTintColor={'#5bc236'}
                                     tintColor={'#ff8080'}
                                     onValueChange={(value) => this.setState({ switchTPH: value })}
                                     style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }], marginBottom: 10, position: 'absolute', right: 0 }}
                                     value={this.state.switchTPH} />
-                                    
+
                                 {/* <Switch
                                     onValueChange={(value) => this.setState({ switchTPH: value })}
                                     value={this.state.switchTPH}
@@ -697,7 +756,7 @@ class KondisiBaris2 extends Component {
                             <View style={{ flex: 1, flexDirection: 'row' }}>
                                 <Text style={{ color: 'grey' }}>Titi Panen</Text>
                                 <Switch
-                                    thumbTintColor={this.state.switchTIPA ? Colors.brand : 'red'}                                    
+                                    thumbTintColor={this.state.switchTIPA ? Colors.brand : 'red'}
                                     onTintColor={'#5bc236'}
                                     tintColor={'#ff8080'}
                                     onValueChange={(value) => this.setState({ switchTIPA: value })}
@@ -850,7 +909,7 @@ class KondisiBaris2 extends Component {
 
                 {/*CIRCLE*/}
                 <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 20, marginBottom: 20 }}>
-                    <TouchableOpacity style={styles.cicle2} onPress={() => {this.props.navigation.goBack() }}>
+                    <TouchableOpacity style={styles.cicle2} onPress={() => { this.props.navigation.goBack() }}>
                         {/* <Icon name={"chevron-left"}  size={10} color="white" /> */}
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.cicle, { marginLeft: 10 }]} onPress={() => { }}>

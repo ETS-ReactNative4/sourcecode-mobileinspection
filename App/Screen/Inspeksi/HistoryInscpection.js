@@ -86,7 +86,8 @@ export default class HistoryInspection extends Component {
                 <Image style={{ alignItems: 'stretch', width: 100, borderRadius:10 }} source={{uri: path}}></Image>
               </View>
               <View style={styles.sectionDesc} >
-                <Text style={{ fontSize: 14, fontWeight: 'bold' }}>{this.getEstateName(dataBlock.WERKS)}</Text>
+                {/* <Text style={{ fontSize: 14, fontWeight: 'bold' }}>{this.getEstateName(dataBlock.WERKS)}</Text> */}                
+                <Text style={{ fontSize: 14, fontWeight: 'bold' }}>{data.EST_NAME}</Text>
                 <Text style={{ fontSize: 12 }}>{dataBlock.BLOCK_NAME}/{data.BLOCK_CODE.toLocaleUpperCase()}</Text>
                 <Text style={{ fontSize: 12 }}>{data.INSPECTION_DATE}</Text>
                 <Text style={{ fontSize: 12, color: colorStatus }}>{status}</Text>
@@ -150,55 +151,59 @@ export default class HistoryInspection extends Component {
     if(data.INSPECTION_RESULT === ''){
       
       let dataBaris = Taskservice.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', data.ID_INSPECTION);
-      if(dataBaris > 1){
-        dataBaris = dataBaris[dataBaris.length-1]
+      if(dataBaris == undefined){
+        if(dataBaris > 1){
+          dataBaris = dataBaris[dataBaris.length-1]
+        }else{
+          dataBaris = dataBaris[0]
+        }
+  
+        let modelInspeksiH = {
+          BLOCK_INSPECTION_CODE: dataBaris.BLOCK_INSPECTION_CODE,
+          ID_INSPECTION: dataBaris.ID_INSPECTION,
+          WERKS: dataBaris.WERKS,
+          AFD_CODE: dataBaris.AFD_CODE,
+          BLOCK_CODE: dataBaris.BLOCK_CODE,
+          AREAL: '',
+          INSPECTION_TYPE: "PANEN",
+          STATUS_BLOCK: dataBaris.STATUS_BLOCK,
+          INSPECTION_DATE: data.INSPECTION_DATE,
+          INSPECTION_SCORE: '',
+          INSPECTION_RESULT: '',
+          STATUS_SYNC: 'N',
+          SYNC_TIME: '',
+          START_INSPECTION: '',
+          END_INSPECTION: '',
+          LAT_START_INSPECTION: dataBaris.LAT_START_INSPECTION,
+          LONG_START_INSPECTION: dataBaris.LONG_START_INSPECTION,
+          LAT_END_INSPECTION: '',
+          LONG_END_INSPECTION: '',
+          INSERT_TIME: '', 
+          INSERT_USER: '',
+          TIME: dataBaris.TIME,
+          DISTANCE: dataBaris.DISTANCE
+        }
+  
+        var dataUsual = {
+          USER_AUTH: this.state.dataLogin[0].USER_AUTH_CODE,
+          BA: dataBaris.WERKS,
+          AFD: dataBaris.AFD_CODE,
+          BLOK: dataBaris.BLOCK_CODE, 
+          BARIS: dataBaris.AREAL,
+          ID_INSPECTION: dataBaris.ID_INSPECTION,
+          BLOCK_INSPECTION_CODE: dataBaris.BLOCK_INSPECTION_CODE
+          
+        }
+  
+        this.props.navigation.dispatch(NavigationActions.navigate({ routeName: 'KondisiBarisAkhir', params: { 
+          inspeksiHeader: modelInspeksiH, 
+          statusBlok:dataBaris.STATUS_BLOCK,
+          dataInspeksi: data,
+          dataUsual: dataUsual,
+          from: 'history' }}));
       }else{
-        dataBaris = dataBaris[0]
-      }
-
-      let modelInspeksiH = {
-        BLOCK_INSPECTION_CODE: dataBaris.BLOCK_INSPECTION_CODE,
-        ID_INSPECTION: dataBaris.ID_INSPECTION,
-        WERKS: dataBaris.WERKS,
-        AFD_CODE: dataBaris.AFD_CODE,
-        BLOCK_CODE: dataBaris.BLOCK_CODE,
-        AREAL: '',
-        INSPECTION_TYPE: "PANEN",
-        STATUS_BLOCK: dataBaris.STATUS_BLOCK,
-        INSPECTION_DATE: data.INSPECTION_DATE,
-        INSPECTION_SCORE: '',
-        INSPECTION_RESULT: '',
-        STATUS_SYNC: 'N',
-        SYNC_TIME: '',
-        START_INSPECTION: '',
-        END_INSPECTION: '',
-        LAT_START_INSPECTION: dataBaris.LAT_START_INSPECTION,
-        LONG_START_INSPECTION: dataBaris.LONG_START_INSPECTION,
-        LAT_END_INSPECTION: '',
-        LONG_END_INSPECTION: '',
-        INSERT_TIME: '', 
-        INSERT_USER: '',
-        TIME: dataBaris.TIME,
-        DISTANCE: dataBaris.DISTANCE
-      }
-
-      var dataUsual = {
-        USER_AUTH: this.state.dataLogin[0].USER_AUTH_CODE,
-        BA: dataBaris.WERKS,
-        AFD: dataBaris.AFD_CODE,
-        BLOK: dataBaris.BLOCK_CODE, 
-        BARIS: dataBaris.AREAL,
-        ID_INSPECTION: dataBaris.ID_INSPECTION,
-        BLOCK_INSPECTION_CODE: dataBaris.BLOCK_INSPECTION_CODE
-        
-      }
-
-      this.props.navigation.dispatch(NavigationActions.navigate({ routeName: 'KondisiBarisAkhir', params: { 
-        inspeksiHeader: modelInspeksiH, 
-        statusBlok:dataBaris.STATUS_BLOCK,
-        dataInspeksi: data,
-        dataUsual: dataUsual,
-        from: 'history' }}));
+        alert(`data TR_BLOCK_INSPECTION_H untuk ID_INSPECTION = ${data.ID_INSPECTION} tidak ada`)
+      }      
 
     }else{
       this.props.navigation.dispatch(NavigationActions.navigate({ routeName: 'DetailHistoryInspeksi', params: { data: data }}));

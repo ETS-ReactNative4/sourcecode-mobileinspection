@@ -3,11 +3,11 @@ import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native'
 import { Container, Content } from 'native-base'
 import Colors from '../Constant/Colors';
 
-export default class SyncScreen extends React.Component {
+export default class Inbox extends React.Component {
 
     static navigationOptions = ({ navigation }) => ({
         headerStyle: {
-            backgroundColor: Colors.tintColor
+            backgroundColor: Colors.tintColorPrimary
         },
         headerTitleStyle: {
             textAlign: "left",
@@ -23,7 +23,10 @@ export default class SyncScreen extends React.Component {
         return (
             <Container style={{ flex: 1, padding: 16 }}>
                 <Content>
-                    <TouchableOpacity>
+                    <View style={styles.container}>
+                        <Image style={{ width: 400, height: 300, marginTop: 110 }} source={require('../Images/img-cooming-soon-1.png')} />
+                    </View>
+                    {/* <TouchableOpacity>
                         <View style={styles.container}>
                             <View style={{ flex: 2 }}>
                                 <Image style={styles.imageThumnail} source={require('../Images/dummy_image.png')} />
@@ -39,7 +42,7 @@ export default class SyncScreen extends React.Component {
                                 <Text style={{ color: 'green', fontWeight: '500', fontSize: 16, alignItems: 'center', marginTop: 18, marginRight: 8 }}> 13:40</Text>
                             </View>
                         </View>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </Content>
             </Container>
         );
@@ -48,8 +51,11 @@ export default class SyncScreen extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 10,
-        flexDirection: 'row'
+        backgroundColor: '#fff',
+        padding: 16,
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     sectionRow: {
         flexDirection: 'row'

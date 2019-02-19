@@ -21,7 +21,7 @@ class TakePhotoSelfie extends Component{
 
   static navigationOptions = {
     headerStyle: {
-      backgroundColor: Colors.tintColor
+      backgroundColor: Colors.tintColorPrimary
     },
     title: 'Ambil Foto Diri',
     headerTintColor: '#fff',

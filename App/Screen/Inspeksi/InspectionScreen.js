@@ -26,7 +26,7 @@ class InspectionScreen extends Component {
       title: 'Inspeksi',  
       headerTintColor: '#fff',    
       headerStyle: {
-        backgroundColor: Colors.tintColor
+        backgroundColor: Colors.tintColorPrimary
       },
       headerTitleStyle: {
         textAlign: "center",

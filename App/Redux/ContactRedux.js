@@ -6,7 +6,8 @@ import Immutable from 'seamless-immutable';
 const { Types, Creators } = createActions({
 	contactRequest: null,
 	contactSuccess: ['payload'],
-	contactFailure: null
+	contactFailure: null,
+	resetContact: null
 });
 
 export const ContactTypes = Types;
@@ -30,6 +31,7 @@ export const ContactSelectors = {
 
 // request the data from an api
 export const request = (state, { data }) => state.merge({ fetchingContact: true, error: null, contact: null });
+export const reset = (state) => state.merge({ fetchingContact: null, contact: null });
 
 // successful api lookup
 export const success = (state, action) => {
@@ -45,5 +47,6 @@ export const failure = state => state.merge({ fetchingContact: false, error: tru
 export const reducer = createReducer(INITIAL_STATE, {
 	[Types.CONTACT_REQUEST]: request,
 	[Types.CONTACT_SUCCESS]: success,
-	[Types.CONTACT_FAILURE]: failure
+	[Types.CONTACT_FAILURE]: failure,
+	[Types.RESET_CONTACT]: reset
 });

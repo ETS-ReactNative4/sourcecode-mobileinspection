@@ -1,9 +1,9 @@
-import React, {Component} from 'react';
-import {Text, BackHandler, Alert, TextInput, StyleSheet, TouchableOpacity, View, Switch, StatusBar,
-    Button,} from 'react-native';
+import React, { Component } from 'react';
 import {
-	Container,
-	Content,  
+    Text, Dimensions, Alert, TextInput, TouchableOpacity, View, Switch,
+    Button,
+} from 'react-native';
+import {
 	Card,
 	CardItem,
 } from 'native-base';
@@ -20,7 +20,8 @@ import geolib from 'geolib';
 import Geojson from 'react-native-geojson';
 import { ProgressDialog } from 'react-native-simple-dialogs';
 import IconLoc from 'react-native-vector-icons/FontAwesome5';
-import TaskServices from '../../Database/TaskServices';
+
+import ModalAlert from '../../Component/ModalAlert';
 
 
 const alcatraz = {
@@ -43,7 +44,7 @@ class KondisiBarisAkhir extends Component{
 
     static navigationOptions = {
         headerStyle: {
-          backgroundColor: Colors.tintColor
+          backgroundColor: Colors.tintColorPrimary
         },
         title: 'Buat Inspeksi',
         headerTintColor: '#fff',
@@ -91,14 +92,20 @@ class KondisiBarisAkhir extends Component{
             kondisiBaris1,
             kondisiBaris2,
             dataUsual,
-            idBaris:0,
-            menit:'',
+            idBaris: 0,
+            menit: '',
             jarak: '',
             statusBlok,
             dataInspeksi,
             fetchLocation: false,
             from,
-            distance: ''
+            distance: '',
+
+            //Add Modal Alert by Aminju 
+            title: 'Title',
+            message: 'Message',
+            showModal: false,
+            icon: ''
         };
     }
 
@@ -155,11 +162,15 @@ class KondisiBarisAkhir extends Component{
 					message = "Mohon nyalakan GPS anda terlebih dahulu.";
 				}
                 // Alert.alert('Informasi', message);
-                alert(message)
-                this.setState({fetchLocation:false})
-				// console.log(message);
-			}, // go here if error while fetch location
-            { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, 
+                // alert(message)
+                this.setState({
+                    showModal: true, title: 'GPS', message: message,
+                    icon: require('../../Images/ic-no-gps.png')
+                });
+                this.setState({ fetchLocation: false })
+                // console.log(message);
+            }, // go here if error while fetch location
+            { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 },
             //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position 
         );
     }
@@ -203,47 +214,59 @@ class KondisiBarisAkhir extends Component{
                     backgroundColor: Colors.brandSecondary,
                 }
             }
-            this.setState({tumbButtonSlide:btn})
-        }else{
-            this.setState({switchLanjut: true})
-            Alert.alert('Maaf, harap lanjutkan 1 baris lagi ');
+            this.setState({ tumbButtonSlide: btn })
+        } else {
+            this.setState({ switchLanjut: true })
+            // Alert.alert('Maaf, harap lanjutkan 1 baris lagi ');
+            this.setState({
+                showModal: true, title: 'Lanjutkan Inspeksi', message: 'Sesuai SOP nih, inspeksi tuh minimal 2 baris per blok.',
+                icon: require('../../Images/ic-1-baris-lagi.png')
+            });
         }
-        
+
     }
 
     onSlideRight = () => {
         this.validation()
     };
 
-    validation(){
-        if(this.state.txtBaris == '' && this.state.switchLanjut){
-            alert('Masukan baris');
-        }else if(this.state.txtBaris == this.state.dataUsual.BARIS && this.state.switchLanjut){
-            alert('Baris tidak boleh sama dengan sebelumnya')
-        }else{
+    validation() {
+        if (this.state.txtBaris == '' && this.state.switchLanjut) {
+            // alert('Masukan baris');
+            this.setState({
+                showModal: true, title: 'Isi Baris', message: 'Kamu harus selalu pilih baris yaa :)',
+                icon: require('../../Images/ic-blm-input-lokasi.png')
+            });
+        } else if (this.state.txtBaris == this.state.dataUsual.BARIS && this.state.switchLanjut) {
+            // alert('Baris tidak boleh sama dengan sebelumnya');
+            this.setState({
+                showModal: true, title: 'Baris Sama', message: 'Opps, baris tidak boleh sama dengan sebelumnya ya',
+                icon: require('../../Images/ic-blm-input-lokasi.png')
+            });
+        } else {
             this.saveData();
         }
     }
 
-    calculateBaris(){
-        
+    calculateBaris() {
+
         var piringan = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'BLOCK_INSPECTION_CODE'], ['CC0007', this.state.inspeksiHeader.BLOCK_INSPECTION_CODE]);
-        var sarkul = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE','BLOCK_INSPECTION_CODE'], ['CC0008', this.state.inspeksiHeader.BLOCK_INSPECTION_CODE]);
-        var tph = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE','BLOCK_INSPECTION_CODE'], ['CC0009', this.state.inspeksiHeader.BLOCK_INSPECTION_CODE]);
-        var gawangan = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE','BLOCK_INSPECTION_CODE'], ['CC0010', this.state.inspeksiHeader.BLOCK_INSPECTION_CODE]);
-        var prunning = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE','BLOCK_INSPECTION_CODE'], ['CC0011', this.state.inspeksiHeader.BLOCK_INSPECTION_CODE]);        
-        
+        var sarkul = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'BLOCK_INSPECTION_CODE'], ['CC0008', this.state.inspeksiHeader.BLOCK_INSPECTION_CODE]);
+        var tph = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'BLOCK_INSPECTION_CODE'], ['CC0009', this.state.inspeksiHeader.BLOCK_INSPECTION_CODE]);
+        var gawangan = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'BLOCK_INSPECTION_CODE'], ['CC0010', this.state.inspeksiHeader.BLOCK_INSPECTION_CODE]);
+        var prunning = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'BLOCK_INSPECTION_CODE'], ['CC0011', this.state.inspeksiHeader.BLOCK_INSPECTION_CODE]);
+
         var jmlNilaiPiringan = this.getTotalNilaiComponent(piringan);
         var jmlNilaiSarkul = this.getTotalNilaiComponent(sarkul);
         var jmlNilaiTph = this.getTotalNilaiComponent(tph);
         var jmlNilaiGwg = this.getTotalNilaiComponent(gawangan);
         var jmlNilaiPrun = this.getTotalNilaiComponent(prunning);
 
-        var avg_piringan = jmlNilaiPiringan/1;
-        var avg_sarkul = jmlNilaiSarkul/1;
-        var avg_tph = jmlNilaiTph/1;
-        var avg_gwg = jmlNilaiGwg/1;
-        var avg_prun = jmlNilaiPrun/1;
+        var avg_piringan = jmlNilaiPiringan / 1;
+        var avg_sarkul = jmlNilaiSarkul / 1;
+        var avg_tph = jmlNilaiTph / 1;
+        var avg_gwg = jmlNilaiGwg / 1;
+        var avg_prun = jmlNilaiPrun / 1;
 
         let bobotPiringan = 4;
         let bobotSarkul = 5;
@@ -252,38 +275,37 @@ class KondisiBarisAkhir extends Component{
         let bobotPrun = 3;
 
         let nilai = 0;
-        if(this.state.statusBlok === 'TM'){
-            nilai = ((avg_piringan*bobotPiringan) + (avg_sarkul*bobotSarkul) + (avg_gwg*bobotGwg) + (avg_tph*bobotTph) + (avg_prun*bobotPrun)) / (bobotPiringan + bobotSarkul + bobotTph + bobotGwg + bobotPrun);
-        }else if(this.state.statusBlok === 'TBM 3'){
-            nilai = ((avg_piringan*bobotPiringan) + (avg_sarkul*bobotSarkul) + (avg_gwg*bobotGwg) + (avg_tph*bobotTph)) / (bobotPiringan + bobotSarkul + bobotTph + bobotGwg);
-        }else{
-            nilai = ((avg_piringan*bobotPiringan) + (avg_sarkul*bobotSarkul) + (avg_gwg*bobotGwg)) / (bobotPiringan + bobotSarkul + bobotGwg);
+        if (this.state.statusBlok === 'TM') {
+            nilai = ((avg_piringan * bobotPiringan) + (avg_sarkul * bobotSarkul) + (avg_gwg * bobotGwg) + (avg_tph * bobotTph) + (avg_prun * bobotPrun)) / (bobotPiringan + bobotSarkul + bobotTph + bobotGwg + bobotPrun);
+        } else if (this.state.statusBlok === 'TBM 3') {
+            nilai = ((avg_piringan * bobotPiringan) + (avg_sarkul * bobotSarkul) + (avg_gwg * bobotGwg) + (avg_tph * bobotTph)) / (bobotPiringan + bobotSarkul + bobotTph + bobotGwg);
+        } else {
+            nilai = ((avg_piringan * bobotPiringan) + (avg_sarkul * bobotSarkul) + (avg_gwg * bobotGwg)) / (bobotPiringan + bobotSarkul + bobotGwg);
         }
-        var result =  this.getKonversiNilaiKeHuruf(nilai);
-
+        var result = this.getKonversiNilaiKeHuruf(nilai);
         return [nilai.toString(), result] //[0]score [1]value
     }
 
-    calculate(){
+    calculate() {
         let barisPembagi = TaskService.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION);
 
         var piringan = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'ID_INSPECTION'], ['CC0007', this.state.dataInspeksi.ID_INSPECTION]);
-        var sarkul = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE','ID_INSPECTION'], ['CC0008', this.state.dataInspeksi.ID_INSPECTION]);
-        var tph = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE','ID_INSPECTION'], ['CC0009', this.state.dataInspeksi.ID_INSPECTION]);
-        var gawangan = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE','ID_INSPECTION'], ['CC0010', this.state.dataInspeksi.ID_INSPECTION]);
-        var prunning = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE','ID_INSPECTION'], ['CC0011', this.state.dataInspeksi.ID_INSPECTION]);        
-        
+        var sarkul = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'ID_INSPECTION'], ['CC0008', this.state.dataInspeksi.ID_INSPECTION]);
+        var tph = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'ID_INSPECTION'], ['CC0009', this.state.dataInspeksi.ID_INSPECTION]);
+        var gawangan = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'ID_INSPECTION'], ['CC0010', this.state.dataInspeksi.ID_INSPECTION]);
+        var prunning = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'ID_INSPECTION'], ['CC0011', this.state.dataInspeksi.ID_INSPECTION]);
+
         var jmlNilaiPiringan = this.getTotalNilaiComponent(piringan);
         var jmlNilaiSarkul = this.getTotalNilaiComponent(sarkul);
         var jmlNilaiTph = this.getTotalNilaiComponent(tph);
         var jmlNilaiGwg = this.getTotalNilaiComponent(gawangan);
         var jmlNilaiPrun = this.getTotalNilaiComponent(prunning);
 
-        var avg_piringan = jmlNilaiPiringan/barisPembagi.length;
-        var avg_sarkul = jmlNilaiSarkul/barisPembagi.length;
-        var avg_tph = jmlNilaiTph/barisPembagi.length;
-        var avg_gwg = jmlNilaiGwg/barisPembagi.length;
-        var avg_prun = jmlNilaiPrun/barisPembagi.length;
+        var avg_piringan = jmlNilaiPiringan / barisPembagi.length;
+        var avg_sarkul = jmlNilaiSarkul / barisPembagi.length;
+        var avg_tph = jmlNilaiTph / barisPembagi.length;
+        var avg_gwg = jmlNilaiGwg / barisPembagi.length;
+        var avg_prun = jmlNilaiPrun / barisPembagi.length;
 
         let bobotPiringan = 4;
         let bobotSarkul = 5;
@@ -292,34 +314,34 @@ class KondisiBarisAkhir extends Component{
         let bobotPrun = 3;
 
         let nilai = 0;
-        if(this.state.statusBlok === 'TM'){
-            nilai = ((avg_piringan*bobotPiringan) + (avg_sarkul*bobotSarkul) + (avg_gwg*bobotGwg) + (avg_tph*bobotTph) + (avg_prun*bobotPrun)) / (bobotPiringan + bobotSarkul + bobotTph + bobotGwg + bobotPrun);
-        }else if(this.state.statusBlok === 'TBM 3'){
-            nilai = ((avg_piringan*bobotPiringan) + (avg_sarkul*bobotSarkul) + (avg_gwg*bobotGwg) + (avg_tph*bobotTph)) / (bobotPiringan + bobotSarkul + bobotTph + bobotGwg);
-        }else{
-            nilai = ((avg_piringan*bobotPiringan) + (avg_sarkul*bobotSarkul) + (avg_gwg*bobotGwg)) / (bobotPiringan + bobotSarkul + bobotGwg);
+        if (this.state.statusBlok === 'TM') {
+            nilai = ((avg_piringan * bobotPiringan) + (avg_sarkul * bobotSarkul) + (avg_gwg * bobotGwg) + (avg_tph * bobotTph) + (avg_prun * bobotPrun)) / (bobotPiringan + bobotSarkul + bobotTph + bobotGwg + bobotPrun);
+        } else if (this.state.statusBlok === 'TBM 3') {
+            nilai = ((avg_piringan * bobotPiringan) + (avg_sarkul * bobotSarkul) + (avg_gwg * bobotGwg) + (avg_tph * bobotTph)) / (bobotPiringan + bobotSarkul + bobotTph + bobotGwg);
+        } else {
+            nilai = ((avg_piringan * bobotPiringan) + (avg_sarkul * bobotSarkul) + (avg_gwg * bobotGwg)) / (bobotPiringan + bobotSarkul + bobotGwg);
         }
-        var result =  this.getKonversiNilaiKeHuruf(nilai);
+        var result = this.getKonversiNilaiKeHuruf(nilai);
 
-        
+
         let param = [nilai.toString(), result]
         let dataInspeksi = TaskService.getAllData('TR_BARIS_INSPECTION')
         let indexData = R.findIndex(R.propEq('ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION))(dataInspeksi);
         TaskService.updateScoreInspeksi(param, indexData);
-        
+
         let val = this.calculateBaris()
         TaskService.updateInspectionHScore(this.state.inspeksiHeader.BLOCK_INSPECTION_CODE, val)
 
         const navigation = this.props.navigation;
         const resetAction = StackActions.reset({
-            index: 0,            
-			actions: [NavigationActions.navigate({ 
-                routeName: 'SelesaiInspeksi', 
-                params : { 
-                    inspeksiHeader: this.state.inspeksiHeader, 
+            index: 0,
+            actions: [NavigationActions.navigate({
+                routeName: 'SelesaiInspeksi',
+                params: {
+                    inspeksiHeader: this.state.inspeksiHeader,
                     statusBlok: this.state.statusBlok,
                     dataInspeksi: dataInspeksi[indexData]
-                } 
+                }
             })]
         });
         clearInterval(this.state.intervalId)
@@ -327,8 +349,8 @@ class KondisiBarisAkhir extends Component{
 
     }
 
-    getKonversiNilaiKeHuruf(param){
-        if(param > 2.5 && param <= 3){
+    getKonversiNilaiKeHuruf(param) {
+        if (param > 2.5 && param <= 3) {
             return 'A';
         }else if(param > 2 && param <= 2.5){
             return 'B';
@@ -366,8 +388,21 @@ class KondisiBarisAkhir extends Component{
     }
 
     saveData(){
-        if(this.state.from !== 'history'){
+        // let lat = '0.0';
+        // let lon = '0.0';
+        // if(this.state.latitude === 0.0 && this.state.longitude === 0.0){
+        //     let data = TaskService.findBy2('TM_INSPECTION_TRACK', 'BLOCK_INSPECTION_CODE', this.state.inspeksiHeader.BLOCK_INSPECTION_CODE);
+        //     if(data !== undefined){
+        //         let record = data[0];
+        //         lat = record.LAT_TRACK;
+        //         lon = record.LONG_TRACK;
+        //     }
+        // }else{
+        //     lat = this.state.latitude.toString();
+        //     lon = this.state.longitude.toString();
+        // }
 
+        if(this.state.from !== 'history'){
             var modelInspeksiH = {
                 BLOCK_INSPECTION_CODE: this.state.inspeksiHeader.BLOCK_INSPECTION_CODE,
                 ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
@@ -519,9 +554,9 @@ class KondisiBarisAkhir extends Component{
 
             let time = TaskService.getAllData('TM_TIME_TRACK')[0];
             let duration = 10000
-            // if(time !== undefined){
-            //     duration = parseFloat(time.DESC);
-            // }
+            if(time !== undefined){
+                duration = parseFloat(time.DESC);
+            }
             let id = setInterval(()=> this.getLocation2(blokInspectionCode), duration);
             this.navigateScreen('TakeFotoBaris', params, modelInspeksi, model, id);
             
@@ -572,15 +607,16 @@ class KondisiBarisAkhir extends Component{
     navigateScreen(screenName, params, inspeksiH, dataInspeksi, intervalId) {
         const navigation = this.props.navigation;
         const resetAction = StackActions.reset({
-            index: 0,            
-			actions: [NavigationActions.navigate({ routeName: screenName, params : { 
-                dataUsual : params, 
-                inspeksiHeader: inspeksiH, 
-                from: 'kondisiBaris', 
-                statusBlok:this.state.statusBlok,
-                intervalId: intervalId,
-                dataInspeksi: dataInspeksi,
-             } 
+            index: 0,
+            actions: [NavigationActions.navigate({
+                routeName: screenName, params: {
+                    dataUsual: params,
+                    inspeksiHeader: inspeksiH,
+                    from: 'kondisiBaris',
+                    statusBlok: this.state.statusBlok,
+                    intervalId: intervalId,
+                    dataInspeksi: dataInspeksi,
+                }
             })]
         });
         navigation.dispatch(resetAction);
@@ -589,6 +625,13 @@ class KondisiBarisAkhir extends Component{
     render(){
         return(
             <View style={styles.mainContainer}>
+
+                <ModalAlert
+                    visible={this.state.showModal}
+                    onPressCancel={() => this.setState({ showModal: false })}
+                    title={this.state.title}
+                    message={this.state.message} />
+
                 {/*STEPPER*/}
                 <View style={{flexDirection:'row', marginLeft:20, marginRight:20, marginTop:10}}>
                     <View style={styles.containerStepper}>
@@ -629,7 +672,7 @@ class KondisiBarisAkhir extends Component{
 
                 {/*MAPS*/}
                     <View style={styles.containerMap}>
-                        {!!this.state.latitude && !!this.state.longitude &&
+                        {this.state.latitude !== 0.0 && this.state.longitude !== 0.0 &&
                         <MapView
                             style={styles.map}
                             initialRegion={{
@@ -749,7 +792,9 @@ const styles = {
         top:0,
         left:0,
         right:0,
-        bottom:0
+        bottom:0,
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height
     },
     cardContainer : {
         width:300,

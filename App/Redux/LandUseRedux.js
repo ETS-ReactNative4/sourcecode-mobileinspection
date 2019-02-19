@@ -7,7 +7,8 @@ const { Types, Creators } = createActions({
 	landUseRequest: null,
 	landUsePost: ['data'],
 	landUseSuccess: ['payload'],
-	landUseFailure: null
+	landUseFailure: null,
+	resetLandUse: null
 });
 
 export const LandUseTypes = Types;
@@ -42,6 +43,7 @@ export const success = (state, action) => {
 
 // Something went wrong somewhere.
 export const failure = state => state.merge({ fetchingLandUse: false, error: true, payload: null });
+export const reset = (state) => state.merge({ fetchingLandUse: null, landUse: null });
 
 /* ------------- Hookup Reducers To Types ------------- */
 
@@ -49,5 +51,6 @@ export const reducer = createReducer(INITIAL_STATE, {
 	[Types.LAND_USE_REQUEST]: request,
 	[Types.LAND_USE_POST]: postLandUse,
 	[Types.LAND_USE_SUCCESS]: success,
-	[Types.LAND_USE_FAILURE]: failure
+	[Types.LAND_USE_FAILURE]: failure,
+	[Types.RESET_LAND_USE]: reset
 });

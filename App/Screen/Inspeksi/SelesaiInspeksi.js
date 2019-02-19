@@ -57,7 +57,7 @@ class SelesaiInspeksi extends React.Component {
 
     static navigationOptions = {
         headerStyle: {
-            backgroundColor: Colors.tintColor
+            backgroundColor: Colors.tintColorPrimary
         },
         headerTitleStyle: {
             textAlign: "left",
@@ -85,7 +85,6 @@ class SelesaiInspeksi extends React.Component {
 
     loadData(){
         let dataBaris = Taskservices.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION);
-        // let dataBaris = Taskservices.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', this.state.data.ID_INSPECTION);
         let barisPembagi = dataBaris.length;
         let time = 0;
         let distance = 0
@@ -101,26 +100,18 @@ class SelesaiInspeksi extends React.Component {
                 distance = distance + parseInt(dataBaris[i].DISTANCE);
             }       
         }
-        
-        // let dataHeader = Taskservices.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', this.state.inspeksiHeader.ID_INSPECTION);
-        // let dataBlock = Taskservices.findBy2('TM_BLOCK', 'BLOCK_CODE', dataBaris[0].BLOCK_CODE);
         let dataBlock = Taskservices.findBy2('TM_BLOCK', 'BLOCK_CODE', this.state.dataInspeksi.BLOCK_CODE);
-
-        // let score = dataHeader[0].INSPECTION_SCORE;
-        // score = score.includes('.') ? parseFloat(score).toFixed(1).toString() : score;
-
-        // let estName = this.getEstateName(this.state.inspeksiHeader.WERKS)
         this.setState({
             jmlBaris: barisPembagi, 
             totalWaktu: time.toString(), 
             totalJarak: distance.toString(), 
-            nilaiInspeksi: this.state.dataInspeksi.INSPECTION_RESULT,//dataHeader[0].INSPECTION_RESULT, 
-            nilaiScore: parseFloat(this.state.dataInspeksi.INSPECTION_SCORE).toFixed(1).toString(),//score,
+            nilaiInspeksi: this.state.dataInspeksi.INSPECTION_RESULT,
+            nilaiScore: parseFloat(this.state.dataInspeksi.INSPECTION_SCORE).toFixed(1).toString(),
             distance: distance,
             blockCode: dataBlock.BLOCK_CODE,
             blockName: dataBlock.BLOCK_NAME,
             barisPembagi: dataBaris.length,
-            estateName: this.state.dataInspeksi.EST_NAME//estName
+            estateName: this.state.dataInspeksi.EST_NAME
         });
 
         var piringan = this.getTotalComponentBy('CC0007'); 

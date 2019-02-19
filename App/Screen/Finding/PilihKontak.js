@@ -2,7 +2,7 @@
 'use strict';
 
 import React, { Component } from 'react';
-import { View, TextInput, Text, StyleSheet, ListView, TouchableOpacity, Alert } from 'react-native';
+import { View, TextInput, Text, StyleSheet, ListView, TouchableOpacity, BackAndroid } from 'react-native';
 import TaskServices from '../../Database/TaskServices';
 
 var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
@@ -10,7 +10,7 @@ var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 class PilihKontak extends Component {
   constructor(props) {
     super(props);
-
+    this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     this.state = {
       searchedAdresses: [],
       adresses: [],
@@ -27,8 +27,17 @@ class PilihKontak extends Component {
     this.props.navigation.goBack();
   };
 
-  componentDidMount() {
+  componentWillUnmount(){
+    BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+  } 
 
+  handleBackButtonClick() {
+    this.props.navigation.goBack();
+    return true;
+  }
+
+  componentDidMount() {
+    BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick);
     const { navigation } = this.props;
     const afdCode = navigation.getParam('afdCode');
     const werks = navigation.getParam('werks');
@@ -37,11 +46,8 @@ class PilihKontak extends Component {
     const login = TaskServices.getAllData('TR_LOGIN')
 
     let dataUser = TaskServices.query('TR_CONTACT', `USER_AUTH_CODE = "${login[0].USER_AUTH_CODE}"`);
-    console.log(JSON.stringify(dataUser));
-    let data = TaskServices.query('TR_CONTACT', `REF_ROLE = "AFD_CODE" AND LOCATION_CODE = "${withAfd}" AND USER_ROLE CONTAINS[c] "ASISTEN" AND USER_AUTH_CODE != "${login[0].USER_AUTH_CODE}"`);
-    console.log(JSON.stringify(data));
-    let data1 = TaskServices.query('TR_CONTACT', `REF_ROLE = "BA_CODE" AND LOCATION_CODE = "${werks}" AND USER_ROLE CONTAINS[c] "ASISTEN" AND USER_AUTH_CODE != "${login[0].USER_AUTH_CODE}"`);
-    console.log(JSON.stringify(data1));
+    let data = TaskServices.query('TR_CONTACT', `REF_ROLE = "AFD_CODE" AND LOCATION_CODE = "${withAfd}" AND USER_ROLE CONTAINS[c] "ASISTEN" AND USER_AUTH_CODE != "${login[0].USER_AUTH_CODE}"`);    
+    let data1 = TaskServices.query('TR_CONTACT', `REF_ROLE = "BA_CODE" AND LOCATION_CODE = "${werks}" AND USER_ROLE CONTAINS[c] "ASISTEN" AND USER_AUTH_CODE != "${login[0].USER_AUTH_CODE}"`);    
 
     let arr = [];
     for (var i = 0; i < dataUser.length; i++) {
@@ -51,7 +57,6 @@ class PilihKontak extends Component {
         userRole: dataUser[i].USER_ROLE,
       });
     }
-    console.log("Array User: " + JSON.stringify(arr));
 
     for (var j = 0; j < data.length; j++) {
       arr.push({
@@ -60,7 +65,6 @@ class PilihKontak extends Component {
         userRole: data[j].USER_ROLE,
       });
     }
-    console.log("Array : " + JSON.stringify(arr));
 
     for (var k = 0; k < data1.length; k++) {
       arr.push({
@@ -69,7 +73,6 @@ class PilihKontak extends Component {
         userRole: data[k].USER_ROLE
       })
     }
-    console.log("Array Update : " + JSON.stringify(arr));
 
     this.setState({ adresses: arr, searchedAdresses: arr })
   }

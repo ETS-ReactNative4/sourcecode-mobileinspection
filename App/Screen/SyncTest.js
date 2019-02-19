@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Alert } from 'react-native'
+import { StyleSheet, View, Text, TouchableOpacity, Alert, NetInfo } from 'react-native'
 import { Container, Content } from 'native-base'
 import * as Progress from 'react-native-progress';
 import Colors from '../Constant/Colors';
@@ -32,14 +32,16 @@ import TaskServices from '../Database/TaskServices'
 import { getTodayDate, convertTimestampToDate } from '../Lib/Utils';
 var RNFS = require('react-native-fs');
 
-
+const link = 'http://149.129.245.230:3008/api/';
 const user = TaskServices.getAllData('TR_LOGIN')[0];
+
+import ModalAlert from '../Component/ModalAlert';
 
 class SyncScreen extends React.Component {
 
     static navigationOptions = ({ navigation }) => ({
         headerStyle: {
-            backgroundColor: Colors.tintColor
+            backgroundColor: Colors.tintColorPrimary
         },
         headerTitleStyle: {
             textAlign: "left",
@@ -74,22 +76,6 @@ class SyncScreen extends React.Component {
             progressInspectionTrack: 0,
             progressParamInspection: 0,
             indeterminate: false,
-            downloadRegion: false,
-            downloadAfd: false,
-            downloadBlok: false,
-            downloadEst: false,
-            downloadLandUse: false,
-            downloadComp: false,
-            downloadContent: false,
-            downloadContact: false,
-            downloadContentLabel: false,
-            downloadKriteria: false,
-            downloadCategory: false,
-            downloadFinding: false,
-            downloadFindingImage: false,
-            downloadParamTrack: false,
-            uploadFinding: false,
-            uploadInspeksi: false,
             downloadInspeksiParam: false,
             fetchLocation: false,
             isBtnEnable: false,
@@ -142,7 +128,23 @@ class SyncScreen extends React.Component {
             dataTrack: [],
 
             showButton: true,
-            blockInspectionCodes: []
+            blockInspectionCodes: [],
+            isFirstInstall: false,
+
+            //Add Modal Alert by Aminju 
+            title: 'Title',
+            message: 'Message',
+            showModal: false,
+            icon: ''
+        }
+    }
+
+    componentDidMount() {
+        let data = TaskServices.getTotalData('TM_BLOCK');
+        if (data > 0) {
+            this.setState({ isFirstInstall: false });
+        } else {
+            this.setState({ isFirstInstall: true });
         }
     }
 
@@ -151,15 +153,14 @@ class SyncScreen extends React.Component {
         let countData = TaskServices.getAllData('TR_FINDING');
         var query = countData.filtered('STATUS_SYNC = "N"');
         countData = query;
-        this.setState({ progressFindingData: 1, valueFindingDataUpload: countData.length, totalFindingDataUpload: countData.length});
+        this.setState({ progressFindingData: 1, valueFindingDataUpload: countData.length, totalFindingDataUpload: countData.length });
         if (countData.length > 0) {
-            for(var i=0; i < countData.length; i++){
+            for (var i = 0; i < countData.length; i++) {
                 this.kirimFinding(countData[i]);
             }
         } else {
-            this.setState({ progressFindingData: 1, valueFindingDataUpload: 0, totalFindingDataUpload: 0  });
+            this.setState({ progressFindingData: 1, valueFindingDataUpload: 0, totalFindingDataUpload: 0 });
         }
-        this.props.findingRequest()
     }
 
     loadData() {
@@ -167,22 +168,22 @@ class SyncScreen extends React.Component {
         var query = dataHeader.filtered('STATUS_SYNC = "N"');
         let countData = query;
 
-        this.setState({ 
-            progressInspeksiHeader: 1, 
-            valueInspeksiHeaderUpload: countData.length, 
+        this.setState({
+            progressInspeksiHeader: 1,
+            valueInspeksiHeaderUpload: countData.length,
             totalInspeksiHeaderUpload: countData.length,
-        });      
-        
+        });
+
         if (countData.length > 0) {
-            for(var i=0; i < countData.length; i++){
-                if(!this.state.dataBarisInspeksi.includes(countData[i].ID_INSPECTION)){
+            for (var i = 0; i < countData.length; i++) {
+                if (!this.state.dataBarisInspeksi.includes(countData[i].ID_INSPECTION)) {
                     this.state.dataBarisInspeksi.push(countData[i].ID_INSPECTION)
                 }
                 this.state.blockInspectionCodes.push(countData[i].BLOCK_INSPECTION_CODE)
                 this.kirimInspeksiHeader(countData[i]);
             }
         } else {
-            this.setState({ 
+            this.setState({
                 progressInspeksiHeader: 1,
                 valueInspeksiHeaderUpload: 0,
                 totalInspeksiHeaderUpload: 0,
@@ -190,24 +191,23 @@ class SyncScreen extends React.Component {
                 valueInspeksiDetailUpload: 0,
                 totalInspeksiDetailUpload: 0
             });
-        } 
-        // this.loadDataDetailInspeksi();
-        
+        }
+
     }
 
-    loadDataDetailInspeksi(){
+    loadDataDetailInspeksi() {
         let data = TaskServices.getAllData('TR_BLOCK_INSPECTION_D');
         data = data.filtered('STATUS_SYNC = "N"');
-        this.setState({ progressInspeksiDetail: 1, valueInspeksiDetailUpload: data.length, totalInspeksiDetailUpload: data.length,
-        }); 
-        if(data.length > 1){
-            for(var i=0; i < data.length; i++){
+        this.setState({
+            progressInspeksiDetail: 1, valueInspeksiDetailUpload: data.length, totalInspeksiDetailUpload: data.length,
+        });
+        if (data.length > 1) {
+            for (var i = 0; i < data.length; i++) {
                 this.kirimInspeksiDetail(data[i]);
             }
         } else {
-            this.setState({ progressInspeksiDetail: 1, valueInspeksiDetailUpload: 0, totalInspeksiDetailUpload: 0});
+            this.setState({ progressInspeksiDetail: 1, valueInspeksiDetailUpload: 0, totalInspeksiDetailUpload: 0 });
         }
-        // this.loadDataInspectionTrack();
     }
 
     loadDataInspectionTrack() {
@@ -216,162 +216,124 @@ class SyncScreen extends React.Component {
         let countData = query;
         this.setState({ progressInspectionTrack: 1, valueInspectionTrack: countData.length, totalInspectionTrack: countData.length });
         if (countData.length > 0) {
-            for(var i=0; i < countData.length; i++){
+            for (var i = 0; i < countData.length; i++) {
                 this.kirimInspectionTrack(countData[i]);
             }
         } else {
-            this.setState({ progressInspectionTrack: 1, valueInspectionTrack: 0, totalInspectionTrack: 0  });
+            this.setState({ progressInspectionTrack: 1, valueInspectionTrack: 0, totalInspectionTrack: 0 });
         }
-        
-        // setTimeout(() => {
-        //     this.props.blockRequest();
-        // }, 5000);
-        
-        
+
+
     }
-    
+
     async kirimImage() {
-        try {            
+        try {
             const user = TaskServices.getAllData('TR_LOGIN')[0];
             let all = TaskServices.getAllData('TR_IMAGE')
             var dataImage = TaskServices.query('TR_IMAGE', `STATUS_SYNC = 'N'`);
             if (all !== undefined && dataImage !== undefined) {
-                for(var i=0; i<dataImage.length; i++){
+                for (var i = 0; i < dataImage.length; i++) {
                     let model = dataImage[i]
                     RNFS.exists(`file://${model.IMAGE_PATH_LOCAL}`).
-                    then((exists) =>{
-                        console.log(exists)
-                        console.log(model.IMAGE_PATH_LOCAL)
-                        if(exists){
-                            var data = new FormData();
-                            let idxOrder = null;
-                            data.append('IMAGE_CODE', model.IMAGE_CODE)
-                            data.append('IMAGE_PATH_LOCAL', model.IMAGE_PATH_LOCAL)
-                            data.append('TR_CODE', model.TR_CODE)
-                            data.append('STATUS_IMAGE', model.STATUS_IMAGE)
-                            data.append('STATUS_SYNC', 'Y')
-                            data.append('SYNC_TIME', getTodayDate('YYYYMMDDHHmmss'))
-                            data.append('INSERT_TIME', convertTimestampToDate(model.INSERT_TIME, 'YYYYMMDDHHmmss'))
-                            data.append('INSERT_USER', model.INSERT_USER)
-                            data.append('FILENAME', {
-                                uri: `file://${model.IMAGE_PATH_LOCAL}`,
-                                type: 'image/jpeg',
-                                name: model.IMAGE_NAME,
-                            });
-                            let indexData = R.findIndex(R.propEq('IMAGE_CODE', model.IMAGE_CODE))(all);
-                            idxOrder = indexData
-                            console.log(JSON.stringify(data))
-                            const url = "http://149.129.245.230:3012/image/upload-file/"
-                            fetch(url, {
-                                method: 'POST',
-                                headers: {
-                                    'Cache-Control': 'no-cache',
-                                    Accept: 'application/json',
-                                    'Content-Type': 'multipart/form-data',
-                                    Authorization: `Bearer ${user.ACCESS_TOKEN}`,
-                                },
-                                body: data
-                            })
-                            .then((response) => response.json())
-                            .then((responseJson) => {
-                                console.log(responseJson)
-                                var dataImage = TaskServices.query('TR_IMAGE', `STATUS_SYNC = 'N'`);
-                                if (responseJson.status) {
-                                    this.setState({ progressUploadImage: 1, valueImageUpload: dataImage.length, totalImagelUpload: dataImage.length });
-                                    TaskServices.updateStatusImage('TR_IMAGE', 'Y', idxOrder);
-                                }
-                            }).catch((error) => {
-                                console.error(error);
-                            });
-                        }else{                          
-                            let data = TaskServices.getAllData('TR_IMAGE');
-                            let indexData = R.findIndex(R.propEq('IMAGE_CODE', model.IMAGE_CODE))(data);
-                            TaskServices.deleteRecord('TR_IMAGE', indexData)
-                        } 
-                                        
-                    })
-                }         
+                        then((exists) => {
+                            console.log(exists)
+                            console.log(model.IMAGE_PATH_LOCAL)
+                            if (exists) {
+                                var data = new FormData();
+                                let idxOrder = null;
+                                data.append('IMAGE_CODE', model.IMAGE_CODE)
+                                data.append('IMAGE_PATH_LOCAL', model.IMAGE_PATH_LOCAL)
+                                data.append('TR_CODE', model.TR_CODE)
+                                data.append('STATUS_IMAGE', model.STATUS_IMAGE)
+                                data.append('STATUS_SYNC', 'Y')
+                                data.append('SYNC_TIME', getTodayDate('YYYYMMDDHHmmss'))
+                                data.append('INSERT_TIME', convertTimestampToDate(model.INSERT_TIME, 'YYYYMMDDHHmmss'))
+                                data.append('INSERT_USER', model.INSERT_USER)
+                                data.append('FILENAME', {
+                                    uri: `file://${model.IMAGE_PATH_LOCAL}`,
+                                    type: 'image/jpeg',
+                                    name: model.IMAGE_NAME,
+                                });
+                                let indexData = R.findIndex(R.propEq('IMAGE_CODE', model.IMAGE_CODE))(all);
+                                idxOrder = indexData
+                                console.log(JSON.stringify(data))
+                                const url = "http://149.129.245.230:3012/image/upload-file/"
+                                fetch(url, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Cache-Control': 'no-cache',
+                                        Accept: 'application/json',
+                                        'Content-Type': 'multipart/form-data',
+                                        Authorization: `Bearer ${user.ACCESS_TOKEN}`,
+                                    },
+                                    body: data
+                                })
+                                    .then((response) => response.json())
+                                    .then((responseJson) => {
+                                        console.log(responseJson)
+                                        // var dataImage = TaskServices.query('TR_IMAGE', `STATUS_SYNC = 'N'`);
+                                        if (responseJson.status) {
+                                            this.setState({ progressUploadImage: 1, valueImageUpload: dataImage.length, totalImagelUpload: dataImage.length });
+                                            TaskServices.updateStatusImage('TR_IMAGE', 'Y', idxOrder);
+                                        }
+                                    }).catch((error) => {
+                                        console.error(error);
+                                    });
+                            } else {
+                                let data = TaskServices.getAllData('TR_IMAGE');
+                                let indexData = R.findIndex(R.propEq('IMAGE_CODE', model.IMAGE_CODE))(data);
+                                TaskServices.deleteRecord('TR_IMAGE', indexData)
+                            }
+
+                        })
+                }
             }
-            this.setState({ progressUploadImage: 1, valueImageUpload: 0, totalImagelUpload: 0  });
+            this.setState({ progressUploadImage: 1, valueImageUpload: 0, totalImagelUpload: 0 });
         } catch (error) {
-            
+
         }
     }
 
-    fetchingData(URL, dataPost, table, idInspection){
+    uploadData(URL, dataPost, table, idInspection) {
         const user = TaskServices.getAllData('TR_LOGIN')[0];
         fetch(URL, {
             method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json' ,
+            headers: {
+                'Content-Type': 'application/json',
                 'Authorization': `Bearer ${user.ACCESS_TOKEN}`
             },
-        body: JSON.stringify(dataPost)
+            body: JSON.stringify(dataPost)
         })
-        .then((response) => { 
-            return response.json();   
-        })
-        .then((data) => { 
-            console.log(data)
-            if(data.status){
-                if(table == 'header'){
-                    this.updateInspeksi(dataPost);
-                    this.updateInspeksiBaris(idInspection);
-                }else if(table == 'detailHeader'){
-                    this.updateInspeksiDetail(dataPost)
-                }else if(table == 'tracking'){
-                    this.updateInspeksiTrack(dataPost)
-                }else if(table == 'finding'){
-                    this.updateFinding(dataPost)
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                console.log(data)
+                if (data.status) {
+                    if (table == 'header') {
+                        this.updateInspeksi(dataPost);
+                        this.updateInspeksiBaris(idInspection);
+                    } else if (table == 'detailHeader') {
+                        this.updateInspeksiDetail(dataPost)
+                    } else if (table == 'tracking') {
+                        this.updateInspeksiTrack(dataPost)
+                    } else if (table == 'finding') {
+                        this.updateFinding(dataPost)
+                    }
                 }
-            }
-        })
+            })
     }
 
-    DownloadData(URL, dataPost, table){
-        const user = TaskServices.getAllData('TR_LOGIN')[0];
-        fetch(URL, {
-            method: 'GET',
-            headers: { 
-                'Content-Type': 'application/json' ,
-                'Authorization': `Bearer ${user.ACCESS_TOKEN}`
-            },
-        })
-        .then((response) => { 
-            return response.json();   
-        })
-        .then((data) => { 
-            console.log(data)
-            if(data.status){
-                if(table == 'block'){
-                }else if(table == 'afd'){
-                }else if(table == 'region'){
-                }else if(table == 'est'){
-                }else if(table == 'landuse'){
-                }else if(table == 'comp'){
-                }else if(table == 'content'){
-                }else if(table == 'contentlabel'){
-                }else if(table == 'kriteria'){
-                }else if(table == 'catogory'){
-                }else if(table == 'contact'){
-                }else if(table == 'finding'){
-                }else if(table == 'image'){
-                }else if(table == 'track'){
-                }
-            }
-        })
-    }
-
-    updateInspeksi = param => {   
-        if(param !== null){
+    updateInspeksi = param => {
+        if (param !== null) {
             let allData = TaskServices.getAllData('TR_BLOCK_INSPECTION_H')
             let indexData = R.findIndex(R.propEq('BLOCK_INSPECTION_CODE', param.BLOCK_INSPECTION_CODE))(allData);
             TaskServices.updateInspeksiSync('TR_BLOCK_INSPECTION_H', 'Y', indexData);
         }
     }
 
-    updateInspeksiDetail = param => {        
-        if(param !== null){
+    updateInspeksiDetail = param => {
+        if (param !== null) {
             let allData = TaskServices.getAllData('TR_BLOCK_INSPECTION_D')
             let indexData = R.findIndex(R.propEq('BLOCK_INSPECTION_CODE_D', param.BLOCK_INSPECTION_CODE_D))(allData);
             TaskServices.updateInspeksiSync('TR_BLOCK_INSPECTION_D', 'Y', indexData);
@@ -379,23 +341,23 @@ class SyncScreen extends React.Component {
     }
 
     updateInspeksiTrack = param => {
-        if(param !== null){
+        if (param !== null) {
             let allData = TaskServices.getAllData('TM_INSPECTION_TRACK')
             let indexData = R.findIndex(R.propEq('TRACK_INSPECTION_CODE', param.TRACK_INSPECTION_CODE))(allData);
             TaskServices.updateInspeksiSync('TM_INSPECTION_TRACK', 'Y', indexData);
         }
     }
 
-    updateInspeksiBaris = param =>{
-        if(param !== null){
+    updateInspeksiBaris = param => {
+        if (param !== null) {
             let allData = TaskServices.getAllData('TR_BARIS_INSPECTION');
             let indexData = R.findIndex(R.propEq('ID_INSPECTION', param))(allData);
             TaskServices.updateInspeksiSync('TR_BARIS_INSPECTION', 'Y', indexData);
         }
     }
 
-    updateFinding = param => {        
-        if(param !== null){
+    updateFinding = param => {
+        if (param !== null) {
             let allData = TaskServices.getAllData('TR_FINDING')
             let indexData = R.findIndex(R.propEq('FINDING_CODE', param.FINDING_CODE))(allData);
             TaskServices.updateInspeksiSync('TR_FINDING', 'Y', indexData);
@@ -404,6 +366,7 @@ class SyncScreen extends React.Component {
 
     //upload to service
     kirimInspeksiHeader(param) {
+        const user = TaskServices.getAllData('TR_LOGIN')[0];
         let data = {
             BLOCK_INSPECTION_CODE: param.BLOCK_INSPECTION_CODE,
             WERKS: param.WERKS,
@@ -425,10 +388,11 @@ class SyncScreen extends React.Component {
             INSERT_TIME: convertTimestampToDate(param.INSERT_TIME, 'YYYYMMDDHHmmss'),
             INSERT_USER: user.USER_AUTH_CODE
         }
-        this.fetchingData('http://149.129.245.230:3008/api/inspection-header', data, 'header', param.ID_INSPECTION);
+        this.uploadData('http://149.129.245.230:3008/api/inspection-header', data, 'header', param.ID_INSPECTION);
     }
 
     kirimInspeksiDetail(result) {
+        const user = TaskServices.getAllData('TR_LOGIN')[0];
         let data = {
             BLOCK_INSPECTION_CODE_D: result.BLOCK_INSPECTION_CODE_D,
             BLOCK_INSPECTION_CODE: result.BLOCK_INSPECTION_CODE,
@@ -439,7 +403,7 @@ class SyncScreen extends React.Component {
             INSERT_USER: user.USER_AUTH_CODE,
             INSERT_TIME: convertTimestampToDate(result.INSERT_TIME, 'YYYYMMDDHHmmss')
         }
-        this.fetchingData('http://149.129.245.230:3008/api/inspection-detail', data, 'detailHeader', '');
+        this.uploadData('http://149.129.245.230:3008/api/inspection-detail', data, 'detailHeader', '');
     }
 
     kirimInspectionTrack(param) {
@@ -452,13 +416,13 @@ class SyncScreen extends React.Component {
             INSERT_USER: param.INSERT_USER,
             INSERT_TIME: param.INSERT_TIME
         }
-        this.fetchingData('http://149.129.245.230:3008/api/inspection-tracking', data, 'tracking', '');
+        this.uploadData('http://149.129.245.230:3008/api/inspection-tracking', data, 'tracking', '');
     }
 
     kirimFinding(param) {
         let dueDate = param.DUE_DATE;
-        if(dueDate.includes(' ')){
-          dueDate = dueDate.substring(0, dueDate.indexOf(' '))
+        if (dueDate.includes(' ')) {
+            dueDate = dueDate.substring(0, dueDate.indexOf(' '))
         }
         let data = {
             FINDING_CODE: param.FINDING_CODE,
@@ -477,32 +441,42 @@ class SyncScreen extends React.Component {
             INSERT_USER: param.INSERT_USER,
             INSERT_TIME: param.INSERT_TIME
         }
-        this.fetchingData('http://149.129.245.230:3008/api/finding', data, 'finding', '');
+        this.uploadData('http://149.129.245.230:3008/api/finding', data, 'finding', '');
     }
-    
+
 
     // POST MOBILE SYNC
     _postMobileSync(param) {
         var moment = require('moment');
         this.props.tmPost({
-            TGL_MOBILE_SYNC: moment().format('YYYY-MM-DD kk:mm:ss'), //'2019-01-20 10:00:00',
-            TABEL_UPDATE: param//"hectare-statement/" + tableName
+            TGL_MOBILE_SYNC: moment().format('YYYY-MM-DD kk:mm:ss'),
+            TABEL_UPDATE: param
         });
     }
 
-    deleteData(table, whereClause, value){ 
+    deleteData(table, whereClause, value) {
         let allData = TaskServices.getAllData(table);
-        if(allData !== undefined && allData.length > 0){
+        if (allData !== undefined && allData.length > 0) {
             let indexData = R.findIndex(R.propEq(whereClause, value))(allData);
-            if(indexData >= 0){
+            if (indexData >= 0) {
                 TaskServices.deleteRecord(table, indexData);
             }
-            
+
+        }
+    }
+
+    hasDownload(item, total) {
+        if (this.state.isFirstInstall) {
+            if (total > 0) {
+                this.fetchingMobileSync(item);
+            } else { alert('gagal download ' + item) }
+        } else {
+            this.fetchingMobileSync(item);
         }
     }
 
     _crudTM_Block(data) {
-        let allData = TaskServices.getAllData('TM_BLOCK');        
+        let allData = TaskServices.getAllData('TM_BLOCK');
         if (data.simpan.length > 0) {
             for (var i = 1; i <= data.simpan.length; i++) {
                 this.setState({ progress: i / data.simpan.length, totalDownload: data.simpan.length })
@@ -516,21 +490,24 @@ class SyncScreen extends React.Component {
             let countDataInsert = TaskServices.getTotalData('TM_BLOCK');
             this.setState({ progress: 1, valueDownload: countDataInsert, totalDownload: 0 })
         }
-        if(data.ubah.length > 0 && all.length > 0){
+        if (data.ubah.length > 0 && all.length > 0) {
             data.ubah.map(item => {
                 let indexData = R.findIndex(R.propEq('WERKS_AFD_BLOCK_CODE', item.WERKS_AFD_BLOCK_CODE))(allData);
                 TaskServices.updateBlock(item, indexData)
             })
         }
-        if(data.hapus.length > 0 && all.length > 0){
-            data.hapus.map(item =>{
+        if (data.hapus.length > 0 && all.length > 0) {
+            data.hapus.map(item => {
                 this.deleteData('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', item.WERKS_AFD_BLOCK_CODE);
-            }); 
+            });
         }
+
+        let countDataInsert = TaskServices.getTotalData('TM_BLOCK');
+        this.hasDownload('hectare-statement/block', countDataInsert);
     }
 
-    _crudTM_Afd(data) {   
-        let allData = TaskServices.getAllData('TM_AFD');        
+    _crudTM_Afd(data) {
+        let allData = TaskServices.getAllData('TM_AFD');
         if (data.simpan.length > 0) {
             for (var i = 1; i <= data.simpan.length; i++) {
                 this.setState({ progressAfd: i / data.simpan.length, totalAfdDownload: data.simpan.length })
@@ -542,29 +519,32 @@ class SyncScreen extends React.Component {
             });
         } else {
             let countDataInsert = TaskServices.getTotalData('TM_AFD');
-            this.setState({ progressAfd: 1,valueAfdDownload: countDataInsert, totalAfdDownload: 0 })
+            this.setState({ progressAfd: 1, valueAfdDownload: countDataInsert, totalAfdDownload: 0 })
         }
 
         //update
-        if(data.ubah.length > 0 && allData.length > 0){
+        if (data.ubah.length > 0 && allData.length > 0) {
             data.ubah.map(item => {
                 let indexData = R.findIndex(R.propEq('WERKS_AFD_CODE', item.WERKS_AFD_CODE))(allData);
                 TaskServices.updateAfdeling(item, indexData)
             })
         }
         //hapus data
-        if(data.hapus.length > 0 && allData.length > 0){
-            data.hapus.map(item =>{
+        if (data.hapus.length > 0 && allData.length > 0) {
+            data.hapus.map(item => {
                 this.deleteData('TM_AFD', 'WERKS_AFD_CODE', item.WERKS_AFD_CODE);
-            });  
-        }        
+            });
+        }
+
+        let countDataInsert = TaskServices.getTotalData('TM_AFD');
+        this.hasDownload('hectare-statement/afdeling', countDataInsert);
     }
 
     _crudTM_Region(data) {
-        let allData = TaskServices.getAllData('TM_REGION');  
+        let allData = TaskServices.getAllData('TM_REGION');
         if (data.simpan.length > 0) {
             for (var i = 1; i <= data.simpan.length; i++) {
-                this.setState({ progressRegion: i / data.simpan.length, totalRegionDownload: data.simpan.length  });
+                this.setState({ progressRegion: i / data.simpan.length, totalRegionDownload: data.simpan.length });
             }
             data.simpan.map(item => {
                 TaskServices.saveData('TM_REGION', item);
@@ -581,11 +561,14 @@ class SyncScreen extends React.Component {
                 TaskServices.updateRegion(item, indexData)
             })
         }
-        if(data.hapus.length > 0 && allData.length > 0){
-            data.hapus.map(item =>{
+        if (data.hapus.length > 0 && allData.length > 0) {
+            data.hapus.map(item => {
                 this.deleteData('TM_REGION', 'REGION_CODE', item.REGION_CODE);
-            });  
-        }   
+            });
+        }
+
+        let countDataInsert = TaskServices.getTotalData('TM_REGION');
+        this.hasDownload('hectare-statement/region', countDataInsert);
     }
 
     _crudTM_Est(data) {
@@ -609,11 +592,14 @@ class SyncScreen extends React.Component {
                 TaskServices.updateEstate(item, indexData)
             })
         }
-        if(data.hapus.length > 0 && allData.length > 0){
-            data.hapus.map(item =>{
+        if (data.hapus.length > 0 && allData.length > 0) {
+            data.hapus.map(item => {
                 this.deleteData('TM_EST', 'WERKS', item.WERKS);
-            });  
-        }   
+            });
+        }
+
+        let countDataInsert = TaskServices.getTotalData('TM_EST');
+        this.hasDownload('hectare-statement/est', countDataInsert);
     }
 
     _crudTM_LandUse(data) {
@@ -629,7 +615,7 @@ class SyncScreen extends React.Component {
             })
         } else {
             let countDataInsert = TaskServices.getTotalData('TM_LAND_USE');
-            this.setState({ progressLandUse: 1, valueLandUseDownload: countDataInsert, totalLandUseDownload: 0 })
+            this.setState({ progressLandUse: 1, valueLandUseDownload: countDataInsert, totalLandUseDownload: 0 });
 
         }
         if (data.ubah.length > 0 && allData.length > 0) {
@@ -638,11 +624,14 @@ class SyncScreen extends React.Component {
                 TaskServices.updateLandUse(item, indexData)
             })
         }
-        if(data.hapus.length > 0 && allData.length > 0){
-            data.hapus.map(item =>{
+        if (data.hapus.length > 0 && allData.length > 0) {
+            data.hapus.map(item => {
                 this.deleteData('TM_LAND_USE', 'WERKS_AFD_BLOCK_CODE', item.WERKS_AFD_BLOCK_CODE);
-            });  
-        }        
+            });
+        }
+
+        let countDataInsert = TaskServices.getTotalData('TM_LAND_USE');
+        this.hasDownload('hectare-statement/land-use', countDataInsert);
     }
 
     _crudTM_Comp(data) {
@@ -667,11 +656,14 @@ class SyncScreen extends React.Component {
                 TaskServices.updateComp(item, indexData)
             })
         }
-        if(data.hapus.length > 0 && allData.length > 0){
-            data.hapus.map(item =>{
+        if (data.hapus.length > 0 && allData.length > 0) {
+            data.hapus.map(item => {
                 this.deleteData('TM_COMP', 'COMP_CODE', item.COMP_CODE);
-            });  
-        }      
+            });
+        }
+
+        let countDataInsert = TaskServices.getTotalData('TM_COMP');
+        this.hasDownload('hectare-statement/comp', countDataInsert);
     }
 
     _crudTM_Content(data) {
@@ -686,8 +678,11 @@ class SyncScreen extends React.Component {
             });
         } else {
             let countDataInsert = TaskServices.getTotalData('TM_CONTENT');
-            this.setState({ progressContent: 1, valueContentDownload: countDataInsert, totalContentDownload: 0 })
+            this.setState({ progressContent: 1, valueContentDownload: countDataInsert, totalContentDownload: 0 });
         }
+
+        let countDataInsert = TaskServices.getTotalData('TM_CONTENT');
+        this.hasDownload('auth/content', countDataInsert);
     }
 
     _crudTM_ContentLabel(data) {
@@ -704,6 +699,9 @@ class SyncScreen extends React.Component {
             let countDataInsert = TaskServices.getTotalData('TM_CONTENT_LABEL');
             this.setState({ progressContentLabel: 1, valueContentLabelDownload: countDataInsert, totalContentLabelDownload: 0 })
         }
+
+        let countDataInsert = TaskServices.getTotalData('TM_CONTENT_LABEL');
+        this.hasDownload('auth/content-label', countDataInsert);
     }
 
     _crudTM_Kriteria(data) {
@@ -718,8 +716,63 @@ class SyncScreen extends React.Component {
             });
         } else {
             let countDataInsert = TaskServices.getTotalData('TM_KRITERIA');
-            this.setState({ progressKriteria: 1, valueKriteriaDownload: countDataInsert, totalKriteriaDownload: 0  })
+            this.setState({ progressKriteria: 1, valueKriteriaDownload: countDataInsert, totalKriteriaDownload: 0 });
         }
+
+        let countDataInsert = TaskServices.getTotalData('TM_KRITERIA');
+        this.hasDownload('auth/kriteria', countDataInsert);
+    }
+
+    _crudTM_Category(data) {
+        if (data.length > 0) {
+            for (var i = 1; i <= data.length; i++) {
+                this.setState({ progressCategory: i / data.length, totalCategoryDownload: data.length });
+            }
+            data.map(item => {
+                TaskServices.saveData('TR_CATEGORY', item);
+                let countDataInsert = TaskServices.getTotalData('TR_CATEGORY');
+                this.setState({ valueCategoryDownload: countDataInsert });
+                this.downloadImageCategory(item);
+            });
+        } else {
+            let countDataInsert = TaskServices.getTotalData('TR_CATEGORY');
+            this.setState({ progressCategory: 1, valueCategoryDownload: countDataInsert, totalCategoryDownload: 0 });
+        }
+
+        let countDataInsert = TaskServices.getTotalData('TR_CATEGORY');
+        this.hasDownload('auth/category', countDataInsert);
+    }
+
+
+    _crudTM_Contact(data) {
+        // let allData = TaskServices.getAllData('TR_CONTACT');
+        if (data.length > 0) {
+            for (var i = 1; i <= data.length; i++) {
+                this.setState({ progressContact: i / data.length, totalContactDownload: data.length });
+            }
+            data.map(item => {
+                TaskServices.saveData('TR_CONTACT', item);
+                let countDataInsert = TaskServices.getTotalData('TR_CONTACT');
+                this.setState({ valueContactDownload: countDataInsert });
+            });
+        } else {
+            let countDataInsert = TaskServices.getTotalData('TR_CONTACT');
+            this.setState({ progressContact: 1, valueContactDownload: countDataInsert, totalContactDownload: 0 });
+        }
+        // if (data.ubah.length > 0 && allData.length > 0) {   
+        //     data.ubah.map(item => {
+        //         let indexData = R.findIndex(R.propEq('USER_AUTH_CODE', item.USER_AUTH_CODE))(allData);
+        //         TaskServices.updateContact(item, indexData)
+        //     });
+        // }
+        // if(data.hapus.length > 0 && allData.length > 0){
+        //     data.hapus.map(item =>{
+        //         this.deleteData('TR_CONTACT', 'USER_AUTH_CODE', item.USER_AUTH_CODE);
+        //     });  
+        // }  
+
+        let countDataInsert = TaskServices.getTotalData('TR_CONTACT');
+        this.hasDownload('auth/contact', countDataInsert);
     }
 
     _crudTM_Finding(data) {
@@ -743,45 +796,10 @@ class SyncScreen extends React.Component {
                 TaskServices.updateFindingDownload(item, indexData)
             })
         }
-        if(data.hapus.length > 0 && allData.length > 0){
-            data.hapus.map(item =>{
+        if (data.hapus.length > 0 && allData.length > 0) {
+            data.hapus.map(item => {
                 this.deleteData('TR_FINDING', 'FINDING_CODE', item.FINDING_CODE);
-            });  
-        }   
-    }
-
-    _crudTM_Category(data) {
-        if (data.length > 0) {
-            for (var i = 1; i <= data.length; i++) {
-                this.setState({ progressCategory: i / data.length, totalCategoryDownload: data.length });
-            }
-            data.map(item => {
-                TaskServices.saveData('TR_CATEGORY', item);
-                let countDataInsert = TaskServices.getTotalData('TR_CATEGORY');
-                this.setState({ valueCategoryDownload: countDataInsert });
-                this.downloadImageCategory(item);
             });
-        } else {
-            let countDataInsert = TaskServices.getTotalData('TR_CATEGORY');
-            this.setState({ progressCategory: 1, valueCategoryDownload: countDataInsert, totalCategoryDownload: 0 })
-        }
-    }
-
-
-    _crudTM_Contact(data) {
-        var dataContact = data.data;
-        if (dataContact.length > 0) {
-            for (var i = 1; i <= dataContact.length; i++) {
-                this.setState({ progressContact: i / dataContact.length, totalContactDownload: dataContact.length });
-            }
-            dataContact.map(item => {
-                TaskServices.saveData('TR_CONTACT', item);
-                let countDataInsert = TaskServices.getTotalData('TR_CONTACT');
-                this.setState({ valueContactDownload: countDataInsert});
-            });
-        } else {
-            let countDataInsert = TaskServices.getTotalData('TR_CONTACT');
-            this.setState({ progressContact: 1,valueContactDownload: countDataInsert, totalContactDownload: 0 })
         }
     }
 
@@ -800,58 +818,39 @@ class SyncScreen extends React.Component {
         } else {
             let countDataInsert = TaskServices.getTotalData('TR_IMAGE');
             this.setState({ progressFindingImage: 1, valueFindingImageDownload: countDataInsert, totalFindingImageDownload: 0 })
-        }  
+        }
+
+        let countDataInsert = TaskServices.getTotalData('TR_IMAGE');
+        this.hasDownload('finding', countDataInsert);
     }
 
     _crudTM_Inspeksi_Param(data) {
-        TaskServices.saveData('TM_TIME_TRACK', data);       
-        this.setState({ progressParamInspection: 1, valueParamInspection: 1, totalParamInspection: 1 });
+        TaskServices.saveData('TM_TIME_TRACK', data);
         RNFS.copyFile(TaskServices.getPath(), 'file:///storage/emulated/0/MobileInspection/data.realm');
-                  
-        let arr = ['hectare-statement/block', 'hectare-statement/afdeling', 'hectare-statement/region', 'hectare-statement/est', 
-        'hectare-statement/land-use', 'hectare-statement/comp', 'auth/content', 'auth/content-label', 'auth/kriteria',
-        'auth/category', 'auth/contact', 'finding'];
-        
+        this.setState({ progressParamInspection: 1, valueParamInspection: 1, totalParamInspection: 1, showButton: true });
+        // alert('Sync Data Selesai')
+        this.setState({
+            showModal: true,
+            title: 'Sync Berhasil',
+            message: 'Yeay sinkronisasi udah selesai!',
+            icon: require('../Images/ic-sync-berhasil.png')
+        });
+
         // let arr = ['hectare-statement/block', 'hectare-statement/afdeling', 'hectare-statement/region', 'hectare-statement/est', 
         // 'hectare-statement/land-use', 'hectare-statement/comp', 'auth/content', 'auth/content-label', 'auth/kriteria',
-        // 'auth/category', 'auth/contact'];
+        // 'auth/category', 'auth/contact', 'finding'];
 
-        arr.map(item =>{
-            this.fetchingMobileSync(item);
-        })
-
-        
+        // arr.map(item =>{
+        //     if(isFirstInstall){
+        //     }
+        //     this.fetchingMobileSync(item);
+        // });        
     }
-
-    fetchingMobileSync(param){
-        var moment = require('moment');
-        const user = TaskServices.getAllData('TR_LOGIN')[0];
-        fetch('http://149.129.245.230:3008/api/mobile-sync', {
-            method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json' ,
-                'Authorization': `Bearer ${user.ACCESS_TOKEN}`
-            },
-        body: JSON.stringify({TGL_MOBILE_SYNC: moment().format('YYYY-MM-DD kk:mm:ss'), TABEL_UPDATE: param})
-        })
-        .then((response) => { 
-            return response.json();   
-        })
-        .then((data) => { 
-            if(data.status){
-                if(param == 'finding'){
-                    this.setState({ showButton: true });
-                    alert('Sync Data Selesai')
-                }
-            }
-        })
-    }
-
 
     //download image
     async _downloadImageFinding(data) {
         let isExist = await RNFS.exists(`${dirPhotoTemuan}/${data.IMAGE_NAME}`)
-        if(!isExist){
+        if (!isExist) {
             var url = data.IMAGE_URL;
             const { config, fs } = RNFetchBlob
             let options = {
@@ -865,12 +864,12 @@ class SyncScreen extends React.Component {
             }
             config(options).fetch('GET', url).then((res) => {
             });
-        }        
+        }
     }
 
     async downloadImageCategory(data) {
         let isExist = await RNFS.exists(`${dirPhotoKategori}/${data.ICON}`)
-        if(!isExist){
+        if (!isExist) {
             var url = data.ICON_URL;
             const { config, fs } = RNFetchBlob
             let options = {
@@ -889,263 +888,384 @@ class SyncScreen extends React.Component {
 
     _onSync() {
 
-        this.setState({
-            downloadBlok: false,
-            downloadAfd: false,
-            downloadRegion: false,
-            downloadEst: false,
-            downloadLandUse: false,
-            downloadComp: false,
-            downloadContent: false,
-            downloadContentLabel: false,
-            downloadKriteria: false,
-            downloadCategory: false,
-            downloadContact: false,
-            downloadFinding: false,
-            downloadFindingImage: false,
-            downloadInspeksiParam: false,
-            downloadTrack: false,
-            downloadParamTrack: false,
+        NetInfo.isConnected.fetch().then(isConnected => {
+            console.log('First, is ' + (isConnected ? 'online' : 'offline'));
+            if (isConnected) {
+                this.setState({
 
-            progressFinding: 0,
-            progressFindingImage: 0,
-            progress: 0,
-            progressAfd: 0,
-            progressRegion: 0,
-            progressEst: 0,
-            progressLandUse: 0,
-            progressComp: 0,
-            progressContent: 0,
-            progressContentLabel: 0,
-            progressKriteria: 0,
-            progressCategory: 0,
-            progressContact: 0,
+                    progressFinding: 0,
+                    progressFindingImage: 0,
+                    progress: 0,
+                    progressAfd: 0,
+                    progressRegion: 0,
+                    progressEst: 0,
+                    progressLandUse: 0,
+                    progressComp: 0,
+                    progressContent: 0,
+                    progressContentLabel: 0,
+                    progressKriteria: 0,
+                    progressCategory: 0,
+                    progressContact: 0,
+                    progressInspectionTrack: 0,
+                    progressParamInspection: 0,
+                    progressInspeksiHeader: 0,
+                    progressInspeksiDetail: 0,
+                    progressFindingData: 0,
+                    progressUploadImage: 0,
 
-            valueDownload: '0',
-            valueAfdDownload: '0',
-            valueRegionDownload: '0',
-            valueEstDownload: '0',
-            valueCompDownload: '0',
-            valueLandUseDownload: '0',
-            valueContentDownload: '0',
-            valueContentLabelDownload: '0',
-            valueKriteriaDownload: '0',
-            valueFindingDownload: '0',
-            valueCategoryDownload: '0',
-            valueContactDownload: '0',
-            valueFindingImageDownload: '0',
-            valueInspeksiHeaderUpload: '0',
-            valueInspeksiDetailUpload: '0',
-            valueFindingDataUpload: '0',
-            valueImageUpload: '0',
-            valueImageUpload: '0',
-            valueInspectionTrack: '0',
-            valueParamInspection: '0',
+                    valueDownload: '0',
+                    valueAfdDownload: '0',
+                    valueRegionDownload: '0',
+                    valueEstDownload: '0',
+                    valueCompDownload: '0',
+                    valueLandUseDownload: '0',
+                    valueContentDownload: '0',
+                    valueContentLabelDownload: '0',
+                    valueKriteriaDownload: '0',
+                    valueFindingDownload: '0',
+                    valueCategoryDownload: '0',
+                    valueContactDownload: '0',
+                    valueFindingImageDownload: '0',
+                    valueInspeksiHeaderUpload: '0',
+                    valueInspeksiDetailUpload: '0',
+                    valueFindingDataUpload: '0',
+                    valueImageUpload: '0',
+                    valueInspectionTrack: '0',
+                    valueParamInspection: '0',
 
-            totalDownload: '0',
-            totalAfdDownload: '0',
-            totalRegionDownload: '0',
-            totalEstDownload: '0',
-            totalCompDownload: '0',
-            totalLandUseDownload: '0',
-            totalContentDownload: '0',
-            totalContentLabelDownload: '0',
-            totalKriteriaDownload: '0',
-            totalFindingDownload: '0',
-            totalCategoryDownload: '0',
-            totalContactDownload: '0',
-            totalFindingImageDownload: '0',
-            totalInspeksiHeaderUpload: '0',
-            totalInspeksiDetailUpload: '0',
-            totalFindingDataUpload: '0',
-            totalImagelUpload: '0',
-            totalImagelUpload: '0',
-            totalInspectionTrack: '0',
-            totalParamInspection: '0',
-            
-            uploadInspeksi: false,
-            uploadInspeksiDetail: false,
-            uploadFinding: false,
-            fetchLocation: false,
-            isBtnEnable: false,
+                    totalDownload: '0',
+                    totalAfdDownload: '0',
+                    totalRegionDownload: '0',
+                    totalEstDownload: '0',
+                    totalCompDownload: '0',
+                    totalLandUseDownload: '0',
+                    totalContentDownload: '0',
+                    totalContentLabelDownload: '0',
+                    totalKriteriaDownload: '0',
+                    totalFindingDownload: '0',
+                    totalCategoryDownload: '0',
+                    totalContactDownload: '0',
 
+                    totalInspeksiHeaderUpload: '0',
+                    totalInspeksiDetailUpload: '0',
+                    totalFindingDataUpload: '0',
+                    totalFindingImageDownload: '0',
+                    totalImagelUpload: '0',
+                    totalImagelUpload: '0',
+                    totalInspectionTrack: '0',
+                    totalParamInspection: '0',
+
+                    fetchLocation: false,
+                    isBtnEnable: false,
+
+                });
+
+                //POST TRANSAKSI
+                this.kirimImage();
+                this.loadDataFinding();
+                this.loadData();
+                this.loadDataDetailInspeksi();
+                this.loadDataInspectionTrack();
+
+                //cara biasa
+                // setTimeout(() => {            
+                // this.DownloadData(`${link}mobile-sync/finding`, 'finding');
+                // }, 2000);
+
+                //cara redux saga
+                setTimeout(() => {
+                    this.props.findingRequest()
+                    this.props.blockRequest();
+                }, 2000);
+
+            } else {
+                this.setState({
+                    showButton: true,
+                    showModal: true,
+                    title: 'Tidak Ada Jaringan',
+                    message: 'Untuk bisa sync, kamu harus terhubung ke Internet',
+                    icon: require('../Images/ic-no-internet.png')
+                });
+            }
         });
+        function handleFirstConnectivityChange(isConnected) {
+            console.log('Then, is ' + (isConnected ? 'online' : 'offline'));
+            NetInfo.isConnected.removeEventListener(
+                'connectionChange',
+                handleFirstConnectivityChange
+            );
+        }
+        NetInfo.isConnected.addEventListener(
+            'connectionChange',
+            handleFirstConnectivityChange
+        );
+    }
 
-        //POST TRANSAKSI
-        this.kirimImage();
-        this.loadDataFinding();
-        this.loadData();
-        this.loadDataDetailInspeksi();
-        this.loadDataInspectionTrack();
+    DownloadData(URL, table) {
+        const user = TaskServices.getAllData('TR_LOGIN')[0];
+        fetch(URL, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${user.ACCESS_TOKEN}`
+            },
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                alert(JSON.stringify(data));
+                if (data.status) {
+                    let payload = data.data;
+                    if (table == 'finding') {
+                        this._crudTM_Finding(payload);
+                        this.DownloadData(`${link}mobile-sync/finding-images`, 'image');
+                    } else if (table == 'image') {
+                        this._crudTM_Finding_Image(payload);
+                        // this.DownloadData(`${link}mobile-sync/hectare-statement/block`, 'block');
+                    } else if (table == 'block') {
+                        this._crudTM_Block(payload);
+                        this.DownloadData(`${link}mobile-sync/hectare-statement/afdeling`, 'afd');
+                    } else if (table == 'afd') {
+                        this._crudTM_Afd(payload);
+                        this.DownloadData(`${link}mobile-sync/hectare-statement/region`, 'region');
+                    } else if (table == 'region') {
+                        this._crudTM_Region(payload);
+                        this.DownloadData(`${link}mobile-sync/hectare-statement/est`, 'est');
+                    } else if (table == 'est') {
+                        this._crudTM_Est(payload);
+                        this.DownloadData(`${link}mobile-sync/hectare-statement/land-use`, 'landuse');
+                    } else if (table == 'landuse') {
+                        this._crudTM_LandUse(payload);
+                        this.DownloadData(`${link}mobile-sync/hectare-statement/comp`, 'comp');
+                    } else if (table == 'comp') {
+                        this._crudTM_Comp(payload);
+                        this.DownloadData(`${link}content`, 'content');
+                    } else if (table == 'content') {
+                        this._crudTM_Content(payload);
+                        this.DownloadData(`${link}content-label`, 'contentlabel');
+                    } else if (table == 'contentlabel') {
+                        this._crudTM_ContentLabel(payload);
+                        this.DownloadData(`${link}kriteria`, 'kriteria');
+                    } else if (table == 'kriteria') {
+                        this._crudTM_Kriteria(payload);
+                        this.DownloadData(`${link}category`, 'catogory');
+                    } else if (table == 'catogory') {
+                        this._crudTM_Category(payload);
+                        this.DownloadData(`${link}contacts`, 'contact');
+                    } else if (table == 'contact') {
+                        this._crudTM_Contact(payload);
+                        this.DownloadData(`${link}parameter/track`, 'track');
+                    } else if (table == 'track') {
+                        this._crudTM_Inspeksi_Param(payload);
+                    }
+                } else {
+                    // alert('Gagal proses download ' + table);
+                    this.setState({
+                        showButton: true,
+                        showModal: true,
+                        title: 'Sync Putus',
+                        message: 'Yaaah jaringannya mati, coba Sync lagi yaa.',
+                        icon: require('../Images/ic-sync-gagal.png')
+                    });
+                }
+            })
+    }
 
-        // GET DATA MASTER
-        // this.props.blockRequest();
-        // this.props.afdRequest();
-        // this.props.regionRequest();
-        // this.props.estRequest();
-        // this.props.landUseRequest();
-        // this.props.compRequest();
-        // this.props.contentRequest();
-        // this.props.contentLabelRequest();
-        // this.props.kriteriaRequest();
-        // this.props.categoryRequest();
-        // this.props.contactRequest();
-        // this.props.findingRequest();
-        // this.props.findingImageRequest();
-        // this.props.paramTrackRequest();
-
+    fetchingMobileSync(param) {
+        var moment = require('moment');
+        const user = TaskServices.getAllData('TR_LOGIN')[0];
+        fetch('http://149.129.245.230:3008/api/mobile-sync', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${user.ACCESS_TOKEN}`
+            },
+            body: JSON.stringify({ TGL_MOBILE_SYNC: moment().format('YYYY-MM-DD kk:mm:ss'), TABEL_UPDATE: param })
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                // if(data.status){
+                //     if(param == 'finding'){
+                //         this.setState({ showButton: true });
+                //         alert('Sync Data Selesai')
+                //     }
+                // }else{
+                //     alert('Gagal proses log mobile '+param)
+                // }
+            })
     }
 
     componentWillReceiveProps(newProps) {
-        console.log(newProps)       
+        console.log(newProps)
 
-        if (newProps.finding.fetchingFinding !== null && !newProps.finding.fetchingFinding && !this.state.downloadFinding) {
+        if (newProps.finding.fetchingFinding !== null && !newProps.finding.fetchingFinding) {
             let dataJSON = newProps.finding.finding;
-            this.setState({ downloadFinding: true });
             if (dataJSON !== null) {
                 this._crudTM_Finding(dataJSON);
             }
-            this.props.findingImageRequest();
+            this.props.resetFinding()
+            this.props.findingImageRequest()
         }
 
-        if (newProps.findingImage.fetchingFindingImage !== null && !newProps.findingImage.fetchingFindingImage && !this.state.downloadFindingImage) {
+        if (newProps.findingImage.fetchingFindingImage !== null && !newProps.findingImage.fetchingFindingImage) {
             let dataJSON = newProps.findingImage.findingImage;
-            this.setState({ downloadFindingImage: true });
             if (dataJSON !== null) {
                 this._crudTM_Finding_Image(dataJSON);
             }
-            this.setState({showButton: true})
-            this.props.blockRequest();
+            this.props.resetFindingImage();
+            // this.props.blockRequest();
         }
 
-        if (newProps.block.fetchingBlock !== null && !newProps.block.fetchingBlock && !this.state.downloadBlok) {
+        if (newProps.block.fetchingBlock !== null && !newProps.block.fetchingBlock) {
             let dataJSON = newProps.block.block;
-            this.setState({ downloadBlok: true });
             if (dataJSON !== null) {
                 this._crudTM_Block(dataJSON);
             }
+            this.props.resetBlock();
             this.props.afdRequest();
         }
 
-        if (newProps.afd.fetchingAfd !== null && !newProps.afd.fetchingAfd && !this.state.downloadAfd) {
+        if (newProps.afd.fetchingAfd !== null && !newProps.afd.fetchingAfd) {
             let dataJSON = newProps.afd.afd;
-            this.setState({ downloadAfd: true });
             if (dataJSON !== null) {
                 this._crudTM_Afd(dataJSON);
             }
-            this.props.regionRequest();            
+            this.props.resetAfd();
+            this.props.regionRequest();
         }
 
-        if (newProps.region.fetchingRegion !== null && !newProps.region.fetchingRegion && !this.state.downloadRegion) {
+        if (newProps.region.fetchingRegion !== null && !newProps.region.fetchingRegion) {
             let dataJSON = newProps.region.region;
-            this.setState({ downloadRegion: true })
             if (dataJSON !== null) {
                 this._crudTM_Region(dataJSON);
             }
+            this.props.resetRegion();
             this.props.estRequest();
         }
 
-        if (newProps.est.fetchingEst !== null && !newProps.est.fetchingEst && !this.state.downloadEst) {
+        if (newProps.est.fetchingEst !== null && !newProps.est.fetchingEst) {
             let dataJSON = newProps.est.est;
             this.setState({ downloadEst: true });
             if (dataJSON !== null) {
                 this._crudTM_Est(dataJSON);
             }
+            this.props.resetEst()
             this.props.landUseRequest();
         }
 
-        if (newProps.landUse.fetchingLandUse !== null && !newProps.landUse.fetchingLandUse && !this.state.downloadLandUse) {
+        if (newProps.landUse.fetchingLandUse !== null && !newProps.landUse.fetchingLandUse) {
             let dataJSON = newProps.landUse.landUse;
             this.setState({ downloadLandUse: true });
             if (dataJSON !== null) {
                 this._crudTM_LandUse(dataJSON);
             }
+            this.props.resetLandUse();
             this.props.compRequest();
         }
 
-        if (newProps.comp.fetchingComp !== null && !newProps.comp.fetchingComp && !this.state.downloadComp) {
+        if (newProps.comp.fetchingComp !== null && !newProps.comp.fetchingComp) {
             let dataJSON = newProps.comp.comp;
-            this.setState({ downloadComp: true });
             if (dataJSON !== null) {
                 this._crudTM_Comp(dataJSON);
             }
+            this.props.resetComp();
             this.props.contentRequest();
         }
 
-        if (newProps.content.fetchingContent !== null && !newProps.content.fetchingContent && !this.state.downloadContent) {
+        if (newProps.content.fetchingContent !== null && !newProps.content.fetchingContent) {
             let dataJSON = newProps.content.content;
-            this.setState({ downloadContent: true });
             if (dataJSON !== null) {
                 this._crudTM_Content(dataJSON);
             }
-            this.props.contentLabelRequest();
-        }
-
-        if (newProps.contentLabel.fetchingContentLabel !== null && !newProps.contentLabel.fetchingContentLabel && !this.state.downloadContentLabel) {
-            let dataJSON = newProps.contentLabel.contentLabel;
-            this.setState({ downloadContentLabel: true });
-            if (dataJSON !== null) {
-                this._crudTM_ContentLabel(dataJSON);
-            }
+            this.props.resetContent();
+            // this.props.contentLabelRequest();
             this.props.kriteriaRequest();
+
         }
 
-        if (newProps.kriteria.fetchingKriteria !== null && !newProps.kriteria.fetchingKriteria && !this.state.downloadKriteria) {
+        // if (newProps.contentLabel.fetchingContentLabel !== null && !newProps.contentLabel.fetchingContentLabel) {
+        //     let dataJSON = newProps.contentLabel.contentLabel;
+        //     if (dataJSON !== null) {
+        //         this._crudTM_ContentLabel(dataJSON);
+        //     }
+        //     this.props.resetContentLabel();
+        //     this.props.kriteriaRequest();
+        // }
+
+        if (newProps.kriteria.fetchingKriteria !== null && !newProps.kriteria.fetchingKriteria) {
             let dataJSON = newProps.kriteria.kriteria;
-            this.setState({ downloadKriteria: true });
             if (dataJSON !== null) {
                 this._crudTM_Kriteria(dataJSON);
             }
+            this.props.resetKriteria();
             this.props.categoryRequest();
         }
 
-        if (newProps.category.fetchingCategory !== null && !newProps.category.fetchingCategory && !this.state.downloadCategory) {
+        if (newProps.category.fetchingCategory !== null && !newProps.category.fetchingCategory) {
             let dataJSON = newProps.category.category;
-            this.setState({ downloadCategory: true });
             if (dataJSON !== null) {
                 this._crudTM_Category(dataJSON);
             }
+            this.props.resetCategory();
             this.props.contactRequest();
         }
 
-        if (newProps.contact.fetchingContact !== null && !newProps.contact.fetchingContact && !this.state.downloadContact) {
-            let dataJSON = newProps.contact.contact;
-            this.setState({ downloadContact: true });
+        if (newProps.contact.fetchingContact !== null && !newProps.contact.fetchingContact) {
+            let dataJSON = newProps.contact.contact.data;
             if (dataJSON !== null) {
                 this._crudTM_Contact(dataJSON);
-            }            
+            }
+            this.props.resetContact()
             this.props.paramTrackRequest();
         }
 
-        if (newProps.paramTrack.fetchingParamTrack !== null && !newProps.paramTrack.fetchingParamTrack && !this.state.downloadParamTrack) {
+        if (newProps.paramTrack.fetchingParamTrack !== null && !newProps.paramTrack.fetchingParamTrack) {
             let dataJSON = newProps.paramTrack.paramTrack;
-            this.setState({ downloadParamTrack: true });
             if (dataJSON !== null) {
                 this._crudTM_Inspeksi_Param(dataJSON);
             }
-        } 
+            this.props.resetParamTrack();
+            this.setState({ showButton: true });
+        }
 
     }
 
     render() {
         return (
             <Container style={{ flex: 1, padding: 16 }}>
-                <Content>                
-                <View style={{ flex: 1, marginTop: 12 }}>
-                    <View style={{ flexDirection: 'row' }}>
-                        <Text>UPLOAD INSPEKSI TRACK</Text>
-                        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                            <Text>{this.state.valueInspectionTrack}</Text>
-                            <Text>/</Text>
-                            <Text>{this.state.totalInspectionTrack}</Text>
+                <Content>
+
+                    <ModalAlert
+                        icon={this.state.icon}
+                        visible={this.state.showModal}
+                        onPressCancel={() => this.setState({ showModal: false })}
+                        title={this.state.title}
+                        message={this.state.message} />
+
+                    {this.state.showButton && <View style={{ flex: 1, marginTop: 8 }}>
+                        <TouchableOpacity disabled={this.state.isBtnEnable} style={styles.button} onPress={() => { this.setState({ showButton: false }); this._onSync() }}>
+                            <Text style={styles.buttonText}>Sync</Text>
+                        </TouchableOpacity>
+                    </View>}
+
+                    <View style={{ flex: 1, marginTop: 24 }}>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text>UPLOAD INSPEKSI TRACK</Text>
+                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
+                                <Text>{this.state.valueInspectionTrack}</Text>
+                                <Text>/</Text>
+                                <Text>{this.state.totalInspectionTrack}</Text>
+                            </View>
                         </View>
-                    </View>
-                    <Progress.Bar
-                        height={20}
-                        width={null}
-                        style={{ marginTop: 2 }}
-                        progress={this.state.progressInspectionTrack}
-                        indeterminate={this.state.indeterminate} />
+                        <Progress.Bar
+                            height={20}
+                            width={null}
+                            style={{ marginTop: 2 }}
+                            progress={this.state.progressInspectionTrack}
+                            indeterminate={this.state.indeterminate} />
                     </View>
 
                     <View style={{ flex: 1, marginTop: 12 }}>
@@ -1216,7 +1336,7 @@ class SyncScreen extends React.Component {
                             style={{ marginTop: 2 }}
                             progress={this.state.progressUploadImage}
                             indeterminate={this.state.indeterminate} />
-                    </View>                    
+                    </View>
 
                     <View style={{ flex: 1, marginTop: 12 }}>
                         <View style={{ flexDirection: 'row' }}>
@@ -1381,7 +1501,7 @@ class SyncScreen extends React.Component {
                             indeterminate={this.state.indeterminate} />
                     </View>
 
-                    <View style={{ flex: 1, marginTop: 12 }}>
+                    {/* <View style={{ flex: 1, marginTop: 12 }}>
                         <View style={{ flexDirection: 'row' }}>
                             <Text>CONTENT LABEL</Text>
                             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
@@ -1397,7 +1517,7 @@ class SyncScreen extends React.Component {
                             style={{ marginTop: 2 }}
                             progress={this.state.progressContentLabel}
                             indeterminate={this.state.indeterminate} />
-                    </View>
+                    </View> */}
 
                     <View style={{ flex: 1, marginTop: 12 }}>
                         <View style={{ flexDirection: 'row' }}>
@@ -1470,13 +1590,6 @@ class SyncScreen extends React.Component {
                             progress={this.state.progressParamInspection}
                             indeterminate={this.state.indeterminate} />
                     </View>
-                    
-
-                    {this.state.showButton && <View style={{ flex: 1, marginTop: 48 }}>
-                        <TouchableOpacity disabled={this.state.isBtnEnable} style={styles.button} onPress={() => { this.setState({ showButton: false }); this._onSync() }}>
-                            <Text style={styles.buttonText}>Sync</Text>
-                        </TouchableOpacity>
-                    </View>}
 
                     <ProgressDialog
                         visible={this.state.fetchLocation}
@@ -1539,8 +1652,23 @@ const mapDispatchToProps = dispatch => {
         inspeksiPostDetail: obj => dispatch(InspeksiAction.inspeksiPostDetail(obj)),
         inspeksiPostTrackingPath: obj => dispatch(InspeksiAction.inspeksiPostTrackingPath(obj)),
         paramTrackRequest: obj => dispatch(ParamTrackAction.paramTrackRequest(obj)),
-        findingPostData: obj => dispatch(FindingUploadAction.findingPostData(obj)),        
+        findingPostData: obj => dispatch(FindingUploadAction.findingPostData(obj)),
         tmPost: obj => dispatch(TMobileAction.tmPost(obj)),
+
+        resetBlock: () => dispatch(BlockAction.resetBlock()),
+        resetAfd: () => dispatch(AfdAction.resetAfd()),
+        resetRegion: () => dispatch(RegionAction.resetRegion()),
+        resetEst: () => dispatch(EstAction.resetEst()),
+        resetLandUse: () => dispatch(LandUseAction.resetLandUse()),
+        resetComp: () => dispatch(CompAction.resetComp()),
+        resetContent: () => dispatch(ContentAction.resetContent()),
+        resetContentLabel: () => dispatch(ContentLabelAction.resetContentLabel()),
+        resetKriteria: () => dispatch(KriteriaAction.resetKriteria()),
+        resetCategory: () => dispatch(CategoryAction.resetCategory()),
+        resetContact: () => dispatch(ContactAction.resetContact()),
+        resetParamTrack: () => dispatch(ParamTrackAction.resetParamTrack()),
+        resetFinding: () => dispatch(FindingAction.resetFinding()),
+        resetFindingImage: () => dispatch(FindingImageAction.resetFindingImage())
     };
 };
 

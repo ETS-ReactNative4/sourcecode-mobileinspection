@@ -5,8 +5,8 @@ import {
     TouchableOpacity,
     View,
     Image,
-    BackHandler,
     Dimensions,
+    BackAndroid
   } from 'react-native';
 import Colors from '../../Constant/Colors';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -14,12 +14,8 @@ import imgTakePhoto from '../../Images/icon/ic_take_photo.png';
 import imgNextPhoto from '../../Images/icon/ic_next_photo.png';
 import { RNCamera as Camera } from 'react-native-camera';
 import TaskServices from '../../Database/TaskServices';
-import { NavigationActions, StackActions } from 'react-navigation';
 import ImageResizer from 'react-native-image-resizer';
-import { dirPhotoTemuan } from '../../Lib/dirStorage'
-import random from 'random-string'
-
-const moment = require('moment');
+import { dirPhotoTemuan } from '../../Lib/dirStorage';
 var RNFS = require('react-native-fs');
 import R from 'ramda';
 import { getTodayDate } from '../../Lib/Utils';
@@ -30,7 +26,7 @@ class TakeFoto extends Component{
     const { params = {} } = navigation.state;
     return {
       headerStyle: {
-        backgroundColor: Colors.tintColor
+        backgroundColor: Colors.tintColorPrimary
       },
       title: 'Ambil Foto',
       headerTintColor: '#fff',
@@ -81,11 +77,11 @@ class TakeFoto extends Component{
 
   componentDidMount(){
     this.props.navigation.setParams({ clearFoto: this.clearFoto })
-    BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+    BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
   }
 
   componentWillUnmount(){
-    BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+    BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
   }
 
   handleBackButtonClick() { 

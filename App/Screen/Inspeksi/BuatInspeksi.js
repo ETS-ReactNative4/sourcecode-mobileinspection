@@ -1,35 +1,21 @@
 import React, { Component } from 'react';
 import {
-    Text, Keyboard, Alert, TextInput, TouchableOpacity, View, Image, StatusBar,
-    KeyboardAvoidingView, BackHandler
+    Text, Keyboard, Dimensions, TextInput, TouchableOpacity, View
 } from 'react-native';
-import {
-    Container,
-    Content,
-    Card,
-    CardItem,
-    Title,
-} from 'native-base';
+import { Card } from 'native-base';
 import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import IconLoc from 'react-native-vector-icons/FontAwesome5';
-import Icons from 'react-native-vector-icons/Ionicons';
-import CardView from 'react-native-cardview';
-import MapView, {PROVIDER_GOOGLE, ProviderPropType, Marker, AnimatedRegion } from 'react-native-maps';
-import {convertTimestampToDate, getTodayDate, getUUID} from '../../Lib/Utils'
+import MapView, { PROVIDER_GOOGLE, ProviderPropType, Marker, AnimatedRegion } from 'react-native-maps';
+import { getTodayDate } from '../../Lib/Utils'
 import TaskService from '../../Database/TaskServices';
-// import KeyboardListener from 'react-native-keyboard-listener';
-import Dialog from "react-native-dialog";
 import { ProgressDialog } from 'react-native-simple-dialogs';
 import Autocomplete from 'react-native-autocomplete-input';
-import { utils } from 'redux-saga';
-var uuid = require('react-native-uuid');
 import Geojson from 'react-native-geojson';
-import Entypo from 'react-native-vector-icons/Entypo';
+import R from 'ramda'
 
-const indonesia = require('../../Data/indonesia-province-simple.json')
-const kaltim = require('../../Data/kalimantantimur.json')
+import ModalAlert from '../../Component/ModalAlert';
 // const kaltim = require('../../Data/skm.json')
 const alcatraz = {
     type: 'FeatureCollection',
@@ -49,25 +35,52 @@ const alcatraz = {
 
 class BuatInspeksiRedesign extends Component {
 
-    static navigationOptions = {
-        headerStyle: {
-            backgroundColor: Colors.tintColor
-        },
-        title: 'Buat Inspeksi',
-        headerTintColor: '#fff',
-        headerTitleStyle: {
+    // static navigationOptions = {
+    //     headerStyle: {
+    //         backgroundColor: Colors.tintColorPrimary
+    //     },
+    //     title: 'Buat Inspeksi',
+    //     headerTintColor: '#fff',
+    //     headerTitleStyle: {
+    //         textAlign: "left",
+    //         flex: 1,
+    //         fontSize: 18,
+    //         fontWeight: '400',
+    //         marginHorizontal: 12
+    //     }
+    // };  
+
+    static navigationOptions = ({ navigation }) => {
+        const { params = {} } = navigation.state;
+        return {
+          headerStyle: {
+            backgroundColor: Colors.tintColorPrimary
+          },
+          title: 'Buat Inspeksi',
+          headerTintColor: '#fff',
+          headerTitleStyle: {
             textAlign: "left",
             flex: 1,
             fontSize: 18,
             fontWeight: '400',
             marginHorizontal: 12
-        }
-    };  
+        },
+        headerRight: (
+              <TouchableOpacity style= {{marginRight: 20}} onPress={()=>{params.searchLocation()}}>
+                  <IconLoc style={{marginLeft: 12}} name={'location-arrow'} size={24} color={'white'} />
+              </TouchableOpacity>
+          )
+        };
+    }
 
     constructor(props) {
         super(props);        
         let dataLogin = TaskService.getAllData('TR_LOGIN');
         let blokInspeksiCode = `I${dataLogin[0].USER_AUTH_CODE}${getTodayDate('YYMMDDHHmmss')}`
+
+        let params = props.navigation.state.params;
+        let testBlock = R.clone(params.block);
+
         this.state = {
             blokInspeksiCode,
             dataLogin,
@@ -90,9 +103,14 @@ class BuatInspeksiRedesign extends Component {
             clickLOV: false,
             intervalId: 0,
             showBtn: true,
+            testBlock,
+            //Add Modal Alert by Aminju 
+            title: 'Title',
+            message: 'Message',
+            showModal: false
         };
-    }
-
+    }   
+    
     findPerson(query){
         if (query === '') {
             return [];
@@ -100,15 +118,6 @@ class BuatInspeksiRedesign extends Component {
         const { person } = this.state;
         const regex = new RegExp(`${query.trim()}`, 'i');
         return person.filter(person => person.allShow.search(regex) >= 0);
-
-        // var letters = /^[A-Za-z]+$/;
-        // if(query.match(letters)){
-        //     console.log('osan');
-            // return person.filter(person => person.blokName.search(regex) >= 0);
-        // }else{
-        //     console.log('asdasdd');
-            // return person.filter(person => person.blokCode.search(regex) >= 0);
-        // }
         
     }
 
@@ -130,8 +139,18 @@ class BuatInspeksiRedesign extends Component {
     // alert('Keyboard Hidden');
     }
 
-    componentDidMount() {
-        this.props.navigation.setParams({ getData: this.state.inspeksiHeader })
+    componentDidMount() {    
+        this.props.navigation.setParams({ searchLocation: this.searchLocation })
+        this.loadDataBlock(this.state.testBlock)    
+        this.getLocation();
+    }
+
+    searchLocation =() =>{
+        this.setState({fetchLocation: true})
+        this.getLocation();
+    }
+
+    loadData(){
         let data = TaskService.getAllData('TM_BLOCK');
         data.map(item=>{
             let statusBlok= this.getStatusBlok(item.WERKS_AFD_BLOCK_CODE);
@@ -147,27 +166,29 @@ class BuatInspeksiRedesign extends Component {
                 compCode: item.COMP_CODE,
                 allShow: `${item.BLOCK_NAME}/${statusBlok}/${estateName}`
             });
-        })
-        this.getLocation();
+        });
     }
 
-    insertTrackLokasi(blokInsCode, lat, lon){
-        try {
-            var trInsCode = `T${this.state.dataLogin[0].USER_AUTH_CODE}${getTodayDate('YYMMDDHHmmss')}`;
-            var today = getTodayDate('YYYY-MM-DD HH:mm:ss');
-            data = {
-                TRACK_INSPECTION_CODE: trInsCode,
-                BLOCK_INSPECTION_CODE: blokInsCode,
-                DATE_TRACK: today,
-                LAT_TRACK: lat.toString(),
-                LONG_TRACK: lon.toString(),
-                INSERT_USER: this.state.dataLogin[0].USER_AUTH_CODE,
-                INSERT_TIME: today,
-                STATUS_SYNC: 'N'
-            }
-            TaskService.saveData('TM_INSPECTION_TRACK', data)
-        } catch (error) {
-            alert('insert track lokasi buat inspeksi '+ error)
+    loadDataBlock(blockCode){
+        let data = TaskService.findBy2('TM_BLOCK', 'BLOCK_CODE', blockCode);
+        // alert(JSON.stringify(data))
+        if(data !== undefined){            
+            let statusBlok= this.getStatusBlok(data.WERKS_AFD_BLOCK_CODE);
+            let estateName = this.getEstateName(data.WERKS);
+            this.setState({
+                blok: data.BLOCK_CODE,
+                blockCode: data.BLOCK_CODE, 
+                blockName: data.BLOCK_NAME, 
+                afdCode: data.AFD_CODE, 
+                werks: data.WERKS,
+                werksAfdBlokCode: data.WERKS_AFD_BLOCK_CODE,
+                estateName: data.estateName,
+                statusBlok: data.statusBlok,
+                compCode: data.COMP_CODE,
+                allShow: `${data.BLOCK_NAME}/${statusBlok}/${estateName}`
+            })
+        }else{
+            alert('Kamu tidak bisa inspeksi')
         }
     }
 
@@ -191,11 +212,32 @@ class BuatInspeksiRedesign extends Component {
                 let message = error && error.message ? error.message : 'Terjadi kesalahan ketika mencari lokasi anda !';
                 if (error && error.message == "No location provider available.") {
                     message = "Mohon nyalakan GPS anda terlebih dahulu.";
-                }
+                }                
+                this.insertTrackLokasi(blokInsCode, this.state.latitude, this.state.longitude)
                 // console.log(message);
             }, // go here if error while fetch location
             { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
         );
+    }
+
+    insertTrackLokasi(blokInsCode, lat, lon){
+        try {
+            var trInsCode = `T${this.state.dataLogin[0].USER_AUTH_CODE}${getTodayDate('YYMMDDHHmmss')}`;
+            var today = getTodayDate('YYYY-MM-DD HH:mm:ss');
+            data = {
+                TRACK_INSPECTION_CODE: trInsCode,
+                BLOCK_INSPECTION_CODE: blokInsCode,
+                DATE_TRACK: today,
+                LAT_TRACK: lat.toString(),
+                LONG_TRACK: lon.toString(),
+                INSERT_USER: this.state.dataLogin[0].USER_AUTH_CODE,
+                INSERT_TIME: today,
+                STATUS_SYNC: 'N'
+            }
+            TaskService.saveData('TM_INSPECTION_TRACK', data)
+        } catch (error) {
+            alert('insert track lokasi buat inspeksi '+ error)
+        }
     }
 
     getLocation() {
@@ -212,27 +254,40 @@ class BuatInspeksiRedesign extends Component {
                 if (error && error.message == "No location provider available.") {
                     message = "Mohon nyalakan GPS anda terlebih dahulu.";
                 }
-                this.setState({fetchLocation:false})
-                alert('Informasi', message);
+                this.setState({ fetchLocation: false })
+                // alert('Informasi', message);
+                this.setState({ showModal: true, title: 'Informasi', message: message, icon: require('../../Images/ic-no-gps.png') });
                 // console.log(message);
             }, // go here if error while fetch location
             { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
         );
+        // this.loadData()
     }
 
     validation() {
         let statusBlok = this.getStatusBlok(this.state.werksAfdBlokCode);
+        var message = 'Kamu harus pilih lokasi dan isi baris dulu yaa :D'
         if(statusBlok === ''){
-            alert('Anda tidak bisa Inspeksi di Blok ini, silahkan hubungi IT Site');
-        } else if(this.state.werks === ''){
-            alert('Anda tidak bisa Inspeksi di Blok ini, silahkan hubungi IT Site');
+            //alert('Anda tidak bisa Inspeksi di Blok ini, silahkan hubungi IT Site');
+            this.setState({ showModal: true, title: 'Pilih Lokasi', message: message, icon: require('../../Images/ic-blm-input-lokasi.png') });
+        } else if (this.state.werks === '') {
+            // alert('Anda tidak bisa Inspeksi di Blok ini, silahkan hubungi IT Site');
+            this.setState({ showModal: true, title: 'Pilih Lokasi', message: message, icon: require('../../Images/ic-blm-input-lokasi.png') });
         } else if (this.state.blok === '') {
-            alert('Blok Belum diisi !');
+            // alert('Blok Belum diisi !');
+            this.setState({ showModal: true, title: 'Pilih Lokasi', message: message, icon: require('../../Images/ic-blm-input-lokasi.png') });
         } else if (this.state.baris === '') {
-            alert('Baris Belum diisi !');
-        } else if(!this.state.clickLOV){
-            alert('Blok harus dipilih dari LOV');
-        } else {
+            // alert('Baris Belum diisi !');
+            this.setState({ showModal: true, title: 'Pilih Lokasi', message: message, icon: require('../../Images/ic-blm-input-lokasi.png') });
+        } else if(this.state.latitude === 0.0 && this.state.longitude === 0.0){
+            // alert('Titik lokasi kamu belum ada, coba refresh lokasi lagi yaa');
+            this.setState({ showModal: true, title: 'Lokasi', message: 'Titik lokasi kamu belum ada, coba refresh lokasi lagi yaa', icon: require('../../Images/ic-no-gps.png') });
+        } 
+        // else if(!this.state.clickLOV){
+        //     alert('Blok harus dipilih dari LOV');
+        //     this.setState({ showModal: true, title: 'Pilih Lokasi', message: message, icon: require('../../Images/ic-blm-input-lokasi.png') });
+        // } 
+        else {
             this.insertDB(statusBlok);
         }    
     }
@@ -254,6 +309,25 @@ class BuatInspeksiRedesign extends Component {
         } catch (error) {
             return ''
         }
+    }
+
+    getEstateName(werks){
+        try {
+            let data = TaskService.findBy2('TM_EST', 'WERKS', werks);
+            return data.EST_NAME;
+        } catch (error) {
+            return '';
+        }
+        
+    }
+
+    potong(param){
+        let brs = param;
+        if(brs.charAt(0) == '0'){
+            brs = brs.substring(1);
+            
+        }
+        this.setState({ baris: brs });
     }
 
     insertDB(param) {
@@ -309,10 +383,12 @@ class BuatInspeksiRedesign extends Component {
         //for track
         let time = TaskService.getAllData('TM_TIME_TRACK')[0];
         let duration = 10000
-        // if(time !== undefined){
-        //     duration = parseFloat(time.DESC);
-        // }
+        if(time !== undefined){
+            duration = parseFloat(time.DESC);
+        }
         let id = setInterval(()=> this.getLocation2(this.state.blokInspeksiCode), duration);
+
+        // this.navigateScreen('TakeFotoBaris', modelInspeksiH, params, param, id, model)
 
         this.props.navigation.navigate('TakeFotoBaris', {
             inspeksiHeader: modelInspeksiH,
@@ -324,31 +400,36 @@ class BuatInspeksiRedesign extends Component {
         });
     }
 
-    getEstateName(werks){
-        try {
-            let data = TaskService.findBy2('TM_EST', 'WERKS', werks);
-            return data.EST_NAME;
-        } catch (error) {
-            return '';
-        }
-        
+    navigateScreen(screenName, modelInspeksiH, params, statusBlok, intervalId, dataInspeksi) {
+        const navigation = this.props.navigation;
+        const resetAction = StackActions.reset({
+        index: 0,            
+        actions: [NavigationActions.navigate({ routeName: screenName, params : { 
+            inspeksiHeader: modelInspeksiH,
+            dataUsual: params,
+            statusBlok: statusBlok,
+            waktu: getTodayDate('YYYY-MM-DD  HH:mm:ss'),
+            intervalId: intervalId,
+            dataInspeksi: dataInspeksi
+            } 
+          })]
+        });
+        navigation.dispatch(resetAction);
     }
 
-    potong(param){
-        let brs = param;
-        if(brs.charAt(0) == '0'){
-            brs = brs.substring(1);
-            
-        }
-        this.setState({ baris: brs });
-    }
-
-    render() {        
+    render() {  
         const { query } = this.state;
         const person = this.findPerson(query);
         const comp = (a, b) => a.toLowerCase().trim() === b.toLowerCase().trim();
         return (
             <View style={styles.mainContainer}>
+
+                <ModalAlert
+                    icon={this.state.icon}
+                    visible={this.state.showModal}
+                    onPressCancel={() => this.setState({ showModal: false })}
+                    title={this.state.title}
+                    message={this.state.message} />
 
                 <View style={{ flexDirection: 'row', marginLeft: 20, marginRight: 20, marginTop: 10 }}>
                     <View style={styles.containerStepper}>
@@ -392,7 +473,7 @@ class BuatInspeksiRedesign extends Component {
                     <Card style={[styles.cardContainer]}>
                         <View style={{flex:1, margin:10}}>
                             <Text style={{ color: '#696969' }}>Blok</Text>
-                            <Autocomplete
+                            {/* <Autocomplete
                                 autoCapitalize="none"
                                 autoCorrect={false}
                                 containerStyle={styles.autocompleteContainer}
@@ -418,7 +499,12 @@ class BuatInspeksiRedesign extends Component {
                                         </View>
                                     </TouchableOpacity>
                                 )}
-                            />
+                            /> */}
+                            <TextInput
+                                underlineColorAndroid={'transparent'}
+                                style={[styles.searchInput]}
+                                value={this.state.allShow}
+                                />
                         </View>
                         {this.state.showBaris && 
                         <View style={{ flex: 1, margin:10 }}>
@@ -439,12 +525,12 @@ class BuatInspeksiRedesign extends Component {
                 </Text>
                 
                 <View style={styles.containerMap}>
-                    {!!this.state.latitude && !!this.state.longitude &&
+                    {/* {this.state.latitude !== 0.0 && this.state.longitude !== 0.0&&
                         <MapView
                             style={styles.map}
                             initialRegion={{
-                                latitude:this.state.latitude,
-                                longitude:this.state.longitude,
+                                latitude: this.state.latitude,
+                                longitude: this.state.longitude,
                                 latitudeDelta:0.015,
                                 longitudeDelta:0.0121
                             }}>
@@ -465,7 +551,7 @@ class BuatInspeksiRedesign extends Component {
                         onPress={()=>{this.setState({fetchLocation: true}); this.getLocation()}}
                         name="location-arrow"
                         size={24}
-                        style={{ alignSelf: 'flex-end', marginBottom:130, marginRight: 10}}/>} 
+                        style={{ alignSelf: 'flex-end', marginBottom:130, marginRight: 10}}/>}  */}
 
                     {this.state.showBtn && <View style={styles.buttonContainer}>
                         <TouchableOpacity style={[styles.bubble, styles.button] } onPress={()=>{this.validation()}}>
@@ -535,7 +621,7 @@ const styles = {
         [Fonts.style.caption, { color: Colors.brand, textAlign: 'center', fontSize: 16, marginTop: 10, marginRight: 20, marginLeft: 20 }]
     ,
     containerMap: {
-        flex: 1,
+        flex:1,
         justifyContent: 'flex-end',
         alignItems: 'center',
         marginTop: 10
@@ -545,7 +631,9 @@ const styles = {
         top: 0,
         left: 0,
         right: 0,
-        bottom: 0
+        bottom: 0,        
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height
     },
     bubble: {
         backgroundColor: '#ff8080',

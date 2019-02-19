@@ -82,6 +82,19 @@ export function getSticker(score) {
 	}
 }
 
+export function getThumnail() {
+	var arrA = [
+		require('../Images/icon/ic-orang-1.png'),
+		require('../Images/icon/ic-orang-2.png'),
+		require('../Images/icon/ic-orang-3.png'),
+		require('../Images/icon/ic-orang-4.png'),
+		require('../Images/icon/ic-orang-5.png'),
+		require('../Images/icon/ic-orang-6.png'),
+		require('../Images/icon/ic-orang-7.png')];
+
+	return randomItem = arrA[Math.floor(Math.random() * arrA.length)];
+}
+
 export function getCalculateTime(date1, date2) {
 	//date1 is today
 	// var today = new Date();

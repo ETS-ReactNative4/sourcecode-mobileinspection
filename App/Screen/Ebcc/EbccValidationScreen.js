@@ -7,7 +7,7 @@ export default class FindingScreen extends Component {
 
   static navigationOptions = ({ navigation }) => ({
     headerStyle: {
-      backgroundColor: Colors.tintColor
+      backgroundColor: Colors.tintColorPrimary
     },
     headerTitleStyle: {
       textAlign: "center",
@@ -37,7 +37,8 @@ export default class FindingScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Image style={{width:300, height: 220}}source={require('../../Images/img-cooming-soon-1.png')} />
+        <View style={{ height: 48, backgroundColor: 'grey' }} />
+        <Image style={{ width: 400, height: 300 }} source={require('../../Images/img-cooming-soon-1.png')} />
       </View>
     )
   }

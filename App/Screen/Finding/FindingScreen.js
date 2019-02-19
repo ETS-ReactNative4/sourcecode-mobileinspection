@@ -8,7 +8,7 @@ export default class FindingScreen extends Component {
   
   static navigationOptions = ({ navigation }) => ({
     headerStyle: {
-      backgroundColor: Colors.tintColor
+      backgroundColor: Colors.tintColorPrimary
     },
     headerTitleStyle: {
       textAlign: "center",

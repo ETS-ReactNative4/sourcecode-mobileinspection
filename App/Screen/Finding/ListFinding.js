@@ -13,6 +13,9 @@ import Dash from 'react-native-dash'
 import TaskServices from '../../Database/TaskServices'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import Icon2 from 'react-native-vector-icons/MaterialIcons'
+import RNFS from 'react-native-fs'
+import RNFetchBlob from 'rn-fetch-blob'
+import { dirPhotoTemuan } from '../../Lib/dirStorage';
 import { NavigationActions, StackActions } from 'react-navigation';
 // import layer from '../../Data/skm.json'
 
@@ -134,6 +137,72 @@ export default class ListFinding extends Component {
     }
   }
 
+  getImageBaseOnFindingCode(findingCode) {
+    const user = TaskServices.getAllData('TR_LOGIN')[0];
+    const url = "http://149.129.245.230:3012/images/" + findingCode;
+    fetch(url, {
+        method: 'GET',
+        headers: {
+            'Cache-Control': 'no-cache',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${user.ACCESS_TOKEN}`,
+        }
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+        if (responseJson.status) {
+            if (responseJson.data.length > 0) {
+              for(var i=0; i<responseJson.data.length; i++){
+                let dataImage = responseJson.data[i];
+                TaskServices.saveData('TR_IMAGE', dataImage);
+                this._downloadImageFinding(dataImage)
+              }
+            } else {
+              alert(`Image ${findingCode} kosong`);
+            }
+        }else{alert(`gagal download image untuk ${findingCode}`)}
+        
+        
+    }).catch((error) => {
+        console.error(error);        
+        alert(error);
+    });   
+    
+  }
+
+  async _downloadImageFinding(data) {
+    let isExist = await RNFS.exists(`${dirPhotoTemuan}/${data.IMAGE_NAME}`)
+    if (!isExist) {
+        var url = data.IMAGE_URL;
+        const { config, fs } = RNFetchBlob
+        let options = {
+            fileCache: true,
+            addAndroidDownloads: {
+                useDownloadManager: true,
+                notification: true,
+                path: `${dirPhotoTemuan}/${data.IMAGE_NAME}`,
+                description: 'Image'
+            }
+        }
+        config(options).fetch('GET', url).then((res) => {
+              // alert("Success Downloaded " + res);
+        });
+    }
+  }
+
+  onClickItem(id) {
+    var images = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', id);
+    if(images !== undefined){
+      this.props.navigation.navigate('DetailFinding', { ID: id })
+    }else{
+      this.getImageBaseOnFindingCode(id)
+      setTimeout(() => {
+        this.props.navigation.navigate('DetailFinding', { ID: id })
+      }, 3000);
+    }    
+  }
+
   _renderItem = (item, index) => {
     const nav = this.props.navigation;
     const image = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', item.FINDING_CODE)
@@ -147,7 +216,7 @@ export default class ListFinding extends Component {
     let showBlockDetail = `${this.getEstateName(item.WERKS)}-${this.getBlokName(item.BLOCK_CODE)}`
     return (
       < TouchableOpacity
-        onPress={() => { nav.navigate('DetailFinding', { ID: item.FINDING_CODE }) }}
+        onPress={() => { this.onClickItem(item.FINDING_CODE) }}
         key={index}
       >
         <View style={{ height: 120, width: 120, marginLeft: 16 }}>

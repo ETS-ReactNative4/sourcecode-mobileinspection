@@ -2,9 +2,8 @@
 'use strict';
 
 import React, { Component } from 'react';
-import { View, FlatList, Text, StyleSheet, ListView, TouchableOpacity, Alert } from 'react-native';
+import { View, FlatList, Text, StyleSheet, ListView, TouchableOpacity, BackAndroid } from 'react-native';
 import TaskService from '../../Database/TaskServices';
-import Colors from '../../Constant/Colors'
 import FastImage from 'react-native-fast-image'
 import { dirPhotoKategori } from '../../Lib/dirStorage';
 
@@ -14,7 +13,7 @@ class PilihKategori extends Component {
 
   constructor(props) {
     super(props);
-
+    this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     this.state = {
       searchedAdresses: [],
       adresses: [],
@@ -26,6 +25,19 @@ class PilihKategori extends Component {
   static navigationOptions = {
     header: null
   };
+
+  componentWillUnmount(){
+    BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+  }   
+
+   componentDidMount() {
+      BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+   } 
+
+  handleBackButtonClick() {
+    this.props.navigation.goBack();
+    return true;
+  }
 
   onSelect(user){
     this.props.navigation.state.params.changeCategory(user);

@@ -1,59 +1,75 @@
 import React, { Component } from 'react';
 import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity ,
-  NetInfo,
-  Keyboard, Alert, Image
+    StyleSheet,
+    Text,
+    View,
+    TextInput,
+    TouchableOpacity,
+    NetInfo,
+    Keyboard, Alert, Image
 } from 'react-native';
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
     listenOrientationChange as loc,
     removeOrientationListener as rol
-  } from 'react-native-responsive-screen';
+} from 'react-native-responsive-screen';
+import ModalAlert from '../Component/ModalAlert'
 import PropTypes from 'prop-types';
 
-class Form extends Component{
+class Form extends Component {
 
     // Prop type warnings
     static propTypes = {
-		onBtnClick: PropTypes.func,
-	};
+        onBtnClick: PropTypes.func,
+    };
 
-	// Defaults for props
-	static defaultProps = {
-		onBtnClick: () => {},
-	};
+    // Defaults for props
+    static defaultProps = {
+        onBtnClick: () => { },
+    };
 
-    constructor(){
+    constructor() {
         super();
-        this.state={
+        this.state = {
             strEmail: '',
-			strPassword: '',
+            strPassword: '',
+            title: 'Title',
+            message: 'Message',
+            showModal: false,
+            icon: ''
         }
     }
 
     makeAlert(msg) {
-		Alert.alert('Peringatan', msg, [
-			{
-				text: 'OK'
-			}], { cancelable: false })
+        Alert.alert('Peringatan', msg, [
+            {
+                text: 'OK'
+            }], { cancelable: false })
     }
-    
-    onBtnClick(props){
+
+    onBtnClick(props) {
         Keyboard.dismiss();
         NetInfo.isConnected.fetch().then(isConnected => {
             console.log('First, is ' + (isConnected ? 'online' : 'offline'));
             if (isConnected) {
                 switch (true) {
                     case this.state.strEmail === '':
-                        this.makeAlert('Email tidak boleh kosong');
+                        this.setState({
+                            showModal: true,
+                            title: 'Email Kosong',
+                            message: 'Kamu harus isi email terlebih dahulu',
+                            icon: require('../Images/ic-inputan-tidak-lengkap.png')
+                        })
                         break;
                     case this.state.strPassword === '':
-                        this.makeAlert('Password tidak boleh kosong');
+                        this.setState({
+                            showModal: true,
+                            title: 'Password Kosong',
+                            message: 'Kamu harus isi password terlebih dahulu',
+                            icon: require('../Images/ic-inputan-tidak-lengkap.png')
+                        })
+                        break;
                     default:
                         props.onBtnClick({
                             ...this.state
@@ -61,66 +77,74 @@ class Form extends Component{
                         break;
                 }
             } else {
-                alert('Tidak Ada Koneksi Internet');
+                // alert('Tidak Ada Koneksi Internet');
+                this.setState({ showModal: true, title: 'Tidak Ada Koneksi', message: 'Opps, check koneksi internet mu dulu ya', icon: require('../Images/ic-no-internet.png') })
             }
         });
-        function handleFirstConnectivityChange(isConnected) {
-            console.log('Then, is ' + (isConnected ? 'online' : 'offline'));
-            NetInfo.isConnected.removeEventListener(
-                'connectionChange',
-                handleFirstConnectivityChange
-            );
-        }
-        NetInfo.isConnected.addEventListener(
-            'connectionChange',
-            handleFirstConnectivityChange
-        );
-    }    
+        // function handleFirstConnectivityChange(isConnected) {
+        //     console.log('Then, is ' + (isConnected ? 'online' : 'offline'));
+        //     NetInfo.isConnected.removeEventListener(
+        //         'connectionChange',
+        //         handleFirstConnectivityChange
+        //     );
+        // }
+        // NetInfo.isConnected.addEventListener(
+        //     'connectionChange',
+        //     handleFirstConnectivityChange
+        // );
+    }
 
-    render(){
-        
-		const props = this.props;
-        return(
+    render() {
+
+        const props = this.props;
+        return (
             // <KeyboardAvoidingView style={{flex:1}}>
-                <View style={styles.container}>
+            <View style={styles.container}>
 
-                    {/* <Text style={[styles.tapText,{marginLeft:20, marginRight:20}]}>PT TRIPUTRA ARGO PERSADA</Text>
+                <ModalAlert
+                    icon={this.state.icon}
+                    visible={this.state.showModal}
+                    onPressCancel={() => this.setState({ showModal: false })}
+                    title={this.state.title}
+                    message={this.state.message} />
+
+                {/* <Text style={[styles.tapText,{marginLeft:20, marginRight:20}]}>PT TRIPUTRA ARGO PERSADA</Text>
                     <Text style={[styles.appText, {marginLeft:20, marginRight:20}]}>Mobile Inspection</Text> */}
-                    <Image source={require('../Images/logo_mobile_inspection.png')} style={{ width: 300, height: 100, resizeMode: 'stretch', marginBottom: 30}} />
+                <Image source={require('../Images/logo.png')} style={{ width: 250, height: 80, resizeMode: 'stretch', marginBottom: 30 }} />
 
-                    <View style={styles.sectionInput}>
-                        <Image source={require('../Images/icon/ic_login.png')} style={styles.iconInput} />
-                        <TextInput
-                            style={styles.inputBox}
-                            underlineColorAndroid='rgba(0,0,0,0)'
-                            placeholder="Email"
-                            placeholderTextColor="#51a977"
-                            selectionColor="#51a977"
-                            keyboardType="email-address"
-                            onChangeText={(strEmail) => { this.setState({ strEmail: strEmail }) }}
-                            value={this.state.strEmail}
-                            onSubmitEditing={() => this.password.focus()} />
-                    </View>
-
-                    <View style={styles.sectionInput}>
-                        <Image source={require('../Images/icon/ic_password.png')} style={styles.iconInput} />
-                        <TextInput style={styles.inputBox}
-                            underlineColorAndroid='rgba(0,0,0,0)'
-                            placeholder="Password"
-                            secureTextEntry={true}
-                            placeholderTextColor="#51a977"
-                            onChangeText={(strPassword) => { this.setState({ strPassword: strPassword }) }}
-                            value={this.state.strPassword}
-                            ref={(input) => this.password = input} />
-                    </View>
-
-                    <TouchableOpacity style={[styles.button,{marginTop:20}]}
-                        onPress={() => this.onBtnClick(props)}>
-                        <Text style={styles.buttonText}>Login</Text>
-                    </TouchableOpacity>     
+                <View style={styles.sectionInput}>
+                    <Image source={require('../Images/icon/ic_login.png')} style={styles.iconInput} />
+                    <TextInput
+                        style={styles.inputBox}
+                        underlineColorAndroid='rgba(0,0,0,0)'
+                        placeholder="Email"
+                        placeholderTextColor="#51a977"
+                        selectionColor="#51a977"
+                        keyboardType="email-address"
+                        onChangeText={(strEmail) => { this.setState({ strEmail: strEmail }) }}
+                        value={this.state.strEmail}
+                        onSubmitEditing={() => this.password.focus()} />
                 </View>
+
+                <View style={styles.sectionInput}>
+                    <Image source={require('../Images/icon/ic_password.png')} style={styles.iconInput} />
+                    <TextInput style={styles.inputBox}
+                        underlineColorAndroid='rgba(0,0,0,0)'
+                        placeholder="Password"
+                        secureTextEntry={true}
+                        placeholderTextColor="#51a977"
+                        onChangeText={(strPassword) => { this.setState({ strPassword: strPassword }) }}
+                        value={this.state.strPassword}
+                        ref={(input) => this.password = input} />
+                </View>
+
+                <TouchableOpacity style={[styles.button, { marginTop: 20 }]}
+                    onPress={() => this.onBtnClick(props)}>
+                    <Text style={styles.buttonText}>Login</Text>
+                </TouchableOpacity>
+            </View>
             // </KeyboardAvoidingView>    
-            
+
         );
     }
 }
@@ -133,7 +157,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop:wp('70%')//200
+        marginTop: wp('70%')//200
     },
     tapText: {
         height: 41,

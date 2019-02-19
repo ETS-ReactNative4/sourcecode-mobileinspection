@@ -13,6 +13,7 @@ import TakeFotoBukti from '../Screen/Finding/TakeFoto'
 import PilihKontak from '../Screen/Finding/PilihKontak'
 import PilihKategori from '../Screen/Finding/PilihKategori'
 import PilihBlok from '../Screen/Finding/PilihBlok'
+import MapsFinding from '../Screen/Finding/MapsFinding';
 // import FormInspectionNavigator from '../Screen/Inspeksi/Navigation/FormInspectionNavigator';
 
 //inspeksi
@@ -28,14 +29,16 @@ import DetailBaris from '../Screen/Inspeksi/DetailBaris';
 import Step1Finding from '../Screen/Inspeksi/Step1Finding';
 import Step2Finding from '../Screen/Inspeksi/Step2Finding';
 import TakeFotoFinding from '../Screen/Inspeksi/TakeFotoFinding';
+import MapsInspeksi from '../Screen/Inspeksi/MapsInspeksi';
 
 
-import SyncScreen from '../Screen/Sync';
+import SyncScreen from '../Screen/SyncTest';
 import InboxScreen from '../Screen/Inbox';
 import FilterScreen from '../Screen/FilterScreen';
 import BisnisAreaScreen from '../Screen/BisnisArea';
 import CalendarsScreen from '../Screen/Calendar';
 import PemberiTugas from '../Screen/PemberiTugas';
+import Colors from '../Constant/Colors'
 
 
 const main = createStackNavigator({
@@ -84,6 +87,7 @@ const main = createStackNavigator({
     BisnisArea: { screen: BisnisAreaScreen },
     Calendar: { screen: CalendarsScreen },
     PemberiTugas: { screen: PemberiTugas },
+    MapsFinding: { screen: MapsFinding },
 
     //inspeksi
     BuatInspeksi: { screen: BuatInspeksi },
@@ -95,6 +99,8 @@ const main = createStackNavigator({
     KondisiBarisAkhir: { screen: KondisiBarisAkhir },
     SelesaiInspeksi: { screen: SelesaiInspeksi },
     DetailBaris: { screen: DetailBaris },
+    MapsInspeksi: { screen: MapsInspeksi },
+
     // test: { screen: test },
     // TestUpload: {screen:TestUpload}
     // slider: { screen: slider },
@@ -103,7 +109,9 @@ const main = createStackNavigator({
         headerMode: 'screen',
         initialRouteName: 'SplashScreen',
         navigationOptions: {
-
+            headerStyle: {
+                backgroundColor: Colors.tintColorPrimary
+            },
         },
         transitionConfig: () => ({ screenInterpolator: () => null }),
     });

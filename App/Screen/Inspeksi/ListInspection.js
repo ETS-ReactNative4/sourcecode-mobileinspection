@@ -1,45 +1,45 @@
 import React, { Component } from 'react';
-import {View, StyleSheet, Image} from 'react-native';
+import { View, StyleSheet, Image } from 'react-native';
 import ActionButton from 'react-native-action-button';
 import Colors from '../../Constant/Colors'
 import TaskServices from '../../Database/TaskServices'
 import { NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux';
 import InspeksiAction from '../../Redux/InspeksiRedux';
-import {getTodayDate} from '../../Lib/Utils';
+import { getTodayDate } from '../../Lib/Utils';
 import Icon2 from 'react-native-vector-icons/MaterialIcons'
 
 import { ProgressDialog } from 'react-native-simple-dialogs';
 import { Container, Content } from 'native-base';
 
 class ListInspection extends Component {
-  
+
   constructor(props) {
     super(props);
-      this.state = {
-        fetching: false
+    this.state = {
+      fetching: false
     }
   }
 
-  loadData(){
+  loadData() {
     let dataHeader = TaskServices.getAllData('TR_BLOCK_INSPECTION_H');
-    if(dataHeader !== null){
-      for(var i=0; i<dataHeader.length; i++){
+    if (dataHeader !== null) {
+      for (var i = 0; i < dataHeader.length; i++) {
         this.kirimInspeksiHeader(dataHeader[i]);
       }
     }
   }
 
-  loadDataDetail(param){
+  loadDataDetail(param) {
     let data = TaskServices.findBy('TR_BLOCK_INSPECTION_D', 'BLOCK_INSPECTION_CODE', param);
-    if(data !== null){
-      for(var i=0; i<data.length; i++){
+    if (data !== null) {
+      for (var i = 0; i < data.length; i++) {
         this.kirimInspeksiDetail(data[i]);
       }
     }
   }
 
-  kirimInspeksiHeader(param) {   
+  kirimInspeksiHeader(param) {
     this.props.postInspeksi({
       BLOCK_INSPECTION_CODE: param.BLOCK_INSPECTION_CODE,
       WERKS: param.WERKS,
@@ -54,11 +54,11 @@ class ListInspection extends Component {
       LAT_START_INSPECTION: param.LAT_START_INSPECTION,
       LONG_START_INSPECTION: param.LONG_START_INSPECTION,
       LAT_END_INSPECTION: param.LAT_END_INSPECTION,
-      LONG_END_INSPECTION:param.LONG_END_INSPECTION
-    }); 
+      LONG_END_INSPECTION: param.LONG_END_INSPECTION
+    });
   }
 
-  kirimInspeksiDetail(param){
+  kirimInspeksiDetail(param) {
     this.props.postInspeksiDetail({
       BLOCK_INSPECTION_CODE: param.BLOCK_INSPECTION_CODE,
       BLOCK_INSPECTION_CODE_D: param.BLOCK_INSPECTION_CODE_D,
@@ -67,28 +67,26 @@ class ListInspection extends Component {
       VALUE: param.VALUE,
       STATUS_SYNC: 'YES',
       SYNC_TIME: getTodayDate('YYYY-MM-DD HH:mm:ss')
-    }); 
+    });
   }
 
   actionButtonClick() {
     // this.props.navigation.navigate('FormInspection');
-    this.props.navigation.dispatch(NavigationActions.navigate({ routeName: 'BuatInspeksi'}));
+    // this.props.navigation.dispatch(NavigationActions.navigate({ routeName: 'BuatInspeksi' }));    
+    this.props.navigation.dispatch(NavigationActions.navigate({ routeName: 'MapsInspeksi' }));
   }
 
   render() {
     return (
-      <Container style={{flex:1, justifyContent:'center', alignItems:'center',  alignContent:'center'}}>
-        <Content>
-        <Image style={{marginTop:120,alignItems:'center', width:300, height: 220}}source={require('../../Images/img-cooming-soon-1.png')} />
-        </Content>
-        
+      <View style={styles.container}>
+        <Image style={{ width: 400, height: 300 }} source={require('../../Images/img-cooming-soon-1.png')} />
+
         <ActionButton style={{ marginEnd: -10, marginBottom: -10 }}
           buttonColor={Colors.tintColor}
           onPress={() => { this.actionButtonClick() }}
-          icon={<Icon2 color = 'white' name='edit' size={25} />}>
-        </ActionButton>   
-      </Container>
-        
+          icon={<Icon2 color='white' name='edit' size={25} />}>
+        </ActionButton>
+      </View>
     )
   }
 }
@@ -112,6 +110,8 @@ export default ListInspection;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: '#fff',
     padding: 16
   },

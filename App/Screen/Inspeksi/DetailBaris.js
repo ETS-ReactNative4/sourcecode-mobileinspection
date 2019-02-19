@@ -45,7 +45,7 @@ class DetailBaris extends React.Component {
 
     static navigationOptions = {
         headerStyle: {
-            backgroundColor: Colors.tintColor
+            backgroundColor: Colors.tintColorPrimary
         },
         headerTitleStyle: {
             textAlign: "left",

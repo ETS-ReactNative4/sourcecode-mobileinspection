@@ -6,7 +6,8 @@ import Immutable from 'seamless-immutable';
 const { Types, Creators } = createActions({
 	regionRequest: null,
 	regionSuccess: ['payload'],
-	regionFailure: null
+	regionFailure: null,
+	resetRegion: null
 });
 
 export const RegionTypes = Types;
@@ -40,11 +41,13 @@ export const success = (state, action) => {
 
 // Something went wrong somewhere.
 export const failure = state => state.merge({ fetchingRegion: false, error: true, payload: null });
+export const reset = (state) => state.merge({ fetchingRegion: null, region: null });
 
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
 	[Types.REGION_REQUEST]: request,
 	[Types.REGION_SUCCESS]: success,
-	[Types.REGION_FAILURE]: failure
+	[Types.REGION_FAILURE]: failure,
+	[Types.RESET_REGION]: reset
 });

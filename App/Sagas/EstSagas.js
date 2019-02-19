@@ -16,7 +16,6 @@ export function* getEst(api, action) {
                     yield put(EstActions.estFailure('Paramater Salah'));
                     break;
                 case true:
-    
                     console.log('^^^ SUCCESS EST ^^^');
                     yield put(EstActions.estSuccess(response.data.data));
                     break;

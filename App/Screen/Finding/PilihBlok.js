@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-    Text, StyleSheet, ListView, TextInput, TouchableOpacity, View, Keyboard
+    Text, StyleSheet, ListView, TextInput, TouchableOpacity, View, Keyboard, BackAndroid
 } from 'react-native';
 import {
     Container,
@@ -44,6 +44,9 @@ class PilihBlok extends Component {
 
     constructor(props) {
         super(props);
+        
+        this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
+
         this.state = {
             latitude: 0.0,
             longitude: 0.0,
@@ -76,9 +79,13 @@ class PilihBlok extends Component {
     _keyboardDidHide () {
     // alert('Keyboard Hidden');
     }
-    
+
+    componentWillUnmount(){
+        BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+    }   
 
     componentDidMount() {
+        BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
         let data = TaskService.getAllData('TM_BLOCK');
         let arr = [];
         for(var i=0; i<data.length; i++){
@@ -100,6 +107,11 @@ class PilihBlok extends Component {
         this.getLocation();
     } 
     
+    handleBackButtonClick() {
+        this.props.navigation.goBack();
+        return true;
+    }
+
     getStatusBlok(werk_afd_blok_code){
         try {
             let data = TaskService.findBy2('TM_LAND_USE', 'WERKS_AFD_BLOCK_CODE', werk_afd_blok_code);

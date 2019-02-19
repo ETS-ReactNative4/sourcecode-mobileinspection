@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { NavigationActions, StackActions } from 'react-navigation';
 import {
     Text, FlatList, TextInput, TouchableOpacity, View, Image, Modal,
-    BackHandler, Alert
+    BackHandler, Alert, BackAndroid
 } from 'react-native';
 import {
     Container,
-    Content    
+    Content
 } from 'native-base'
 import R, { isEmpty } from 'ramda'
 import Colors from '../../Constant/Colors'
@@ -26,6 +26,8 @@ import { dirPhotoTemuan } from '../../Lib/dirStorage'
 import Autocomplete from 'react-native-autocomplete-input';
 import Geojson from 'react-native-geojson';
 
+import ModalAlert from '../../Component/ModalAlert';
+import ModalAlertConfirmation from '../../Component/ModalAlertConfirmation'
 
 const radioGroupList = [{
     label: 'HIGH',
@@ -59,7 +61,7 @@ class Step2Finding extends Component {
     constructor(props) {
         super(props);
 
-        // this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
+        this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
 
         let params = props.navigation.state.params;
         let foto = R.clone(params.image);
@@ -103,13 +105,20 @@ class Step2Finding extends Component {
             TRANS_CODE: `F${user.USER_AUTH_CODE}${getTodayDate('YYMMDDHHmmss')}`,
             colorPriority: '#ddd',
             disableCalendar: true,
-            inspeksiHeader
+            inspeksiHeader,
+
+            //Add Modal Alert by Aminju 
+            title: 'Title',
+            message: 'Message',
+            showModal: false,
+            showModalConfirmation: false,
+            icon: ''
         }
     }
 
     static navigationOptions = {
         headerStyle: {
-            backgroundColor: Colors.tintColor
+            backgroundColor: Colors.tintColorPrimary
         },
         title: 'Buat Laporan Temuan',
         headerTintColor: '#fff',
@@ -133,18 +142,30 @@ class Step2Finding extends Component {
         }
     }
 
+    
+    componentDidMount() {
+        BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
+    }
+
     componentWillUnmount() {
+        BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
     }
 
     handleBackButtonClick() {
-        Alert.alert(
-            'Peringatan',
-            'Transaksi kamu tidak akan tersimpan, kamu yakin akan melanjutkan?',
-            [
-                { text: 'NO', style: 'cancel' },
-                { text: 'YES', onPress: () => this.props.navigation.goBack(null) }
-            ]
-        );
+        // Alert.alert(
+        //     'Peringatan',
+        //     'Transaksi kamu tidak akan tersimpan, kamu yakin akan melanjutkan?',
+        //     [
+        //         { text: 'NO', style: 'cancel' },
+        //         { text: 'YES', onPress: () => this.props.navigation.goBack(null) }
+        //     ]
+        // );
+
+        this.setState({
+            showModalConfirmation: true, title: 'Data Hilang', message: 'Temuan mu belum tersimpan loh. Yakin nih mau dilanjutin?',
+            icon: require('../../Images/ic-not-save.png')
+        });
+
         return true;
     }
 
@@ -218,36 +239,61 @@ class Step2Finding extends Component {
 
     validation() {
         let isSameUser = this.state.assignto == this.state.user.USER_AUTH_CODE ? true : false;
+        let title = 'Inputan Tidak Lengkap';
         if (isEmpty(this.state.keterangan)) {
-            Alert.alert(
-                'Peringatan',
-                "Keterangan harus diisi"
-            );
+            // Alert.alert(
+            //     'Peringatan',
+            //     "Keterangan harus diisi"
+            // );
+            this.setState({
+                showModal: true, title: title, message: 'Eh Keterangan belum diisi loh',
+                icon: require('../../Images/ic-inputan-tidak-lengkap.png')
+            });
         } else if (isEmpty(this.state.blok)) {
-            Alert.alert(
-                'Peringatan',
-                "Lokasi Blok harus diisi"
-            );
+            // Alert.alert(
+            //     'Peringatan',
+            //     "Lokasi Blok harus diisi"
+            // );
+            this.setState({
+                showModal: true, title: title, message: 'Eh Lokasi belum diisi loh',
+                icon: require('../../Images/ic-inputan-tidak-lengkap.png')
+            });
         } else if (isEmpty(this.state.category)) {
-            Alert.alert(
-                'Peringatan',
-                "Kategori harus diisi"
-            );
+            // Alert.alert(
+            //     'Peringatan',
+            //     "Kategori harus diisi"
+            // );
+            this.setState({
+                showModal: true, title: title, message: 'Eh Kategori belum diisi loh',
+                icon: require('../../Images/ic-inputan-tidak-lengkap.png')
+            });
         } else if (isEmpty(this.state.priority)) {
-            Alert.alert(
-                'Peringatan',
-                "Prioritas harus diisi"
-            );
+            // Alert.alert(
+            //     'Peringatan',
+            //     "Prioritas harus diisi"
+            // );
+            this.setState({
+                showModal: true, title: title, message: 'Eh Prioritas belum diisi loh',
+                icon: require('../../Images/ic-inputan-tidak-lengkap.png')
+            });
         } else if (isEmpty(this.state.tugasKepada)) {
-            Alert.alert(
-                'Peringatan',
-                "Ditugaskan kepada harus diisi"
-            );
+            // Alert.alert(
+            //     'Peringatan',
+            //     "Ditugaskan kepada harus diisi"
+            // );
+            this.setState({
+                showModal: true, title: title, message: 'Eh Ditugaskan kepada belum diisi loh',
+                icon: require('../../Images/ic-inputan-tidak-lengkap.png')
+            });
         } else if (isSameUser && isEmpty(this.state.batasWaktu)) {
-            Alert.alert(
-                'Peringatan',
-                "Batas waktu harus diisi"
-            );
+            // Alert.alert(
+            //     'Peringatan',
+            //     "Batas waktu harus diisi"
+            // );
+            this.setState({
+                showModal: true, title: title, message: 'Eh Batas waktu belum diisi loh',
+                icon: require('../../Images/ic-batas-waktu.png')
+            });
         } else {
             this.saveData()
         }
@@ -347,10 +393,11 @@ class Step2Finding extends Component {
         
     }
 
-    pilihKontak(){
-        if(isEmpty(this.state.blok)){
-            alert('kamu harus pilih lokasi dulu')
-        }else{
+    pilihKontak() {
+        if (isEmpty(this.state.blok)) {
+            // alert('kamu harus pilih lokasi dulu')
+            this.setState({ showModal: true, title: title, message: 'Kamu harus pilih lokasi dulu yaaa' });
+        } else {
             this.props.navigation.navigate('PilihKontak', { changeContact: this.changeContact, afdCode: this.state.afdCode, werks: this.state.werks })
         }        
     }
@@ -361,6 +408,22 @@ class Step2Finding extends Component {
         return (
             <Container style={{ flex: 1, backgroundColor: 'white' }}>
                 <Content style={{ flex: 1, paddingHorizontal: 16, }}>
+
+                    <ModalAlert
+                        icon={this.state.icon}
+                        visible={this.state.showModal}
+                        onPressCancel={() => this.setState({ showModal: false })}
+                        title={this.state.title}
+                        message={this.state.message} />
+
+                    <ModalAlertConfirmation
+                        icon={this.state.icon}
+                        visible={this.state.showModalConfirmation}
+                        onPressCancel={() => this.setState({ showModalConfirmation: false })}
+                        onPressSubmit={() => { this.props.navigation.goBack(null) }}
+                        title={this.state.title}
+                        message={this.state.message}/>
+
                     {/* STEPPER */}
                     <FlatList
                         style={[style.stepperContainer, { margin: 15, alignSelf: 'center' }]}

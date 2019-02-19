@@ -2,8 +2,11 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
 import TaskServices from '../../Database/TaskServices'
 import Colors from '../../Constant/Colors'
-import { getFormatDate, changeFormatDate } from '../../Lib/Utils'
+import { changeFormatDate } from '../../Lib/Utils'
 import Moment from 'moment'
+import RNFS from 'react-native-fs'
+import RNFetchBlob from 'rn-fetch-blob'
+import { dirPhotoTemuan } from '../../Lib/dirStorage';
 
 export default class HistoryFinding extends Component {
   constructor(props) {
@@ -33,7 +36,7 @@ export default class HistoryFinding extends Component {
 
   _initData() {
     let user = TaskServices.getAllData('TR_LOGIN')[0]
-    var data = TaskServices.query('TR_FINDING', `INSERT_USER = '${user.USER_AUTH_CODE}'`);
+    var data = TaskServices.query('TR_FINDING', `INSERT_USER = '${user.USER_AUTH_CODE}' OR ASSIGN_TO = '${user.USER_AUTH_CODE}'`);
     data = data.sorted('INSERT_TIME', true);
     this.setState({ data })
   }
@@ -61,18 +64,69 @@ export default class HistoryFinding extends Component {
   }
 
   onClickItem(id) {
-    var images = TaskServices.query('TR_IMAGE', `TR_CODE='${id}' AND STATUS_IMAGE='SEBELUM'`);
-    let test = [];
-    images.map(item => {
-      var img = {
-        TR_CODE: item.TRANS_CODE,
-        IMAGE_NAME: item.IMAGE_NAME,
-        IMAGE_PATH: item.IMAGE_PATH_LOCAL,
-        STATUS_IMAGE: item.STATUS_IMAGE,
-      }
-      test.push(img);
+    var images = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', id);
+    if(images !== undefined){
+      this.props.navigation.navigate('DetailFinding', { ID: id })
+    }else{
+      this.getImageBaseOnFindingCode(id)
+      setTimeout(() => {
+        this.props.navigation.navigate('DetailFinding', { ID: id })
+      }, 3000);
+    }    
+  }
+
+  getImageBaseOnFindingCode(findingCode) {
+    const user = TaskServices.getAllData('TR_LOGIN')[0];
+    const url = "http://149.129.245.230:3012/images/" + findingCode;
+    fetch(url, {
+        method: 'GET',
+        headers: {
+            'Cache-Control': 'no-cache',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${user.ACCESS_TOKEN}`,
+        }
     })
-    this.props.navigation.navigate('DetailFinding', { ID: id, images: test })
+    .then((response) => response.json())
+    .then((responseJson) => {
+        if (responseJson.status) {
+            if (responseJson.data.length > 0) {
+              for(var i=0; i<responseJson.data.length; i++){
+                let dataImage = responseJson.data[i];
+                TaskServices.saveData('TR_IMAGE', dataImage);
+                this._downloadImageFinding(dataImage)
+              }
+            } else {
+              alert(`Image ${findingCode} kosong`);
+            }
+        }else{alert(`gagal download image untuk ${findingCode}`)}
+        
+        
+    }).catch((error) => {
+        console.error(error);        
+        alert(error);
+    });   
+    
+  }
+
+  async _downloadImageFinding(data) {
+    let isExist = await RNFS.exists(`${dirPhotoTemuan}/${data.IMAGE_NAME}`)
+    if (!isExist) {
+        var url = data.IMAGE_URL;
+        const { config, fs } = RNFetchBlob
+        let options = {
+            fileCache: true,
+            addAndroidDownloads: {
+                useDownloadManager: true,
+                notification: true,
+                path: `${dirPhotoTemuan}/${data.IMAGE_NAME}`,
+                description: 'Image'
+            }
+        }
+        config(options).fetch('GET', url).then((res) => {
+              // alert("Success Downloaded " + res);
+        });
+    }
   }
 
   getEstateName(werks) {
@@ -133,7 +187,7 @@ export default class HistoryFinding extends Component {
 
   _renderNoData() {
     return (
-      <Image style={{justifyContent: 'center', alignSelf:'center', marginTop: 120, width:300, height: 220}}source={require('../../Images/img-no-data.png')} />
+      <Image style={{justifyContent: 'center', alignSelf:'center', marginTop: 110,  width: 350, height: 280 }}source={require('../../Images/img-no-data.png')} />
     )
   }
 

@@ -7,7 +7,8 @@ const { Types, Creators } = createActions({
 	kriteriaRequest: null,
 	kriteriaPost: ['data'],
 	kriteriaSuccess: ['payload'],
-	kriteriaFailure: null
+	kriteriaFailure: null,
+	resetKriteria: null
 });
 
 export const KriteriaTypes = Types;
@@ -41,6 +42,7 @@ export const success = (state, action) => {
 
 // Something went wrong somewhere.
 export const failure = state => state.merge({ fetchingKriteria: false, error: true, payload: null });
+export const reset = (state) => state.merge({ fetchingKriteria: null, kriteria: null });
 
 /* ------------- Hookup Reducers To Types ------------- */
 
@@ -48,5 +50,6 @@ export const reducer = createReducer(INITIAL_STATE, {
 	[Types.KRITERIA_REQUEST]: request,
 	[Types.KRITERIA_POST]: postKriteria,
 	[Types.KRITERIA_SUCCESS]: success,
-	[Types.KRITERIA_FAILURE]: failure
+	[Types.KRITERIA_FAILURE]: failure,
+	[Types.RESET_KRITERIA]: reset
 });

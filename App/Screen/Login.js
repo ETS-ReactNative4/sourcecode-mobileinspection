@@ -22,6 +22,7 @@ import TaskServices from '../Database/TaskServices';
 const IMEI = require('react-native-imei');
 import RNFetchBlob from 'rn-fetch-blob'
 import { dirPhotoTemuan, dirPhotoInspeksiBaris, dirPhotoInspeksiSelfie, dirPhotoKategori } from '../Lib/dirStorage';
+import ModalAlert from '../Component/ModalAlert'
 
 class Login extends Component {
 
@@ -34,6 +35,10 @@ class Login extends Component {
             token: '',
             imei: '',
             exit: '',
+            title: 'Title',
+            message: 'Message',
+            showModal: false,
+            icon: ''
         }
     }
 
@@ -78,45 +83,45 @@ class Login extends Component {
     //     }
     // }
 
-    checkUser(param){
-        if(TaskServices.getTotalData('TR_LOGIN') > 0){
+    checkUser(param) {
+        if (TaskServices.getTotalData('TR_LOGIN') > 0) {
             let data = TaskServices.getAllData('TR_LOGIN')[0]
-            if(param.USER_AUTH_CODE !== data.USER_AUTH_CODE){
+            if (param.USER_AUTH_CODE !== data.USER_AUTH_CODE) {
                 console.log('beda')
                 this.resetMobileSync(param, data.ACCESS_TOKEN)
-            }else{
+            } else {
                 console.log('sama')
-                TaskServices.deleteAllData('TR_LOGIN');         
+                TaskServices.deleteAllData('TR_LOGIN');
                 this.insertUser(param);
                 this.navigateScreen('MainMenu');
             }
-        }else{
+        } else {
             this.resetMobileSync(param, param.ACCESS_TOKEN)
         }
     }
 
-    resetMobileSync(param, token){  
+    resetMobileSync(param, token) {
         fetch('http://149.129.245.230:3008/api/mobile-sync/reset', {
-        method: 'POST',
-        headers: { 
-            'Cache-Control': 'no-cache',
-            'Accept': 'application/json',
-            'Content-Type': 'application/json' ,
-            'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({RESET_SYNC: 1})
+            method: 'POST',
+            headers: {
+                'Cache-Control': 'no-cache',
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ RESET_SYNC: 1 })
         })
-        .then((response) => { 
-            return response.json();   
-        })
-        .then((data) => { 
-            // alert(data)
-            console.log(data)
-            this.deleteAllTableAndFolder(param)   
-        });
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                // alert(data)
+                console.log(data)
+                this.deleteAllTableAndFolder(param)
+            });
     }
 
-    deleteAllTableAndFolder(param){
+    deleteAllTableAndFolder(param) {
 
         TaskServices.deleteAllData('TR_LOGIN');
         TaskServices.deleteAllData('TR_BLOCK_INSPECTION_H');
@@ -143,7 +148,7 @@ class Login extends Component {
         RNFetchBlob.fs.unlink(`file://${dirPhotoInspeksiSelfie}`)
         RNFetchBlob.fs.unlink(`file://${dirPhotoKategori}`)
 
-        
+
         this.insertUser(param);
         this.navigateScreen('MainMenu');
     }
@@ -159,49 +164,53 @@ class Login extends Component {
 
     onLogin(username, password) {
         Keyboard.dismiss();
-        var Imei = this.get_IMEI_Number();    
-        this.props.authRequest({
-            username: username,
-            password: password,
-            imei: Imei
-        });
-    }
-
-    fetchingLogin(username, password) {
-        this.setState({
-            fetching: true
-        });
-
-        this.postLogin(username, password);
-
+        var imei = this.get_IMEI_Number();
+        this.setState({ fetching: true });
+        this.postLogin(username, password, imei);
         setTimeout(() => {
-            this.setState({
-                fetching: false
-            });
+            this.setState({ fetching: false });
         }, 3000);
+        // this.props.authRequest({
+        //     username: username,
+        //     password: password,
+        //     imei: Imei
+        // });
     }
 
-    postLogin(username, password) {
-        fetch(link, {
+    postLogin(username, password, imei) {
+        fetch('http://149.129.245.230:3008/api/login', {
             method: 'POST',
             headers: {
                 'Cache-Control': 'no-cache',
                 Accept: 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ username, password })
+            body: JSON.stringify({ username, password, imei })
         })
             .then((response) => {
                 return response.json();
             })
             .then((data) => {
+                this.setState({ fetching: false });
                 if (data.status == true) {
-                    this.insertUser(data.data);
+                    this.checkUser(data.data)
                 } else {
                     if (data.message == 'Request Timeout') {
-                        alert('Masalah jaringan coba lagi');
+                        // alert('Masalah jaringan coba lagi');
+                        this.setState({
+                            showModal: true,
+                            title: 'Jaringan Bermasalah',
+                            message: 'Silahkan Kamu Coba Lagi',
+                            icon: require('../Images/ic-no-internet.png')
+                        })
                     } else {
-                        alert('Username atau Password Salah');
+                        // alert('Username atau Password Salah');
+                        this.setState({
+                            showModal: true,
+                            title: 'Username & Password',
+                            message: 'Username atau Password Kamu salah nih.. coba check ulang ya',
+                            icon: require('../Images/ic-salah-pass.png')
+                        })
                     }
                 }
             });
@@ -224,20 +233,26 @@ class Login extends Component {
         return (
             //Add By Aminju 20/01/2019 15:45 (Handle Back Method)
             <HandleBack onBack={this.onBack}>
+
+                <ModalAlert
+                    icon={this.state.icon}
+                    visible={this.state.showModal}
+                    onPressCancel={() => this.setState({ showModal: false })}
+                    title={this.state.title}
+                    message={this.state.message} />
+
                 <ImageBackground source={require('../Images/background_login.png')} style={styles.container}>
                     <KeyboardAvoidingView
                         style={styles.container}
                         behavior="padding" >
                         <StatusBar
                             hidden={true}
-                            barStyle="light-content"
-                        />
-
+                            barStyle="light-content" />
 
                         {/* <Logo/> */}
 
                         <Form
-                            onBtnClick={data => { this.fetchingLogin(data.strEmail, data.strPassword) }} />
+                            onBtnClick={data => { this.onLogin(data.strEmail, data.strPassword) }} />
                         <View style={styles.footerView}>
                             <Text style={styles.footerText}>{'\u00A9'} 2018 Copyrights PT Triputra Agro Persada</Text>
                         </View>

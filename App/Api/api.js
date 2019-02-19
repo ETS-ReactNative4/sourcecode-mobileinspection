@@ -119,6 +119,7 @@ const create = () => {
 
     const getContact = () => {
         api.setHeader('Authorization', `Bearer ${user[0].ACCESS_TOKEN}`)
+        // return api.get('/mobile-sync/auth/contact')
         return api.get('/contacts')
     }
 

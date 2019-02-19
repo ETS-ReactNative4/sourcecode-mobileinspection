@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Image, TouchableOpacity, Text, ScrollView, Alert, Button } from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity, Text, ScrollView, Alert, NetInfo } from 'react-native';
 
 import Colors from '../../Constant/Colors';
 import Icon from 'react-native-vector-icons/Ionicons';
 import CardView from 'react-native-cardview';
 import TaskServices from '../../Database/TaskServices'
 import { NavigationActions, StackActions } from 'react-navigation';
-import ModalConfirmation from '../../Component/ModalConfirmation'
+import ModalConfirmation from '../../Component/ModalAlertConfirmation'
+import ModalAlert from '../../Component/ModalAlert'
 
 export default class MoreScreen extends Component {
 
   static navigationOptions = ({ navigation }) => ({
     headerStyle: {
-      backgroundColor: Colors.tintColor
+      backgroundColor: Colors.tintColorPrimary
     },
     headerTitleStyle: {
       textAlign: "center",
@@ -42,7 +43,12 @@ export default class MoreScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showConfirm: false
+      showConfirm: false,
+      showModal: false,
+      //Add Modal Alert by Aminju 
+      title: 'Title',
+      message: 'Message',
+
     }
   }
 
@@ -56,9 +62,23 @@ export default class MoreScreen extends Component {
   }
 
   logout() {
-    TaskServices.updateLogin('TR_LOGIN');
-    this.setState({ showConfirm: false });
-    this.props.navigation.navigate('Login', { exit: 'true' });
+    NetInfo.isConnected.fetch().then(isConnected => {
+      console.log('First, is ' + (isConnected ? 'online' : 'offline'));
+      if (isConnected) {
+        TaskServices.updateLogin('TR_LOGIN');
+        this.setState({ showConfirm: false });
+        this.props.navigation.navigate('Login', { exit: 'true' });
+      } else {
+        // alert('Tidak Ada Koneksi Internet');
+        this.setState({
+          showConfirm: false,
+          showModal: true,
+          title: 'Tidak Ada Koneksi',
+          message: 'Opps, check koneksi internet mu dulu ya',
+          icon: require('../../Images/ic-no-internet.png')
+        })
+      }
+    });
   }
 
   render() {
@@ -67,17 +87,23 @@ export default class MoreScreen extends Component {
         <View style={{ padding: 6 }} >
 
           <ModalConfirmation
+            icon={require('../../Images/ic-logout.png')}
             visible={this.state.showConfirm}
             onPressCancel={() =>
               this.setState({ showConfirm: false })}
             onPressSubmit={() => {
               this.logout();
             }}
-            title={'Konfirmasi'}
-            message={`Apakah anda ingin keluar dari aplikasi ?`}
-            btnCancelText={'Tidak'}
-            btnSubmitText={'Ya'}
+            title={'Konfirmasi Logout'}
+            message={`Yakin nih mau keluar dari aplikasi ini? Untuk login lagi, kamu harus terhubung ke WIFI dulu ya`}
           />
+
+          <ModalAlert
+            visible={this.state.showModal}
+            icon={this.state.icon}
+            onPressCancel={() => this.setState({ showModal: false })}
+            title={this.state.title}
+            message={this.state.message} />
 
           {/*Profile*/}
           {/* <TouchableOpacity style={styles.marginCard}>
@@ -154,8 +180,8 @@ export default class MoreScreen extends Component {
             </CardView>
           </TouchableOpacity> */}
 
-          {/*Contact Center*/}
-          {/* <TouchableOpacity style={styles.marginCard}>
+          {/* Contact Center */}
+          {/* <TouchableOpacity style={styles.marginCard} onPress={() => { this.setState({ showModal: true }) }}>
             <CardView cardElevation={2} cardMaxElevation={2} cornerRadius={10}>
               <View style={styles.sectionCardView}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }} >

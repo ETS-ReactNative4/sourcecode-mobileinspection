@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { NavigationActions, StackActions } from 'react-navigation';
-import {
-    BackHandler, Text, FlatList, ScrollView, TouchableOpacity, View, Image, Alert, Platform
+import { BackHandler, Text, FlatList, ScrollView, TouchableOpacity, View, Image, Alert, Platform, BackAndroid
 } from 'react-native';
 import {
     Container,
@@ -20,6 +19,8 @@ import random from 'random-string'
 import TaskServices from '../../Database/TaskServices'
 import RNFS from 'react-native-fs';
 const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
+
+import ModalAlert from '../../Component/ModalAlert';
 
 class FormStep1 extends Component {
 
@@ -62,6 +63,12 @@ class FormStep1 extends Component {
             longitude: 0.0,
             fetchLocation: false,
             isMounted: false,
+
+            //Add Modal Alert by Aminju 
+            title: 'Title',
+            message: 'Message',
+            showModal: false,
+            icon: ''
         }
     }
 
@@ -71,17 +78,17 @@ class FormStep1 extends Component {
                 RNFS.unlink(item.uri)
             })
         }
-        this.props.navigation.goBack(null); 
+        this.props.navigation.goBack(); 
     }
 
     componentDidMount() {
        this.getLocation();
        this.props.navigation.setParams({ clearFoto: this.clearFoto })
-       BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+       BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
     }
 
     componentWillUnmount(){
-        BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+        BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
     }
 
     handleBackButtonClick() { 
@@ -141,15 +148,17 @@ class FormStep1 extends Component {
 
     onBtnClick() {
         if (this.state.photos.length == 0) {
-            Alert.alert(
-                'Peringatan',
-                'Anda belum mengambil foto'
-            );
+            // Alert.alert(
+            //     'Peringatan',
+            //     'Anda belum mengambil foto'
+            // );
+            this.setState({ showModal: true, title: "Ambil Foto", message: 'Opps kamu belum ambil Foto Temuan yaaa', icon: require('../../Images/ic-no-pic.png') });
         } else if (this.state.selectedPhotos.length == 0) {
-            Alert.alert(
-                'Peringatan',
-                "Minimal harus ada 1 Foto dipilih"
-            );
+            // Alert.alert(
+            //     'Peringatan',
+            //     "Minimal harus ada 1 Foto dipilih"
+            // );
+            this.setState({ showModal: true, title: 'Foto Temuan', message: 'Kamu harus ambil min. 1 foto yoo.', icon: require('../../Images/ic-no-pic.png') });
         } else {
             let images = [];
             this.state.selectedPhotos.map((item) => {
@@ -163,7 +172,7 @@ class FormStep1 extends Component {
                 });
                 navigation.dispatch(resetAction);
 
-            });
+            });            
         }
     }
 
@@ -187,7 +196,8 @@ class FormStep1 extends Component {
             selectedPhotos.splice(index, 1);
         } else {
             if (selectedPhotos.length > 2) {
-                alert("Hanya 3 foto yang bisa dipilih")
+                // alert("Hanya 3 foto yang bisa dipilih")
+                this.setState({ showModal: true, title: 'Pilih Foto', message: 'Kamu cuma bisa pilih 3 foto aja yaa..', icon: require('../../Images/ic-no-pic.png') });    
             } else {
                 selectedPhotos.push(foto);
             }
@@ -225,6 +235,14 @@ class FormStep1 extends Component {
             <Container style={{ flex: 1, backgroundColor: 'white' }}>
                 <Content style={{ flex: 1 }}>
                     {/* STEPPER */}
+
+                    <ModalAlert
+                        icon={this.state.icon}
+                        visible={this.state.showModal}
+                        onPressCancel={() => this.setState({ showModal: false })}
+                        title={this.state.title}
+                        message={this.state.message} />
+
                     <FlatList
                         style={[style.stepperContainer, { margin: 15, alignSelf: 'center' }]}
                         horizontal

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, View, Alert, Text, TextInput, ScrollView, Image } from 'react-native';
+import { TouchableOpacity, View, Alert, Text, TextInput, ScrollView, Image, BackAndroid } from 'react-native';
 import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -9,14 +9,15 @@ import R from 'ramda';
 import TaskServices from '../../Database/TaskServices'
 import { getTodayDate } from '../../Lib/Utils'
 
+import ModalAlertConfirmation from '../../Component/ModalAlertConfirmation';
 
 class KondisiBaris1 extends Component {
 
-    static navigationOptions = ({ navigation }) => {        
+    static navigationOptions = ({ navigation }) => {
         const { params = {} } = navigation.state;
         return {
             headerStyle: {
-                backgroundColor: Colors.tintColor
+                backgroundColor: Colors.tintColorPrimary
             },
             title: 'Kondisi Baris',
             headerTintColor: '#fff',
@@ -26,17 +27,19 @@ class KondisiBaris1 extends Component {
                 fontWeight: '400'
             },
             headerRight: (
-                <TouchableOpacity onPress={() => {navigation.navigate('Step1Finding', {data: params.getData})}}>
+                <TouchableOpacity onPress={() => { navigation.navigate('Step1Finding', { data: params.getData }) }}>
                     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingRight: 16 }}>
                         <Entypo name='flashlight' size={24} color='white' />
                     </View>
                 </TouchableOpacity>
             ),
-        }        
+        }
     };
 
     constructor(props) {
         super(props);
+
+        this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
 
         let params = props.navigation.state.params;
         let fotoBaris = R.clone(params.fotoBaris);
@@ -58,13 +61,32 @@ class KondisiBaris1 extends Component {
             inspeksiHeader,
             dataUsual,
             statusBlok,
-            dataInspeksi
+            dataInspeksi,
 
+            //Add Modal Alert by Aminju 
+            title: 'Title',
+            message: 'Message',
+            showModal: false,
+            icon: ''
         }
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.props.navigation.setParams({ getData: this.state.inspeksiHeader })
+        BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
+    }
+
+    componentWillUnmount() {
+        BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+    }
+
+    handleBackButtonClick() {
+        this.setState({
+            showModal: true, title: 'Data Hilang',
+            message: 'Inspeksi mu belum tersimpan loh. Yakin mau dilanjutin?',
+            icon: require('../../Images/ic-not-save.png')
+        });
+        return true;
     }
 
     insertDB() {
@@ -228,6 +250,16 @@ class KondisiBaris1 extends Component {
     render() {
         return (
             <ScrollView style={styles.mainContainer}>
+
+                <ModalAlertConfirmation
+                    icon={this.state.icon}
+                    visible={this.state.showModal}
+                    onPressCancel={() => this.setState({ showModal: false })}
+                    onPressSubmit={() => { this.props.navigation.goBack(null) }}
+                    title={this.state.title}
+                    message={this.state.message}
+                />
+
                 {/*STEPPER*/}
                 <View style={{ flexDirection: 'row', marginLeft: 20, marginRight: 20, marginTop: 10, justifyContent: 'center', alignItems: 'center' }}>
                     <View style={styles.containerStepper}>

@@ -7,7 +7,8 @@ const { Types, Creators } = createActions({
 	contentRequest: null,
 	contentPost: ['data'],
 	contentSuccess: ['payload'],
-	contentFailure: null
+	contentFailure: null,
+	resetContent: null
 });
 
 export const ContentTypes = Types;
@@ -42,6 +43,7 @@ export const success = (state, action) => {
 
 // Something went wrong somewhere.
 export const failure = state => state.merge({ fetchingContent: false, error: true, payload: null });
+export const reset = (state) => state.merge({ fetchingContent: null, content: null });
 
 /* ------------- Hookup Reducers To Types ------------- */
 
@@ -49,5 +51,6 @@ export const reducer = createReducer(INITIAL_STATE, {
 	[Types.CONTENT_REQUEST]: request,
 	[Types.CONTENT_POST]: postContent,
 	[Types.CONTENT_SUCCESS]: success,
-	[Types.CONTENT_FAILURE]: failure
+	[Types.CONTENT_FAILURE]: failure,
+	[Types.RESET_CONTENT]: reset
 });

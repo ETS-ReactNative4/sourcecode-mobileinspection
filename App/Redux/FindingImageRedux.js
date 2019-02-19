@@ -7,7 +7,8 @@ const { Types, Creators } = createActions({
 	findingImageRequest: null,
 	findingImagePost: ['data'],
 	findingImageSuccess: ['payload'],
-	findingImageFailure: null
+	findingImageFailure: null,
+	resetFindingImage: null
 });
 
 export const FindingImageTypes = Types;
@@ -42,6 +43,7 @@ export const success = (state, action) => {
 
 // Something went wrong somewhere.
 export const failure = state => state.merge({ fetchingFindingImage: false, error: true, payload: null });
+export const reset = (state) => state.merge({ fetchingFindingImage: null, findingImage: null });
 
 /* ------------- Hookup Reducers To Types ------------- */
 
@@ -49,5 +51,6 @@ export const reducer = createReducer(INITIAL_STATE, {
 	[Types.FINDING_IMAGE_REQUEST]: request,
 	[Types.FINDING_IMAGE_POST]: postFindingImage,
 	[Types.FINDING_IMAGE_SUCCESS]: success,
-	[Types.FINDING_IMAGE_FAILURE]: failure
+	[Types.FINDING_IMAGE_FAILURE]: failure,
+	[Types.RESET_FINDING_IMAGE]: reset
 });

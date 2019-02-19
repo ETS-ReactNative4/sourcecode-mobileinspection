@@ -7,7 +7,8 @@ const { Types, Creators } = createActions({
 	findingRequest: null,
 	findingPost: ['data'],
 	findingSuccess: ['payload'],
-	findingFailure: null
+	findingFailure: null,
+	resetFinding: null
 });
 
 export const FindingTypes = Types;
@@ -42,6 +43,7 @@ export const success = (state, action) => {
 
 // Something went wrong somewhere.
 export const failure = state => state.merge({ fetchingFinding: false, error: true, payload: null });
+export const reset = (state) => state.merge({ fetchingFinding: null, finding: null });
 
 /* ------------- Hookup Reducers To Types ------------- */
 
@@ -49,5 +51,6 @@ export const reducer = createReducer(INITIAL_STATE, {
 	[Types.FINDING_REQUEST]: request,
 	[Types.FINDING_POST]: postFinding,
 	[Types.FINDING_SUCCESS]: success,
-	[Types.FINDING_FAILURE]: failure
+	[Types.FINDING_FAILURE]: failure,
+	[Types.RESET_FINDING]: reset
 });

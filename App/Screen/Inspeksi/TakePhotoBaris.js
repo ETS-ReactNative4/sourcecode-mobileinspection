@@ -24,7 +24,7 @@ class TakePhotoBaris extends Component {
 
   static navigationOptions = {
     headerStyle: {
-      backgroundColor: Colors.tintColor
+      backgroundColor: Colors.tintColorPrimary
     },
     title: 'Ambil Foto Baris',
     headerTintColor: '#fff',

@@ -89,102 +89,6 @@ const TaskServices = {
     });
   },
 
-  // deleteTest: function (object) {
-  //   RealmSchemas.write(() => {
-  //     RealmSchemas.delete(object);
-  //   });
-  // },
-
-
-  // deleteTrackInsByTrackInsCode: function (value) {
-  //   let total = RealmSchemas.objects('TR_TRACK_INSPECTION');
-  //   for (var i = 0; i < total.length; i++) {
-  //     if (value === total[i].TRACK_INSPECTION_CODE) {
-  //       RealmSchemas.write(() => {
-  //         RealmSchemas.delete(RealmSchemas.objects('TR_TRACK_INSPECTION')[i]);
-  //       });
-  //     }
-  //   }
-  // },
-
-  // deleteInpeksiHeaderByBlockInsCode: function (value) {
-  //   let total = RealmSchemas.objects('TR_BLOCK_INSPECTION_H');
-  //   for (var i = 0; i < total.length; i++) {
-  //     if (value === total[i].BLOCK_INSPECTION_CODE) {
-  //       RealmSchemas.write(() => {
-  //         RealmSchemas.delete(RealmSchemas.objects('TR_BLOCK_INSPECTION_H')[i]);
-  //       });
-  //     }
-  //   }
-  // },
-
-  // deleteTRBaris: function (value) {
-  //   let total = RealmSchemas.objects('TR_BARIS_INSPECTION');
-  //   for (var i = 0; i < total.length; i++) {
-  //     if (value === total[i].BLOCK_INSPECTION_CODE) {
-  //       RealmSchemas.write(() => {
-  //         RealmSchemas.delete(RealmSchemas.objects('TR_BARIS_INSPECTION')[i]);
-  //       });
-  //     }
-  //   }
-  // },
-
-  // deleteTRBarisByID: function (value) {
-  //   let total = RealmSchemas.objects('TR_BARIS_INSPECTION');
-  //   for (var i = 0; i < total.length; i++) {
-  //     if (value === total[i].ID) {
-  //       RealmSchemas.write(() => {
-  //         RealmSchemas.delete(RealmSchemas.objects('TR_BARIS_INSPECTION')[i]);
-  //       });
-  //     }
-  //   }
-  // },
-
-  // deleteBy: function (table, param, value) {
-  //   let sortedPeople = RealmSchemas.objects(table).sorted(param)
-  //   let Dave = RealmSchemas.objects(table).filtered("ID=1")
-  //   let indexOfDave = sortedPeople.indexOf(Dave)
-  //   return indexOfDave;
-  // },
-
-  //   deleteByQuery(table, param, value){    
-  //     RealmSchemas.write(() => {
-  //         RealmSchemas.delete(RealmSchemas.objects(table).filtered(param+' == \"'+ value +'\" '));        
-  //     })
-  //   },
-
-
-  //deleteby
-
-  //   RealmSchema.write(() => {           
-  //     RealmSchema.delete(RealmSchema.objects('TR_TRACK_INSPECTION')[0]);
-
-  // });
-
-  //update yg jalan
-  // var data = RealmSchema.objects('TR_TRACK_INSPECTION');
-  // RealmSchema.write(() => {
-  //     data[0].LAT_TRACK = 'HATI'
-  // })
-
-  // updateData: function (table, whereClause, value) {
-  //   var data = RealmSchemas.objects(table);
-  //   var field = whereClause;
-  //   RealmSchemas.write(() => {
-  //     data[0].field = value
-  //   })
-  // },
-
-  // updateData2: function (table, whereClause, valueClause, param, value) {
-  //   let list = RealmSchemas.objects(table);
-
-  //   RealmSchemas.write(() => {
-  //     for (var i = 0; i < list.length; i++) {
-  //       data[i].param = value[i]
-  //     }
-  //   });
-  // },
-
   updateLogin: function(){
     let data = RealmSchemas.objects('TR_LOGIN')[0];
     RealmSchemas.write(() => {
@@ -292,6 +196,18 @@ const TaskServices = {
       data.UOM = param.UOM;
       data.FLAG_TYPE = param.FLAG_TYPE;
       data.URUTAN = param.URUTAN;
+    });
+  },
+
+  updateContact: function(param, index){
+    let data = RealmSchemas.objects('TR_CONTACT')[index];
+    RealmSchemas.write(() => {
+      data.EMPLOYEE_NIK = param.EMPLOYEE_NIK;
+      data.USER_ROLE = param.USER_ROLE;
+      data.LOCATION_CODE = param.LOCATION_CODE;
+      data.REF_ROLE = param.REF_ROLE;
+      data.JOB = param.JOB;
+      data.FULLNAME = param.FULLNAME;
     });
   },
 

@@ -14,7 +14,7 @@ class FilterScreen extends React.Component {
 
     static navigationOptions = ({ navigation }) => ({
         headerStyle: {
-            backgroundColor: Colors.tintColor
+            backgroundColor: Colors.tintColorPrimary
         },
         headerTitleStyle: {
             textAlign: "left",
@@ -133,25 +133,25 @@ class FilterScreen extends React.Component {
                     barStyle="light-content" />
                 <Content style={{ padding: 16 }}>
                     <Form>
-                        <Text style={{ fontWeight: '500', marginLeft: 8, fontSize: 16 }}>BISNIS AREA</Text>
+                        <Text style={{ fontWeight: '400', marginLeft: 8, fontSize: 14, color: 'grey' }}>Bisnis Area</Text>
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('BisnisArea', { changeBa: this.changeBa })} >
                             <Text style={{ color: 'black', marginLeft: 8, fontSize: 16, marginTop: 8 }}>{this.state.valBisnisArea}</Text>
                             <View style={{ height: 0.5, flex: 1, flexDirection: 'row', backgroundColor: 'grey', marginTop: 8 }}></View>
                         </TouchableOpacity>
 
-                        <Text style={{ fontWeight: '500', marginLeft: 8, fontSize: 16, marginTop: 16 }}>PEMBERI TUGAS</Text>
+                        <Text style={{ fontWeight: '400', marginLeft: 8, fontSize: 14, marginTop: 16, color: 'grey' }}>Pemberi Tugas</Text>
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('PemberiTugas', { assignTo: this.assignTo })} >
                             <Text style={{ color: 'black', marginLeft: 8, fontSize: 16, marginTop: 8 }}>{this.state.valAssignto}</Text>
                             <View style={{ height: 0.5, flex: 1, flexDirection: 'row', backgroundColor: 'grey', marginTop: 8 }}></View>
                         </TouchableOpacity>
 
-                        <Text style={{ fontWeight: '500', marginLeft: 8, fontSize: 16, marginTop: 16 }}>TANGGAL PEMBUATAN</Text>
+                        <Text style={{ fontWeight: '400', marginLeft: 8, fontSize: 14, marginTop: 16, color: 'grey' }}>Tanggal Pembuatan</Text>
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('Calendar', { changeBatasWaktu: this.changeBatasWaktu })}  >
                             <Text style={{ color: 'black', marginLeft: 8, fontSize: 16, marginTop: 8 }}>{this.state.valBatasWaktu}</Text>
                             <View style={{ height: 0.5, flex: 1, flexDirection: 'row', backgroundColor: 'grey', marginTop: 8 }}></View>
                         </TouchableOpacity>
 
-                        <Text style={{ fontWeight: '500', marginLeft: 8, fontSize: 16, marginTop: 16 }}>STATUS TEMUAN</Text>
+                        <Text style={{ fontWeight: '400', marginLeft: 8, fontSize: 14, marginTop: 16, color: 'grey' }}>Status Temuan</Text>
                         <Picker
                             mode="dropdown"
                             iosHeader="Select your SIM"

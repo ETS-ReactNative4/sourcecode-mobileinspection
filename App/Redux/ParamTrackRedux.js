@@ -6,7 +6,8 @@ import Immutable from 'seamless-immutable';
 const { Types, Creators } = createActions({
 	paramTrackRequest: null,
 	paramTrackSuccess: ['payload'],
-	paramTrackFailure: null
+	paramTrackFailure: null,
+	resetParamTrack: null
 });
 
 export const ParamTrackTypes = Types;
@@ -39,11 +40,13 @@ export const success = (state, action) => {
 
 // Something went wrong somewhere.
 export const failure = state => state.merge({ fetchingParamTrack: false, error: true, payload: null });
+export const reset = (state) => state.merge({ fetchingParamTrack: null, paramTrack: null });
 
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
 	[Types.PARAM_TRACK_REQUEST]: request,
 	[Types.PARAM_TRACK_SUCCESS]: success,
-	[Types.PARAM_TRACK_FAILURE]: failure
+	[Types.PARAM_TRACK_FAILURE]: failure,
+	[Types.RESET_PARAM_TRACK]: reset
 });

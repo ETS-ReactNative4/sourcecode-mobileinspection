@@ -7,7 +7,8 @@ const { Types, Creators } = createActions({
 	blockRequest: null,
 	blockPost: ['data'],
 	blockSuccess: ['payload'],
-	blockFailed: null
+	blockFailed: null,
+	resetBlock: null
 });
 
 export const BlockTypes = Types;
@@ -42,11 +43,14 @@ export const success = (state, action) => {
 // Something went wrong somewhere.
 export const failed = state => state.merge({ fetchingBlock: false, error: true, payload: null });
 
+export const reset = (state) => state.merge({ fetchingBlock: null, block: null });
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
 	[Types.BLOCK_REQUEST]: requestBlock,
 	[Types.BLOCK_POST]: postBlock,
 	[Types.BLOCK_SUCCESS]: success,
-	[Types.BLOCK_FAILED]: failed
+	[Types.BLOCK_FAILED]: failed,
+	[Types.RESET_BLOCK]: reset
 });

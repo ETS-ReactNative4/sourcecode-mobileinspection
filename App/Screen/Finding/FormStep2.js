@@ -1,40 +1,29 @@
 import React, { Component } from 'react';
 import { NavigationActions, StackActions } from 'react-navigation';
 import {
-    ScrollView, Text, FlatList, TextInput, TouchableOpacity, View, Image, Modal,
-    BackHandler, Alert
+    BackAndroid, Text, FlatList, TextInput, TouchableOpacity, View, Image, Modal,
+    Alert
 } from 'react-native';
 import {
     Container,
-    Content,
-    Spinner
+    Content
 } from 'native-base'
-import R, { isEmpty, isNil } from 'ramda'
+import R, { isEmpty } from 'ramda'
 import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
 import Icon from 'react-native-vector-icons/MaterialIcons'
-import IconLoc from 'react-native-vector-icons/FontAwesome5';
 import RadioGroup from 'react-native-custom-radio-group'
 import DateTimePicker from 'react-native-modal-datetime-picker'
 import moment from 'moment'
-import Contact from '../../Component/Contact'
-import SlidingUpPanel from 'rn-sliding-up-panel'
-import FastImage from 'react-native-fast-image'
-import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps'
 import TaskServices from '../../Database/TaskServices'
-import { getUUID, getTodayDate } from '../../Lib/Utils'
-import random from 'random-string'
+import { getTodayDate } from '../../Lib/Utils'
 import IIcon from 'react-native-vector-icons/Ionicons'
 import Carousel from 'react-native-looped-carousel'
 import { dirPhotoTemuan } from '../../Lib/dirStorage'
-import Autocomplete from 'react-native-autocomplete-input';
-import layer from '../../Data/kalimantantimur.json'
-import SearchContact from './Component/SearchContact'
-import Geojson from 'react-native-geojson';
-import { dirPhotoKategori } from '../../Lib/dirStorage';
-// var RNFS = require('react-native-fs');
-// const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
+var RNFS = require('react-native-fs');
 
+import ModalAlert from '../../Component/ModalAlert';
+import ModalAlertConfirmation from '../../Component/ModalAlertConfirmation'
 
 const radioGroupList = [{
     label: 'HIGH',
@@ -68,7 +57,7 @@ class FormStep2 extends Component {
     constructor(props) {
         super(props);
 
-        // this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
+        this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
 
         let params = props.navigation.state.params;
         let foto = R.clone(params.image);
@@ -110,9 +99,15 @@ class FormStep2 extends Component {
             ],
             TRANS_CODE: `F${user.USER_AUTH_CODE}${getTodayDate('YYMMDDHHmmss')}`,
             colorPriority: '#ddd',
-            query: '',
             person: [],
-            disableCalendar: true
+            disableCalendar: true,
+
+            //Add Modal Alert by Aminju 
+            title: 'Title',
+            message: 'Message',
+            showModal: false,
+            showModalConfirmation: false,
+            icon: ''
         }
     }
 
@@ -131,25 +126,31 @@ class FormStep2 extends Component {
 
     componentDidMount() {
         this.getLocation();
-        // BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
-        // this.handleAndroidBackButton(this.exitAlert);
+        BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
     }
 
     componentWillUnmount() {
-        // alert(JSON.stringify(this.state.foto))
-        // BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+        BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
     }
 
     handleBackButtonClick() {
-        Alert.alert(
-            'Peringatan',
-            'Transaksi kamu tidak akan tersimpan, kamu yakin akan melanjutkan?',
-            [
-                { text: 'NO', style: 'cancel' },
-                { text: 'YES', onPress: () => this.props.navigation.goBack(null) }
-            ]
-        );
+        this.setState({
+            showModalConfirmation: true,
+            title: 'Data Hilang',
+            message: 'Temuan mu belum tersimpan loh. Yakin nih mau dilanjutin?',
+            icon: require('../../Images/ic-not-save.png')
+        });
+
         return true;
+    }
+
+    clearFoto(){
+        if(this.state.foto.length > 0){
+            this.state.foto.map(item =>{                
+                RNFS.unlink(`file://${dirPhotoTemuan}/${item}`)
+            })
+        }
+        this.props.navigation.goBack(null);
     }
 
     getStatusBlok(werk_afd_blok_code) {
@@ -193,56 +194,57 @@ class FormStep2 extends Component {
         navigation.dispatch(resetAction);
     }
 
-    exitAlert = () => {
-        Alert.alert(
-            'Peringatan',
-            'Transaksi kamu tidak akan tersimpan, kamu yakin akan melanjutkan?',
-            [
-                { text: 'NO', style: 'cancel' },
-                { text: 'YES', onPress: () => this.props.navigation.goBack(null) }
-            ]
-        );
-    };
+    // exitAlert = () => {
+    //     Alert.alert(
+    //         'Peringatan',
+    //         'Transaksi kamu tidak akan tersimpan, kamu yakin akan melanjutkan?',
+    //         [
+    //             { text: 'NO', style: 'cancel' },
+    //             { text: 'YES', onPress: () => this.props.navigation.goBack(null) }
+    //         ]
+    //     );
+    // };
 
-    handleAndroidBackButton = callback => {
-        BackHandler.addEventListener('hardwareBackPress', () => {
-            callback();
-            return true;
-        });
-    };
+    // handleAndroidBackButton = callback => {
+    //     BackHandler.addEventListener('hardwareBackPress', () => {
+    //         callback();
+    //         return true;
+    //     });
+    // };
 
     validation() {
         let isSameUser = this.state.assignto == this.state.user.USER_AUTH_CODE ? true : false;
+        let title = 'Inputan Tidak Lengkap';
         if (isEmpty(this.state.keterangan)) {
-            Alert.alert(
-                'Peringatan',
-                "Keterangan harus diisi"
-            );
+            this.setState({
+                showModal: true, title: title, message: 'Eh Keterangan belum diisi loh',
+                icon: require('../../Images/ic-inputan-tidak-lengkap.png')
+            });
         } else if (isEmpty(this.state.blok)) {
-            Alert.alert(
-                'Peringatan',
-                "Lokasi Blok harus diisi"
-            );
+            this.setState({
+                showModal: true, title: title, message: 'Eh Lokasi belum diisi loh',
+                icon: require('../../Images/ic-inputan-tidak-lengkap.png')
+            });
         } else if (isEmpty(this.state.category)) {
-            Alert.alert(
-                'Peringatan',
-                "Kategori harus diisi"
-            );
+            this.setState({
+                showModal: true, title: title, message: 'Eh Kategori belum diisi loh',
+                icon: require('../../Images/ic-inputan-tidak-lengkap.png')
+            });
         } else if (isEmpty(this.state.priority)) {
-            Alert.alert(
-                'Peringatan',
-                "Prioritas harus diisi"
-            );
+            this.setState({
+                showModal: true, title: title, message: 'Eh Prioritas belum diisi loh',
+                icon: require('../../Images/ic-inputan-tidak-lengkap.png')
+            });
         } else if (isEmpty(this.state.tugasKepada)) {
-            Alert.alert(
-                'Peringatan',
-                "Ditugaskan kepada harus diisi"
-            );
+            this.setState({
+                showModal: true, title: title, message: 'Eh Ditugaskan kepada belum diisi loh',
+                icon: require('../../Images/ic-inputan-tidak-lengkap.png')
+            });
         } else if (isSameUser && isEmpty(this.state.batasWaktu)) {
-            Alert.alert(
-                'Peringatan',
-                "Batas waktu harus diisi"
-            );
+            this.setState({
+                showModal: true, title: title, message: 'Eh Batas waktu belum diisi loh',
+                icon: require('../../Images/ic-batas-waktu.png')
+            });
         } else {
             this.saveData()
         }
@@ -293,20 +295,10 @@ class FormStep2 extends Component {
 
     _hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
 
-    _handleDatePicked = (date) => {        
-        // this.setState({ batasWaktu: moment(date).format("LL"), batasWaktuSave: moment(date).format("YYYY-MM-DD")})
-        // this.setState({ batasWaktu: moment(date).format("LL"), batasWaktuSave: moment(date).format("YYYY-MM-DD")})
-        // this.setState({ batasWaktu: moment(date).format("LL"), batasWaktuSave: moment(date).format("YYYYMMDD")})
-        
+    _handleDatePicked = (date) => {         
         this.setState({ batasWaktu: moment(date).format("YYYY-MM-DD") })
         this._hideDateTimePicker();
     };
-
-    _showLocation = () => {
-        this.setState({
-            isMapsVisible: true
-        })
-    }
 
     changeColorPriority(priority) {
         switch (priority) {
@@ -324,15 +316,6 @@ class FormStep2 extends Component {
         }
     }
 
-    findPerson(query) {
-        if (query === '') {
-            return [];
-        }
-        const { person } = this.state;
-        const regex = new RegExp(`${query.trim()}`, 'i');
-        return person.filter(person => person.allShow.search(regex) >= 0);
-    }
-
     changeContact = data => {
         let isSameUser = data.userAuth == this.state.user.USER_AUTH_CODE ? true : false;
         if (isSameUser) {
@@ -347,27 +330,58 @@ class FormStep2 extends Component {
 
     changeBlok = data => {
         if(data !== null){
-            this.setState({ blok: data.allShow, blockCode: data.blokCode, werks: data.werks, afdCode: data.afdCode });
+            this.loadDataBlock(data);
+            // this.setState({ blok: data.allShow, blockCode: data.blokCode, werks: data.werks, afdCode: data.afdCode });
         }
         
     }
 
-    pilihKontak(){
-        if(isEmpty(this.state.blok)){
-            alert('kamu harus pilih lokasi dulu')
+    loadDataBlock(blockCode){
+        let data = TaskServices.findBy2('TM_BLOCK', 'BLOCK_CODE', blockCode);
+        if(data !== undefined){            
+            let statusBlok= this.getStatusBlok(data.WERKS_AFD_BLOCK_CODE);
+            let estateName = this.getEstateName(data.WERKS);
+            this.setState({
+                blok: `${data.BLOCK_NAME}/${statusBlok}/${estateName}`,
+                blockCode: data.BLOCK_CODE, 
+                afdCode: data.AFD_CODE, 
+                werks: data.WERKS
+            })
         }else{
+            alert('Blok yg kamu pilih tidak valid')
+        }
+    }
+
+    pilihKontak() {
+        if (isEmpty(this.state.blok)) {
+            // alert('kamu harus pilih lokasi dulu')
+            this.setState({ showModal: true, title: 'Pilih Lokasi', message: 'Kamu harus pilih lokasi dulu yaaa', icon: require('../../Images/ic-inputan-tidak-lengkap.png') });
+        } else {
             this.props.navigation.navigate('PilihKontak', { changeContact: this.changeContact, afdCode: this.state.afdCode, werks: this.state.werks })
         }        
     }
 
     render() {
-        const { query } = this.state;
-        const person = this.findPerson(query);
-        const comp = (a, b) => a.toLowerCase().trim() === b.toLowerCase().trim();
 
         return (
             <Container style={{ flex: 1, backgroundColor: 'white' }}>
                 <Content style={{ flex: 1, paddingHorizontal: 16, }}>
+
+                    <ModalAlert
+                        icon={this.state.icon}
+                        visible={this.state.showModal}
+                        onPressCancel={() => this.setState({ showModal: false })}
+                        title={this.state.title}
+                        message={this.state.message} />
+
+                    <ModalAlertConfirmation
+                        icon={this.state.icon}
+                        visible={this.state.showModalConfirmation}
+                        onPressCancel={() => this.setState({ showModalConfirmation: false })}
+                        onPressSubmit={() => { this.props.navigation.goBack(null) }}
+                        title={this.state.title}
+                        message={this.state.message} />
+
                     {/* STEPPER */}
                     <FlatList
                         style={[style.stepperContainer, { margin: 15, alignSelf: 'center' }]}
@@ -445,7 +459,11 @@ class FormStep2 extends Component {
 
                     <View style={{ flex: 1, flexDirection: 'row' }}>
                         <Text style={style.label}>Lokasi <Text style={style.mandatory}>*</Text></Text>
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('PilihBlok', { changeBlok: this.changeBlok })}>
+                        {/* <TouchableOpacity onPress={() => this.props.navigation.navigate('PilihBlok', { changeBlok: this.changeBlok })}>
+                            {isEmpty(this.state.blok) && (<Text style={{ fontSize: 14, color: '#999' }}> Set Location </Text>)}
+                            {!isEmpty(this.state.blok) && (<Text style={{ fontSize: 14 }}> {this.state.blok} </Text>)}
+                        </TouchableOpacity> */}
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('MapsFinding', { changeBlok: this.changeBlok })}>
                             {isEmpty(this.state.blok) && (<Text style={{ fontSize: 14, color: '#999' }}> Set Location </Text>)}
                             {!isEmpty(this.state.blok) && (<Text style={{ fontSize: 14 }}> {this.state.blok} </Text>)}
                         </TouchableOpacity>
@@ -544,191 +562,6 @@ class FormStep2 extends Component {
                         }} color={'white'} name="ios-close-circle-outline" size={45} onPress={() => { this.setState({ isImageFullVisible: false }) }} />
                     </View>
                 </Modal>
-
-                <SlidingUpPanel
-                    visible={this.state.isMapsVisible}
-                    onRequestClose={() => this.setState({ isMapsVisible: false })}>
-                    <View style={[style.containerSlidingUpPanel]}>
-                        <View style={{ width: '100%', height: 20 }} onPress={() => this.setState({ isMapsVisible: false })}>
-                            <View
-                                style={{
-                                    backgroundColor: '#CCC', alignSelf: 'center',
-                                    height: 4, width: 80
-                                }}
-                            ></View>
-                        </View>
-
-                        <Text style={{ marginBottom: 20, fontSize: 16, fontWeight: 'bold', alignSelf: 'center' }}>Tentukan Lokasi</Text>
-
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={[style.label, { height: 35, textAlignVertical: 'center' }]}> Blok </Text>
-                            <Autocomplete
-                                autoCapitalize="none"
-                                autoCorrect={false}
-                                containerStyle={{ width: '60%' }}
-                                data={person.length === 1 && comp(query, person[0].allShow) ? [] : person}
-                                defaultValue={query}
-                                onChangeText={text => {
-                                    this.setState({ query: text })
-                                }
-                                }
-                                renderItem={({ blokCode, blokName, statusBlok, allShow, werks, afdCode }) => (
-                                    <TouchableOpacity onPress={() => {
-                                        // alert(allShow)
-                                        this.setState({
-                                            werks: werks,
-                                            afdCode: afdCode,
-                                            blok: allShow,//blokCode, 
-                                            blockCode: blokCode,
-                                            query: allShow
-                                        }
-                                        )
-                                    }}>
-                                        <View style={{ padding: 10 }}>
-                                            <Text style={{ fontSize: 15, margin: 2 }}>{blokName}/{statusBlok}/{this.getEstateName(werks)}</Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                )}
-                            />
-                        </View>
-
-                        <View style={{ marginTop: 10, width: '100%' }}>
-                            <TouchableOpacity style={[style.buttonSetLoc, { alignSelf: 'flex-end' }]}
-                                onPress={() => {
-                                    alert(this.state.blok);
-                                    this.setState({ isMapsVisible: false })
-                                }
-                                }>
-                                <Text style={style.buttonText}>Set Lokasi</Text>
-                            </TouchableOpacity>
-                        </View>
-
-                        <View style={style.line} />
-
-                        <Text style={{ color: Colors.brand, textAlign: 'center', paddingHorizontal: 25, marginBottom: 10, fontSize: 16, fontWeight: 'bold', alignSelf: 'center' }}>Pastikan kamu telah berada di lokasi yang benar</Text>
-                        <View style={style.containerMap}>
-                            <MapView
-                                style={style.map}>
-                                <Geojson geojson={alcatraz} />
-                                <Marker
-                                    coordinate={{
-                                        latitude: this.state.latitude,
-                                        longitude: this.state.longitude,
-                                    }}
-                                    centerOffset={{ x: -42, y: -60 }}
-                                    anchor={{ x: 0.84, y: 1 }}
-                                >
-                                </Marker>
-                            </MapView>
-                            <IconLoc
-                                onPress={() => { this.getLocation() }}
-                                name="location-arrow"
-                                size={24}
-                                style={{ alignSelf: 'flex-end', marginBottom: 325, marginRight: 10 }} />
-                        </View>
-
-                        {/* <View>   
-                            <IconLoc
-                                onPress={()=>{this.getLocation()}}
-                                name="location-arrow"
-                                size={24}
-                                style={{ alignSelf: 'flex-end', marginTop: 30, marginRight: 10}}/>  
-
-                            <MapView
-                                style={{ height: 300, borderRadius: 10 }}
-                                provider={PROVIDER_GOOGLE}
-                                region={{
-                                    latitude: this.state.regionLat,
-                                    longitude: this.state.regionLon,
-                                    latitudeDelta: 3,
-                                    longitudeDelta: 3
-                                }}
-                            >
-
-                                {!!this.state.latitude && !!this.state.longitude && <MapView.Marker
-                                    coordinate={{ "latitude": this.state.latitude, "longitude": this.state.longitude }}
-                                    title={"Your Location"}
-                                />}
-                            </MapView>
-                        </View>                         */}
-                    </View>
-                </SlidingUpPanel>
-
-                {/* slidingup contacts */}
-                {/* <SlidingUpPanel
-                    visible={this.state.isContactVisible}
-                    onRequestClose={() => this.setState({ isContactVisible: false })}>
-                    <View style={style.containerSlidingUpPanel}>
-                        <View style={{ width: '100%', height: 20 }} onPress={() => this.setState({ isContactVisible: false })}>
-                            <View
-                                style={{
-                                    backgroundColor: '#CCC', alignSelf: 'center',
-                                    height: 4, width: 80
-                                }}
-                            ></View>
-                        </View>
-
-                        <Text style={{ marginBottom: 20, fontSize: 16, fontWeight: 'bold', alignSelf: 'center' }}>Contact</Text>
-                        <SearchContact onSelect={user => {
-                            this.setState({
-                                isContactVisible: false,
-                                tugasKepada: user.user.fullName,
-                                assignto: user.user.userAuth
-                            })
-                            
-                            let isSameUser = user.user.userAuth == this.state.user.USER_AUTH_CODE ? true : false;
-                            if(isSameUser){
-                                this.setState({disableCalendar: false})
-                            }
-                        }} />
-                    </View>
-                </SlidingUpPanel> */}
-
-                {/* slidingup category */}
-                {/* <SlidingUpPanel
-                    height={340}
-                    draggableRange={{ top: 420, bottom: 0 }}
-                    visible={this.state.isCategoryVisible}
-                    onRequestClose={() => this.setState({ isCategoryVisible: false })}>
-                    <View style={[style.containerSlidingUpPanel]}>
-                        <View style={{ width: '100%', height: 20 }} onPress={() => this.setState({ isCategoryVisible: false })}>
-                            <View
-                                style={{
-                                    backgroundColor: '#CCC', alignSelf: 'center',
-                                    height: 4, width: 80
-                                }}
-                            ></View>
-                        </View>
-
-                        <Text style={{ marginBottom: 20, fontSize: 16, fontWeight: 'bold', alignSelf: 'center' }}>Pilih Kategori</Text>
-                        <FlatList
-                            data={this.state.categories}
-                            keyExtractor={item => item.id}
-                            numColumns={4}
-                            renderItem={({ item }) => {
-                                return (
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            this.setState({
-                                                isCategoryVisible: false,
-                                                category: item.CATEGORY_NAME,
-                                                categoryCode: item.CATEGORY_CODE
-                                            })
-                                        }}
-                                        style={style.itemCategory}>
-                                        <FastImage style={{ width: 40, height: 40 }}
-                                            resizeMode={FastImage.resizeMode.contain}
-                                            source={{
-                                                uri: `file://${dirPhotoKategori}/${item.ICON}`,
-                                                priority: FastImage.priority.normal,
-                                            }} />
-                                        <Text style={style.textCategory}>{item.CATEGORY_NAME}</Text>
-                                    </TouchableOpacity>
-                                );
-                            }}
-                        />
-                    </View>
-                </SlidingUpPanel> */}
             </Container >
         )
     }

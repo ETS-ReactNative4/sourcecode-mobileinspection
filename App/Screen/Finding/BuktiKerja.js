@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-    BackHandler, Text, FlatList, ScrollView, TouchableOpacity, View, Image, Alert, Platform
+    Text, BackAndroid, ScrollView, TouchableOpacity, View, Image, Alert, Platform
 } from 'react-native';
 import {
     Container,
@@ -12,11 +12,12 @@ import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
 import Icon2 from 'react-native-vector-icons/Ionicons';
 import R from 'ramda'
-import { dirPhotoTemuan } from '../../Lib/dirStorage'
 import {getTodayDate} from '../../Lib/Utils'
-import random from 'random-string'
 import TaskServices from '../../Database/TaskServices'
+import RNFS from 'react-native-fs';
 const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
+
+import ModalAlert from '../../Component/ModalAlert';
 
 class FormStep1 extends Component {
 
@@ -24,7 +25,7 @@ class FormStep1 extends Component {
         const { params = {} } = navigation.state;
         return {
           headerStyle: {
-            backgroundColor: Colors.tintColor
+            backgroundColor: Colors.tintColorPrimary
           },
           title: 'Bukti Kerja',
           headerTintColor: '#fff',
@@ -34,7 +35,7 @@ class FormStep1 extends Component {
             fontWeight: '400'
           },
           headerLeft: (
-              <TouchableOpacity onPress={() => {navigation.goBack(null)}}>
+              <TouchableOpacity onPress={() => {params.clearFoto()}}>
                   <Icon2 style={{marginLeft: 12}} name={'ios-arrow-round-back'} size={45} color={'white'} />
               </TouchableOpacity>
           )
@@ -58,86 +59,64 @@ class FormStep1 extends Component {
                 { step: '1', title: 'Ambil Photo' },
                 { step: '2', title: 'Tulis Keterangan' }
             ],
-            latitude: 0.0,
-            longitude: 0.0,
             fetchLocation: false,
-            isMounted: false,
-            TRANS_CODE: ID//'F' + user.USER_AUTH_CODE + random({ length: 3 }).toUpperCase(),
+            TRANS_CODE: ID,
+            
+            //Add by Aminju
+            title: 'Title',
+            message: 'Message',
+            showModal: false,
+            icon: ''
         }
     }
 
     clearFoto(){
-        // if(this.state.hasPhoto){
-        //   RNFS.unlink(this.state.path);
-        //   RNFS.unlink(this.state.pathCacheInternal);
-        //   RNFS.unlink(this.state.pathCacheResize);
-        //   this.setState({ pathView: '', hasPhoto: false });
-        // }
-        this.props.navigation.goBack(nul); 
+        if(this.state.photos.length > 0){
+            this.state.photos.map(item =>{                
+                RNFS.unlink(item.uri)
+            })
+        }
+        this.props.navigation.goBack(); 
     }
 
     componentDidMount() {
-       this.getLocation();
+       BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick);
        this.props.navigation.setParams({ clearFoto: this.clearFoto })
-       BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
     }
 
     componentWillUnmount(){
-        BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+        BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
     }
 
     handleBackButtonClick() { 
-        this.props.navigation.goBack(null); 
+        this.clearFoto();
         return true;
-    }
-
-    getLocation() {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                var lat = parseFloat(position.coords.latitude);
-                var lon = parseFloat(position.coords.longitude);
-                // const timestamp = convertTimestampToDate(position.timestamp, 'DD/MM/YYYY HH:mm:ss')//moment(position.timestamp).format('DD/MM/YYYY HH:mm:ss');
-                // console.log(timestamp);
-                this.setState({latitude:lat, longitude:lon, fetchLocation: false});
-
-            },
-            (error) => {
-                let message = error && error.message ? error.message : 'Terjadi kesalahan ketika mencari lokasi anda !';
-                if (error && error.message == "No location provider available.") {
-                    message = "Mohon nyalakan GPS anda terlebih dahulu.";
-                }
-                this.setState({fetchLocation:false})
-                alert('Informasi', message);
-            }, // go here if error while fetch location
-            { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
-        );
-    }
-
-    componentDidMount() {
     }
 
     onBtnClick() {
         if (this.state.photos.length == 0) {
-            Alert.alert(
-                'Peringatan',
-                'Anda belum mengambil foto'
-            );
+            // Alert.alert(
+            //     'Peringatan',
+            //     'Anda belum mengambil foto'
+            // );
+            
+            this.setState({ showModal: true, title: "Ambil Foto", message: 'Opps kamu belum ambil Foto Temuan yaaa', icon: require('../../Images/ic-no-pic.png') });
+        
         } else if (this.state.selectedPhotos.length == 0) {
-            Alert.alert(
-                'Peringatan',
-                "Minimal harus ada 1 Foto dipilih"
-            );
+            // Alert.alert(
+            //     'Peringatan',
+            //     "Minimal harus ada 1 Foto dipilih"
+            // );
+            this.setState({ showModal: true, title: 'Foto Temuan', message: 'Kamu harus ambil min. 1 foto yoo.', icon: require('../../Images/ic-no-pic.png') });
         } else {
             let images = [];
             this.state.selectedPhotos.map((item) => {
                 let da = item.split('/')
                 let imgName = da[da.length-1];
                 item = item.substring(7);
-                // var pname = 'F' + this.state.user.USER_AUTH_CODE + random({ length: 3 }).toUpperCase() + ".jpg";
-                var pname = `P${this.state.user.USER_AUTH_CODE}${getTodayDate('YYMMDDHHmmss')}.jpg`
                 var img = {
                     TR_CODE: this.state.TRANS_CODE,
-                    IMAGE_CODE: pname.replace(".jpg", ""),
+                    IMAGE_CODE: imgName.replace(".jpg", ""),
                     IMAGE_NAME: imgName,
                     IMAGE_PATH_LOCAL: item,
                     IMAGE_URL: '',
@@ -172,7 +151,8 @@ class FormStep1 extends Component {
             selectedPhotos.splice(index, 1);
         } else {
             if (selectedPhotos.length > 2) {
-                alert("Hanya 3 foto yang bisa dipilih")
+                // alert("Hanya 3 foto yang bisa dipilih")
+                this.setState({ showModal: true, title: 'Pilih Foto', message: 'Kamu cuma bisa pilih 3 foto aja yaa..', icon: require('../../Images/ic-no-pic.png') });    
             } else {
                 selectedPhotos.push(foto);
             }
@@ -209,6 +189,13 @@ class FormStep1 extends Component {
         return (
             <Container style={{ flex: 1, backgroundColor: 'white' }}>
                 <Content style={{ flex: 1, marginTop: 30 }}>
+                    <ModalAlert
+                        visible={this.state.showModal}
+                        icon={this.state.icon}
+                        onPressCancel={() => this.setState({ showModal: false })}
+                        title={this.state.title}
+                        message={this.state.message} />
+
                     <Card style={[style.cardContainer]}>
                         <TouchableOpacity style={{ padding: 70 }}
                             onPress={() => { this.takePicture() }}

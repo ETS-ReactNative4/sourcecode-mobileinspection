@@ -7,7 +7,8 @@ const { Types, Creators } = createActions({
 	contentLabelRequest: null,
 	contentLabelPost: ['data'],
 	contentLabelSuccess: ['payload'],
-	contentLabelFailure: null
+	contentLabelFailure: null,
+	resetContentLabel: null
 });
 
 export const ContentLabelTypes = Types;
@@ -42,6 +43,7 @@ export const success = (state, action) => {
 
 // Something went wrong somewhere.
 export const failure = state => state.merge({ fetchingContentLabel: false, error: true, payload: null });
+export const reset = (state) => state.merge({ fetchingContentLabel: null, contentLabel: null });
 
 /* ------------- Hookup Reducers To Types ------------- */
 
@@ -49,5 +51,6 @@ export const reducer = createReducer(INITIAL_STATE, {
 	[Types.CONTENT_LABEL_REQUEST]: request,
 	[Types.CONTENT_LABEL_POST]: postContentLabel,
 	[Types.CONTENT_LABEL_SUCCESS]: success,
-	[Types.CONTENT_LABEL_FAILURE]: failure
+	[Types.CONTENT_LABEL_FAILURE]: failure,
+	[Types.RESET_CONTENT_LABEL]: reset
 });
