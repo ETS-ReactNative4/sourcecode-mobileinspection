@@ -34,7 +34,7 @@ export const AfdSelectors = {
 
 export const request = (state, { data }) => state.merge({ fetchingAfd: true, error: null, afd: null });
 export const postAfd = (state, { data }) => state.merge({ fetchingAfd: true, data, afd: null });
-export const reset = (state) => state.merge({ fetchingAfd: null, afd: null });
+export const reset = (state) => state.merge({ fetchingAfd: null, error: null, afd: null });
 
 // successful api lookup
 export const success = (state, action) => {

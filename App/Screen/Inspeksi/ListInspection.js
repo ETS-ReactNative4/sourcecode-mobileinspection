@@ -79,12 +79,12 @@ class ListInspection extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Image style={{ width: 400, height: 300 }} source={require('../../Images/img-cooming-soon-1.png')} />
+        <Image style={{ width:300, height: 300 }} source={require('../../Images/icon/ic-no-inspeksi.png')} />
 
         <ActionButton style={{ marginEnd: -10, marginBottom: -10 }}
           buttonColor={Colors.tintColor}
           onPress={() => { this.actionButtonClick() }}
-          icon={<Icon2 color='white' name='edit' size={25} />}>
+          icon={<Icon2 color='white' name='add' size={25} />}>
         </ActionButton>
       </View>
     )

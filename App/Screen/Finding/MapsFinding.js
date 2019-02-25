@@ -5,34 +5,43 @@ import {
   Text,
   Dimensions,
   StatusBar,
-  TouchableOpacity
+  TouchableOpacity,
+  BackAndroid
 } from 'react-native';
 
 import MapView, { Polygon, ProviderPropType, Marker } from 'react-native-maps';
-const { width, height } = Dimensions.get('window');
 import Colors from '../../Constant/Colors'
+import { NavigationActions, StackActions  } from 'react-navigation';
+import IconLoc from 'react-native-vector-icons/FontAwesome5';
+import ModalAlert from '../../Component/ModalLoading'
+import ModalGps from '../../Component/ModalAlert';
+
 const ASPECT_RATIO = width / height;
 const LATITUDE = -2.1890660;
 const LONGITUDE = 111.3609873;
 const LATITUDE_DELTA = 0.0922;
-const skm = require('../../Data/skm2.json');
-import { NavigationActions, StackActions  } from 'react-navigation';
-import { ProgressDialog } from 'react-native-simple-dialogs';
-import IconLoc from 'react-native-vector-icons/FontAwesome5';
+const skm = require('../../Data/4421.json');
+const { width, height } = Dimensions.get('window');
+import geolib from 'geolib';
 
 class MapsInspeksi extends React.Component {
   constructor(props) {
     super(props);
-
+    this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     this.state = {
         latitude: 0.0,
         longitude: 0.0,  
         region: {
           latitude: LATITUDE,
           longitude: LONGITUDE,
-          latitudeDelta:0.0015,
-          longitudeDelta:0.00121
-        }      
+          latitudeDelta:0.0075,
+          longitudeDelta:0.00721
+        },
+        poligons: [],
+        fetchLocation: true,
+        showModal: false,
+        title: 'Sabar Ya..',
+        message: 'Sedang mencari lokasi kamu nih.'
     };
   }
 
@@ -58,36 +67,97 @@ class MapsInspeksi extends React.Component {
   }
 
   componentDidMount(){
-    this.props.navigation.setParams({ searchLocation: this.searchLocation })
+    BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
+    this.props.navigation.setParams({ searchLocation: this.searchLocation });
     this.getLocation()
   }
 
+  componentWillUnmount(){
+    BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+  }
+
+  handleBackButtonClick() {
+    this.props.navigation.goBack();
+    return true;
+  }
+
   searchLocation =() =>{
-    this.setState({fetchLocation: true})
+    this.setState({fetchLocation: true});
+    setTimeout(() => {
+      this.setState({fetchLocation: false});
+    }, 5000);
     this.getLocation();
   }  
+
+  totalPolygons(){
+    return skm.data.polygons.length;
+  }
+
+  getPolygons(position){
+    let data = skm.data.polygons;
+    let poligons = [];
+    let index = 0;
+    for(var i=0; i<data.length; i++){
+        let coords = data[i];
+        if(geolib.isPointInside(position, coords.coords)){
+            this.state.poligons.push(coords)
+            poligons.push(coords)
+            index = i;
+            break;
+        }
+    } 
+    //ambil map sebelum index
+    if(index < 4){
+      for(var j=0; j<index; j++){
+        let coords = data[j];
+        this.state.poligons.push(coords)
+        poligons.push(coords)
+      }
+    } 
+
+    //ambil map setelah index
+    let lebih = this.totalPolygons()-index
+    if(lebih > 4){
+      for(var j=0; j<4; j++){
+        let coords = data[j];
+        this.state.poligons.push(coords)
+        poligons.push(coords)
+      }
+    }else{
+      for(var j=0; j<lebih; j++){
+        let coords = data[j];
+        this.state.poligons.push(coords)
+        poligons.push(coords)
+      }
+    }
+
+    return poligons;
+  }
 
   getLocation() {
     navigator.geolocation.getCurrentPosition(
         (position) => {
             var lat = parseFloat(position.coords.latitude);
             var lon = parseFloat(position.coords.longitude);
-            this.setState({latitude:lat, longitude:lon, fetchLocation: false});   
-            model = {
+            region = {
               latitude: lat,
               longitude: lon,
-              latitudeDelta:0.0015,
-              longitudeDelta:0.00121
+              latitudeDelta:0.0075,
+              longitudeDelta:0.00721
             }   
+            // position = {
+            //   latitude: lat, longitude: lon
+            // }
+            // let poligons = this.getPolygons(position);
             this.map.animateToCoordinate(region, 1);
-            this.setState({latitude:lat, longitude:lon, fetchLocation: false, region});     
+            this.setState({latitude:lat, longitude:lon, fetchLocation: false, region, poligons});   
         },
         (error) => {
             let message = error && error.message ? error.message : 'Terjadi kesalahan ketika mencari lokasi anda !';
             if (error && error.message == "No location provider available.") {
                 message = "Mohon nyalakan GPS anda terlebih dahulu.";
             }
-            alert('Informasi', message);
+            this.setState({ fetchLocation: false, showModal: true, title: 'Informasi', message: message, icon: require('../../Images/ic-no-gps.png') });
         }, // go here if error while fetch location
         { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
     );
@@ -123,6 +193,11 @@ class MapsInspeksi extends React.Component {
     this.props.navigation.goBack();
   }
 
+  onMapReady(){
+    //lakukan aoa yg mau dilakukan disini setelah map selesai
+    this.setState({fetchLocation: false})
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -130,17 +205,33 @@ class MapsInspeksi extends React.Component {
             hidden={true}
             barStyle="light-content"
         />
+
+        <ModalAlert
+          visible={this.state.fetchLocation}
+          title={this.state.title}
+          message={this.state.message} />
+
+        <ModalGps
+          icon={this.state.icon}
+          visible={this.state.showModal}
+          onPressCancel={() => this.setState({ showModal: false })}
+          title={this.state.title}
+          message={this.state.message} />
+
         <MapView
           ref={ map =>  this.map = map }
           provider={this.props.provider}
           style={styles.map}
           showsUserLocation = {true}
-          zoomEnabled = {true}
           showsMyLocationButton = {true}
           showsCompass = {true}
           showScale = {true}
           showsIndoors = {true}
           initialRegion={this.state.region}
+          followsUserLocation={true}
+          zoomEnabled={false}
+          scrollEnabled={false}
+          onMapReady={()=>this.onMapReady()}
           >
           {skm.data.polygons.map((poly, index) => (
             <View key={index}>
@@ -157,7 +248,7 @@ class MapsInspeksi extends React.Component {
                 coordinate={this.centerCoordinate(poly.coords)}>
                 <View style={{flexDirection: 'column',alignSelf: 'flex-start'}}>
                   <View style={styles.marker}>
-                    <Text style={{color: '#000000', fontSize: 13}}>{poly.blokname}</Text>
+                    <Text style={{color: '#000000', fontSize: 20}}>{poly.blokname}</Text>
                   </View>
                 </View>
               </Marker>
@@ -166,8 +257,8 @@ class MapsInspeksi extends React.Component {
            
         <Marker
             coordinate={{
-                latitude: LATITUDE,
-                longitude: LONGITUDE,
+                latitude: this.state.latitude,
+                longitude: this.state.longitude,
             }}
             centerOffset={{ x: -42, y: -60 }}
             anchor={{ x: 0.84, y: 1 }}
@@ -175,17 +266,6 @@ class MapsInspeksi extends React.Component {
         </Marker>  
         
         </MapView>
-        {/* <TouchableOpacity style={styles.buttonContainer} onPress={()=>{this.getLocation()}}>
-          <View style={styles.bubble}>
-            <Text>Render circles, polygons, and polylines</Text>
-          </View>
-        </TouchableOpacity> */}
-
-        {<ProgressDialog
-            visible={this.state.fetchLocation}
-            activityIndicatorSize="large"
-            message="Mencari Lokasi..."
-        />}
       </View>
     );
   }

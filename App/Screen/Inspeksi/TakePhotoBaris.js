@@ -7,6 +7,7 @@ import {
     Platform,
     BackHandler,
     Dimensions,
+    StatusBar
   } from 'react-native';
 import Colors from '../../Constant/Colors';
 const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
@@ -111,7 +112,6 @@ class TakePhotoBaris extends Component {
   takePicture = async () => {
     try {
       if(this.state.hasPhoto){  
-        // clearInterval(this.state.intervalId)
         this.insertDB();     
       }else{
         const takeCameraOptions = {
@@ -203,6 +203,11 @@ class TakePhotoBaris extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <StatusBar
+            hidden={false}
+            barStyle="light-content"
+            backgroundColor={Colors.tintColorPrimary}
+        />
         <View style={{ flex: 2 }}>
           {this.state.path ? this.renderImage() : this.renderCamera()}
         </View>

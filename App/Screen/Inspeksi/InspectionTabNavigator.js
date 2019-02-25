@@ -20,7 +20,7 @@ export default createMaterialTopTabNavigator({
 }, {
     initialRouteName: 'DaftarInspeksi',
     order: ['DaftarInspeksi', 'Riwayat'],
-    swipeEnabled: false,
+    swipeEnabled: true,
     tabBarOptions: {
       activeTintColor: '#51A977',
       inactiveTintColor: 'grey',

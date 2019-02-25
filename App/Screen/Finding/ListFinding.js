@@ -1,6 +1,6 @@
 'use strict';
 import React, { Component } from 'react'
-import { AppState, View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native'
+import { AppState, View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, NetInfo } from 'react-native'
 import R, { isEmpty } from 'ramda'
 import {
   Container,
@@ -16,6 +16,7 @@ import Icon2 from 'react-native-vector-icons/MaterialIcons'
 import RNFS from 'react-native-fs'
 import RNFetchBlob from 'rn-fetch-blob'
 import { dirPhotoTemuan } from '../../Lib/dirStorage';
+import ModalAlert from '../../Component/ModalAlert'
 import { NavigationActions, StackActions } from 'react-navigation';
 // import layer from '../../Data/skm.json'
 
@@ -45,7 +46,11 @@ export default class ListFinding extends Component {
       data7Hari: [],
       dataMore7Hari: [],
       dataNoDate: [],
-      refreshing: false
+      refreshing: false,
+      title: 'Title',
+      message: 'Message',
+      showModal: false,
+      icon: ''
     }
 
   }
@@ -81,9 +86,9 @@ export default class ListFinding extends Component {
     data.map(item => {
       if (isEmpty(item.DUE_DATE)) {
         dataNoDate.push(item)
-      } else {        
+      } else {
         let dueDate = item.DUE_DATE;
-        if(dueDate.includes(' ')){
+        if (dueDate.includes(' ')) {
           dueDate = dueDate.substring(0, dueDate.indexOf(' '))
         }
         var diff = moment(new Date(dueDate)).diff(now, 'day');
@@ -109,11 +114,11 @@ export default class ListFinding extends Component {
   getColor(param) {
     switch (param) {
       case 'SELESAI':
-        return Colors.brand;
+        return 'rgba(35, 144, 35, 0.7)';
       case 'SEDANG DIPROSES':
-        return '#feb236';
+        return 'rgba(254, 178, 54, 0.7)';
       case 'BARU':
-        return 'red';
+        return 'rgba(255, 77, 77, 0.7)';
       default:
         return '#ff7b25';
     }
@@ -141,75 +146,93 @@ export default class ListFinding extends Component {
     const user = TaskServices.getAllData('TR_LOGIN')[0];
     const url = "http://149.129.245.230:3012/images/" + findingCode;
     fetch(url, {
-        method: 'GET',
-        headers: {
-            'Cache-Control': 'no-cache',
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${user.ACCESS_TOKEN}`,
-        }
+      method: 'GET',
+      headers: {
+        'Cache-Control': 'no-cache',
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${user.ACCESS_TOKEN}`,
+      }
     })
-    .then((response) => response.json())
-    .then((responseJson) => {
+      .then((response) => response.json())
+      .then((responseJson) => {
         if (responseJson.status) {
-            if (responseJson.data.length > 0) {
-              for(var i=0; i<responseJson.data.length; i++){
-                let dataImage = responseJson.data[i];
-                TaskServices.saveData('TR_IMAGE', dataImage);
-                this._downloadImageFinding(dataImage)
-              }
-            } else {
-              alert(`Image ${findingCode} kosong`);
+          if (responseJson.data.length > 0) {
+            for (var i = 0; i < responseJson.data.length; i++) {
+              let dataImage = responseJson.data[i];
+              TaskServices.saveData('TR_IMAGE', dataImage);
+              this._downloadImageFinding(dataImage)
             }
-        }else{alert(`gagal download image untuk ${findingCode}`)}
-        
-        
-    }).catch((error) => {
-        console.error(error);        
-        alert(error);
-    });   
-    
+          } else {
+            // alert(`Image ${findingCode} kosong`);
+            console.log(`Image ${findingCode} kosong`);
+          }
+        } else {
+          // alert(`gagal download image untuk ${findingCode}`)
+          console.log(`Image ${findingCode} kosong`);
+        }
+
+
+      }).catch((error) => {
+        console.error(error);
+        // alert(error);
+      });
+
   }
 
   async _downloadImageFinding(data) {
     let isExist = await RNFS.exists(`${dirPhotoTemuan}/${data.IMAGE_NAME}`)
     if (!isExist) {
-        var url = data.IMAGE_URL;
-        const { config, fs } = RNFetchBlob
-        let options = {
-            fileCache: true,
-            addAndroidDownloads: {
-                useDownloadManager: true,
-                notification: true,
-                path: `${dirPhotoTemuan}/${data.IMAGE_NAME}`,
-                description: 'Image'
-            }
+      var url = data.IMAGE_URL;
+      const { config, fs } = RNFetchBlob
+      let options = {
+        fileCache: true,
+        addAndroidDownloads: {
+          useDownloadManager: true,
+          notification: true,
+          path: `${dirPhotoTemuan}/${data.IMAGE_NAME}`,
+          description: 'Image'
         }
-        config(options).fetch('GET', url).then((res) => {
-              // alert("Success Downloaded " + res);
-        });
+      }
+      config(options).fetch('GET', url).then((res) => {
+        // alert("Success Downloaded " + res);
+      }).catch((error) => {
+        // alert(error);
+        console.log(error);
+      });
     }
   }
 
   onClickItem(id) {
     var images = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', id);
-    if(images !== undefined){
+    if (images !== undefined) {
       this.props.navigation.navigate('DetailFinding', { ID: id })
-    }else{
-      this.getImageBaseOnFindingCode(id)
-      setTimeout(() => {
-        this.props.navigation.navigate('DetailFinding', { ID: id })
-      }, 3000);
-    }    
+    } else {
+      NetInfo.isConnected.fetch().then(isConnected => {
+        if (isConnected) {
+          this.getImageBaseOnFindingCode(id)
+          setTimeout(() => {
+            this.props.navigation.navigate('DetailFinding', { ID: id })
+          }, 3000);
+        } else {
+          this.setState({
+            showModal: true,
+            title: 'Jaringan Bermasalah',
+            message: 'Silahkan Kamu Coba Lagi',
+            icon: require('../../Images/ic-no-internet.png')
+          });
+        }
+      })
+    }
   }
 
   _renderItem = (item, index) => {
     const nav = this.props.navigation;
     const image = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', item.FINDING_CODE)
-    var label = { backgroundColor: item.PROGRESS == '0' ? 'rgba(255, 0, 0, 0.7)' : 'rgba(255, 255, 0, 0.7)' };
+    var label = { backgroundColor: item.PROGRESS == '0' ? 'rgba(255, 0, 0, 0.7)' : 'rgba(254, 178, 54, 0.7)' };
     let showImage;
     if (image == undefined) {
-      showImage = <Image style={{ alignItems: 'stretch', width: 120, height: 120, borderRadius: 10 }} source={require('../../Images/background.png')} />
+      showImage = <Image style={{ alignItems: 'stretch', width: 120, height: 120, borderRadius: 10 }} source={require('../../Images/ic-default-thumbnail.png')} />
     } else {
       showImage = <Image style={{ alignItems: 'stretch', width: 120, height: 120, borderRadius: 10 }} source={{ uri: "file://" + image.IMAGE_PATH_LOCAL }} />
     }
@@ -235,6 +258,14 @@ export default class ListFinding extends Component {
     return (
       <Container style={{ flex: 1 }}>
         <Content style={styles.container} >
+
+          <ModalAlert
+            icon={this.state.icon}
+            visible={this.state.showModal}
+            onPressCancel={() => this.setState({ showModal: false })}
+            title={this.state.title}
+            message={this.state.message} />
+
           <Text style={{ fontSize: 16, fontWeight: 'bold', paddingHorizontal: 16 }}>
             Belum Ada Batas Waktu
           </Text>
@@ -316,7 +347,7 @@ export default class ListFinding extends Component {
         <ActionButton style={{ marginEnd: -10, marginBottom: -10 }}
           buttonColor={Colors.tintColor}
           onPress={() => { this.actionButtonClick() }}
-          icon={<Icon2 color='white' name='edit' size={25} />}>
+          icon={<Icon2 color='white' name='add' size={25} />}>
         </ActionButton>
       </Container >
 
@@ -344,9 +375,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     height: 22,
     color: 'white',
-  }, devider: {
+  },
+  devider: {
     marginBottom: 16, marginTop: 16, backgroundColor: '#ccc', height: 8
-  }, labelBackground: {
+  },
+  labelBackground: {
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
     width: 120, padding: 5, position: 'absolute', bottom: 0,

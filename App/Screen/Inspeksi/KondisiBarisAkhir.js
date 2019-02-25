@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-    Text, Dimensions, Alert, TextInput, TouchableOpacity, View, Switch,
+    Text, Dimensions, StatusBar, TextInput, TouchableOpacity, View, Switch,
     Button,
 } from 'react-native';
 import {
@@ -10,7 +10,7 @@ import {
 import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import MapView, {PROVIDER_GOOGLE, ProviderPropType, Marker, AnimatedRegion } from 'react-native-maps';
+import MapView, { Polygon, ProviderPropType, Marker } from 'react-native-maps';
 import {RNSlidingButton, SlideDirection} from 'rn-sliding-button';
 import TaskService from '../../Database/TaskServices';
 import {getTodayDate, getCalculateTime, getUUID} from '../../Lib/Utils'
@@ -20,8 +20,12 @@ import geolib from 'geolib';
 import Geojson from 'react-native-geojson';
 import { ProgressDialog } from 'react-native-simple-dialogs';
 import IconLoc from 'react-native-vector-icons/FontAwesome5';
-
 import ModalAlert from '../../Component/ModalAlert';
+
+const LATITUDE = -2.1890660;
+const LONGITUDE = 111.3609873;
+const { width, height } = Dimensions.get('window');
+const skm = require('../../Data/4421.json');
 
 
 const alcatraz = {
@@ -52,7 +56,7 @@ class KondisiBarisAkhir extends Component{
           flex: 1,
           fontSize: 18,
           fontWeight: '400'
-        },
+        }
       };
 
     constructor(props){
@@ -85,6 +89,12 @@ class KondisiBarisAkhir extends Component{
                 borderWidth:1,
                 borderColor:'#C8C8C8',
                 backgroundColor: Colors.tintColor,
+            },            
+            region: {
+                latitude: LATITUDE,
+                longitude: LONGITUDE,
+                latitudeDelta:0.0075,
+                longitudeDelta:0.00721
             },
             fotoBaris,
             fotoSelfie,
@@ -138,41 +148,55 @@ class KondisiBarisAkhir extends Component{
         return distance;
     }
 
-    getLocation = () =>{
-		navigator.geolocation.getCurrentPosition(
-			(position) => {
-                var lat = parseFloat(position.coords.latitude);
-                var lon = parseFloat(position.coords.longitude);
-                // var initialRegion = new AnimatedRegion({
-                //     latitude:lat,
-                //     longitude:lon,
-                //     latitudeDelta:0.015,
-                //     longitudeDelta:0.0121
-                // });
-                // this.setState({initialPosition:initialRegion});
-                // this.setState({initialMarker:initialRegion});
-                let totalJarak = this.state.from == 'history' ? this.state.distance : this.totalJarak({latitude:lat, longitude:lon});
-                this.setState({latitude:lat, longitude:lon, jarak: totalJarak.toString(), fetchLocation: false});
+    searchLocation =() =>{
+        this.setState({fetchLocation: true})
+        this.getLocation();
+    }
 
-			},
-			(error) => {
-				// this.setState({ error: error.message, fetchingLocation: false })
-				let message = error && error.message ? error.message : 'Terjadi kesalahan ketika mencari lokasi anda !';
-				if (error && error.message == "No location provider available.") {
-					message = "Mohon nyalakan GPS anda terlebih dahulu.";
-				}
-                // Alert.alert('Informasi', message);
-                // alert(message)
+    getLocation() {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                var lat = parseFloat(position.coords.latitude);
+                var lon = parseFloat(position.coords.longitude);  
+                let totalJarak = this.state.from == 'history' ? this.state.distance : this.totalJarak({latitude:lat, longitude:lon});
+                region = {
+                  latitude: lat,
+                  longitude: lon,
+                  latitudeDelta:0.0075,
+                  longitudeDelta:0.00721
+                } 
+                // this.map.animateToCoordinate(region, 1);
+                this.setState({latitude:lat, longitude:lon, jarak: totalJarak.toString(), fetchLocation: false, region});
+            },
+            (error) => {
+                let message = error && error.message ? error.message : 'Terjadi kesalahan ketika mencari lokasi anda !';
+                if (error && error.message == "No location provider available.") {
+                    message = "Mohon nyalakan GPS anda terlebih dahulu.";
+                }
                 this.setState({
                     showModal: true, title: 'GPS', message: message,
-                    icon: require('../../Images/ic-no-gps.png')
+                    icon: require('../../Images/ic-no-gps.png'),
+                    fetchLocation: false
                 });
-                this.setState({ fetchLocation: false })
-                // console.log(message);
             }, // go here if error while fetch location
-            { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 },
-            //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position 
+            { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
         );
+      } 
+
+    centerCoordinate(coordinates) {
+        let x = coordinates.map(c => c.latitude)
+        let y = coordinates.map(c => c.longitude)
+      
+        let minX = Math.min.apply(null, x)
+        let maxX = Math.max.apply(null, x)
+      
+        let minY = Math.min.apply(null, y)
+        let maxY = Math.max.apply(null, y)
+      
+        return {
+          latitude: (minX + maxX) / 2,
+          longitude: (minY + maxY) / 2
+        }
     }
 
     has2Row(){        
@@ -217,7 +241,6 @@ class KondisiBarisAkhir extends Component{
             this.setState({ tumbButtonSlide: btn })
         } else {
             this.setState({ switchLanjut: true })
-            // Alert.alert('Maaf, harap lanjutkan 1 baris lagi ');
             this.setState({
                 showModal: true, title: 'Lanjutkan Inspeksi', message: 'Sesuai SOP nih, inspeksi tuh minimal 2 baris per blok.',
                 icon: require('../../Images/ic-1-baris-lagi.png')
@@ -232,13 +255,11 @@ class KondisiBarisAkhir extends Component{
 
     validation() {
         if (this.state.txtBaris == '' && this.state.switchLanjut) {
-            // alert('Masukan baris');
             this.setState({
                 showModal: true, title: 'Isi Baris', message: 'Kamu harus selalu pilih baris yaa :)',
                 icon: require('../../Images/ic-blm-input-lokasi.png')
             });
         } else if (this.state.txtBaris == this.state.dataUsual.BARIS && this.state.switchLanjut) {
-            // alert('Baris tidak boleh sama dengan sebelumnya');
             this.setState({
                 showModal: true, title: 'Baris Sama', message: 'Opps, baris tidak boleh sama dengan sebelumnya ya',
                 icon: require('../../Images/ic-blm-input-lokasi.png')
@@ -417,10 +438,10 @@ class KondisiBarisAkhir extends Component{
                 INSPECTION_RESULT: '',
                 STATUS_SYNC:'N',
                 SYNC_TIME:'',
-                START_INSPECTION: this.state.inspeksiHeader.START_INSPECTION,//getTodayDate('DD MMM YYYY HH:mm:ss'),
+                START_INSPECTION: this.state.inspeksiHeader.START_INSPECTION,
                 END_INSPECTION: getTodayDate('YYYY-MM-DD HH:mm:ss'),
-                LAT_START_INSPECTION: this.state.inspeksiHeader.LAT_START_INSPECTION, //this.state.latitude.toString(),
-                LONG_START_INSPECTION: this.state.inspeksiHeader.LONG_START_INSPECTION,//this.state.longitude.toString(),
+                LAT_START_INSPECTION: this.state.inspeksiHeader.LAT_START_INSPECTION, 
+                LONG_START_INSPECTION: this.state.inspeksiHeader.LONG_START_INSPECTION,
                 LAT_END_INSPECTION: this.state.latitude.toString(),
                 LONG_END_INSPECTION: this.state.longitude.toString(),
                 INSERT_TIME: getTodayDate('YYYY-MM-DD HH:mm:ss'), 
@@ -548,7 +569,6 @@ class KondisiBarisAkhir extends Component{
             
             if(this.state.from !== 'history'){
                 //for track
-                // alert('delete interval '+ this.state.intervalId)
                 clearInterval(this.state.intervalId)
             }
 
@@ -572,13 +592,11 @@ class KondisiBarisAkhir extends Component{
                 this.insertTrackLokasi(blokInsCode, lat, lon)               
             },
             (error) => {
-                // this.setState({ error: error.message, fetchingLocation: false })
                 let message = error && error.message ? error.message : 'Terjadi kesalahan ketika mencari lokasi anda !';
                 if (error && error.message == "No location provider available.") {
                     message = "Mohon nyalakan GPS anda terlebih dahulu.";
                 }
-                // console.log(message);
-            }, // go here if error while fetch location
+            },
             { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
         );
     }
@@ -598,7 +616,6 @@ class KondisiBarisAkhir extends Component{
                 STATUS_SYNC: 'N'
             }
             TaskService.saveData('TM_INSPECTION_TRACK', data)
-            // alert('insert')
         } catch (error) {
             alert('insert track lokasi baris akhir inspeksi '+ error)
         }
@@ -625,8 +642,13 @@ class KondisiBarisAkhir extends Component{
     render(){
         return(
             <View style={styles.mainContainer}>
-
+                <StatusBar
+                    hidden={false}
+                    barStyle="light-content"
+                    backgroundColor={Colors.tintColorPrimary}
+                />
                 <ModalAlert
+                    icon={this.state.icon}
                     visible={this.state.showModal}
                     onPressCancel={() => this.setState({ showModal: false })}
                     title={this.state.title}
@@ -691,11 +713,56 @@ class KondisiBarisAkhir extends Component{
                                 anchor={{ x: 0.84, y: 1 }}
                             >
                             </Marker>
-                        </MapView>
+                        </MapView>                        
                         }
+                        {/* <MapView
+                            ref={ map =>  this.map = map }
+                            provider={this.props.provider}
+                            style={styles.map}
+                            showsUserLocation = {true}
+                            showsMyLocationButton = {true}
+                            showsCompass = {true}
+                            showScale = {true}
+                            showsIndoors = {true}
+                            initialRegion={this.state.region}                            
+                            zoomEnabled={false}
+                            followsUserLocation={true}
+                            scrollEnabled={false}
+                            >
+                            {skm.data.polygons.map((poly, index) => (
+                                <View key={index}>
+                                <Polygon
+                                    coordinates={poly.coords}
+                                    fillColor="rgba(0, 200, 0, 0.5)"
+                                    strokeColor="rgba(0,0,0,0.5)"
+                                    strokeWidth={2}
+                                />
+                                <Marker
+                                    ref={ref => poly.marker = ref}
+                                    coordinate={this.centerCoordinate(poly.coords)}>
+                                    <View style={{flexDirection: 'column',alignSelf: 'flex-start'}}>
+                                    <View style={styles.marker}>
+                                        <Text style={{color: '#000000', fontSize: 20}}>{poly.blokname}</Text>
+                                    </View>
+                                    </View>
+                                </Marker>
+                                </View>
+                            ))}
+                            
+                            <Marker
+                                coordinate={{
+                                    latitude: this.state.latitude,
+                                    longitude: this.state.longitude,
+                                }}
+                                centerOffset={{ x: -42, y: -60 }}
+                                anchor={{ x: 0.84, y: 1 }}
+                            >
+                            </Marker>  
+                            
+                        </MapView> */}
 
                         <IconLoc
-                            onPress={()=>{this.getLocation()}}
+                            onPress={()=>{this.searchLocation()}}
                             name="location-arrow"
                             size={24}
                             style={{ alignSelf: 'flex-end', marginBottom:210, marginRight: 10}}/>  
@@ -709,7 +776,11 @@ class KondisiBarisAkhir extends Component{
                                         <View style={{flexDirection:'row', marginTop:10}}>
                                             <Text style={{color:'grey'}}>Lanjut Baris Berikutnya ?</Text>
                                             <Switch
+                                                thumbTintColor={this.state.switchLanjut ? Colors.brand : 'red'}
+                                                onTintColor={'#5bc236'}
+                                                tintColor={'#ff8080'}
                                                 onValueChange={(value) => {this.setState({switchLanjut:value}); this.changeColorSlide()}}
+                                                // style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }], marginBottom: 10, position: 'absolute', right: 0 }}
                                                 style={{marginBottom: 10, position:'absolute', right:0}}
                                                 value={this.state.switchLanjut} />
                                         </View>
@@ -748,18 +819,21 @@ class KondisiBarisAkhir extends Component{
                     
                     </View>
 
-                {/* {<ProgressDialog
+                {<ProgressDialog
                         visible={this.state.fetchLocation}
                         activityIndicatorSize="large"
                         message="Mencari Lokasi..."
-                />} */}
+                />}
                 
             </View>
         )
     }
 }
 
-export default KondisiBarisAkhir;
+KondisiBarisAkhir.propTypes = {
+    provider: ProviderPropType,
+};
+
 
 const styles = {
     mainContainer:{
@@ -860,3 +934,5 @@ const styles = {
     //     backgroundColor: 'transparent',
     // },
 }
+
+export default KondisiBarisAkhir;

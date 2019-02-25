@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { StatusBar, Text, TouchableOpacity, StyleSheet, TextInput, ListView } from 'react-native';
+import { StatusBar, Text, TouchableOpacity, StyleSheet, AsyncStorage, ListView } from 'react-native';
 import Colors from '../Constant/Colors';
 import { Container, Content, Icon, Picker, Form, View } from 'native-base';
 import { getTodayDate, changeFormatDate } from '../Lib/Utils';
@@ -12,20 +12,28 @@ var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
 class FilterScreen extends React.Component {
 
-    static navigationOptions = ({ navigation }) => ({
-        headerStyle: {
-            backgroundColor: Colors.tintColorPrimary
-        },
-        headerTitleStyle: {
-            textAlign: "left",
-            flex: 1,
-            fontSize: 18,
-            fontWeight: '400'
-        },
-        title: 'Filter',
-        headerTintColor: '#fff'
-    });
-
+    static navigationOptions = ({ navigation }) => {
+        return {
+            headerStyle: {
+                backgroundColor: Colors.tintColorPrimary
+            },
+            headerTitleStyle: {
+                textAlign: "left",
+                flex: 1,
+                fontSize: 18,
+                fontWeight: '400'
+            },
+            title: 'Filter',
+            headerTintColor: '#fff',
+            // headerRight: (
+            //     <TouchableOpacity onPress={navigation.getParam('resetFilter')}>
+            //         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingRight: 12, marginTop: 1 }}>
+            //             <Text style={{ fontSize: 18, color: 'white', marginRight: 16, alignSelf: 'center' }} >Reset</Text>
+            //         </View>
+            //     </TouchableOpacity>
+            // ),
+        };
+    };
 
     constructor(props) {
         super(props);
@@ -44,15 +52,68 @@ class FilterScreen extends React.Component {
         }
     }
 
-    changeBa = data => {
-        console.log("Data BA : " + data.fullName);
-        this.setState({
-            valBisnisArea: data.fullName
+    componentDidMount() {
+        // this.props.navigation.setParams({ resetFilter: this._resetFilter });
+        this._retrieveData();
+    }
+
+    _setDataFilter(data) {
+        console.log('Data Set : ' + data);
+        let parseData = JSON.parse(data);
+        parseData.map(item => {
+            console.log('Data valBisnisArea : ' + item.ba)
+            this.setState({
+                valBisnisArea: item.ba,
+                selected: this.getSetStatus(item.status),
+                valStBatasWaktu: item.stBatasWaktu,
+                valEndBatasWaktu: item.endBatasWaktu,
+                valBatasWaktu: item.valBatasWaktu,
+                valUserAuthCode: item.userAuth,
+                valAssignto: item.valAssignto
+            });
         })
     }
 
+    _retrieveData = async () => {
+        try {
+            const value = await AsyncStorage.getItem('data');
+            if (value !== null) {
+                // We have data!!
+                console.log('Data : ' + value);
+                this._setDataFilter(value);
+            }
+        } catch (error) {
+            // Error retrieving data
+        }
+    };
+
+    _storeData = async (data) => {
+        try {
+            await AsyncStorage.setItem('data', data);
+        } catch (error) {
+            // Error saving data
+        }
+    };
+
+    _resetFilter = () => {
+        this.setState({
+            valBisnisArea: 'Pilih Lokasi',
+            valAssignto: 'Pilih Pemberi Tugas',
+            valUserAuthCode: '',
+            valTanggal: 'Pilih Batas Waktu',
+            valBatasWaktu: 'Pilih Batas Waktu',
+            valStBatasWaktu: '',
+            valEndBatasWaktu: '',
+            selected: "key0",
+            selectedTanggal: "key0",
+        })
+    }
+
+    changeBa = data => {
+        this.setState({ valBisnisArea: data.fullName })
+    }
+
     assignTo = data => {
-        console.log("Data ASSIGN TO : " + data.fullName);
         this.setState({
             valAssignto: data.fullName,
             valUserAuthCode: data.userAuth
@@ -60,7 +121,6 @@ class FilterScreen extends React.Component {
     }
 
     changeBatasWaktu = data => {
-        console.log("Data : " + data);
         let resultParsed = JSON.parse(data)
 
         let stDate = Moment(resultParsed.startDate).format('YYYYMMDDHHmmss');
@@ -95,12 +155,14 @@ class FilterScreen extends React.Component {
             userAuth: this.state.valUserAuthCode,
             valAssignto: this.state.valAssignto
         });
+
+        this._storeData(JSON.stringify(arrData));
+
         this.props.navigation.state.params._changeFilterList(arrData);
         this.props.navigation.goBack();
     };
 
     onValueChange(value) {
-        console.log("Data Status : " + this.getStatus(value));
         this.setState({
             selected: value
         });
@@ -122,6 +184,19 @@ class FilterScreen extends React.Component {
                 return 'SELESAI';
             default:
                 return 'Pilih Status';
+        }
+    }
+
+    getSetStatus(param) {
+        switch (param) {
+            case 'BARU':
+                return 'key1';
+            case 'SEDANG DIPROSES':
+                return 'key2';
+            case 'SELESAI':
+                return 'key3';
+            default:
+                return 'key0';
         }
     }
 
@@ -166,11 +241,16 @@ class FilterScreen extends React.Component {
                         </Picker>
                         <View style={{ height: 0.5, flex: 1, flexDirection: 'row', backgroundColor: 'grey' }}></View>
 
-                        <View style={{ justifyContent: 'center', flex: 1, flexDirection: 'row' }}>
-                            <TouchableOpacity onPress={() => {
-                                this._changeFilterList();
-                            }} style={[styles.button, { marginTop: 16 }]}>
-                                <Text style={styles.buttonText}>Submit</Text>
+                        <View style={{ justifyContent: 'center', flex: 1, flexDirection: 'row', marginTop: 16 }}>
+                            <TouchableOpacity onPress={this._resetFilter} style={[styles.button, {
+                                marginRight: 3,
+                                borderWidth: 1,
+                                borderColor: Colors.tintColor,
+                            }]}>
+                                <Text style={[styles.buttonText, { color: Colors.tintColor, }]}>Reset</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => { this._changeFilterList() }} style={[styles.button, { marginLeft: 3, backgroundColor: Colors.tintColor }]}>
+                                <Text style={[styles.buttonText, { color: 'white' }]}>Filter</Text>
                             </TouchableOpacity>
                         </View>
                     </Form>
@@ -199,17 +279,15 @@ const styles = StyleSheet.create({
         backgroundColor: 'white'
     },
     button: {
+        flex: 1,
         height: 45,
-        width: 300,
-        backgroundColor: Colors.tintColor,
         borderRadius: 25,
         marginVertical: 10,
         paddingVertical: 10
     },
     buttonText: {
-        fontSize: 16,
-        fontWeight: '500',
-        color: 'white',
+        fontSize: 18,
+        fontWeight: '400',
         textAlign: 'center'
     }
 });

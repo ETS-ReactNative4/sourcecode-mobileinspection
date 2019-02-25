@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, NetInfo } from 'react-native';
 import TaskServices from '../../Database/TaskServices'
 import Colors from '../../Constant/Colors'
 import { changeFormatDate } from '../../Lib/Utils'
@@ -7,6 +7,7 @@ import Moment from 'moment'
 import RNFS from 'react-native-fs'
 import RNFetchBlob from 'rn-fetch-blob'
 import { dirPhotoTemuan } from '../../Lib/dirStorage';
+import ModalAlert from '../../Component/ModalAlert'
 
 export default class HistoryFinding extends Component {
   constructor(props) {
@@ -15,7 +16,11 @@ export default class HistoryFinding extends Component {
     this.state = {
       refreshing: false,
       data: [],
-      idx: 0
+      idx: 0,
+      title: 'Title',
+      message: 'Message',
+      showModal: false,
+      icon: ''
     }
   }
 
@@ -65,67 +70,75 @@ export default class HistoryFinding extends Component {
 
   onClickItem(id) {
     var images = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', id);
-    if(images !== undefined){
+    if (images !== undefined) {
       this.props.navigation.navigate('DetailFinding', { ID: id })
-    }else{
-      this.getImageBaseOnFindingCode(id)
-      setTimeout(() => {
-        this.props.navigation.navigate('DetailFinding', { ID: id })
-      }, 3000);
-    }    
+    } else {
+      NetInfo.isConnected.fetch().then(isConnected => {
+        if (isConnected) {
+          this.getImageBaseOnFindingCode(id)
+          setTimeout(() => {
+            this.props.navigation.navigate('DetailFinding', { ID: id })
+          }, 3000);
+        } else {
+          alert('tidak ada koneksi')
+        }
+      });
+    }
   }
 
   getImageBaseOnFindingCode(findingCode) {
     const user = TaskServices.getAllData('TR_LOGIN')[0];
     const url = "http://149.129.245.230:3012/images/" + findingCode;
     fetch(url, {
-        method: 'GET',
-        headers: {
-            'Cache-Control': 'no-cache',
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${user.ACCESS_TOKEN}`,
-        }
+      method: 'GET',
+      headers: {
+        'Cache-Control': 'no-cache',
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${user.ACCESS_TOKEN}`,
+      }
     })
-    .then((response) => response.json())
-    .then((responseJson) => {
+      .then((response) => response.json())
+      .then((responseJson) => {
         if (responseJson.status) {
-            if (responseJson.data.length > 0) {
-              for(var i=0; i<responseJson.data.length; i++){
-                let dataImage = responseJson.data[i];
-                TaskServices.saveData('TR_IMAGE', dataImage);
-                this._downloadImageFinding(dataImage)
-              }
-            } else {
-              alert(`Image ${findingCode} kosong`);
+          if (responseJson.data.length > 0) {
+            for (var i = 0; i < responseJson.data.length; i++) {
+              let dataImage = responseJson.data[i];
+              TaskServices.saveData('TR_IMAGE', dataImage);
+              this._downloadImageFinding(dataImage)
             }
-        }else{alert(`gagal download image untuk ${findingCode}`)}
-        
-        
-    }).catch((error) => {
-        console.error(error);        
+          } else {
+            alert(`Image ${findingCode} kosong`);
+          }
+        } else { alert(`gagal download image untuk ${findingCode}`) }
+
+
+      }).catch((error) => {
+        console.error(error);
         alert(error);
-    });   
-    
+      });
+
   }
 
   async _downloadImageFinding(data) {
     let isExist = await RNFS.exists(`${dirPhotoTemuan}/${data.IMAGE_NAME}`)
     if (!isExist) {
-        var url = data.IMAGE_URL;
-        const { config, fs } = RNFetchBlob
-        let options = {
-            fileCache: true,
-            addAndroidDownloads: {
-                useDownloadManager: true,
-                notification: true,
-                path: `${dirPhotoTemuan}/${data.IMAGE_NAME}`,
-                description: 'Image'
-            }
+      var url = data.IMAGE_URL;
+      const { config, fs } = RNFetchBlob
+      let options = {
+        fileCache: true,
+        addAndroidDownloads: {
+          useDownloadManager: true,
+          notification: true,
+          path: `${dirPhotoTemuan}/${data.IMAGE_NAME}`,
+          description: 'Image'
         }
-        config(options).fetch('GET', url).then((res) => {
-              // alert("Success Downloaded " + res);
-        });
+      }
+      config(options).fetch('GET', url).then((res) => {
+        // alert("Success Downloaded " + res);
+      }).catch((error) => {
+        alert(error);
+      });
     }
   }
 
@@ -162,7 +175,7 @@ export default class HistoryFinding extends Component {
     Moment.locale();
     let showImage;
     if (image == undefined) {
-      showImage = <Image style={{ alignItems: 'stretch', width: 65, height: 65, borderRadius: 10 }} source={require('../../Images/background.png')} />
+      showImage = <Image style={{ alignItems: 'stretch', width: 65, height: 65, borderRadius: 10 }} source={require('../../Images/ic-default-thumbnail.png')} />
     } else {
       showImage = <Image style={{ alignItems: 'stretch', width: 65, height: 65, borderRadius: 10 }} source={{ uri: "file://" + image.IMAGE_PATH_LOCAL }} />
     }
@@ -176,10 +189,22 @@ export default class HistoryFinding extends Component {
       >
         {showImage}
         <View style={styles.sectionDesc} >
-          <Text style={{ fontSize: 12, color: 'black' }}>Lokasi : <Text style={{ color: 'grey' }}>{lokasi}</Text></Text>
-          <Text style={{ fontSize: 12, color: 'black' }}>Tanggal dibuat : <Text style={{ color: 'grey' }}>{changeFormatDate(INSERT_TIME, "YYYY-MM-DD hh-mm-ss")}</Text></Text>
-          <Text style={{ fontSize: 12, color: 'black' }}>Kategori : <Text style={{ color: 'grey' }}>{this.getCategoryName(item.FINDING_CATEGORY)}</Text ></Text>
-          <Text style={{ fontSize: 12, color: 'black' }}>Status : <Text style={{ color: this.getColor(item.STATUS) }}>{item.STATUS}</Text ></Text>
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={{ fontSize: 12, color: 'black', width: 50 }}>Lokasi </Text>
+            <Text style={{ fontSize: 12, color: 'grey' }}>:  {lokasi}</Text>
+          </View>
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={{ fontSize: 12, color: 'black', width: 50 }}>Dibuat </Text>
+            <Text style={{ fontSize: 12, color: 'grey' }}>:  {changeFormatDate(INSERT_TIME, "YYYY-MM-DD hh-mm-ss")}</Text>
+          </View>
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={{ fontSize: 12, color: 'black', width: 50 }}>Kategori </Text>
+            <Text style={{ fontSize: 12, color: 'grey' }}>:  {this.getCategoryName(item.FINDING_CATEGORY)}</Text>
+          </View>
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={{ fontSize: 12, color: 'black', width: 50 }}>Status </Text>
+            <Text style={{ fontSize: 12, color: this.getColor(item.STATUS) }}>:  {item.STATUS}</Text>
+          </View>
         </View>
       </TouchableOpacity>
     );
@@ -187,13 +212,19 @@ export default class HistoryFinding extends Component {
 
   _renderNoData() {
     return (
-      <Image style={{justifyContent: 'center', alignSelf:'center', marginTop: 110,  width: 350, height: 280 }}source={require('../../Images/img-no-data.png')} />
+      <Image style={{ justifyContent: 'center', alignSelf: 'center', marginTop: 110, width: 350, height: 280 }} source={require('../../Images/img-no-data.png')} />
     )
   }
 
   _renderData() {
     return (
       <ScrollView style={styles.container}>
+        <ModalAlert
+          icon={this.state.icon}
+          visible={this.state.showModal}
+          onPressCancel={() => this.setState({ showModal: false })}
+          title={this.state.title}
+          message={this.state.message} />
         <View style={{ paddingTop: 4, paddingRight: 16, paddingLeft: 16, paddingBottom: 16 }}>
           <View style={{ marginTop: 12 }}>
             {this.state.data.map((data, idx) => this._renderItem(data, idx))}
@@ -206,13 +237,13 @@ export default class HistoryFinding extends Component {
   render() {
     const nav = this.props.navigation;
     let show;
-    if(this.state.data.length > 0){
+    if (this.state.data.length > 0) {
       show = this._renderData()
-    }else{
+    } else {
       show = this._renderNoData()
     }
     return (
-      <View style ={{flex:1}}>{show}</View>
+      <View style={{ flex: 1 }}>{show}</View>
     )
   }
 }

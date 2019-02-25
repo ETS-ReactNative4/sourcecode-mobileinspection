@@ -36,17 +36,16 @@ export default class ModalConfirmation extends Component {
 				onRequestClose={props.onPressCancel}>
 				<View style={style.modalContainer}>
 					<View style={style.modalInnerContainer}>
-						{/* <Icon size={24} name={'close'} /> */}
 						<View style={{ justifyContent: 'center', width: '100%', alignItems: 'center' }}>
 							<Image style={{ width: 120, height: 120, marginTop: 12 }} source={props.icon} />
 							<Text style={style.textTitle}> {props.title}</Text>
 							<Text style={style.textMessage}>{props.message}</Text>
 						</View>
-						<View style={style.bottomContainer} >
-							<TouchableOpacity onPress={props.onPressCancel}>
+						<TouchableOpacity style={style.bottomContainer} onPress={props.onPressCancel} >
+							<View onPress={props.onPressCancel}>
 								<Text style={{ fontSize: 16 }}> TUTUP</Text>
-							</TouchableOpacity>
-						</View>
+							</View>
+						</TouchableOpacity>
 					</View>
 				</View>
 			</Modal>

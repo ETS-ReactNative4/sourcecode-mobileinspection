@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, View, Alert, Text, TextInput, ScrollView, Image, BackAndroid } from 'react-native';
+import { TouchableOpacity, View, Alert, Text, TextInput, ScrollView, Image, BackAndroid, StatusBar } from 'react-native';
 import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -250,12 +250,16 @@ class KondisiBaris1 extends Component {
     render() {
         return (
             <ScrollView style={styles.mainContainer}>
-
+                <StatusBar
+                    hidden={false}
+                    barStyle="light-content"
+                    backgroundColor={Colors.tintColorPrimary}
+                />
                 <ModalAlertConfirmation
                     icon={this.state.icon}
                     visible={this.state.showModal}
                     onPressCancel={() => this.setState({ showModal: false })}
-                    onPressSubmit={() => { this.props.navigation.goBack(null) }}
+                    onPressSubmit={() => { this.setState({ showModal: false }); this.props.navigation.goBack(null) }}
                     title={this.state.title}
                     message={this.state.message}
                 />
@@ -432,12 +436,18 @@ class KondisiBaris1 extends Component {
 
                 {/*CIRCLE*/}
                 <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 20, marginBottom: 20 }}>
-                    <TouchableOpacity style={styles.cicle} onPress={() => { }}>
-                        {/* <Icon name={"chevron-left"}  size={10} color="white" /> */}
+                    {/*Gani*/}
+                    <TouchableOpacity onPress={() => { this.insertDB() }}
+                        style={[styles.buttonSubmit, { backgroundColor: Colors.tintColor }]}>
+                        <Image style={styles.imageSubmit} source={require('../../Images/icon/ic_lanjut.png')} />
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles.cicle2, { marginLeft: 10 }]} onPress={() => { this.insertDB() }}>
-                        {/* <Icon name={"chevron-right"}  size={10} color="white" /> */}
-                    </TouchableOpacity>
+                    {/*<TouchableOpacity style={styles.cicle} onPress={() => { }}>*/}
+                    {/* <Icon name={"chevron-left"}  size={10} color="white" /> */}
+                    {/*</TouchableOpacity>*/}
+                    {/*<TouchableOpacity style={[styles.cicle2, { marginLeft: 10 }]} onPress={() => { this.insertDB() }}>*/}
+                    {/* <Icon name={"chevron-right"}  size={10} color="white" /> */}
+                    {/*</TouchableOpacity>*/}
+                    {/*End Gani*/}
                 </View>
 
             </ScrollView>
@@ -549,5 +559,20 @@ const styles = {
         width: 64,
         resizeMode: 'stretch',
         alignItems: 'center'
+    },
+    buttonSubmit: {
+        width: 150,
+        borderRadius: 25,
+        margin: 5,
+        padding: 10,
+        height: 50,
+        alignSelf: 'center',
+        justifyContent: 'center',
+    },
+    imageSubmit: {
+        flex: 1,
+        width: 100,
+        alignSelf: 'center',
+        resizeMode: 'contain'
     },
 }

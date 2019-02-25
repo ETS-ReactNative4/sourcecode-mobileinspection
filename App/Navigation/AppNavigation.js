@@ -38,6 +38,9 @@ import FilterScreen from '../Screen/FilterScreen';
 import BisnisAreaScreen from '../Screen/BisnisArea';
 import CalendarsScreen from '../Screen/Calendar';
 import PemberiTugas from '../Screen/PemberiTugas';
+// import OpenGl from '../Screen/OpenGl';
+import ContohMap from '../Test/MapsOri'
+
 import Colors from '../Constant/Colors'
 
 
@@ -64,10 +67,10 @@ const main = createStackNavigator({
     },
 
     //finding
-    Step1Finding: {screen: Step1Finding},
-    Step2Finding: {screen: Step2Finding},
-    TakeFotoFinding: {screen: TakeFotoFinding},
-    
+    Step1Finding: { screen: Step1Finding },
+    Step2Finding: { screen: Step2Finding },
+    TakeFotoFinding: { screen: TakeFotoFinding },
+
     DetailFinding: { screen: DetailFindingScreen },
     BuktiKerja: { screen: BuktiKerja },
     TakeFotoBukti: { screen: TakeFotoBukti },
@@ -103,7 +106,8 @@ const main = createStackNavigator({
 
     // test: { screen: test },
     // TestUpload: {screen:TestUpload}
-    // slider: { screen: slider },
+    // OpenGl: { screen: OpenGl },
+    // ContohMap: { screen: ContohMap },    
 
 }, {
         headerMode: 'screen',

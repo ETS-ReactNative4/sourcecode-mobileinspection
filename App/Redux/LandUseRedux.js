@@ -43,7 +43,7 @@ export const success = (state, action) => {
 
 // Something went wrong somewhere.
 export const failure = state => state.merge({ fetchingLandUse: false, error: true, payload: null });
-export const reset = (state) => state.merge({ fetchingLandUse: null, landUse: null });
+export const reset = (state) => state.merge({ fetchingLandUse: null, error: null, landUse: null });
 
 /* ------------- Hookup Reducers To Types ------------- */
 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-    Text, Keyboard, Dimensions, TextInput, TouchableOpacity, View
+    Text, Keyboard, Dimensions, TextInput, TouchableOpacity, View, BackAndroid, StatusBar
 } from 'react-native';
 import { Card } from 'native-base';
 import Colors from '../../Constant/Colors'
@@ -14,24 +14,9 @@ import { ProgressDialog } from 'react-native-simple-dialogs';
 import Autocomplete from 'react-native-autocomplete-input';
 import Geojson from 'react-native-geojson';
 import R from 'ramda'
-
+import { NavigationActions, StackActions  } from 'react-navigation';
 import ModalAlert from '../../Component/ModalAlert';
-// const kaltim = require('../../Data/skm.json')
-const alcatraz = {
-    type: 'FeatureCollection',
-    features: [
-      {
-        type: 'Feature',
-        properties: {},
-        geometry: {
-          type: 'Point',
-          coordinates: [-6.2292229, 106.8253967],
-          latitudeDelta:0.015,
-          longitudeDelta:0.0121 //[-122.42305755615234, 37.82687023785448],
-        }
-      }
-    ]
-};
+import ModalAlert2 from '../../Component/ModalAlert';
 
 class BuatInspeksiRedesign extends Component {
 
@@ -80,6 +65,8 @@ class BuatInspeksiRedesign extends Component {
 
         let params = props.navigation.state.params;
         let testBlock = R.clone(params.block);
+        
+        this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
 
         this.state = {
             blokInspeksiCode,
@@ -107,7 +94,9 @@ class BuatInspeksiRedesign extends Component {
             //Add Modal Alert by Aminju 
             title: 'Title',
             message: 'Message',
-            showModal: false
+            showModal: false,
+            showModal2: false,
+            icon: ''
         };
     }   
     
@@ -127,6 +116,7 @@ class BuatInspeksiRedesign extends Component {
     }
 
     componentWillUnmount () {
+        BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
         this.keyboardDidShowListener.remove();
         this.keyboardDidHideListener.remove();
     }
@@ -140,9 +130,27 @@ class BuatInspeksiRedesign extends Component {
     }
 
     componentDidMount() {    
+        BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
         this.props.navigation.setParams({ searchLocation: this.searchLocation })
         this.loadDataBlock(this.state.testBlock)    
         this.getLocation();
+    }
+
+    selesai=()=>{
+        const navigation = this.props.navigation;
+        let routeName = 'MainMenu';
+        Promise.all([
+            navigation.dispatch(
+                StackActions.reset({
+                    index:0,
+                    actions:[NavigationActions.navigate({ routeName : routeName})]
+                })
+            )]).then(() => navigation.navigate('Inspection')).then(() => navigation.navigate('DaftarInspeksi'))
+    }
+
+    handleBackButtonClick() { 
+        this.selesai()
+        return true;
     }
 
     searchLocation =() =>{
@@ -171,7 +179,6 @@ class BuatInspeksiRedesign extends Component {
 
     loadDataBlock(blockCode){
         let data = TaskService.findBy2('TM_BLOCK', 'BLOCK_CODE', blockCode);
-        // alert(JSON.stringify(data))
         if(data !== undefined){            
             let statusBlok= this.getStatusBlok(data.WERKS_AFD_BLOCK_CODE);
             let estateName = this.getEstateName(data.WERKS);
@@ -188,7 +195,9 @@ class BuatInspeksiRedesign extends Component {
                 allShow: `${data.BLOCK_NAME}/${statusBlok}/${estateName}`
             })
         }else{
-            alert('Kamu tidak bisa inspeksi')
+            // alert('Kamu tidak bisa inspeksi');
+            // this.selesai();            
+            this.setState({ showModal2: true, title: 'Salah Blok', message: 'Kamu ga bisa buat inspeksi di blok ini', icon: require('../../Images/ic-blm-input-lokasi.png') });
         }
     }
 
@@ -268,19 +277,14 @@ class BuatInspeksiRedesign extends Component {
         let statusBlok = this.getStatusBlok(this.state.werksAfdBlokCode);
         var message = 'Kamu harus pilih lokasi dan isi baris dulu yaa :D'
         if(statusBlok === ''){
-            //alert('Anda tidak bisa Inspeksi di Blok ini, silahkan hubungi IT Site');
             this.setState({ showModal: true, title: 'Pilih Lokasi', message: message, icon: require('../../Images/ic-blm-input-lokasi.png') });
         } else if (this.state.werks === '') {
-            // alert('Anda tidak bisa Inspeksi di Blok ini, silahkan hubungi IT Site');
             this.setState({ showModal: true, title: 'Pilih Lokasi', message: message, icon: require('../../Images/ic-blm-input-lokasi.png') });
         } else if (this.state.blok === '') {
-            // alert('Blok Belum diisi !');
             this.setState({ showModal: true, title: 'Pilih Lokasi', message: message, icon: require('../../Images/ic-blm-input-lokasi.png') });
         } else if (this.state.baris === '') {
-            // alert('Baris Belum diisi !');
             this.setState({ showModal: true, title: 'Pilih Lokasi', message: message, icon: require('../../Images/ic-blm-input-lokasi.png') });
         } else if(this.state.latitude === 0.0 && this.state.longitude === 0.0){
-            // alert('Titik lokasi kamu belum ada, coba refresh lokasi lagi yaa');
             this.setState({ showModal: true, title: 'Lokasi', message: 'Titik lokasi kamu belum ada, coba refresh lokasi lagi yaa', icon: require('../../Images/ic-no-gps.png') });
         } 
         // else if(!this.state.clickLOV){
@@ -333,7 +337,8 @@ class BuatInspeksiRedesign extends Component {
     insertDB(param) {
 
         let inspectionDate = getTodayDate('YYYY-MM-DD HH:mm:ss');
-        let idInspection = `B${this.state.dataLogin[0].USER_AUTH_CODE}${getTodayDate('YYMMDDHHmmss')}`
+        // let idInspection = `B${this.state.dataLogin[0].USER_AUTH_CODE}${getTodayDate('YYMMDDHHmmss')}`
+        let idInspection = `B${this.state.dataLogin[0].USER_AUTH_CODE}${getTodayDate('YYMMDD')}${this.state.blok}`
         
         let modelInspeksiH = {
             BLOCK_INSPECTION_CODE: this.state.blokInspeksiCode,
@@ -423,11 +428,22 @@ class BuatInspeksiRedesign extends Component {
         const comp = (a, b) => a.toLowerCase().trim() === b.toLowerCase().trim();
         return (
             <View style={styles.mainContainer}>
-
+                <StatusBar
+                    hidden={false}
+                    barStyle="light-content"
+                    backgroundColor={Colors.tintColorPrimary}
+                />
                 <ModalAlert
                     icon={this.state.icon}
                     visible={this.state.showModal}
                     onPressCancel={() => this.setState({ showModal: false })}
+                    title={this.state.title}
+                    message={this.state.message} />
+
+                <ModalAlert
+                    icon={this.state.icon}
+                    visible={this.state.showModal2}
+                    onPressCancel={() => {this.setState({ showModal2: false }); this.selesai()}}
                     title={this.state.title}
                     message={this.state.message} />
 
@@ -636,7 +652,8 @@ const styles = {
         height: Dimensions.get('window').height
     },
     bubble: {
-        backgroundColor: '#ff8080',
+        // backgroundColor: '#ff8080',        
+        backgroundColor: Colors.brand,
         paddingHorizontal: 18,
         paddingVertical: 12,
         borderRadius: 20,

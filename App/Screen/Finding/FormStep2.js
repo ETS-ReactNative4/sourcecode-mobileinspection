@@ -144,9 +144,9 @@ class FormStep2 extends Component {
         return true;
     }
 
-    clearFoto(){
-        if(this.state.foto.length > 0){
-            this.state.foto.map(item =>{                
+    clearFoto() {
+        if (this.state.foto.length > 0) {
+            this.state.foto.map(item => {
                 RNFS.unlink(`file://${dirPhotoTemuan}/${item}`)
             })
         }
@@ -295,7 +295,7 @@ class FormStep2 extends Component {
 
     _hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
 
-    _handleDatePicked = (date) => {         
+    _handleDatePicked = (date) => {
         this.setState({ batasWaktu: moment(date).format("YYYY-MM-DD") })
         this._hideDateTimePicker();
     };
@@ -329,25 +329,25 @@ class FormStep2 extends Component {
     }
 
     changeBlok = data => {
-        if(data !== null){
+        if (data !== null) {
             this.loadDataBlock(data);
             // this.setState({ blok: data.allShow, blockCode: data.blokCode, werks: data.werks, afdCode: data.afdCode });
         }
-        
+
     }
 
-    loadDataBlock(blockCode){
+    loadDataBlock(blockCode) {
         let data = TaskServices.findBy2('TM_BLOCK', 'BLOCK_CODE', blockCode);
-        if(data !== undefined){            
-            let statusBlok= this.getStatusBlok(data.WERKS_AFD_BLOCK_CODE);
+        if (data !== undefined) {
+            let statusBlok = this.getStatusBlok(data.WERKS_AFD_BLOCK_CODE);
             let estateName = this.getEstateName(data.WERKS);
             this.setState({
                 blok: `${data.BLOCK_NAME}/${statusBlok}/${estateName}`,
-                blockCode: data.BLOCK_CODE, 
-                afdCode: data.AFD_CODE, 
+                blockCode: data.BLOCK_CODE,
+                afdCode: data.AFD_CODE,
                 werks: data.WERKS
             })
-        }else{
+        } else {
             alert('Blok yg kamu pilih tidak valid')
         }
     }
@@ -358,7 +358,7 @@ class FormStep2 extends Component {
             this.setState({ showModal: true, title: 'Pilih Lokasi', message: 'Kamu harus pilih lokasi dulu yaaa', icon: require('../../Images/ic-inputan-tidak-lengkap.png') });
         } else {
             this.props.navigation.navigate('PilihKontak', { changeContact: this.changeContact, afdCode: this.state.afdCode, werks: this.state.werks })
-        }        
+        }
     }
 
     render() {
@@ -378,7 +378,7 @@ class FormStep2 extends Component {
                         icon={this.state.icon}
                         visible={this.state.showModalConfirmation}
                         onPressCancel={() => this.setState({ showModalConfirmation: false })}
-                        onPressSubmit={() => { this.props.navigation.goBack(null) }}
+                        onPressSubmit={() => { this.clearFoto() }}
                         title={this.state.title}
                         message={this.state.message} />
 
@@ -514,7 +514,7 @@ class FormStep2 extends Component {
                             <View style={[style.item, { flex: 1, flexDirection: 'row' }]}>
                                 <Image style={{ alignItems: 'stretch', width: 20, height: 20, marginRight: 5 }}
                                     source={require('../../Images/icon/ic_calendar.png')} />
-                                <TouchableOpacity onPress={this._showDateTimePicker} disabled ={this.state.disableCalendar}>
+                                <TouchableOpacity onPress={this._showDateTimePicker} disabled={this.state.disableCalendar}>
                                     {isEmpty(this.state.batasWaktu) && (
                                         <Text style={{ fontSize: 14, color: '#999' }}> Select Calendar </Text>)}
                                     {!isEmpty(this.state.batasWaktu) && (
@@ -531,7 +531,7 @@ class FormStep2 extends Component {
                         />
                     </View>}
 
-                    {this.state.assignto == this.state.user.USER_AUTH_CODE &&<View style={[style.line]} />}
+                    {this.state.assignto == this.state.user.USER_AUTH_CODE && <View style={[style.line]} />}
 
                     <TouchableOpacity style={[style.button, { margin: 16 }]}
                         onPress={() => { this.validation() }}>
@@ -543,8 +543,10 @@ class FormStep2 extends Component {
                     transparent={false}
                     visible={this.state.isImageFullVisible}>
                     <View style={{ flex: 1 }}>
+                        {/*Gani*/}
                         <Carousel
                             style={{ flex: 1 }}
+                            bullets
                             autoplay={false}
                             currentPage={this.state.foto.length - 1}
                             onAnimateNextPage={p => console.log(p)}>
@@ -555,6 +557,7 @@ class FormStep2 extends Component {
                                 </View>
                             ))}
                         </Carousel>
+                        {/*End Gani*/}
                         <IIcon style={{
                             position: 'absolute',
                             right: 16,

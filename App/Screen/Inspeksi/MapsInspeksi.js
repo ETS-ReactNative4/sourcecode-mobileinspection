@@ -9,16 +9,18 @@ import {
 } from 'react-native';
 
 import MapView, { Polygon, ProviderPropType, Marker } from 'react-native-maps';
-const { width, height } = Dimensions.get('window');
 import Colors from '../../Constant/Colors'
+import { NavigationActions, StackActions  } from 'react-navigation';
+import IconLoc from 'react-native-vector-icons/FontAwesome5';
+import ModalAlert from '../../Component/ModalLoading'
+import ModalGps from '../../Component/ModalAlert';
+
+const skm = require('../../Data/4421.json');
 const ASPECT_RATIO = width / height;
 const LATITUDE = -2.1890660;
 const LONGITUDE = 111.3609873;
 const LATITUDE_DELTA = 0.0922;
-const skm = require('../../Data/skm2.json');
-import { NavigationActions, StackActions  } from 'react-navigation';
-import { ProgressDialog } from 'react-native-simple-dialogs';
-import IconLoc from 'react-native-vector-icons/FontAwesome5';
+const { width, height } = Dimensions.get('window');
 
 class MapsInspeksi extends React.Component {
 
@@ -31,9 +33,14 @@ class MapsInspeksi extends React.Component {
         region: {
           latitude: LATITUDE,
           longitude: LONGITUDE,
-          latitudeDelta:0.0015,
-          longitudeDelta:0.00121
-        } 
+          latitudeDelta:0.0075,
+          longitudeDelta:0.00721
+        },
+        poligons: [],
+        fetchLocation: true,
+        showModal: false,
+        title: 'Sabar Ya..',
+        message: 'Sedang mencari lokasi kamu nih.'
     };
   }
 
@@ -41,7 +48,7 @@ class MapsInspeksi extends React.Component {
     const { params = {} } = navigation.state;
     return {
       headerStyle: {
-        backgroundColor: Colors.tintColor
+        backgroundColor: Colors.tintColorPrimary
       },
       title: 'Pilih Blok',
       headerTintColor: '#fff',
@@ -50,6 +57,7 @@ class MapsInspeksi extends React.Component {
         fontSize: 18,
         fontWeight: '400'
       },
+      
     headerRight: (
           <TouchableOpacity style= {{marginRight: 20}} onPress={()=>{params.searchLocation()}}>
               <IconLoc style={{marginLeft: 12}} name={'location-arrow'} size={24} color={'white'} />
@@ -65,6 +73,9 @@ class MapsInspeksi extends React.Component {
 
   searchLocation =() =>{
     this.setState({fetchLocation: true})
+    setTimeout(() => {
+      this.setState({fetchLocation: false});
+    }, 5000);
     this.getLocation();
   }  
 
@@ -76,8 +87,8 @@ class MapsInspeksi extends React.Component {
             region = {
               latitude: lat,
               longitude: lon,
-              latitudeDelta:0.0015,
-              longitudeDelta:0.00121
+              latitudeDelta:0.0075,
+              longitudeDelta:0.00721
             } 
             this.map.animateToCoordinate(region, 1);
             this.setState({latitude:lat, longitude:lon, fetchLocation: false, region});
@@ -87,7 +98,7 @@ class MapsInspeksi extends React.Component {
             if (error && error.message == "No location provider available.") {
                 message = "Mohon nyalakan GPS anda terlebih dahulu.";
             }
-            alert('Informasi', message);
+            this.setState({ fetchLocation: false, showModal: true, title: 'Informasi', message: message, icon: require('../../Images/ic-no-gps.png') });
         }, // go here if error while fetch location
         { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
     );
@@ -134,30 +145,46 @@ class MapsInspeksi extends React.Component {
     navigation.dispatch(resetAction);
   }
 
+  onMapReady(){
+    //lakukan aoa yg mau dilakukan disini setelah map selesai
+    this.setState({fetchLocation: false})
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <StatusBar
-            hidden={true}
-            barStyle="light-content"
+          hidden={false}
+          barStyle="light-content"
+          backgroundColor={Colors.tintColorPrimary}
         />
+
+        <ModalAlert
+          visible={this.state.fetchLocation}
+          title={this.state.title}
+          message={this.state.message} />
+
+        <ModalGps
+          icon={this.state.icon}
+          visible={this.state.showModal}
+          onPressCancel={() => this.setState({ showModal: false })}
+          title={this.state.title}
+          message={this.state.message} />
+
         <MapView
           ref={ map =>  this.map = map }
           provider={this.props.provider}
           style={styles.map}
           showsUserLocation = {true}
-          zoomEnabled = {true}
           showsMyLocationButton = {true}
           showsCompass = {true}
           showScale = {true}
           showsIndoors = {true}
           initialRegion={this.state.region}
-          // initialRegion={{
-          //   latitude: LATITUDE,
-          //   longitude: LONGITUDE,
-          //   latitudeDelta:0.0015,
-          //   longitudeDelta:0.00121
-          // }}
+          zoomEnabled={false}
+          followsUserLocation={true}
+          scrollEnabled={false}
+          onMapReady={()=>this.onMapReady()}
           >
           {skm.data.polygons.map((poly, index) => (
             <View key={index}>
@@ -167,15 +194,15 @@ class MapsInspeksi extends React.Component {
                 strokeColor="rgba(0,0,0,0.5)"
                 strokeWidth={2}
                 tappable={true}
-                // onPress={()=>this.navigateScreen('BuatInspeksi', poly.blokcode)}                
-                onPress={()=>this.onClickBlok(poly.blokcode)}
+                onPress={()=>this.navigateScreen('BuatInspeksi', poly.blokcode)}                
+                // onPress={()=>this.onClickBlok(poly.blokcode)}
               />
               <Marker
                 ref={ref => poly.marker = ref}
                 coordinate={this.centerCoordinate(poly.coords)}>
                 <View style={{flexDirection: 'column',alignSelf: 'flex-start'}}>
                   <View style={styles.marker}>
-                    <Text style={{color: '#000000', fontSize: 13}}>{poly.blokname}</Text>
+                    <Text style={{color: '#000000', fontSize: 20}}>{poly.blokname}</Text>
                   </View>
                 </View>
               </Marker>
@@ -193,12 +220,6 @@ class MapsInspeksi extends React.Component {
         </Marker>  
         
         </MapView>
-
-        {<ProgressDialog
-            visible={this.state.fetchLocation}
-            activityIndicatorSize="large"
-            message="Mencari Lokasi..."
-        />}
       </View>
     );
   }

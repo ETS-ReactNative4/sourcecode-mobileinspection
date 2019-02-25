@@ -50,17 +50,17 @@ export default class ModalConfirmation extends Component {
 								borderBottomEndRadius: 10,
 								borderBottomStartRadius: 10
 							}}>
-								<View style={{ flex: 1, width: '100%', justifyContent: 'center' }}>
-									<Button transparent onPress={props.onPressCancel} style={style.button}>
+								<TouchableOpacity onPress={props.onPressCancel} style={{ flex: 1, width: '100%', justifyContent: 'center' }}>
+									<View transparent style={style.button}>
 										<Text style={{ color: 'black', fontSize: 16 }}>Tidak</Text>
-									</Button>
-								</View>
+									</View>
+								</TouchableOpacity>
 								<View style={{ backgroundColor: Colors.background, width: 0.5 }}></View>
-								<View style={{ flex: 1, width: '100%', justifyContent: 'center' }}>
-									<Button transparent onPress={props.onPressSubmit} style={style.button}>
+								<TouchableOpacity onPress={props.onPressSubmit} style={{ flex: 1, width: '100%', justifyContent: 'center' }}>
+									<View transparent style={style.button}>
 										<Text style={{ color: 'grey', fontSize: 16 }}>Iya</Text>
-									</Button>
-								</View>
+									</View>
+								</TouchableOpacity>
 							</View>
 						</View>
 					</View>

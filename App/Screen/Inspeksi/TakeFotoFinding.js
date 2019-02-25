@@ -7,6 +7,7 @@ import {
     Image,
     BackHandler,
     Dimensions,
+    StatusBar
   } from 'react-native';
 import Colors from '../../Constant/Colors';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -181,6 +182,11 @@ class TakeFoto extends Component{
   render() {
     return (
       <View style={styles.container}>
+        <StatusBar
+            hidden={false}
+            barStyle="light-content"
+            backgroundColor={Colors.tintColorPrimary}
+        />
         <View style={{ flex: 2 }}>
           {this.state.path ? this.renderImage() : this.renderCamera()}
         </View>

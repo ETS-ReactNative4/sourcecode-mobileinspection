@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { NavigationActions, StackActions } from 'react-navigation';
 import {
-    BackHandler, Text, FlatList, ScrollView, TouchableOpacity, View, Image, Alert, Platform
+    BackHandler, Text, FlatList, ScrollView, TouchableOpacity, View, Image, StatusBar, Platform
 } from 'react-native';
 import {
     Container,
@@ -121,23 +121,11 @@ class Step1Finding extends Component {
         );
     }
 
-    componentDidMount() {
-        // this.handleAndroidBackButton(this.exitAlert);
-    }
-
     onBtnClick() {
 
         if (this.state.photos.length == 0) {
-            // Alert.alert(
-            //     'Peringatan',
-            //     'Anda belum mengambil foto'
-            // );
             this.setState({ showModal: true, title: "Ambil Foto", message: 'Opps kamu belum ambil Foto Temuan yaaa', icon: require('../../Images/ic-no-pic.png') });
         } else if (this.state.selectedPhotos.length == 0) {
-            // Alert.alert(
-            //     'Peringatan',
-            //     "Minimal harus ada 1 Foto dipilih"
-            // );
             this.setState({ showModal: true, title: 'Foto Temuan', message: 'Kamu harus ambil min. 1 foto yoo.', icon: require('../../Images/ic-no-pic.png') });
         } else {
             let images = [];
@@ -162,7 +150,6 @@ class Step1Finding extends Component {
     }
 
     finish = data => {
-        // alert(data)
         this.props.navigation.goBack(null);
     }
 
@@ -177,7 +164,6 @@ class Step1Finding extends Component {
             selectedPhotos.splice(index, 1);
         } else {
             if (selectedPhotos.length > 2) {
-                // alert("Hanya 3 foto yang bisa dipilih")
                 this.setState({ showModal: true, title: 'Pilih Foto', message: 'Kamu cuma bisa pilih 3 foto aja yaa..', icon: require('../../Images/ic-no-pic.png') });
             } else {
                 selectedPhotos.push(foto);
@@ -216,7 +202,11 @@ class Step1Finding extends Component {
             <Container style={{ flex: 1, backgroundColor: 'white' }}>
                 <Content style={{ flex: 1 }}>
                     {/* STEPPER */}
-
+                    <StatusBar
+                        hidden={false}
+                        barStyle="light-content"
+                        backgroundColor={Colors.tintColorPrimary}
+                    />
                     <ModalAlert
                         icon={this.state.icon}
                         visible={this.state.showModal}

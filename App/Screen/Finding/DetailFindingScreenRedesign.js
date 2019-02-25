@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react'
 import {
-    View, Image, TouchableOpacity, TouchableHighlight, StyleSheet, Text,
+    ImageBackground, View, Image, TouchableOpacity, TouchableHighlight, StyleSheet, Text,
     Alert
 } from 'react-native'
 import Colors from '../../Constant/Colors'
@@ -12,6 +12,7 @@ import {
     Card
 } from 'native-base'
 import TaskServices from '../../Database/TaskServices'
+import Entypo from 'react-native-vector-icons/Entypo'
 import Slider from 'react-native-slider'
 import RNFS from 'react-native-fs'
 import R, { isEmpty, isNil } from 'ramda'
@@ -289,9 +290,10 @@ class DetailFindingScreenRedesign extends Component {
         } else {
             sources = require('../../Images/icon/ic_inprogress_timeline.png')
         }
-        
-        if(this.state.images.length == 0){
-            this.state.images.push(require('../../Images/img-no-picture.png'))
+        if (this.state.images.length == 0) {
+            //Edited by Gani
+            //this.state.images.push(require('../../Images/img-no-picture.png'))
+            this.state.images.push("NO IMAGES")
         }
 
         return (
@@ -335,8 +337,10 @@ class DetailFindingScreenRedesign extends Component {
                                 <ImageSlider
                                     images={this.state.images}
                                     customSlide={({ index, item, style, width }) => (
+
                                         // It's important to put style here because it's got offset inside
                                         <View key={index} style={[style, { backgroundColor: 'yellow', flex: 1 }]}>
+
                                             {this.state.data.STATUS == 'SELESAI' && <View style={{
                                                 backgroundColor: 'rgba(91, 90, 90, 0.7)', width: 80,
                                                 padding: 5, position: 'absolute', top: 0, right: 10, zIndex: 1, justifyContent: 'center', alignItems: 'center',
@@ -344,11 +348,21 @@ class DetailFindingScreenRedesign extends Component {
                                             }}>
                                                 <Text style={{ fontSize: 10, color: 'white' }}>{this.getStatusImage(item.STATUS_IMAGE)}</Text>
                                             </View>}
-                                            <FastImage style={{ alignItems: 'center', width: '100%', height: '100%' }}
-                                                source={{
-                                                    uri: 'file://' + item.IMAGE_PATH_LOCAL,
-                                                    priority: FastImage.priority.normal,
-                                                }} />
+
+                                            {/*Gani*/}
+                                            {this.state.images[0] == "NO IMAGES" &&
+                                                <Image style={{ width: '100%', height: '100%' }}
+                                                    source={require('../../Images/img-no-picture.png')}>
+                                                </Image>
+                                            }
+                                            {this.state.images[0] != "NO IMAGES" &&
+                                                <FastImage style={{ alignItems: 'center', width: '100%', height: '100%' }}
+                                                    source={{
+                                                        uri: 'file://' + item.IMAGE_PATH_LOCAL,
+                                                        priority: FastImage.priority.normal,
+                                                    }} />
+                                            }
+                                            {/*End Gani*/}
                                             <View style={{
                                                 flexDirection: 'row',
                                                 backgroundColor: this.getColor(this.state.data.STATUS),
@@ -361,12 +375,18 @@ class DetailFindingScreenRedesign extends Component {
                                             </View>
                                         </View>
                                     )}
-                                    customButtons={this.state.data.STATUS !== 'SELESAI' ? (position, move) => (
+                                    customButtons={this.state.images > 1 ? (position, move) => (
                                         <View style={{ flex: 1, flexDirection: 'row', }}>
                                             {this.state.images.map((image, index) => {
                                             })}
                                         </View>
                                     ) : null}
+                                // customButtons={(position, move) => (
+                                //     <View style={{ flex: 1, flexDirection: 'row', }}>
+                                //         {this.state.images.map((image, index) => {
+                                //         })}
+                                //     </View>
+                                // )}
                                 />
                             </View>
                         </View>

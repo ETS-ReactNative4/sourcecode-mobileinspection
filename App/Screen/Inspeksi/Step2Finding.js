@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { NavigationActions, StackActions } from 'react-navigation';
 import {
     Text, FlatList, TextInput, TouchableOpacity, View, Image, Modal,
-    BackHandler, Alert, BackAndroid
+    BackHandler, Alert, BackAndroid, StatusBar
 } from 'react-native';
 import {
     Container,
@@ -130,21 +130,17 @@ class Step2Finding extends Component {
     };
 
     componentDidMount() {
-        if(this.state.inspeksiHeader !== undefined){
+        BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
+        if (this.state.inspeksiHeader !== undefined) {
             let werkAfdBlock = `${this.state.inspeksiHeader.WERKS}${this.state.inspeksiHeader.AFD_CODE}${this.state.inspeksiHeader.BLOCK_CODE}`
-            let detailBlock = `${this.getBlokName(this.state.inspeksiHeader.BLOCK_CODE)}/${this.getStatusBlok(werkAfdBlock)}/${this.getEstateName(this.state.inspeksiHeader.WERKS)}`    
-            this.setState({blok:detailBlock, werks: this.state.inspeksiHeader.WERKS, blockCode: this.state.inspeksiHeader.BLOCK_CODE, afdCode: this.state.inspeksiHeader.AFD_CODE})
+            let detailBlock = `${this.getBlokName(this.state.inspeksiHeader.BLOCK_CODE)}/${this.getStatusBlok(werkAfdBlock)}/${this.getEstateName(this.state.inspeksiHeader.WERKS)}`
+            this.setState({ blok: detailBlock, werks: this.state.inspeksiHeader.WERKS, blockCode: this.state.inspeksiHeader.BLOCK_CODE, afdCode: this.state.inspeksiHeader.AFD_CODE })
             this.getLocation();
-        }else{
+        } else {
             alert('terjadi kesalahan dalam data header');
             this.props.navigation.state.params.finish('data');
             this.props.navigation.goBack(null)
         }
-    }
-
-    
-    componentDidMount() {
-        BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
     }
 
     componentWillUnmount() {
@@ -152,15 +148,6 @@ class Step2Finding extends Component {
     }
 
     handleBackButtonClick() {
-        // Alert.alert(
-        //     'Peringatan',
-        //     'Transaksi kamu tidak akan tersimpan, kamu yakin akan melanjutkan?',
-        //     [
-        //         { text: 'NO', style: 'cancel' },
-        //         { text: 'YES', onPress: () => this.props.navigation.goBack(null) }
-        //     ]
-        // );
-
         this.setState({
             showModalConfirmation: true, title: 'Data Hilang', message: 'Temuan mu belum tersimpan loh. Yakin nih mau dilanjutin?',
             icon: require('../../Images/ic-not-save.png')
@@ -178,12 +165,12 @@ class Step2Finding extends Component {
         }
     }
 
-    getBlokName(blockCode){
-        try {      
-          let data = TaskServices.findBy2('TM_BLOCK', 'BLOCK_CODE', blockCode);
-          return data.BLOCK_NAME;
+    getBlokName(blockCode) {
+        try {
+            let data = TaskServices.findBy2('TM_BLOCK', 'BLOCK_CODE', blockCode);
+            return data.BLOCK_NAME;
         } catch (error) {
-          return ''
+            return ''
         }
     }
 
@@ -241,55 +228,31 @@ class Step2Finding extends Component {
         let isSameUser = this.state.assignto == this.state.user.USER_AUTH_CODE ? true : false;
         let title = 'Inputan Tidak Lengkap';
         if (isEmpty(this.state.keterangan)) {
-            // Alert.alert(
-            //     'Peringatan',
-            //     "Keterangan harus diisi"
-            // );
             this.setState({
                 showModal: true, title: title, message: 'Eh Keterangan belum diisi loh',
                 icon: require('../../Images/ic-inputan-tidak-lengkap.png')
             });
         } else if (isEmpty(this.state.blok)) {
-            // Alert.alert(
-            //     'Peringatan',
-            //     "Lokasi Blok harus diisi"
-            // );
             this.setState({
                 showModal: true, title: title, message: 'Eh Lokasi belum diisi loh',
                 icon: require('../../Images/ic-inputan-tidak-lengkap.png')
             });
         } else if (isEmpty(this.state.category)) {
-            // Alert.alert(
-            //     'Peringatan',
-            //     "Kategori harus diisi"
-            // );
             this.setState({
                 showModal: true, title: title, message: 'Eh Kategori belum diisi loh',
                 icon: require('../../Images/ic-inputan-tidak-lengkap.png')
             });
         } else if (isEmpty(this.state.priority)) {
-            // Alert.alert(
-            //     'Peringatan',
-            //     "Prioritas harus diisi"
-            // );
             this.setState({
                 showModal: true, title: title, message: 'Eh Prioritas belum diisi loh',
                 icon: require('../../Images/ic-inputan-tidak-lengkap.png')
             });
         } else if (isEmpty(this.state.tugasKepada)) {
-            // Alert.alert(
-            //     'Peringatan',
-            //     "Ditugaskan kepada harus diisi"
-            // );
             this.setState({
                 showModal: true, title: title, message: 'Eh Ditugaskan kepada belum diisi loh',
                 icon: require('../../Images/ic-inputan-tidak-lengkap.png')
             });
         } else if (isSameUser && isEmpty(this.state.batasWaktu)) {
-            // Alert.alert(
-            //     'Peringatan',
-            //     "Batas waktu harus diisi"
-            // );
             this.setState({
                 showModal: true, title: title, message: 'Eh Batas waktu belum diisi loh',
                 icon: require('../../Images/ic-batas-waktu.png')
@@ -337,7 +300,7 @@ class Step2Finding extends Component {
 
             TaskServices.saveData('TR_IMAGE', imagetr);
         });
-        
+
         this.props.navigation.state.params.finish('data');
         this.props.navigation.goBack(null)
         // this.props.navigation.popToTop()
@@ -347,7 +310,7 @@ class Step2Finding extends Component {
 
     _hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
 
-    _handleDatePicked = (date) => {                
+    _handleDatePicked = (date) => {
         this.setState({ batasWaktu: moment(date).format("YYYY-MM-DD") })
         this._hideDateTimePicker();
     };
@@ -387,10 +350,10 @@ class Step2Finding extends Component {
     }
 
     changeBlok = data => {
-        if(data !== null){
+        if (data !== null) {
             this.setState({ blok: data.allShow, blockCode: data.blokCode, werks: data.werks, afdCode: data.afdCode });
         }
-        
+
     }
 
     pilihKontak() {
@@ -399,7 +362,7 @@ class Step2Finding extends Component {
             this.setState({ showModal: true, title: title, message: 'Kamu harus pilih lokasi dulu yaaa' });
         } else {
             this.props.navigation.navigate('PilihKontak', { changeContact: this.changeContact, afdCode: this.state.afdCode, werks: this.state.werks })
-        }        
+        }
     }
 
     render() {
@@ -408,7 +371,11 @@ class Step2Finding extends Component {
         return (
             <Container style={{ flex: 1, backgroundColor: 'white' }}>
                 <Content style={{ flex: 1, paddingHorizontal: 16, }}>
-
+                    <StatusBar
+                        hidden={false}
+                        barStyle="light-content"
+                        backgroundColor={Colors.tintColorPrimary}
+                    />
                     <ModalAlert
                         icon={this.state.icon}
                         visible={this.state.showModal}
@@ -422,7 +389,7 @@ class Step2Finding extends Component {
                         onPressCancel={() => this.setState({ showModalConfirmation: false })}
                         onPressSubmit={() => { this.props.navigation.goBack(null) }}
                         title={this.state.title}
-                        message={this.state.message}/>
+                        message={this.state.message} />
 
                     {/* STEPPER */}
                     <FlatList
@@ -501,9 +468,9 @@ class Step2Finding extends Component {
 
                     <View style={{ flex: 1, flexDirection: 'row' }}>
                         <Text style={style.label}>Lokasi <Text style={style.mandatory}>*</Text></Text>
-                        <TouchableOpacity disabled = {disableLoc} 
-                            onPress={() => this.props.navigation.navigate('PilihBlok', 
-                            {changeBlok: this.changeBlok, inspeksiHeader: this.state.inspeksiHeader, from: 'inspeksi'})}>
+                        <TouchableOpacity disabled={disableLoc}
+                            onPress={() => this.props.navigation.navigate('PilihBlok',
+                                { changeBlok: this.changeBlok, inspeksiHeader: this.state.inspeksiHeader, from: 'inspeksi' })}>
                             {isEmpty(this.state.blok) && (<Text style={{ fontSize: 14, color: '#999' }}> Set Location </Text>)}
                             {!isEmpty(this.state.blok) && (<Text style={{ fontSize: 14 }}> {this.state.blok} </Text>)}
                         </TouchableOpacity>
@@ -554,7 +521,7 @@ class Step2Finding extends Component {
                             <View style={[style.item, { flex: 1, flexDirection: 'row' }]}>
                                 <Image style={{ alignItems: 'stretch', width: 20, height: 20, marginRight: 5 }}
                                     source={require('../../Images/icon/ic_calendar.png')} />
-                                <TouchableOpacity onPress={this._showDateTimePicker} disabled ={this.state.disableCalendar}>
+                                <TouchableOpacity onPress={this._showDateTimePicker} disabled={this.state.disableCalendar}>
                                     {isEmpty(this.state.batasWaktu) && (
                                         <Text style={{ fontSize: 14, color: '#999' }}> Select Calendar </Text>)}
                                     {!isEmpty(this.state.batasWaktu) && (
@@ -571,7 +538,7 @@ class Step2Finding extends Component {
                         />
                     </View>}
 
-                    {this.state.assignto == this.state.user.USER_AUTH_CODE &&<View style={[style.line]} />}
+                    {this.state.assignto == this.state.user.USER_AUTH_CODE && <View style={[style.line]} />}
 
                     <TouchableOpacity style={[style.button, { margin: 16 }]}
                         onPress={() => { this.validation() }}>
@@ -585,6 +552,7 @@ class Step2Finding extends Component {
                     <View style={{ flex: 1 }}>
                         <Carousel
                             style={{ flex: 1 }}
+                            bullets
                             autoplay={false}
                             currentPage={this.state.foto.length - 1}
                             onAnimateNextPage={p => console.log(p)}>
@@ -601,7 +569,7 @@ class Step2Finding extends Component {
                             top: 10,
                         }} color={'white'} name="ios-close-circle-outline" size={45} onPress={() => { this.setState({ isImageFullVisible: false }) }} />
                     </View>
-                </Modal>                
+                </Modal>
             </Container >
         )
     }

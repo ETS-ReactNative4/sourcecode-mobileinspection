@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Platform, StatusBar } from 'react-native';
 import CardView from 'react-native-cardview';
 import {Card,CardItem} from 'native-base';
 import Colors from '../../Constant/Colors';
@@ -236,6 +236,11 @@ export default class HistoryInspection extends Component {
     }
     return (  
       <View style={{flex: 1}}>
+        <StatusBar
+            hidden={false}
+            barStyle="light-content"
+            backgroundColor={Colors.tintColorPrimary}
+        />
         {show}
       </View>
     )

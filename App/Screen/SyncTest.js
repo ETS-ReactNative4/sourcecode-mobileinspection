@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, TouchableOpacity, Alert, NetInfo } from 'react-
 import { Container, Content } from 'native-base'
 import * as Progress from 'react-native-progress';
 import Colors from '../Constant/Colors';
-import { moment } from 'moment';
+import moment from 'moment';
 
 import RegionAction from '../Redux/RegionRedux';
 import BlockAction from '../Redux/BlockRedux';
@@ -32,10 +32,15 @@ import TaskServices from '../Database/TaskServices'
 import { getTodayDate, convertTimestampToDate } from '../Lib/Utils';
 var RNFS = require('react-native-fs');
 
+// import moment from 'moment';
+
 const link = 'http://149.129.245.230:3008/api/';
 const user = TaskServices.getAllData('TR_LOGIN')[0];
 
 import ModalAlert from '../Component/ModalAlert';
+
+const heightProgress = 5;
+const colorProgress = '#D5D5D5'
 
 class SyncScreen extends React.Component {
 
@@ -137,6 +142,112 @@ class SyncScreen extends React.Component {
             showModal: false,
             icon: ''
         }
+    }
+
+    _deleteFinding() {
+        // var data = TaskServices.query('TR_FINDING', `PROGRESS = '100' AND STATUS_SYNC = 'Y'`);
+        var data = TaskServices.getAllData('TR_FINDING');
+        // console.log('Data Delete : ' +  JSON.stringify(data));
+        var now = moment(new Date());
+        // console.log('Now : ', now)
+        if (data.length > 0) {
+            for (var i = 0; i < data.length; i++) {
+                // let dueDate = data[i].DUE_DATE;
+                // console.log('Due Date : ', dueDate)
+                // if (dueDate.includes(' ')) {
+                //     dueDate = dueDate.substring(0, dueDate.indexOf(' '))
+                // }
+                // var diff = moment(new Date(dueDate)).diff(now, 'day');
+                // console.log('Diff : ' + diff)
+
+                this.deleteData('TR_FINDING', 'FINDING_CODE', data[i].FINDING_CODE);
+                // this.deleteImage(data[i].FINDING_CODE);
+
+                // if (diff >= 4) {
+                //     console.log('Data [i] : ', data[i])
+                //     this.deleteImage(data[i].FINDING_CODE);
+                //     this.deleteData('TR_FINDING', 'FINDING_CODE', data[i].FINDING_CODE);
+                // }
+
+                // this.deleteDataWoi();
+            }
+        }
+    }
+
+    _deleteInspeksiHeader() {
+        var data = TaskServices.getAllData('TR_BLOCK_INSPECTION_H');
+        var now = moment(new Date());
+        if (data != undefined) {
+            for (var i = 0; i > data.length; i++) {
+                if (data[i].INSERT_TIME !== '') {
+                    let insertTime = data[i].INSERT_TIME;
+                    if (insertTime.includes(' ')) {
+                        insertTime = insertTime.substring(0, insertTime.indexOf(' '))
+                    }
+                    var diff = moment(new Date(insertTime)).diff(now, 'day');
+                    if (diff < -7) {
+                        this.deleteImage(data[i].BLOCK_INSPECTION_CODE);
+                        this.deleteDetailInspeksi(data[i].BLOCK_INSPECTION_CODE)
+                        this.deleteData('TR_BLOCK_INSPECTION_H', 'BLOCK_INSPECTION_CODE', data[i].BLOCK_INSPECTION_CODE);
+                        this.deleteData('TR_BARIS_INSPECTION', 'ID_INSPECTION', data[i].ID_INSPECTION);
+                    }
+                }
+            }
+        }
+    }
+
+    deleteImage(trCode) {
+        console.log('TR CODE : ' + trCode)
+        let dataImage = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', trCode);
+        console.log('Data Image : ', dataImage)
+        if (dataImage !== undefined) {
+            this.deleteData('TR_IMAGE', 'IMAGE_CODE', dataImage.IMAGE_CODE);
+            this.deleteImageFile(`file://${dataImage.IMAGE_PATH_LOCAL}`);
+        }
+    }
+
+    deleteDetailInspeksi(blokInsCode) {
+        let data = TaskServices.findBy('TR_BLOCK_INSPECTION_D', 'BLOCK_INSPECTION_CODE', blokInsCode);
+        if (data !== undefined) {
+            data.map(item => {
+                this.deleteData('TR_BLOCK_INSPECTION_D', 'BLOCK_INSPECTION_CODE_D', item.BLOCK_INSPECTION_CODE_D);
+            });
+        }
+    }
+
+    deleteDataWoi(){
+        console.log('Masuk Pak Eko')
+    }
+
+    deleteData(table, whereClause, value) {
+        console.log('Masuk Delete Data')
+        // let allData = TaskServices.getAllData(table);
+        // if (allData !== undefined && allData.length > 0) {
+        //     let indexData = R.findIndex(R.propEq(whereClause, value))(allData);
+        //     console.log('Index Delete : ' + indexData);
+        //     if (indexData >= 0) {
+        //         TaskServices.deleteRecord(table, indexData);
+        //     }
+        // }
+    }
+
+    deleteImageFile(filepath) {
+        console.log('File Path : ' + filepath)
+        RNFS.exists(filepath)
+            .then((result) => {
+                if (result) {
+                    return RNFS.unlink(filepath)
+                        .then(() => {
+                            console.log('FILE DELETED');
+                        })
+                        .catch((err) => {
+                            console.log(err.message);
+                        });
+                }
+            })
+            .catch((err) => {
+                console.log(err.message);
+            });
     }
 
     componentDidMount() {
@@ -469,7 +580,17 @@ class SyncScreen extends React.Component {
         if (this.state.isFirstInstall) {
             if (total > 0) {
                 this.fetchingMobileSync(item);
-            } else { alert('gagal download ' + item) }
+            } else {
+                this.setState({
+                    showButton: true,
+                    showModal: true,
+                    title: 'Gagal Download' + item,
+                    message: 'Opps, Download bermasalah, silahkan coba lagi ya..',
+                    icon: require('../Images/ic-sync-gagal.png')
+                })
+                // alert('gagal download ' + item)
+
+            }
         } else {
             this.fetchingMobileSync(item);
         }
@@ -828,7 +949,6 @@ class SyncScreen extends React.Component {
         TaskServices.saveData('TM_TIME_TRACK', data);
         RNFS.copyFile(TaskServices.getPath(), 'file:///storage/emulated/0/MobileInspection/data.realm');
         this.setState({ progressParamInspection: 1, valueParamInspection: 1, totalParamInspection: 1, showButton: true });
-        // alert('Sync Data Selesai')
         this.setState({
             showModal: true,
             title: 'Sync Berhasil',
@@ -863,6 +983,8 @@ class SyncScreen extends React.Component {
                 }
             }
             config(options).fetch('GET', url).then((res) => {
+            }).catch((error) => {
+                console.log(error);
             });
         }
     }
@@ -882,194 +1004,223 @@ class SyncScreen extends React.Component {
                 }
             }
             config(options).fetch('GET', url).then((res) => {
+            }).catch((error) => {
+                console.log(error);
             });
         }
     }
 
     _onSync() {
+        // this._deleteFinding();
+        // Gani
+            this.props.resetFinding()
+            this.props.resetFindingImage();
+            this.props.resetBlock();
+            this.props.resetAfd();
+            this.props.resetRegion();
+            this.props.resetEst()
+            this.props.resetLandUse();
+            this.props.resetComp();
+            this.props.resetContent();
+            this.props.resetKriteria();
+            this.props.resetCategory();
+            this.props.resetContact()
+            this.props.resetParamTrack();
+            NetInfo.isConnected.fetch().then(isConnected => {
+                if (isConnected) {
+                    this.setState({
 
-        NetInfo.isConnected.fetch().then(isConnected => {
-            console.log('First, is ' + (isConnected ? 'online' : 'offline'));
-            if (isConnected) {
-                this.setState({
+                        progressFinding: 0,
+                        progressFindingImage: 0,
+                        progress: 0,
+                        progressAfd: 0,
+                        progressRegion: 0,
+                        progressEst: 0,
+                        progressLandUse: 0,
+                        progressComp: 0,
+                        progressContent: 0,
+                        progressContentLabel: 0,
+                        progressKriteria: 0,
+                        progressCategory: 0,
+                        progressContact: 0,
+                        progressInspectionTrack: 0,
+                        progressParamInspection: 0,
+                        progressInspeksiHeader: 0,
+                        progressInspeksiDetail: 0,
+                        progressFindingData: 0,
+                        progressUploadImage: 0,
 
-                    progressFinding: 0,
-                    progressFindingImage: 0,
-                    progress: 0,
-                    progressAfd: 0,
-                    progressRegion: 0,
-                    progressEst: 0,
-                    progressLandUse: 0,
-                    progressComp: 0,
-                    progressContent: 0,
-                    progressContentLabel: 0,
-                    progressKriteria: 0,
-                    progressCategory: 0,
-                    progressContact: 0,
-                    progressInspectionTrack: 0,
-                    progressParamInspection: 0,
-                    progressInspeksiHeader: 0,
-                    progressInspeksiDetail: 0,
-                    progressFindingData: 0,
-                    progressUploadImage: 0,
+                        valueDownload: '0',
+                        valueAfdDownload: '0',
+                        valueRegionDownload: '0',
+                        valueEstDownload: '0',
+                        valueCompDownload: '0',
+                        valueLandUseDownload: '0',
+                        valueContentDownload: '0',
+                        valueContentLabelDownload: '0',
+                        valueKriteriaDownload: '0',
+                        valueFindingDownload: '0',
+                        valueCategoryDownload: '0',
+                        valueContactDownload: '0',
+                        valueFindingImageDownload: '0',
+                        valueInspeksiHeaderUpload: '0',
+                        valueInspeksiDetailUpload: '0',
+                        valueFindingDataUpload: '0',
+                        valueImageUpload: '0',
+                        valueInspectionTrack: '0',
+                        valueParamInspection: '0',
 
-                    valueDownload: '0',
-                    valueAfdDownload: '0',
-                    valueRegionDownload: '0',
-                    valueEstDownload: '0',
-                    valueCompDownload: '0',
-                    valueLandUseDownload: '0',
-                    valueContentDownload: '0',
-                    valueContentLabelDownload: '0',
-                    valueKriteriaDownload: '0',
-                    valueFindingDownload: '0',
-                    valueCategoryDownload: '0',
-                    valueContactDownload: '0',
-                    valueFindingImageDownload: '0',
-                    valueInspeksiHeaderUpload: '0',
-                    valueInspeksiDetailUpload: '0',
-                    valueFindingDataUpload: '0',
-                    valueImageUpload: '0',
-                    valueInspectionTrack: '0',
-                    valueParamInspection: '0',
+                        totalDownload: '0',
+                        totalAfdDownload: '0',
+                        totalRegionDownload: '0',
+                        totalEstDownload: '0',
+                        totalCompDownload: '0',
+                        totalLandUseDownload: '0',
+                        totalContentDownload: '0',
+                        totalContentLabelDownload: '0',
+                        totalKriteriaDownload: '0',
+                        totalFindingDownload: '0',
+                        totalCategoryDownload: '0',
+                        totalContactDownload: '0',
 
-                    totalDownload: '0',
-                    totalAfdDownload: '0',
-                    totalRegionDownload: '0',
-                    totalEstDownload: '0',
-                    totalCompDownload: '0',
-                    totalLandUseDownload: '0',
-                    totalContentDownload: '0',
-                    totalContentLabelDownload: '0',
-                    totalKriteriaDownload: '0',
-                    totalFindingDownload: '0',
-                    totalCategoryDownload: '0',
-                    totalContactDownload: '0',
+                        totalInspeksiHeaderUpload: '0',
+                        totalInspeksiDetailUpload: '0',
+                        totalFindingDataUpload: '0',
+                        totalFindingImageDownload: '0',
+                        totalImagelUpload: '0',
+                        totalImagelUpload: '0',
+                        totalInspectionTrack: '0',
+                        totalParamInspection: '0',
 
-                    totalInspeksiHeaderUpload: '0',
-                    totalInspeksiDetailUpload: '0',
-                    totalFindingDataUpload: '0',
-                    totalFindingImageDownload: '0',
-                    totalImagelUpload: '0',
-                    totalImagelUpload: '0',
-                    totalInspectionTrack: '0',
-                    totalParamInspection: '0',
+                        fetchLocation: false,
+                        isBtnEnable: false,
 
-                    fetchLocation: false,
-                    isBtnEnable: false,
+                    });
 
-                });
+                    this.props.resetFinding();
+                    this.props.resetFindingImage();
+                    this.props.resetBlock();
+                    this.props.resetAfd();
+                    this.props.resetRegion();
+                    this.props.resetEst();
+                    this.props.resetLandUse();
+                    this.props.resetComp();
+                    this.props.resetContent();
+                    this.props.resetKriteria();
+                    this.props.resetCategory();
+                    this.props.resetContact();
+                    this.props.resetParamTrack();
 
-                //POST TRANSAKSI
-                this.kirimImage();
-                this.loadDataFinding();
-                this.loadData();
-                this.loadDataDetailInspeksi();
-                this.loadDataInspectionTrack();
+                    //POST TRANSAKSI
+                    this.kirimImage();
+                    this.loadDataFinding();
+                    this.loadData();
+                    this.loadDataDetailInspeksi();
+                    this.loadDataInspectionTrack();
 
-                //cara biasa
-                // setTimeout(() => {            
-                // this.DownloadData(`${link}mobile-sync/finding`, 'finding');
-                // }, 2000);
+                    //cara biasa
+                    // setTimeout(() => {            
+                    // this.DownloadData(`${link}mobile-sync/finding`, 'finding');
+                    // }, 2000);
 
-                //cara redux saga
-                setTimeout(() => {
-                    this.props.findingRequest()
-                    this.props.blockRequest();
-                }, 2000);
+                    //cara redux saga
+                    setTimeout(() => {
+                        this.props.findingRequest();
+                        this.props.blockRequest();
+                    }, 2000);
 
-            } else {
-                this.setState({
-                    showButton: true,
-                    showModal: true,
-                    title: 'Tidak Ada Jaringan',
-                    message: 'Untuk bisa sync, kamu harus terhubung ke Internet',
-                    icon: require('../Images/ic-no-internet.png')
-                });
+                } else {
+                    this.setState({
+                        showButton: true,
+                        showModal: true,
+                        title: 'Tidak Ada Jaringan',
+                        message: 'Untuk bisa sync, kamu harus terhubung ke Internet',
+                        icon: require('../Images/ic-no-internet.png')
+                    });
+                }
+            });
+            function handleFirstConnectivityChange(isConnected) {
+                console.log('Then, is ' + (isConnected ? 'online' : 'offline'));
+                NetInfo.isConnected.removeEventListener(
+                    'connectionChange',
+                    handleFirstConnectivityChange
+                );
             }
-        });
-        function handleFirstConnectivityChange(isConnected) {
-            console.log('Then, is ' + (isConnected ? 'online' : 'offline'));
-            NetInfo.isConnected.removeEventListener(
+            NetInfo.isConnected.addEventListener(
                 'connectionChange',
                 handleFirstConnectivityChange
             );
         }
-        NetInfo.isConnected.addEventListener(
-            'connectionChange',
-            handleFirstConnectivityChange
-        );
-    }
 
-    DownloadData(URL, table) {
-        const user = TaskServices.getAllData('TR_LOGIN')[0];
-        fetch(URL, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${user.ACCESS_TOKEN}`
-            },
-        })
-            .then((response) => {
-                return response.json();
+        DownloadData(URL, table) {
+            const user = TaskServices.getAllData('TR_LOGIN')[0];
+            fetch(URL, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.ACCESS_TOKEN}`
+                },
             })
-            .then((data) => {
-                alert(JSON.stringify(data));
-                if (data.status) {
-                    let payload = data.data;
-                    if (table == 'finding') {
-                        this._crudTM_Finding(payload);
-                        this.DownloadData(`${link}mobile-sync/finding-images`, 'image');
-                    } else if (table == 'image') {
-                        this._crudTM_Finding_Image(payload);
-                        // this.DownloadData(`${link}mobile-sync/hectare-statement/block`, 'block');
-                    } else if (table == 'block') {
-                        this._crudTM_Block(payload);
-                        this.DownloadData(`${link}mobile-sync/hectare-statement/afdeling`, 'afd');
-                    } else if (table == 'afd') {
-                        this._crudTM_Afd(payload);
-                        this.DownloadData(`${link}mobile-sync/hectare-statement/region`, 'region');
-                    } else if (table == 'region') {
-                        this._crudTM_Region(payload);
-                        this.DownloadData(`${link}mobile-sync/hectare-statement/est`, 'est');
-                    } else if (table == 'est') {
-                        this._crudTM_Est(payload);
-                        this.DownloadData(`${link}mobile-sync/hectare-statement/land-use`, 'landuse');
-                    } else if (table == 'landuse') {
-                        this._crudTM_LandUse(payload);
-                        this.DownloadData(`${link}mobile-sync/hectare-statement/comp`, 'comp');
-                    } else if (table == 'comp') {
-                        this._crudTM_Comp(payload);
-                        this.DownloadData(`${link}content`, 'content');
-                    } else if (table == 'content') {
-                        this._crudTM_Content(payload);
-                        this.DownloadData(`${link}content-label`, 'contentlabel');
-                    } else if (table == 'contentlabel') {
-                        this._crudTM_ContentLabel(payload);
-                        this.DownloadData(`${link}kriteria`, 'kriteria');
-                    } else if (table == 'kriteria') {
-                        this._crudTM_Kriteria(payload);
-                        this.DownloadData(`${link}category`, 'catogory');
-                    } else if (table == 'catogory') {
-                        this._crudTM_Category(payload);
-                        this.DownloadData(`${link}contacts`, 'contact');
-                    } else if (table == 'contact') {
-                        this._crudTM_Contact(payload);
-                        this.DownloadData(`${link}parameter/track`, 'track');
-                    } else if (table == 'track') {
-                        this._crudTM_Inspeksi_Param(payload);
+                .then((response) => {
+                    return response.json();
+                })
+                .then((data) => {
+                    alert(JSON.stringify(data));
+                    if (data.status) {
+                        let payload = data.data;
+                        if (table == 'finding') {
+                            this._crudTM_Finding(payload);
+                            this.DownloadData(`${link}mobile-sync/finding-images`, 'image');
+                        } else if (table == 'image') {
+                            this._crudTM_Finding_Image(payload);
+                            // this.DownloadData(`${link}mobile-sync/hectare-statement/block`, 'block');
+                        } else if (table == 'block') {
+                            this._crudTM_Block(payload);
+                            this.DownloadData(`${link}mobile-sync/hectare-statement/afdeling`, 'afd');
+                        } else if (table == 'afd') {
+                            this._crudTM_Afd(payload);
+                            this.DownloadData(`${link}mobile-sync/hectare-statement/region`, 'region');
+                        } else if (table == 'region') {
+                            this._crudTM_Region(payload);
+                            this.DownloadData(`${link}mobile-sync/hectare-statement/est`, 'est');
+                        } else if (table == 'est') {
+                            this._crudTM_Est(payload);
+                            this.DownloadData(`${link}mobile-sync/hectare-statement/land-use`, 'landuse');
+                        } else if (table == 'landuse') {
+                            this._crudTM_LandUse(payload);
+                            this.DownloadData(`${link}mobile-sync/hectare-statement/comp`, 'comp');
+                        } else if (table == 'comp') {
+                            this._crudTM_Comp(payload);
+                            this.DownloadData(`${link}content`, 'content');
+                        } else if (table == 'content') {
+                            this._crudTM_Content(payload);
+                            this.DownloadData(`${link}content-label`, 'contentlabel');
+                        } else if (table == 'contentlabel') {
+                            this._crudTM_ContentLabel(payload);
+                            this.DownloadData(`${link}kriteria`, 'kriteria');
+                        } else if (table == 'kriteria') {
+                            this._crudTM_Kriteria(payload);
+                            this.DownloadData(`${link}category`, 'catogory');
+                        } else if (table == 'catogory') {
+                            this._crudTM_Category(payload);
+                            this.DownloadData(`${link}contacts`, 'contact');
+                        } else if (table == 'contact') {
+                            this._crudTM_Contact(payload);
+                            this.DownloadData(`${link}parameter/track`, 'track');
+                        } else if (table == 'track') {
+                            this._crudTM_Inspeksi_Param(payload);
+                        }
+                    } else {
+                        // alert('Gagal proses download ' + table);
+                        this.setState({
+                            showButton: true,
+                            showModal: true,
+                            title: 'Sync Putus',
+                            message: 'Yaaah jaringannya mati, coba Sync lagi yaa.',
+                            icon: require('../Images/ic-sync-gagal.png')
+                        });
                     }
-                } else {
-                    // alert('Gagal proses download ' + table);
-                    this.setState({
-                        showButton: true,
-                        showModal: true,
-                        title: 'Sync Putus',
-                        message: 'Yaaah jaringannya mati, coba Sync lagi yaa.',
-                        icon: require('../Images/ic-sync-gagal.png')
-                    });
-                }
-            })
+                })
     }
 
     fetchingMobileSync(param) {
@@ -1098,9 +1249,97 @@ class SyncScreen extends React.Component {
             })
     }
 
-    componentWillReceiveProps(newProps) {
-        console.log(newProps)
-
+    componentWillReceiveProps(newProps, newState) {
+        //Gani
+        let errorFlag = false;
+        if (newProps.finding.error) {
+            errorFlag = true;
+        }
+        else if (newProps.findingImage.error) {
+            errorFlag = true;
+        }
+        else if (newProps.block.error) {
+            errorFlag = true;
+        }
+        else if (newProps.afd.error) {
+            errorFlag = true;
+        }
+        else if (newProps.region.error) {
+            errorFlag = true;
+        }
+        else if (newProps.est.error) {
+            errorFlag = true;
+        }
+        else if (newProps.landUse.error) {
+            errorFlag = true;
+        }
+        else if (newProps.comp.error) {
+            errorFlag = true;
+        }
+        else if (newProps.content.error) {
+            errorFlag = true;
+        }
+        else if (newProps.kriteria.error) {
+            errorFlag = true;
+        }
+        else if (newProps.category.error) {
+            errorFlag = true;
+        }
+        else if (newProps.contact.error) {
+            errorFlag = true;
+        }
+        else if (newProps.paramTrack.error) {
+            errorFlag = true;
+        }
+        if (errorFlag) {
+            let newFinding = Object.assign({}, newProps.finding);
+            newFinding.error = false;
+            let newParamTrack = Object.assign({}, newProps.paramTrack);
+            newParamTrack.error = false;
+            let newContact = Object.assign({}, newProps.contact);
+            newContact.error = false;
+            let newCategory = Object.assign({}, newProps.category);
+            newCategory.error = false;
+            let newKriteria = Object.assign({}, newProps.kriteria);
+            newKriteria.error = false;
+            let newContent = Object.assign({}, newProps.content);
+            newContent.error = false;
+            let newComp = Object.assign({}, newProps.comp);
+            newComp.error = false;
+            let newLandUse = Object.assign({}, newProps.landUse);
+            newLandUse.error = false;
+            let newEst = Object.assign({}, newProps.est);
+            newEst.error = false;
+            let newRegion = Object.assign({}, newProps.region);
+            newRegion.error = false;
+            let newAfd = Object.assign({}, newProps.afd);
+            newAfd.error = false;
+            let newBlock = Object.assign({}, newProps.block);
+            newBlock.error = false;
+            let newFindingImage = Object.assign({}, newProps.findingImage);
+            newFindingImage.error = false;
+            this.setState({
+                showButton: true,
+                showModal: true,
+                title: 'Sync Putus',
+                message: 'Yaaah jaringannya mati, coba Sync lagi yaa.',
+                icon: require('../Images/ic-sync-gagal.png')
+            });
+            this.props.resetFinding();
+            this.props.resetFindingImage();
+            this.props.resetBlock();
+            this.props.resetAfd();
+            this.props.resetRegion();
+            this.props.resetEst();
+            this.props.resetLandUse();
+            this.props.resetComp();
+            this.props.resetContent();
+            this.props.resetKriteria();
+            this.props.resetCategory();
+            this.props.resetContact();
+            this.props.resetParamTrack();
+            return;
+        }
         if (newProps.finding.fetchingFinding !== null && !newProps.finding.fetchingFinding) {
             let dataJSON = newProps.finding.finding;
             if (dataJSON !== null) {
@@ -1251,253 +1490,286 @@ class SyncScreen extends React.Component {
                         </TouchableOpacity>
                     </View>}
 
-                    <View style={{ flex: 1, marginTop: 24 }}>
+                    <Text style={{ fontSize: 14, color: 'blue', marginTop: 24 }}>UPLOAD</Text>
+                    <View style={{ backgroundColor: 'grey', height: 0.5, flex: 1, flexDirection: 'row', marginTop: 3 }} />
+
+                    <View style={{ flex: 1, marginTop: 12 }}>
                         <View style={{ flexDirection: 'row' }}>
-                            <Text>UPLOAD INSPEKSI TRACK</Text>
+                            <Text style={styles.labelProgress}>INSPEKSI TRACK</Text>
                             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text>{this.state.valueInspectionTrack}</Text>
-                                <Text>/</Text>
-                                <Text>{this.state.totalInspectionTrack}</Text>
+                                <Text style={styles.labelProgress}>{this.state.valueInspectionTrack}</Text>
+                                <Text style={styles.labelProgress}>/</Text>
+                                <Text style={styles.labelProgress}>{this.state.totalInspectionTrack}</Text>
                             </View>
                         </View>
                         <Progress.Bar
-                            height={20}
+                            height={heightProgress}
                             width={null}
                             style={{ marginTop: 2 }}
                             progress={this.state.progressInspectionTrack}
+                            backgroundColor={colorProgress}
+                            borderColor={'white'}
                             indeterminate={this.state.indeterminate} />
                     </View>
 
                     <View style={{ flex: 1, marginTop: 12 }}>
                         <View style={{ flexDirection: 'row' }}>
-                            <Text>UPLOAD INSPEKSI HEADER</Text>
+                            <Text style={styles.labelProgress}>INSPEKSI HEADER</Text>
                             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text>{this.state.valueInspeksiHeaderUpload}</Text>
-                                <Text>/</Text>
-                                <Text>{this.state.totalInspeksiHeaderUpload}</Text>
+                                <Text style={styles.labelProgress}>{this.state.valueInspeksiHeaderUpload}</Text>
+                                <Text style={styles.labelProgress}>/</Text>
+                                <Text style={styles.labelProgress}>{this.state.totalInspeksiHeaderUpload}</Text>
                             </View>
                         </View>
                         <Progress.Bar
-                            height={20}
+                            height={heightProgress}
                             width={null}
                             style={{ marginTop: 2 }}
                             progress={this.state.progressInspeksiHeader}
+                            backgroundColor={colorProgress}
+                            borderColor={'white'}
                             indeterminate={this.state.indeterminate} />
                     </View>
 
                     <View style={{ flex: 1, marginTop: 12 }}>
                         <View style={{ flexDirection: 'row' }}>
-                            <Text>UPLOAD INSPEKSI DETAIL</Text>
+                            <Text style={styles.labelProgress}>INSPEKSI DETAIL</Text>
                             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text>{this.state.valueInspeksiDetailUpload}</Text>
-                                <Text>/</Text>
-                                <Text>{this.state.totalInspeksiDetailUpload}</Text>
+                                <Text style={styles.labelProgress}>{this.state.valueInspeksiDetailUpload}</Text>
+                                <Text style={styles.labelProgress}>/</Text>
+                                <Text style={styles.labelProgress}>{this.state.totalInspeksiDetailUpload}</Text>
                             </View>
                         </View>
                         <Progress.Bar
-                            height={20}
+                            height={heightProgress}
                             width={null}
                             style={{ marginTop: 2 }}
                             progress={this.state.progressInspeksiDetail}
+                            backgroundColor={colorProgress}
+                            borderColor={'white'}
                             indeterminate={this.state.indeterminate} />
 
                     </View>
 
                     <View style={{ flex: 1, marginTop: 12 }}>
                         <View style={{ flexDirection: 'row' }}>
-                            <Text>UPLOAD FINDING DATA</Text>
+                            <Text style={styles.labelProgress}>FINDING DATA</Text>
                             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text>{this.state.valueFindingDataUpload}</Text>
-                                <Text>/</Text>
-                                <Text>{this.state.totalFindingDataUpload}</Text>
+                                <Text style={styles.labelProgress}>{this.state.valueFindingDataUpload}</Text>
+                                <Text style={styles.labelProgress}>/</Text>
+                                <Text style={styles.labelProgress}>{this.state.totalFindingDataUpload}</Text>
                             </View>
                         </View>
                         <Progress.Bar
-                            height={20}
+                            height={heightProgress}
                             width={null}
                             style={{ marginTop: 2 }}
                             progress={this.state.progressFindingData}
+                            backgroundColor={colorProgress}
+                            borderColor={'white'}
                             indeterminate={this.state.indeterminate} />
 
                     </View>
 
                     <View style={{ flex: 1, marginTop: 12 }}>
                         <View style={{ flexDirection: 'row' }}>
-                            <Text>UPLOAD IMAGE</Text>
+                            <Text style={styles.labelProgress}>IMAGE</Text>
                             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text>{this.state.valueImageUpload}</Text>
-                                <Text>/</Text>
-                                <Text>{this.state.totalImagelUpload}</Text>
+                                <Text style={styles.labelProgress}>{this.state.valueImageUpload}</Text>
+                                <Text style={styles.labelProgress}>/</Text>
+                                <Text style={styles.labelProgress}>{this.state.totalImagelUpload}</Text>
                             </View>
                         </View>
                         <Progress.Bar
-                            height={20}
+                            height={heightProgress}
                             width={null}
                             style={{ marginTop: 2 }}
                             progress={this.state.progressUploadImage}
+                            backgroundColor={colorProgress}
+                            borderColor={'white'}
                             indeterminate={this.state.indeterminate} />
                     </View>
 
+                    <Text style={{ fontSize: 14, color: Colors.tintColor, marginTop: 16 }}>DOWNLOAD</Text>
+                    <View style={{ backgroundColor: 'grey', height: 0.5, flex: 1, flexDirection: 'row', marginTop: 3 }} />
+
                     <View style={{ flex: 1, marginTop: 12 }}>
                         <View style={{ flexDirection: 'row' }}>
-                            <Text>FINDING</Text>
+                            <Text style={styles.labelProgress}>FINDING</Text>
                             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text>{this.state.valueFindingDownload}</Text>
-                                <Text>/</Text>
-                                <Text>{this.state.totalFindingDownload}</Text>
+                                <Text style={styles.labelProgress}>{this.state.valueFindingDownload}</Text>
+                                <Text style={styles.labelProgress}>/</Text>
+                                <Text style={styles.labelProgress}>{this.state.totalFindingDownload}</Text>
                             </View>
                         </View>
                         <Progress.Bar
-                            height={20}
+                            height={heightProgress}
                             width={null}
                             color={Colors.brand}
                             style={{ marginTop: 2 }}
                             progress={this.state.progressFinding}
+                            backgroundColor={colorProgress}
+                            borderColor={'white'}
                             indeterminate={this.state.indeterminate} />
                     </View>
 
                     <View style={{ flex: 1, marginTop: 12 }}>
                         <View style={{ flexDirection: 'row' }}>
-                            <Text>FINDING IMAGE</Text>
+                            <Text style={styles.labelProgress}>FINDING IMAGE</Text>
                             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text>{this.state.valueFindingImageDownload}</Text>
-                                <Text>/</Text>
-                                <Text>{this.state.totalFindingImageDownload}</Text>
+                                <Text style={styles.labelProgress}>{this.state.valueFindingImageDownload}</Text>
+                                <Text style={styles.labelProgress}>/</Text>
+                                <Text style={styles.labelProgress}>{this.state.totalFindingImageDownload}</Text>
                             </View>
                         </View>
                         <Progress.Bar
-                            height={20}
+                            height={heightProgress}
                             width={null}
                             color={Colors.brand}
                             style={{ marginTop: 2 }}
                             progress={this.state.progressFindingImage}
+                            backgroundColor={colorProgress}
+                            borderColor={'white'}
                             indeterminate={this.state.indeterminate} />
                     </View>
 
                     <View style={{ flex: 1, marginTop: 12 }}>
                         <View style={{ flexDirection: 'row' }}>
-                            <Text>BLOCK</Text>
+                            <Text style={styles.labelProgress}>BLOCK</Text>
                             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text>{this.state.valueDownload}</Text>
-                                <Text>/</Text>
-                                <Text style={{ marginRight: 3 }}>{this.state.totalDownload}</Text>
+                                <Text style={styles.labelProgress}>{this.state.valueDownload}</Text>
+                                <Text style={styles.labelProgress}>/</Text>
+                                <Text style={styles.labelProgress}>{this.state.totalDownload}</Text>
                             </View>
                         </View>
                         <Progress.Bar
-                            height={20}
+                            height={heightProgress}
                             width={null}
                             color={Colors.brand}
                             style={{ marginTop: 2 }}
                             progress={this.state.progress}
+                            backgroundColor={colorProgress}
+                            borderColor={'white'}
                             indeterminate={this.state.indeterminate} />
                     </View>
 
                     <View style={{ flex: 1, marginTop: 12 }}>
                         <View style={{ flexDirection: 'row' }}>
-                            <Text>AFD</Text>
+                            <Text style={styles.labelProgress}>AFD</Text>
                             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text>{this.state.valueAfdDownload}</Text>
-                                <Text>/</Text>
-                                <Text>{this.state.totalAfdDownload}</Text>
+                                <Text style={styles.labelProgress}>{this.state.valueAfdDownload}</Text>
+                                <Text style={styles.labelProgress}>/</Text>
+                                <Text style={styles.labelProgress}>{this.state.totalAfdDownload}</Text>
                             </View>
                         </View>
                         <Progress.Bar
-                            height={20}
+                            height={heightProgress}
                             width={null}
                             color={Colors.brand}
                             style={{ marginTop: 2 }}
                             progress={this.state.progressAfd}
+                            backgroundColor={colorProgress}
+                            borderColor={'white'}
                             indeterminate={this.state.indeterminate} />
                     </View>
 
                     <View style={{ flex: 1, marginTop: 12 }}>
                         <View style={{ flexDirection: 'row' }}>
-                            <Text>REGION</Text>
+                            <Text style={styles.labelProgress}>REGION</Text>
                             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text>{this.state.valueRegionDownload}</Text>
-                                <Text>/</Text>
-                                <Text>{this.state.totalRegionDownload}</Text>
+                                <Text style={styles.labelProgress}>{this.state.valueRegionDownload}</Text>
+                                <Text style={styles.labelProgress}>/</Text>
+                                <Text style={styles.labelProgress}>{this.state.totalRegionDownload}</Text>
                             </View>
                         </View>
                         <Progress.Bar
-                            height={20}
+                            height={heightProgress}
                             width={null}
                             color={Colors.brand}
                             style={{ marginTop: 2 }}
                             progress={this.state.progressRegion}
+                            backgroundColor={colorProgress}
+                            borderColor={'white'}
                             indeterminate={this.state.indeterminate} />
                     </View>
 
                     <View style={{ flex: 1, marginTop: 12 }}>
                         <View style={{ flexDirection: 'row' }}>
-                            <Text>ESTATE</Text>
+                            <Text style={styles.labelProgress}>ESTATE</Text>
                             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text>{this.state.valueEstDownload}</Text>
-                                <Text>/</Text>
-                                <Text>{this.state.totalEstDownload}</Text>
+                                <Text style={styles.labelProgress}>{this.state.valueEstDownload}</Text>
+                                <Text style={styles.labelProgress}>/</Text>
+                                <Text style={styles.labelProgress}>{this.state.totalEstDownload}</Text>
                             </View>
                         </View>
                         <Progress.Bar
-                            height={20}
+                            height={heightProgress}
                             width={null}
                             color={Colors.brand}
                             style={{ marginTop: 2 }}
                             progress={this.state.progressEst}
+                            backgroundColor={colorProgress}
+                            borderColor={'white'}
                             indeterminate={this.state.indeterminate} />
                     </View>
 
                     <View style={{ flex: 1, marginTop: 12 }}>
                         <View style={{ flexDirection: 'row' }}>
-                            <Text>LAND USE</Text>
+                            <Text style={styles.labelProgress}>LAND USE</Text>
                             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-
-                                <Text>{this.state.valueLandUseDownload}</Text>
-                                <Text>/</Text>
-                                <Text>{this.state.totalLandUseDownload}</Text>
+                                <Text style={styles.labelProgress}>{this.state.valueLandUseDownload}</Text>
+                                <Text style={styles.labelProgress}>/</Text>
+                                <Text style={styles.labelProgress}>{this.state.totalLandUseDownload}</Text>
                             </View>
                         </View>
                         <Progress.Bar
-                            height={20}
+                            height={heightProgress}
                             width={null}
                             color={Colors.brand}
                             style={{ marginTop: 2 }}
                             progress={this.state.progressLandUse}
+                            backgroundColor={colorProgress}
+                            borderColor={'white'}
                             indeterminate={this.state.indeterminate} />
                     </View>
 
                     <View style={{ flex: 1, marginTop: 12 }}>
                         <View style={{ flexDirection: 'row' }}>
-                            <Text>COMP</Text>
+                            <Text style={styles.labelProgress}>COMP</Text>
                             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text>{this.state.valueCompDownload}</Text>
-                                <Text>/</Text>
-                                <Text>{this.state.totalCompDownload}</Text>
+                                <Text style={styles.labelProgress}>{this.state.valueCompDownload}</Text>
+                                <Text style={styles.labelProgress}>/</Text>
+                                <Text style={styles.labelProgress}>{this.state.totalCompDownload}</Text>
                             </View>
                         </View>
                         <Progress.Bar
-                            height={20}
+                            height={heightProgress}
                             width={null}
                             color={Colors.brand}
                             style={{ marginTop: 2 }}
                             progress={this.state.progressComp}
+                            backgroundColor={colorProgress}
+                            borderColor={'white'}
                             indeterminate={this.state.indeterminate} />
                     </View>
 
                     <View style={{ flex: 1, marginTop: 12 }}>
                         <View style={{ flexDirection: 'row' }}>
-                            <Text>CONTENT</Text>
+                            <Text style={styles.labelProgress}>CONTENT</Text>
                             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text>{this.state.valueContentDownload}</Text>
-                                <Text>/</Text>
-                                <Text>{this.state.totalContentDownload}</Text>
+                                <Text style={styles.labelProgress}>{this.state.valueContentDownload}</Text>
+                                <Text style={styles.labelProgress}>/</Text>
+                                <Text style={styles.labelProgress}>{this.state.totalContentDownload}</Text>
                             </View>
                         </View>
                         <Progress.Bar
-                            height={20}
+                            height={heightProgress}
                             width={null}
                             color={Colors.brand}
                             style={{ marginTop: 2 }}
                             progress={this.state.progressContent}
+                            backgroundColor={colorProgress}
+                            borderColor={'white'}
                             indeterminate={this.state.indeterminate} />
                     </View>
 
@@ -1521,73 +1793,81 @@ class SyncScreen extends React.Component {
 
                     <View style={{ flex: 1, marginTop: 12 }}>
                         <View style={{ flexDirection: 'row' }}>
-                            <Text>KRITERIA</Text>
+                            <Text style={styles.labelProgress}>KRITERIA</Text>
                             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text>{this.state.valueKriteriaDownload}</Text>
-                                <Text>/</Text>
-                                <Text>{this.state.totalKriteriaDownload}</Text>
+                                <Text style={styles.labelProgress}>{this.state.valueKriteriaDownload}</Text>
+                                <Text style={styles.labelProgress}>/</Text>
+                                <Text style={styles.labelProgress}>{this.state.totalKriteriaDownload}</Text>
                             </View>
                         </View>
                         <Progress.Bar
-                            height={20}
+                            height={heightProgress}
                             width={null}
                             color={Colors.brand}
                             style={{ marginTop: 2 }}
                             progress={this.state.progressKriteria}
+                            backgroundColor={colorProgress}
+                            borderColor={'white'}
                             indeterminate={this.state.indeterminate} />
                     </View>
 
                     <View style={{ flex: 1, marginTop: 12 }}>
                         <View style={{ flexDirection: 'row' }}>
-                            <Text>CATEGORY</Text>
+                            <Text style={styles.labelProgress}>CATEGORY</Text>
                             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text>{this.state.valueCategoryDownload}</Text>
-                                <Text>/</Text>
-                                <Text>{this.state.totalCategoryDownload}</Text>
+                                <Text style={styles.labelProgress}>{this.state.valueCategoryDownload}</Text>
+                                <Text style={styles.labelProgress}>/</Text>
+                                <Text style={styles.labelProgress}>{this.state.totalCategoryDownload}</Text>
                             </View>
                         </View>
                         <Progress.Bar
-                            height={20}
+                            height={heightProgress}
                             width={null}
                             color={Colors.brand}
                             style={{ marginTop: 2 }}
                             progress={this.state.progressCategory}
+                            backgroundColor={colorProgress}
+                            borderColor={'white'}
                             indeterminate={this.state.indeterminate} />
                     </View>
 
                     <View style={{ flex: 1, marginTop: 12 }}>
                         <View style={{ flexDirection: 'row' }}>
-                            <Text>CONTACT</Text>
+                            <Text style={styles.labelProgress}>CONTACT</Text>
                             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text>{this.state.valueContactDownload}</Text>
-                                <Text>/</Text>
-                                <Text>{this.state.totalContactDownload}</Text>
+                                <Text style={styles.labelProgress}>{this.state.valueContactDownload}</Text>
+                                <Text style={styles.labelProgress}>/</Text>
+                                <Text style={styles.labelProgress}>{this.state.totalContactDownload}</Text>
                             </View>
                         </View>
                         <Progress.Bar
-                            height={20}
+                            height={heightProgress}
                             width={null}
                             color={Colors.brand}
                             style={{ marginTop: 2 }}
                             progress={this.state.progressContact}
+                            backgroundColor={colorProgress}
+                            borderColor={'white'}
                             indeterminate={this.state.indeterminate} />
                     </View>
 
                     <View style={{ flex: 1, marginTop: 12 }}>
                         <View style={{ flexDirection: 'row' }}>
-                            <Text>PARAMATER TRACK INSPECTION</Text>
+                            <Text style={styles.labelProgress}>PARAMATER TRACK INSPECTION</Text>
                             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text>{this.state.valueParamInspection}</Text>
-                                <Text>/</Text>
-                                <Text>{this.state.totalParamInspection}</Text>
+                                <Text style={styles.labelProgress}>{this.state.valueParamInspection}</Text>
+                                <Text style={styles.labelProgress}>/</Text>
+                                <Text style={styles.labelProgress}>{this.state.totalParamInspection}</Text>
                             </View>
                         </View>
                         <Progress.Bar
-                            height={20}
+                            height={heightProgress}
                             width={null}
                             style={{ marginTop: 2 }}
                             color={Colors.brand}
                             progress={this.state.progressParamInspection}
+                            backgroundColor={colorProgress}
+                            borderColor={'white'}
                             indeterminate={this.state.indeterminate} />
                     </View>
 
@@ -1701,6 +1981,9 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         color: '#ffffff',
         textAlign: 'center'
+    },
+    labelProgress: {
+        fontSize: 12
     }
 });
 

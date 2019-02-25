@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal } from 'react-native';
+import { Modal, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 import { View, Text, Item, Label, Input, Button } from 'native-base';
 
@@ -44,16 +44,16 @@ export default class ModalConfirmation extends Component {
 						<Text style={[ Fonts.style.subhead, { color: Colors.brand } ]}>{props.title}</Text>
 						<Text style={{ padding: 24, paddingBottom: 8, textAlign: 'center' }}>{props.message}</Text>
 						<View style={{ flexDirection: 'row', paddingTop: 12, paddingBottom: 8 }}>
-							<View style={{ flex: 1 }}>
-								<Button transparent onPress={props.onPressCancel} style={style.button}>
+							<TouchableOpacity onPress={props.onPressCancel} style={{ flex: 1 }}>
+								<View transparent style={style.button}>
 									<Text style={{ color: Colors.textSecondary }}>{props.btnCancelText}</Text>
-								</Button>
-							</View>
-							<View style={{ flex: 1 }}>
-								<Button transparent onPress={props.onPressSubmit} style={style.button}>
+								</View>
+							</TouchableOpacity>
+							<TouchableOpacity onPress={props.onPressSubmit} style={{ flex: 1 }}>
+								<View transparent style={style.button}>
 									<Text>{props.btnSubmitText}</Text>
-								</Button>
-							</View>
+								</View>
+							</TouchableOpacity>
 						</View>
 					</View>
 				</View>

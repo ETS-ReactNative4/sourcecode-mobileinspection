@@ -1,18 +1,14 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, ScrollView, Text, View, Switch, Alert, Image } from 'react-native';
+import { TouchableOpacity, ScrollView, Text, View, Switch, StatusBar, Image } from 'react-native';
 import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
 import BtnStyles from './Component/ButtonStyle'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { RNSlidingButton, SlideDirection } from 'rn-sliding-button';
-import TaskServices from '../../Database/TaskServices'
-import Icon2 from 'react-native-vector-icons/FontAwesome';
-import PropTypes from 'prop-types';
 import Entypo from 'react-native-vector-icons/Entypo'
 import { NavigationActions, StackActions } from 'react-navigation';
 import { getTodayDate } from '../../Lib/Utils'
 import R from 'ramda';
-
 import ModalAlert from '../../Component/ModalAlert'
 
 class KondisiBaris2 extends Component {
@@ -322,67 +318,56 @@ class KondisiBaris2 extends Component {
         //
         let title = 'Inputan Tidak Lengkap'
         if (this.state.piringan == '') {
-            // alert('Piringan belim dipilih');
             this.setState({
                 showModal: true, title: title, message: 'Eh Piringan belum diisi loh. Itu wajib diisi yak',
                 icon: require('../../Images/ic-inputan-tidak-lengkap.png')
             });
         } else if (this.state.sarKul == '') {
-            // alert('Pasar Pikul belim dipilih');
             this.setState({
                 showModal: true, title: title, message: 'Eh Pasar Pikul belum diisi loh. Itu wajib diisi yak',
                 icon: require('../../Images/ic-inputan-tidak-lengkap.png')
             });
         } else if ((this.state.statusBlok == 'TM' || this.state.statusBlok == 'TBM 3') && this.state.TPH == '') {
-            // alert('TPH belum dipilih')
             this.setState({
                 showModal: true, title: title, message: 'Eh TPH belum diisi loh. Itu wajib diisi yak',
                 icon: require('../../Images/ic-inputan-tidak-lengkap.png')
             });
         } else if (this.state.TPH == '' && this.state.switchTPH == true) {
-            // alert('TPH belim dipilih');
             this.setState({
                 showModal: true, title: title, message: 'Eh TPH belum diisi loh. Itu wajib diisi yak',
                 icon: require('../../Images/ic-inputan-tidak-lengkap.png')
             });
         } else if (this.state.GWG == '') {
-            // alert('Gawangan belim dipilih');
             this.setState({
                 showModal: true, title: title, message: 'Eh Gawangan belum diisi loh. Itu wajib diisi yak',
                 icon: require('../../Images/ic-inputan-tidak-lengkap.png')
             });
         } else if (this.state.PRUN == '' && this.state.statusBlok == 'TM') {
-            // alert('Prunning belim dipilih');
             this.setState({
                 showModal: true, title: title, message: 'Eh Prunning belum diisi loh. Itu wajib diisi yak',
                 icon: require('../../Images/ic-inputan-tidak-lengkap.png')
             });
         } else if (this.state.TIPA == '' && this.state.switchTIPA == true) {
-            // alert('Titi Panen belim dipilih');
             this.setState({
                 showModal: true, title: title, message: 'Eh Titi Panen belum diisi loh. Itu wajib diisi yak',
                 icon: require('../../Images/ic-inputan-tidak-lengkap.png')
             });
         } else if (this.state.KASTRASI == '' && this.state.statusBlok == 'TBM 3') {
-            // alert('Kastrasi belum dipilih')
             this.setState({
                 showModal: true, title: title, message: 'Eh Kastrasi belum diisi loh. Itu wajib diisi yak',
                 icon: require('../../Images/ic-inputan-tidak-lengkap.png')
             });
         } else if (this.state.SANITASI == '' && this.state.statusBlok == 'TBM 3') {
-            // alert('Sanitasi belum dipilih')
             this.setState({
                 showModal: true, title: title, message: 'Eh Sanitasi belum diisi loh. Itu wajib diisi yak',
                 icon: require('../../Images/ic-inputan-tidak-lengkap.png')
             });
         } else if (this.kodisiPemupukanIsOn() && this.state.PENABUR == '') {
-            // alert('Sistem Penaburan belum dipilih')
             this.setState({
                 showModal: true, title: title, message: 'Eh Sistem Penaburan belum diisi loh. Itu wajib diisi yak',
                 icon: require('../../Images/ic-inputan-tidak-lengkap.png')
             });
         } else if (this.kodisiPemupukanIsOn() && this.state.PUPUK == '') {
-            // alert('Kondisi Pupuk belum dipilih')
             this.setState({
                 showModal: true, title: title, message: 'Eh Kondisi Pupuk belum diisi loh. Itu wajib diisi yak',
                 icon: require('../../Images/ic-inputan-tidak-lengkap.png')
@@ -393,7 +378,6 @@ class KondisiBaris2 extends Component {
     }
 
     insertDB() {
-
 
         var listBaris2 = [];
         if (this.state.showPiringan) {
@@ -474,27 +458,31 @@ class KondisiBaris2 extends Component {
             listBaris2.push(data);
         }
 
-        data = {
-            BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${getTodayDate('YYYYMMDDHHmmss')}13`,
-            BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
-            ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
-            CONTENT_INSPECTION_CODE: 'CC0013',
-            VALUE: this.state.PENABUR,
-            AREAL: this.state.dataUsual.BARIS,
-            STATUS_SYNC: 'N'
-        }
-        listBaris2.push(data);
+        if(this.state.PENABUR !== '' ){
+            data = {
+                BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${getTodayDate('YYYYMMDDHHmmss')}13`,
+                BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
+                ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
+                CONTENT_INSPECTION_CODE: 'CC0013',
+                VALUE: this.state.PENABUR,
+                AREAL: this.state.dataUsual.BARIS,
+                STATUS_SYNC: 'N'
+            }
+            listBaris2.push(data);
+        }        
 
-        data = {
-            BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${getTodayDate('YYYYMMDDHHmmss')}14`,
-            BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
-            ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
-            CONTENT_INSPECTION_CODE: 'CC0014',
-            VALUE: this.state.PUPUK,
-            AREAL: this.state.dataUsual.BARIS,
-            STATUS_SYNC: 'N'
-        }
-        listBaris2.push(data);
+        if(this.state.PUPUK !== '' ){
+            data = {
+                BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${getTodayDate('YYYYMMDDHHmmss')}14`,
+                BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
+                ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
+                CONTENT_INSPECTION_CODE: 'CC0014',
+                VALUE: this.state.PUPUK,
+                AREAL: this.state.dataUsual.BARIS,
+                STATUS_SYNC: 'N'
+            }
+            listBaris2.push(data);
+        }        
 
         if (this.state.showKastrasi) {
             data = {
@@ -547,7 +535,11 @@ class KondisiBaris2 extends Component {
 
         return (
             <ScrollView style={styles.mainContainer}>
-
+                <StatusBar
+                    hidden={false}
+                    barStyle="light-content"
+                    backgroundColor={Colors.tintColorPrimary}
+                />
                 <ModalAlert
                     icon={this.state.icon}
                     visible={this.state.showModal}
@@ -909,12 +901,18 @@ class KondisiBaris2 extends Component {
 
                 {/*CIRCLE*/}
                 <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 20, marginBottom: 20 }}>
-                    <TouchableOpacity style={styles.cicle2} onPress={() => { this.props.navigation.goBack() }}>
+					{/*Gani*/}
+					<TouchableOpacity onPress={() => { this.props.navigation.goBack() }} 
+						style={[styles.buttonSubmit, { backgroundColor: Colors.tintColor }]}>
+						<Image style={styles.imageSubmit} source={require('../../Images/icon/ic_kembali.png')} />
+					</TouchableOpacity>
+                    {/*<TouchableOpacity style={styles.cicle2} onPress={() => { this.props.navigation.goBack() }}>*/}
                         {/* <Icon name={"chevron-left"}  size={10} color="white" /> */}
-                    </TouchableOpacity>
-                    <TouchableOpacity style={[styles.cicle, { marginLeft: 10 }]} onPress={() => { }}>
+                    {/*</TouchableOpacity>*/}
+                    {/*<TouchableOpacity style={[styles.cicle, { marginLeft: 10 }]} onPress={() => { }}>*/}
                         {/* <Icon name={"chevron-right"}  size={10} color="white" /> */}
-                    </TouchableOpacity>
+                    {/*</TouchableOpacity>*/}
+					{/*End Gani*/}
                 </View>
 
             </ScrollView>
@@ -992,6 +990,21 @@ const styles = {
         padding: 10,
         alignSelf: 'center',
         justifyContent: 'center',
+    },
+    buttonSubmit: {
+        width: 150,
+        borderRadius: 25,
+        margin: 5,
+        padding: 10,
+        height: 50,
+        alignSelf: 'center',
+        justifyContent: 'center',
+    },
+    imageSubmit: {
+		flex: 1,
+		width: 100,
+        alignSelf: 'center',
+		resizeMode: 'contain'
     },
     buttonText: {
         fontSize: 13,

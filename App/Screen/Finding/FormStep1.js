@@ -142,22 +142,14 @@ class FormStep1 extends Component {
     //     });
     // };
 
-    componentDidMount() {
+    // componentDidMount() {
         // this.handleAndroidBackButton(this.exitAlert);
-    }
+    // }
 
     onBtnClick() {
         if (this.state.photos.length == 0) {
-            // Alert.alert(
-            //     'Peringatan',
-            //     'Anda belum mengambil foto'
-            // );
             this.setState({ showModal: true, title: "Ambil Foto", message: 'Opps kamu belum ambil Foto Temuan yaaa', icon: require('../../Images/ic-no-pic.png') });
         } else if (this.state.selectedPhotos.length == 0) {
-            // Alert.alert(
-            //     'Peringatan',
-            //     "Minimal harus ada 1 Foto dipilih"
-            // );
             this.setState({ showModal: true, title: 'Foto Temuan', message: 'Kamu harus ambil min. 1 foto yoo.', icon: require('../../Images/ic-no-pic.png') });
         } else {
             let images = [];

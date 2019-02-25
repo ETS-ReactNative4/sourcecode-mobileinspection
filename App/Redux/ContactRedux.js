@@ -31,7 +31,7 @@ export const ContactSelectors = {
 
 // request the data from an api
 export const request = (state, { data }) => state.merge({ fetchingContact: true, error: null, contact: null });
-export const reset = (state) => state.merge({ fetchingContact: null, contact: null });
+export const reset = (state) => state.merge({ fetchingContact: null, error: null, contact: null });
 
 // successful api lookup
 export const success = (state, action) => {

@@ -87,10 +87,8 @@ class Login extends Component {
         if (TaskServices.getTotalData('TR_LOGIN') > 0) {
             let data = TaskServices.getAllData('TR_LOGIN')[0]
             if (param.USER_AUTH_CODE !== data.USER_AUTH_CODE) {
-                console.log('beda')
                 this.resetMobileSync(param, data.ACCESS_TOKEN)
             } else {
-                console.log('sama')
                 TaskServices.deleteAllData('TR_LOGIN');
                 this.insertUser(param);
                 this.navigateScreen('MainMenu');
@@ -199,7 +197,7 @@ class Login extends Component {
                         // alert('Masalah jaringan coba lagi');
                         this.setState({
                             showModal: true,
-                            title: 'Jaringan Bermasalah',
+                            title: 'Proses Sedang Lambat',
                             message: 'Silahkan Kamu Coba Lagi',
                             icon: require('../Images/ic-no-internet.png')
                         })

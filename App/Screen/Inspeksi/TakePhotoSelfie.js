@@ -4,7 +4,7 @@ import {
     TouchableOpacity,
     View,
     Image,
-    Dimensions, BackHandler,Platform
+    Dimensions, BackHandler,Platform, StatusBar
   } from 'react-native';
 import Colors from '../../Constant/Colors';
 import { RNCamera as Camera } from 'react-native-camera';
@@ -210,6 +210,11 @@ class TakePhotoSelfie extends Component{
     render(){
         return (
           <View style={styles.container}>
+              <StatusBar
+                  hidden={false}
+                  barStyle="light-content"
+                  backgroundColor={Colors.tintColorPrimary}
+              />
               <View style={{flex:2}}>
                 {this.state.path ? this.renderImage() : this.renderCamera()}
               </View>

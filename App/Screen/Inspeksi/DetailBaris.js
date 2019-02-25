@@ -3,7 +3,7 @@ import {
     StyleSheet,
     Text,
     View,
-    TouchableOpacity,
+    StatusBar,
     ScrollView
 } from 'react-native';
 
@@ -129,6 +129,11 @@ class DetailBaris extends React.Component {
         return (
             <ScrollView>
                 < View style={styles.container} >
+                    <StatusBar
+                        hidden={false}
+                        barStyle="light-content"
+                        backgroundColor={Colors.tintColorPrimary}
+                    />
                     <View style={styles.section}>
                         <Text style={styles.textLokasi}>Data Penilaian</Text>
                         <Text style={[styles.textLokasi,{marginTop:5}]}>Baris Ke {this.state.baris}</Text>

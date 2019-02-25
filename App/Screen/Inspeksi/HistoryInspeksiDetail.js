@@ -5,7 +5,8 @@ import {
     View,
     TouchableOpacity,
     ScrollView,
-    Image
+    Image,
+    StatusBar
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/AntDesign'
@@ -59,13 +60,13 @@ class HistoryInspeksiDetail extends React.Component {
         },
         title: `Detail Inspeksi`,
         headerTintColor: '#fff',
-        headerRight: (
-            <TouchableOpacity onPress={() => navigation.navigate('FindingFormNavigator')}>
-                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingRight: 16 }}>
-                    <Entypo name='flashlight' size={24} color='white' />
-                </View>
-            </TouchableOpacity>
-        ),
+        // headerRight: (
+        //     <TouchableOpacity onPress={() => navigation.navigate('FindingFormNavigator')}>
+        //         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingRight: 16 }}>
+        //             <Entypo name='flashlight' size={24} color='white' />
+        //         </View>
+        //     </TouchableOpacity>
+        // ),
     };
 
     componentDidMount() {
@@ -228,6 +229,20 @@ class HistoryInspeksiDetail extends React.Component {
         }
         listData.push(this.renderComponent(data));
 
+        data = {
+            idx: 10,
+            name : 'Losses Brondolan',
+            value: ((jmlNilaiBrondolPiring+jmlNilaiBrondolTph)/jmlNilaiPokokPanen).toFixed(2)
+        }
+        listData.push(this.renderComponent(data));
+
+        data = {
+            idx: 11,
+            name : 'Losses Janjang',
+            value: (jmlNilaiBuahTgl/jmlNilaiPokokPanen).toFixed(2)
+        }
+        listData.push(this.renderComponent(data));
+
         if (tipa.length > 0) {
             var jmlNilaiTipa = this.getTotalNilaiComponent(tipa);
             var avg_tipa = jmlNilaiTipa / tipa.length;
@@ -239,25 +254,59 @@ class HistoryInspeksiDetail extends React.Component {
             }
             listData.push(this.renderComponent(data));
         }
+        // if (penabur.length > 0) {
+        //     var jmlNilaiPenabur = this.getTotalNilaiComponent(penabur);
+        //     var avg_penabur = jmlNilaiPenabur / penabur.length;
+        //     var nilaiPenabur = this.getKonversiNilaiKeHuruf(avg_penabur);
+        //     data = {
+        //         idx: 6,
+        //         name: 'Sistem Penaburan',
+        //         value: `${nilaiPenabur}/${avg_penabur.toFixed(2)}`
+        //     }
+        //     listData.push(this.renderComponent(data));
+        // }
+        // if (pupuk.length > 0) {
+        //     var jmlNilaiPupuk = this.getTotalNilaiComponent(pupuk);
+        //     var avg_pupuk = jmlNilaiPupuk / pupuk.length;
+        //     var nilaiPupuk = this.getKonversiNilaiKeHuruf(avg_pupuk);
+        //     data = {
+        //         idx: 9,
+        //         name: 'Kondisi Pemupukan',
+        //         value: `${nilaiPupuk}/${avg_pupuk.toFixed(2)}`
+        //     }
+        //     listData.push(this.renderComponent(data));
+        // }
         if (penabur.length > 0) {
             var jmlNilaiPenabur = this.getTotalNilaiComponent(penabur);
-            var avg_penabur = jmlNilaiPenabur / penabur.length;
-            var nilaiPenabur = this.getKonversiNilaiKeHuruf(avg_penabur);
+            var avg_penabur;
+            var average = jmlNilaiPenabur / penabur.length;
+            if (average == 0) {
+                avg_penabur = '-'
+            } else {
+                avg_penabur = average.toFixed(2);
+            }
+            var nilaiPenabur = this.getKonversiNilaiKeHuruf(average);
             data = {
                 idx: 6,
                 name: 'Sistem Penaburan',
-                value: `${nilaiPenabur}/${avg_penabur.toFixed(2)}`
+                value: avg_penabur == '-' ? '-' :  `${nilaiPenabur}/${avg_penabur}`
             }
             listData.push(this.renderComponent(data));
         }
         if (pupuk.length > 0) {
             var jmlNilaiPupuk = this.getTotalNilaiComponent(pupuk);
-            var avg_pupuk = jmlNilaiPupuk / pupuk.length;
-            var nilaiPupuk = this.getKonversiNilaiKeHuruf(avg_pupuk);
+            var avg_pupuk;
+            var average = jmlNilaiPupuk / pupuk.length;
+            if (average == 0) {
+                avg_pupuk = '-'
+            } else {
+                avg_pupuk = average.toFixed(2);
+            }
+            var nilaiPupuk = this.getKonversiNilaiKeHuruf(average);
             data = {
                 idx: 9,
                 name: 'Kondisi Pemupukan',
-                value: `${nilaiPupuk}/${avg_pupuk.toFixed(2)}`
+                value: avg_pupuk == '-' ? '-' : `${nilaiPupuk}/${avg_pupuk}`
             }
             listData.push(this.renderComponent(data));
         }
@@ -414,6 +463,11 @@ class HistoryInspeksiDetail extends React.Component {
         return (
             <ScrollView>
                 < View style={styles.container} >
+                    <StatusBar
+                        hidden={false}
+                        barStyle="light-content"
+                        backgroundColor={Colors.tintColorPrimary}
+                    />
                     <View style={[styles.section, { alignItems: 'center' }]}>
                         {this.renderSticker(this.state.nilaiInspeksi)}
                         <Text style={[styles.textNilai, { color: this.colorTextScore(this.state.nilaiInspeksi) }]}>{this.state.nilaiInspeksi}/{this.state.nilaiScore}</Text>

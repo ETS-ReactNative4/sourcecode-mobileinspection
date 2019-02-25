@@ -2,7 +2,8 @@ import React from 'react';
 import * as ReactNavigation from 'react-navigation';
 import { connect } from 'react-redux';
 import AppNavigation from './AppNavigation';
-import MainNavigation from './MainNavigation';
+// import MainNavigation from './MainNavigation';
+// import TestSwitch from './TestSwitch'
 import { BackHandler } from 'react-native';
 import PropTypes from 'prop-types';
 
@@ -15,7 +16,7 @@ class ReduxNavigation extends React.Component {
 	render() {
 		return <AppNavigation />;
 		
-		// return <MainNavigation />;
+		// return <TestSwitch />;
 	}
 }
 
