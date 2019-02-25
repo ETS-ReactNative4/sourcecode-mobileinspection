@@ -12,7 +12,6 @@ import {
     Card
 } from 'native-base'
 import TaskServices from '../../Database/TaskServices'
-import Entypo from 'react-native-vector-icons/Entypo'
 import Slider from 'react-native-slider'
 import RNFS from 'react-native-fs'
 import R, { isEmpty, isNil } from 'ramda'
@@ -337,10 +336,8 @@ class DetailFindingScreenRedesign extends Component {
                                 <ImageSlider
                                     images={this.state.images}
                                     customSlide={({ index, item, style, width }) => (
-
                                         // It's important to put style here because it's got offset inside
                                         <View key={index} style={[style, { backgroundColor: 'yellow', flex: 1 }]}>
-
                                             {this.state.data.STATUS == 'SELESAI' && <View style={{
                                                 backgroundColor: 'rgba(91, 90, 90, 0.7)', width: 80,
                                                 padding: 5, position: 'absolute', top: 0, right: 10, zIndex: 1, justifyContent: 'center', alignItems: 'center',

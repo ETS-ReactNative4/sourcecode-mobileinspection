@@ -130,7 +130,7 @@ class MapsInspeksi extends React.Component {
   }
 
   onClickBlok(blockCode){
-    this.props.navigation.navigate('BuatInspeksi', {block: blockCode});
+    this.props.navigation.navigate('BuatInspeksi', {block: blockCode, latitude: this.state.latitude, longitude: this.state.longitude});
   }
 
   navigateScreen(screenName, blockCode) {
@@ -147,7 +147,7 @@ class MapsInspeksi extends React.Component {
 
   onMapReady(){
     //lakukan aoa yg mau dilakukan disini setelah map selesai
-    this.setState({fetchLocation: false})
+    this.setState({fetchLocation: false});
   }
 
   render() {

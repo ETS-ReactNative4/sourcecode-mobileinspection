@@ -1,6 +1,6 @@
 'use strict';
 import React, { Component } from 'react'
-import { AppState, View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, NetInfo } from 'react-native'
+import { AppState, View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native'
 import R, { isEmpty } from 'ramda'
 import {
   Container,
@@ -16,7 +16,6 @@ import Icon2 from 'react-native-vector-icons/MaterialIcons'
 import RNFS from 'react-native-fs'
 import RNFetchBlob from 'rn-fetch-blob'
 import { dirPhotoTemuan } from '../../Lib/dirStorage';
-import ModalAlert from '../../Component/ModalAlert'
 import { NavigationActions, StackActions } from 'react-navigation';
 // import layer from '../../Data/skm.json'
 
@@ -46,11 +45,7 @@ export default class ListFinding extends Component {
       data7Hari: [],
       dataMore7Hari: [],
       dataNoDate: [],
-      refreshing: false,
-      title: 'Title',
-      message: 'Message',
-      showModal: false,
-      icon: ''
+      refreshing: false
     }
 
   }
@@ -207,23 +202,12 @@ export default class ListFinding extends Component {
     var images = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', id);
     if (images !== undefined) {
       this.props.navigation.navigate('DetailFinding', { ID: id })
-    } else {
-      NetInfo.isConnected.fetch().then(isConnected => {
-        if (isConnected) {
-          this.getImageBaseOnFindingCode(id)
-          setTimeout(() => {
-            this.props.navigation.navigate('DetailFinding', { ID: id })
-          }, 3000);
-        } else {
-          this.setState({
-            showModal: true,
-            title: 'Jaringan Bermasalah',
-            message: 'Silahkan Kamu Coba Lagi',
-            icon: require('../../Images/ic-no-internet.png')
-          });
-        }
-      })
-    }
+    }else{
+      this.getImageBaseOnFindingCode(id)
+      setTimeout(() => {
+        this.props.navigation.navigate('DetailFinding', { ID: id })
+      }, 3000);
+    }    
   }
 
   _renderItem = (item, index) => {
@@ -258,14 +242,6 @@ export default class ListFinding extends Component {
     return (
       <Container style={{ flex: 1 }}>
         <Content style={styles.container} >
-
-          <ModalAlert
-            icon={this.state.icon}
-            visible={this.state.showModal}
-            onPressCancel={() => this.setState({ showModal: false })}
-            title={this.state.title}
-            message={this.state.message} />
-
           <Text style={{ fontSize: 16, fontWeight: 'bold', paddingHorizontal: 16 }}>
             Belum Ada Batas Waktu
           </Text>
