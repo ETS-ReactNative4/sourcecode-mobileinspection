@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, NetInfo } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
 import TaskServices from '../../Database/TaskServices'
 import Colors from '../../Constant/Colors'
 import { changeFormatDate } from '../../Lib/Utils'
@@ -7,7 +7,6 @@ import Moment from 'moment'
 import RNFS from 'react-native-fs'
 import RNFetchBlob from 'rn-fetch-blob'
 import { dirPhotoTemuan } from '../../Lib/dirStorage';
-import ModalAlert from '../../Component/ModalAlert'
 
 export default class HistoryFinding extends Component {
   constructor(props) {
@@ -16,11 +15,7 @@ export default class HistoryFinding extends Component {
     this.state = {
       refreshing: false,
       data: [],
-      idx: 0,
-      title: 'Title',
-      message: 'Message',
-      showModal: false,
-      icon: ''
+      idx: 0
     }
   }
 
@@ -70,20 +65,14 @@ export default class HistoryFinding extends Component {
 
   onClickItem(id) {
     var images = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', id);
-    if (images !== undefined) {
+    if(images !== undefined){
       this.props.navigation.navigate('DetailFinding', { ID: id })
-    } else {
-      NetInfo.isConnected.fetch().then(isConnected => {
-        if (isConnected) {
-          this.getImageBaseOnFindingCode(id)
-          setTimeout(() => {
-            this.props.navigation.navigate('DetailFinding', { ID: id })
-          }, 3000);
-        } else {
-          alert('tidak ada koneksi')
-        }
-      });
-    }
+    }else{
+      this.getImageBaseOnFindingCode(id)
+      setTimeout(() => {
+        this.props.navigation.navigate('DetailFinding', { ID: id })
+      }, 3000);
+    }    
   }
 
   getImageBaseOnFindingCode(findingCode) {
@@ -219,12 +208,6 @@ export default class HistoryFinding extends Component {
   _renderData() {
     return (
       <ScrollView style={styles.container}>
-        <ModalAlert
-          icon={this.state.icon}
-          visible={this.state.showModal}
-          onPressCancel={() => this.setState({ showModal: false })}
-          title={this.state.title}
-          message={this.state.message} />
         <View style={{ paddingTop: 4, paddingRight: 16, paddingLeft: 16, paddingBottom: 16 }}>
           <View style={{ marginTop: 12 }}>
             {this.state.data.map((data, idx) => this._renderItem(data, idx))}

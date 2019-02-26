@@ -91,20 +91,6 @@ class ListInspection extends Component {
   }
 }
 
-// const mapStateToProps = state => {
-// 	return {
-// 		inspeksi: state.inspeksi
-// 	};
-// };
-
-// const mapDispatchToProps = dispatch => {
-// 	return {
-// 		postInspeksi: obj => dispatch(InspeksiAction.postInspeksi(obj))
-// 	};
-// };
-
-// export default connect(mapStateToProps, mapDispatchToProps)(ListInspection);
-
 export default ListInspection;
 
 const styles = StyleSheet.create({

@@ -37,7 +37,6 @@ class MapsInspeksi extends React.Component {
           latitudeDelta:0.0075,
           longitudeDelta:0.00721
         },
-        poligons: [],
         fetchLocation: true,
         showModal: false,
         title: 'Sabar Ya..',
@@ -150,7 +149,7 @@ class MapsInspeksi extends React.Component {
             // }
             // let poligons = this.getPolygons(position);
             this.map.animateToCoordinate(region, 1);
-            this.setState({latitude:lat, longitude:lon, fetchLocation: false, region, poligons});   
+            this.setState({latitude:lat, longitude:lon, fetchLocation: false, region});   
         },
         (error) => {
             let message = error && error.message ? error.message : 'Terjadi kesalahan ketika mencari lokasi anda !';

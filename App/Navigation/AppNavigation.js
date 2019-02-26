@@ -39,7 +39,6 @@ import BisnisAreaScreen from '../Screen/BisnisArea';
 import CalendarsScreen from '../Screen/Calendar';
 import PemberiTugas from '../Screen/PemberiTugas';
 // import OpenGl from '../Screen/OpenGl';
-import ContohMap from '../Test/MapsOri'
 
 import Colors from '../Constant/Colors'
 

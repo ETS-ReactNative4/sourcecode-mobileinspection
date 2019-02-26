@@ -50,11 +50,11 @@ class BuatInspeksiRedesign extends Component {
             fontWeight: '400',
             marginHorizontal: 12
         },
-        headerRight: (
-              <TouchableOpacity style= {{marginRight: 20}} onPress={()=>{params.searchLocation()}}>
-                  <IconLoc style={{marginLeft: 12}} name={'location-arrow'} size={24} color={'white'} />
-              </TouchableOpacity>
-          )
+        // headerRight: (
+        //       <TouchableOpacity style= {{marginRight: 20}} onPress={()=>{params.searchLocation()}}>
+        //           <IconLoc style={{marginLeft: 12}} name={'location-arrow'} size={24} color={'white'} />
+        //       </TouchableOpacity>
+        //   )
         };
     }
 
@@ -65,14 +65,16 @@ class BuatInspeksiRedesign extends Component {
 
         let params = props.navigation.state.params;
         let testBlock = R.clone(params.block);
+        let latitude = R.clone(params.latitude);
+        let longitude = R.clone(params.longitude);
         
         this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
 
         this.state = {
             blokInspeksiCode,
             dataLogin,
-            latitude: 0.0,
-            longitude: 0.0,
+            latitude,
+            longitude,
             error: null,
             modelInspeksiH: null,
             modelTrack: null,
@@ -119,14 +121,6 @@ class BuatInspeksiRedesign extends Component {
         BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
         this.keyboardDidShowListener.remove();
         this.keyboardDidHideListener.remove();
-    }
-
-    _keyboardDidShow () {
-    // alert('Keyboard Shown');
-    }
-
-    _keyboardDidHide () {
-    // alert('Keyboard Hidden');
     }
 
     componentDidMount() {    
