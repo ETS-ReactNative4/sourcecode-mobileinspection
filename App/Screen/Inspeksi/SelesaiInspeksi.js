@@ -230,14 +230,14 @@ class SelesaiInspeksi extends React.Component {
         data = {
             idx: 10,
             name : 'Losses Brondolan',
-            value: `${(((jmlNilaiBrondolPiring+jmlNilaiBrondolTph)/jmlNilaiPokokPanen).toFixed(2))*100}%`
+            value: ((jmlNilaiBrondolPiring+jmlNilaiBrondolTph)/jmlNilaiPokokPanen).toFixed(2)
         }
         listData.push(this.renderComponent(data));
 
         data = {
             idx: 11,
             name : 'Losses Janjang',
-            value: `${((jmlNilaiBuahTgl/jmlNilaiPokokPanen).toFixed(2))*100}%`
+            value: (jmlNilaiBuahTgl/jmlNilaiPokokPanen).toFixed(3)
         }
         listData.push(this.renderComponent(data));
 

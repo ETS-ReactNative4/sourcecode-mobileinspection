@@ -100,9 +100,7 @@ const TaskServices = {
   },
 
   deleteRecordPrimaryKey: function (table, primary_key) {
-    console.log('Primary Key Finding Code : ' + JSON.stringify(primary_key))
     let result = RealmSchemas.objects(table).find(row => {
-      // console.log('Row : ', row)
       return row.FINDING_CODE == primary_key.FINDING_CODE
     })
     RealmSchemas.write(() => {
