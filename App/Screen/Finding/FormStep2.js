@@ -348,7 +348,13 @@ class FormStep2 extends Component {
                 werks: data.WERKS
             })
         } else {
-            alert('Blok yg kamu pilih tidak valid')
+            this.setState({
+                showModal: true, 
+				title: "Blok Salah", 
+				message: 'Ups blok yang kamu pilih salah',
+                icon: require('../../Images/ic-blm-input-lokasi.png')
+            });
+            //alert('Blok yg kamu pilih tidak valid')
         }
     }
 

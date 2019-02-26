@@ -635,12 +635,13 @@ class SyncScreen extends React.Component {
         if (data.ubah.length > 0 && all.length > 0) {
             data.ubah.map(item => {
                 let indexData = R.findIndex(R.propEq('WERKS_AFD_BLOCK_CODE', item.WERKS_AFD_BLOCK_CODE))(allData);
-                TaskServices.updateBlock(item, indexData)
+                TaskServices.updateByPrimaryKey('TM_BLOCK', item)
+                //TaskServices.updateBlock(item, indexData)
             })
         }
         if (data.hapus.length > 0 && all.length > 0) {
             data.hapus.map(item => {
-                this.deleteData('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', item.WERKS_AFD_BLOCK_CODE);
+                this.deleteRecordByPK('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', item.WERKS_AFD_BLOCK_CODE);
             });
         }
 
@@ -668,13 +669,14 @@ class SyncScreen extends React.Component {
         if (data.ubah.length > 0 && allData.length > 0) {
             data.ubah.map(item => {
                 let indexData = R.findIndex(R.propEq('WERKS_AFD_CODE', item.WERKS_AFD_CODE))(allData);
-                TaskServices.updateAfdeling(item, indexData)
+                TaskServices.updateByPrimaryKey('TM_AFD', item)
+                //TaskServices.updateAfdeling(item, indexData)
             })
         }
         //hapus data
         if (data.hapus.length > 0 && allData.length > 0) {
             data.hapus.map(item => {
-                this.deleteData('TM_AFD', 'WERKS_AFD_CODE', item.WERKS_AFD_CODE);
+                this.deleteRecordByPK('TM_AFD', 'WERKS_AFD_CODE', item.WERKS_AFD_CODE);
             });
         }
 
@@ -700,12 +702,13 @@ class SyncScreen extends React.Component {
         if (data.ubah.length > 0 && allData.length > 0) {
             data.ubah.map(item => {
                 let indexData = R.findIndex(R.propEq('REGION_CODE', item.REGION_CODE))(allData);
-                TaskServices.updateRegion(item, indexData)
+                TaskServices.updateByPrimaryKey('TM_REGION', item)
+                //TaskServices.updateRegion(item, indexData)
             })
         }
         if (data.hapus.length > 0 && allData.length > 0) {
             data.hapus.map(item => {
-                this.deleteData('TM_REGION', 'REGION_CODE', item.REGION_CODE);
+                this.deleteRecordByPK('TM_REGION', 'REGION_CODE', item.REGION_CODE);
             });
         }
 
@@ -731,12 +734,13 @@ class SyncScreen extends React.Component {
         if (data.ubah.length > 0 && allData.length > 0) {
             data.ubah.map(item => {
                 let indexData = R.findIndex(R.propEq('WERKS', item.WERKS))(allData);
-                TaskServices.updateEstate(item, indexData)
+                TaskServices.updateByPrimaryKey('TM_EST', item)
+                //TaskServices.updateEstate(item, indexData)
             })
         }
         if (data.hapus.length > 0 && allData.length > 0) {
             data.hapus.map(item => {
-                this.deleteData('TM_EST', 'WERKS', item.WERKS);
+                this.deleteRecordByPK('TM_EST', 'WERKS', item.WERKS);
             });
         }
 
@@ -763,12 +767,13 @@ class SyncScreen extends React.Component {
         if (data.ubah.length > 0 && allData.length > 0) {
             data.ubah.map(item => {
                 let indexData = R.findIndex(R.propEq('WERKS_AFD_BLOCK_CODE', item.WERKS_AFD_BLOCK_CODE))(allData);
+                TaskServices.updateByPrimaryKey('TM_LAND_USE', item)
                 TaskServices.updateLandUse(item, indexData)
             })
         }
         if (data.hapus.length > 0 && allData.length > 0) {
             data.hapus.map(item => {
-                this.deleteData('TM_LAND_USE', 'WERKS_AFD_BLOCK_CODE', item.WERKS_AFD_BLOCK_CODE);
+                this.deleteRecordByPK('TM_LAND_USE', 'WERKS_AFD_BLOCK_CODE', item.WERKS_AFD_BLOCK_CODE);
             });
         }
 
@@ -795,12 +800,13 @@ class SyncScreen extends React.Component {
         if (data.ubah.length > 0 && allData.length > 0) {
             data.ubah.map(item => {
                 let indexData = R.findIndex(R.propEq('COMP_CODE', item.COMP_CODE))(allData);
-                TaskServices.updateComp(item, indexData)
+                TaskServices.updateByPrimaryKey('TM_COMP',item)
+                //TaskServices.updateComp(item, indexData)
             })
         }
         if (data.hapus.length > 0 && allData.length > 0) {
             data.hapus.map(item => {
-                this.deleteData('TM_COMP', 'COMP_CODE', item.COMP_CODE);
+                this.deleteRecordByPK('TM_COMP', 'COMP_CODE', item.COMP_CODE);
             });
         }
 
@@ -918,6 +924,7 @@ class SyncScreen extends React.Component {
     }
 
     _crudTM_Finding(data) {
+		console.log(TaskServices.getPath())
         let allData = TaskServices.getAllData('TR_FINDING');
         if (data.simpan.length > 0) {
             for (var i = 1; i <= data.simpan.length; i++) {
@@ -932,15 +939,19 @@ class SyncScreen extends React.Component {
             let countDataInsert = TaskServices.getTotalData('TR_FINDING');
             this.setState({ progressFinding: 1, valueFindingDownload: countDataInsert, totalFindingDownload: 0 })
         }
+		console.log("_crudTM_Finding simpan",data.simpan);
+		console.log("_crudTM_Finding hapus",data.hapus);
         if (data.ubah.length > 0 && allData.length > 0) {
             data.ubah.map(item => {
+		console.log("_crudTM_Finding ubah",item);
                 let indexData = R.findIndex(R.propEq('FINDING_CODE', item.FINDING_CODE))(allData);
-                TaskServices.updateFindingDownload(item, indexData)
+                TaskServices.updateByPrimaryKey('TR_FINDING', item)
+                //TaskServices.updateFindingDownload(item, indexData)
             })
         }
         if (data.hapus.length > 0 && allData.length > 0) {
             data.hapus.map(item => {
-                this.deleteData('TR_FINDING', 'FINDING_CODE', item.FINDING_CODE);
+                this.deleteRecordByPK('TR_FINDING', 'FINDING_CODE', item.FINDING_CODE);
             });
         }
     }
@@ -1362,9 +1373,11 @@ class SyncScreen extends React.Component {
             this.props.resetParamTrack();
             return;
         }
+		console.log("cek update state",newProps.finding.fetchingFinding !== null && !newProps.finding.fetchingFinding);
         if (newProps.finding.fetchingFinding !== null && !newProps.finding.fetchingFinding) {
             let dataJSON = newProps.finding.finding;
             if (dataJSON !== null) {
+				console.log("masuk");
                 this._crudTM_Finding(dataJSON);
             }
             this.props.resetFinding()

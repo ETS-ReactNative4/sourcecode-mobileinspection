@@ -107,6 +107,11 @@ const TaskServices = {
       RealmSchemas.delete(result);
     });
   },
+  updateByPrimaryKey: function (table,param) {
+    RealmSchemas.write(() => {
+        RealmSchemas.create(table, param,true)
+    });
+  },
 
   updateLogin: function () {
     let data = RealmSchemas.objects('TR_LOGIN')[0];
