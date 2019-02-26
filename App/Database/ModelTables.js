@@ -188,7 +188,7 @@ const TR_FINDING = {
     name: 'TR_FINDING',
     primaryKey: 'FINDING_CODE',
     properties: {
-        FINDING_CODE: { type: 'string', optional: true },
+        FINDING_CODE: { type: 'string' },
         WERKS: { type: 'string', optional: true },
         AFD_CODE: { type: 'string', optional: true },
         BLOCK_CODE: 'string',

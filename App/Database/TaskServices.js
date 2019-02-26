@@ -8,7 +8,7 @@ const TaskServices = {
   },
 
   saveData: async function (table, obj) {
-    try {      
+    try {
       console.log('Save Data : ' + table + ' ' + JSON.stringify(obj));
       await RealmSchemas.write(() => {
         RealmSchemas.create(table, obj, true);
@@ -19,7 +19,7 @@ const TaskServices = {
   },
 
   insertSameObject: async function (table, obj) {
-    try {      
+    try {
       // var saved = null;
       console.log('Save Data : ' + table + ' ' + JSON.stringify(obj));
 
@@ -74,14 +74,14 @@ const TaskServices = {
   query: function (table, query) {
     let list = RealmSchemas.objects(table);
     return list.filtered(query);
-  },  
+  },
 
   deleteAllData: function (table) {
     RealmSchemas.write(() => {
       let data = RealmSchemas.objects(table);
       RealmSchemas.delete(data);
     })
-  },  
+  },
 
   deleteRecord: function (table, index) {
     RealmSchemas.write(() => {
@@ -89,14 +89,25 @@ const TaskServices = {
     });
   },
 
-  updateLogin: function(){
+  deleteRecordPrimaryKey: function (table, primary_key) {
+    console.log('Primary Key Finding Code : ' + JSON.stringify(primary_key))
+    let result = RealmSchemas.objects(table).find(row => {
+      // console.log('Row : ', row)
+      return row.FINDING_CODE == primary_key.FINDING_CODE
+    })
+    RealmSchemas.write(() => {
+      RealmSchemas.delete(result);
+    });
+  },
+
+  updateLogin: function () {
     let data = RealmSchemas.objects('TR_LOGIN')[0];
     RealmSchemas.write(() => {
       data.STATUS = 'LOGOUT';
     });
   },
 
-  updateAfdeling: function(param, index){
+  updateAfdeling: function (param, index) {
     let data = RealmSchemas.objects('TM_AFD')[index];
     RealmSchemas.write(() => {
       data.REGION_CODE = param.REGION_CODE;
@@ -108,7 +119,7 @@ const TaskServices = {
     });
   },
 
-  updateBlock: function(param, index){
+  updateBlock: function (param, index) {
     let data = RealmSchemas.objects('TM_BLOCK')[index];
     RealmSchemas.write(() => {
       data.REGION_CODE = param.REGION_CODE;
@@ -124,7 +135,7 @@ const TaskServices = {
     });
   },
 
-  updateRegion: function (param, index){
+  updateRegion: function (param, index) {
     let data = RealmSchemas.objects('TM_REGION')[index];
     RealmSchemas.write(() => {
       data.NATIONAL = param.NATIONAL;
@@ -132,7 +143,7 @@ const TaskServices = {
     });
   },
 
-  updateEstate: function(param, index){
+  updateEstate: function (param, index) {
     let data = RealmSchemas.objects('TM_EST')[index];
     RealmSchemas.write(() => {
       data.REGION_CODE = param.REGION_CODE;
@@ -143,7 +154,7 @@ const TaskServices = {
     });
   },
 
-  updateLandUse: function(param, index){
+  updateLandUse: function (param, index) {
     let data = RealmSchemas.objects('TM_LAND_USE')[index];
     RealmSchemas.write(() => {
       data.NATIONAL = param.NATIONAL;
@@ -151,17 +162,17 @@ const TaskServices = {
       data.COMP_CODE = param.COMP_CODE;
       data.WERKS = param.WERKS;
       data.SUB_BA_CODE = param.SUB_BA_CODE,
-      data.KEBUN_CODE = param.KEBUN_CODE,
-      data.AFD_CODE = param.AFD_CODE;
+        data.KEBUN_CODE = param.KEBUN_CODE,
+        data.AFD_CODE = param.AFD_CODE;
       data.AFD_NAME = param.AFD_NAME;
       data.WERKS_AFD_CODE = param.WERKS_AFD_CODE;
       data.BLOCK_CODE = param.BLOCK_CODE;
       data.BLOCK_NAME = param.BLOCK_NAME;
       data.LAND_USE_CODE = param.LAND_USE_CODE;
       data.LAND_USE_NAME = param.LAND_USE_NAME;
-      data.LAND_USE_CODE_GIS= param.LAND_USE_CODE_GIS;
+      data.LAND_USE_CODE_GIS = param.LAND_USE_CODE_GIS;
       data.SPMON = param.SPMON;
-      data.LAND_CAT= param.LAND_CAT;
+      data.LAND_CAT = param.LAND_CAT;
       data.LAND_CAT_L1_CODE = param.LAND_CAT_L1_CODE;
       data.LAND_CAT_L1 = param.LAND_CAT_L1;
       data.LAND_CAT_L2_CODE = param.LAND_CAT_L2_CODE;
@@ -177,7 +188,7 @@ const TaskServices = {
     });
   },
 
-  updateComp: function(param, index){
+  updateComp: function (param, index) {
     let data = RealmSchemas.objects('TM_COMP')[index];
     RealmSchemas.write(() => {
       data.NATIONAL = param.NATIONAL;
@@ -187,7 +198,7 @@ const TaskServices = {
     });
   },
 
-  updateContent: function(param, index){
+  updateContent: function (param, index) {
     let data = RealmSchemas.objects('TM_CONTENT')[index];
     RealmSchemas.write(() => {
       data.GROUP_CATEGORY = param.GROUP_CATEGORY;
@@ -199,7 +210,7 @@ const TaskServices = {
     });
   },
 
-  updateContact: function(param, index){
+  updateContact: function (param, index) {
     let data = RealmSchemas.objects('TR_CONTACT')[index];
     RealmSchemas.write(() => {
       data.EMPLOYEE_NIK = param.EMPLOYEE_NIK;
@@ -211,7 +222,7 @@ const TaskServices = {
     });
   },
 
-  updateFindingDownload: function(param, index){
+  updateFindingDownload: function (param, index) {
     let data = RealmSchemas.objects('TR_FINDING')[index];
     RealmSchemas.write(() => {
       data.WERKS = param.WERKS;
@@ -219,13 +230,13 @@ const TaskServices = {
       data.BLOCK_CODE = param.BLOCK_CODE;
       data.FINDING_CATEGORY = param.FINDING_CATEGORY;
       data.FINDING_DESC = param.FINDING_DESC;
-      data.FINDING_PRIORITY = param.FINDING_PRIORITY;      
+      data.FINDING_PRIORITY = param.FINDING_PRIORITY;
       data.DUE_DATE = param.DUE_DATE;
       data.STATUS = param.STATUS;
       data.ASSIGN_TO = param.ASSIGN_TO;
       data.PROGRESS = param.PROGRESS;
       data.LAT_FINDING = param.LAT_FINDING;
-      data.LONG_FINDING = param.LONG_FINDING;      
+      data.LONG_FINDING = param.LONG_FINDING;
       data.REFFERENCE_INS_CODE = param.REFFERENCE_INS_CODE;
       data.INSERT_USER = param.INSERT_USER;
       data.INSERT_TIME = param.INSERT_TIME;
@@ -233,7 +244,7 @@ const TaskServices = {
     });
   },
 
-  updateParamTrack: function(param, index){
+  updateParamTrack: function (param, index) {
     let data = RealmSchemas.objects('TM_TIME_TRACK')[index];
     RealmSchemas.write(() => {
       data.PARAMETER_GROUP = param.PARAMETER_GROUP;
@@ -242,8 +253,8 @@ const TaskServices = {
       data.NO_URUT = param.NO_URUT;
     });
   },
-  
-  updateFinding: function (table, param, index){
+
+  updateFinding: function (table, param, index) {
     let data = RealmSchemas.objects(table)[index];
     RealmSchemas.write(() => {
       data.STATUS = param[0];
@@ -253,7 +264,7 @@ const TaskServices = {
     });
   },
 
-  updateFindingSync: function (table, param, index){
+  updateFindingSync: function (table, param, index) {
     let data = RealmSchemas.objects(table)[index];
     alert(JSON.stringify(param))
     RealmSchemas.write(() => {
@@ -263,14 +274,14 @@ const TaskServices = {
     });
   },
 
-  updateInspeksiSync: function (table, param, index){
+  updateInspeksiSync: function (table, param, index) {
     let data = RealmSchemas.objects(table)[index];
     RealmSchemas.write(() => {
       data.STATUS_SYNC = param;
     });
   },
 
-  updateStatusImage: function (table, param, index){
+  updateStatusImage: function (table, param, index) {
     let data = RealmSchemas.objects(table)[index];
     RealmSchemas.write(() => {
       data.STATUS_SYNC = param;
@@ -285,7 +296,7 @@ const TaskServices = {
     });
   },
 
-  updateScoreInspeksi: function (param, index){
+  updateScoreInspeksi: function (param, index) {
     let data = RealmSchemas.objects('TR_BARIS_INSPECTION')[index];
     RealmSchemas.write(() => {
       data.INSPECTION_SCORE = param[0];

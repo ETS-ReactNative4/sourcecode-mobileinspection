@@ -148,22 +148,48 @@ class SyncScreen extends React.Component {
 
     _deleteFinding() {
         var data = TaskServices.query('TR_FINDING', `PROGRESS = '100' AND STATUS_SYNC = 'Y'`);
+        // var data = TaskServices.query('TR_FINDING', `PROGRESS < '100'`);
+        // var data = TaskServices.getAllData('TR_FINDING');
+        // console.log('Data Delete : ', data);
         var now = moment(new Date());
+        // console.log('Data  : ', data.length);
 
         if (data.length > 0) {
+            let arrFindingCode = [];
             for (var i = 0; i < data.length; i++) {
                 let dueDate = data[i].DUE_DATE;
+                // console.log('Due Date : ', dueDate);
 
                 if (dueDate.includes(' ')) {
                     dueDate = dueDate.substring(0, dueDate.indexOf(' '))
                 }
 
-                var diff = moment(new Date(dueDate)).diff(now, 'day');
+                // console.log('Data Index [i] : ', i)
+                // console.log('Data Finding Code [i] : ', data[i])
+                // this.deleteImage(data[i].FINDING_CODE);
 
-                if (diff < -7) {
-                    this.deleteImage(data[i]);
-                }
+                // arrFindingCode.push(data[i].FINDING_CODE);
+                // this.setState({ findingCode: arrFindingCode })
+                // TaskServices.deleteRecordPrimaryKey('TR_FINDING', data[i]); 
+
+
+                // this.deleteDataFinding('TR_FINDING', data[i].FINDING_CODE);
+                // var diff = moment(new Date(dueDate)).diff(now, 'day');
+
+                this.deleteImage(data[i]);
+                // if (diff > 1) {
+                //     // console.log('Data Finding Code [i] : ', data[i].FINDING_CODE) 
+                //     // this.deleteImage(item.FINDING_CODE);
+                //     this.deleteDataFinding('TR_FINDING', data[i].FINDING_CODE);
+                // }
             }
+
+            // console.log('FINDING CODE : ' + data[i].FINDING_CODE);
+
+            // this.deleteDataImage('TR_IMAGE', this.state.findingCode);
+
+            // this.deleteImage(data[i].FINDING_CODE);
+            // this.deleteData(data[i].FINDING_CODE);
         }
     }
 
@@ -190,8 +216,12 @@ class SyncScreen extends React.Component {
     }
 
     async deleteImage(FINDING_CODE) {
+        // console.log('FINDING CODE [i] : ', FINDING_CODE)
         let dataImage = TaskServices.findBy('TR_IMAGE', 'TR_CODE', FINDING_CODE.FINDING_CODE);
+        // console.log('Data Image Length : ' + dataImage.length)
+        // console.log('Data Image : ' + JSON.stringify(dataImage));
         if (dataImage != undefined) {
+            // console.log('Data Image : ', dataImage);
             this.deleteImageFile(dataImage, FINDING_CODE);
         }
     }
@@ -229,15 +259,20 @@ class SyncScreen extends React.Component {
 
     async deleteImageFile(image, FINDING_CODE) {
 
-        const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
-        for (let i = 0; i < image.length; i++) {
+        // console.log('Data Image : ', image)
+        console.log('Data FINDING_CODE : ', FINDING_CODE)
 
-            const PATH = `${FILE_PREFIX}${dirPhotoTemuan}/${image[i].IMAGE_NAME}`;
-            RNFS.exists(PATH)
+        const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
+        // let arr = [];
+        // arr.push(image);
+        for (let i = 0; i < image.length; i++) {
+            console.log('Image Name : ', image[i].IMAGE_NAME)
+            const path = `${FILE_PREFIX}${dirPhotoTemuan}/${image[i].IMAGE_NAME}`;
+            RNFS.exists(path)
                 .then((result) => {
                     console.log("File Exist : ", result);
                     if (result) {
-                        return RNFS.unlink(PATH)
+                        return RNFS.unlink(path)
                             .then(() => {
                                 console.log('FILE DELETED');
                                 // this.setState({ isDeleteImage: true });
@@ -247,6 +282,8 @@ class SyncScreen extends React.Component {
                             .catch((err) => {
                                 console.log(err.message);
                             });
+                    } else {
+                        this.setState({ isDeleteImage: true });
                     }
                 })
                 .catch((err) => {
@@ -1019,240 +1056,240 @@ class SyncScreen extends React.Component {
         this._deleteFinding();
 
         // Gani
-        this.props.resetFinding()
-        this.props.resetFindingImage();
-        this.props.resetBlock();
-        this.props.resetAfd();
-        this.props.resetRegion();
-        this.props.resetEst()
-        this.props.resetLandUse();
-        this.props.resetComp();
-        this.props.resetContent();
-        this.props.resetKriteria();
-        this.props.resetCategory();
-        this.props.resetContact()
-        this.props.resetParamTrack();
-        NetInfo.isConnected.fetch().then(isConnected => {
-            if (isConnected) {
-                this.setState({
+        //         this.props.resetFinding()
+        //         this.props.resetFindingImage();
+        //         this.props.resetBlock();
+        //         this.props.resetAfd();
+        //         this.props.resetRegion();
+        //         this.props.resetEst()
+        //         this.props.resetLandUse();
+        //         this.props.resetComp();
+        //         this.props.resetContent();
+        //         this.props.resetKriteria();
+        //         this.props.resetCategory();
+        //         this.props.resetContact()
+        //         this.props.resetParamTrack();
+        //         NetInfo.isConnected.fetch().then(isConnected => {
+        //             if (isConnected) {
+        //                 this.setState({
 
-                    progressFinding: 0,
-                    progressFindingImage: 0,
-                    progress: 0,
-                    progressAfd: 0,
-                    progressRegion: 0,
-                    progressEst: 0,
-                    progressLandUse: 0,
-                    progressComp: 0,
-                    progressContent: 0,
-                    progressContentLabel: 0,
-                    progressKriteria: 0,
-                    progressCategory: 0,
-                    progressContact: 0,
-                    progressInspectionTrack: 0,
-                    progressParamInspection: 0,
-                    progressInspeksiHeader: 0,
-                    progressInspeksiDetail: 0,
-                    progressFindingData: 0,
-                    progressUploadImage: 0,
+        //                     progressFinding: 0,
+        //                     progressFindingImage: 0,
+        //                     progress: 0,
+        //                     progressAfd: 0,
+        //                     progressRegion: 0,
+        //                     progressEst: 0,
+        //                     progressLandUse: 0,
+        //                     progressComp: 0,
+        //                     progressContent: 0,
+        //                     progressContentLabel: 0,
+        //                     progressKriteria: 0,
+        //                     progressCategory: 0,
+        //                     progressContact: 0,
+        //                     progressInspectionTrack: 0,
+        //                     progressParamInspection: 0,
+        //                     progressInspeksiHeader: 0,
+        //                     progressInspeksiDetail: 0,
+        //                     progressFindingData: 0,
+        //                     progressUploadImage: 0,
 
-                    valueDownload: '0',
-                    valueAfdDownload: '0',
-                    valueRegionDownload: '0',
-                    valueEstDownload: '0',
-                    valueCompDownload: '0',
-                    valueLandUseDownload: '0',
-                    valueContentDownload: '0',
-                    valueContentLabelDownload: '0',
-                    valueKriteriaDownload: '0',
-                    valueFindingDownload: '0',
-                    valueCategoryDownload: '0',
-                    valueContactDownload: '0',
-                    valueFindingImageDownload: '0',
-                    valueInspeksiHeaderUpload: '0',
-                    valueInspeksiDetailUpload: '0',
-                    valueFindingDataUpload: '0',
-                    valueImageUpload: '0',
-                    valueInspectionTrack: '0',
-                    valueParamInspection: '0',
+        //                     valueDownload: '0',
+        //                     valueAfdDownload: '0',
+        //                     valueRegionDownload: '0',
+        //                     valueEstDownload: '0',
+        //                     valueCompDownload: '0',
+        //                     valueLandUseDownload: '0',
+        //                     valueContentDownload: '0',
+        //                     valueContentLabelDownload: '0',
+        //                     valueKriteriaDownload: '0',
+        //                     valueFindingDownload: '0',
+        //                     valueCategoryDownload: '0',
+        //                     valueContactDownload: '0',
+        //                     valueFindingImageDownload: '0',
+        //                     valueInspeksiHeaderUpload: '0',
+        //                     valueInspeksiDetailUpload: '0',
+        //                     valueFindingDataUpload: '0',
+        //                     valueImageUpload: '0',
+        //                     valueInspectionTrack: '0',
+        //                     valueParamInspection: '0',
 
-                    totalDownload: '0',
-                    totalAfdDownload: '0',
-                    totalRegionDownload: '0',
-                    totalEstDownload: '0',
-                    totalCompDownload: '0',
-                    totalLandUseDownload: '0',
-                    totalContentDownload: '0',
-                    totalContentLabelDownload: '0',
-                    totalKriteriaDownload: '0',
-                    totalFindingDownload: '0',
-                    totalCategoryDownload: '0',
-                    totalContactDownload: '0',
+        //                     totalDownload: '0',
+        //                     totalAfdDownload: '0',
+        //                     totalRegionDownload: '0',
+        //                     totalEstDownload: '0',
+        //                     totalCompDownload: '0',
+        //                     totalLandUseDownload: '0',
+        //                     totalContentDownload: '0',
+        //                     totalContentLabelDownload: '0',
+        //                     totalKriteriaDownload: '0',
+        //                     totalFindingDownload: '0',
+        //                     totalCategoryDownload: '0',
+        //                     totalContactDownload: '0',
 
-                    totalInspeksiHeaderUpload: '0',
-                    totalInspeksiDetailUpload: '0',
-                    totalFindingDataUpload: '0',
-                    totalFindingImageDownload: '0',
-                    totalImagelUpload: '0',
-                    totalImagelUpload: '0',
-                    totalInspectionTrack: '0',
-                    totalParamInspection: '0',
+        //                     totalInspeksiHeaderUpload: '0',
+        //                     totalInspeksiDetailUpload: '0',
+        //                     totalFindingDataUpload: '0',
+        //                     totalFindingImageDownload: '0',
+        //                     totalImagelUpload: '0',
+        //                     totalImagelUpload: '0',
+        //                     totalInspectionTrack: '0',
+        //                     totalParamInspection: '0',
 
-                    fetchLocation: false,
-                    isBtnEnable: false,
+        //                     fetchLocation: false,
+        //                     isBtnEnable: false,
 
-                });
+        //                 });
 
-                this.props.resetFinding();
-                this.props.resetFindingImage();
-                this.props.resetBlock();
-                this.props.resetAfd();
-                this.props.resetRegion();
-                this.props.resetEst();
-                this.props.resetLandUse();
-                this.props.resetComp();
-                this.props.resetContent();
-                this.props.resetKriteria();
-                this.props.resetCategory();
-                this.props.resetContact();
-                this.props.resetParamTrack();
+        //                 this.props.resetFinding();
+        //                 this.props.resetFindingImage();
+        //                 this.props.resetBlock();
+        //                 this.props.resetAfd();
+        //                 this.props.resetRegion();
+        //                 this.props.resetEst();
+        //                 this.props.resetLandUse();
+        //                 this.props.resetComp();
+        //                 this.props.resetContent();
+        //                 this.props.resetKriteria();
+        //                 this.props.resetCategory();
+        //                 this.props.resetContact();
+        //                 this.props.resetParamTrack();
 
-                //POST TRANSAKSI
-                this.kirimImage();
-                this.loadDataFinding();
-                this.loadData();
-                this.loadDataDetailInspeksi();
-                this.loadDataInspectionTrack();
+        //                 //POST TRANSAKSI
+        //                 this.kirimImage();
+        //                 this.loadDataFinding();
+        //                 this.loadData();
+        //                 this.loadDataDetailInspeksi();
+        //                 this.loadDataInspectionTrack();
 
-                //cara biasa
-                // setTimeout(() => {            
-                // this.DownloadData(`${link}mobile-sync/finding`, 'finding');
-                // }, 2000);
+        //                 //cara biasa
+        //                 // setTimeout(() => {            
+        //                 // this.DownloadData(`${link}mobile-sync/finding`, 'finding');
+        //                 // }, 2000);
 
-                //cara redux saga
-                setTimeout(() => {
-                    this.props.findingRequest();
-                    this.props.blockRequest();
-                }, 2000);
+        //                 //cara redux saga
+        //                 setTimeout(() => {
+        //                     this.props.findingRequest();
+        //                     this.props.blockRequest();
+        //                 }, 2000);
 
-            } else {
-                this.setState({
-                    showButton: true,
-                    showModal: true,
-                    title: 'Tidak Ada Jaringan',
-                    message: 'Untuk bisa sync, kamu harus terhubung ke Internet',
-                    icon: require('../Images/ic-no-internet.png')
-                });
-            }
-        });
-        function handleFirstConnectivityChange(isConnected) {
-            console.log('Then, is ' + (isConnected ? 'online' : 'offline'));
-            NetInfo.isConnected.removeEventListener(
-                'connectionChange',
-                handleFirstConnectivityChange
-            );
-        }
-        NetInfo.isConnected.addEventListener(
-            'connectionChange',
-            handleFirstConnectivityChange
-        );
-    }
+        //             } else {
+        //                 this.setState({
+        //                     showButton: true,
+        //                     showModal: true,
+        //                     title: 'Tidak Ada Jaringan',
+        //                     message: 'Untuk bisa sync, kamu harus terhubung ke Internet',
+        //                     icon: require('../Images/ic-no-internet.png')
+        //                 });
+        //             }
+        //         });
+        //         function handleFirstConnectivityChange(isConnected) {
+        //             console.log('Then, is ' + (isConnected ? 'online' : 'offline'));
+        //             NetInfo.isConnected.removeEventListener(
+        //                 'connectionChange',
+        //                 handleFirstConnectivityChange
+        //             );
+        //         }
+        //         NetInfo.isConnected.addEventListener(
+        //             'connectionChange',
+        //             handleFirstConnectivityChange
+        //         );
+        //     }
 
-    DownloadData(URL, table) {
-        const user = TaskServices.getAllData('TR_LOGIN')[0];
-        fetch(URL, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${user.ACCESS_TOKEN}`
-            },
-        })
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                alert(JSON.stringify(data));
-                if (data.status) {
-                    let payload = data.data;
-                    if (table == 'finding') {
-                        this._crudTM_Finding(payload);
-                        this.DownloadData(`${link}mobile-sync/finding-images`, 'image');
-                    } else if (table == 'image') {
-                        this._crudTM_Finding_Image(payload);
-                        // this.DownloadData(`${link}mobile-sync/hectare-statement/block`, 'block');
-                    } else if (table == 'block') {
-                        this._crudTM_Block(payload);
-                        this.DownloadData(`${link}mobile-sync/hectare-statement/afdeling`, 'afd');
-                    } else if (table == 'afd') {
-                        this._crudTM_Afd(payload);
-                        this.DownloadData(`${link}mobile-sync/hectare-statement/region`, 'region');
-                    } else if (table == 'region') {
-                        this._crudTM_Region(payload);
-                        this.DownloadData(`${link}mobile-sync/hectare-statement/est`, 'est');
-                    } else if (table == 'est') {
-                        this._crudTM_Est(payload);
-                        this.DownloadData(`${link}mobile-sync/hectare-statement/land-use`, 'landuse');
-                    } else if (table == 'landuse') {
-                        this._crudTM_LandUse(payload);
-                        this.DownloadData(`${link}mobile-sync/hectare-statement/comp`, 'comp');
-                    } else if (table == 'comp') {
-                        this._crudTM_Comp(payload);
-                        this.DownloadData(`${link}content`, 'content');
-                    } else if (table == 'content') {
-                        this._crudTM_Content(payload);
-                        this.DownloadData(`${link}content-label`, 'contentlabel');
-                    } else if (table == 'contentlabel') {
-                        this._crudTM_ContentLabel(payload);
-                        this.DownloadData(`${link}kriteria`, 'kriteria');
-                    } else if (table == 'kriteria') {
-                        this._crudTM_Kriteria(payload);
-                        this.DownloadData(`${link}category`, 'catogory');
-                    } else if (table == 'catogory') {
-                        this._crudTM_Category(payload);
-                        this.DownloadData(`${link}contacts`, 'contact');
-                    } else if (table == 'contact') {
-                        this._crudTM_Contact(payload);
-                        this.DownloadData(`${link}parameter/track`, 'track');
-                    } else if (table == 'track') {
-                        this._crudTM_Inspeksi_Param(payload);
-                    }
-                } else {
-                    // alert('Gagal proses download ' + table);
-                    this.setState({
-                        showButton: true,
-                        showModal: true,
-                        title: 'Sync Putus',
-                        message: 'Yaaah jaringannya mati, coba Sync lagi yaa.',
-                        icon: require('../Images/ic-sync-gagal.png')
-                    });
-                }
-            })
-    }
+        //     DownloadData(URL, table) {
+        //         const user = TaskServices.getAllData('TR_LOGIN')[0];
+        //         fetch(URL, {
+        //             method: 'GET',
+        //             headers: {
+        //                 'Content-Type': 'application/json',
+        //                 'Authorization': `Bearer ${user.ACCESS_TOKEN}`
+        //             },
+        //         })
+        //             .then((response) => {
+        //                 return response.json();
+        //             })
+        //             .then((data) => {
+        //                 alert(JSON.stringify(data));
+        //                 if (data.status) {
+        //                     let payload = data.data;
+        //                     if (table == 'finding') {
+        //                         this._crudTM_Finding(payload);
+        //                         this.DownloadData(`${link}mobile-sync/finding-images`, 'image');
+        //                     } else if (table == 'image') {
+        //                         this._crudTM_Finding_Image(payload);
+        //                         // this.DownloadData(`${link}mobile-sync/hectare-statement/block`, 'block');
+        //                     } else if (table == 'block') {
+        //                         this._crudTM_Block(payload);
+        //                         this.DownloadData(`${link}mobile-sync/hectare-statement/afdeling`, 'afd');
+        //                     } else if (table == 'afd') {
+        //                         this._crudTM_Afd(payload);
+        //                         this.DownloadData(`${link}mobile-sync/hectare-statement/region`, 'region');
+        //                     } else if (table == 'region') {
+        //                         this._crudTM_Region(payload);
+        //                         this.DownloadData(`${link}mobile-sync/hectare-statement/est`, 'est');
+        //                     } else if (table == 'est') {
+        //                         this._crudTM_Est(payload);
+        //                         this.DownloadData(`${link}mobile-sync/hectare-statement/land-use`, 'landuse');
+        //                     } else if (table == 'landuse') {
+        //                         this._crudTM_LandUse(payload);
+        //                         this.DownloadData(`${link}mobile-sync/hectare-statement/comp`, 'comp');
+        //                     } else if (table == 'comp') {
+        //                         this._crudTM_Comp(payload);
+        //                         this.DownloadData(`${link}content`, 'content');
+        //                     } else if (table == 'content') {
+        //                         this._crudTM_Content(payload);
+        //                         this.DownloadData(`${link}content-label`, 'contentlabel');
+        //                     } else if (table == 'contentlabel') {
+        //                         this._crudTM_ContentLabel(payload);
+        //                         this.DownloadData(`${link}kriteria`, 'kriteria');
+        //                     } else if (table == 'kriteria') {
+        //                         this._crudTM_Kriteria(payload);
+        //                         this.DownloadData(`${link}category`, 'catogory');
+        //                     } else if (table == 'catogory') {
+        //                         this._crudTM_Category(payload);
+        //                         this.DownloadData(`${link}contacts`, 'contact');
+        //                     } else if (table == 'contact') {
+        //                         this._crudTM_Contact(payload);
+        //                         this.DownloadData(`${link}parameter/track`, 'track');
+        //                     } else if (table == 'track') {
+        //                         this._crudTM_Inspeksi_Param(payload);
+        //                     }
+        //                 } else {
+        //                     // alert('Gagal proses download ' + table);
+        //                     this.setState({
+        //                         showButton: true,
+        //                         showModal: true,
+        //                         title: 'Sync Putus',
+        //                         message: 'Yaaah jaringannya mati, coba Sync lagi yaa.',
+        //                         icon: require('../Images/ic-sync-gagal.png')
+        //                     });
+        //                 }
+        //             })
+        // }
 
-    fetchingMobileSync(param) {
-        var moment = require('moment');
-        const user = TaskServices.getAllData('TR_LOGIN')[0];
-        fetch('http://149.129.245.230:3008/api/mobile-sync', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${user.ACCESS_TOKEN}`
-            },
-            body: JSON.stringify({ TGL_MOBILE_SYNC: moment().format('YYYY-MM-DD kk:mm:ss'), TABEL_UPDATE: param })
-        })
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                // if(data.status){
-                //     if(param == 'finding'){
-                //         this.setState({ showButton: true });
-                //         alert('Sync Data Selesai')
-                //     }
-                // }else{
-                //     alert('Gagal proses log mobile '+param)
-                // }
-            })
+        // fetchingMobileSync(param) {
+        //     var moment = require('moment');
+        //     const user = TaskServices.getAllData('TR_LOGIN')[0];
+        //     fetch('http://149.129.245.230:3008/api/mobile-sync', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //             'Authorization': `Bearer ${user.ACCESS_TOKEN}`
+        //         },
+        //         body: JSON.stringify({ TGL_MOBILE_SYNC: moment().format('YYYY-MM-DD kk:mm:ss'), TABEL_UPDATE: param })
+        //     })
+        //         .then((response) => {
+        //             return response.json();
+        //         })
+        //         .then((data) => {
+        //             // if(data.status){
+        //             //     if(param == 'finding'){
+        //             //         this.setState({ showButton: true });
+        //             //         alert('Sync Data Selesai')
+        //             //     }
+        //             // }else{
+        //             //     alert('Gagal proses log mobile '+param)
+        //             // }
+        //         })
     }
 
     componentWillReceiveProps(newProps, newState) {
