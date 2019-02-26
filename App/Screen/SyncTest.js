@@ -26,14 +26,19 @@ import ParamTrackAction from '../Redux/ParamTrackRedux'
 import { ProgressDialog } from 'react-native-simple-dialogs';
 import { dirPhotoKategori, dirPhotoTemuan } from '../Lib/dirStorage';
 import { connect } from 'react-redux';
-import R from 'ramda'
+import R, { isEmpty, isNil } from 'ramda'
 import RNFetchBlob from 'rn-fetch-blob'
 import TaskServices from '../Database/TaskServices'
 import { getTodayDate, convertTimestampToDate } from '../Lib/Utils';
+var RNFS = require('react-native-fs');
+
+// import moment from 'moment';
+
+const link = 'http://149.129.245.230:3008/api/';
+const user = TaskServices.getAllData('TR_LOGIN')[0];
+
 import ModalAlert from '../Component/ModalAlert';
 
-var RNFS = require('react-native-fs');
-const link = 'http://149.129.245.230:3008/api/';
 const heightProgress = 5;
 const colorProgress = '#D5D5D5'
 
@@ -142,6 +147,7 @@ class SyncScreen extends React.Component {
     }
 
     _deleteFinding() {
+		this._deleteInspeksiHeader();
         var data = TaskServices.query('TR_FINDING', `PROGRESS = '100' AND STATUS_SYNC = 'Y'`);
         var now = moment(new Date());
 
@@ -166,7 +172,7 @@ class SyncScreen extends React.Component {
         var data = TaskServices.getAllData('TR_BLOCK_INSPECTION_H');
         var now = moment(new Date());
         if (data != undefined) {
-            for (var i = 0; i > data.length; i++) {
+            for (var i = 0; i < data.length; i++) {
                 if (data[i].INSERT_TIME !== '') {
                     let insertTime = data[i].INSERT_TIME;
                     if (insertTime.includes(' ')) {
@@ -174,42 +180,30 @@ class SyncScreen extends React.Component {
                     }
                     var diff = moment(new Date(insertTime)).diff(now, 'day');
                     if (diff < -7) {
-                        this.deleteImage(data[i].BLOCK_INSPECTION_CODE);
-                        this.deleteDetailInspeksi(data[i].BLOCK_INSPECTION_CODE)
-                        this.deleteData('TR_BLOCK_INSPECTION_H', 'BLOCK_INSPECTION_CODE', data[i].BLOCK_INSPECTION_CODE);
-                        this.deleteData('TR_BARIS_INSPECTION', 'ID_INSPECTION', data[i].ID_INSPECTION);
+                        this.deleteImageInspeksi(data[i].BLOCK_INSPECTION_CODE,data[i].ID_INSPECTION,
+							this.deleteImageFileInspeksi,this.deleteRecordByPK);
                     }
                 }
             }
         }
     }
 
+    async deleteImageInspeksi(INSPECTION_CODE,ID_INSPECTION,delImgFunc,delFunc) {
+        let dataImage = TaskServices.findBy('TR_IMAGE', 'TR_CODE', INSPECTION_CODE);
+        if (dataImage != undefined) {
+            delImgFunc(dataImage, INSPECTION_CODE,ID_INSPECTION,delFunc);
+        }
+    }
     async deleteImage(FINDING_CODE) {
         let dataImage = TaskServices.findBy('TR_IMAGE', 'TR_CODE', FINDING_CODE.FINDING_CODE);
         if (dataImage != undefined) {
             this.deleteImageFile(dataImage, FINDING_CODE);
         }
     }
-
-    deleteDetailInspeksi(blokInsCode) {
-        let data = TaskServices.findBy('TR_BLOCK_INSPECTION_D', 'BLOCK_INSPECTION_CODE', blokInsCode);
-        if (data !== undefined) {
-            data.map(item => {
-                this.deleteData('TR_BLOCK_INSPECTION_D', 'BLOCK_INSPECTION_CODE_D', item.BLOCK_INSPECTION_CODE_D);
-            });
-        }
+	
+    async deleteRecordByPK(table, whereClause, value) {
+		return TaskServices.deleteRecordByPK(table, whereClause, value);
     }
-
-    deleteDataFinding(table, value) {
-        console.log('Value : ' + value)
-        TaskServices.deleteRecordPrimaryKey(table, value)
-    }
-
-    deleteDataImage(table, value) {
-        console.log('Value : ' + value)
-        TaskServices.deleteRecordPrimaryKey(table, value)
-    }
-
     deleteData(table, whereClause, value) {
         console.log('Masuk Delete Data : ' + JSON.stringify(data))
         let allData = TaskServices.getAllData(table);
@@ -222,6 +216,33 @@ class SyncScreen extends React.Component {
         }
     }
 
+    async deleteImageFileInspeksi(image, INSPECTION_CODE,ID_INSPECTION,callback) {
+        const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
+        for (let i = 0; i < image.length; i++) {
+			
+            const PATH = `${FILE_PREFIX}${image[i].IMAGE_PATH_LOCAL}`;
+            RNFS.exists(PATH)
+                .then((result) => {
+                    console.log("File Exist : ", result);
+                    if (result) {
+                        return RNFS.unlink(PATH)
+                            .then(() => {
+                                console.log('FILE DELETED');
+								callback('TR_BLOCK_INSPECTION_D','BLOCK_INSPECTION_CODE', INSPECTION_CODE)
+								callback('TR_BLOCK_INSPECTION_H','BLOCK_INSPECTION_CODE', INSPECTION_CODE)
+								callback('TR_BARIS_INSPECTION','ID_INSPECTION', ID_INSPECTION)
+                            })
+                            // `unlink` will throw an error, if the item to unlink does not exist
+                            .catch((err) => {
+                                console.log(err.message);
+                            });
+                    }
+                })
+                .catch((err) => {
+                    console.log(err.message);
+                });
+        }
+    }
     async deleteImageFile(image, FINDING_CODE) {
 
         const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
