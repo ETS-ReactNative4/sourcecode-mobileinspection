@@ -26,19 +26,14 @@ import ParamTrackAction from '../Redux/ParamTrackRedux'
 import { ProgressDialog } from 'react-native-simple-dialogs';
 import { dirPhotoKategori, dirPhotoTemuan } from '../Lib/dirStorage';
 import { connect } from 'react-redux';
-import R, { isEmpty, isNil } from 'ramda'
+import R from 'ramda'
 import RNFetchBlob from 'rn-fetch-blob'
 import TaskServices from '../Database/TaskServices'
 import { getTodayDate, convertTimestampToDate } from '../Lib/Utils';
-var RNFS = require('react-native-fs');
-
-// import moment from 'moment';
-
-const link = 'http://149.129.245.230:3008/api/';
-const user = TaskServices.getAllData('TR_LOGIN')[0];
-
 import ModalAlert from '../Component/ModalAlert';
 
+var RNFS = require('react-native-fs');
+const link = 'http://149.129.245.230:3008/api/';
 const heightProgress = 5;
 const colorProgress = '#D5D5D5'
 
