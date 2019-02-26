@@ -88,6 +88,16 @@ const TaskServices = {
       RealmSchemas.delete(RealmSchemas.objects(table)[index]);
     });
   },
+  deleteRecordByPK: function (table,PK_NAME, primary_key) {
+    console.log('Primary Key Finding Code PK: ' + JSON.stringify(primary_key))
+    let result = RealmSchemas.objects(table).find(row => {
+      console.log('Row : ', row)
+      return row[PK_NAME] == primary_key
+    })
+    RealmSchemas.write(() => {
+      RealmSchemas.delete(result);
+    });
+  },
 
   deleteRecordPrimaryKey: function (table, primary_key) {
     console.log('Primary Key Finding Code : ' + JSON.stringify(primary_key))
