@@ -64,12 +64,12 @@ class BuatInspeksiRedesign extends Component {
         let blokInspeksiCode = `I${dataLogin[0].USER_AUTH_CODE}${getTodayDate('YYMMDDHHmmss')}`
 
         let params = props.navigation.state.params;
-        let testBlock = R.clone(params.block);
+        let werkAfdBlockCode = R.clone(params.werkAfdBlockCode);
         let latitude = R.clone(params.latitude);
         let longitude = R.clone(params.longitude);
         
         this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
-
+        
         this.state = {
             blokInspeksiCode,
             dataLogin,
@@ -92,7 +92,7 @@ class BuatInspeksiRedesign extends Component {
             clickLOV: false,
             intervalId: 0,
             showBtn: true,
-            testBlock,
+            werkAfdBlockCode,
             //Add Modal Alert by Aminju 
             title: 'Title',
             message: 'Message',
@@ -126,7 +126,7 @@ class BuatInspeksiRedesign extends Component {
     componentDidMount() {    
         BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
         this.props.navigation.setParams({ searchLocation: this.searchLocation })
-        this.loadDataBlock(this.state.testBlock)    
+        this.loadDataBlock(this.state.werkAfdBlockCode)    
         this.getLocation();
     }
 
@@ -171,8 +171,8 @@ class BuatInspeksiRedesign extends Component {
         });
     }
 
-    loadDataBlock(blockCode){
-        let data = TaskService.findBy2('TM_BLOCK', 'BLOCK_CODE', blockCode);
+    loadDataBlock(werkAfdBlockCode){
+        let data = TaskService.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', werkAfdBlockCode);
         if(data !== undefined){            
             let statusBlok= this.getStatusBlok(data.WERKS_AFD_BLOCK_CODE);
             let estateName = this.getEstateName(data.WERKS);

@@ -37,6 +37,7 @@ class MapsInspeksi extends React.Component {
           latitudeDelta:0.0075,
           longitudeDelta:0.00721
         },
+        poligons: [],
         fetchLocation: true,
         showModal: false,
         title: 'Sabar Ya..',
@@ -105,7 +106,7 @@ class MapsInspeksi extends React.Component {
             break;
         }
     } 
-    //ambil map sebelum index
+    //ambil map jika posisi index kurang dari 4
     if(index < 4){
       for(var j=0; j<index; j++){
         let coords = data[j];
@@ -117,8 +118,13 @@ class MapsInspeksi extends React.Component {
     //ambil map setelah index
     let lebih = this.totalPolygons()-index
     if(lebih > 4){
-      for(var j=0; j<4; j++){
-        let coords = data[j];
+      for(var j=1; j<4; j++){
+        let coords = data[index+j];
+        this.state.poligons.push(coords)
+        poligons.push(coords)
+      }
+      for(var j=1; j<4; j++){
+        let coords = data[index-j];
         this.state.poligons.push(coords)
         poligons.push(coords)
       }
@@ -129,7 +135,6 @@ class MapsInspeksi extends React.Component {
         poligons.push(coords)
       }
     }
-
     return poligons;
   }
 
@@ -144,12 +149,12 @@ class MapsInspeksi extends React.Component {
               latitudeDelta:0.0075,
               longitudeDelta:0.00721
             }   
-            // position = {
-            //   latitude: lat, longitude: lon
-            // }
-            // let poligons = this.getPolygons(position);
+            position = {
+              latitude: lat, longitude: lon
+            }
+            let poligons = this.getPolygons(position);
             this.map.animateToCoordinate(region, 1);
-            this.setState({latitude:lat, longitude:lon, fetchLocation: false, region});   
+            this.setState({latitude:lat, longitude:lon, fetchLocation: false, region, poligons});   
         },
         (error) => {
             let message = error && error.message ? error.message : 'Terjadi kesalahan ketika mencari lokasi anda !';
@@ -187,8 +192,8 @@ class MapsInspeksi extends React.Component {
     return color;
   }
 
-  onClickBlok(blockCode){
-    this.props.navigation.state.params.changeBlok(blockCode);
+  onClickBlok(werkAfdBlockCode){
+    this.props.navigation.state.params.changeBlok(werkAfdBlockCode);
     this.props.navigation.goBack();
   }
 
@@ -232,7 +237,8 @@ class MapsInspeksi extends React.Component {
           scrollEnabled={false}
           onMapReady={()=>this.onMapReady()}
           >
-          {skm.data.polygons.map((poly, index) => (
+          {/* {skm.data.polygons.map((poly, index) => ( */}
+          {this.state.poligons.length > 1 && this.state.poligons.map((poly, index) => (
             <View key={index}>
               <Polygon
                 coordinates={poly.coords}
@@ -240,7 +246,7 @@ class MapsInspeksi extends React.Component {
                 strokeColor="rgba(0,0,0,0.5)"
                 strokeWidth={2}
                 tappable={true}           
-                onPress={()=>this.onClickBlok(poly.blokcode)}
+                onPress={()=>this.onClickBlok(poly.werks_afd_block_code)}
               />
               <Marker
                 ref={ref => poly.marker = ref}
