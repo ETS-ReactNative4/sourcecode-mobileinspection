@@ -237,6 +237,11 @@ class SyncScreen extends React.Component {
                                 console.log(err.message);
                             });
                     }
+					else{
+						callback('TR_BLOCK_INSPECTION_D','BLOCK_INSPECTION_CODE', INSPECTION_CODE)
+						callback('TR_BLOCK_INSPECTION_H','BLOCK_INSPECTION_CODE', INSPECTION_CODE)
+						callback('TR_BARIS_INSPECTION','ID_INSPECTION', ID_INSPECTION)
+					}
                 })
                 .catch((err) => {
                     console.log(err.message);
@@ -252,6 +257,7 @@ class SyncScreen extends React.Component {
             RNFS.exists(PATH)
                 .then((result) => {
                     console.log("File Exist : ", result);
+					
                     if (result) {
                         return RNFS.unlink(PATH)
                             .then(() => {
@@ -264,6 +270,9 @@ class SyncScreen extends React.Component {
                                 console.log(err.message);
                             });
                     }
+					else{
+						TaskServices.deleteRecordPrimaryKey('TR_FINDING', FINDING_CODE)
+					}
                 })
                 .catch((err) => {
                     console.log(err.message);
@@ -427,6 +436,7 @@ class SyncScreen extends React.Component {
     }
 
     uploadData(URL, dataPost, table, idInspection) {
+		console.log("masuk uploadData",dataPost)
         const user = TaskServices.getAllData('TR_LOGIN')[0];
         fetch(URL, {
             method: 'POST',
@@ -440,7 +450,7 @@ class SyncScreen extends React.Component {
                 return response.json();
             })
             .then((data) => {
-                console.log(data)
+                console.log("upload data coy",data)
                 if (data.status) {
                     if (table == 'header') {
                         this.updateInspeksi(dataPost);
@@ -489,15 +499,21 @@ class SyncScreen extends React.Component {
     }
 
     updateFinding = param => {
-        if (param !== null) {
-            let allData = TaskServices.getAllData('TR_FINDING')
-            let indexData = R.findIndex(R.propEq('FINDING_CODE', param.FINDING_CODE))(allData);
-            TaskServices.updateInspeksiSync('TR_FINDING', 'Y', indexData);
+			console.log("masuk updateFinding coy",param)
+        if (param !== undefined) {
+			console.log("masuk updateFinding")
+            /*let allData = TaskServices.getAllData('TR_FINDING')
+            let indexData = R.findIndex(R.propEq('FINDING_CODE', param.FINDING_CODE))(allData);*/
+            TaskServices.updateByPrimaryKey('TR_FINDING', {
+				"FINDING_CODE":param.FINDING_CODE,
+				"STATUS_SYNC":"Y"
+			});
         }
     }
 
     //upload to service
     kirimInspeksiHeader(param) {
+		console.log("kirimInspeksiHeader");
         const user = TaskServices.getAllData('TR_LOGIN')[0];
         let data = {
             BLOCK_INSPECTION_CODE: param.BLOCK_INSPECTION_CODE,
@@ -553,9 +569,10 @@ class SyncScreen extends React.Component {
 
     kirimFinding(param) {
         let dueDate = param.DUE_DATE;
-        if (dueDate.includes(' ')) {
-            dueDate = dueDate.substring(0, dueDate.indexOf(' '))
-        }
+		if (dueDate.includes(' ')&&dueDate.length>0) {
+			dueDate = dueDate.substring(0, dueDate.indexOf(' '))
+			dueDate += " 00:00:00"
+		}
         let data = {
             FINDING_CODE: param.FINDING_CODE,
             WERKS: param.WERKS,
@@ -564,14 +581,14 @@ class SyncScreen extends React.Component {
             FINDING_CATEGORY: param.FINDING_CATEGORY,
             FINDING_DESC: param.FINDING_DESC,
             FINDING_PRIORITY: param.FINDING_PRIORITY,
-            DUE_DATE: `${dueDate} 00:00:00`,
+            DUE_DATE: dueDate,
             ASSIGN_TO: param.ASSIGN_TO,
             PROGRESS: param.PROGRESS.toString(),
             LAT_FINDING: param.LAT_FINDING,
             LONG_FINDING: param.LONG_FINDING,
             REFFERENCE_INS_CODE: param.REFFERENCE_INS_CODE,
             INSERT_USER: param.INSERT_USER,
-            INSERT_TIME: param.INSERT_TIME
+            INSERT_TIME: param.INSERT_TIME.toString()
         }
         this.uploadData('http://149.129.245.230:3008/api/finding', data, 'finding', '');
     }
@@ -926,11 +943,13 @@ class SyncScreen extends React.Component {
     _crudTM_Finding(data) {
 		console.log(TaskServices.getPath())
         let allData = TaskServices.getAllData('TR_FINDING');
+		console.log("_crudTM_Finding simpan all",data.simpan);
         if (data.simpan.length > 0) {
             for (var i = 1; i <= data.simpan.length; i++) {
                 this.setState({ progressFinding: i / data.simpan.length, totalFindingDownload: data.simpan.length });
             }
             data.simpan.map(item => {
+		console.log("_crudTM_Finding simpan item",item);
                 TaskServices.saveData('TR_FINDING', item);
                 let countDataInsert = TaskServices.getTotalData('TR_FINDING');
                 this.setState({ valueFindingDownload: countDataInsert });
@@ -939,7 +958,7 @@ class SyncScreen extends React.Component {
             let countDataInsert = TaskServices.getTotalData('TR_FINDING');
             this.setState({ progressFinding: 1, valueFindingDownload: countDataInsert, totalFindingDownload: 0 })
         }
-		console.log("_crudTM_Finding simpan",data.simpan);
+		console.log("_crudTM_Finding ubah all",data.ubah);
 		console.log("_crudTM_Finding hapus",data.hapus);
         if (data.ubah.length > 0 && allData.length > 0) {
             data.ubah.map(item => {
@@ -1202,6 +1221,7 @@ class SyncScreen extends React.Component {
                 if (data.status) {
                     let payload = data.data;
                     if (table == 'finding') {
+						console.log("DownloadData")
                         this._crudTM_Finding(payload);
                         this.DownloadData(`${link}mobile-sync/finding-images`, 'image');
                     } else if (table == 'image') {
@@ -1373,7 +1393,6 @@ class SyncScreen extends React.Component {
             this.props.resetParamTrack();
             return;
         }
-		console.log("cek update state",newProps.finding.fetchingFinding !== null && !newProps.finding.fetchingFinding);
         if (newProps.finding.fetchingFinding !== null && !newProps.finding.fetchingFinding) {
             let dataJSON = newProps.finding.finding;
             if (dataJSON !== null) {
