@@ -397,7 +397,8 @@
                     }
                 ],
                 "blokname": "B13",
-                "blokcode": "011"
+                "werks_afd_block_code": "4421A011",
+                "afd_code": "A"
             },
             {
                 "coords": [
@@ -815,7 +816,8 @@
                     }
                 ],
                 "blokname": "B14",
-                "blokcode": "012"
+                "werks_afd_block_code": "4421A012",
+                "afd_code": "A"
             },
             {
                 "coords": [
@@ -1629,7 +1631,8 @@
                     }
                 ],
                 "blokname": "B14",
-                "blokcode": "012"
+                "werks_afd_block_code": "4421A012",
+                "afd_code": "A"
             },
             {
                 "coords": [
@@ -2271,7 +2274,8 @@
                     }
                 ],
                 "blokname": "B15",
-                "blokcode": "013"
+                "werks_afd_block_code": "4421A013",
+                "afd_code": "A"
             },
             {
                 "coords": [
@@ -2837,7 +2841,8 @@
                     }
                 ],
                 "blokname": "B16",
-                "blokcode": "014"
+                "werks_afd_block_code": "4421A014",
+                "afd_code": "A"
             },
             {
                 "coords": [
@@ -2867,7 +2872,8 @@
                     }
                 ],
                 "blokname": "C02",
-                "blokcode": ""
+                "werks_afd_block_code": "4421A",
+                "afd_code": "A"
             },
             {
                 "coords": [
@@ -2925,7 +2931,8 @@
                     }
                 ],
                 "blokname": "C03",
-                "blokcode": ""
+                "werks_afd_block_code": "4421A",
+                "afd_code": "A"
             },
             {
                 "coords": [
@@ -3043,7 +3050,8 @@
                     }
                 ],
                 "blokname": "C04",
-                "blokcode": ""
+                "werks_afd_block_code": "4421A",
+                "afd_code": "A"
             },
             {
                 "coords": [
@@ -3245,7 +3253,8 @@
                     }
                 ],
                 "blokname": "C05",
-                "blokcode": "001"
+                "werks_afd_block_code": "4421A001",
+                "afd_code": "A"
             },
             {
                 "coords": [
@@ -3471,7 +3480,8 @@
                     }
                 ],
                 "blokname": "C06",
-                "blokcode": "002"
+                "werks_afd_block_code": "4421A002",
+                "afd_code": "A"
             },
             {
                 "coords": [
@@ -3745,7 +3755,8 @@
                     }
                 ],
                 "blokname": "C07",
-                "blokcode": "003"
+                "werks_afd_block_code": "4421A003",
+                "afd_code": "A"
             },
             {
                 "coords": [
@@ -3931,7 +3942,8 @@
                     }
                 ],
                 "blokname": "C08",
-                "blokcode": ""
+                "werks_afd_block_code": "4421A",
+                "afd_code": "A"
             },
             {
                 "coords": [
@@ -4033,7 +4045,8 @@
                     }
                 ],
                 "blokname": "C09",
-                "blokcode": ""
+                "werks_afd_block_code": "4421A",
+                "afd_code": "A"
             },
             {
                 "coords": [
@@ -4147,7 +4160,8 @@
                     }
                 ],
                 "blokname": "C10",
-                "blokcode": ""
+                "werks_afd_block_code": "4421A",
+                "afd_code": "A"
             },
             {
                 "coords": [
@@ -4217,7 +4231,8 @@
                     }
                 ],
                 "blokname": "C11",
-                "blokcode": ""
+                "werks_afd_block_code": "4421A",
+                "afd_code": "A"
             },
             {
                 "coords": [
@@ -4947,7 +4962,8 @@
                     }
                 ],
                 "blokname": "C15",
-                "blokcode": "004"
+                "werks_afd_block_code": "4421A004",
+                "afd_code": "A"
             },
             {
                 "coords": [
@@ -5521,7 +5537,8 @@
                     }
                 ],
                 "blokname": "C16",
-                "blokcode": "005"
+                "werks_afd_block_code": "4421A005",
+                "afd_code": "A"
             },
             {
                 "coords": [
@@ -6031,7 +6048,8 @@
                     }
                 ],
                 "blokname": "A17",
-                "blokcode": "020"
+                "werks_afd_block_code": "4421B020",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -6557,7 +6575,8 @@
                     }
                 ],
                 "blokname": "A18",
-                "blokcode": "021"
+                "werks_afd_block_code": "4421B021",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -7099,7 +7118,8 @@
                     }
                 ],
                 "blokname": "A19",
-                "blokcode": "022"
+                "werks_afd_block_code": "4421B022",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -7645,7 +7665,8 @@
                     }
                 ],
                 "blokname": "A20",
-                "blokcode": "023"
+                "werks_afd_block_code": "4421B023",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -8215,7 +8236,8 @@
                     }
                 ],
                 "blokname": "A21",
-                "blokcode": "024"
+                "werks_afd_block_code": "4421B024",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -8777,7 +8799,8 @@
                     }
                 ],
                 "blokname": "A22",
-                "blokcode": "025"
+                "werks_afd_block_code": "4421B025",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -9415,7 +9438,8 @@
                     }
                 ],
                 "blokname": "A23",
-                "blokcode": "026"
+                "werks_afd_block_code": "4421B026",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -10069,7 +10093,8 @@
                     }
                 ],
                 "blokname": "A24",
-                "blokcode": "027"
+                "werks_afd_block_code": "4421B027",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -10683,7 +10708,8 @@
                     }
                 ],
                 "blokname": "A25",
-                "blokcode": "028"
+                "werks_afd_block_code": "4421B028",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -11505,7 +11531,8 @@
                     }
                 ],
                 "blokname": "A26",
-                "blokcode": "029"
+                "werks_afd_block_code": "4421B029",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -12375,7 +12402,8 @@
                     }
                 ],
                 "blokname": "A27",
-                "blokcode": "030"
+                "werks_afd_block_code": "4421B030",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -13265,7 +13293,8 @@
                     }
                 ],
                 "blokname": "A28",
-                "blokcode": "031"
+                "werks_afd_block_code": "4421B031",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -14059,7 +14088,8 @@
                     }
                 ],
                 "blokname": "A29",
-                "blokcode": "032"
+                "werks_afd_block_code": "4421B032",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -14609,7 +14639,8 @@
                     }
                 ],
                 "blokname": "B17",
-                "blokcode": "033"
+                "werks_afd_block_code": "4421B033",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -15171,7 +15202,8 @@
                     }
                 ],
                 "blokname": "B18",
-                "blokcode": "034"
+                "werks_afd_block_code": "4421B034",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -15181,7 +15213,8 @@
                     }
                 ],
                 "blokname": "B19",
-                "blokcode": "035"
+                "werks_afd_block_code": "4421B035",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -15847,7 +15880,8 @@
                     }
                 ],
                 "blokname": "B19",
-                "blokcode": "035"
+                "werks_afd_block_code": "4421B035",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -16685,7 +16719,8 @@
                     }
                 ],
                 "blokname": "B20",
-                "blokcode": "036"
+                "werks_afd_block_code": "4421B036",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -16695,7 +16730,8 @@
                     }
                 ],
                 "blokname": "B21",
-                "blokcode": "102"
+                "werks_afd_block_code": "4421B102",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -16709,7 +16745,8 @@
                     }
                 ],
                 "blokname": "B21",
-                "blokcode": "102"
+                "werks_afd_block_code": "4421B102",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -17311,7 +17348,8 @@
                     }
                 ],
                 "blokname": "B21",
-                "blokcode": "102"
+                "werks_afd_block_code": "4421B102",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -17893,7 +17931,8 @@
                     }
                 ],
                 "blokname": "B22",
-                "blokcode": "099"
+                "werks_afd_block_code": "4421B099",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -18535,7 +18574,8 @@
                     }
                 ],
                 "blokname": "B23",
-                "blokcode": "037"
+                "werks_afd_block_code": "4421B037",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -19073,7 +19113,8 @@
                     }
                 ],
                 "blokname": "B24",
-                "blokcode": "100"
+                "werks_afd_block_code": "4421B100",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -19515,7 +19556,8 @@
                     }
                 ],
                 "blokname": "B25",
-                "blokcode": "103"
+                "werks_afd_block_code": "4421B103",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -19817,7 +19859,8 @@
                     }
                 ],
                 "blokname": "B26",
-                "blokcode": "104"
+                "werks_afd_block_code": "4421B104",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -19971,7 +20014,8 @@
                     }
                 ],
                 "blokname": "B27",
-                "blokcode": "105"
+                "werks_afd_block_code": "4421B105",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -20193,7 +20237,8 @@
                     }
                 ],
                 "blokname": "B28",
-                "blokcode": "106"
+                "werks_afd_block_code": "4421B106",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -20423,7 +20468,8 @@
                     }
                 ],
                 "blokname": "B29",
-                "blokcode": "169"
+                "werks_afd_block_code": "4421B169",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -20925,7 +20971,8 @@
                     }
                 ],
                 "blokname": "C17",
-                "blokcode": "108"
+                "werks_afd_block_code": "4421B108",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -20935,7 +20982,8 @@
                     }
                 ],
                 "blokname": "C18",
-                "blokcode": "038"
+                "werks_afd_block_code": "4421B038",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -20945,7 +20993,8 @@
                     }
                 ],
                 "blokname": "C18",
-                "blokcode": "038"
+                "werks_afd_block_code": "4421B038",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -21519,7 +21568,8 @@
                     }
                 ],
                 "blokname": "C18",
-                "blokcode": "038"
+                "werks_afd_block_code": "4421B038",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -22021,7 +22071,8 @@
                     }
                 ],
                 "blokname": "C19",
-                "blokcode": "109"
+                "werks_afd_block_code": "4421B109",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -22343,7 +22394,8 @@
                     }
                 ],
                 "blokname": "C20",
-                "blokcode": "110"
+                "werks_afd_block_code": "4421B110",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -22729,7 +22781,8 @@
                     }
                 ],
                 "blokname": "C21",
-                "blokcode": "111"
+                "werks_afd_block_code": "4421B111",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -23067,7 +23120,8 @@
                     }
                 ],
                 "blokname": "C22",
-                "blokcode": "112"
+                "werks_afd_block_code": "4421B112",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -23221,7 +23275,8 @@
                     }
                 ],
                 "blokname": "C23",
-                "blokcode": "107"
+                "werks_afd_block_code": "4421B107",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -23779,7 +23834,8 @@
                     }
                 ],
                 "blokname": "C24",
-                "blokcode": "114"
+                "werks_afd_block_code": "4421B114",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -24577,7 +24633,8 @@
                     }
                 ],
                 "blokname": "C25",
-                "blokcode": "039"
+                "werks_afd_block_code": "4421B039",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -24603,7 +24660,8 @@
                     }
                 ],
                 "blokname": "C26",
-                "blokcode": ""
+                "werks_afd_block_code": "4421B",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -25217,7 +25275,8 @@
                     }
                 ],
                 "blokname": "C26",
-                "blokcode": ""
+                "werks_afd_block_code": "4421B",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -25311,7 +25370,8 @@
                     }
                 ],
                 "blokname": "C27",
-                "blokcode": ""
+                "werks_afd_block_code": "4421B",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -25341,7 +25401,8 @@
                     }
                 ],
                 "blokname": "C28",
-                "blokcode": ""
+                "werks_afd_block_code": "4421B",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -25371,7 +25432,8 @@
                     }
                 ],
                 "blokname": "C29",
-                "blokcode": ""
+                "werks_afd_block_code": "4421B",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -25421,7 +25483,8 @@
                     }
                 ],
                 "blokname": "D13",
-                "blokcode": ""
+                "werks_afd_block_code": "4421B",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -25483,7 +25546,8 @@
                     }
                 ],
                 "blokname": "D13",
-                "blokcode": ""
+                "werks_afd_block_code": "4421B",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -25793,7 +25857,8 @@
                     }
                 ],
                 "blokname": "D13",
-                "blokcode": ""
+                "werks_afd_block_code": "4421B",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -26359,7 +26424,8 @@
                     }
                 ],
                 "blokname": "D14",
-                "blokcode": ""
+                "werks_afd_block_code": "4421B",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -26773,7 +26839,8 @@
                     }
                 ],
                 "blokname": "D16",
-                "blokcode": ""
+                "werks_afd_block_code": "4421B",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -27223,7 +27290,8 @@
                     }
                 ],
                 "blokname": "D17",
-                "blokcode": ""
+                "werks_afd_block_code": "4421B",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -27721,7 +27789,8 @@
                     }
                 ],
                 "blokname": "D18",
-                "blokcode": ""
+                "werks_afd_block_code": "4421B",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -28143,7 +28212,8 @@
                     }
                 ],
                 "blokname": "D18",
-                "blokcode": ""
+                "werks_afd_block_code": "4421B",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -28741,7 +28811,8 @@
                     }
                 ],
                 "blokname": "D19",
-                "blokcode": ""
+                "werks_afd_block_code": "4421B",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -29727,7 +29798,8 @@
                     }
                 ],
                 "blokname": "D25",
-                "blokcode": ""
+                "werks_afd_block_code": "4421B",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -30669,7 +30741,8 @@
                     }
                 ],
                 "blokname": "D26",
-                "blokcode": ""
+                "werks_afd_block_code": "4421B",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -30735,7 +30808,8 @@
                     }
                 ],
                 "blokname": "E13",
-                "blokcode": ""
+                "werks_afd_block_code": "4421B",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -30989,7 +31063,8 @@
                     }
                 ],
                 "blokname": "E13",
-                "blokcode": ""
+                "werks_afd_block_code": "4421B",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -31679,7 +31754,8 @@
                     }
                 ],
                 "blokname": "E14",
-                "blokcode": ""
+                "werks_afd_block_code": "4421B",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -32393,7 +32469,8 @@
                     }
                 ],
                 "blokname": "E15",
-                "blokcode": ""
+                "werks_afd_block_code": "4421B",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -32403,7 +32480,8 @@
                     }
                 ],
                 "blokname": "E16",
-                "blokcode": ""
+                "werks_afd_block_code": "4421B",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -33113,7 +33191,8 @@
                     }
                 ],
                 "blokname": "E16",
-                "blokcode": ""
+                "werks_afd_block_code": "4421B",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -33831,7 +33910,8 @@
                     }
                 ],
                 "blokname": "E17",
-                "blokcode": ""
+                "werks_afd_block_code": "4421B",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -34281,7 +34361,8 @@
                     }
                 ],
                 "blokname": "E18",
-                "blokcode": ""
+                "werks_afd_block_code": "4421B",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -34755,7 +34836,8 @@
                     }
                 ],
                 "blokname": "F14",
-                "blokcode": ""
+                "werks_afd_block_code": "4421B",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -35081,7 +35163,8 @@
                     }
                 ],
                 "blokname": "F15",
-                "blokcode": ""
+                "werks_afd_block_code": "4421B",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -35427,7 +35510,8 @@
                     }
                 ],
                 "blokname": "F16",
-                "blokcode": ""
+                "werks_afd_block_code": "4421B",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -35885,7 +35969,8 @@
                     }
                 ],
                 "blokname": "F17",
-                "blokcode": ""
+                "werks_afd_block_code": "4421B",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -35963,7 +36048,8 @@
                     }
                 ],
                 "blokname": "F18",
-                "blokcode": ""
+                "werks_afd_block_code": "4421B",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -36153,7 +36239,8 @@
                     }
                 ],
                 "blokname": "F18",
-                "blokcode": ""
+                "werks_afd_block_code": "4421B",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -36455,7 +36542,8 @@
                     }
                 ],
                 "blokname": "F18",
-                "blokcode": ""
+                "werks_afd_block_code": "4421B",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -36733,7 +36821,8 @@
                     }
                 ],
                 "blokname": "I14",
-                "blokcode": "040"
+                "werks_afd_block_code": "4421C040",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -36743,7 +36832,8 @@
                     }
                 ],
                 "blokname": "I15",
-                "blokcode": "041"
+                "werks_afd_block_code": "4421C041",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -37405,7 +37495,8 @@
                     }
                 ],
                 "blokname": "I15",
-                "blokcode": "041"
+                "werks_afd_block_code": "4421C041",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -38223,7 +38314,8 @@
                     }
                 ],
                 "blokname": "I16",
-                "blokcode": "042"
+                "werks_afd_block_code": "4421C042",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -38797,7 +38889,8 @@
                     }
                 ],
                 "blokname": "I17",
-                "blokcode": "043"
+                "werks_afd_block_code": "4421C043",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -39311,7 +39404,8 @@
                     }
                 ],
                 "blokname": "I18",
-                "blokcode": "044"
+                "werks_afd_block_code": "4421C044",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -39889,7 +39983,8 @@
                     }
                 ],
                 "blokname": "I20",
-                "blokcode": "046"
+                "werks_afd_block_code": "4421C046",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -40643,7 +40738,8 @@
                     }
                 ],
                 "blokname": "I21",
-                "blokcode": "047"
+                "werks_afd_block_code": "4421C047",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -41841,7 +41937,8 @@
                     }
                 ],
                 "blokname": "I22",
-                "blokcode": "048"
+                "werks_afd_block_code": "4421C048",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -42747,7 +42844,8 @@
                     }
                 ],
                 "blokname": "I24",
-                "blokcode": "050"
+                "werks_afd_block_code": "4421C050",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -43589,7 +43687,8 @@
                     }
                 ],
                 "blokname": "I25",
-                "blokcode": "051"
+                "werks_afd_block_code": "4421C051",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -44523,7 +44622,8 @@
                     }
                 ],
                 "blokname": "I26",
-                "blokcode": "052"
+                "werks_afd_block_code": "4421C052",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -44665,7 +44765,8 @@
                     }
                 ],
                 "blokname": "I27",
-                "blokcode": "053"
+                "werks_afd_block_code": "4421C053",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -45451,7 +45552,8 @@
                     }
                 ],
                 "blokname": "I27",
-                "blokcode": "053"
+                "werks_afd_block_code": "4421C053",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -45461,7 +45563,8 @@
                     }
                 ],
                 "blokname": "I28",
-                "blokcode": "054"
+                "werks_afd_block_code": "4421C054",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -46067,7 +46170,8 @@
                     }
                 ],
                 "blokname": "I28",
-                "blokcode": "054"
+                "werks_afd_block_code": "4421C054",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -46269,7 +46373,8 @@
                     }
                 ],
                 "blokname": "I29",
-                "blokcode": "166"
+                "werks_afd_block_code": "4421C166",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -47167,7 +47272,8 @@
                     }
                 ],
                 "blokname": "J16",
-                "blokcode": "055"
+                "werks_afd_block_code": "4421C055",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -48081,7 +48187,8 @@
                     }
                 ],
                 "blokname": "J17",
-                "blokcode": "056"
+                "werks_afd_block_code": "4421C056",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -48935,7 +49042,8 @@
                     }
                 ],
                 "blokname": "J18",
-                "blokcode": "057"
+                "werks_afd_block_code": "4421C057",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -49801,7 +49909,8 @@
                     }
                 ],
                 "blokname": "J19",
-                "blokcode": "058"
+                "werks_afd_block_code": "4421C058",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -50575,7 +50684,8 @@
                     }
                 ],
                 "blokname": "J20",
-                "blokcode": "059"
+                "werks_afd_block_code": "4421C059",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -51505,7 +51615,8 @@
                     }
                 ],
                 "blokname": "J21",
-                "blokcode": "060"
+                "werks_afd_block_code": "4421C060",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -52567,7 +52678,8 @@
                     }
                 ],
                 "blokname": "J22",
-                "blokcode": "061"
+                "werks_afd_block_code": "4421C061",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -53485,7 +53597,8 @@
                     }
                 ],
                 "blokname": "J23",
-                "blokcode": "062"
+                "werks_afd_block_code": "4421C062",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -54383,7 +54496,8 @@
                     }
                 ],
                 "blokname": "J24",
-                "blokcode": "063"
+                "werks_afd_block_code": "4421C063",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -55321,7 +55435,8 @@
                     }
                 ],
                 "blokname": "J25",
-                "blokcode": "064"
+                "werks_afd_block_code": "4421C064",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -56187,7 +56302,8 @@
                     }
                 ],
                 "blokname": "J26",
-                "blokcode": "065"
+                "werks_afd_block_code": "4421C065",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -56937,7 +57053,8 @@
                     }
                 ],
                 "blokname": "J27",
-                "blokcode": "066"
+                "werks_afd_block_code": "4421C066",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -57379,7 +57496,8 @@
                     }
                 ],
                 "blokname": "J28",
-                "blokcode": "067"
+                "werks_afd_block_code": "4421C067",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -57785,7 +57903,8 @@
                     }
                 ],
                 "blokname": "J29",
-                "blokcode": "124"
+                "werks_afd_block_code": "4421C124",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -58403,7 +58522,8 @@
                     }
                 ],
                 "blokname": "K18",
-                "blokcode": "068"
+                "werks_afd_block_code": "4421C068",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -59061,7 +59181,8 @@
                     }
                 ],
                 "blokname": "K19",
-                "blokcode": "069"
+                "werks_afd_block_code": "4421C069",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -59803,7 +59924,8 @@
                     }
                 ],
                 "blokname": "K20",
-                "blokcode": "070"
+                "werks_afd_block_code": "4421C070",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -60745,7 +60867,8 @@
                     }
                 ],
                 "blokname": "K21",
-                "blokcode": "071"
+                "werks_afd_block_code": "4421C071",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -61531,7 +61654,8 @@
                     }
                 ],
                 "blokname": "K22",
-                "blokcode": "072"
+                "werks_afd_block_code": "4421C072",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -62321,7 +62445,8 @@
                     }
                 ],
                 "blokname": "K23",
-                "blokcode": "073"
+                "werks_afd_block_code": "4421C073",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -63263,7 +63388,8 @@
                     }
                 ],
                 "blokname": "K25",
-                "blokcode": "075"
+                "werks_afd_block_code": "4421C075",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -64157,7 +64283,8 @@
                     }
                 ],
                 "blokname": "K26",
-                "blokcode": "076"
+                "werks_afd_block_code": "4421C076",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -64759,7 +64886,8 @@
                     }
                 ],
                 "blokname": "K28",
-                "blokcode": "122"
+                "werks_afd_block_code": "4421C122",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -65025,7 +65153,8 @@
                     }
                 ],
                 "blokname": "K29",
-                "blokcode": "123"
+                "werks_afd_block_code": "4421C123",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -66023,7 +66152,8 @@
                     }
                 ],
                 "blokname": "4421D",
-                "blokcode": ""
+                "werks_afd_block_code": "4421D",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -66053,7 +66183,8 @@
                     }
                 ],
                 "blokname": "L15",
-                "blokcode": ""
+                "werks_afd_block_code": "4421D",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -66235,7 +66366,8 @@
                     }
                 ],
                 "blokname": "L16",
-                "blokcode": ""
+                "werks_afd_block_code": "4421D",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -66833,7 +66965,8 @@
                     }
                 ],
                 "blokname": "L17",
-                "blokcode": "078"
+                "werks_afd_block_code": "4421D078",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -67571,7 +67704,8 @@
                     }
                 ],
                 "blokname": "L18",
-                "blokcode": "079"
+                "werks_afd_block_code": "4421D079",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -68237,7 +68371,8 @@
                     }
                 ],
                 "blokname": "L19",
-                "blokcode": "080"
+                "werks_afd_block_code": "4421D080",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -68975,7 +69110,8 @@
                     }
                 ],
                 "blokname": "L20",
-                "blokcode": "081"
+                "werks_afd_block_code": "4421D081",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -69825,7 +69961,8 @@
                     }
                 ],
                 "blokname": "L21",
-                "blokcode": "082"
+                "werks_afd_block_code": "4421D082",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -70499,7 +70636,8 @@
                     }
                 ],
                 "blokname": "L22",
-                "blokcode": "083"
+                "werks_afd_block_code": "4421D083",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -71173,7 +71311,8 @@
                     }
                 ],
                 "blokname": "L23",
-                "blokcode": "084"
+                "werks_afd_block_code": "4421D084",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -72279,7 +72418,8 @@
                     }
                 ],
                 "blokname": "L24",
-                "blokcode": "085"
+                "werks_afd_block_code": "4421D085",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -73101,7 +73241,8 @@
                     }
                 ],
                 "blokname": "L25",
-                "blokcode": "086"
+                "werks_afd_block_code": "4421D086",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -73559,7 +73700,8 @@
                     }
                 ],
                 "blokname": "L26",
-                "blokcode": "118"
+                "werks_afd_block_code": "4421D118",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -74177,7 +74319,8 @@
                     }
                 ],
                 "blokname": "L27",
-                "blokcode": "119"
+                "werks_afd_block_code": "4421D119",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -74299,7 +74442,8 @@
                     }
                 ],
                 "blokname": "L27",
-                "blokcode": "119"
+                "werks_afd_block_code": "4421D119",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -75033,7 +75177,8 @@
                     }
                 ],
                 "blokname": "L28",
-                "blokcode": "120"
+                "werks_afd_block_code": "4421D120",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -75331,7 +75476,8 @@
                     }
                 ],
                 "blokname": "M13",
-                "blokcode": "087"
+                "werks_afd_block_code": "4421D087",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -75769,7 +75915,8 @@
                     }
                 ],
                 "blokname": "M14",
-                "blokcode": "088"
+                "werks_afd_block_code": "4421D088",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -76247,7 +76394,8 @@
                     }
                 ],
                 "blokname": "M15",
-                "blokcode": "089"
+                "werks_afd_block_code": "4421D089",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -76797,7 +76945,8 @@
                     }
                 ],
                 "blokname": "M16",
-                "blokcode": "090"
+                "werks_afd_block_code": "4421D090",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -77211,7 +77360,8 @@
                     }
                 ],
                 "blokname": "M17",
-                "blokcode": "091"
+                "werks_afd_block_code": "4421D091",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -77565,7 +77715,8 @@
                     }
                 ],
                 "blokname": "M18",
-                "blokcode": "092"
+                "werks_afd_block_code": "4421D092",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -77967,7 +78118,8 @@
                     }
                 ],
                 "blokname": "M19",
-                "blokcode": "093"
+                "werks_afd_block_code": "4421D093",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -78429,7 +78581,8 @@
                     }
                 ],
                 "blokname": "M20",
-                "blokcode": "094"
+                "werks_afd_block_code": "4421D094",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -78887,7 +79040,8 @@
                     }
                 ],
                 "blokname": "M21",
-                "blokcode": "095"
+                "werks_afd_block_code": "4421D095",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -79381,7 +79535,8 @@
                     }
                 ],
                 "blokname": "M22",
-                "blokcode": "096"
+                "werks_afd_block_code": "4421D096",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -79711,7 +79866,8 @@
                     }
                 ],
                 "blokname": "M23",
-                "blokcode": "097"
+                "werks_afd_block_code": "4421D097",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -80105,7 +80261,8 @@
                     }
                 ],
                 "blokname": "M24",
-                "blokcode": "098"
+                "werks_afd_block_code": "4421D098",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -80115,7 +80272,8 @@
                     }
                 ],
                 "blokname": "M25",
-                "blokcode": "116"
+                "werks_afd_block_code": "4421D116",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -80321,7 +80479,8 @@
                     }
                 ],
                 "blokname": "M25",
-                "blokcode": "116"
+                "werks_afd_block_code": "4421D116",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -80599,7 +80758,8 @@
                     }
                 ],
                 "blokname": "M26",
-                "blokcode": "117"
+                "werks_afd_block_code": "4421D117",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -80869,7 +81029,8 @@
                     }
                 ],
                 "blokname": "M27",
-                "blokcode": ""
+                "werks_afd_block_code": "4421D",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -81087,7 +81248,8 @@
                     }
                 ],
                 "blokname": "M28",
-                "blokcode": ""
+                "werks_afd_block_code": "4421D",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -81245,7 +81407,8 @@
                     }
                 ],
                 "blokname": "M29",
-                "blokcode": ""
+                "werks_afd_block_code": "4421D",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -81279,7 +81442,8 @@
                     }
                 ],
                 "blokname": "N29",
-                "blokcode": ""
+                "werks_afd_block_code": "4421D",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -81313,7 +81477,8 @@
                     }
                 ],
                 "blokname": "O29",
-                "blokcode": ""
+                "werks_afd_block_code": "4421D",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -81463,7 +81628,8 @@
                     }
                 ],
                 "blokname": "4421E",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -81593,7 +81759,8 @@
                     }
                 ],
                 "blokname": "D27",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -81623,7 +81790,8 @@
                     }
                 ],
                 "blokname": "D28",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -81661,7 +81829,8 @@
                     }
                 ],
                 "blokname": "D29",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -81691,7 +81860,8 @@
                     }
                 ],
                 "blokname": "D30",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -81729,7 +81899,8 @@
                     }
                 ],
                 "blokname": "D31",
-                "blokcode": "182"
+                "werks_afd_block_code": "4421E182",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -81759,7 +81930,8 @@
                     }
                 ],
                 "blokname": "D32",
-                "blokcode": "183"
+                "werks_afd_block_code": "4421E183",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -81797,7 +81969,8 @@
                     }
                 ],
                 "blokname": "D33",
-                "blokcode": "184"
+                "werks_afd_block_code": "4421E184",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -81835,7 +82008,8 @@
                     }
                 ],
                 "blokname": "D34",
-                "blokcode": "185"
+                "werks_afd_block_code": "4421E185",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -81969,7 +82143,8 @@
                     }
                 ],
                 "blokname": "D35",
-                "blokcode": "186"
+                "werks_afd_block_code": "4421E186",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -82099,7 +82274,8 @@
                     }
                 ],
                 "blokname": "D36",
-                "blokcode": "187"
+                "werks_afd_block_code": "4421E187",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -82133,7 +82309,8 @@
                     }
                 ],
                 "blokname": "D37",
-                "blokcode": "188"
+                "werks_afd_block_code": "4421E188",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -82167,7 +82344,8 @@
                     }
                 ],
                 "blokname": "D38",
-                "blokcode": "189"
+                "werks_afd_block_code": "4421E189",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -82197,7 +82375,8 @@
                     }
                 ],
                 "blokname": "D39",
-                "blokcode": "190"
+                "werks_afd_block_code": "4421E190",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -82239,7 +82418,8 @@
                     }
                 ],
                 "blokname": "D40",
-                "blokcode": "191"
+                "werks_afd_block_code": "4421E191",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -82285,7 +82465,8 @@
                     }
                 ],
                 "blokname": "D41",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -82327,7 +82508,8 @@
                     }
                 ],
                 "blokname": "D42",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -82373,7 +82555,8 @@
                     }
                 ],
                 "blokname": "D43",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -82411,7 +82594,8 @@
                     }
                 ],
                 "blokname": "D44",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -82461,7 +82645,8 @@
                     }
                 ],
                 "blokname": "D45",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -82515,7 +82700,8 @@
                     }
                 ],
                 "blokname": "D46",
-                "blokcode": "164"
+                "werks_afd_block_code": "4421E164",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -82569,7 +82755,8 @@
                     }
                 ],
                 "blokname": "D47",
-                "blokcode": "165"
+                "werks_afd_block_code": "4421E165",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -82611,7 +82798,8 @@
                     }
                 ],
                 "blokname": "D48",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -82649,7 +82837,8 @@
                     }
                 ],
                 "blokname": "D49",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -82687,7 +82876,8 @@
                     }
                 ],
                 "blokname": "D50",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -82737,7 +82927,8 @@
                     }
                 ],
                 "blokname": "D51",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -82779,7 +82970,8 @@
                     }
                 ],
                 "blokname": "D52",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -82817,7 +83009,8 @@
                     }
                 ],
                 "blokname": "D53",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -82855,7 +83048,8 @@
                     }
                 ],
                 "blokname": "D54",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -82889,7 +83083,8 @@
                     }
                 ],
                 "blokname": "D55",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -82915,7 +83110,8 @@
                     }
                 ],
                 "blokname": "E43",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -82941,7 +83137,8 @@
                     }
                 ],
                 "blokname": "E44",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -82967,7 +83164,8 @@
                     }
                 ],
                 "blokname": "E45",
-                "blokcode": "196"
+                "werks_afd_block_code": "4421E196",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -82993,7 +83191,8 @@
                     }
                 ],
                 "blokname": "E46",
-                "blokcode": "162"
+                "werks_afd_block_code": "4421E162",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -83023,7 +83222,8 @@
                     }
                 ],
                 "blokname": "E47",
-                "blokcode": "163"
+                "werks_afd_block_code": "4421E163",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -83053,7 +83253,8 @@
                     }
                 ],
                 "blokname": "E48",
-                "blokcode": "197"
+                "werks_afd_block_code": "4421E197",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -83083,7 +83284,8 @@
                     }
                 ],
                 "blokname": "E49",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -83105,7 +83307,8 @@
                     }
                 ],
                 "blokname": "E50",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -83127,7 +83330,8 @@
                     }
                 ],
                 "blokname": "E51",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -83149,7 +83353,8 @@
                     }
                 ],
                 "blokname": "E52",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -83171,7 +83376,8 @@
                     }
                 ],
                 "blokname": "E53",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -83201,7 +83407,8 @@
                     }
                 ],
                 "blokname": "E54",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -83235,7 +83442,8 @@
                     }
                 ],
                 "blokname": "E55",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -83257,7 +83465,8 @@
                     }
                 ],
                 "blokname": "F43",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -83283,7 +83492,8 @@
                     }
                 ],
                 "blokname": "F44",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -83309,7 +83519,8 @@
                     }
                 ],
                 "blokname": "F45",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -83331,7 +83542,8 @@
                     }
                 ],
                 "blokname": "F46",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -83353,7 +83565,8 @@
                     }
                 ],
                 "blokname": "F47",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -83379,7 +83592,8 @@
                     }
                 ],
                 "blokname": "F48",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -83409,7 +83623,8 @@
                     }
                 ],
                 "blokname": "F49",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -83439,7 +83654,8 @@
                     }
                 ],
                 "blokname": "F50",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -83469,7 +83685,8 @@
                     }
                 ],
                 "blokname": "F51",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -83491,7 +83708,8 @@
                     }
                 ],
                 "blokname": "F52",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -83513,7 +83731,8 @@
                     }
                 ],
                 "blokname": "F53",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -83535,7 +83754,8 @@
                     }
                 ],
                 "blokname": "F54",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -83557,7 +83777,8 @@
                     }
                 ],
                 "blokname": "F55",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -83579,7 +83800,8 @@
                     }
                 ],
                 "blokname": "G49",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -83601,7 +83823,8 @@
                     }
                 ],
                 "blokname": "G50",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -83631,7 +83854,8 @@
                     }
                 ],
                 "blokname": "G51",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -83661,7 +83885,8 @@
                     }
                 ],
                 "blokname": "G52",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -83687,7 +83912,8 @@
                     }
                 ],
                 "blokname": "G53",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -83717,7 +83943,8 @@
                     }
                 ],
                 "blokname": "G54",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -83747,7 +83974,8 @@
                     }
                 ],
                 "blokname": "G55",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -84629,7 +84857,8 @@
                     }
                 ],
                 "blokname": "F27",
-                "blokcode": ""
+                "werks_afd_block_code": "4421F",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -85151,7 +85380,8 @@
                     }
                 ],
                 "blokname": "F28",
-                "blokcode": ""
+                "werks_afd_block_code": "4421F",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -85425,7 +85655,8 @@
                     }
                 ],
                 "blokname": "F29",
-                "blokcode": "125"
+                "werks_afd_block_code": "4421F125",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -85827,7 +86058,8 @@
                     }
                 ],
                 "blokname": "G26",
-                "blokcode": ""
+                "werks_afd_block_code": "4421F",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -85845,7 +86077,8 @@
                     }
                 ],
                 "blokname": "G27",
-                "blokcode": ""
+                "werks_afd_block_code": "4421F",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -86071,7 +86304,8 @@
                     }
                 ],
                 "blokname": "G27",
-                "blokcode": ""
+                "werks_afd_block_code": "4421F",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -86253,7 +86487,8 @@
                     }
                 ],
                 "blokname": "G28",
-                "blokcode": ""
+                "werks_afd_block_code": "4421F",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -86747,7 +86982,8 @@
                     }
                 ],
                 "blokname": "G29",
-                "blokcode": "144"
+                "werks_afd_block_code": "4421F144",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -86985,7 +87221,8 @@
                     }
                 ],
                 "blokname": "G30",
-                "blokcode": "145"
+                "werks_afd_block_code": "4433F145",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -86995,7 +87232,8 @@
                     }
                 ],
                 "blokname": "H22",
-                "blokcode": "167"
+                "werks_afd_block_code": "4421F167",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -87009,7 +87247,8 @@
                     }
                 ],
                 "blokname": "H22",
-                "blokcode": "167"
+                "werks_afd_block_code": "4421F167",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -87063,7 +87302,8 @@
                     }
                 ],
                 "blokname": "H22",
-                "blokcode": "167"
+                "werks_afd_block_code": "4421F167",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -87173,7 +87413,8 @@
                     }
                 ],
                 "blokname": "H22",
-                "blokcode": "167"
+                "werks_afd_block_code": "4421F167",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -87227,7 +87468,8 @@
                     }
                 ],
                 "blokname": "H22",
-                "blokcode": "167"
+                "werks_afd_block_code": "4421F167",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -87501,7 +87743,8 @@
                     }
                 ],
                 "blokname": "H22",
-                "blokcode": "167"
+                "werks_afd_block_code": "4421F167",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -88103,7 +88346,8 @@
                     }
                 ],
                 "blokname": "H23",
-                "blokcode": ""
+                "werks_afd_block_code": "4421F",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -88717,7 +88961,8 @@
                     }
                 ],
                 "blokname": "H24",
-                "blokcode": ""
+                "werks_afd_block_code": "4421F",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -89403,7 +89648,8 @@
                     }
                 ],
                 "blokname": "H25",
-                "blokcode": ""
+                "werks_afd_block_code": "4421F",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -90049,7 +90295,8 @@
                     }
                 ],
                 "blokname": "H26",
-                "blokcode": ""
+                "werks_afd_block_code": "4421F",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -90291,7 +90538,8 @@
                     }
                 ],
                 "blokname": "H27",
-                "blokcode": ""
+                "werks_afd_block_code": "4421F",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -90389,7 +90637,8 @@
                     }
                 ],
                 "blokname": "H28",
-                "blokcode": "142"
+                "werks_afd_block_code": "4421F142",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -90659,7 +90908,8 @@
                     }
                 ],
                 "blokname": "H28",
-                "blokcode": "142"
+                "werks_afd_block_code": "4421F142",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -90817,7 +91067,8 @@
                     }
                 ],
                 "blokname": "H29",
-                "blokcode": "143"
+                "werks_afd_block_code": "4421F143",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -91055,7 +91306,8 @@
                     }
                 ],
                 "blokname": "H30",
-                "blokcode": "168"
+                "werks_afd_block_code": "4421F168",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -91069,7 +91321,8 @@
                     }
                 ],
                 "blokname": "H31",
-                "blokcode": "146"
+                "werks_afd_block_code": "4421F146",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -91427,7 +91680,8 @@
                     }
                 ],
                 "blokname": "H31",
-                "blokcode": "146"
+                "werks_afd_block_code": "4421F146",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -91861,7 +92115,8 @@
                     }
                 ],
                 "blokname": "H32",
-                "blokcode": "147"
+                "werks_afd_block_code": "4421F147",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -92115,7 +92370,8 @@
                     }
                 ],
                 "blokname": "H37",
-                "blokcode": "152"
+                "werks_afd_block_code": "4421F152",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -92125,7 +92381,8 @@
                     }
                 ],
                 "blokname": "I30",
-                "blokcode": "126"
+                "werks_afd_block_code": "4421F126",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -92411,7 +92668,8 @@
                     }
                 ],
                 "blokname": "I30",
-                "blokcode": "126"
+                "werks_afd_block_code": "4421F126",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -92429,7 +92687,8 @@
                     }
                 ],
                 "blokname": "I31",
-                "blokcode": "127"
+                "werks_afd_block_code": "4421F127",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -92443,7 +92702,8 @@
                     }
                 ],
                 "blokname": "I31",
-                "blokcode": "127"
+                "werks_afd_block_code": "4421F127",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -92629,7 +92889,8 @@
                     }
                 ],
                 "blokname": "I31",
-                "blokcode": "127"
+                "werks_afd_block_code": "4421F127",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -92759,7 +93020,8 @@
                     }
                 ],
                 "blokname": "I32",
-                "blokcode": "128"
+                "werks_afd_block_code": "4421F128",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -92777,7 +93039,8 @@
                     }
                 ],
                 "blokname": "I33",
-                "blokcode": "129"
+                "werks_afd_block_code": "4421F129",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -92787,7 +93050,8 @@
                     }
                 ],
                 "blokname": "I33",
-                "blokcode": "129"
+                "werks_afd_block_code": "4421F129",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -92797,7 +93061,8 @@
                     }
                 ],
                 "blokname": "I33",
-                "blokcode": "129"
+                "werks_afd_block_code": "4421F129",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -92835,7 +93100,8 @@
                     }
                 ],
                 "blokname": "I33",
-                "blokcode": "129"
+                "werks_afd_block_code": "4421F129",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -93001,7 +93267,8 @@
                     }
                 ],
                 "blokname": "I33",
-                "blokcode": "129"
+                "werks_afd_block_code": "4421F129",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -93203,7 +93470,8 @@
                     }
                 ],
                 "blokname": "I34",
-                "blokcode": "130"
+                "werks_afd_block_code": "4421F130",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -93217,7 +93485,8 @@
                     }
                 ],
                 "blokname": "I35",
-                "blokcode": "131"
+                "werks_afd_block_code": "4421F131",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -93443,7 +93712,8 @@
                     }
                 ],
                 "blokname": "I35",
-                "blokcode": "131"
+                "werks_afd_block_code": "4421F131",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -93493,7 +93763,8 @@
                     }
                 ],
                 "blokname": "I36",
-                "blokcode": "132"
+                "werks_afd_block_code": "4421F132",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -93707,7 +93978,8 @@
                     }
                 ],
                 "blokname": "I36",
-                "blokcode": "132"
+                "werks_afd_block_code": "4421F132",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -93805,7 +94077,8 @@
                     }
                 ],
                 "blokname": "I37",
-                "blokcode": "133"
+                "werks_afd_block_code": "4421F133",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -93831,7 +94104,8 @@
                     }
                 ],
                 "blokname": "I38",
-                "blokcode": "134"
+                "werks_afd_block_code": "4421F134",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -93853,7 +94127,8 @@
                     }
                 ],
                 "blokname": "I39",
-                "blokcode": "135"
+                "werks_afd_block_code": "4421F135",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -93875,7 +94150,8 @@
                     }
                 ],
                 "blokname": "I40",
-                "blokcode": "136"
+                "werks_afd_block_code": "4421F136",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -93897,7 +94173,8 @@
                     }
                 ],
                 "blokname": "I41",
-                "blokcode": "137"
+                "werks_afd_block_code": "4421F137",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -93919,7 +94196,8 @@
                     }
                 ],
                 "blokname": "I42",
-                "blokcode": "138"
+                "werks_afd_block_code": "4421F138",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -93941,7 +94219,8 @@
                     }
                 ],
                 "blokname": "I43",
-                "blokcode": "139"
+                "werks_afd_block_code": "4421F139",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -93963,7 +94242,8 @@
                     }
                 ],
                 "blokname": "I44",
-                "blokcode": "140"
+                "werks_afd_block_code": "4421F140",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -93985,7 +94265,8 @@
                     }
                 ],
                 "blokname": "I45",
-                "blokcode": "141"
+                "werks_afd_block_code": "4421F141",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -94007,7 +94288,8 @@
                     }
                 ],
                 "blokname": "I46",
-                "blokcode": "175"
+                "werks_afd_block_code": "4421F175",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -94029,7 +94311,8 @@
                     }
                 ],
                 "blokname": "I47",
-                "blokcode": "180"
+                "werks_afd_block_code": "4421F180",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -94055,7 +94338,8 @@
                     }
                 ],
                 "blokname": "I48",
-                "blokcode": "181"
+                "werks_afd_block_code": "4421F181",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -94085,7 +94369,8 @@
                     }
                 ],
                 "blokname": "I49",
-                "blokcode": "192"
+                "werks_afd_block_code": "4421F192",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -94119,7 +94404,8 @@
                     }
                 ],
                 "blokname": "I50",
-                "blokcode": "193"
+                "werks_afd_block_code": "4421F193",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -94149,7 +94435,8 @@
                     }
                 ],
                 "blokname": "I51",
-                "blokcode": "194"
+                "werks_afd_block_code": "4421F194",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -94175,7 +94462,8 @@
                     }
                 ],
                 "blokname": "I53",
-                "blokcode": ""
+                "werks_afd_block_code": "4421F",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -94197,7 +94485,8 @@
                     }
                 ],
                 "blokname": "I54",
-                "blokcode": ""
+                "werks_afd_block_code": "4421F",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -94219,7 +94508,8 @@
                     }
                 ],
                 "blokname": "I55",
-                "blokcode": ""
+                "werks_afd_block_code": "4421F",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -94377,7 +94667,8 @@
                     }
                 ],
                 "blokname": "4421G",
-                "blokcode": ""
+                "werks_afd_block_code": "4421G",
+                "afd_code": "G"
             },
             {
                 "coords": [
@@ -94483,7 +94774,8 @@
                     }
                 ],
                 "blokname": "4421G",
-                "blokcode": ""
+                "werks_afd_block_code": "4421G",
+                "afd_code": "G"
             },
             {
                 "coords": [
@@ -94517,7 +94809,8 @@
                     }
                 ],
                 "blokname": "D03",
-                "blokcode": ""
+                "werks_afd_block_code": "4421G",
+                "afd_code": "G"
             },
             {
                 "coords": [
@@ -94543,7 +94836,8 @@
                     }
                 ],
                 "blokname": "D04",
-                "blokcode": ""
+                "werks_afd_block_code": "4421G",
+                "afd_code": "G"
             },
             {
                 "coords": [
@@ -94569,7 +94863,8 @@
                     }
                 ],
                 "blokname": "D05",
-                "blokcode": ""
+                "werks_afd_block_code": "4421G",
+                "afd_code": "G"
             },
             {
                 "coords": [
@@ -94599,7 +94894,8 @@
                     }
                 ],
                 "blokname": "D06",
-                "blokcode": ""
+                "werks_afd_block_code": "4421G",
+                "afd_code": "G"
             },
             {
                 "coords": [
@@ -94629,7 +94925,8 @@
                     }
                 ],
                 "blokname": "D07",
-                "blokcode": ""
+                "werks_afd_block_code": "4421G",
+                "afd_code": "G"
             },
             {
                 "coords": [
@@ -94659,7 +94956,8 @@
                     }
                 ],
                 "blokname": "D08",
-                "blokcode": ""
+                "werks_afd_block_code": "4421G",
+                "afd_code": "G"
             },
             {
                 "coords": [
@@ -94693,7 +94991,8 @@
                     }
                 ],
                 "blokname": "D09",
-                "blokcode": ""
+                "werks_afd_block_code": "4421G",
+                "afd_code": "G"
             },
             {
                 "coords": [
@@ -94727,7 +95026,8 @@
                     }
                 ],
                 "blokname": "D10",
-                "blokcode": ""
+                "werks_afd_block_code": "4421G",
+                "afd_code": "G"
             },
             {
                 "coords": [
@@ -94777,7 +95077,8 @@
                     }
                 ],
                 "blokname": "D11",
-                "blokcode": ""
+                "werks_afd_block_code": "4421G",
+                "afd_code": "G"
             },
             {
                 "coords": [
@@ -94811,7 +95112,8 @@
                     }
                 ],
                 "blokname": "E02",
-                "blokcode": ""
+                "werks_afd_block_code": "4421G",
+                "afd_code": "G"
             },
             {
                 "coords": [
@@ -94857,7 +95159,8 @@
                     }
                 ],
                 "blokname": "E03",
-                "blokcode": ""
+                "werks_afd_block_code": "4421G",
+                "afd_code": "G"
             },
             {
                 "coords": [
@@ -94887,7 +95190,8 @@
                     }
                 ],
                 "blokname": "E04",
-                "blokcode": ""
+                "werks_afd_block_code": "4421G",
+                "afd_code": "G"
             },
             {
                 "coords": [
@@ -94925,7 +95229,8 @@
                     }
                 ],
                 "blokname": "E05",
-                "blokcode": ""
+                "werks_afd_block_code": "4421G",
+                "afd_code": "G"
             },
             {
                 "coords": [
@@ -94963,7 +95268,8 @@
                     }
                 ],
                 "blokname": "E06",
-                "blokcode": ""
+                "werks_afd_block_code": "4421G",
+                "afd_code": "G"
             },
             {
                 "coords": [
@@ -94989,7 +95295,8 @@
                     }
                 ],
                 "blokname": "E07",
-                "blokcode": ""
+                "werks_afd_block_code": "4421G",
+                "afd_code": "G"
             },
             {
                 "coords": [
@@ -95015,7 +95322,8 @@
                     }
                 ],
                 "blokname": "E08",
-                "blokcode": ""
+                "werks_afd_block_code": "4421G",
+                "afd_code": "G"
             },
             {
                 "coords": [
@@ -95041,7 +95349,8 @@
                     }
                 ],
                 "blokname": "E09",
-                "blokcode": ""
+                "werks_afd_block_code": "4421G",
+                "afd_code": "G"
             },
             {
                 "coords": [
@@ -95135,7 +95444,8 @@
                     }
                 ],
                 "blokname": "E10",
-                "blokcode": ""
+                "werks_afd_block_code": "4421G",
+                "afd_code": "G"
             },
             {
                 "coords": [
@@ -95233,7 +95543,8 @@
                     }
                 ],
                 "blokname": "E11",
-                "blokcode": ""
+                "werks_afd_block_code": "4421G",
+                "afd_code": "G"
             },
             {
                 "coords": [
@@ -95275,7 +95586,8 @@
                     }
                 ],
                 "blokname": "F01",
-                "blokcode": ""
+                "werks_afd_block_code": "4421G",
+                "afd_code": "G"
             },
             {
                 "coords": [
@@ -95309,7 +95621,8 @@
                     }
                 ],
                 "blokname": "F02",
-                "blokcode": ""
+                "werks_afd_block_code": "4421G",
+                "afd_code": "G"
             },
             {
                 "coords": [
@@ -95339,7 +95652,8 @@
                     }
                 ],
                 "blokname": "F03",
-                "blokcode": ""
+                "werks_afd_block_code": "4421G",
+                "afd_code": "G"
             },
             {
                 "coords": [
@@ -95365,7 +95679,8 @@
                     }
                 ],
                 "blokname": "F04",
-                "blokcode": ""
+                "werks_afd_block_code": "4421G",
+                "afd_code": "G"
             },
             {
                 "coords": [
@@ -95391,7 +95706,8 @@
                     }
                 ],
                 "blokname": "F05",
-                "blokcode": ""
+                "werks_afd_block_code": "4421G",
+                "afd_code": "G"
             },
             {
                 "coords": [
@@ -95421,7 +95737,8 @@
                     }
                 ],
                 "blokname": "F06",
-                "blokcode": ""
+                "werks_afd_block_code": "4421G",
+                "afd_code": "G"
             },
             {
                 "coords": [
@@ -95467,7 +95784,8 @@
                     }
                 ],
                 "blokname": "F07",
-                "blokcode": ""
+                "werks_afd_block_code": "4421G",
+                "afd_code": "G"
             },
             {
                 "coords": [
@@ -95521,7 +95839,8 @@
                     }
                 ],
                 "blokname": "F08",
-                "blokcode": ""
+                "werks_afd_block_code": "4421G",
+                "afd_code": "G"
             },
             {
                 "coords": [
@@ -95575,7 +95894,8 @@
                     }
                 ],
                 "blokname": "F09",
-                "blokcode": ""
+                "werks_afd_block_code": "4421G",
+                "afd_code": "G"
             },
             {
                 "coords": [
@@ -95637,7 +95957,8 @@
                     }
                 ],
                 "blokname": "F10",
-                "blokcode": ""
+                "werks_afd_block_code": "4421G",
+                "afd_code": "G"
             },
             {
                 "coords": [
@@ -95683,7 +96004,8 @@
                     }
                 ],
                 "blokname": "F11",
-                "blokcode": ""
+                "werks_afd_block_code": "4421G",
+                "afd_code": "G"
             },
             {
                 "coords": [
@@ -95705,7 +96027,8 @@
                     }
                 ],
                 "blokname": "4421H",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -95743,7 +96066,8 @@
                     }
                 ],
                 "blokname": "4421H",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -95845,7 +96169,8 @@
                     }
                 ],
                 "blokname": "4421H",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -95883,7 +96208,8 @@
                     }
                 ],
                 "blokname": "G01",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -95925,7 +96251,8 @@
                     }
                 ],
                 "blokname": "G02",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -95967,7 +96294,8 @@
                     }
                 ],
                 "blokname": "G03",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -96009,7 +96337,8 @@
                     }
                 ],
                 "blokname": "G04",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -96051,7 +96380,8 @@
                     }
                 ],
                 "blokname": "G05",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -96093,7 +96423,8 @@
                     }
                 ],
                 "blokname": "G06",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -96135,7 +96466,8 @@
                     }
                 ],
                 "blokname": "G07",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -96165,7 +96497,8 @@
                     }
                 ],
                 "blokname": "G08",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -96191,7 +96524,8 @@
                     }
                 ],
                 "blokname": "G09",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -96213,7 +96547,8 @@
                     }
                 ],
                 "blokname": "G10",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -96243,7 +96578,8 @@
                     }
                 ],
                 "blokname": "G11",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -96265,7 +96601,8 @@
                     }
                 ],
                 "blokname": "H01",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -96287,7 +96624,8 @@
                     }
                 ],
                 "blokname": "H02",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -96313,7 +96651,8 @@
                     }
                 ],
                 "blokname": "H03",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -96335,7 +96674,8 @@
                     }
                 ],
                 "blokname": "H04",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -96357,7 +96697,8 @@
                     }
                 ],
                 "blokname": "H05",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -96383,7 +96724,8 @@
                     }
                 ],
                 "blokname": "H06",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -96405,7 +96747,8 @@
                     }
                 ],
                 "blokname": "H07",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -96427,7 +96770,8 @@
                     }
                 ],
                 "blokname": "H08",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -96449,7 +96793,8 @@
                     }
                 ],
                 "blokname": "H09",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -96475,7 +96820,8 @@
                     }
                 ],
                 "blokname": "H10",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -96501,7 +96847,8 @@
                     }
                 ],
                 "blokname": "H11",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -96523,7 +96870,8 @@
                     }
                 ],
                 "blokname": "I01",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -96549,7 +96897,8 @@
                     }
                 ],
                 "blokname": "I02",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -96575,7 +96924,8 @@
                     }
                 ],
                 "blokname": "I03",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -96597,7 +96947,8 @@
                     }
                 ],
                 "blokname": "I04",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -96619,7 +96970,8 @@
                     }
                 ],
                 "blokname": "I05",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -96645,7 +96997,8 @@
                     }
                 ],
                 "blokname": "I06",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -96679,7 +97032,8 @@
                     }
                 ],
                 "blokname": "I07",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -96701,7 +97055,8 @@
                     }
                 ],
                 "blokname": "I08",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -96727,7 +97082,8 @@
                     }
                 ],
                 "blokname": "I09",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -96745,7 +97101,8 @@
                     }
                 ],
                 "blokname": "I10",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -96767,7 +97124,8 @@
                     }
                 ],
                 "blokname": "J02",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -96789,7 +97147,8 @@
                     }
                 ],
                 "blokname": "J03",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -96819,7 +97178,8 @@
                     }
                 ],
                 "blokname": "J04",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -96841,7 +97201,8 @@
                     }
                 ],
                 "blokname": "J05",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -96867,7 +97228,8 @@
                     }
                 ],
                 "blokname": "J06",
-                "blokcode": ""
+                "werks_afd_block_code": "4421H",
+                "afd_code": "H"
             },
             {
                 "coords": [
@@ -96977,7 +97339,8 @@
                     }
                 ],
                 "blokname": "X",
-                "blokcode": ""
+                "werks_afd_block_code": "4422",
+                "afd_code": ""
             },
             {
                 "coords": [
@@ -97091,7 +97454,8 @@
                     }
                 ],
                 "blokname": "X",
-                "blokcode": ""
+                "werks_afd_block_code": "4422",
+                "afd_code": ""
             },
             {
                 "coords": [
@@ -97121,7 +97485,8 @@
                     }
                 ],
                 "blokname": "E31",
-                "blokcode": "011"
+                "werks_afd_block_code": "4433E011",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -97147,7 +97512,8 @@
                     }
                 ],
                 "blokname": "E33",
-                "blokcode": "013"
+                "werks_afd_block_code": "4433E013",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -97177,7 +97543,8 @@
                     }
                 ],
                 "blokname": "E40",
-                "blokcode": "020"
+                "werks_afd_block_code": "4433E020",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -97223,7 +97590,8 @@
                     }
                 ],
                 "blokname": "E49",
-                "blokcode": "019"
+                "werks_afd_block_code": "4433E019",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -97261,7 +97629,8 @@
                     }
                 ],
                 "blokname": "E38",
-                "blokcode": "018"
+                "werks_afd_block_code": "4433E018",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -97303,7 +97672,8 @@
                     }
                 ],
                 "blokname": "E37",
-                "blokcode": "017"
+                "werks_afd_block_code": "4433E017",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -97349,7 +97719,8 @@
                     }
                 ],
                 "blokname": "E33",
-                "blokcode": "013"
+                "werks_afd_block_code": "4433E013",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -97379,7 +97750,8 @@
                     }
                 ],
                 "blokname": "E32",
-                "blokcode": "012"
+                "werks_afd_block_code": "4433E012",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -97401,7 +97773,8 @@
                     }
                 ],
                 "blokname": "E34",
-                "blokcode": "014"
+                "werks_afd_block_code": "4433E014",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -97435,7 +97808,8 @@
                     }
                 ],
                 "blokname": "E32",
-                "blokcode": "012"
+                "werks_afd_block_code": "4433E012",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -97565,7 +97939,8 @@
                     }
                 ],
                 "blokname": "4421E",
-                "blokcode": ""
+                "werks_afd_block_code": "4421E",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -97607,7 +97982,8 @@
                     }
                 ],
                 "blokname": "E34",
-                "blokcode": "014"
+                "werks_afd_block_code": "4433E014",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -97669,7 +98045,8 @@
                     }
                 ],
                 "blokname": "E36",
-                "blokcode": "016"
+                "werks_afd_block_code": "4433E016",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -97735,7 +98112,8 @@
                     }
                 ],
                 "blokname": "E35",
-                "blokcode": "015"
+                "werks_afd_block_code": "4433E015",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -97765,7 +98143,8 @@
                     }
                 ],
                 "blokname": "I52",
-                "blokcode": ""
+                "werks_afd_block_code": "4421F",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -97795,7 +98174,8 @@
                     }
                 ],
                 "blokname": "H39",
-                "blokcode": "049"
+                "werks_afd_block_code": "4433F049",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -97821,7 +98201,8 @@
                     }
                 ],
                 "blokname": "H37",
-                "blokcode": "047"
+                "werks_afd_block_code": "4433F047",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -97851,7 +98232,8 @@
                     }
                 ],
                 "blokname": "H35",
-                "blokcode": ""
+                "werks_afd_block_code": "4433F",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -97889,7 +98271,8 @@
                     }
                 ],
                 "blokname": "H42",
-                "blokcode": "052"
+                "werks_afd_block_code": "4433F052",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -97931,7 +98314,8 @@
                     }
                 ],
                 "blokname": "G43",
-                "blokcode": "039"
+                "werks_afd_block_code": "4433F039",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -97957,7 +98341,8 @@
                     }
                 ],
                 "blokname": "H43",
-                "blokcode": "053"
+                "werks_afd_block_code": "4433F053",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -97991,7 +98376,8 @@
                     }
                 ],
                 "blokname": "H41",
-                "blokcode": "154"
+                "werks_afd_block_code": "4433F154",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -98037,7 +98423,8 @@
                     }
                 ],
                 "blokname": "G41",
-                "blokcode": "037"
+                "werks_afd_block_code": "4433F037",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -98067,7 +98454,8 @@
                     }
                 ],
                 "blokname": "H40",
-                "blokcode": "050"
+                "werks_afd_block_code": "4433F050",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -98089,7 +98477,8 @@
                     }
                 ],
                 "blokname": "H38",
-                "blokcode": "048"
+                "werks_afd_block_code": "4433F048",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -98119,7 +98508,8 @@
                     }
                 ],
                 "blokname": "H36",
-                "blokcode": "046"
+                "werks_afd_block_code": "4433F046",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -98141,7 +98531,8 @@
                     }
                 ],
                 "blokname": "H34",
-                "blokcode": "044"
+                "werks_afd_block_code": "4433F044",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -98195,7 +98586,8 @@
                     }
                 ],
                 "blokname": "H32",
-                "blokcode": "043"
+                "werks_afd_block_code": "4433F043",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -98277,7 +98669,8 @@
                     }
                 ],
                 "blokname": "H30",
-                "blokcode": "040"
+                "werks_afd_block_code": "4433F040",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -98311,7 +98704,8 @@
                     }
                 ],
                 "blokname": "H31",
-                "blokcode": "041"
+                "werks_afd_block_code": "4433F041",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -98389,7 +98783,8 @@
                     }
                 ],
                 "blokname": "G42",
-                "blokcode": "038"
+                "werks_afd_block_code": "4433F038",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -98423,7 +98818,8 @@
                     }
                 ],
                 "blokname": "G40",
-                "blokcode": "036"
+                "werks_afd_block_code": "4433F036",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -98449,7 +98845,8 @@
                     }
                 ],
                 "blokname": "G38",
-                "blokcode": "034"
+                "werks_afd_block_code": "4433F034",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -98483,7 +98880,8 @@
                     }
                 ],
                 "blokname": "G36",
-                "blokcode": "032"
+                "werks_afd_block_code": "4433F032",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -98493,7 +98891,8 @@
                     }
                 ],
                 "blokname": "4433F",
-                "blokcode": ""
+                "werks_afd_block_code": "4433F",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -98523,7 +98922,8 @@
                     }
                 ],
                 "blokname": "4433F",
-                "blokcode": ""
+                "werks_afd_block_code": "4433F",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -98557,7 +98957,8 @@
                     }
                 ],
                 "blokname": "F34",
-                "blokcode": "025"
+                "werks_afd_block_code": "4433F025",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -98583,7 +98984,8 @@
                     }
                 ],
                 "blokname": "F33",
-                "blokcode": "024"
+                "werks_afd_block_code": "4433F024",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -98613,7 +99015,8 @@
                     }
                 ],
                 "blokname": "F32",
-                "blokcode": "023"
+                "werks_afd_block_code": "4433F023",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -98667,7 +99070,8 @@
                     }
                 ],
                 "blokname": "F30",
-                "blokcode": "021"
+                "werks_afd_block_code": "4433F021",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -98701,7 +99105,8 @@
                     }
                 ],
                 "blokname": "F31",
-                "blokcode": "022"
+                "werks_afd_block_code": "4433F022",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -98723,7 +99128,8 @@
                     }
                 ],
                 "blokname": "G32",
-                "blokcode": "028"
+                "werks_afd_block_code": "4433F028",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -98749,7 +99155,8 @@
                     }
                 ],
                 "blokname": "G34",
-                "blokcode": "030"
+                "werks_afd_block_code": "4433F030",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -98775,7 +99182,8 @@
                     }
                 ],
                 "blokname": "G33",
-                "blokcode": "029"
+                "werks_afd_block_code": "4433F029",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -98797,7 +99205,8 @@
                     }
                 ],
                 "blokname": "G31",
-                "blokcode": "027"
+                "werks_afd_block_code": "4433F027",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -99187,7 +99596,8 @@
                     }
                 ],
                 "blokname": "L29",
-                "blokcode": "121"
+                "werks_afd_block_code": "4421D121",
+                "afd_code": "D"
             },
             {
                 "coords": [
@@ -100045,7 +100455,8 @@
                     }
                 ],
                 "blokname": "K27",
-                "blokcode": "077"
+                "werks_afd_block_code": "4421C077",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -101051,7 +101462,8 @@
                     }
                 ],
                 "blokname": "K24",
-                "blokcode": "074"
+                "werks_afd_block_code": "4421C074",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -101297,7 +101709,8 @@
                     }
                 ],
                 "blokname": "4421A",
-                "blokcode": ""
+                "werks_afd_block_code": "4421A",
+                "afd_code": "A"
             },
             {
                 "coords": [
@@ -101431,7 +101844,8 @@
                     }
                 ],
                 "blokname": "4421A",
-                "blokcode": ""
+                "werks_afd_block_code": "4421A",
+                "afd_code": "A"
             },
             {
                 "coords": [
@@ -101473,7 +101887,8 @@
                     }
                 ],
                 "blokname": "4421A",
-                "blokcode": ""
+                "werks_afd_block_code": "4421A",
+                "afd_code": "A"
             },
             {
                 "coords": [
@@ -101767,7 +102182,8 @@
                     }
                 ],
                 "blokname": "4421A",
-                "blokcode": ""
+                "werks_afd_block_code": "4421A",
+                "afd_code": "A"
             },
             {
                 "coords": [
@@ -102181,7 +102597,8 @@
                     }
                 ],
                 "blokname": "4421A",
-                "blokcode": ""
+                "werks_afd_block_code": "4421A",
+                "afd_code": "A"
             },
             {
                 "coords": [
@@ -102303,7 +102720,8 @@
                     }
                 ],
                 "blokname": "4421A",
-                "blokcode": ""
+                "werks_afd_block_code": "4421A",
+                "afd_code": "A"
             },
             {
                 "coords": [
@@ -102617,7 +103035,8 @@
                     }
                 ],
                 "blokname": "4421A",
-                "blokcode": ""
+                "werks_afd_block_code": "4421A",
+                "afd_code": "A"
             },
             {
                 "coords": [
@@ -102647,7 +103066,8 @@
                     }
                 ],
                 "blokname": "4421B",
-                "blokcode": ""
+                "werks_afd_block_code": "4421B",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -104061,7 +104481,8 @@
                     }
                 ],
                 "blokname": "4421B",
-                "blokcode": ""
+                "werks_afd_block_code": "4421B",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -107699,7 +108120,8 @@
                     }
                 ],
                 "blokname": "4421B",
-                "blokcode": ""
+                "werks_afd_block_code": "4421B",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -107873,7 +108295,8 @@
                     }
                 ],
                 "blokname": "4421B",
-                "blokcode": ""
+                "werks_afd_block_code": "4421B",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -108943,7 +109366,8 @@
                     }
                 ],
                 "blokname": "A30",
-                "blokcode": "101"
+                "werks_afd_block_code": "4421B101",
+                "afd_code": "B"
             },
             {
                 "coords": [
@@ -109837,7 +110261,8 @@
                     }
                 ],
                 "blokname": "4421C",
-                "blokcode": ""
+                "werks_afd_block_code": "4421C",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -110363,7 +110788,8 @@
                     }
                 ],
                 "blokname": "I19",
-                "blokcode": "045"
+                "werks_afd_block_code": "4421C045",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -110377,7 +110803,8 @@
                     }
                 ],
                 "blokname": "H36",
-                "blokcode": "151"
+                "werks_afd_block_code": "4421F151",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -110391,7 +110818,8 @@
                     }
                 ],
                 "blokname": "H36",
-                "blokcode": "151"
+                "werks_afd_block_code": "4421F151",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -110409,7 +110837,8 @@
                     }
                 ],
                 "blokname": "H36",
-                "blokcode": "151"
+                "werks_afd_block_code": "4421F151",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -110419,7 +110848,8 @@
                     }
                 ],
                 "blokname": "H36",
-                "blokcode": "151"
+                "werks_afd_block_code": "4421F151",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -110561,7 +110991,8 @@
                     }
                 ],
                 "blokname": "H36",
-                "blokcode": "151"
+                "werks_afd_block_code": "4421F151",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -110611,7 +111042,8 @@
                     }
                 ],
                 "blokname": "H35",
-                "blokcode": "150"
+                "werks_afd_block_code": "4421F150",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -110729,7 +111161,8 @@
                     }
                 ],
                 "blokname": "4421F",
-                "blokcode": ""
+                "werks_afd_block_code": "4421F",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -113583,7 +114016,8 @@
                     }
                 ],
                 "blokname": "4421F",
-                "blokcode": ""
+                "werks_afd_block_code": "4421F",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -113613,7 +114047,8 @@
                     }
                 ],
                 "blokname": "I23",
-                "blokcode": "049"
+                "werks_afd_block_code": "4421C049",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -114615,7 +115050,8 @@
                     }
                 ],
                 "blokname": "I23",
-                "blokcode": "049"
+                "werks_afd_block_code": "4421C049",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -114625,7 +115061,8 @@
                     }
                 ],
                 "blokname": "I25",
-                "blokcode": "051"
+                "werks_afd_block_code": "4421C051",
+                "afd_code": "C"
             },
             {
                 "coords": [
@@ -114695,7 +115132,8 @@
                     }
                 ],
                 "blokname": "4421F",
-                "blokcode": ""
+                "werks_afd_block_code": "4421F",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -114717,7 +115155,8 @@
                     }
                 ],
                 "blokname": "G47",
-                "blokcode": "158"
+                "werks_afd_block_code": "4421F158",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -114739,7 +115178,8 @@
                     }
                 ],
                 "blokname": "G46",
-                "blokcode": "170"
+                "werks_afd_block_code": "4421F170",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -114761,7 +115201,8 @@
                     }
                 ],
                 "blokname": "H47",
-                "blokcode": "157"
+                "werks_afd_block_code": "4421F157",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -114795,7 +115236,8 @@
                     }
                 ],
                 "blokname": "H46",
-                "blokcode": "156"
+                "werks_afd_block_code": "4421F156",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -114829,7 +115271,8 @@
                     }
                 ],
                 "blokname": "H43",
-                "blokcode": "173"
+                "werks_afd_block_code": "4421F173",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -114855,7 +115298,8 @@
                     }
                 ],
                 "blokname": "H40",
-                "blokcode": "172"
+                "werks_afd_block_code": "4421F172",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -114969,7 +115413,8 @@
                     }
                 ],
                 "blokname": "H38",
-                "blokcode": "153"
+                "werks_afd_block_code": "4421F153",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -114995,7 +115440,8 @@
                     }
                 ],
                 "blokname": "H39",
-                "blokcode": "177"
+                "werks_afd_block_code": "4421F177",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -115025,7 +115471,8 @@
                     }
                 ],
                 "blokname": "H41",
-                "blokcode": "154"
+                "werks_afd_block_code": "4421F154",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -115059,7 +115506,8 @@
                     }
                 ],
                 "blokname": "H42",
-                "blokcode": "155"
+                "werks_afd_block_code": "4421F155",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -115101,7 +115549,8 @@
                     }
                 ],
                 "blokname": "G39",
-                "blokcode": "035"
+                "werks_afd_block_code": "4433F035",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -115131,7 +115580,8 @@
                     }
                 ],
                 "blokname": "G37",
-                "blokcode": ""
+                "werks_afd_block_code": "4433F",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -115173,7 +115623,8 @@
                     }
                 ],
                 "blokname": "G35",
-                "blokcode": "031"
+                "werks_afd_block_code": "4433F031",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -115311,7 +115762,8 @@
                     }
                 ],
                 "blokname": "H34",
-                "blokcode": "149"
+                "werks_afd_block_code": "4421F149",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -115573,7 +116025,8 @@
                     }
                 ],
                 "blokname": "H33",
-                "blokcode": "148"
+                "werks_afd_block_code": "4421F148",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -115635,7 +116088,8 @@
                     }
                 ],
                 "blokname": "H33",
-                "blokcode": "043"
+                "werks_afd_block_code": "4433F043",
+                "afd_code": "F"
             },
             {
                 "coords": [
@@ -115657,7 +116111,8 @@
                     }
                 ],
                 "blokname": "D40",
-                "blokcode": "191"
+                "werks_afd_block_code": "4433E191",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -115679,7 +116134,8 @@
                     }
                 ],
                 "blokname": "D39",
-                "blokcode": "009"
+                "werks_afd_block_code": "4433E009",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -115705,7 +116161,8 @@
                     }
                 ],
                 "blokname": "D38",
-                "blokcode": "008"
+                "werks_afd_block_code": "4433E008",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -115727,7 +116184,8 @@
                     }
                 ],
                 "blokname": "D37",
-                "blokcode": "007"
+                "werks_afd_block_code": "4433E007",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -115753,7 +116211,8 @@
                     }
                 ],
                 "blokname": "D36",
-                "blokcode": "006"
+                "werks_afd_block_code": "4433E006",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -115787,7 +116246,8 @@
                     }
                 ],
                 "blokname": "D35",
-                "blokcode": "005"
+                "werks_afd_block_code": "4433E005",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -115813,7 +116273,8 @@
                     }
                 ],
                 "blokname": "D33",
-                "blokcode": "003"
+                "werks_afd_block_code": "4433E003",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -115835,7 +116296,8 @@
                     }
                 ],
                 "blokname": "D32",
-                "blokcode": "002"
+                "werks_afd_block_code": "4433E002",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -115857,7 +116319,8 @@
                     }
                 ],
                 "blokname": "D31",
-                "blokcode": "001"
+                "werks_afd_block_code": "4433E001",
+                "afd_code": "E"
             },
             {
                 "coords": [
@@ -115883,7 +116346,8 @@
                     }
                 ],
                 "blokname": "D34",
-                "blokcode": "004"
+                "werks_afd_block_code": "4433E004",
+                "afd_code": "E"
             }
         ]
     }

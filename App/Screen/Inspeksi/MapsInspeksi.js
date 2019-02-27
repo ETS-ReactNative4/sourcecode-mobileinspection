@@ -241,7 +241,7 @@ class MapsInspeksi extends React.Component {
           onMapReady={()=>this.onMapReady()}
           >
           {/* {skm.data.polygons.map((poly, index) => ( */}
-          {this.state.poligons.map((poly, index) => (
+          {this.state.poligons.length > 1 && this.state.poligons.map((poly, index) => (
             <View key={index}>
               <Polygon
                 coordinates={poly.coords}
