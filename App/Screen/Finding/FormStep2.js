@@ -336,8 +336,8 @@ class FormStep2 extends Component {
 
     }
 
-    loadDataBlock(blockCode) {
-        let data = TaskServices.findBy2('TM_BLOCK', 'BLOCK_CODE', blockCode);
+    loadDataBlock(werkAfdBlockCode) {
+        let data = TaskServices.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', werkAfdBlockCode);
         if (data !== undefined) {
             let statusBlok = this.getStatusBlok(data.WERKS_AFD_BLOCK_CODE);
             let estateName = this.getEstateName(data.WERKS);

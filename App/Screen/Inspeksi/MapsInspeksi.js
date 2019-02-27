@@ -79,6 +79,56 @@ class MapsInspeksi extends React.Component {
     this.getLocation();
   }  
 
+  totalPolygons(){
+    return skm.data.polygons.length;
+  }
+
+  getPolygons(position){
+    let data = skm.data.polygons;
+    let poligons = [];
+    let index = 0;
+    for(var i=0; i<data.length; i++){
+        let coords = data[i];
+        if(geolib.isPointInside(position, coords.coords)){
+            this.state.poligons.push(coords)
+            poligons.push(coords)
+            index = i;
+            break;
+        }
+    } 
+    //ambil map jika posisi index kurang dari 4
+    if(index < 4){
+      for(var j=0; j<index; j++){
+        let coords = data[j];
+        this.state.poligons.push(coords)
+        poligons.push(coords)
+      }
+    } 
+
+    //ambil map setelah index
+    let lebih = this.totalPolygons()-index
+    if(lebih > 4){
+      for(var j=1; j<4; j++){
+        let coords = data[index+j];
+        this.state.poligons.push(coords)
+        poligons.push(coords)
+      }
+      for(var j=1; j<4; j++){
+        let coords = data[index-j];
+        this.state.poligons.push(coords)
+        poligons.push(coords)
+      }
+    }else{
+      for(var j=0; j<lebih; j++){
+        let coords = data[j];
+        this.state.poligons.push(coords)
+        poligons.push(coords)
+      }
+    }
+
+    return poligons;
+  }
+
   getLocation() {
     navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -90,8 +140,12 @@ class MapsInspeksi extends React.Component {
               latitudeDelta:0.0075,
               longitudeDelta:0.00721
             } 
+            position = {
+              latitude: lat, longitude: lon
+            }
+            let poligons = this.getPolygons(position);
             this.map.animateToCoordinate(region, 1);
-            this.setState({latitude:lat, longitude:lon, fetchLocation: false, region});
+            this.setState({latitude:lat, longitude:lon, fetchLocation: false, region, poligons});
         },
         (error) => {
             let message = error && error.message ? error.message : 'Terjadi kesalahan ketika mencari lokasi anda !';
@@ -133,12 +187,12 @@ class MapsInspeksi extends React.Component {
     this.props.navigation.navigate('BuatInspeksi', {block: blockCode, latitude: this.state.latitude, longitude: this.state.longitude});
   }
 
-  navigateScreen(screenName, blockCode) {
+  navigateScreen(screenName, werkAfdBlockCode) {
     const navigation = this.props.navigation;
     const resetAction = StackActions.reset({
     index: 0,            
-    actions: [NavigationActions.navigate({ routeName: screenName, params : { 
-          block : blockCode
+      actions: [NavigationActions.navigate({ routeName: screenName, params : { 
+          werkAfdBlockCode : werkAfdBlockCode
         } 
       })]
     });
@@ -181,12 +235,13 @@ class MapsInspeksi extends React.Component {
           showScale = {true}
           showsIndoors = {true}
           initialRegion={this.state.region}
-          zoomEnabled={false}
           followsUserLocation={true}
           scrollEnabled={false}
+          zoomEnabled={false}
           onMapReady={()=>this.onMapReady()}
           >
-          {skm.data.polygons.map((poly, index) => (
+          {/* {skm.data.polygons.map((poly, index) => ( */}
+          {this.state.poligons.map((poly, index) => (
             <View key={index}>
               <Polygon
                 coordinates={poly.coords}
@@ -194,7 +249,7 @@ class MapsInspeksi extends React.Component {
                 strokeColor="rgba(0,0,0,0.5)"
                 strokeWidth={2}
                 tappable={true}
-                onPress={()=>this.navigateScreen('BuatInspeksi', poly.blokcode)}                
+                onPress={()=>this.navigateScreen('BuatInspeksi', poly.werks_afd_block_code)}                
                 // onPress={()=>this.onClickBlok(poly.blokcode)}
               />
               <Marker
