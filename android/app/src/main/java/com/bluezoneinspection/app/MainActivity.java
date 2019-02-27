@@ -1,4 +1,4 @@
-package com.mobileinspection;
+package com.bluezoneinspection.app;
 
 import com.facebook.react.ReactActivity;
 

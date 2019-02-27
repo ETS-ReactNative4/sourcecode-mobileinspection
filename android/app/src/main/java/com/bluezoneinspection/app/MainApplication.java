@@ -1,4 +1,4 @@
-package com.mobileinspection;
+package com.bluezoneinspection.app;
 
 import android.app.Application;
 

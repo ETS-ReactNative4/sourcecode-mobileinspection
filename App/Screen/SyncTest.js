@@ -569,8 +569,10 @@ class SyncScreen extends React.Component {
 
     kirimFinding(param) {
         let dueDate = param.DUE_DATE;
-		if (dueDate.includes(' ')&&dueDate.length>0) {
+		if (dueDate.includes(' ')) {
 			dueDate = dueDate.substring(0, dueDate.indexOf(' '))
+		}
+		if(dueDate.length>0){
 			dueDate += " 00:00:00"
 		}
         let data = {
@@ -590,6 +592,7 @@ class SyncScreen extends React.Component {
             INSERT_USER: param.INSERT_USER,
             INSERT_TIME: param.INSERT_TIME.toString()
         }
+		console.log("kirimFinding",data);
         this.uploadData('http://149.129.245.230:3008/api/finding', data, 'finding', '');
     }
 
