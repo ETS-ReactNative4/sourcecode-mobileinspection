@@ -11,10 +11,10 @@ import {
 
 import MapView, { Polygon, ProviderPropType, Marker } from 'react-native-maps';
 import Colors from '../../Constant/Colors'
-import { NavigationActions, StackActions  } from 'react-navigation';
 import IconLoc from 'react-native-vector-icons/FontAwesome5';
 import ModalAlert from '../../Component/ModalLoading'
 import ModalGps from '../../Component/ModalAlert';
+import geolib from 'geolib';
 
 const ASPECT_RATIO = width / height;
 const LATITUDE = -2.1890660;
@@ -22,7 +22,6 @@ const LONGITUDE = 111.3609873;
 const LATITUDE_DELTA = 0.0922;
 const skm = require('../../Data/4421.json');
 const { width, height } = Dimensions.get('window');
-import geolib from 'geolib';
 
 class MapsInspeksi extends React.Component {
   constructor(props) {
@@ -41,7 +40,8 @@ class MapsInspeksi extends React.Component {
         fetchLocation: true,
         showModal: false,
         title: 'Sabar Ya..',
-        message: 'Sedang mencari lokasi kamu nih.'
+        message: 'Sedang mencari lokasi kamu nih.',        
+        icon: ''
     };
   }
 
@@ -115,26 +115,29 @@ class MapsInspeksi extends React.Component {
       }
     } 
 
-    //ambil map setelah index
-    let lebih = this.totalPolygons()-index
-    if(lebih > 4){
-      for(var j=1; j<4; j++){
-        let coords = data[index+j];
-        this.state.poligons.push(coords)
-        poligons.push(coords)
+    
+    if(index > 0){
+      //ambil map setelah index
+      let lebih = this.totalPolygons()-index
+      if(lebih > 4){
+        for(var j=1; j<4; j++){
+          let coords = data[index+j];
+          this.state.poligons.push(coords)
+          poligons.push(coords)
+        }
+        for(var j=1; j<4; j++){
+          let coords = data[index-j];
+          this.state.poligons.push(coords)
+          poligons.push(coords)
+        }
+      }else if(lebih > 0 && lebih < 4){
+        for(var j=0; j<lebih; j++){
+          let coords = data[j];
+          this.state.poligons.push(coords)
+          poligons.push(coords)
+        }
       }
-      for(var j=1; j<4; j++){
-        let coords = data[index-j];
-        this.state.poligons.push(coords)
-        poligons.push(coords)
-      }
-    }else{
-      for(var j=0; j<lebih; j++){
-        let coords = data[j];
-        this.state.poligons.push(coords)
-        poligons.push(coords)
-      }
-    }
+    }    
     return poligons;
   }
 
