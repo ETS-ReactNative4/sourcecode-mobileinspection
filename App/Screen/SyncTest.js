@@ -34,7 +34,8 @@ var RNFS = require('react-native-fs');
 
 // import moment from 'moment';
 
-const link = 'http://149.129.245.230:3008/api/';
+//const link = 'http://149.129.245.230:3008/api/';
+const link = "http://app.tap-agri.com/mobileinspection/ins-msa-auth/api/";
 const user = TaskServices.getAllData('TR_LOGIN')[0];
 
 import ModalAlert from '../Component/ModalAlert';
@@ -536,7 +537,7 @@ class SyncScreen extends React.Component {
             INSERT_TIME: convertTimestampToDate(param.INSERT_TIME, 'YYYYMMDDHHmmss'),
             INSERT_USER: user.USER_AUTH_CODE
         }
-        this.uploadData('http://149.129.245.230:3008/api/inspection-header', data, 'header', param.ID_INSPECTION);
+        this.uploadData(link+'inspection-header', data, 'header', param.ID_INSPECTION);
     }
 
     kirimInspeksiDetail(result) {
@@ -551,7 +552,7 @@ class SyncScreen extends React.Component {
             INSERT_USER: user.USER_AUTH_CODE,
             INSERT_TIME: convertTimestampToDate(result.INSERT_TIME, 'YYYYMMDDHHmmss')
         }
-        this.uploadData('http://149.129.245.230:3008/api/inspection-detail', data, 'detailHeader', '');
+        this.uploadData(link+'inspection-detail', data, 'detailHeader', '');
     }
 
     kirimInspectionTrack(param) {
@@ -564,7 +565,7 @@ class SyncScreen extends React.Component {
             INSERT_USER: param.INSERT_USER,
             INSERT_TIME: param.INSERT_TIME
         }
-        this.uploadData('http://149.129.245.230:3008/api/inspection-tracking', data, 'tracking', '');
+        this.uploadData(link+'inspection-tracking', data, 'tracking', '');
     }
 
     kirimFinding(param) {
@@ -593,7 +594,7 @@ class SyncScreen extends React.Component {
             INSERT_TIME: param.INSERT_TIME.toString()
         }
 		console.log("kirimFinding",data);
-        this.uploadData('http://149.129.245.230:3008/api/finding', data, 'finding', '');
+        this.uploadData(link+'finding', data, 'finding', '');
     }
 
 
@@ -1282,7 +1283,7 @@ class SyncScreen extends React.Component {
     fetchingMobileSync(param) {
         var moment = require('moment');
         const user = TaskServices.getAllData('TR_LOGIN')[0];
-        fetch('http://149.129.245.230:3008/api/mobile-sync', {
+        fetch(link+'mobile-sync', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
