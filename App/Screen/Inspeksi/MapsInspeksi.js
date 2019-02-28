@@ -40,7 +40,8 @@ class MapsInspeksi extends React.Component {
         fetchLocation: true,
         showModal: false,
         title: 'Sabar Ya..',
-        message: 'Sedang mencari lokasi kamu nih.'
+        message: 'Sedang mencari lokasi kamu nih.',        
+        icon: ''
     };
   }
 
@@ -105,27 +106,29 @@ class MapsInspeksi extends React.Component {
       }
     } 
 
-    //ambil map setelah index
-    let lebih = this.totalPolygons()-index
-    if(lebih > 4){
-      for(var j=1; j<4; j++){
-        let coords = data[index+j];
-        this.state.poligons.push(coords)
-        poligons.push(coords)
+    
+    if(index > 0){
+      //ambil map setelah index
+      let lebih = this.totalPolygons()-index
+      if(lebih > 4){
+        for(var j=1; j<4; j++){
+          let coords = data[index+j];
+          this.state.poligons.push(coords)
+          poligons.push(coords)
+        }
+        for(var j=1; j<4; j++){
+          let coords = data[index-j];
+          this.state.poligons.push(coords)
+          poligons.push(coords)
+        }
+      }else if(lebih > 0 && lebih < 4){
+        for(var j=0; j<lebih; j++){
+          let coords = data[j];
+          this.state.poligons.push(coords)
+          poligons.push(coords)
+        }
       }
-      for(var j=1; j<4; j++){
-        let coords = data[index-j];
-        this.state.poligons.push(coords)
-        poligons.push(coords)
-      }
-    }else{
-      for(var j=0; j<lebih; j++){
-        let coords = data[j];
-        this.state.poligons.push(coords)
-        poligons.push(coords)
-      }
-    }
-
+    }    
     return poligons;
   }
 
@@ -241,7 +244,7 @@ class MapsInspeksi extends React.Component {
           onMapReady={()=>this.onMapReady()}
           >
           {/* {skm.data.polygons.map((poly, index) => ( */}
-          {this.state.poligons.length > 1 && this.state.poligons.map((poly, index) => (
+           {this.state.poligons.length > 1 && this.state.poligons.map((poly, index) => (
             <View key={index}>
               <Polygon
                 coordinates={poly.coords}
