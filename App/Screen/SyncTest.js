@@ -789,7 +789,7 @@ class SyncScreen extends React.Component {
             data.ubah.map(item => {
                 let indexData = R.findIndex(R.propEq('WERKS_AFD_BLOCK_CODE', item.WERKS_AFD_BLOCK_CODE))(allData);
                 TaskServices.updateByPrimaryKey('TM_LAND_USE', item)
-                TaskServices.updateLandUse(item, indexData)
+                //TaskServices.updateLandUse(item, indexData)
             })
         }
         if (data.hapus.length > 0 && allData.length > 0) {
@@ -945,15 +945,12 @@ class SyncScreen extends React.Component {
     }
 
     _crudTM_Finding(data) {
-		console.log(TaskServices.getPath())
         let allData = TaskServices.getAllData('TR_FINDING');
-		console.log("_crudTM_Finding simpan all",data.simpan);
         if (data.simpan.length > 0) {
             for (var i = 1; i <= data.simpan.length; i++) {
                 this.setState({ progressFinding: i / data.simpan.length, totalFindingDownload: data.simpan.length });
             }
             data.simpan.map(item => {
-		console.log("_crudTM_Finding simpan item",item);
                 TaskServices.saveData('TR_FINDING', item);
                 let countDataInsert = TaskServices.getTotalData('TR_FINDING');
                 this.setState({ valueFindingDownload: countDataInsert });
@@ -962,11 +959,8 @@ class SyncScreen extends React.Component {
             let countDataInsert = TaskServices.getTotalData('TR_FINDING');
             this.setState({ progressFinding: 1, valueFindingDownload: countDataInsert, totalFindingDownload: 0 })
         }
-		console.log("_crudTM_Finding ubah all",data.ubah);
-		console.log("_crudTM_Finding hapus",data.hapus);
         if (data.ubah.length > 0 && allData.length > 0) {
             data.ubah.map(item => {
-		console.log("_crudTM_Finding ubah",item);
                 let indexData = R.findIndex(R.propEq('FINDING_CODE', item.FINDING_CODE))(allData);
                 TaskServices.updateByPrimaryKey('TR_FINDING', item)
                 //TaskServices.updateFindingDownload(item, indexData)
@@ -1153,26 +1147,12 @@ class SyncScreen extends React.Component {
 
                 });
 
-                this.props.resetFinding();
-                this.props.resetFindingImage();
-                this.props.resetBlock();
-                this.props.resetAfd();
-                this.props.resetRegion();
-                this.props.resetEst();
-                this.props.resetLandUse();
-                this.props.resetComp();
-                this.props.resetContent();
-                this.props.resetKriteria();
-                this.props.resetCategory();
-                this.props.resetContact();
-                this.props.resetParamTrack();
-
-                //POST TRANSAKSI
-                this.kirimImage();
-                this.loadDataFinding();
-                this.loadData();
-                this.loadDataDetailInspeksi();
-                this.loadDataInspectionTrack();
+                    //POST TRANSAKSI
+                    this.kirimImage();
+                    this.loadDataFinding();
+                    this.loadData();
+                    this.loadDataDetailInspeksi();
+                    this.loadDataInspectionTrack();
 
                 //cara biasa
                 // setTimeout(() => {            
@@ -1196,7 +1176,6 @@ class SyncScreen extends React.Component {
             }
         });
         function handleFirstConnectivityChange(isConnected) {
-            console.log('Then, is ' + (isConnected ? 'online' : 'offline'));
             NetInfo.isConnected.removeEventListener(
                 'connectionChange',
                 handleFirstConnectivityChange
@@ -1225,7 +1204,6 @@ class SyncScreen extends React.Component {
                 if (data.status) {
                     let payload = data.data;
                     if (table == 'finding') {
-						console.log("DownloadData")
                         this._crudTM_Finding(payload);
                         this.DownloadData(`${link}mobile-sync/finding-images`, 'image');
                     } else if (table == 'image') {
@@ -1400,7 +1378,6 @@ class SyncScreen extends React.Component {
         if (newProps.finding.fetchingFinding !== null && !newProps.finding.fetchingFinding) {
             let dataJSON = newProps.finding.finding;
             if (dataJSON !== null) {
-				console.log("masuk");
                 this._crudTM_Finding(dataJSON);
             }
             this.props.resetFinding()

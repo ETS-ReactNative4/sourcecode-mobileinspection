@@ -21,6 +21,7 @@ const LATITUDE = -2.1890660;
 const LONGITUDE = 111.3609873;
 const LATITUDE_DELTA = 0.0922;
 const { width, height } = Dimensions.get('window');
+const alfabet = ['A','B','C','D','E','F'];
 
 class MapsInspeksi extends React.Component {
 
@@ -82,6 +83,12 @@ class MapsInspeksi extends React.Component {
 
   totalPolygons(){
     return skm.data.polygons.length;
+  }
+
+  getMapsAround(afdCode){
+    let pos = alfabet.indexOf(afdCode)
+    let posBeforeAfdNow = pos-1;
+    let posAfterAfdNow = pos+1;
   }
 
   getPolygons(position){
@@ -186,10 +193,31 @@ class MapsInspeksi extends React.Component {
     return color;
   }
 
-  onClickBlok(blockCode){
-    this.props.navigation.navigate('BuatInspeksi', {block: blockCode, latitude: this.state.latitude, longitude: this.state.longitude});
+  onClickBlok(werkAfdBlockCode){
+    if(this.isOnBlok(werkAfdBlockCode)){
+      this.navigateScreen('BuatInspeksi', poly.werks_afd_block_code)
+    }else{
+      alert('km ga boleh salah pilih blok')
+    }
+    // this.props.navigation.navigate('BuatInspeksi', {werkAfdBlockCode: werkAfdBlockCode, latitude: this.state.latitude, longitude: this.state.longitude});
   }
 
+  isOnBlok(werkAfdBlockCode){
+    let data = skm.data.polygons;
+    let position = {
+      latitude: this.state.latitude, longitude: this.state.longitude
+    }
+    for(var i=0; i<data.length; i++){
+        let coords = data[i];
+        if(geolib.isPointInside(position, coords.coords)){
+            if(werkAfdBlockCode == coords.werks_afd_block_code){
+              return true
+            }
+        }
+    } 
+    return false;
+  }
+  
   navigateScreen(screenName, werkAfdBlockCode) {
     const navigation = this.props.navigation;
     const resetAction = StackActions.reset({
@@ -238,7 +266,7 @@ class MapsInspeksi extends React.Component {
           showScale = {true}
           showsIndoors = {true}
           initialRegion={this.state.region}
-          followsUserLocation={true}
+          followsUserLocation={false}
           scrollEnabled={false}
           zoomEnabled={false}
           onMapReady={()=>this.onMapReady()}
@@ -252,8 +280,8 @@ class MapsInspeksi extends React.Component {
                 strokeColor="rgba(0,0,0,0.5)"
                 strokeWidth={2}
                 tappable={true}
-                onPress={()=>this.navigateScreen('BuatInspeksi', poly.werks_afd_block_code)}                
-                // onPress={()=>this.onClickBlok(poly.blokcode)}
+                // onPress={()=>this.navigateScreen('BuatInspeksi', poly.werks_afd_block_code)}                
+                onPress={()=>this.onClickBlok(poly.werks_afd_block_code)}
               />
               <Marker
                 ref={ref => poly.marker = ref}

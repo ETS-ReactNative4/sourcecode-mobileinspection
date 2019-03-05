@@ -5,31 +5,30 @@ import {
   Text,
   Dimensions,
   StatusBar,
-  TouchableOpacity,
-  BackAndroid
+  TouchableOpacity
 } from 'react-native';
 
 import MapView, { Polygon, ProviderPropType, Marker } from 'react-native-maps';
 import Colors from '../../Constant/Colors'
+import { NavigationActions, StackActions  } from 'react-navigation';
 import IconLoc from 'react-native-vector-icons/FontAwesome5';
 import ModalAlert from '../../Component/ModalLoading'
 import ModalGps from '../../Component/ModalAlert';
-import geolib from 'geolib';
 
-const ASPECT_RATIO = width / height;
+const skm = require('../../Data/4421.json');
 const LATITUDE = -2.1890660;
 const LONGITUDE = 111.3609873;
-const LATITUDE_DELTA = 0.0922;
-const skm = require('../../Data/4421.json');
 const { width, height } = Dimensions.get('window');
+const alfabet = ['A','B','C','D','E','F'];
 
-class MapsInspeksi extends React.Component {
+class MapsEbcc extends React.Component {
+
   constructor(props) {
     super(props);
-    this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
+
     this.state = {
         latitude: 0.0,
-        longitude: 0.0,  
+        longitude: 0.0, 
         region: {
           latitude: LATITUDE,
           longitude: LONGITUDE,
@@ -49,7 +48,7 @@ class MapsInspeksi extends React.Component {
     const { params = {} } = navigation.state;
     return {
       headerStyle: {
-        backgroundColor: Colors.tintColor
+        backgroundColor: Colors.tintColorPrimary
       },
       title: 'Pilih Blok',
       headerTintColor: '#fff',
@@ -58,6 +57,7 @@ class MapsInspeksi extends React.Component {
         fontSize: 18,
         fontWeight: '400'
       },
+      
     headerRight: (
           <TouchableOpacity style= {{marginRight: 20}} onPress={()=>{params.searchLocation()}}>
               <IconLoc style={{marginLeft: 12}} name={'location-arrow'} size={24} color={'white'} />
@@ -67,22 +67,12 @@ class MapsInspeksi extends React.Component {
   }
 
   componentDidMount(){
-    BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
-    this.props.navigation.setParams({ searchLocation: this.searchLocation });
+    this.props.navigation.setParams({ searchLocation: this.searchLocation })
     this.getLocation()
   }
 
-  componentWillUnmount(){
-    BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
-  }
-
-  handleBackButtonClick() {
-    this.props.navigation.goBack();
-    return true;
-  }
-
   searchLocation =() =>{
-    this.setState({fetchLocation: true});
+    this.setState({fetchLocation: true})
     setTimeout(() => {
       this.setState({fetchLocation: false});
     }, 5000);
@@ -91,6 +81,12 @@ class MapsInspeksi extends React.Component {
 
   totalPolygons(){
     return skm.data.polygons.length;
+  }
+
+  getMapsAround(afdCode){
+    let pos = alfabet.indexOf(afdCode)
+    let posBeforeAfdNow = pos-1;
+    let posAfterAfdNow = pos+1;
   }
 
   getPolygons(position){
@@ -145,19 +141,19 @@ class MapsInspeksi extends React.Component {
     navigator.geolocation.getCurrentPosition(
         (position) => {
             var lat = parseFloat(position.coords.latitude);
-            var lon = parseFloat(position.coords.longitude);
+            var lon = parseFloat(position.coords.longitude);  
             region = {
               latitude: lat,
               longitude: lon,
               latitudeDelta:0.0075,
               longitudeDelta:0.00721
-            }   
+            } 
             position = {
               latitude: lat, longitude: lon
             }
             let poligons = this.getPolygons(position);
             this.map.animateToCoordinate(region, 1);
-            this.setState({latitude:lat, longitude:lon, fetchLocation: false, region, poligons});   
+            this.setState({latitude:lat, longitude:lon, fetchLocation: false, region, poligons});
         },
         (error) => {
             let message = error && error.message ? error.message : 'Terjadi kesalahan ketika mencari lokasi anda !';
@@ -196,8 +192,12 @@ class MapsInspeksi extends React.Component {
   }
 
   onClickBlok(werkAfdBlockCode){
-    this.props.navigation.state.params.changeBlok(werkAfdBlockCode);
-    this.props.navigation.goBack();
+    if(this.isOnBlok(werkAfdBlockCode)){
+      this.navigateScreen('BuatInspeksi', poly.werks_afd_block_code)
+    }else{
+      alert('km ga boleh salah pilih blok')
+    }
+    // this.props.navigation.navigate('BuatInspeksi', {werkAfdBlockCode: werkAfdBlockCode, latitude: this.state.latitude, longitude: this.state.longitude});
   }
 
   isOnBlok(werkAfdBlockCode){
@@ -215,18 +215,31 @@ class MapsInspeksi extends React.Component {
     } 
     return false;
   }
+  
+  navigateScreen(screenName, werkAfdBlockCode) {
+    const navigation = this.props.navigation;
+    const resetAction = StackActions.reset({
+    index: 0,            
+      actions: [NavigationActions.navigate({ routeName: screenName, params : { 
+          werkAfdBlockCode : werkAfdBlockCode
+        } 
+      })]
+    });
+    navigation.dispatch(resetAction);
+  }
 
   onMapReady(){
     //lakukan aoa yg mau dilakukan disini setelah map selesai
-    this.setState({fetchLocation: false})
+    this.setState({fetchLocation: false});
   }
 
   render() {
     return (
       <View style={styles.container}>
         <StatusBar
-            hidden={true}
-            barStyle="light-content"
+          hidden={false}
+          barStyle="light-content"
+          backgroundColor={Colors.tintColorPrimary}
         />
 
         <ModalAlert
@@ -252,19 +265,20 @@ class MapsInspeksi extends React.Component {
           showsIndoors = {true}
           initialRegion={this.state.region}
           followsUserLocation={false}
-          zoomEnabled={false}
           scrollEnabled={false}
+          zoomEnabled={false}
           onMapReady={()=>this.onMapReady()}
           >
           {/* {skm.data.polygons.map((poly, index) => ( */}
-          {this.state.poligons.length > 1 && this.state.poligons.map((poly, index) => (
+           {this.state.poligons.length > 1 && this.state.poligons.map((poly, index) => (
             <View key={index}>
               <Polygon
                 coordinates={poly.coords}
                 fillColor="rgba(0, 200, 0, 0.5)"
                 strokeColor="rgba(0,0,0,0.5)"
                 strokeWidth={2}
-                tappable={true}           
+                tappable={true}
+                // onPress={()=>this.navigateScreen('BuatInspeksi', poly.werks_afd_block_code)}                
                 onPress={()=>this.onClickBlok(poly.werks_afd_block_code)}
               />
               <Marker
@@ -295,7 +309,7 @@ class MapsInspeksi extends React.Component {
   }
 }
 
-MapsInspeksi.propTypes = {
+MapsEbcc.propTypes = {
   provider: ProviderPropType,
 };
 
@@ -342,4 +356,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MapsInspeksi;
+export default MapsEbcc;

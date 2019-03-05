@@ -318,22 +318,6 @@ class KondisiBaris1 extends Component {
 
                 {/*INPUT*/}
                 <View style={{ backgroundColor: 'white' }}>
-                    {/* <View style={styles.containerLabel}>
-                        <Text style={styles.txtLabel}>Jumlah Pokok</Text>
-                        <View style={[styles.containerInput, {flex:5}]}>
-                            <TouchableOpacity style={styles.btnMinus} onPress={()=>{this.decreaseNumber('JP')}}>
-                                <Icon2 name={"minus"}  size={20} color="white" />
-                            </TouchableOpacity>
-                            <TextInput
-                                underlineColorAndroid={'transparent'}
-                                style={[styles.searchInput]}
-                                value={this.state.jumlahPokok}                                    
-                                onChangeText={(jumlahPokok) => { this.setState({ jumlahPokok: jumlahPokok }) }}/>
-                            <TouchableOpacity style={styles.btnAdd} onPress={()=>{this.increaseNumber('JP')}}>
-                                <Icon name={"add"}  size={20} color="white" />
-                            </TouchableOpacity>
-                        </View>
-                    </View>                       */}
                     <View style={styles.containerLabel}>
                         <Text style={styles.txtLabel}>Pokok Panen</Text>
                         <View style={[styles.containerInput, { flex: 5 }]}>
