@@ -1,36 +1,42 @@
-import { createStackNavigator } from 'react-navigation';
-import SplashScreen from '../Screen/SplashScreen';
-import Login from '../Screen/Login';
-import MainMenu from '../Screen/Home/MainTabNavigator';
+import { createStackNavigator } from 'react-navigation'
+import SplashScreen from '../Screen/SplashScreen'
+import Login from '../Screen/Login'
+import MainMenu from '../Screen/Home/MainTabNavigator'
 
 //finding
-import FindingFormNavigator from '../Screen/Finding/FindingFormNavigator';
-import FormStep1 from '../Screen/Finding/FormStep1';
-import FormStep2 from '../Screen/Finding/FormStep2';
-import DetailFindingScreen from '../Screen/Finding/DetailFindingScreenRedesign';
+import FindingFormNavigator from '../Screen/Finding/FindingFormNavigator'
+import FormStep1 from '../Screen/Finding/FormStep1'
+import FormStep2 from '../Screen/Finding/FormStep2'
+import DetailFindingScreen from '../Screen/Finding/DetailFindingScreenRedesign'
 import BuktiKerja from '../Screen/Finding/BuktiKerja'
 import TakeFotoBukti from '../Screen/Finding/TakeFoto'
 import PilihKontak from '../Screen/Finding/PilihKontak'
 import PilihKategori from '../Screen/Finding/PilihKategori'
 import PilihBlok from '../Screen/Finding/PilihBlok'
-import MapsFinding from '../Screen/Finding/MapsFinding';
+import MapsFinding from '../Screen/Finding/MapsFinding'
 // import FormInspectionNavigator from '../Screen/Inspeksi/Navigation/FormInspectionNavigator';
 
 //inspeksi
-import DetailHistoryInspeksi from '../Screen/Inspeksi/HistoryInspeksiDetail';
-import BuatInspeksi from '../Screen/Inspeksi/BuatInspeksi';
-import TakeFotoBaris from '../Screen/Inspeksi/TakePhotoBaris';
-import KondisiBaris1 from '../Screen/Inspeksi/KondisiBaris1';
-import KondisiBaris2 from '../Screen/Inspeksi/KondisiBaris2';
-import TakeFotoSelfie from '../Screen/Inspeksi/TakePhotoSelfie';
-import KondisiBarisAkhir from '../Screen/Inspeksi/KondisiBarisAkhir';
-import SelesaiInspeksi from '../Screen/Inspeksi/SelesaiInspeksi';
-import DetailBaris from '../Screen/Inspeksi/DetailBaris';
-import Step1Finding from '../Screen/Inspeksi/Step1Finding';
-import Step2Finding from '../Screen/Inspeksi/Step2Finding';
-import TakeFotoFinding from '../Screen/Inspeksi/TakeFotoFinding';
-import MapsInspeksi from '../Screen/Inspeksi/MapsInspeksi';
+import DetailHistoryInspeksi from '../Screen/Inspeksi/HistoryInspeksiDetail'
+import BuatInspeksi from '../Screen/Inspeksi/BuatInspeksi'
+import TakeFotoBaris from '../Screen/Inspeksi/TakePhotoBaris'
+import KondisiBaris1 from '../Screen/Inspeksi/KondisiBaris1'
+import KondisiBaris2 from '../Screen/Inspeksi/KondisiBaris2'
+import TakeFotoSelfie from '../Screen/Inspeksi/TakePhotoSelfie'
+import KondisiBarisAkhir from '../Screen/Inspeksi/KondisiBarisAkhir'
+import SelesaiInspeksi from '../Screen/Inspeksi/SelesaiInspeksi'
+import DetailBaris from '../Screen/Inspeksi/DetailBaris'
+import Step1Finding from '../Screen/Inspeksi/Step1Finding'
+import Step2Finding from '../Screen/Inspeksi/Step2Finding'
+import TakeFotoFinding from '../Screen/Inspeksi/TakeFotoFinding'
+import MapsInspeksi from '../Screen/Inspeksi/MapsInspeksi'
 
+//ebcc
+import EbccQrCode from '../Screen/Ebcc/EbccQrCode'
+import FotoJanjang from '../Screen/Ebcc/FotoJanjangEbcc'
+import FotoSelfieEbcc from '../Screen/Ebcc/FotoSelfieEbcc'
+import KriteriaBuah from '../Screen/Ebcc/KriteriaBuah'
+import ReasonManualTPH from '../Screen/Ebcc/ReasonManualTPH'
 
 import SyncScreen from '../Screen/SyncTest';
 import InboxScreen from '../Screen/Inbox';
@@ -105,10 +111,16 @@ const main = createStackNavigator({
     DetailBaris: { screen: DetailBaris },
     MapsInspeksi: { screen: MapsInspeksi },
 
+    //ebccValidation
+    EbccQrCode: { screen: EbccQrCode }, 
+    FotoJanjang: { screen: FotoJanjang }, 
+    FotoSelfieEbcc: { screen: FotoSelfieEbcc }, 
+    KriteriaBuah: { screen: KriteriaBuah }, 
+    ReasonManualTPH: { screen: ReasonManualTPH }, 
+
     // test: { screen: test },
     // TestUpload: {screen:TestUpload}
-    // OpenGl: { screen: OpenGl },
-    // ContohMap: { screen: ContohMap },    
+    // OpenGl: { screen: OpenGl }, 
 
 }, {
         headerMode: 'screen',

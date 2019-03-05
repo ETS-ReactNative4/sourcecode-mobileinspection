@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
-
+import EbccTabNavigator from './EbccTabNavigator'
 import Colors from '../../Constant/Colors'
 
-export default class FindingScreen extends Component {
+export default class EbccValidationScreen extends Component {
+  static router = EbccTabNavigator.router;
 
   static navigationOptions = ({ navigation }) => ({
     headerStyle: {
@@ -37,9 +38,8 @@ export default class FindingScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={{ height: 48, backgroundColor: 'grey' }} />
-        <Image style={{ width: 400, height: 300 }} source={require('../../Images/img-cooming-soon-1.png')} />
-      </View>
+        <EbccTabNavigator navigation={this.props.navigation} />
+      </View >
     )
   }
 }
@@ -47,9 +47,6 @@ export default class FindingScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
-    padding: 16,
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
+    flex: 1
   }
 });

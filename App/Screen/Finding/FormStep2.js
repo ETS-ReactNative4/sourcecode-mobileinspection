@@ -363,7 +363,6 @@ class FormStep2 extends Component {
 				message: 'Ups blok yang kamu pilih salah',
                 icon: require('../../Images/ic-blm-input-lokasi.png')
             });
-            //alert('Blok yg kamu pilih tidak valid')
         }
     }
 

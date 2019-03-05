@@ -1,9 +1,8 @@
 "use strict";
 import React from 'react';
 import { ImageBackground, StatusBar, TouchableOpacity, TouchableNativeFeedback, View, ScrollView, Image, StyleSheet, Dimensions } from 'react-native';
-import { Container, Content, Card, CardItem, Thumbnail, Text, Left, Body, Icon } from 'native-base';
+import { Thumbnail, Text } from 'native-base';
 import { connect } from 'react-redux'
-import Icons from 'react-native-vector-icons/MaterialIcons'
 import Entypo from 'react-native-vector-icons/Entypo'
 import Colors from '../../Constant/Colors'
 import TaskServices from '../../Database/TaskServices'
@@ -17,7 +16,6 @@ import { changeFormatDate, getThumnail } from '../../Lib/Utils';
 import FastImage from 'react-native-fast-image'
 import SwiperSlider from 'react-native-swiper'
 import { dirPhotoInspeksiBaris, dirPhotoInspeksiSelfie, dirPhotoTemuan, dirPhotoKategori } from '../../Lib/dirStorage';
-import ModalAlert from '../../Component/ModalAlert'
 
 
 
