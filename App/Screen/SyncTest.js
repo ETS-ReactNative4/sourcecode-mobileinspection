@@ -34,7 +34,7 @@ var RNFS = require('react-native-fs');
 
 // import moment from 'moment';
 
-const link = 'http://149.129.250.199:3008/api';
+const link = 'http://149.129.250.199:3008/api/';
 //const link = "http://app.tap-agri.com/mobileinspection/ins-msa-auth/api/";
 const user = TaskServices.getAllData('TR_LOGIN')[0];
 
@@ -1002,14 +1002,7 @@ class SyncScreen extends React.Component {
 
     _crudTM_Inspeksi_Param(data) {
         TaskServices.saveData('TM_TIME_TRACK', data);
-        RNFS.copyFile(TaskServices.getPath(), 'file:///storage/emulated/0/MobileInspection/data.realm');
-        this.setState({ progressParamInspection: 1, valueParamInspection: 1, totalParamInspection: 1, showButton: true });
-        this.setState({
-            showModal: true,
-            title: 'Sync Berhasil',
-            message: 'Yeay sinkronisasi udah selesai!',
-            icon: require('../Images/ic-sync-berhasil.png')
-        });
+        this.setState({ progressParamInspection: 1, valueParamInspection: 1, totalParamInspection: 1 });
 
         // let arr = ['hectare-statement/block', 'hectare-statement/afdeling', 'hectare-statement/region', 'hectare-statement/est', 
         // 'hectare-statement/land-use', 'hectare-statement/comp', 'auth/content', 'auth/content-label', 'auth/kriteria',
@@ -1021,6 +1014,70 @@ class SyncScreen extends React.Component {
         //     this.fetchingMobileSync(item);
         // });        
     }
+	_reset_token(){
+		let allLoginData = TaskServices.findBy('TR_LOGIN','STATUS','LOGIN');
+		if(allLoginData.length>0){
+			let token = allLoginData[0].ACCESS_TOKEN;
+			fetch(link+'token/generate/', {
+				method: 'GET',
+				headers: {
+					'Authorization': `Bearer ${token}`
+				}
+			})
+			.then((response) => {
+				return response.json();
+			})
+			.then((data) => {
+				if(data.status){
+					let newToken = data.data;
+					let allLoginData = TaskServices.findBy('TR_LOGIN','STATUS','LOGIN');
+					if(allLoginData.length>0){
+						let oldUser = Object.assign({}, allLoginData[0],{ACCESS_TOKEN:newToken});
+						TaskServices.updateByPrimaryKey('TR_LOGIN',oldUser);
+						let newLoginData = TaskServices.findBy('TR_LOGIN','STATUS','LOGIN');
+						RNFS.copyFile(TaskServices.getPath(), 'file:///storage/emulated/0/MobileInspection/data.realm');
+						this.setState({
+							showModal: true,
+							title: 'Sync Berhasil',
+							message: 'Yeay sinkronisasi udah selesai!',
+							icon: require('../Images/ic-sync-berhasil.png'), 
+							showButton: true
+						});
+					}
+					else{
+						this.setState({
+							showModal: true,
+							title: 'Sync Gagal',
+							message: 'Gagal mendapatkan informasi user',
+							icon: require('../Images/ic-sync-gagal.png'), 
+							showButton: true
+						});
+					}
+				}
+				else{
+					this.setState({
+						showModal: true,
+						title: 'Sync Gagal',
+						message: 'Gagal memperbarui token',
+						icon: require('../Images/ic-sync-gagal.png'), 
+						showButton: true
+					});
+				}
+			})
+			.catch((data)=>{
+				console.log("catch",data)
+			});
+		}
+		else{
+			this.setState({
+				showModal: true,
+				title: 'Sync Gagal',
+				message: 'Anda belum login',
+				icon: require('../Images/ic-sync-gagal.png'), 
+				showButton: true
+			});
+		}
+	}
 
     //download image
     async _downloadImageFinding(data) {
@@ -1525,6 +1582,7 @@ class SyncScreen extends React.Component {
                 this._crudTM_Inspeksi_Param(dataJSON);
             }
             this.props.resetParamTrack();
+			this._reset_token();
             this.setState({ showButton: true });
         }
 
