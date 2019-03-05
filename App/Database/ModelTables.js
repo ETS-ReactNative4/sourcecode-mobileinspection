@@ -323,6 +323,45 @@ const TM_TIME_TRACK = {
     }
 }
 
+const TM_KUALITAS = {
+    name: 'ID_KUALITAS',
+    properties: {
+        ID_KUALITAS: 'string',
+        NAMA_KUALITAS: 'string',
+        UOM: 'string',
+        GROUP_KUALITAS: 'string',        
+        STATUS: 'string',
+        SORT: 'string',
+        INSERT_DATE: 'string',
+    }
+}
+
+const TR_H_EBCC_VALIDATION = {
+    name: 'EBCC_VALIDATION_CODE',
+    properties: {
+        EBCC_VALIDATION_CODE: 'string',
+        WERKS: 'string',
+        AFD_CODE: 'string',
+        BLOCK_CODE: 'string',        
+        NO_TPH: 'string',
+        STATUS_TPH_SCAN: 'string',
+        DELIVERY_CODE: 'string',
+        STATUS_DELIVERY_CODE: 'string',
+        INSERT_USER: 'string',
+        INSERT_DATE: 'string'
+    }
+}
+
+const TR_D_EBCC_VALIDATION = {
+    name: 'EBCC_VALIDATION_D_CODE',
+    properties: {
+        EBCC_VALIDATION_D_CODE: 'string',
+        EBCC_VALIDATION_CODE: 'string',
+        ID_KUALITAS: 'string',
+        JUMLAH: 'string'
+    }
+}
+
 export default {
     TR_LOGIN,
     TR_BLOCK_INSPECTION_H,
@@ -345,5 +384,9 @@ export default {
     TM_CONTENT,
     TM_CONTENT_LABEL,
     TM_INSPECTION_TRACK,
-    TM_TIME_TRACK
+    TM_TIME_TRACK,
+
+    TM_KUALITAS,
+    TR_H_EBCC_VALIDATION,
+    TR_D_EBCC_VALIDATION
 }

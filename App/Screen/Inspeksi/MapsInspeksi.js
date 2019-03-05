@@ -280,8 +280,8 @@ class MapsInspeksi extends React.Component {
                 strokeColor="rgba(0,0,0,0.5)"
                 strokeWidth={2}
                 tappable={true}
-                // onPress={()=>this.navigateScreen('BuatInspeksi', poly.werks_afd_block_code)}                
-                onPress={()=>this.onClickBlok(poly.werks_afd_block_code)}
+                onPress={()=>this.navigateScreen('BuatInspeksi', poly.werks_afd_block_code)}                
+                // onPress={()=>this.onClickBlok(poly.werks_afd_block_code)}
               />
               <Marker
                 ref={ref => poly.marker = ref}
