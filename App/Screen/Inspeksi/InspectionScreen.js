@@ -6,7 +6,6 @@ import InspectionTabNavigator from './InspectionTabNavigator'
 import { connect } from 'react-redux';
 import InspeksiAction from '../../Redux/InspeksiRedux';
 import TaskServices from '../../Database/TaskServices';
-import {getTodayDate} from '../../Lib/Utils';
 
 
 class InspectionScreen extends Component {

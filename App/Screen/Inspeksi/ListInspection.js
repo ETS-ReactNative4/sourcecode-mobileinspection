@@ -6,7 +6,7 @@ import TaskServices from '../../Database/TaskServices'
 import { NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux';
 import InspeksiAction from '../../Redux/InspeksiRedux';
-import { getTodayDate } from '../../Lib/Utils';
+import { getTodayDateFromGPS,getTodayDate } from '../../Lib/Utils';
 import Icon2 from 'react-native-vector-icons/MaterialIcons'
 
 import { ProgressDialog } from 'react-native-simple-dialogs';
@@ -21,25 +21,25 @@ class ListInspection extends Component {
     }
   }
 
-  loadData() {
+  async loadData() {
     let dataHeader = TaskServices.getAllData('TR_BLOCK_INSPECTION_H');
     if (dataHeader !== null) {
       for (var i = 0; i < dataHeader.length; i++) {
-        this.kirimInspeksiHeader(dataHeader[i]);
+        await this.kirimInspeksiHeader(dataHeader[i]);
       }
     }
   }
 
-  loadDataDetail(param) {
+  async loadDataDetail(param) {
     let data = TaskServices.findBy('TR_BLOCK_INSPECTION_D', 'BLOCK_INSPECTION_CODE', param);
     if (data !== null) {
       for (var i = 0; i < data.length; i++) {
-        this.kirimInspeksiDetail(data[i]);
+        await this.kirimInspeksiDetail(data[i]);
       }
     }
   }
 
-  kirimInspeksiHeader(param) {
+  async kirimInspeksiHeader(param) {
     this.props.postInspeksi({
       BLOCK_INSPECTION_CODE: param.BLOCK_INSPECTION_CODE,
       WERKS: param.WERKS,
@@ -48,7 +48,7 @@ class ListInspection extends Component {
       INSPECTION_DATE: param.INSPECTION_DATE,
       INSPECTION_RESULT: param.INSPECTION_RESULT,
       STATUS_SYNC: 'YES',
-      SYNC_TIME: getTodayDate('YYYY-MM-DD HH:mm:ss'),
+      SYNC_TIME: await getTodayDateFromGPS('YYYY-MM-DD HH:mm:ss'),
       START_INSPECTION: param.START_INSPECTION,
       END_INSPECTION: param.END_INSPECTION,
       LAT_START_INSPECTION: param.LAT_START_INSPECTION,
@@ -58,7 +58,7 @@ class ListInspection extends Component {
     });
   }
 
-  kirimInspeksiDetail(param) {
+  async kirimInspeksiDetail(param) {
     this.props.postInspeksiDetail({
       BLOCK_INSPECTION_CODE: param.BLOCK_INSPECTION_CODE,
       BLOCK_INSPECTION_CODE_D: param.BLOCK_INSPECTION_CODE_D,
@@ -66,7 +66,7 @@ class ListInspection extends Component {
       AREAL: param.AREAL,
       VALUE: param.VALUE,
       STATUS_SYNC: 'YES',
-      SYNC_TIME: getTodayDate('YYYY-MM-DD HH:mm:ss')
+      SYNC_TIME: await getTodayDateFromGPS('YYYY-MM-DD HH:mm:ss')
     });
   }
 

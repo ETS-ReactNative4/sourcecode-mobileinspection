@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { RNSlidingButton, SlideDirection } from 'rn-sliding-button';
 import Entypo from 'react-native-vector-icons/Entypo'
 import { NavigationActions, StackActions } from 'react-navigation';
-import { getTodayDate } from '../../Lib/Utils'
+import { getTodayDateFromGPS,getTodayDate } from '../../Lib/Utils'
 import R from 'ramda';
 import ModalAlert from '../../Component/ModalAlert'
 
@@ -305,12 +305,11 @@ class KondisiBaris2 extends Component {
     }
 
 
-    onSlideRight = () => {
-        //perform Action on slide success.
-        this.validation()
+    onSlideRight = async () => {
+        await this.validation()
     };
 
-    validation() {
+    async validation(){
         //TM dan TBM3 TPH mandatory
         //TM Prunning mandatory
         //titi panen jika switch on wajib dipilih
@@ -373,16 +372,16 @@ class KondisiBaris2 extends Component {
                 icon: require('../../Images/ic-inputan-tidak-lengkap.png')
             });
         } else {
-            this.insertDB();
+            await this.insertDB();
         }
     }
-
-    insertDB() {
-
+	
+    async insertDB() {
+		var today = await getTodayDateFromGPS('YYYYMMDDHHmmss');
         var listBaris2 = [];
         if (this.state.showPiringan) {
             var data = {
-                BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${getTodayDate('YYYYMMDDHHmmss')}7`,
+                BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}7`,
                 BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
                 ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
                 CONTENT_INSPECTION_CODE: 'CC0007',
@@ -395,7 +394,7 @@ class KondisiBaris2 extends Component {
 
         if (this.state.showSarkul) {
             data = {
-                BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${getTodayDate('YYYYMMDDHHmmss')}8`,
+                BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}8`,
                 BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
                 ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
                 CONTENT_INSPECTION_CODE: 'CC0008',
@@ -408,7 +407,7 @@ class KondisiBaris2 extends Component {
 
         if (this.state.showTph && this.state.switchTPH) {
             data = {
-                BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${getTodayDate('YYYYMMDDHHmmss')}9`,
+                BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}9`,
                 BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
                 ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
                 CONTENT_INSPECTION_CODE: 'CC0009',
@@ -421,7 +420,7 @@ class KondisiBaris2 extends Component {
 
         if (this.state.showGwg) {
             data = {
-                BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${getTodayDate('YYYYMMDDHHmmss')}10`,
+                BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}10`,
                 BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
                 ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
                 CONTENT_INSPECTION_CODE: 'CC0010',
@@ -434,7 +433,7 @@ class KondisiBaris2 extends Component {
 
         if (this.state.showPrun) {
             data = {
-                BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${getTodayDate('YYYYMMDDHHmmss')}11`,
+                BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}11`,
                 BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
                 ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
                 CONTENT_INSPECTION_CODE: 'CC0011',
@@ -447,7 +446,7 @@ class KondisiBaris2 extends Component {
 
         if (this.state.showTipa && this.state.switchTIPA) {
             data = {
-                BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${getTodayDate('YYYYMMDDHHmmss')}12`,
+                BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}12`,
                 BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
                 ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
                 CONTENT_INSPECTION_CODE: 'CC0012',
@@ -460,7 +459,7 @@ class KondisiBaris2 extends Component {
 
         if(this.state.PENABUR !== '' ){
             data = {
-                BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${getTodayDate('YYYYMMDDHHmmss')}13`,
+                BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}13`,
                 BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
                 ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
                 CONTENT_INSPECTION_CODE: 'CC0013',
@@ -473,7 +472,7 @@ class KondisiBaris2 extends Component {
 
         if(this.state.PUPUK !== '' ){
             data = {
-                BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${getTodayDate('YYYYMMDDHHmmss')}14`,
+                BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}14`,
                 BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
                 ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
                 CONTENT_INSPECTION_CODE: 'CC0014',
@@ -486,7 +485,7 @@ class KondisiBaris2 extends Component {
 
         if (this.state.showKastrasi) {
             data = {
-                BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${getTodayDate('YYYYMMDDHHmmss')}15`,
+                BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}15`,
                 BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
                 ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
                 CONTENT_INSPECTION_CODE: 'CC0015',
@@ -499,7 +498,7 @@ class KondisiBaris2 extends Component {
 
         if (this.state.showSanitasi) {
             data = {
-                BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${getTodayDate('YYYYMMDDHHmmss')}16`,
+                BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}16`,
                 BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
                 ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
                 CONTENT_INSPECTION_CODE: 'CC0016',

@@ -36,6 +36,7 @@ import SyncScreen from '../Screen/SyncTest';
 import InboxScreen from '../Screen/Inbox';
 import FilterScreen from '../Screen/FilterScreen';
 import BisnisAreaScreen from '../Screen/BisnisArea';
+import AfdelingScreen from '../Screen/Afdeling';
 import CalendarsScreen from '../Screen/Calendar';
 import PemberiTugas from '../Screen/PemberiTugas';
 // import OpenGl from '../Screen/OpenGl';
@@ -87,6 +88,7 @@ const main = createStackNavigator({
     Inbox: { screen: InboxScreen },
     Filter: { screen: FilterScreen },
     BisnisArea: { screen: BisnisAreaScreen },
+    Afdeling: { screen: AfdelingScreen },
     Calendar: { screen: CalendarsScreen },
     PemberiTugas: { screen: PemberiTugas },
     MapsFinding: { screen: MapsFinding },

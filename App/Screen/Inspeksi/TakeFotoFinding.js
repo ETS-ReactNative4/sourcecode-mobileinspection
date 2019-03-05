@@ -23,7 +23,7 @@ import random from 'random-string'
 const moment = require('moment');
 var RNFS = require('react-native-fs');
 import R from 'ramda';
-import { getTodayDate } from '../../Lib/Utils';
+import { getTodayDateFromGPS,getTodayDate } from '../../Lib/Utils';
 
 class TakeFoto extends Component{
 
@@ -104,8 +104,9 @@ class TakeFoto extends Component{
           skipProcessing: false,
           fixOrientation: true
         };
-        const data = await this.camera.takePictureAsync(takeCameraOptions);            
-        var pname = `P${this.state.user.USER_AUTH_CODE}${getTodayDate('YYMMDDHHmmss')}.jpg`//'F' + this.state.user.USER_AUTH_CODE + random({ length: 3 }).toUpperCase() + ".jpg";
+        const data = await this.camera.takePictureAsync(takeCameraOptions); 
+		var today = await getTodayDateFromGPS('YYMMDDHHmmss')
+        var pname = `P${this.state.user.USER_AUTH_CODE}${today}.jpg`//'F' + this.state.user.USER_AUTH_CODE + random({ length: 3 }).toUpperCase() + ".jpg";
         var imgPath = dirPhotoTemuan + '/' + pname;
 
         RNFS.copyFile(data.uri, imgPath);

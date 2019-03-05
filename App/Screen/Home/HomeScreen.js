@@ -152,6 +152,7 @@ class HomeScreen extends React.Component {
   _initFilterData(dataFilter) {
     dataFilter.map(item => {
       let ba = item.ba;
+      let afd = item.afd;
       let userAuth = item.userAuth;
       let status = item.status;
       let stBatasWaktu = item.stBatasWaktu;
@@ -160,6 +161,7 @@ class HomeScreen extends React.Component {
       let valAssignto = item.valAssignto;
 
       let varBa = ' AND WERKS = ' + `"${ba}"`
+      let varAfd = ' AND AFD_CODE = ' + `"${afd}"`
       let varUserAuth = ' AND INSERT_USER = ' + `"${userAuth}"`
       let varStatus = ' AND STATUS = ' + `"${status}"`
       let varInsertTime = ' AND INSERT_TIME >= ' + `"${stBatasWaktu}"` + ' AND INSERT_TIME <= ' + `"${endBatasWaktu}"`
@@ -169,6 +171,13 @@ class HomeScreen extends React.Component {
         stBa = ' AND WERKS CONTAINS ' + `"${""}"`
       } else {
         stBa = varBa
+      }
+	  
+      let stAfd;
+      if (afd == 'Pilih Afdeling') {
+        stAfd = ' AND AFD_CODE CONTAINS ' + `"${""}"`
+      } else {
+        stAfd = varAfd
       }
 
       let stUserAuth;
@@ -193,11 +202,13 @@ class HomeScreen extends React.Component {
       }
 
       let data;
-      if (ba == 'Pilih Lokasi' && valAssignto == 'Pilih Pemberi Tugas' && status == 'Pilih Status' && valBatasWaktu == 'Pilih Batas Waktu') {
+      if (ba == 'Pilih Lokasi' && afd == 'Pilih Afdeling' && 
+			valAssignto == 'Pilih Pemberi Tugas' && status == 'Pilih Status' && valBatasWaktu == 'Pilih Batas Waktu') {
         data = this._filterHome();
         this.setState({ data, isFilter: false });
       } else {
-        data = this._filterHome().filtered(`AFD_CODE CONTAINS ""${stBa}${stUserAuth}${stStatus}${stInsertTime}`);
+		  //bingung
+        data = this._filterHome().filtered(`AFD_CODE CONTAINS ""${stBa}${stAfd}${stUserAuth}${stStatus}${stInsertTime}`);
         if (data.length == 0) {
           this.setState({ data, isFilter: true, showModal: true, title: 'Tidak Ada Data', message: 'Wah ga ada data berdasarkan filter ini.', icon: require('../../Images/ic-no-data.png') });
         } else {

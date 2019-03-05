@@ -7,7 +7,7 @@ import Icon2 from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
 import R from 'ramda';
 import TaskServices from '../../Database/TaskServices'
-import { getTodayDate } from '../../Lib/Utils'
+import { getTodayDateFromGPS,getTodayDate } from '../../Lib/Utils'
 
 import ModalAlertConfirmation from '../../Component/ModalAlertConfirmation';
 
@@ -89,10 +89,11 @@ class KondisiBaris1 extends Component {
         return true;
     }
 
-    insertDB() {
+    async insertDB() {
+		var today = await getTodayDateFromGPS('YYYYMMDDHHmmss');
         var kondisiBaris1 = []
         var data = {
-            BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${getTodayDate('YYYYMMDDHHmmss')}2`,
+            BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}2`,
             BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
             ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
             CONTENT_INSPECTION_CODE: 'CC0002',
@@ -103,7 +104,7 @@ class KondisiBaris1 extends Component {
         kondisiBaris1.push(data);
 
         data = {
-            BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${getTodayDate('YYYYMMDDHHmmss')}3`,
+            BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}3`,
             BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
             ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
             CONTENT_INSPECTION_CODE: 'CC0003',
@@ -114,7 +115,7 @@ class KondisiBaris1 extends Component {
         kondisiBaris1.push(data);
 
         data = {
-            BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${getTodayDate('YYYYMMDDHHmmss')}4`,
+            BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}4`,
             BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
             ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
             CONTENT_INSPECTION_CODE: 'CC0004',
@@ -125,7 +126,7 @@ class KondisiBaris1 extends Component {
         kondisiBaris1.push(data);
 
         data = {
-            BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${getTodayDate('YYYYMMDDHHmmss')}5`,
+            BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}5`,
             BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
             ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
             CONTENT_INSPECTION_CODE: 'CC0005',
@@ -136,7 +137,7 @@ class KondisiBaris1 extends Component {
         kondisiBaris1.push(data);
 
         data = {
-            BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${getTodayDate('YYYYMMDDHHmmss')}6`,
+            BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}6`,
             BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
             ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
             CONTENT_INSPECTION_CODE: 'CC0006',

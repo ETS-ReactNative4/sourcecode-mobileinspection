@@ -19,7 +19,7 @@ import moment from 'moment'
 import SlidingUpPanel from 'rn-sliding-up-panel'
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps'
 import TaskServices from '../../Database/TaskServices'
-import { getTodayDate } from '../../Lib/Utils'
+import { getTodayDateFromGPS,getTodayDate } from '../../Lib/Utils'
 import IIcon from 'react-native-vector-icons/Ionicons'
 import Carousel from 'react-native-looped-carousel'
 import { dirPhotoTemuan } from '../../Lib/dirStorage'
@@ -102,7 +102,7 @@ class Step2Finding extends Component {
                 { step: '1', title: 'Ambil Photo' },
                 { step: '2', title: 'Tulis Keterangan' }
             ],
-            TRANS_CODE: `F${user.USER_AUTH_CODE}${getTodayDate('YYMMDDHHmmss')}`,
+            TRANS_CODE: '',
             colorPriority: '#ddd',
             disableCalendar: true,
             inspeksiHeader,
@@ -114,7 +114,15 @@ class Step2Finding extends Component {
             showModalConfirmation: false,
             icon: ''
         }
+		this.initTrans_Code();
     }
+	
+	async initTrans_Code(){
+		let today = await getTodayDateFromGPS('YYMMDDHHmmss');
+		this.setState({
+			TRANS_CODE: `F${user.USER_AUTH_CODE}${today}`
+		})
+	}
 
     static navigationOptions = {
         headerStyle: {
@@ -224,7 +232,7 @@ class Step2Finding extends Component {
         });
     };
 
-    validation() {
+    validation = async () => {
         let isSameUser = this.state.assignto == this.state.user.USER_AUTH_CODE ? true : false;
         let title = 'Inputan Tidak Lengkap';
         if (isEmpty(this.state.keterangan)) {
@@ -258,11 +266,13 @@ class Step2Finding extends Component {
                 icon: require('../../Images/ic-batas-waktu.png')
             });
         } else {
-            this.saveData()
+            await this.saveData()
         }
     }
 
-    saveData() {
+    async saveData() {
+		let insertTime = await getTodayDateFromGPS('YYYYMMDDHHmmss');
+		insertTime = parseInt(insertTime);
         var data = {
             FINDING_CODE: this.state.TRANS_CODE,
             WERKS: this.state.werks,
@@ -279,7 +289,7 @@ class Step2Finding extends Component {
             LONG_FINDING: this.state.longitude.toString(),
             REFFERENCE_INS_CODE: "",
             INSERT_USER: this.state.user.USER_AUTH_CODE,
-            INSERT_TIME: parseInt(getTodayDate('YYYYMMDDHHmmss')),
+            INSERT_TIME: insertTime,
             STATUS_SYNC: "N"
         }
 

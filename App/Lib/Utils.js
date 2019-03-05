@@ -183,6 +183,30 @@ export function getUUID() {
 	return uuid.v4();
 }
 
+export async function getTodayDateFromGPS(format) {
+	var response = { fetchLocation: false };
+	var getPosition = function (options) {
+		return new Promise(function (resolve, reject) {
+			navigator.geolocation.getCurrentPosition(resolve, reject, options);
+		});
+	}
+
+	await getPosition({ enableHighAccuracy: true, timeout: 5000, maximumAge: 0 })
+	.then((position) => {
+		response = { fetchLocation: true, currTimeStamp: position.timestamp };
+	})
+	.catch((err) => {
+		response = { fetchLocation: false , msg: err.message};
+	});
+	if(response.fetchLocation){
+		let currentTimestamp = convertTimestampToDate(response.currTimeStamp, format);
+		return currentTimestamp;
+	}
+	else{
+		return response;
+	}
+}
+
 export function getTodayDate(format) {
 	var tgl = moment().format(format)
 	return tgl;

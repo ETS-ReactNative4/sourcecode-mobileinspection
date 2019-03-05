@@ -13,7 +13,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import MapView, { Polygon, ProviderPropType, Marker } from 'react-native-maps';
 import {RNSlidingButton, SlideDirection} from 'rn-sliding-button';
 import TaskService from '../../Database/TaskServices';
-import {getTodayDate, getCalculateTime, getUUID} from '../../Lib/Utils'
+import {getTodayDateFromGPS,getTodayDate, getCalculateTime, getUUID} from '../../Lib/Utils'
 import { NavigationActions, StackActions  } from 'react-navigation';
 import R from 'ramda';
 import geolib from 'geolib';
@@ -249,11 +249,11 @@ class KondisiBarisAkhir extends Component{
 
     }
 
-    onSlideRight = () => {
-        this.validation()
+    onSlideRight = async () => {
+        await this.validation()
     };
 
-    validation() {
+    async validation() {
         if (this.state.txtBaris == '' && this.state.switchLanjut) {
             this.setState({
                 showModal: true, title: 'Isi Baris', message: 'Kamu harus selalu pilih baris yaa :)',
@@ -265,7 +265,7 @@ class KondisiBarisAkhir extends Component{
                 icon: require('../../Images/ic-blm-input-lokasi.png')
             });
         } else {
-            this.saveData();
+            await this.saveData();
         }
     }
 
@@ -408,7 +408,7 @@ class KondisiBarisAkhir extends Component{
         }
     }
 
-    saveData(){
+    async saveData(){
         // let lat = '0.0';
         // let lon = '0.0';
         // if(this.state.latitude === 0.0 && this.state.longitude === 0.0){
@@ -422,6 +422,7 @@ class KondisiBarisAkhir extends Component{
         //     lat = this.state.latitude.toString();
         //     lon = this.state.longitude.toString();
         // }
+		let insertTime = await getTodayDateFromGPS('YYYY-MM-DD HH:mm:ss');
 
         if(this.state.from !== 'history'){
             var modelInspeksiH = {
@@ -439,12 +440,12 @@ class KondisiBarisAkhir extends Component{
                 STATUS_SYNC:'N',
                 SYNC_TIME:'',
                 START_INSPECTION: this.state.inspeksiHeader.START_INSPECTION,
-                END_INSPECTION: getTodayDate('YYYY-MM-DD HH:mm:ss'),
+                END_INSPECTION: insertTime,
                 LAT_START_INSPECTION: this.state.inspeksiHeader.LAT_START_INSPECTION, 
                 LONG_START_INSPECTION: this.state.inspeksiHeader.LONG_START_INSPECTION,
                 LAT_END_INSPECTION: this.state.latitude.toString(),
                 LONG_END_INSPECTION: this.state.longitude.toString(),
-                INSERT_TIME: getTodayDate('YYYY-MM-DD HH:mm:ss'), 
+                INSERT_TIME: insertTime, 
                 INSERT_USER: this.state.dataUsual.USER_AUTH,
                 TIME: this.state.menit,
                 DISTANCE: this.state.jarak
@@ -460,7 +461,7 @@ class KondisiBarisAkhir extends Component{
                 STATUS_IMAGE: 'BARIS',
                 STATUS_SYNC: 'N',
                 INSERT_USER: this.state.dataUsual.USER_AUTH,
-                INSERT_TIME: getTodayDate('YYYY-MM-DD HH:mm:ss')
+                INSERT_TIME: insertTime
             }
             TaskService.saveData('TR_IMAGE', image);
     
@@ -473,7 +474,7 @@ class KondisiBarisAkhir extends Component{
                 STATUS_IMAGE: 'SELFIE',
                 STATUS_SYNC: 'N',
                 INSERT_USER: this.state.dataUsual.USER_AUTH,
-                INSERT_TIME: getTodayDate('YYYY-MM-DD HH:mm:ss')
+                INSERT_TIME: insertTime
             }        
             TaskService.saveData('TR_IMAGE', selfie);
     
@@ -489,7 +490,7 @@ class KondisiBarisAkhir extends Component{
                         AREAL: this.state.dataUsual.BARIS,
                         STATUS_SYNC: 'N',
                         INSERT_USER: this.state.dataUsual.USER_AUTH,
-                        INSERT_TIME: getTodayDate('YYYY-MM-DD HH:mm:ss')
+                        INSERT_TIME: insertTime
                         
                     }
                     TaskService.saveData('TR_BLOCK_INSPECTION_D', mdl);     
@@ -508,7 +509,7 @@ class KondisiBarisAkhir extends Component{
                         AREAL: this.state.dataUsual.BARIS,
                         STATUS_SYNC: 'N',
                         INSERT_USER: this.state.dataUsual.USER_AUTH,
-                        INSERT_TIME: getTodayDate('YYYY-MM-DD HH:mm:ss')
+                        INSERT_TIME: insertTime
                     }
                     TaskService.saveData('TR_BLOCK_INSPECTION_D', mdl);        
                 }
@@ -517,7 +518,8 @@ class KondisiBarisAkhir extends Component{
             TaskService.saveData('TR_BARIS_INSPECTION', this.state.dataInspeksi)
         }
 
-        let blokInspectionCode = `I${this.state.dataUsual.USER_AUTH}${getTodayDate('YYMMDDHHmmss')}`
+		let today = await getTodayDateFromGPS('YYMMDDHHmmss');
+        let blokInspectionCode = `I${this.state.dataUsual.USER_AUTH}${today}`
         var params = {
             USER_AUTH: this.state.dataUsual.USER_AUTH,
             BA: this.state.dataUsual.BA,
@@ -548,7 +550,7 @@ class KondisiBarisAkhir extends Component{
                 INSPECTION_RESULT:'',
                 STATUS_SYNC:'N',
                 SYNC_TIME:'',
-                START_INSPECTION: getTodayDate('YYYY-MM-DD HH:mm:ss'),
+                START_INSPECTION: insertTime,
                 END_INSPECTION: '',
                 LAT_START_INSPECTION: this.state.inspeksiHeader.LAT_START_INSPECTION,
                 LONG_START_INSPECTION: this.state.inspeksiHeader.LONG_START_INSPECTION,
@@ -601,10 +603,11 @@ class KondisiBarisAkhir extends Component{
         );
     }
 
-    insertTrackLokasi(blokInsCode, lat, lon){
-        try {            
-            var trInsCode = `T${this.state.dataUsual.USER_AUTH}${getTodayDate('YYMMDDHHmmss')}`;
-            var today = getTodayDate('YYYY-MM-DD HH:mm:ss');
+    async insertTrackLokasi(blokInsCode, lat, lon){
+        try {
+			var curr = await getTodayDateFromGPS('YYMMDDHHmmss');
+            var trInsCode = `T${this.state.dataUsual.USER_AUTH}${curr}`;
+            var today = await getTodayDateFromGPS('YYYY-MM-DD HH:mm:ss');
             data = {
                 TRACK_INSPECTION_CODE: trInsCode,
                 BLOCK_INSPECTION_CODE: blokInsCode,

@@ -34,8 +34,8 @@ var RNFS = require('react-native-fs');
 
 // import moment from 'moment';
 
-//const link = 'http://149.129.245.230:3008/api/';
-const link = "http://app.tap-agri.com/mobileinspection/ins-msa-auth/api/";
+const link = 'http://149.129.250.199:3008/api';
+//const link = "http://app.tap-agri.com/mobileinspection/ins-msa-auth/api/";
 const user = TaskServices.getAllData('TR_LOGIN')[0];
 
 import ModalAlert from '../Component/ModalAlert';

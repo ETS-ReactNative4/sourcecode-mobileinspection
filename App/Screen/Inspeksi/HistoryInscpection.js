@@ -5,7 +5,6 @@ import {Card,CardItem} from 'native-base';
 import Colors from '../../Constant/Colors';
 import Taskservice from '../../Database/TaskServices'
 import { NavigationActions, StackActions  } from 'react-navigation';
-import {getTodayDate} from '../../Lib/Utils'
 import TaskServices from '../../Database/TaskServices';
 var RNFS = require('react-native-fs');
 const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
