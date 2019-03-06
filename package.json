@@ -21,6 +21,7 @@
     "react-native": "0.57.5",
     "react-native-action-button": "^2.8.5",
     "react-native-autocomplete-input": "^3.6.0",
+    "react-native-base64": "0.0.2",
     "react-native-calendario": "^0.2.5",
     "react-native-calendars": "^1.21.0",
     "react-native-camera": "git+https://git@github.com/react-native-community/react-native-camera",
