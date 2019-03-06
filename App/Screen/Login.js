@@ -24,6 +24,9 @@ import RNFetchBlob from 'rn-fetch-blob'
 import { dirPhotoTemuan, dirPhotoInspeksiBaris, dirPhotoInspeksiSelfie, dirPhotoKategori } from '../Lib/dirStorage';
 import ModalAlert from '../Component/ModalAlert'
 
+const baseUri = "http://149.129.250.199:3008/api/";
+//const baseUri = "http://app.tap-agri.com/api/"
+
 class Login extends Component {
 
     constructor(props) {
@@ -45,6 +48,7 @@ class Login extends Component {
     static navigationOptions = {
         header: null,
     }
+	
 
     get_IMEI_Number() {
         var IMEI_2 = IMEI.getImei();
@@ -86,6 +90,7 @@ class Login extends Component {
     checkUser(param) {
         if (TaskServices.getTotalData('TR_LOGIN') > 0) {
             let data = TaskServices.getAllData('TR_LOGIN')[0]
+			console.log("user login data",data)
             if (param.USER_AUTH_CODE !== data.USER_AUTH_CODE) {
                 this.resetMobileSync(param, data.ACCESS_TOKEN)
             } else {
@@ -99,7 +104,7 @@ class Login extends Component {
     }
 
     resetMobileSync(param, token) {
-        fetch('http://149.129.245.230:3008/api/mobile-sync/reset', {
+        fetch(baseUri+'mobile-sync/reset', {
             method: 'POST',
             headers: {
                 'Cache-Control': 'no-cache',
@@ -114,7 +119,7 @@ class Login extends Component {
             })
             .then((data) => {
                 // alert(data)
-                console.log(data)
+                console.log("resetMobileSync",data)
                 this.deleteAllTableAndFolder(param)
             });
     }
@@ -176,7 +181,7 @@ class Login extends Component {
     }
 
     postLogin(username, password, imei) {
-        fetch('http://149.129.245.230:3008/api/login', {
+        fetch(baseUri+'login', {
             method: 'POST',
             headers: {
                 'Cache-Control': 'no-cache',
