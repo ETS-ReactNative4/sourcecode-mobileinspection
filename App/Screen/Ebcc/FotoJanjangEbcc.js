@@ -7,7 +7,8 @@ import {
     Platform,
     BackHandler,
     Dimensions,
-    StatusBar
+    StatusBar,
+    BackAndroid
   } from 'react-native';
 import Colors from '../../Constant/Colors';
 import imgTakePhoto from '../../Images/icon/ic_take_photo.png';
@@ -18,31 +19,58 @@ import ImageResizer from 'react-native-image-resizer';
 import { dirPhotoEbccJanjang } from '../../Lib/dirStorage'
 import TaskService from '../../Database/TaskServices'
 import R from 'ramda';
-import moment from 'moment'
+import Icon2 from 'react-native-vector-icons/Ionicons';
+import { NavigationActions } from 'react-navigation';
+
+import ModalAlertConfirmation from '../../Component/ModalAlertConfirmation';
+import ModalAlert from '../../Component/ModalAlert';
 
 var RNFS = require('react-native-fs');
 const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
 
 class FotoJanjang extends Component {
 
-  static navigationOptions = {
-    headerStyle: {
-      backgroundColor: Colors.tintColorPrimary
-    },
-    title: 'Ambil Foto Janjang',
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      flex: 1,
-      fontSize: 18,
-      fontWeight: '400'
-    },
-  };
+  // static navigationOptions = {
+  //   headerStyle: {
+  //     backgroundColor: Colors.tintColorPrimary
+  //   },
+  //   title: 'Ambil Foto Janjang',
+  //   headerTintColor: '#fff',
+  //   headerTitleStyle: {
+  //     flex: 1,
+  //     fontSize: 18,
+  //     fontWeight: '400'
+  //   },
+  // };
+
+  static navigationOptions = ({ navigation }) => {
+    const { params = {} } = navigation.state;
+    return {
+      headerStyle: {
+        backgroundColor: Colors.tintColorPrimary
+      },
+      title: 'Ambil Foto Janjang',
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        flex: 1,
+        fontSize: 18,
+        fontWeight: '400'
+      },
+      headerLeft: (
+        <TouchableOpacity onPress={() => {params.handleBackButtonClick()}}>
+            <Icon2 style={{marginLeft: 12}} name={'ios-arrow-round-back'} size={45} color={'white'} />
+        </TouchableOpacity>
+      )
+    };
+  }
 
   constructor(props) {
     super(props);
 
     let params = props.navigation.state.params;
     let tphAfdWerksBlockCode = R.clone(params.tphAfdWerksBlockCode)
+    let statusScan = R.clone(params.statusScan)
+
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     this.state = {
       hasPhoto: false,
@@ -51,34 +79,58 @@ class FotoJanjang extends Component {
       dataModel: null,
       tphAfdWerksBlockCode,
       pathCache: '',
-      timestamp: getTodayDate('YYMMDDkkmmss')
+      timestamp: getTodayDate('YYMMDDkkmmss'),
+      ebccValCode: '',
+      dataHeader: null,
+      statusScan,
+      latitude: 0.0,
+      longitude: 0.0,
+      title: 'Title',
+      message: 'Message',
+      showModal: false,
+      showModal2: false,
+      icon: ''
     };
   }
 
   componentDidMount(){
     this.getLocation()
-    BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+    this.props.navigation.setParams({ handleBackButtonClick: this.handleBackButtonClick })
+    // BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+    BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
   }
 
   componentWillUnmount(){
-    BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+    // BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+    BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
   }
 
   handleBackButtonClick() { 
-    if(this.state.hasPhoto){
-        this.deleteFoto()
-    }
-    this.props.navigation.goBack(null);
+    this.setState({
+        showModal: true, title: 'Data Hilang',
+        message: 'Datamu belum tersimpan loh. Yakin mau dilanjutin?',
+        icon: require('../../Images/ic-not-save.png')
+    });    
     return true;
+  }
+
+  backAndDeletePhoto(){
+    if(this.state.hasPhoto){
+      this.deleteFoto()
+    }
+    const navigation = this.props.navigation;
+    let routeName = 'MainMenu'; 
+    this.setState({showModal: false})
+    Promise.all([navigation.dispatch(NavigationActions.navigate({ routeName : routeName}))]).
+      then(() => navigation.navigate('EbccValidation')).then(() => navigation.navigate('DaftarEbcc'));
   }
 
   getLocation() {
     navigator.geolocation.getCurrentPosition(
         (position) => {
             var lat = parseFloat(position.coords.latitude);
-            var lon = parseFloat(position.coords.longitude);   
-            var timestamp = moment(position.timestamp).format('YYMMDDkkmmss');
-            this.setState({currentDate: timestamp});            
+            var lon = parseFloat(position.coords.longitude);  
+            this.setState({latitude: lat, longitude: lon});
             this.setParameter();
                      
         },
@@ -88,7 +140,11 @@ class FotoJanjang extends Component {
             if (error && error.message == "No location provider available.") {
                 message = "Mohon nyalakan GPS anda terlebih dahulu.";
             }
-            this.setParameter();
+            this.setState({
+              showModal2: true, title: 'Lokasi GPS',
+              message: 'Kamu belum bisa lanjut sebelum lokasi GPS kamu belum ditemukan, lanjut cari lokasi?',
+              icon: require('../../Images/ic-no-gps.png')
+          }); 
         }, // go here if error while fetch location
         { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
     );
@@ -105,11 +161,12 @@ class FotoJanjang extends Component {
 
   setParameter() {
     let dataLogin = TaskService.getAllData('TR_LOGIN')[0];
-    var imgCode = `V${dataLogin.USER_AUTH_CODE}${this.state.timestamp}`;
+    var imgCode = `VP${dataLogin.USER_AUTH_CODE}${this.state.timestamp}`;
     var imageName = imgCode + '.jpg';
     var arrTph = this.state.tphAfdWerksBlockCode.split('-') //tph-afd-werks-blockcode
+    var ebccValCode = `V${dataLogin.USER_AUTH_CODE}${this.state.timestamp}${arrTph[0]}${arrTph[3]}`
     var image = {
-      TR_CODE: `V${dataLogin.USER_AUTH_CODE}${this.state.timestamp}${arrTph[0]}${arrTph[3]}`,
+      TR_CODE: ebccValCode,
       IMAGE_CODE: imgCode,
       IMAGE_NAME: imageName,
       IMAGE_PATH_LOCAL: dirPhotoEbccJanjang + '/' + imageName,
@@ -119,7 +176,24 @@ class FotoJanjang extends Component {
       INSERT_USER: dataLogin.USER_AUTH_CODE,
       INSERT_TIME: ''
     }
-    this.setState({ dataModel: image });
+    var header = {
+      EBCC_VALIDATION_CODE: ebccValCode,
+      WERKS: arrTph[2],
+      AFD_CODE: arrTph[1],
+      BLOCK_CODE: arrTph[3],
+      NO_TPH: arrTph[0],
+      STATUS_TPH_SCAN: this.state.statusScan, //manual dan automatics
+      ALASAN: '',//1 rusak, 2 hilang
+      DELIVERY_CODE: '',
+      STATUS_DELIVERY_CODE: '',
+      INSERT_USER: dataLogin.USER_AUTH_CODE,
+      INSERT_TIME: getTodayDate('YYYY-MM-DD kk:mm:ss'),
+      STATUS_SYNC: 'N',
+      SYNC_TIME: '',      
+      LATITUDE: this.state.latitude.toString(),
+      LONGITUDE: this.state.longitude.toString()
+    }
+    this.setState({ dataModel: image, ebccValCode, dataHeader: header });
 
   }
 
@@ -176,17 +250,32 @@ class FotoJanjang extends Component {
   }
 
   async insertDB() {
-    RNFS.unlink(this.state.pathCache);
-    let isImageContain = await RNFS.exists(`file://${dirPhotoEbccJanjang}/${this.state.dataModel.IMAGE_NAME}`);
-    if(isImageContain){
-      this.props.navigation.navigate('KriteriaBuah',
-      { 
-          fotoJanjang: this.state.dataModel, 
-          tphAfdWerksBlockCode: this.state.tphAfdWerksBlockCode
-      }); 
+    if(this.state.dataHeader !== null && this.state.dataHeader.LATITUDE !== '0.0' && this.state.dataHeader.LONGITUDE !== '0.0'){
+      RNFS.unlink(this.state.pathCache);
+      let isImageContain = await RNFS.exists(`file://${dirPhotoEbccJanjang}/${this.state.dataModel.IMAGE_NAME}`);
+      if(isImageContain){
+        this.props.navigation.navigate('KriteriaBuah',
+        { 
+            fotoJanjang: this.state.dataModel, 
+            tphAfdWerksBlockCode: this.state.tphAfdWerksBlockCode,
+            ebccValCode: this.state.ebccValCode,
+            dataHeader: this.state.dataHeader
+        }); 
+      }else{
+        this.setState({
+          showModal: true, title: 'GAGAL',
+          message: 'Kamu gagal untuk menyimpan gambar, coba ulangin lagi',
+          icon: require('../../Images/ic-not-save.png')
+        });  
+      } 
     }else{
-      alert('Ada kesalahan, Ulangi ambil gambar baris')
-    }   
+      this.setState({
+        showModal2: true, title: 'Lokasi GPS',
+        message: 'Kamu belum bisa lanjut sebelum lokasi GPS kamu belum ditemukan, lanjut cari lokasi?',
+        icon: require('../../Images/ic-no-gps.png')
+      });  
+    }
+      
   }
 
   renderImage() {
@@ -218,13 +307,29 @@ class FotoJanjang extends Component {
             barStyle="light-content"
             backgroundColor={Colors.tintColorPrimary}
         />
+        <ModalAlert
+            icon={this.state.icon}
+            visible={this.state.showModal2}
+            onPressCancel={() => {this.getLocation(); this.setState({ showModal: false })}}
+            title={this.state.title}
+            message={this.state.message}
+        />
+        <ModalAlertConfirmation
+            icon={this.state.icon}
+            visible={this.state.showModal}
+            onPressCancel={() => this.setState({ showModal: false })}
+            onPressSubmit={() => {this.backAndDeletePhoto()}}
+            title={this.state.title}
+            message={this.state.message}
+        />
         <View style={{ flex: 2 }}>
           {this.state.path ? this.renderImage() : this.renderCamera()}
         </View>
         <View style={{ flex: 0.5, alignItems: 'center', justifyContent: 'center' }}>
+          {this.state.dataHeader !== null &&
           <TouchableOpacity style={[styles.takePicture, { marginTop: 15 }]} onPress={this.takePicture.bind(this)}>
             {this.renderIcon()}
-          </TouchableOpacity>
+          </TouchableOpacity>}
         </View>
       </View>
     );

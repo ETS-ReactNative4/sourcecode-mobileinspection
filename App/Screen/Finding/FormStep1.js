@@ -101,8 +101,6 @@ class FormStep1 extends Component {
             (position) => {
                 var lat = parseFloat(position.coords.latitude);
                 var lon = parseFloat(position.coords.longitude);
-                // const timestamp = convertTimestampToDate(position.timestamp, 'DD/MM/YYYY HH:mm:ss')//moment(position.timestamp).format('DD/MM/YYYY HH:mm:ss');
-                // console.log(timestamp);
                 this.setState({latitude:lat, longitude:lon, fetchLocation: false});
 
             },

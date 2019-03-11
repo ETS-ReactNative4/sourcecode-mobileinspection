@@ -23,6 +23,7 @@ import InspeksiAction from '../Redux/InspeksiRedux'
 import FindingUploadAction from '../Redux/FindingUploadRedux'
 import TMobileAction from '../Redux/TMobileRedux'
 import ParamTrackAction from '../Redux/ParamTrackRedux'
+import KualitasAction from '../Redux/KualitasRedux'
 import { ProgressDialog } from 'react-native-simple-dialogs';
 import { dirPhotoKategori, dirPhotoTemuan } from '../Lib/dirStorage';
 import { connect } from 'react-redux';
@@ -62,6 +63,26 @@ class SyncScreen extends React.Component {
     constructor() {
         super();
         this.state = {
+            //upload            
+            progressInspeksiHeader: 0,
+            progressInspeksiDetail: 0,
+            progressUploadImage: 0,
+            progressFindingData: 0,
+            progressInspectionTrack: 0,
+
+            //labelUpload
+            valueInspeksiHeaderUpload: '0',
+            totalInspeksiHeaderUpload: '0',
+            valueInspeksiDetailUpload: '0',
+            totalInspeksiDetailUpload: '0',
+            valueFindingDataUpload: '0',
+            totalFindingDataUpload: '0',
+            valueImageUpload: '0',
+            totalImagelUpload: '0',
+            valueInspectionTrack: '0',
+            totalInspectionTrack: '0',
+
+            //downlaod
             progress: 0,
             progressAfd: 0,
             progressRegion: 0,
@@ -75,16 +96,10 @@ class SyncScreen extends React.Component {
             progressContact: 0,
             progressFinding: 0,
             progressFindingImage: 0,
-            progressInspeksiHeader: 0,
-            progressInspeksiDetail: 0,
-            progressUploadImage: 0,
-            progressFindingData: 0,
-            progressInspectionTrack: 0,
             progressParamInspection: 0,
-            indeterminate: false,
-            downloadInspeksiParam: false,
-            fetchLocation: false,
-            isBtnEnable: false,
+            progressKualitas: 0,
+
+            //labelDownload
             downloadApa: 'Download sedang dalam proses',
             valueDownload: '0',
             totalDownload: '0',
@@ -112,20 +127,15 @@ class SyncScreen extends React.Component {
             totalContactDownload: '0',
             valueFindingImageDownload: '0',
             totalFindingImageDownload: '0',
-            valueInspeksiHeaderUpload: '0',
-            totalInspeksiHeaderUpload: '0',
-            valueInspeksiDetailUpload: '0',
-            totalInspeksiDetailUpload: '0',
-            valueFindingDataUpload: '0',
-            totalFindingDataUpload: '0',
-            valueImageUpload: '0',
-            totalImagelUpload: '0',
-            valueImageUpload: '0',
-            totalImagelUpload: '0',
-            valueInspectionTrack: '0',
-            totalInspectionTrack: '0',
             valueParamInspection: '0',
             totalParamInspection: '0',
+            valueKualitas: '0',
+            totalKualitas: '0',
+            
+            indeterminate: false,
+            downloadInspeksiParam: false,
+            fetchLocation: false,
+            isBtnEnable: false,
 
             dataFinding: [],
             dataInspeksi: [],
@@ -182,7 +192,7 @@ class SyncScreen extends React.Component {
                     var diff = moment(new Date(insertTime)).diff(now, 'day');
                     if (diff < -7) {
                         this.deleteImageInspeksi(data[i].BLOCK_INSPECTION_CODE,data[i].ID_INSPECTION,
-							this.deleteImageFileInspeksi,this.deleteRecordByPK);
+							          this.deleteImageFileInspeksi,this.deleteRecordByPK);
                     }
                 }
             }
@@ -203,35 +213,31 @@ class SyncScreen extends React.Component {
     }
 	
     async deleteRecordByPK(table, whereClause, value) {
-		return TaskServices.deleteRecordByPK(table, whereClause, value);
+		  return TaskServices.deleteRecordByPK(table, whereClause, value);
     }
+    
     deleteData(table, whereClause, value) {
-        console.log('Masuk Delete Data : ' + JSON.stringify(data))
         let allData = TaskServices.getAllData(table);
         if (allData !== undefined && allData.length > 0) {
             let indexData = R.findIndex(R.propEq(whereClause, value))(allData);
-            console.log('Index Delete : ' + indexData);
             if (indexData >= 0) {
                 TaskServices.deleteRecord(table, indexData);
             }
         }
     }
 
-    async deleteImageFileInspeksi(image, INSPECTION_CODE,ID_INSPECTION,callback) {
+    async deleteImageFileInspeksi(image, INSPECTION_CODE, ID_INSPECTION, callback) {
         const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
-        for (let i = 0; i < image.length; i++) {
-			
+        for (let i = 0; i < image.length; i++) {			
             const PATH = `${FILE_PREFIX}${image[i].IMAGE_PATH_LOCAL}`;
             RNFS.exists(PATH)
                 .then((result) => {
-                    console.log("File Exist : ", result);
                     if (result) {
                         return RNFS.unlink(PATH)
                             .then(() => {
-                                console.log('FILE DELETED');
-								callback('TR_BLOCK_INSPECTION_D','BLOCK_INSPECTION_CODE', INSPECTION_CODE)
-								callback('TR_BLOCK_INSPECTION_H','BLOCK_INSPECTION_CODE', INSPECTION_CODE)
-								callback('TR_BARIS_INSPECTION','ID_INSPECTION', ID_INSPECTION)
+                                callback('TR_BLOCK_INSPECTION_D','BLOCK_INSPECTION_CODE', INSPECTION_CODE)
+                                callback('TR_BLOCK_INSPECTION_H','BLOCK_INSPECTION_CODE', INSPECTION_CODE)
+                                callback('TR_BARIS_INSPECTION','ID_INSPECTION', ID_INSPECTION)
                             })
                             // `unlink` will throw an error, if the item to unlink does not exist
                             .catch((err) => {
@@ -250,19 +256,14 @@ class SyncScreen extends React.Component {
         }
     }
     async deleteImageFile(image, FINDING_CODE) {
-
         const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
         for (let i = 0; i < image.length; i++) {
-
             const PATH = `${FILE_PREFIX}${dirPhotoTemuan}/${image[i].IMAGE_NAME}`;
             RNFS.exists(PATH)
                 .then((result) => {
-                    console.log("File Exist : ", result);
-					
                     if (result) {
                         return RNFS.unlink(PATH)
                             .then(() => {
-                                console.log('FILE DELETED');
                                 // this.setState({ isDeleteImage: true });
                                 TaskServices.deleteRecordPrimaryKey('TR_FINDING', FINDING_CODE)
                             })
@@ -378,8 +379,6 @@ class SyncScreen extends React.Component {
                     let model = dataImage[i]
                     RNFS.exists(`file://${model.IMAGE_PATH_LOCAL}`).
                         then((exists) => {
-                            console.log(exists)
-                            console.log(model.IMAGE_PATH_LOCAL)
                             if (exists) {
                                 var data = new FormData();
                                 let idxOrder = null;
@@ -398,7 +397,6 @@ class SyncScreen extends React.Component {
                                 });
                                 let indexData = R.findIndex(R.propEq('IMAGE_CODE', model.IMAGE_CODE))(all);
                                 idxOrder = indexData
-                                console.log(JSON.stringify(data))
                                 const url = "http://149.129.245.230:3012/image/upload-file/"
                                 fetch(url, {
                                     method: 'POST',
@@ -412,8 +410,6 @@ class SyncScreen extends React.Component {
                                 })
                                     .then((response) => response.json())
                                     .then((responseJson) => {
-                                        console.log(responseJson)
-                                        // var dataImage = TaskServices.query('TR_IMAGE', `STATUS_SYNC = 'N'`);
                                         if (responseJson.status) {
                                             this.setState({ progressUploadImage: 1, valueImageUpload: dataImage.length, totalImagelUpload: dataImage.length });
                                             TaskServices.updateStatusImage('TR_IMAGE', 'Y', idxOrder);
@@ -437,7 +433,6 @@ class SyncScreen extends React.Component {
     }
 
     uploadData(URL, dataPost, table, idInspection) {
-		console.log("masuk uploadData",dataPost)
         const user = TaskServices.getAllData('TR_LOGIN')[0];
         fetch(URL, {
             method: 'POST',
@@ -514,7 +509,6 @@ class SyncScreen extends React.Component {
 
     //upload to service
     kirimInspeksiHeader(param) {
-		console.log("kirimInspeksiHeader");
         const user = TaskServices.getAllData('TR_LOGIN')[0];
         let data = {
             BLOCK_INSPECTION_CODE: param.BLOCK_INSPECTION_CODE,
@@ -1072,6 +1066,37 @@ class SyncScreen extends React.Component {
 			});
 		}
 	}
+  
+      _crudTM_Kualitas(data) {
+        if (data.simpan.length > 0) {
+            for (var i = 1; i <= data.simpan.length; i++) {
+                this.setState({ progressKualitas: i / data.simpan.length, totalKualitas: data.simpan.length });
+            }
+            data.simpan.map(item => {
+                TaskServices.saveData('TM_KUALITAS', item);
+                let countDataInsert = TaskServices.getTotalData('TM_KUALITAS');
+                this.setState({ valueKualitas: countDataInsert });
+            });
+        } else {
+            let countDataInsert = TaskServices.getTotalData('TM_KUALITAS');
+            this.setState({ progressKualitas: 1, valueKualitas: countDataInsert, totalKualitas: 0 })
+        }
+        if (data.ubah.length > 0 && allData.length > 0) {
+            data.ubah.map(item => {
+                TaskServices.updateByPrimaryKey('TM_KUALITAS', item)
+                // let indexData = R.findIndex(R.propEq('ID_KUALITAS', item.ID_KUALITAS))(allData);
+                //TaskServices.updateFindingDownload(item, indexData)
+            })
+        }
+        if (data.hapus.length > 0 && allData.length > 0) {
+            data.hapus.map(item => {
+                this.deleteRecordByPK('TM_KUALITAS', 'ID_KUALITAS', item.ID_KUALITAS);
+            });
+        }
+
+        let countDataInsert = TaskServices.getTotalData('TM_KUALITAS');
+        this.hasDownload('ebcc/kualitas', countDataInsert);
+    }
 
     //download image
     async _downloadImageFinding(data) {
@@ -1116,27 +1141,51 @@ class SyncScreen extends React.Component {
         }
     }
 
-    _onSync() {
-        this._deleteFinding();
-
-        // Gani
+    resetSagas(){
         this.props.resetFinding()
         this.props.resetFindingImage();
         this.props.resetBlock();
         this.props.resetAfd();
         this.props.resetRegion();
-        this.props.resetEst()
+        this.props.resetEst();
         this.props.resetLandUse();
         this.props.resetComp();
         this.props.resetContent();
         this.props.resetKriteria();
         this.props.resetCategory();
-        this.props.resetContact()
+        this.props.resetContact();
         this.props.resetParamTrack();
+        this.props.resetKualitas();
+    }
+
+    _onSync() {
+        this._deleteFinding();
+        // Gani            
+        this.resetSagas();
         NetInfo.isConnected.fetch().then(isConnected => {
             if (isConnected) {
                 this.setState({
 
+                    //upload
+                    progressInspeksiHeader: 0,
+                    progressInspeksiDetail: 0,
+                    progressUploadImage: 0,
+                    progressFindingData: 0,
+                    progressInspectionTrack: 0,                   
+
+                    //labelUpload
+                    valueInspeksiHeaderUpload: '0',
+                    totalInspeksiHeaderUpload: '0',
+                    valueInspeksiDetailUpload: '0',
+                    totalInspeksiDetailUpload: '0',
+                    valueFindingDataUpload: '0',
+                    totalFindingDataUpload: '0',
+                    valueImageUpload: '0',
+                    totalImagelUpload: '0',
+                    valueInspectionTrack: '0',
+                    totalInspectionTrack: '0',
+
+                    //download
                     progressFinding: 0,
                     progressFindingImage: 0,
                     progress: 0,
@@ -1150,13 +1199,10 @@ class SyncScreen extends React.Component {
                     progressKriteria: 0,
                     progressCategory: 0,
                     progressContact: 0,
-                    progressInspectionTrack: 0,
-                    progressParamInspection: 0,
-                    progressInspeksiHeader: 0,
-                    progressInspeksiDetail: 0,
-                    progressFindingData: 0,
-                    progressUploadImage: 0,
-
+                    progressParamInspection: 0,     
+                    progressKualitas: 0,
+                    
+                    //labelDownload
                     valueDownload: '0',
                     valueAfdDownload: '0',
                     valueRegionDownload: '0',
@@ -1170,12 +1216,8 @@ class SyncScreen extends React.Component {
                     valueCategoryDownload: '0',
                     valueContactDownload: '0',
                     valueFindingImageDownload: '0',
-                    valueInspeksiHeaderUpload: '0',
-                    valueInspeksiDetailUpload: '0',
-                    valueFindingDataUpload: '0',
-                    valueImageUpload: '0',
-                    valueInspectionTrack: '0',
                     valueParamInspection: '0',
+                    valueKualitas: '0',
 
                     totalDownload: '0',
                     totalAfdDownload: '0',
@@ -1189,27 +1231,21 @@ class SyncScreen extends React.Component {
                     totalFindingDownload: '0',
                     totalCategoryDownload: '0',
                     totalContactDownload: '0',
-
-                    totalInspeksiHeaderUpload: '0',
-                    totalInspeksiDetailUpload: '0',
-                    totalFindingDataUpload: '0',
                     totalFindingImageDownload: '0',
-                    totalImagelUpload: '0',
-                    totalImagelUpload: '0',
-                    totalInspectionTrack: '0',
                     totalParamInspection: '0',
+                    totalKualitas: '0',
 
                     fetchLocation: false,
                     isBtnEnable: false,
 
                 });
 
-                    //POST TRANSAKSI
-                    this.kirimImage();
-                    this.loadDataFinding();
-                    this.loadData();
-                    this.loadDataDetailInspeksi();
-                    this.loadDataInspectionTrack();
+                //POST TRANSAKSI
+                this.kirimImage();
+                this.loadDataFinding();
+                this.loadData();
+                this.loadDataDetailInspeksi();
+                this.loadDataInspectionTrack();
 
                 //cara biasa
                 // setTimeout(() => {            
@@ -1244,77 +1280,6 @@ class SyncScreen extends React.Component {
         );
     }
 
-    DownloadData(URL, table) {
-        const user = TaskServices.getAllData('TR_LOGIN')[0];
-        fetch(URL, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${user.ACCESS_TOKEN}`
-            },
-        })
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                alert(JSON.stringify(data));
-                if (data.status) {
-                    let payload = data.data;
-                    if (table == 'finding') {
-                        this._crudTM_Finding(payload);
-                        this.DownloadData(`${link}mobile-sync/finding-images`, 'image');
-                    } else if (table == 'image') {
-                        this._crudTM_Finding_Image(payload);
-                        // this.DownloadData(`${link}mobile-sync/hectare-statement/block`, 'block');
-                    } else if (table == 'block') {
-                        this._crudTM_Block(payload);
-                        this.DownloadData(`${link}mobile-sync/hectare-statement/afdeling`, 'afd');
-                    } else if (table == 'afd') {
-                        this._crudTM_Afd(payload);
-                        this.DownloadData(`${link}mobile-sync/hectare-statement/region`, 'region');
-                    } else if (table == 'region') {
-                        this._crudTM_Region(payload);
-                        this.DownloadData(`${link}mobile-sync/hectare-statement/est`, 'est');
-                    } else if (table == 'est') {
-                        this._crudTM_Est(payload);
-                        this.DownloadData(`${link}mobile-sync/hectare-statement/land-use`, 'landuse');
-                    } else if (table == 'landuse') {
-                        this._crudTM_LandUse(payload);
-                        this.DownloadData(`${link}mobile-sync/hectare-statement/comp`, 'comp');
-                    } else if (table == 'comp') {
-                        this._crudTM_Comp(payload);
-                        this.DownloadData(`${link}content`, 'content');
-                    } else if (table == 'content') {
-                        this._crudTM_Content(payload);
-                        this.DownloadData(`${link}content-label`, 'contentlabel');
-                    } else if (table == 'contentlabel') {
-                        this._crudTM_ContentLabel(payload);
-                        this.DownloadData(`${link}kriteria`, 'kriteria');
-                    } else if (table == 'kriteria') {
-                        this._crudTM_Kriteria(payload);
-                        this.DownloadData(`${link}category`, 'catogory');
-                    } else if (table == 'catogory') {
-                        this._crudTM_Category(payload);
-                        this.DownloadData(`${link}contacts`, 'contact');
-                    } else if (table == 'contact') {
-                        this._crudTM_Contact(payload);
-                        this.DownloadData(`${link}parameter/track`, 'track');
-                    } else if (table == 'track') {
-                        this._crudTM_Inspeksi_Param(payload);
-                    }
-                } else {
-                    // alert('Gagal proses download ' + table);
-                    this.setState({
-                        showButton: true,
-                        showModal: true,
-                        title: 'Sync Putus',
-                        message: 'Yaaah jaringannya mati, coba Sync lagi yaa.',
-                        icon: require('../Images/ic-sync-gagal.png')
-                    });
-                }
-            })
-    }
-
     fetchingMobileSync(param) {
         var moment = require('moment');
         const user = TaskServices.getAllData('TR_LOGIN')[0];
@@ -1341,7 +1306,7 @@ class SyncScreen extends React.Component {
             })
     }
 
-    componentWillReceiveProps(newProps, newState) {
+    componentWillReceiveProps(newProps) {
         //Gani
         let errorFlag = false;
         if (newProps.finding.error) {
@@ -1383,6 +1348,9 @@ class SyncScreen extends React.Component {
         else if (newProps.paramTrack.error) {
             errorFlag = true;
         }
+        else if (newProps.kualitas.error) {
+            errorFlag = true;
+        }
         if (errorFlag) {
             let newFinding = Object.assign({}, newProps.finding);
             newFinding.error = false;
@@ -1410,6 +1378,8 @@ class SyncScreen extends React.Component {
             newBlock.error = false;
             let newFindingImage = Object.assign({}, newProps.findingImage);
             newFindingImage.error = false;
+            let newKualitas = Object.assign({}, newProps.kualitas);
+            newKualitas.error = false;
             this.setState({
                 showButton: true,
                 showModal: true,
@@ -1417,19 +1387,7 @@ class SyncScreen extends React.Component {
                 message: 'Yaaah jaringannya mati, coba Sync lagi yaa.',
                 icon: require('../Images/ic-sync-gagal.png')
             });
-            this.props.resetFinding();
-            this.props.resetFindingImage();
-            this.props.resetBlock();
-            this.props.resetAfd();
-            this.props.resetRegion();
-            this.props.resetEst();
-            this.props.resetLandUse();
-            this.props.resetComp();
-            this.props.resetContent();
-            this.props.resetKriteria();
-            this.props.resetCategory();
-            this.props.resetContact();
-            this.props.resetParamTrack();
+            this.resetSagas()
             return;
         }
         if (newProps.finding.fetchingFinding !== null && !newProps.finding.fetchingFinding) {
@@ -1550,6 +1508,15 @@ class SyncScreen extends React.Component {
                 this._crudTM_Contact(dataJSON);
             }
             this.props.resetContact()
+            this.props.kualitasRequest();
+        }        
+
+        if (newProps.kualitas.fetchingKualitas !== null && !newProps.kualitas.fetchingKualitas) {
+            let dataJSON = newProps.kualitas.kualitas;
+            if (dataJSON !== null) {
+                this._crudTM_Kualitas(dataJSON);
+            }
+            this.props.resetKualitas();
             this.props.paramTrackRequest();
         }
 
@@ -1964,6 +1931,26 @@ class SyncScreen extends React.Component {
                             indeterminate={this.state.indeterminate} />
                     </View>
 
+                    <View style={{ flex: 1, marginTop: 12 }}>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={styles.labelProgress}>TM KUALITAS</Text>
+                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
+                                <Text style={styles.labelProgress}>{this.state.valueKualitas}</Text>
+                                <Text style={styles.labelProgress}>/</Text>
+                                <Text style={styles.labelProgress}>{this.state.totalKualitas}</Text>
+                            </View>
+                        </View>
+                        <Progress.Bar
+                            height={heightProgress}
+                            width={null}
+                            style={{ marginTop: 2 }}
+                            color={Colors.brand}
+                            progress={this.state.progressKualitas}
+                            backgroundColor={colorProgress}
+                            borderColor={'white'}
+                            indeterminate={this.state.indeterminate} />
+                    </View>
+
                     <ProgressDialog
                         visible={this.state.fetchLocation}
                         activityIndicatorSize="small"
@@ -1991,7 +1978,8 @@ const mapStateToProps = state => {
         findingImage: state.findingImage,
         inspeksi: state.inspeksi,
         findingUpload: state.findingUpload,
-        paramTrack: state.paramTrack
+        paramTrack: state.paramTrack,        
+        kualitas: state.kualitas
     };
 };
 
@@ -2027,6 +2015,7 @@ const mapDispatchToProps = dispatch => {
         paramTrackRequest: obj => dispatch(ParamTrackAction.paramTrackRequest(obj)),
         findingPostData: obj => dispatch(FindingUploadAction.findingPostData(obj)),
         tmPost: obj => dispatch(TMobileAction.tmPost(obj)),
+        kualitasRequest: obj => dispatch(KualitasAction.kualitasRequest(obj)),
 
         resetBlock: () => dispatch(BlockAction.resetBlock()),
         resetAfd: () => dispatch(AfdAction.resetAfd()),
@@ -2041,7 +2030,8 @@ const mapDispatchToProps = dispatch => {
         resetContact: () => dispatch(ContactAction.resetContact()),
         resetParamTrack: () => dispatch(ParamTrackAction.resetParamTrack()),
         resetFinding: () => dispatch(FindingAction.resetFinding()),
-        resetFindingImage: () => dispatch(FindingImageAction.resetFindingImage())
+        resetFindingImage: () => dispatch(FindingImageAction.resetFindingImage()),
+        resetKualitas: () => dispatch(KualitasAction.resetKualitas())
     };
 };
 

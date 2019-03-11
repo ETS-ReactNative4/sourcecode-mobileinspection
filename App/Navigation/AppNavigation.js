@@ -1,3 +1,4 @@
+import React, { Component } from 'react';
 import { createStackNavigator } from 'react-navigation'
 import SplashScreen from '../Screen/SplashScreen'
 import Login from '../Screen/Login'
@@ -37,6 +38,10 @@ import FotoJanjang from '../Screen/Ebcc/FotoJanjangEbcc'
 import FotoSelfieEbcc from '../Screen/Ebcc/FotoSelfieEbcc'
 import KriteriaBuah from '../Screen/Ebcc/KriteriaBuah'
 import ReasonManualTPH from '../Screen/Ebcc/ReasonManualTPH'
+import ManualInputTPH from '../Screen/Ebcc/ManualInputTPH'
+import DetailEbcc from '../Screen/Ebcc/DetailEbcc'
+import MapsEbcc from '../Screen/Ebcc/MapsEbcc'
+import EbccNavigator from '../Screen/Ebcc/EbccNavigator'
 
 import SyncScreen from '../Screen/SyncTest';
 import InboxScreen from '../Screen/Inbox';
@@ -117,6 +122,12 @@ const main = createStackNavigator({
     FotoSelfieEbcc: { screen: FotoSelfieEbcc }, 
     KriteriaBuah: { screen: KriteriaBuah }, 
     ReasonManualTPH: { screen: ReasonManualTPH }, 
+    ManualInputTPH: { screen: ManualInputTPH }, 
+    DetailEbcc: { screen: DetailEbcc }, 
+    MapsEbcc: { screen: MapsEbcc }, 
+    // EbccNavigator: { screen: ({ navigation }) => <EbccNavigator screenProps={{ rootNavigation: navigation }} />, navigationOptions: {
+    //     header: null
+    // }},
 
     // test: { screen: test },
     // TestUpload: {screen:TestUpload}

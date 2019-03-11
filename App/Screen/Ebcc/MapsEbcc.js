@@ -14,6 +14,7 @@ import { NavigationActions, StackActions  } from 'react-navigation';
 import IconLoc from 'react-native-vector-icons/FontAwesome5';
 import ModalAlert from '../../Component/ModalLoading'
 import ModalGps from '../../Component/ModalAlert';
+import R from 'ramda';
 
 const skm = require('../../Data/4421.json');
 const LATITUDE = -2.1890660;
@@ -25,6 +26,10 @@ class MapsEbcc extends React.Component {
 
   constructor(props) {
     super(props);
+
+    let params = props.navigation.state.params;
+    let statusScan = R.clone(params.statusScan)
+    let reason = R.clone(params.reason)
 
     this.state = {
         latitude: 0.0,
@@ -38,6 +43,8 @@ class MapsEbcc extends React.Component {
         poligons: [],
         fetchLocation: true,
         showModal: false,
+        statusScan,
+        reason,
         title: 'Sabar Ya..',
         message: 'Sedang mencari lokasi kamu nih.',        
         icon: ''
@@ -193,7 +200,7 @@ class MapsEbcc extends React.Component {
 
   onClickBlok(werkAfdBlockCode){
     if(this.isOnBlok(werkAfdBlockCode)){
-      this.navigateScreen('BuatInspeksi', poly.werks_afd_block_code)
+      this.navigateScreen('ManualInputTPH', poly.werks_afd_block_code)
     }else{
       alert('km ga boleh salah pilih blok')
     }
@@ -221,7 +228,11 @@ class MapsEbcc extends React.Component {
     const resetAction = StackActions.reset({
     index: 0,            
       actions: [NavigationActions.navigate({ routeName: screenName, params : { 
-          werkAfdBlockCode : werkAfdBlockCode
+          werkAfdBlockCode : werkAfdBlockCode,
+          statusScan: this.state.statusScan,
+          reason: this.state.reason,
+          latitude: this.state.latitude,
+          longitude: this.state.longitude
         } 
       })]
     });
@@ -278,8 +289,8 @@ class MapsEbcc extends React.Component {
                 strokeColor="rgba(0,0,0,0.5)"
                 strokeWidth={2}
                 tappable={true}
-                // onPress={()=>this.navigateScreen('BuatInspeksi', poly.werks_afd_block_code)}                
-                onPress={()=>this.onClickBlok(poly.werks_afd_block_code)}
+                onPress={()=>this.navigateScreen('ManualInputTPH', poly.werks_afd_block_code)}                
+                // onPress={()=>this.onClickBlok(poly.werks_afd_block_code)}
               />
               <Marker
                 ref={ref => poly.marker = ref}

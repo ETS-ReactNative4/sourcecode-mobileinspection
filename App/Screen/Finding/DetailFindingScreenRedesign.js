@@ -23,8 +23,6 @@ import { changeFormatDate } from '../../Lib/Utils';
 import ModalAlert from '../../Component/ModalAlert';
 import ModalAlertBack from '../../Component/ModalAlert';
 
-const sizeThumb = 28;
-
 class DetailFindingScreenRedesign extends Component {
 
 

@@ -6,6 +6,7 @@ import {
     Image,
     Platform,
     BackHandler,
+    BackAndroid,
     Dimensions,
     StatusBar
   } from 'react-native';
@@ -19,6 +20,8 @@ import { dirPhotoEbccSelfie } from '../../Lib/dirStorage'
 import TaskService from '../../Database/TaskServices'
 import R from 'ramda';
 import moment from 'moment'
+import ModalAlertBack from '../../Component/ModalAlert';
+import { NavigationActions, StackActions  } from 'react-navigation';
 
 var RNFS = require('react-native-fs');
 const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
@@ -43,6 +46,12 @@ class FotoSelfieEbcc extends Component {
 
     let params = props.navigation.state.params;
     let tphAfdWerksBlockCode = R.clone(params.tphAfdWerksBlockCode)
+    let fotoJanjang = R.clone(params.fotoJanjang);
+    let ebccValCode = R.clone(params.ebccValCode);
+    let totalJanjang = R.clone(params.totalJanjang);
+    let kriteriaBuah = R.clone(params.kriteriaBuah);
+    let dataHeader = R.clone(params.dataHeader);
+
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     this.state = {
       hasPhoto: false,
@@ -50,18 +59,29 @@ class FotoSelfieEbcc extends Component {
       pathImg: null,
       dataModel: null,
       tphAfdWerksBlockCode,
+      fotoJanjang,
+      ebccValCode,
+      totalJanjang,
+      kriteriaBuah,
+      dataHeader,
       pathCache: '',
-      timestamp: getTodayDate('YYMMDDkkmmss')
+      timestamp: getTodayDate('YYMMDDkkmmss'),
+      title: 'Title',
+      message: 'Message',
+      showModalBack: false,
+      icon: ''
     };
   }
 
   componentDidMount(){
-    this.getLocation()
-    BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+    this.setParameter()
+    // BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+    BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
   }
 
   componentWillUnmount(){
-    BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+    // BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+    BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
   }
 
   handleBackButtonClick() { 
@@ -105,11 +125,10 @@ class FotoSelfieEbcc extends Component {
 
   setParameter() {
     let dataLogin = TaskService.getAllData('TR_LOGIN')[0];
-    var imgCode = `V${dataLogin.USER_AUTH_CODE}${this.state.timestamp}`;
+    var imgCode = `VP${dataLogin.USER_AUTH_CODE}${this.state.timestamp}`;
     var imageName = imgCode + '.jpg';
-    var arrTph = this.state.tphAfdWerksBlockCode.split('-') //tph-afd-werks-blockcode
     var image = {
-      TR_CODE: `V${dataLogin.USER_AUTH_CODE}${this.state.timestamp}${arrTph[0]}${arrTph[3]}`,
+      TR_CODE: this.state.ebccValCode,
       IMAGE_CODE: imgCode,
       IMAGE_NAME: imageName,
       IMAGE_PATH_LOCAL: dirPhotoEbccSelfie + '/' + imageName,
@@ -168,6 +187,8 @@ class FotoSelfieEbcc extends Component {
         }}
         style={styles.preview}
         flashMode={Camera.Constants.FlashMode.auto}
+        type={'front'}
+        mirrorImage={false}
         permissionDialogTitle={'Permission to use camera'}
         permissionDialogMessage={'We need your permission to use your camera phone'}
       >
@@ -179,14 +200,34 @@ class FotoSelfieEbcc extends Component {
     RNFS.unlink(this.state.pathCache);
     let isImageContain = await RNFS.exists(`file://${dirPhotoEbccSelfie}/${this.state.dataModel.IMAGE_NAME}`);
     if(isImageContain){
-      this.props.navigation.navigate('KriteriaBuah',
-      { 
-          fotoJanjang: this.state.dataModel, 
-          tphAfdWerksBlockCode: this.state.tphAfdWerksBlockCode
-      }); 
+
+      //insert TR_H_EBCC_VALIDATION
+      TaskService.saveData('TR_H_EBCC_VALIDATION', this.state.dataHeader);
+
+      // insert TR_D_EBCC_VALIDATION
+      if(this.state.kriteriaBuah !== null){
+        this.state.kriteriaBuah.map(item => {
+          TaskService.saveData('TR_D_EBCC_VALIDATION', item);
+        })
+      }
+
+      //insert TR_IMAGE
+      TaskService.saveData('TR_IMAGE', this.state.fotoJanjang);
+      TaskService.saveData('TR_IMAGE', this.state.dataModel);
+
+      this.setState({ showModalBack: true, title: 'Berhasil Disimpan', message: 'Yeaay! Data kamu berhasil disimpan', icon: require('../../Images/ic-save-berhasil.png') });
     }else{
       alert('Ada kesalahan, Ulangi ambil gambar baris')
     }   
+  }
+
+  selesai=()=>{
+    const navigation = this.props.navigation;
+    let routeName = 'MainMenu';
+    Promise.all([navigation.dispatch(NavigationActions.navigate({ routeName : routeName}))]).
+    then(() => navigation.navigate('EbccValidation')).then(() => navigation.navigate('Riwayat'));
+    this.setState({showModalBack: false})
+    // this.props.screenProps.rootNavigation.navigate('MainMenu')
   }
 
   renderImage() {
@@ -218,6 +259,12 @@ class FotoSelfieEbcc extends Component {
             barStyle="light-content"
             backgroundColor={Colors.tintColorPrimary}
         />
+        <ModalAlertBack
+          visible={this.state.showModalBack}
+          icon={this.state.icon}
+          onPressCancel={() => this.selesai()}
+          title={this.state.title}
+          message={this.state.message} />
         <View style={{ flex: 2 }}>
           {this.state.path ? this.renderImage() : this.renderCamera()}
         </View>

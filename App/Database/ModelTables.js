@@ -324,20 +324,22 @@ const TM_TIME_TRACK = {
 }
 
 const TM_KUALITAS = {
-    name: 'ID_KUALITAS',
+    name: 'TM_KUALITAS',
+    primaryKey: 'ID_KUALITAS',
     properties: {
         ID_KUALITAS: 'string',
         NAMA_KUALITAS: 'string',
         UOM: 'string',
         GROUP_KUALITAS: 'string',        
-        STATUS: 'string',
-        SORT: 'string',
-        INSERT_DATE: 'string',
+        ACTIVE_STATUS: 'string',   
+        PENALTY_STATUS: 'string',
+        SHORT_NAME: 'string'
     }
 }
 
 const TR_H_EBCC_VALIDATION = {
-    name: 'EBCC_VALIDATION_CODE',
+    name: 'TR_H_EBCC_VALIDATION',
+    primaryKey: 'EBCC_VALIDATION_CODE',
     properties: {
         EBCC_VALIDATION_CODE: 'string',
         WERKS: 'string',
@@ -345,20 +347,30 @@ const TR_H_EBCC_VALIDATION = {
         BLOCK_CODE: 'string',        
         NO_TPH: 'string',
         STATUS_TPH_SCAN: 'string',
+        ALASAN: 'string',
         DELIVERY_CODE: 'string',
         STATUS_DELIVERY_CODE: 'string',
         INSERT_USER: 'string',
-        INSERT_DATE: 'string'
+        INSERT_TIME: 'string',
+        STATUS_SYNC: 'string',
+        SYNC_TIME: 'string',
+        LATITUDE: 'string',
+        LONGITUDE: 'string'
     }
 }
 
 const TR_D_EBCC_VALIDATION = {
-    name: 'EBCC_VALIDATION_D_CODE',
+    name: 'TR_D_EBCC_VALIDATION',
     properties: {
-        EBCC_VALIDATION_D_CODE: 'string',
         EBCC_VALIDATION_CODE: 'string',
+        GROUP_KUALITAS: 'string',
+        UOM: 'string',
         ID_KUALITAS: 'string',
-        JUMLAH: 'string'
+        NAMA_KUALITAS: 'string',
+        JUMLAH: 'string',
+        INSERT_TIME: 'string',
+        STATUS_SYNC: 'string',
+        SYNC_TIME: 'string'
     }
 }
 

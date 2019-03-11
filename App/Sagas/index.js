@@ -26,6 +26,7 @@ import { FindingUploadTypes } from '../Redux/FindingUploadRedux';
 import { TMobileTypes } from '../Redux/TMobileRedux';
 import { ParamTrackTypes } from '../Redux/ParamTrackRedux';
 import { ResetTypes } from '../Redux/ResetRedux';
+import { KualitasTypes } from '../Redux/KualitasRedux';
 
 /* ------------- Sagas ------------- */
 import { startup } from './StartupSagas';
@@ -48,6 +49,7 @@ import { postFindingData } from './FindingUploadSagas';
 import {postTMobileSync } from './TMobileSagas';
 import {getInspeksiParamTrackingPath } from './ParamTrackSagas';
 import {postReset } from './ResetSagas';
+import {getKualitas } from './KualitasSagas';
 
 //Add by Aminju
 import { getBlock, postBlock } from './BlockSagas'
@@ -98,6 +100,7 @@ export default function* root() {
 		takeLatest(TMobileTypes.TM_POST, postTMobileSync, miApi),
 		takeLatest(ParamTrackTypes.PARAM_TRACK_REQUEST, getInspeksiParamTrackingPath, miApi),
 		takeLatest(ResetTypes.RESET_POST, postReset, miApi),
+		takeLatest(KualitasTypes.KUALITAS_REQUEST, getKualitas, miApi),
 
 		fork(networkEventsListenerSaga, { timeout: 2000, checkConnectionInterval: 20000 })
 	]);
