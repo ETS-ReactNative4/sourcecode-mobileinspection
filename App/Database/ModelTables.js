@@ -1,3 +1,4 @@
+const SCHEMA_VERSION = 0
 const TR_LOGIN = {
     name: 'TR_LOGIN',
     primaryKey: 'USER_AUTH_CODE',
@@ -388,5 +389,7 @@ export default {
 
     TM_KUALITAS,
     TR_H_EBCC_VALIDATION,
-    TR_D_EBCC_VALIDATION
+    TR_D_EBCC_VALIDATION,
+	
+	SCHEMA_VERSION
 }

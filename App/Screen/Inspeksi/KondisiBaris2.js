@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, ScrollView, Text, View, Switch, StatusBar, Image } from 'react-native';
+import { TouchableOpacity, ScrollView, Text, View, Switch, StatusBar, Image, AsyncStorage } from 'react-native';
 import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
 import BtnStyles from './Component/ButtonStyle'
@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { RNSlidingButton, SlideDirection } from 'rn-sliding-button';
 import Entypo from 'react-native-vector-icons/Entypo'
 import { NavigationActions, StackActions } from 'react-navigation';
-import { getTodayDateFromGPS,getTodayDate } from '../../Lib/Utils'
+import { getTodayDateFromGPS,getTodayDate } from '../../Lib/Utils';
 import R from 'ramda';
 import ModalAlert from '../../Component/ModalAlert'
 
@@ -151,9 +151,61 @@ class KondisiBaris2 extends Component {
     }
 
     componentDidMount() {
+		this._loadInput();
         this.props.navigation.setParams({ getData: this.state.inspeksiHeader })
         this.hideAndShow();
     }
+    componentWillUnmount() {
+        this._saveInput();
+    }
+	
+	_loadInput = async () => {
+		try {
+			const value = await AsyncStorage.getItem('savedInput');
+			if (value !== null) {
+				let oldInput = JSON.parse(value);
+				if(this.state.dataUsual.BA==oldInput.header.BA&&this.state.dataUsual.AFD==oldInput.header.AFD
+					&&this.state.dataUsual.BLOK==oldInput.header.BLOK&&this.state.dataUsual.BARIS==oldInput.header.BARIS){
+					for(key in oldInput.detail){
+						this.changeColor(key.toUpperCase(),oldInput.detail[key].toUpperCase());
+					}
+				}
+				else{
+					this._resetInput();
+				}
+			}
+		} catch (error) {
+		}
+	};
+	_resetInput = async () => {
+		try {
+			const value = await AsyncStorage.removeItem('savedInput');
+		} catch (error) {
+		}
+	};
+	_saveInput = async () => {
+		try {
+			let currInput = {
+				header:JSON.parse(JSON.stringify(this.state.dataUsual)),
+				detail:{
+					piringan:this.state.piringan,
+					sarKul:this.state.sarKul,
+					TPH:this.state.TPH,
+					GWG:this.state.GWG,
+					PRUN:this.state.PRUN,
+					TIPA:this.state.TIPA,
+					PENABUR:this.state.PENABUR,
+					PUPUK:this.state.PUPUK,
+					KASTRASI:this.state.KASTRASI,
+					SANITASI:this.state.SANITASI
+				}
+			};
+			let jsonString = JSON.stringify(currInput);
+			await AsyncStorage.setItem('savedInput', jsonString);
+		} catch (error) {
+			// Error saving data
+		}
+	};
 
     kodisiPemupukanIsOn() {
         const data = this.state.kondisiBaris1;

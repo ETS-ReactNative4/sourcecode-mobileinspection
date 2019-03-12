@@ -15,10 +15,13 @@ import IconLoc from 'react-native-vector-icons/FontAwesome5';
 import ModalAlert from '../../Component/ModalLoading'
 import ModalGps from '../../Component/ModalAlert';
 
+//const skm = require('../../Data/2121.json');
 const skm = require('../../Data/4421.json');
 const ASPECT_RATIO = width / height;
 const LATITUDE = -2.1890660;
 const LONGITUDE = 111.3609873;
+//const LATITUDE = -1.3682;
+//const LONGITUDE = 103.3943;
 const LATITUDE_DELTA = 0.0922;
 const { width, height } = Dimensions.get('window');
 const alfabet = ['A','B','C','D','E','F'];

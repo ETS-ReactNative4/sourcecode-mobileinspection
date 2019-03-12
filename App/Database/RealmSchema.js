@@ -26,7 +26,8 @@ let realmSchema = new Realm({
         ModelTables.TM_KRITERIA,
         ModelTables.TM_INSPECTION_TRACK,
         ModelTables.TM_TIME_TRACK
-    ]
+    ], 
+	schemaVersion: ModelTables.SCHEMA_VERSION
 });
 
 // let realmSchemaTrack = new Realm({
