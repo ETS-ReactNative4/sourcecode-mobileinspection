@@ -199,6 +199,11 @@ const create = () => {
         return api.get('./parameter/track')
     }
 
+    const getKualitas = () => {
+        api.setHeader('Authorization', `Bearer ${user[0].ACCESS_TOKEN}`)
+        return api.get('/mobile-sync/ebcc/kualitas')
+    }
+
     return {
         api,
         login,
@@ -241,7 +246,8 @@ const create = () => {
         getContentLabel,
         getFinding,
         getFindingImage,
-        getInspeksiParamTrackingPath
+        getInspeksiParamTrackingPath,
+        getKualitas
 
     };
 };

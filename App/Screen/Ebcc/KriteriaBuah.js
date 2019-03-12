@@ -9,8 +9,9 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import R from 'ramda';
 import TaskServices from '../../Database/TaskServices'
 import { getTodayDate } from '../../Lib/Utils'
+import { NavigationActions, StackActions  } from 'react-navigation';
 
-import ModalAlertConfirmation from '../../Component/ModalAlertConfirmation';
+import ModalAlertConfirmation from '../../Component/ModalAlert';
 
 class KriteriaBuah extends Component {
 
@@ -32,9 +33,11 @@ class KriteriaBuah extends Component {
 
         this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
 
-        // let params = props.navigation.state.params;
-        // let fotoJanjang = R.clone(params.fotoJanjang);
-        // let tphAfdWerksBlockCode = R.clone(params.tphAfdWerksBlockCode);
+        let params = props.navigation.state.params;
+        let fotoJanjang = R.clone(params.fotoJanjang);
+        let tphAfdWerksBlockCode = R.clone(params.tphAfdWerksBlockCode);
+        let ebccValCode = R.clone(params.ebccValCode);
+        let dataHeader = R.clone(params.dataHeader);
 
         this.state = {
             arrHasilPanen: [],
@@ -51,8 +54,15 @@ class KriteriaBuah extends Component {
             btnTdkAda: styles.bubbleRightOff,
             txtAda: styles.buttonTextSideOff,
             txtTdkAda: styles.buttonTextSideOff,       
-            // tphAfdWerksBlockCode,
-            // fotoJanjang,
+            tphAfdWerksBlockCode,
+            fotoJanjang,
+            ebccValCode,
+            dataHeader,
+            TPH: '',
+            blockCode: '',
+            blockName: '',
+            werks: '',
+            werk_afd_blok_code: '',
 
 
             title: 'Title',
@@ -75,79 +85,143 @@ class KriteriaBuah extends Component {
     }
 
     handleBackButtonClick() {
-        this.setState({
-            showModal: true, title: 'Data Hilang',
-            message: 'Inspeksi mu belum tersimpan loh. Yakin mau dilanjutin?',
-            icon: require('../../Images/ic-not-save.png')
-        });
+        this.props.navigation.goBack(null)
         return true;
     }
 
-    loadData(){
+    loadData(){        
+        let dataLogin = TaskServices.getAllData('TR_LOGIN')[0]; 
+        var arrTph = this.state.tphAfdWerksBlockCode.split('-') //tph-afd-werks-blockcode
+        var dataBlock = TaskServices.findBy2('TM_BLOCK', 'BLOCK_CODE', arrTph[3])
+        var blockName = dataBlock !== undefined ? dataBlock.BLOCK_NAME:''
+        var werk_afd_blok_code = dataBlock !== undefined ? dataBlock.WERKS_AFD_BLOCK_CODE:''
+        var werks = dataBlock !== undefined ? dataBlock.WERKS:''
+        this.setState({TPH: arrTph[0], blockCode: arrTph[3], blockName, werk_afd_blok_code, werks})
 
         //kondisi panen
-        this.state.arrHasilPanen.push('Mentah')
-        this.state.arrHasilPanen.push('Mengkal/Kurang Masak')
-        this.state.arrHasilPanen.push('Masak')
-        this.state.arrHasilPanen.push('Overripe/Terlalu Masak')
-        this.state.arrHasilPanen.push('Busuk')  
-        
-        this.state.valueHasilPanen.push('0')
-        this.state.valueHasilPanen.push('0')
-        this.state.valueHasilPanen.push('0')
-        this.state.valueHasilPanen.push('0')
-        this.state.valueHasilPanen.push('0')
+        let hasilPanen = TaskServices.findByWithList('TM_KUALITAS', ['GROUP_KUALITAS', 'UOM'], ['HASIL PANEN', 'JJG'])
+        if(hasilPanen !== undefined){
+            hasilPanen.map((item, index) =>{
+                this.state.arrHasilPanen.push(item)
+                let model = {
+                    EBCC_VALIDATION_CODE: this.state.ebccValCode,
+                    GROUP_KUALITAS: 'HASIL PANEN',
+                    UOM: 'JJG',
+                    ID_KUALITAS: item.ID_KUALITAS,
+                    NAMA_KUALITAS: item.NAMA_KUALITAS,
+                    JUMLAH: '0',
+                    INSERT_TIME: getTodayDate('YYYY-MM-DD kk:mm:ss'),
+                    STATUS_SYNC: 'N',
+                    SYNC_TIME: ''
+                }
+                this.state.valueHasilPanen.push(model)
+            })
+        }
         
         //kondisi panen janjang
-        this.state.arrJjg.push('Total Brondolan') 
-        this.state.valueJjg.push('0')
+        let hasilPanen2 = TaskServices.findByWithList('TM_KUALITAS', ['GROUP_KUALITAS', 'UOM'], ['HASIL PANEN', 'KG'])
+        if(hasilPanen2 !== undefined){
+            hasilPanen2.map((item, index) =>{
+                this.state.arrJjg.push(item)
+                let model = {
+                    EBCC_VALIDATION_CODE: this.state.ebccValCode,
+                    GROUP_KUALITAS: 'HASIL PANEN',
+                    UOM: 'KG',
+                    ID_KUALITAS: item.ID_KUALITAS,
+                    NAMA_KUALITAS: item.NAMA_KUALITAS,
+                    JUMLAH: '0',
+                    INSERT_TIME: getTodayDate('YYYY-MM-DD kk:mm:ss'),
+                    STATUS_SYNC: 'N',
+                    SYNC_TIME: ''
+                }
+                this.state.valueJjg.push(model)
+            })
+        }
 
         //kondisi buah
-        this.state.arrKondisiBuah.push('Parthenocarpic/Abnormal')
-        this.state.arrKondisiBuah.push('Buah Masak Tangkai Panjang')
-        this.state.arrKondisiBuah.push('Dimakan Hama')
-
-        this.state.valueKondisiBuah.push('0')
-        this.state.valueKondisiBuah.push('0')
-        this.state.valueKondisiBuah.push('0')
+        let kondisiBuah = TaskServices.findByWithList('TM_KUALITAS', ['GROUP_KUALITAS', 'UOM'], ['KONDISI BUAH', 'JJG'])
+        if(kondisiBuah !== undefined){
+            kondisiBuah.map((item, index) =>{
+                this.state.arrKondisiBuah.push(item)
+                let model = {
+                    EBCC_VALIDATION_CODE: this.state.ebccValCode,
+                    GROUP_KUALITAS: 'KONDISI BUAH',
+                    UOM: 'JJG',
+                    ID_KUALITAS: item.ID_KUALITAS,
+                    NAMA_KUALITAS: item.NAMA_KUALITAS,
+                    JUMLAH: '0',
+                    INSERT_TIME: getTodayDate('YYYY-MM-DD kk:mm:ss'),
+                    STATUS_SYNC: 'N',
+                    SYNC_TIME: ''
+                }
+                this.state.valueKondisiBuah.push(model)
+            })
+        }
 
         //penalty tph
-        this.state.arrPenaltyTph.push('Alas Brondolan(TPH)')
-        this.state.valuePenaltyTph.push('')
+        let penaltyTph = TaskServices.findByWithList('TM_KUALITAS', ['GROUP_KUALITAS', 'UOM'], ['PENALTY DI TPH', 'TPH'])
+        if(penaltyTph !== undefined){
+            penaltyTph.map((item, index) =>{
+                this.state.arrPenaltyTph.push(item)
+                let model = {
+                    EBCC_VALIDATION_CODE: this.state.ebccValCode,
+                    GROUP_KUALITAS: 'PENALTY DI TPH',
+                    UOM: 'TPH',
+                    ID_KUALITAS: item.ID_KUALITAS,
+                    NAMA_KUALITAS: item.NAMA_KUALITAS,
+                    JUMLAH: '',
+                    INSERT_TIME: getTodayDate('YYYY-MM-DD kk:mm:ss'),
+                    STATUS_SYNC: 'N',
+                    SYNC_TIME: ''
+                }
+                this.state.valuePenaltyTph.push(model)
+            })
+        }
 
     }
 
     validation(){
-        alert(JSON.stringify(this.state.valuePenaltyTph))
-    }
-
-    insertDB() {
-        this.props.navigation.navigate('KondisiBaris2', {
-            kondisiBaris1: kondisiBaris1,
-        });
+        let kriteriaBuah = this.state.valueHasilPanen.concat(this.state.valueJjg).concat(this.state.valueKondisiBuah).concat(this.state.valuePenaltyTph)
+        if(this.state.totalJanjang == '0'){
+            this.setState({
+                showModal: true, title: 'Validasi',
+                message: 'Total janjang tidak boleh kosong !',
+                icon: require('../../Images/ic-not-save.png')
+            });
+        }else{
+            this.props.navigation.navigate('FotoSelfieEbcc', { 
+                fotoJanjang: this.state.fotoJanjang, 
+                tphAfdWerksBlockCode: this.state.tphAfdWerksBlockCode,
+                ebccValCode: this.state.ebccValCode,
+                totalJanjang: this.state.totalJanjang,
+                kriteriaBuah: kriteriaBuah,                
+                dataHeader: this.state.dataHeader
+            }); 
+        }
+        
     }
 
     renderDynamicComp(data, index, arr){
         return(
             <View style={styles.containerLabel} key={index}>
-                <Text style={styles.txtLabel}>{data}</Text>
+                <Text style={styles.txtLabel}>{data.NAMA_KUALITAS}</Text>
                 <View style={[styles.containerInput, { flex: 1 }]}>
                     <TextInput
                         underlineColorAndroid={'transparent'}
                         style={[styles.searchInput]}
                         maxLength={2}
                         keyboardType={'numeric'}
-                        value={arr[index]}
-                        onChangeText={(text) => { text = text.replace(/[^0-9 ]/g, ''); this.updateArrValue(index, text, arr) }} />
+                        value={arr[index].JUMLAH}
+                        onChangeText={(text) => { text = text.replace(/[^0-9 ]/g, ''); this.updateArr(index, text, arr, 'panen') }} />
                 </View>
             </View>
         )
     }
 
-    renderDynamicCompNotUpdate(data, index, arr){
+    renderDynamicCompNotUpdate(param, data, index, arr){
         return(
             <View style={styles.containerLabel} key={index}>
-                <Text style={styles.txtLabel}>{data}</Text>
+                <Text style={styles.txtLabel}>{data.NAMA_KUALITAS}</Text>
                 <View style={[styles.containerInput, { flex: 1 }]}>
                     <TextInput
                         underlineColorAndroid={'transparent'}
@@ -155,7 +229,7 @@ class KriteriaBuah extends Component {
                         maxLength={2}
                         keyboardType={'numeric'}
                         value={arr[index]}
-                        onChangeText={(text) => { text = text.replace(/[^0-9 ]/g, '') }} />
+                        onChangeText={(text) => { text = text.replace(/[^0-9 ]/g, ''); param == 'total'? this.updateArr(index, text, arr, 'jjg'):this.updateArr(index, text, arr, 'buah') }} />
                 </View>
             </View>
         )
@@ -164,7 +238,7 @@ class KriteriaBuah extends Component {
     renderDynamicCompBtn(data, index, arr){
         return(
             <View style={styles.containerLabel} key={index}>
-                <Text style={[styles.txtLabel, {flex:1}]}>{data}</Text>
+                <Text style={[styles.txtLabel, {flex:1}]}>{data.NAMA_KUALITAS}</Text>
                 <View style={{ flex: 1, flexDirection:'row', alignItems: 'center', justifyContent: 'center', }}>
                     <View style={{marginRight:1}}>
                         <TouchableOpacity style={[this.state.btnAda, styles.buttonSide] } onPress={()=>{this.getValueAndChangeColor('ADA', index, arr)}}>
@@ -181,33 +255,48 @@ class KriteriaBuah extends Component {
         )
     }
 
-    updateArrValue(index, strUpdate, arr){
+    updateArr(index, strUpdate, arr, param){
         let newArray = [...arr];
-        newArray[index] = strUpdate;
-        this.setState({valueHasilPanen: newArray});
-        if(strUpdate !== ''){
-            let total = 0;
-            newArray.map(item => {
-                total = total+parseInt(item)
-            });
-            this.setState({totalJanjang: total.toString()})
+        let data = newArray[index]
+        let model = {
+            EBCC_VALIDATION_CODE: data.EBCC_VALIDATION_CODE,
+            GROUP_KUALITAS: data.GROUP_KUALITAS,
+            UOM: data.UOM,
+            ID_KUALITAS: data.ID_KUALITAS,
+            NAMA_KUALITAS: data.NAMA_KUALITAS,
+            JUMLAH: strUpdate,
+            INSERT_TIME: data.INSERT_TIME,
+            STATUS_SYNC: data.STATUS_SYNC,
+            SYNC_TIME: data.SYNC_TIME
+        }      
+        newArray[index] = model;
+        if(param == 'tph'){
+            this.setState({valuePenaltyTph: newArray});
+        }else if(param == 'buah'){            
+            this.setState({valueKondisiBuah: newArray});   
+        }else if(param == 'jjg'){      
+            this.setState({valueJjg: newArray});     
+        }else if(param == 'panen'){      
+            this.setState({valueHasilPanen: newArray});
+            if(strUpdate !== ''){
+                let total = 0;
+                newArray.map(item => {
+                    total = total+parseInt(item.JUMLAH)
+                });
+                this.setState({totalJanjang: total.toString()})
+            }    
         }
-    }
-
-    updateArrBtn(index, strUpdate, arr){
-        let newArray = [...arr];
-        newArray[index] = strUpdate;
-        this.setState({valuePenaltyTph: newArray});
+       
     }
 
     getValueAndChangeColor(value, index, arr){
         switch(value){
             case 'ADA':
-                this.updateArrBtn(index, value, arr)
+                this.updateArr(index, '1', arr, 'tph')
                 this.setState({btnAda: styles.bubbleLeftOn, btnTdkAda: styles.bubbleRightOff, txtAda: styles.buttonTextSideOn, txtTdkAda: styles.buttonTextSideOff});
                 break;
             case 'TIDAK ADA':
-                this.updateArrBtn(index, value, arr)
+                this.updateArr(index, '0', arr, 'tph')
                 this.setState({btnTdkAda: styles.bubbleRightOn, btnAda: styles.bubbleLeftOff, txtAda: styles.buttonTextSideOff, txtTdkAda: styles.buttonTextSideOn});
                 break;
             default:
@@ -218,6 +307,32 @@ class KriteriaBuah extends Component {
     onSlideRight = () => {
         this.validation()
     };
+
+    getEstateName(werks){
+        try {
+            let data = TaskServices.findBy2('TM_EST', 'WERKS', werks);
+            return data.EST_NAME;
+        } catch (error) {
+            return '';
+        }    
+    }
+    getStatusBlok(werk_afd_blok_code){
+        try {
+            let data = TaskServices.findBy2('TM_LAND_USE', 'WERKS_AFD_BLOCK_CODE', werk_afd_blok_code);
+            return data.MATURITY_STATUS;            
+        } catch (error) {
+            return ''
+        }
+    }
+
+    getDataBlock(blockCode){
+        try {
+            let data = TaskServices.findBy2('TM_BLOCK', 'BLOCK_CODE', blockCode);
+            return data;            
+        } catch (error) {
+            return ''
+        }
+    }
 
     render() {
         return (
@@ -231,7 +346,6 @@ class KriteriaBuah extends Component {
                     icon={this.state.icon}
                     visible={this.state.showModal}
                     onPressCancel={() => this.setState({ showModal: false })}
-                    onPressSubmit={() => { this.setState({ showModal: false }); this.props.navigation.goBack(null) }}
                     title={this.state.title}
                     message={this.state.message}
                 />
@@ -239,8 +353,8 @@ class KriteriaBuah extends Component {
 
                 {/*LABEL*/}
                 <View style={styles.containerHeader}>
-                    <Text style={{ fontSize: 17, fontWeight: '500' }}>A10/TM/GAWI INTI 1</Text>
-                    <Text style={{ fontSize: 14, color: 'grey', fontWeight: '500', marginTop: 10 }}>TPH 001</Text>
+                    <Text style={{ fontSize: 17, fontWeight: '500' }}>{`${this.state.blockName}/${this.getStatusBlok(this.state.werk_afd_blok_code)}/${this.getEstateName(this.state.werks)}`}</Text>
+                    <Text style={{ fontSize: 14, color: 'grey', fontWeight: '500', marginTop: 10 }}>TPH {this.state.TPH}</Text>
                 </View>
 
                 <View style={{ height: 10, backgroundColor: '#F5F5F5', marginTop: 10 }} />
@@ -248,6 +362,7 @@ class KriteriaBuah extends Component {
                 {/*INPUT*/}
                 <View style={{ backgroundColor: 'white' }}>
 
+                    <Text style={{ fontSize: 20, fontWeight: '500', paddingLeft: 20, marginTop: 10 }}>Hasil Panen</Text>
                     {this.state.arrHasilPanen.map((data, idx) => this.renderDynamicComp(data, idx, this.state.valueHasilPanen))}
                     {/* total janjang */}
                     <View style={styles.containerLabel}>
@@ -262,14 +377,16 @@ class KriteriaBuah extends Component {
                                 value={this.state.totalJanjang} />
                         </View>
                     </View>
-                    {this.state.arrJjg.map((data, idx) => this.renderDynamicCompNotUpdate(data, idx, this.state.valueJjg))}
+                    {this.state.arrJjg.map((data, idx) => this.renderDynamicCompNotUpdate('total', data, idx, this.state.valueJjg))}
 
                     <View style={{ height: 10, backgroundColor: '#F5F5F5', marginTop: 10 }} />
                     {/* kondisi buah */}
-                    {this.state.arrKondisiBuah.map((data, idx) => this.renderDynamicComp(data, idx, this.state.valueKondisiBuah))}
+                    <Text style={{ fontSize: 20, fontWeight: '500', paddingLeft: 20, marginTop: 10 }}>Kondisi Buah</Text>
+                    {this.state.arrKondisiBuah.map((data, idx) => this.renderDynamicCompNotUpdate('kondisi', data, idx, this.state.valueKondisiBuah))}
 
                     <View style={{ height: 10, backgroundColor: '#F5F5F5', marginTop: 10 }} />
                     {/* Penalty TPH */}
+                    <Text style={{ fontSize: 20, fontWeight: '500', paddingLeft: 20, marginTop: 10 }}>Penalti di TPH</Text>
                     {this.state.arrPenaltyTph.map((data, idx) => this.renderDynamicCompBtn(data, idx, this.state.valuePenaltyTph))}
 
                     {/*SLIDER*/}

@@ -8,8 +8,8 @@ import { NavigationActions } from 'react-navigation';
 export default class FindingScreen extends Component {
 
   actionButtonClick() {
-    // this.props.navigation.dispatch(NavigationActions.navigate({ routeName: 'EbccQrCode'}));
-    this.props.navigation.dispatch(NavigationActions.navigate({ routeName: 'KriteriaBuah'}));
+    this.props.navigation.dispatch(NavigationActions.navigate({ routeName: 'EbccQrCode'}));
+    // this.props.navigation.navigate('EbccNavigator')
   }
 
   render() {

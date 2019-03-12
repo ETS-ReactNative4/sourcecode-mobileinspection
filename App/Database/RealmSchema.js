@@ -25,7 +25,10 @@ let realmSchema = new Realm({
         ModelTables.TM_CONTENT_LABEL,
         ModelTables.TM_KRITERIA,
         ModelTables.TM_INSPECTION_TRACK,
-        ModelTables.TM_TIME_TRACK
+        ModelTables.TM_TIME_TRACK,
+        ModelTables.TM_KUALITAS,
+        ModelTables.TR_H_EBCC_VALIDATION,
+        ModelTables.TR_D_EBCC_VALIDATION
     ], 
 	schemaVersion: ModelTables.SCHEMA_VERSION
 });

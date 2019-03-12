@@ -28,6 +28,7 @@ export const reducers = combineReducers({
 	tMobile: require('./TMobileRedux').reducer,
 	paramTrack: require('./ParamTrackRedux').reducer,
 	reset: require('./ResetRedux').reducer,
+	kualitas: require('./KualitasRedux').reducer,
 
 	network
 });
