@@ -90,9 +90,11 @@ class FilterScreen extends React.Component {
                                 placeholder="Pilih Pemberi Tugas" />
                         </View>
 
-                        <View style={{ width: 60, justifyContent: 'flex-end', alignContent: 'center' }}>
+                        <View style={{ flex:0.2, alignContent: 'center' }}>
                             <TouchableOpacity onPress={() => { this.handleBackButtonClick() }}>
-                                <Text style={{ fontSize: 16, fontWeight: '300', alignSelf: 'center', marginBottom: 8, marginLeft: 8 }}>Cancel</Text>
+                                <Text style={{ fontSize: 16, fontWeight: '300', alignSelf: 'center', marginTop: 8, marginLeft: 8 }}>
+									Cancel
+								</Text>
                             </TouchableOpacity>
                         </View>
 
@@ -115,7 +117,7 @@ class FilterScreen extends React.Component {
 
 const styles = StyleSheet.create({
     containerkontak: {
-        flex: 1,
+        flex: 0.8,
         flexDirection: 'row',
         backgroundColor: '#f5f5f5',
         borderRadius: 5,
