@@ -79,7 +79,7 @@ class FotoJanjang extends Component {
       dataModel: null,
       tphAfdWerksBlockCode,
       pathCache: '',
-      timestamp: getTodayDate('YYMMDDkkmmss'),
+      timestamp: getTodayDate('YYYYMMDDkkmmss'),
       ebccValCode: '',
       dataHeader: null,
       statusScan,

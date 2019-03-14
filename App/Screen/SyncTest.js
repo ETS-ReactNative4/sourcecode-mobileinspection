@@ -27,7 +27,7 @@ import KualitasAction from '../Redux/KualitasRedux'
 import { ProgressDialog } from 'react-native-simple-dialogs';
 import { dirPhotoKategori, dirPhotoTemuan } from '../Lib/dirStorage';
 import { connect } from 'react-redux';
-import R, { isEmpty, isNil } from 'ramda'
+import R from 'ramda'
 import RNFetchBlob from 'rn-fetch-blob'
 import TaskServices from '../Database/TaskServices'
 import { getTodayDate, convertTimestampToDate } from '../Lib/Utils';
@@ -39,8 +39,8 @@ var RNFS = require('react-native-fs');
 const baseUploadImageLink = 'http://149.129.250.199:3012/';
 //const link = 'http://149.129.245.230:3008/api/';
 const link = 'http://149.129.250.199:3008/api/';
+const linkEbcc = 'http://149.129.250.199:3014/';
 //const link = "http://app.tap-agri.com/mobileinspection/ins-msa-auth/api/";
-const user = TaskServices.getAllData('TR_LOGIN')[0];
 
 import ModalAlert from '../Component/ModalAlert';
 
@@ -72,6 +72,8 @@ class SyncScreen extends React.Component {
             progressUploadImage: 0,
             progressFindingData: 0,
             progressInspectionTrack: 0,
+            progressEbcc: 0,
+            progressEbccDetail: 0,
 
             //labelUpload
             valueInspeksiHeaderUpload: '0',
@@ -84,6 +86,10 @@ class SyncScreen extends React.Component {
             totalImagelUpload: '0',
             valueInspectionTrack: '0',
             totalInspectionTrack: '0',
+            valueEbcc: '0',
+            totalEbcc: '0',
+            valueEbccDetail: '0',
+            totalEbccDetail: '0',
 
             //downlaod
             progress: 0,
@@ -158,6 +164,74 @@ class SyncScreen extends React.Component {
             findingCode: [],
             isDeleteImage: false
         }
+    }
+
+    /* obsolete data ebcc by akbar */
+    deleteEbccHeader(){
+        var data = TaskServices.getAllData('TR_H_EBCC_VALIDATION');
+        var now = moment(new Date());
+        if (data != undefined) {
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].INSERT_TIME !== '') {
+                    let insertTime = data[i].INSERT_TIME;
+                    if (insertTime.includes(' ')) {
+                        insertTime = insertTime.substring(0, insertTime.indexOf(' '))
+                    }
+                    var diff = moment(new Date(insertTime)).diff(now, 'day');
+                    if (diff < -7) {
+                        this.deleteImages(data[i].EBCC_VALIDATION_CODE)
+                        TaskServices.deleteRecordByPK('TR_H_EBCC_VALIDATION', 'EBCC_VALIDATION_CODE', data[i].EBCC_VALIDATION_CODE)
+                    }
+                }
+            }
+        }
+    }
+
+    deleteEbccDetail(){
+        var data = TaskServices.getAllData('TR_D_EBCC_VALIDATION');
+        var now = moment(new Date());
+        if (data != undefined) {
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].INSERT_TIME !== '') {
+                    let insertTime = data[i].INSERT_TIME;
+                    if (insertTime.includes(' ')) {
+                        insertTime = insertTime.substring(0, insertTime.indexOf(' '))
+                    }
+                    var diff = moment(new Date(insertTime)).diff(now, 'day');
+                    if (diff < -7) {
+                        this.deleteImages(data[i].EBCC_VALIDATION_CODE_D)
+                        TaskServices.deleteRecordByPK('TR_D_EBCC_VALIDATION', 'EBCC_VALIDATION_CODE_D', data[i].EBCC_VALIDATION_CODE_D)
+                    }
+                }
+            }
+        }
+    }    
+
+    deleteImages(trCode){
+        let dataImage = TaskServices.findBy('TR_IMAGE', 'TR_CODE', trCode);
+        if (dataImage != undefined) {
+            dataImage.map(item => {
+                this.deleteImageFile2(item.IMAGE_PATH_LOCAL)
+            })
+        }
+    }
+
+    deleteImageFile2(path) {
+        RNFS.exists(path)
+        .then((result) => {
+            if (result) {
+                RNFS.unlink(`${FILE_PREFIX}${path}`)
+                .then(() => {
+                    console.log(`${path} DELETED`);
+                    TaskServices.deleteRecordByPK('TR_IMAGE', 'TR_CODE', trCode)
+                });
+            }else{
+                TaskServices.deleteRecordByPK('TR_IMAGE', 'TR_CODE', trCode)
+            }
+        })
+        .catch((err) => {
+            console.log(err.message);
+        });
     }
 
     _deleteFinding() {
@@ -368,8 +442,34 @@ class SyncScreen extends React.Component {
         } else {
             this.setState({ progressInspectionTrack: 1, valueInspectionTrack: 0, totalInspectionTrack: 0 });
         }
+    }
 
+    kirimEbccHeader(){
+        let dataHeader = TaskServices.getAllData('TR_H_EBCC_VALIDATION');
+        var query = dataHeader.filtered('STATUS_SYNC = "N"');
+        let countData = query;
+        this.setState({ progressEbcc: 1, valueEbcc: countData.length, totalEbcc: countData.length });
+        if (countData.length > 0) {
+            for (var i = 0; i < countData.length; i++) {
+                this.postEbccHeader(countData[i]);
+            }
+        } else {
+            this.setState({ progressEbcc: 1, valueEbcc: 0, totalEbcc: 0 });
+        }
+    }
 
+    kirimEbccDetail(){
+        let dataHeader = TaskServices.getAllData('TR_D_EBCC_VALIDATION');
+        var query = dataHeader.filtered('STATUS_SYNC = "N"');
+        let countData = query;
+        this.setState({ progressEbccDetail: 1, valueEbccDetail: countData.length, totalEbccDetail: countData.length });
+        if (countData.length > 0) {
+            for (var i = 0; i < countData.length; i++) {
+                this.postEbccDetail(countData[i]);
+            }
+        } else {
+            this.setState({ progressEbccDetail: 1, valueEbccDetail: 0, totalEbccDetail: 0 });
+        }
     }
 
     async kirimImage() {
@@ -390,8 +490,8 @@ class SyncScreen extends React.Component {
                                 data.append('TR_CODE', model.TR_CODE)
                                 data.append('STATUS_IMAGE', model.STATUS_IMAGE)
                                 data.append('STATUS_SYNC', 'Y')
-                                data.append('SYNC_TIME', getTodayDate('YYYYMMDDHHmmss'))
-                                data.append('INSERT_TIME', convertTimestampToDate(model.INSERT_TIME, 'YYYYMMDDHHmmss'))
+                                data.append('SYNC_TIME', getTodayDate('YYYYMMDDkkmmss'))
+                                data.append('INSERT_TIME', convertTimestampToDate(model.INSERT_TIME, 'YYYYMMDDkkmmss'))
                                 data.append('INSERT_USER', model.INSERT_USER)
                                 data.append('FILENAME', {
                                     uri: `file://${model.IMAGE_PATH_LOCAL}`,
@@ -461,6 +561,10 @@ class SyncScreen extends React.Component {
                         this.updateInspeksiTrack(dataPost)
                     } else if (table == 'finding') {
                         this.updateFinding(dataPost)
+                    }else if (table == 'ebccH') {
+                        this.updateEbccHeader(dataPost)
+                    }else if (table == 'ebccD') {
+                        this.updateEbccDetail(dataPost)
                     }
                 }
             })
@@ -499,13 +603,29 @@ class SyncScreen extends React.Component {
     }
 
     updateFinding = param => {
-			console.log("masuk updateFinding coy",param)
         if (param !== undefined) {
-			console.log("masuk updateFinding")
             /*let allData = TaskServices.getAllData('TR_FINDING')
             let indexData = R.findIndex(R.propEq('FINDING_CODE', param.FINDING_CODE))(allData);*/
             TaskServices.updateByPrimaryKey('TR_FINDING', {
 				"FINDING_CODE":param.FINDING_CODE,
+				"STATUS_SYNC":"Y"
+			});
+        }
+    }
+
+    updateEbccHeader = param => {
+        if (param !== undefined) {
+            TaskServices.updateByPrimaryKey('TR_H_EBCC_VALIDATION', {
+				"EBCC_VALIDATION_CODE":param.EBCC_VALIDATION_CODE,
+				"STATUS_SYNC":"Y"
+			});
+        }
+    }
+
+    updateEbccDetail = param => {
+        if (param !== undefined) {
+            TaskServices.updateByPrimaryKey('TR_D_EBCC_VALIDATION', {
+				"EBCC_VALIDATION_CODE_D":param.EBCC_VALIDATION_CODE_D,
 				"STATUS_SYNC":"Y"
 			});
         }
@@ -521,18 +641,18 @@ class SyncScreen extends React.Component {
             BLOCK_CODE: param.BLOCK_CODE,
             AREAL: param.AREAL,
             INSPECTION_TYPE: "PANEN",
-            INSPECTION_DATE: convertTimestampToDate(param.INSPECTION_DATE, 'YYYYMMDDHHmmss'),
+            INSPECTION_DATE: convertTimestampToDate(param.INSPECTION_DATE, 'YYYYMMDDkkmmss'),
             INSPECTION_RESULT: param.INSPECTION_RESULT,
             INSPECTION_SCORE: param.INSPECTION_SCORE,
             STATUS_SYNC: 'Y',
-            SYNC_TIME: getTodayDate('YYYYMMDDHHmmss'),
-            START_INSPECTION: convertTimestampToDate(param.START_INSPECTION, 'YYYYMMDDHHmmss'),
+            SYNC_TIME: getTodayDate('YYYYMMDDkkmmss'),
+            START_INSPECTION: convertTimestampToDate(param.START_INSPECTION, 'YYYYMMDDkkmmss'),
             END_INSPECTION: param.END_INSPECTION,
             LAT_START_INSPECTION: param.LAT_START_INSPECTION,
             LONG_START_INSPECTION: param.LONG_START_INSPECTION,
             LAT_END_INSPECTION: param.LAT_END_INSPECTION,
             LONG_END_INSPECTION: param.LONG_END_INSPECTION,
-            INSERT_TIME: convertTimestampToDate(param.INSERT_TIME, 'YYYYMMDDHHmmss'),
+            INSERT_TIME: convertTimestampToDate(param.INSERT_TIME, 'YYYYMMDDkkmmss'),
             INSERT_USER: user.USER_AUTH_CODE
         }
         this.uploadData(link+'inspection-header', data, 'header', param.ID_INSPECTION);
@@ -546,9 +666,9 @@ class SyncScreen extends React.Component {
             CONTENT_INSPECTION_CODE: result.CONTENT_INSPECTION_CODE,
             VALUE: result.VALUE,
             STATUS_SYNC: 'Y',
-            SYNC_TIME: getTodayDate('YYYYMMDDHHmmss'),
+            SYNC_TIME: getTodayDate('YYYYMMDDkkmmss'),
             INSERT_USER: user.USER_AUTH_CODE,
-            INSERT_TIME: convertTimestampToDate(result.INSERT_TIME, 'YYYYMMDDHHmmss')
+            INSERT_TIME: convertTimestampToDate(result.INSERT_TIME, 'YYYYMMDDkkmmss')
         }
         this.uploadData(link+'inspection-detail', data, 'detailHeader', '');
     }
@@ -561,7 +681,7 @@ class SyncScreen extends React.Component {
             LAT_TRACK: param.LAT_TRACK,
             LONG_TRACK: param.LONG_TRACK,
             INSERT_USER: param.INSERT_USER,
-            INSERT_TIME: param.INSERT_TIME
+            INSERT_TIME: convertTimestampToDate(param.INSERT_TIME, 'YYYYMMDDkkmmss')//param.INSERT_TIME
         }
         this.uploadData(link+'inspection-tracking', data, 'tracking', '');
     }
@@ -589,10 +709,44 @@ class SyncScreen extends React.Component {
             LONG_FINDING: param.LONG_FINDING,
             REFFERENCE_INS_CODE: param.REFFERENCE_INS_CODE,
             INSERT_USER: param.INSERT_USER,
-            INSERT_TIME: param.INSERT_TIME.toString()
+            INSERT_TIME: convertTimestampToDate(param.INSERT_TIME.toString(), 'YYYYMMDDkkmmss')//param.INSERT_TIME.toString()
         }
-		console.log("kirimFinding",data);
         this.uploadData(link+'finding', data, 'finding', '');
+    }
+
+    postEbccHeader(param) {
+        let data = {
+            EBCC_VALIDATION_CODE: param.EBCC_VALIDATION_CODE,
+            WERKS: param.WERKS,
+            AFD_CODE: param.AFD_CODE,
+            BLOCK_CODE: param.BLOCK_CODE,
+            NO_TPH: param.NO_TPH,
+            STATUS_TPH_SCAN: param.STATUS_TPH_SCAN,
+            ALASAN: param.ALASAN,
+            DELIVERY_CODE: param.DELIVERY_CODE,            
+            STATUS_DELIVERY_CODE: param.STATUS_DELIVERY_CODE,
+            INSERT_USER: param.INSERT_USER,
+            INSERT_TIME: convertTimestampToDate(param.INSERT_TIME, 'YYYYMMDDkkmmss'),
+            UPDATE_USER: '',
+            UPDATE_TIME: 0,
+            LATITUDE: param.LATITUDE,
+            LONGITUDE: param.LONGITUDE
+        }
+        alert(JSON.stringify(data))
+        // this.uploadData(linkEbcc+'ebcc/validation/header', data, 'ebccH', '');
+    }
+
+    postEbccDetail(param) {
+        let data = {
+            EBCC_VALIDATION_CODE: param.EBCC_VALIDATION_CODE,
+            ID_KUALITAS: param.ID_KUALITAS,
+            JUMLAH: param.JUMLAH,
+            INSERT_USER: param.INSERT_USER,
+            INSERT_TIME: convertTimestampToDate(param.INSERT_TIME, 'YYYYMMDDkkmmss'),
+            UPDATE_USER: '',
+            UPDATE_TIME: 0
+        }
+        this.uploadData(linkEbcc+'ebcc/validation/header', data, 'ebccD', '');
     }
 
 
@@ -994,17 +1148,7 @@ class SyncScreen extends React.Component {
 
     _crudTM_Inspeksi_Param(data) {
         TaskServices.saveData('TM_TIME_TRACK', data);
-        this.setState({ progressParamInspection: 1, valueParamInspection: 1, totalParamInspection: 1 });
-
-        // let arr = ['hectare-statement/block', 'hectare-statement/afdeling', 'hectare-statement/region', 'hectare-statement/est', 
-        // 'hectare-statement/land-use', 'hectare-statement/comp', 'auth/content', 'auth/content-label', 'auth/kriteria',
-        // 'auth/category', 'auth/contact', 'finding'];
-
-        // arr.map(item =>{
-        //     if(isFirstInstall){
-        //     }
-        //     this.fetchingMobileSync(item);
-        // });        
+        this.setState({ progressParamInspection: 1, valueParamInspection: 1, totalParamInspection: 1 });      
     }
 	_reset_token(){
 		let allLoginData = TaskServices.findBy('TR_LOGIN','STATUS','LOGIN');
@@ -1250,11 +1394,8 @@ class SyncScreen extends React.Component {
                 this.loadData();
                 this.loadDataDetailInspeksi();
                 this.loadDataInspectionTrack();
-
-                //cara biasa
-                // setTimeout(() => {            
-                // this.DownloadData(`${link}mobile-sync/finding`, 'finding');
-                // }, 2000);
+                //this.kirimEbccHeader();
+                //this.kirimEbccDetail();
 
                 //cara redux saga
                 setTimeout(() => {
@@ -1629,6 +1770,46 @@ class SyncScreen extends React.Component {
                             width={null}
                             style={{ marginTop: 2 }}
                             progress={this.state.progressFindingData}
+                            backgroundColor={colorProgress}
+                            borderColor={'white'}
+                            indeterminate={this.state.indeterminate} />
+
+                    </View>
+
+                    <View style={{ flex: 1, marginTop: 12 }}>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={styles.labelProgress}>EBCC VALIDATION HEADER</Text>
+                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
+                                <Text style={styles.labelProgress}>{this.state.valueEbcc}</Text>
+                                <Text style={styles.labelProgress}>/</Text>
+                                <Text style={styles.labelProgress}>{this.state.totalEbcc}</Text>
+                            </View>
+                        </View>
+                        <Progress.Bar
+                            height={heightProgress}
+                            width={null}
+                            style={{ marginTop: 2 }}
+                            progress={this.state.progressEbcc}
+                            backgroundColor={colorProgress}
+                            borderColor={'white'}
+                            indeterminate={this.state.indeterminate} />
+
+                    </View>
+
+                    <View style={{ flex: 1, marginTop: 12 }}>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={styles.labelProgress}>EBCC VALIDATION DETAIL</Text>
+                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
+                                <Text style={styles.labelProgress}>{this.state.valueEbccDetail}</Text>
+                                <Text style={styles.labelProgress}>/</Text>
+                                <Text style={styles.labelProgress}>{this.state.totalEbccDetail}</Text>
+                            </View>
+                        </View>
+                        <Progress.Bar
+                            height={heightProgress}
+                            width={null}
+                            style={{ marginTop: 2 }}
+                            progress={this.state.progressEbccDetail}
                             backgroundColor={colorProgress}
                             borderColor={'white'}
                             indeterminate={this.state.indeterminate} />
