@@ -21,6 +21,7 @@ import TaskServices from '../Database/TaskServices';
 import RNFetchBlob from 'rn-fetch-blob'
 import { dirPhotoTemuan, dirPhotoInspeksiBaris, dirPhotoInspeksiSelfie, dirPhotoKategori, dirPhotoEbccJanjang, dirPhotoEbccSelfie } from '../Lib/dirStorage';
 import ModalAlert from '../Component/ModalAlert'
+import IMEI from 'react-native-imei'
 
 const baseUri = "http://149.129.250.199:3008/api/";
 //const baseUri = "http://app.tap-agri.com/api/"
@@ -165,7 +166,7 @@ class Login extends Component {
         navigation.dispatch(resetAction);
     }
 
-    onLogin(username, password) {
+    onLogin(username, password){
         Keyboard.dismiss();
         var imei = this.get_IMEI_Number();
         this.setState({ fetching: true });
@@ -173,6 +174,7 @@ class Login extends Component {
         setTimeout(() => {
             this.setState({ fetching: false });
         }, 3000);
+
         // this.props.authRequest({
         //     username: username,
         //     password: password,
@@ -253,7 +255,7 @@ class Login extends Component {
                         {/* <Logo/> */}
 
                         <Form
-                            onBtnClick={data => { this.onLogin(data.strEmail, data.strPassword) }} />
+                            onBtnClick={data => {this.onLogin(data.strEmail, data.strPassword) }} />
                         <View style={styles.footerView}>
                             <Text style={styles.footerText}>{'\u00A9'} 2018 Copyrights PT Triputra Agro Persada</Text>
                         </View>

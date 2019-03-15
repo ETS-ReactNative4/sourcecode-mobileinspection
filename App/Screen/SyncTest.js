@@ -1652,18 +1652,9 @@ class SyncScreen extends React.Component {
             if (dataJSON !== null) {
                 this._crudTM_Contact(dataJSON);
             }
-            this.props.resetContact()
-            this.props.kualitasRequest();
-        }        
-
-        if (newProps.kualitas.fetchingKualitas !== null && !newProps.kualitas.fetchingKualitas) {
-            let dataJSON = newProps.kualitas.kualitas;
-            if (dataJSON !== null) {
-                this._crudTM_Kualitas(dataJSON);
-            }
-            this.props.resetKualitas();
+            this.props.resetContact();
             this.props.paramTrackRequest();
-        }
+        }        
 
         if (newProps.paramTrack.fetchingParamTrack !== null && !newProps.paramTrack.fetchingParamTrack) {
             let dataJSON = newProps.paramTrack.paramTrack;
@@ -1671,6 +1662,16 @@ class SyncScreen extends React.Component {
                 this._crudTM_Inspeksi_Param(dataJSON);
             }
             this.props.resetParamTrack();
+            this.props.kualitasRequest();
+            
+        }
+
+        if (newProps.kualitas.fetchingKualitas !== null && !newProps.kualitas.fetchingKualitas) {
+            let dataJSON = newProps.kualitas.kualitas;
+            if (dataJSON !== null) {
+                this._crudTM_Kualitas(dataJSON);
+            }
+            this.props.resetKualitas();
 			this._reset_token();
             this.setState({ showButton: true });
         }
