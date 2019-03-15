@@ -258,7 +258,7 @@ class FormStep2 extends Component {
     }
 
     async saveData() {
-		var insertTime = await getTodayDateFromGPS('YYYYMMDDHHmmss');
+		var insertTime = await getTodayDateFromGPS('YYYYMMDDkkmmss');
 		insertTime = parseInt(insertTime);
         var data = {
             FINDING_CODE: this.state.TRANS_CODE,

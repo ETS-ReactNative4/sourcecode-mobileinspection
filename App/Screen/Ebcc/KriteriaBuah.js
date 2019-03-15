@@ -90,92 +90,99 @@ class KriteriaBuah extends Component {
     }
 
     loadData(){        
-        let dataLogin = TaskServices.getAllData('TR_LOGIN')[0]; 
         var arrTph = this.state.tphAfdWerksBlockCode.split('-') //tph-afd-werks-blockcode
-        var dataBlock = TaskServices.findBy2('TM_BLOCK', 'BLOCK_CODE', arrTph[3])
-        var blockName = dataBlock !== undefined ? dataBlock.BLOCK_NAME:''
-        var werk_afd_blok_code = dataBlock !== undefined ? dataBlock.WERKS_AFD_BLOCK_CODE:''
-        var werks = dataBlock !== undefined ? dataBlock.WERKS:''
-        this.setState({TPH: arrTph[0], blockCode: arrTph[3], blockName, werk_afd_blok_code, werks})
+        var dataBlock = TaskServices.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', `${arrTph[2]}${arrTph[1]}${arrTph[3]}`)
+        if(dataBlock !== undefined){
+            var blockName = dataBlock !== undefined ? dataBlock.BLOCK_NAME:''
+            var werk_afd_blok_code = `${arrTph[2]}${arrTph[1]}${arrTph[3]}`
+            var werks = arrTph[2]
+            this.setState({TPH: arrTph[0], blockCode: arrTph[3], blockName, werk_afd_blok_code, werks})
 
-        //kondisi panen
-        let hasilPanen = TaskServices.findByWithList('TM_KUALITAS', ['GROUP_KUALITAS', 'UOM'], ['HASIL PANEN', 'JJG'])
-        if(hasilPanen !== undefined){
-            hasilPanen.map((item, index) =>{
-                this.state.arrHasilPanen.push(item)
-                let model = {
-                    EBCC_VALIDATION_CODE: this.state.ebccValCode,
-                    GROUP_KUALITAS: 'HASIL PANEN',
-                    UOM: 'JJG',
-                    ID_KUALITAS: item.ID_KUALITAS,
-                    NAMA_KUALITAS: item.NAMA_KUALITAS,
-                    JUMLAH: '0',
-                    INSERT_TIME: getTodayDate('YYYY-MM-DD kk:mm:ss'),
-                    STATUS_SYNC: 'N',
-                    SYNC_TIME: ''
-                }
-                this.state.valueHasilPanen.push(model)
-            })
-        }
-        
-        //kondisi panen janjang
-        let hasilPanen2 = TaskServices.findByWithList('TM_KUALITAS', ['GROUP_KUALITAS', 'UOM'], ['HASIL PANEN', 'KG'])
-        if(hasilPanen2 !== undefined){
-            hasilPanen2.map((item, index) =>{
-                this.state.arrJjg.push(item)
-                let model = {
-                    EBCC_VALIDATION_CODE: this.state.ebccValCode,
-                    GROUP_KUALITAS: 'HASIL PANEN',
-                    UOM: 'KG',
-                    ID_KUALITAS: item.ID_KUALITAS,
-                    NAMA_KUALITAS: item.NAMA_KUALITAS,
-                    JUMLAH: '0',
-                    INSERT_TIME: getTodayDate('YYYY-MM-DD kk:mm:ss'),
-                    STATUS_SYNC: 'N',
-                    SYNC_TIME: ''
-                }
-                this.state.valueJjg.push(model)
-            })
-        }
+            //kondisi panen
+            let hasilPanen = TaskServices.findByWithList('TM_KUALITAS', ['GROUP_KUALITAS', 'UOM'], ['HASIL PANEN', 'JJG'])
+            if(hasilPanen !== undefined){
+                hasilPanen.map((item, index) =>{
+                    this.state.arrHasilPanen.push(item)
+                    let model = {
+                        EBCC_VALIDATION_CODE_D: `${this.state.ebccValCode}${item.ID_KUALITAS}`,
+                        EBCC_VALIDATION_CODE: this.state.ebccValCode,
+                        GROUP_KUALITAS: 'HASIL PANEN',
+                        UOM: 'JJG',
+                        ID_KUALITAS: item.ID_KUALITAS,
+                        NAMA_KUALITAS: item.NAMA_KUALITAS,
+                        JUMLAH: '0',
+                        INSERT_TIME: getTodayDate('YYYY-MM-DD kk:mm:ss'),
+                        STATUS_SYNC: 'N',
+                        SYNC_TIME: ''
+                    }
+                    this.state.valueHasilPanen.push(model)
+                })
+            }
+            
+            //kondisi panen janjang
+            let hasilPanen2 = TaskServices.findByWithList('TM_KUALITAS', ['GROUP_KUALITAS', 'UOM'], ['HASIL PANEN', 'KG'])
+            if(hasilPanen2 !== undefined){
+                hasilPanen2.map((item, index) =>{
+                    this.state.arrJjg.push(item)
+                    let model = {
+                        EBCC_VALIDATION_CODE_D: `${this.state.ebccValCode}${item.ID_KUALITAS}`,
+                        EBCC_VALIDATION_CODE: this.state.ebccValCode,
+                        GROUP_KUALITAS: 'HASIL PANEN',
+                        UOM: 'KG',
+                        ID_KUALITAS: item.ID_KUALITAS,
+                        NAMA_KUALITAS: item.NAMA_KUALITAS,
+                        JUMLAH: '0',
+                        INSERT_TIME: getTodayDate('YYYY-MM-DD kk:mm:ss'),
+                        STATUS_SYNC: 'N',
+                        SYNC_TIME: ''
+                    }
+                    this.state.valueJjg.push(model)
+                })
+            }
 
-        //kondisi buah
-        let kondisiBuah = TaskServices.findByWithList('TM_KUALITAS', ['GROUP_KUALITAS', 'UOM'], ['KONDISI BUAH', 'JJG'])
-        if(kondisiBuah !== undefined){
-            kondisiBuah.map((item, index) =>{
-                this.state.arrKondisiBuah.push(item)
-                let model = {
-                    EBCC_VALIDATION_CODE: this.state.ebccValCode,
-                    GROUP_KUALITAS: 'KONDISI BUAH',
-                    UOM: 'JJG',
-                    ID_KUALITAS: item.ID_KUALITAS,
-                    NAMA_KUALITAS: item.NAMA_KUALITAS,
-                    JUMLAH: '0',
-                    INSERT_TIME: getTodayDate('YYYY-MM-DD kk:mm:ss'),
-                    STATUS_SYNC: 'N',
-                    SYNC_TIME: ''
-                }
-                this.state.valueKondisiBuah.push(model)
-            })
-        }
+            //kondisi buah
+            let kondisiBuah = TaskServices.findByWithList('TM_KUALITAS', ['GROUP_KUALITAS', 'UOM'], ['KONDISI BUAH', 'JJG'])
+            if(kondisiBuah !== undefined){
+                kondisiBuah.map((item, index) =>{
+                    this.state.arrKondisiBuah.push(item)
+                    let model = {
+                        EBCC_VALIDATION_CODE_D: `${this.state.ebccValCode}${item.ID_KUALITAS}`,
+                        EBCC_VALIDATION_CODE: this.state.ebccValCode,
+                        GROUP_KUALITAS: 'KONDISI BUAH',
+                        UOM: 'JJG',
+                        ID_KUALITAS: item.ID_KUALITAS,
+                        NAMA_KUALITAS: item.NAMA_KUALITAS,
+                        JUMLAH: '0',
+                        INSERT_TIME: getTodayDate('YYYY-MM-DD kk:mm:ss'),
+                        STATUS_SYNC: 'N',
+                        SYNC_TIME: ''
+                    }
+                    this.state.valueKondisiBuah.push(model)
+                })
+            }
 
-        //penalty tph
-        let penaltyTph = TaskServices.findByWithList('TM_KUALITAS', ['GROUP_KUALITAS', 'UOM'], ['PENALTY DI TPH', 'TPH'])
-        if(penaltyTph !== undefined){
-            penaltyTph.map((item, index) =>{
-                this.state.arrPenaltyTph.push(item)
-                let model = {
-                    EBCC_VALIDATION_CODE: this.state.ebccValCode,
-                    GROUP_KUALITAS: 'PENALTY DI TPH',
-                    UOM: 'TPH',
-                    ID_KUALITAS: item.ID_KUALITAS,
-                    NAMA_KUALITAS: item.NAMA_KUALITAS,
-                    JUMLAH: '',
-                    INSERT_TIME: getTodayDate('YYYY-MM-DD kk:mm:ss'),
-                    STATUS_SYNC: 'N',
-                    SYNC_TIME: ''
-                }
-                this.state.valuePenaltyTph.push(model)
-            })
+            //penalty tph
+            let penaltyTph = TaskServices.findByWithList('TM_KUALITAS', ['GROUP_KUALITAS', 'UOM'], ['PENALTY DI TPH', 'TPH'])
+            if(penaltyTph !== undefined){
+                penaltyTph.map((item, index) =>{
+                    this.state.arrPenaltyTph.push(item)
+                    let model = {
+                        EBCC_VALIDATION_CODE_D: `${this.state.ebccValCode}${item.ID_KUALITAS}`,
+                        EBCC_VALIDATION_CODE: this.state.ebccValCode,
+                        GROUP_KUALITAS: 'PENALTY DI TPH',
+                        UOM: 'TPH',
+                        ID_KUALITAS: item.ID_KUALITAS,
+                        NAMA_KUALITAS: item.NAMA_KUALITAS,
+                        JUMLAH: '',
+                        INSERT_TIME: getTodayDate('YYYY-MM-DD kk:mm:ss'),
+                        STATUS_SYNC: 'N',
+                        SYNC_TIME: ''
+                    }
+                    this.state.valuePenaltyTph.push(model)
+                })
+            }
+        }else{
+            this.setState({ showModal2: true, title: 'Salah Blok', message: 'Kamu ga bisa buat inspeksi di blok ini', icon: require('../../Images/ic-blm-input-lokasi.png') });
         }
 
     }
@@ -228,7 +235,7 @@ class KriteriaBuah extends Component {
                         style={[styles.searchInput]}
                         maxLength={2}
                         keyboardType={'numeric'}
-                        value={arr[index]}
+                        value={arr[index].JUMLAH}
                         onChangeText={(text) => { text = text.replace(/[^0-9 ]/g, ''); param == 'total'? this.updateArr(index, text, arr, 'jjg'):this.updateArr(index, text, arr, 'buah') }} />
                 </View>
             </View>
@@ -349,6 +356,13 @@ class KriteriaBuah extends Component {
                     title={this.state.title}
                     message={this.state.message}
                 />
+
+                <ModalAlertConfirmation
+                    icon={this.state.icon}
+                    visible={this.state.showModal2}
+                    onPressCancel={() => {this.setState({ showModal2: false }); this.props.navigation.goBack(null)}}
+                    title={this.state.title}
+                    message={this.state.message} />
                 
 
                 {/*LABEL*/}

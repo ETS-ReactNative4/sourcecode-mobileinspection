@@ -171,7 +171,7 @@ class DetailEbcc extends Component {
 
     }
 
-    renderDynamicComp(data, index, arr){
+    renderDynamicComp(data, index){
         return(
             <View style={styles.containerLabel} key={index}>
                 <Text style={styles.txtLabel}>{data.NAMA_KUALITAS}</Text>
@@ -186,7 +186,7 @@ class DetailEbcc extends Component {
         )
     }
 
-    renderDynamicCompNotUpdate(data, index, arr){
+    renderDynamicCompNotUpdate(data, index){
         return(
             <View style={styles.containerLabel} key={index}>
                 <Text style={styles.txtLabel}>{data.NAMA_KUALITAS}</Text>
@@ -201,7 +201,8 @@ class DetailEbcc extends Component {
         )
     }
 
-    renderDynamicCompBtn(data, index, arr){
+    renderDynamicCompBtn(data, index){
+        let val = data.JUMLAH > 0 ? 'Ada':'Tidak Ada'
         return(
             <View style={styles.containerLabel} key={index}>
                 <Text style={styles.txtLabel}>{data.NAMA_KUALITAS}</Text>
@@ -210,7 +211,7 @@ class DetailEbcc extends Component {
                         editable={false}
                         underlineColorAndroid={'transparent'}
                         style={[styles.searchInput, {backgroundColor: Colors.brand, borderWidth:0, borderColor:'transparent', color: '#ffffff'}]}
-                        value={data.JUMLAH}/>
+                        value={val}/>
                 </View> 
             </View>
         )
@@ -240,7 +241,7 @@ class DetailEbcc extends Component {
                 <View style={{ backgroundColor: 'white' }}>
 
                     <Text style={{ fontSize: 20, fontWeight: '500', paddingLeft: 20, marginTop: 10 }}>Hasil Panen</Text>
-                    {this.state.arrHasilPanen.map((data, idx) => this.renderDynamicComp(data, idx, this.state.valueHasilPanen))}
+                    {this.state.arrHasilPanen.map((data, idx) => this.renderDynamicComp(data, idx))}
                     {/* total janjang */}
                     <View style={styles.containerLabel}>
                         <Text style={{ fontSize: 16, color: 'grey', fontWeight: '500', flex: 2 }}>Total Janjang</Text>
@@ -254,35 +255,19 @@ class DetailEbcc extends Component {
                                 value={this.state.totalJanjang} />
                         </View>
                     </View>
-                    {this.state.arrJjg.map((data, idx) => this.renderDynamicCompNotUpdate(data, idx, this.state.valueJjg))}
+                    {this.state.arrJjg.map((data, idx) => this.renderDynamicCompNotUpdate(data, idx))}
 
                     <View style={{ height: 10, backgroundColor: '#F5F5F5', marginTop: 10 }} />
                     {/* kondisi buah */}
                     <Text style={{ fontSize: 20, fontWeight: '500', paddingLeft: 20, marginTop: 10 }}>Kondisi Buah</Text>
-                    {this.state.arrKondisiBuah.map((data, idx) => this.renderDynamicComp(data, idx, this.state.valueKondisiBuah))}
+                    {this.state.arrKondisiBuah.map((data, idx) => this.renderDynamicComp(data, idx))}
 
                     <View style={{ height: 10, backgroundColor: '#F5F5F5', marginTop: 10 }} />
                     {/* Penalty TPH */}
                     <Text style={{ fontSize: 20, fontWeight: '500', paddingLeft: 20, marginTop: 10 }}>Penalti di TPH</Text>
-                    {this.state.arrPenaltyTph.map((data, idx) => this.renderDynamicCompBtn(data, idx, this.state.valuePenaltyTph))}
-
-                    {/*SLIDER*/}
-                    <View style={{padding:10, alignItems:'center', marginTop:10, marginBottom: 10}}>
-                        {/* <RNSlidingButton
-                            style={styles.buttonSlide}
-                            height={45}
-                            onSlidingSuccess={this.onSlideRight}
-                            slideDirection={SlideDirection.RIGHT}>
-                            <View style={{flexDirection:'row'}}>
-                                <TouchableOpacity style={[styles.bubble, styles.tumbButtonSlide] } onPress={()=>{}}>
-                                    <Icon name={"chevron-right"}  size={20} color="white" />
-                                </TouchableOpacity>
-                                <Text numberOfLines={1} style={[styles.titleText,{alignItems:'center'}]}>
-                                    Selesai
-                                </Text>
-                            </View>
-                        </RNSlidingButton> */}
-                    </View>
+                    {this.state.arrPenaltyTph.map((data, idx) => this.renderDynamicCompBtn(data, idx))}
+                    
+                    <View style={{padding:10, alignItems:'center', marginTop:10, marginBottom: 10}}/>
                 </View>
 
             </ScrollView>
