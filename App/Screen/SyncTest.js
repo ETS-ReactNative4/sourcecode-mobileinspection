@@ -36,8 +36,8 @@ var RNFS = require('react-native-fs');
 // import moment from 'moment';
 
 //const baseUploadImageLink = 'http://149.129.245.230:3012/';
-const baseUploadImageLink = 'http://149.129.250.199:3012/';
 //const link = 'http://149.129.245.230:3008/api/';
+const baseUploadImageLink = 'http://149.129.250.199:3012/';
 const link = 'http://149.129.250.199:3008/api/';
 const linkEbcc = 'http://149.129.250.199:3014/';
 //const link = "http://app.tap-agri.com/mobileinspection/ins-msa-auth/api/";

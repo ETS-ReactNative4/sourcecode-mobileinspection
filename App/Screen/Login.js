@@ -17,11 +17,9 @@ import { connect } from 'react-redux';
 import AuthAction from '../Redux/AuthRedux';
 import { ProgressDialog } from 'react-native-simple-dialogs';
 import { NavigationActions, StackActions } from 'react-navigation';
-import { isNil } from 'ramda';
 import TaskServices from '../Database/TaskServices';
-const IMEI = require('react-native-imei');
 import RNFetchBlob from 'rn-fetch-blob'
-import { dirPhotoTemuan, dirPhotoInspeksiBaris, dirPhotoInspeksiSelfie, dirPhotoKategori } from '../Lib/dirStorage';
+import { dirPhotoTemuan, dirPhotoInspeksiBaris, dirPhotoInspeksiSelfie, dirPhotoKategori, dirPhotoEbccJanjang, dirPhotoEbccSelfie } from '../Lib/dirStorage';
 import ModalAlert from '../Component/ModalAlert'
 
 const baseUri = "http://149.129.250.199:3008/api/";
@@ -48,7 +46,6 @@ class Login extends Component {
     static navigationOptions = {
         header: null,
     }
-	
 
     get_IMEI_Number() {
         var IMEI_2 = IMEI.getImei();
@@ -90,7 +87,6 @@ class Login extends Component {
     checkUser(param) {
         if (TaskServices.getTotalData('TR_LOGIN') > 0) {
             let data = TaskServices.getAllData('TR_LOGIN')[0]
-			console.log("user login data",data)
             if (param.USER_AUTH_CODE !== data.USER_AUTH_CODE) {
                 this.resetMobileSync(param, data.ACCESS_TOKEN)
             } else {
@@ -145,11 +141,15 @@ class Login extends Component {
         TaskServices.deleteAllData('TM_CONTENT_LABEL');
         TaskServices.deleteAllData('TM_INSPECTION_TRACK');
         TaskServices.deleteAllData('TM_TIME_TRACK');
+        TaskServices.deleteAllData('TR_H_EBCC_VALIDATION');
+        TaskServices.deleteAllData('TR_D_EBCC_VALIDATION');
 
         RNFetchBlob.fs.unlink(`file://${dirPhotoTemuan}`)
         RNFetchBlob.fs.unlink(`file://${dirPhotoInspeksiBaris}`)
         RNFetchBlob.fs.unlink(`file://${dirPhotoInspeksiSelfie}`)
         RNFetchBlob.fs.unlink(`file://${dirPhotoKategori}`)
+        RNFetchBlob.fs.unlink(`file://${dirPhotoEbccJanjang}`)
+        RNFetchBlob.fs.unlink(`file://${dirPhotoEbccSelfie}`)
 
 
         this.insertUser(param);
@@ -190,33 +190,31 @@ class Login extends Component {
             },
             body: JSON.stringify({ username, password, imei })
         })
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                this.setState({ fetching: false });
-                if (data.status == true) {
-                    this.checkUser(data.data)
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            this.setState({ fetching: false });
+            if (data.status == true) {
+                this.checkUser(data.data)
+            } else {
+                if (data.message == 'Request Timeout') {
+                    this.setState({
+                        showModal: true,
+                        title: 'Proses Sedang Lambat',
+                        message: 'Silahkan Kamu Coba Lagi',
+                        icon: require('../Images/ic-no-internet.png')
+                    })
                 } else {
-                    if (data.message == 'Request Timeout') {
-                        // alert('Masalah jaringan coba lagi');
-                        this.setState({
-                            showModal: true,
-                            title: 'Proses Sedang Lambat',
-                            message: 'Silahkan Kamu Coba Lagi',
-                            icon: require('../Images/ic-no-internet.png')
-                        })
-                    } else {
-                        // alert('Username atau Password Salah');
-                        this.setState({
-                            showModal: true,
-                            title: 'Username & Password',
-                            message: 'Username atau Password Kamu salah nih.. coba check ulang ya',
-                            icon: require('../Images/ic-salah-pass.png')
-                        })
-                    }
+                    this.setState({
+                        showModal: true,
+                        title: 'Username & Password',
+                        message: 'Username atau Password Kamu salah nih.. coba check ulang ya',
+                        icon: require('../Images/ic-salah-pass.png')
+                    })
                 }
-            });
+            }
+        });
     }
 
     //Add By Aminju 20/01/2019 15:45
