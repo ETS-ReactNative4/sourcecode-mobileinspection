@@ -393,9 +393,7 @@ class BuatInspeksiRedesign extends Component {
         if(time !== undefined){
             duration = parseFloat(time.DESC);
         }
-        let id = setInterval(()=> this.getLocation2(this.state.blokInspeksiCode), duration);
-
-        // this.navigateScreen('TakeFotoBaris', modelInspeksiH, params, param, id, model)
+        let id = 1//setInterval(()=> this.getLocation2(this.state.blokInspeksiCode), duration);
 
         this.props.navigation.navigate('TakeFotoBaris', {
             inspeksiHeader: modelInspeksiH,

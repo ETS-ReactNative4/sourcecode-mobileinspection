@@ -310,7 +310,7 @@ class FotoJanjang extends Component {
         <ModalAlert
             icon={this.state.icon}
             visible={this.state.showModal2}
-            onPressCancel={() => {this.getLocation(); this.setState({ showModal: false })}}
+            onPressCancel={() => {this.getLocation(); this.setState({ showModal2: false })}}
             title={this.state.title}
             message={this.state.message}
         />
@@ -318,7 +318,7 @@ class FotoJanjang extends Component {
             icon={this.state.icon}
             visible={this.state.showModal}
             onPressCancel={() => this.setState({ showModal: false })}
-            onPressSubmit={() => {this.backAndDeletePhoto()}}
+            onPressSubmit={() => {this.backAndDeletePhoto(); this.setState({ showModal: false })}}
             title={this.state.title}
             message={this.state.message}
         />

@@ -39,7 +39,8 @@ class DetailBaris extends React.Component {
             hideKriteria: false,
             barisPembagi:0,
             baris,
-            idInspection
+            idInspection,
+            path: '',
         };
     }
 
@@ -66,7 +67,19 @@ class DetailBaris extends React.Component {
         var data = Taskservices.findByWithList('TR_BLOCK_INSPECTION_D', ['ID_INSPECTION', 'AREAL'], [this.state.idInspection, this.state.baris]); 
         for(var i=0; i < data.length; i++){
             this.getValuComponent({compCode: data[i].CONTENT_INSPECTION_CODE, value: data[i].VALUE})
+            this.loadImage(data[i].BLOCK_INSPECTION_CODE)
         }
+    }
+
+    loadImage(trCode){
+        let imgBaris = Taskservices.findByWithList('TR_IMAGE', ['TR_CODE', 'STATUS_IMAGE'], [trCode, 'BARIS']);
+        let path = '';
+        try {
+            path = `file://${imgBaris[0].IMAGE_PATH_LOCAL}`;
+        } catch (error) {
+            path = '';
+        }
+        this.setState({path})
     }
 
     getValuComponent(data){
@@ -134,8 +147,13 @@ class DetailBaris extends React.Component {
                         barStyle="light-content"
                         backgroundColor={Colors.tintColorPrimary}
                     />
+                    <View style={{alignItems: 'center', justifyContent: 'center', backgroundColor: 'white'}}>
+                        <View style={{ flexDirection: 'row', height: 200 }} >
+                            <Image style={{ width: '100%', height: '100%' }} source={{uri: this.state.path}}></Image>
+                        </View>
+                    </View>
                     <View style={styles.section}>
-                        <Text style={styles.textLokasi}>Data Penilaian</Text>
+                        <Text style={[styles.textLokasi, {marginTop:10}]}>Data Penilaian</Text>
                         <Text style={[styles.textLokasi,{marginTop:5}]}>Baris Ke {this.state.baris}</Text>
                     </View>
                     <View style={styles.section}>
