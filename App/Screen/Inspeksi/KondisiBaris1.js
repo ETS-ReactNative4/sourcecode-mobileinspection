@@ -7,7 +7,7 @@ import Icon2 from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
 import R from 'ramda';
 import TaskServices from '../../Database/TaskServices'
-import { getTodayDateFromGPS,getTodayDate } from '../../Lib/Utils'
+import { getTodayDate } from '../../Lib/Utils'
 
 import ModalAlertConfirmation from '../../Component/ModalAlertConfirmation';
 
@@ -89,8 +89,8 @@ class KondisiBaris1 extends Component {
         return true;
     }
 
-    async insertDB() {
-		var today = await getTodayDateFromGPS('YYYYMMDDHHmmss');
+    insertDB() {
+		var today = getTodayDate('YYYYMMDDHHmmss');
         var kondisiBaris1 = []
         var data = {
             BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}2`,

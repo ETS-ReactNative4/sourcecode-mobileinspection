@@ -14,7 +14,7 @@ const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
 import imgTakePhoto from '../../Images/icon/ic_take_photo.png';
 import imgNextPhoto from '../../Images/icon/ic_next_photo.png';
 import { RNCamera as Camera } from 'react-native-camera';
-import { getTodayDateFromGPS,getTodayDate, getUUID } from '../../Lib/Utils'
+import { getTodayDate, getUUID } from '../../Lib/Utils'
 import ImageResizer from 'react-native-image-resizer';
 import { dirPhotoInspeksiBaris } from '../../Lib/dirStorage'
 import { HeaderBackButton, StackNavigator } from 'react-navigation'
@@ -90,8 +90,8 @@ class TakePhotoBaris extends Component {
     this.setState({ path: null, hasPhoto: false });
   }
 
-  async setParameter() {
-	var today = await getTodayDateFromGPS('YYMMDDHHmmss');
+  setParameter() {
+	var today = getTodayDate('YYMMDDHHmmss');
     var imgCode = 'P' + this.state.dataUsual.USER_AUTH + today;
     var imageName = imgCode + '.jpg';
 

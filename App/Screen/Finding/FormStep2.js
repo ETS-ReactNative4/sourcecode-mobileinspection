@@ -16,7 +16,7 @@ import RadioGroup from 'react-native-custom-radio-group'
 import DateTimePicker from 'react-native-modal-datetime-picker'
 import moment from 'moment'
 import TaskServices from '../../Database/TaskServices'
-import { getTodayDateFromGPS,getTodayDate } from '../../Lib/Utils'
+import { getTodayDate } from '../../Lib/Utils'
 import IIcon from 'react-native-vector-icons/Ionicons'
 import Carousel from 'react-native-looped-carousel'
 import { dirPhotoTemuan } from '../../Lib/dirStorage'
@@ -65,6 +65,8 @@ class FormStep2 extends Component {
         let longitude = R.clone(params.lon);
 
         var user = TaskServices.getAllData('TR_LOGIN')[0];
+		let today = getTodayDate('YYMMDDHHmmss');
+		let TRANS_CODE= `F${user.USER_AUTH_CODE}${today}`;
         this.state = {
             user,
             keterangan: "",
@@ -97,7 +99,7 @@ class FormStep2 extends Component {
                 { step: '1', title: 'Ambil Photo' },
                 { step: '2', title: 'Tulis Keterangan' }
             ],
-            TRANS_CODE: '',
+            TRANS_CODE,
             colorPriority: '#ddd',
             person: [],
             disableCalendar: true,
@@ -109,15 +111,7 @@ class FormStep2 extends Component {
             showModalConfirmation: false,
             icon: ''
         }
-		this.initTransCode();
     }
-	async initTransCode(){
-		let today = await getTodayDateFromGPS('YYMMDDHHmmss');
-		this.setState({
-            TRANS_CODE: `F${user.USER_AUTH_CODE}${today}`
-		})
-	}
-
     static navigationOptions = {
         headerStyle: {
             backgroundColor: Colors.tintColor
@@ -219,7 +213,7 @@ class FormStep2 extends Component {
     //     });
     // };
 
-    async validation() {
+    validation() {
         let isSameUser = this.state.assignto == this.state.user.USER_AUTH_CODE ? true : false;
         let title = 'Inputan Tidak Lengkap';
         if (isEmpty(this.state.keterangan)) {
@@ -253,12 +247,12 @@ class FormStep2 extends Component {
                 icon: require('../../Images/ic-batas-waktu.png')
             });
         } else {
-            await this.saveData()
+            this.saveData()
         }
     }
 
-    async saveData() {
-		var insertTime = await getTodayDateFromGPS('YYYYMMDDkkmmss');
+    saveData() {
+		var insertTime = getTodayDate('YYYYMMDDkkmmss');
 		insertTime = parseInt(insertTime);
         var data = {
             FINDING_CODE: this.state.TRANS_CODE,

@@ -11,7 +11,7 @@ import { RNCamera as Camera } from 'react-native-camera';
 import imgTakePhoto from '../../Images/icon/ic_take_photo.png';
 import imgNextPhoto from '../../Images/icon/ic_next_photo.png';
 import R from 'ramda';
-import {getTodayDateFromGPS,getTodayDate} from '../../Lib/Utils'
+import {getTodayDate} from '../../Lib/Utils'
 import { dirPhotoInspeksiSelfie } from '../../Lib/dirStorage'
 const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
 var RNFS = require('react-native-fs');
@@ -74,8 +74,8 @@ class TakePhotoSelfie extends Component{
       BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
     }
 
-    async setParameter(){
-		var today = await getTodayDateFromGPS('YYMMDDHHmmss');
+    setParameter(){
+		var today = getTodayDate('YYMMDDHHmmss');
       var imgCode = 'P' + this.state.dataUsual.USER_AUTH + today;
       var imageName = imgCode + '.jpg';
 

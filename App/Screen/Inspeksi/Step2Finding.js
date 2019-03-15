@@ -19,7 +19,7 @@ import moment from 'moment'
 import SlidingUpPanel from 'rn-sliding-up-panel'
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps'
 import TaskServices from '../../Database/TaskServices'
-import { getTodayDateFromGPS,getTodayDate } from '../../Lib/Utils'
+import { getTodayDate } from '../../Lib/Utils'
 import IIcon from 'react-native-vector-icons/Ionicons'
 import Carousel from 'react-native-looped-carousel'
 import { dirPhotoTemuan } from '../../Lib/dirStorage'
@@ -69,7 +69,9 @@ class Step2Finding extends Component {
         let longitude = R.clone(params.lon);
         let inspeksiHeader = R.clone(params.data);
 
+		let today = getTodayDate('YYMMDDHHmmss');
         var user = TaskServices.getAllData('TR_LOGIN')[0];
+		let	TRANS_CODE = `F${user.USER_AUTH_CODE}${today}`;
         this.state = {
             user,
             keterangan: "",
@@ -102,7 +104,7 @@ class Step2Finding extends Component {
                 { step: '1', title: 'Ambil Photo' },
                 { step: '2', title: 'Tulis Keterangan' }
             ],
-            TRANS_CODE: '',
+            TRANS_CODE,
             colorPriority: '#ddd',
             disableCalendar: true,
             inspeksiHeader,
@@ -114,15 +116,7 @@ class Step2Finding extends Component {
             showModalConfirmation: false,
             icon: ''
         }
-		this.initTrans_Code();
     }
-	
-	async initTrans_Code(){
-		let today = await getTodayDateFromGPS('YYMMDDHHmmss');
-		this.setState({
-			TRANS_CODE: `F${user.USER_AUTH_CODE}${today}`
-		})
-	}
 
     static navigationOptions = {
         headerStyle: {
@@ -232,7 +226,7 @@ class Step2Finding extends Component {
         });
     };
 
-    validation = async () => {
+    validation = () => {
         let isSameUser = this.state.assignto == this.state.user.USER_AUTH_CODE ? true : false;
         let title = 'Inputan Tidak Lengkap';
         if (isEmpty(this.state.keterangan)) {
@@ -266,12 +260,12 @@ class Step2Finding extends Component {
                 icon: require('../../Images/ic-batas-waktu.png')
             });
         } else {
-            await this.saveData()
+            this.saveData()
         }
     }
 
-    async saveData() {
-		let insertTime = await getTodayDateFromGPS('YYYYMMDDHHmmss');
+    saveData() {
+		let insertTime = getTodayDate('YYYYMMDDHHmmss');
 		insertTime = parseInt(insertTime);
         var data = {
             FINDING_CODE: this.state.TRANS_CODE,

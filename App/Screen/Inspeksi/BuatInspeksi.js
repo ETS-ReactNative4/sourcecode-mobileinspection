@@ -8,7 +8,7 @@ import Fonts from '../../Constant/Fonts'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import IconLoc from 'react-native-vector-icons/FontAwesome5';
 import MapView, { PROVIDER_GOOGLE, ProviderPropType, Marker, AnimatedRegion } from 'react-native-maps';
-import { getTodayDateFromGPS,getTodayDate } from '../../Lib/Utils'
+import { getTodayDate } from '../../Lib/Utils'
 import TaskService from '../../Database/TaskServices';
 import { ProgressDialog } from 'react-native-simple-dialogs';
 import Autocomplete from 'react-native-autocomplete-input';
@@ -101,8 +101,8 @@ class BuatInspeksiRedesign extends Component {
         };
 		this.initBlokInspeksiCode(dataLogin[0].USER_AUTH_CODE);
     }   
-    async initBlokInspeksiCode(authCode){
-		let today = await getTodayDateFromGPS('YYMMDDHHmmss');
+    initBlokInspeksiCode(authCode){
+		let today = getTodayDate('YYMMDDHHmmss');
         let blokInspeksiCode = `I${authCode}${today}`;
 		this.setState({
 			blokInspeksiCode : blokInspeksiCode
@@ -229,11 +229,11 @@ class BuatInspeksiRedesign extends Component {
         );
     }
 
-    async insertTrackLokasi(blokInsCode, lat, lon){
+    insertTrackLokasi(blokInsCode, lat, lon){
         try {
-			var today = getTodayDateFromGPS('YYMMDDHHmmss');
+			var today = getTodayDate('YYMMDDHHmmss');
             var trInsCode = `T${this.state.dataLogin[0].USER_AUTH_CODE}${today}`;
-            var today = await getTodayDateFromGPS('YYYY-MM-DD HH:mm:ss');
+            var today = getTodayDate('YYYY-MM-DD HH:mm:ss');
             data = {
                 TRACK_INSPECTION_CODE: trInsCode,
                 BLOCK_INSPECTION_CODE: blokInsCode,
@@ -335,11 +335,11 @@ class BuatInspeksiRedesign extends Component {
         this.setState({ baris: brs });
     }
 
-    async insertDB(param) {
+    insertDB(param) {
 
-        let inspectionDate = await getTodayDateFromGPS('YYYY-MM-DD HH:mm:ss');
+        let inspectionDate = getTodayDate('YYYY-MM-DD HH:mm:ss');
         // let idInspection = `B${this.state.dataLogin[0].USER_AUTH_CODE}${getTodayDate('YYMMDDHHmmss')}`
-		let today = await getTodayDateFromGPS('YYMMDD');
+		let today = getTodayDate('YYMMDD');
         let idInspection = `B${this.state.dataLogin[0].USER_AUTH_CODE}${today}${this.state.blok}`
         
         let modelInspeksiH = {
@@ -356,7 +356,7 @@ class BuatInspeksiRedesign extends Component {
             INSPECTION_RESULT: '',
             STATUS_SYNC: 'N',
             SYNC_TIME: '',
-            START_INSPECTION: await getTodayDateFromGPS('YYYY-MM-DD HH:mm:ss'),//getTodayDate('DD MMM YYYY HH:mm:ss'),
+            START_INSPECTION: getTodayDate('YYYY-MM-DD HH:mm:ss'),//getTodayDate('DD MMM YYYY HH:mm:ss'),
             END_INSPECTION: '',
             LAT_START_INSPECTION: this.state.latitude.toString(),
             LONG_START_INSPECTION: this.state.longitude.toString(),
@@ -401,13 +401,13 @@ class BuatInspeksiRedesign extends Component {
             inspeksiHeader: modelInspeksiH,
             dataUsual: params,
             statusBlok: param,
-            waktu: await getTodayDateFromGPS('YYYY-MM-DD  HH:mm:ss'),
+            waktu: getTodayDate('YYYY-MM-DD  HH:mm:ss'),
             intervalId: id,
             dataInspeksi: model
         });
     }
 
-    async navigateScreen(screenName, modelInspeksiH, params, statusBlok, intervalId, dataInspeksi) {
+    navigateScreen(screenName, modelInspeksiH, params, statusBlok, intervalId, dataInspeksi) {
         const navigation = this.props.navigation;
         const resetAction = StackActions.reset({
         index: 0,            
@@ -415,7 +415,7 @@ class BuatInspeksiRedesign extends Component {
             inspeksiHeader: modelInspeksiH,
             dataUsual: params,
             statusBlok: statusBlok,
-            waktu: await getTodayDateFromGPS('YYYY-MM-DD  HH:mm:ss'),
+            waktu: getTodayDate('YYYY-MM-DD  HH:mm:ss'),
             intervalId: intervalId,
             dataInspeksi: dataInspeksi
             } 

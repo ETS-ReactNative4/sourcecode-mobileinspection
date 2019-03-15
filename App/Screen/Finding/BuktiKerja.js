@@ -12,7 +12,7 @@ import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
 import Icon2 from 'react-native-vector-icons/Ionicons';
 import R from 'ramda'
-import {getTodayDateFromGPS,getTodayDate} from '../../Lib/Utils'
+import {getTodayDate} from '../../Lib/Utils'
 import TaskServices from '../../Database/TaskServices'
 import RNFS from 'react-native-fs';
 const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
@@ -93,7 +93,7 @@ class FormStep1 extends Component {
         return true;
     }
 
-    async onBtnClick() {
+    onBtnClick() {
         if (this.state.photos.length == 0) {
             // Alert.alert(
             //     'Peringatan',
@@ -123,7 +123,7 @@ class FormStep1 extends Component {
                     STATUS_IMAGE: 'SESUDAH',
                     STATUS_SYNC: 'N',
                     INSERT_USER: this.state.user.USER_AUTH_CODE,
-                    INSERT_TIME: await getTodayDateFromGPS('YYYY-MM-DD HH:mm:ss')
+                    INSERT_TIME: getTodayDate('YYYY-MM-DD HH:mm:ss')
                 }               
                 images.push(img);
             });

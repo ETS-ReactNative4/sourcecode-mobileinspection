@@ -13,7 +13,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import MapView, { Polygon, ProviderPropType, Marker } from 'react-native-maps';
 import {RNSlidingButton, SlideDirection} from 'rn-sliding-button';
 import TaskService from '../../Database/TaskServices';
-import {getTodayDateFromGPS,getTodayDate, getCalculateTime, getUUID} from '../../Lib/Utils'
+import {getTodayDate, getCalculateTime, getUUID} from '../../Lib/Utils'
 import { NavigationActions, StackActions  } from 'react-navigation';
 import R from 'ramda';
 import geolib from 'geolib';
@@ -249,11 +249,11 @@ class KondisiBarisAkhir extends Component{
 
     }
 
-    onSlideRight = async () => {
-        await this.validation()
+    onSlideRight = () => {
+        this.validation()
     };
 
-    async validation() {
+    validation() {
         if (this.state.txtBaris == '' && this.state.switchLanjut) {
             this.setState({
                 showModal: true, title: 'Isi Baris', message: 'Kamu harus selalu pilih baris yaa :)',
@@ -265,7 +265,7 @@ class KondisiBarisAkhir extends Component{
                 icon: require('../../Images/ic-blm-input-lokasi.png')
             });
         } else {
-            await this.saveData();
+            this.saveData();
         }
     }
 
@@ -408,7 +408,7 @@ class KondisiBarisAkhir extends Component{
         }
     }
 
-    async saveData(){
+    saveData(){
         // let lat = '0.0';
         // let lon = '0.0';
         // if(this.state.latitude === 0.0 && this.state.longitude === 0.0){
@@ -422,7 +422,7 @@ class KondisiBarisAkhir extends Component{
         //     lat = this.state.latitude.toString();
         //     lon = this.state.longitude.toString();
         // }
-		let insertTime = await getTodayDateFromGPS('YYYY-MM-DD HH:mm:ss');
+		let insertTime = getTodayDate('YYYY-MM-DD HH:mm:ss');
 
         if(this.state.from !== 'history'){
             var modelInspeksiH = {
@@ -518,7 +518,7 @@ class KondisiBarisAkhir extends Component{
             TaskService.saveData('TR_BARIS_INSPECTION', this.state.dataInspeksi)
         }
 
-		let today = await getTodayDateFromGPS('YYMMDDHHmmss');
+		let today = getTodayDate('YYMMDDHHmmss');
         let blokInspectionCode = `I${this.state.dataUsual.USER_AUTH}${today}`
         var params = {
             USER_AUTH: this.state.dataUsual.USER_AUTH,
@@ -603,11 +603,11 @@ class KondisiBarisAkhir extends Component{
         );
     }
 
-    async insertTrackLokasi(blokInsCode, lat, lon){
+    insertTrackLokasi(blokInsCode, lat, lon){
         try {
-			var curr = await getTodayDateFromGPS('YYMMDDHHmmss');
+			var curr = getTodayDate('YYMMDDHHmmss');
             var trInsCode = `T${this.state.dataUsual.USER_AUTH}${curr}`;
-            var today = await getTodayDateFromGPS('YYYY-MM-DD HH:mm:ss');
+            var today = getTodayDate('YYYY-MM-DD HH:mm:ss');
             data = {
                 TRACK_INSPECTION_CODE: trInsCode,
                 BLOCK_INSPECTION_CODE: blokInsCode,

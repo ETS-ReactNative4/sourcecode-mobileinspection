@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { RNSlidingButton, SlideDirection } from 'rn-sliding-button';
 import Entypo from 'react-native-vector-icons/Entypo'
 import { NavigationActions, StackActions } from 'react-navigation';
-import { getTodayDateFromGPS,getTodayDate } from '../../Lib/Utils';
+import { getTodayDate } from '../../Lib/Utils';
 import R from 'ramda';
 import ModalAlert from '../../Component/ModalAlert'
 
@@ -357,11 +357,11 @@ class KondisiBaris2 extends Component {
     }
 
 
-    onSlideRight = async () => {
-        await this.validation()
+    onSlideRight = () => {
+        this.validation()
     };
 
-    async validation(){
+    validation(){
         //TM dan TBM3 TPH mandatory
         //TM Prunning mandatory
         //titi panen jika switch on wajib dipilih
@@ -424,12 +424,12 @@ class KondisiBaris2 extends Component {
                 icon: require('../../Images/ic-inputan-tidak-lengkap.png')
             });
         } else {
-            await this.insertDB();
+            this.insertDB();
         }
     }
 	
-    async insertDB() {
-		var today = await getTodayDateFromGPS('YYYYMMDDHHmmss');
+    insertDB() {
+		var today = getTodayDate('YYYYMMDDHHmmss');
         var listBaris2 = [];
         if (this.state.showPiringan) {
             var data = {
