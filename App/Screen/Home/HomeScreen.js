@@ -129,18 +129,22 @@ class HomeScreen extends React.Component {
             query += ` OR WERKS == `
           }
         }
-        findingFilter = findingSorted.filtered(`${query} AND ASSIGN_TO != "${user_auth}"`);
+        //findingFilter = findingSorted.filtered(`${query} AND ASSIGN_TO != "${user_auth}"`);
+        findingFilter = findingSorted.filtered(`${query}`);
       } else {
         findingFilter = finding.sorted('INSERT_TIME', true);
       }
     } else if (ref_role == 'COMP_CODE') {
-      findingFilter = findingSorted.filtered(`WERKS CONTAINS[c] "${loc_code}" AND ASSIGN_TO != "${user_auth}"`);
+      //findingFilter = findingSorted.filtered(`WERKS CONTAINS[c] "${loc_code}" AND ASSIGN_TO != "${user_auth}"`);
+      findingFilter = findingSorted.filtered(`WERKS CONTAINS[c] "${loc_code}"`);
     } else if (ref_role == 'WERKS') {
-      findingFilter = findingSorted.filtered(`WERKS = "${loc_code}" AND ASSIGN_TO != "${user_auth}"`);
+      //findingFilter = findingSorted.filtered(`WERKS = "${loc_code}" AND ASSIGN_TO != "${user_auth}"`);
+      findingFilter = findingSorted.filtered(`WERKS = "${loc_code}"`);
     } else if (ref_role == 'AFD_CODE') {
       const werks = loc_code.substring(0, 4);
       const afd_code = loc_code.substring(4, 5);
-      findingFilter = findingSorted.filtered(`WERKS = "${werks}" AND AFD_CODE = "${afd_code}" AND ASSIGN_TO != "${user_auth}"`);
+      //findingFilter = findingSorted.filtered(`WERKS = "${werks}" AND AFD_CODE = "${afd_code}" AND ASSIGN_TO != "${user_auth}"`);
+      findingFilter = findingSorted.filtered(`WERKS = "${werks}" AND AFD_CODE = "${afd_code}"`);
     } else {
       findingFilter = finding.sorted('INSERT_TIME', true);
     }

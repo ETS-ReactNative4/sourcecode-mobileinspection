@@ -1,4 +1,4 @@
-const SCHEMA_VERSION = 0
+const SCHEMA_VERSION = 1
 const TR_LOGIN = {
     name: 'TR_LOGIN',
     primaryKey: 'USER_AUTH_CODE',
@@ -375,6 +375,15 @@ const TR_D_EBCC_VALIDATION = {
     }
 }
 
+const TR_SYNC_LOG = {
+    name: 'TR_SYNC_LOG',
+    primaryKey: 'SYNC_LOG_ID',
+    properties: {
+		SYNC_LOG_ID: 'string',
+        SYNC_TIME: 'string'
+    }
+}
+
 export default {
     TR_LOGIN,
     TR_BLOCK_INSPECTION_H,
@@ -402,6 +411,8 @@ export default {
     TM_KUALITAS,
     TR_H_EBCC_VALIDATION,
     TR_D_EBCC_VALIDATION,
+	
+	TR_SYNC_LOG,
 	
 	SCHEMA_VERSION
 }

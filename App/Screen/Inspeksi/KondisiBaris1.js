@@ -249,7 +249,8 @@ class KondisiBaris1 extends Component {
     }
 	
 	_render_variable_input(){
-		if(this.state.statusBlok=="TBM1"||this.state.statusBlok=="TBM2"){
+		console.log(this.state.statusBlok);
+		if(this.state.statusBlok=="TBM 0"||this.state.statusBlok=="TBM 1"||this.state.statusBlok=="TBM 2"){
 			return null;
 		}
 		else{
