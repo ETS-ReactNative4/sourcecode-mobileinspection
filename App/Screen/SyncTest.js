@@ -778,14 +778,15 @@ class SyncScreen extends React.Component {
             if (total > 0) {
                 this.fetchingMobileSync(item);
             } else {
-                this.setState({
-                    showButton: true,
-                    showModal: true,
-                    title: 'Gagal Download' + item,
-                    message: 'Opps, Download bermasalah, silahkan coba lagi ya..',
-                    icon: require('../Images/ic-sync-gagal.png')
-                })
-                // alert('gagal download ' + item)
+                if(item !== 'finding'){
+                    this.setState({
+                        showButton: true,
+                        showModal: true,
+                        title: 'Gagal Download' + item,
+                        message: 'Opps, Download bermasalah, silahkan coba lagi ya..',
+                        icon: require('../Images/ic-sync-gagal.png')
+                    })
+                }
 
             }
         } else {

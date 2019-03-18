@@ -87,9 +87,9 @@ export default class HistoryInspection extends Component {
               <View style={styles.sectionDesc} >
                 {/* <Text style={{ fontSize: 14, fontWeight: 'bold' }}>{this.getEstateName(dataBlock.WERKS)}</Text> */}                
                 <Text style={{ fontSize: 14, fontWeight: 'bold' }}>{data.EST_NAME}</Text>
-                <Text style={{ fontSize: 12 }}>{dataBlock.BLOCK_NAME}/{data.BLOCK_CODE.toLocaleUpperCase()}</Text>
-                <Text style={{ fontSize: 12 }}>{data.INSPECTION_DATE}</Text>
-                <Text style={{ fontSize: 12, color: colorStatus }}>{status}</Text>
+                <Text style={{ fontSize: 12 , marginTop: 15}}>{dataBlock.BLOCK_NAME}/{data.BLOCK_CODE.toLocaleUpperCase()}</Text>
+                <Text style={{ fontSize: 12, marginTop: 5}}>{data.INSPECTION_DATE}</Text>
+                <Text style={{ fontSize: 12, marginTop: 20, color: colorStatus }}>{status}</Text>
               </View>
               <View style={{flexDirection:'row', height:120}}>
                 <Text style={[styles.textValue,{marginTop: 40}]}>{data.INSPECTION_RESULT == 'string' ? '': data.INSPECTION_RESULT}</Text>
@@ -270,12 +270,11 @@ const styles = StyleSheet.create({
   },
   sectionDesc: {
     flexDirection: 'column',
-    justifyContent: 'space-between',
     height: 120,
-    paddingRight: 10,
-    paddingTop: 10,
-    paddingBottom: 10,
-    marginRight: 20
+    // paddingRight: 10,
+    // paddingTop: 10,
+    // paddingBottom: 10,
+    // marginRight: 20
   },
   cardContainer: {
     flex: 1,

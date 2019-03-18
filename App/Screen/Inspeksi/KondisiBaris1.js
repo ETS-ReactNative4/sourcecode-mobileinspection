@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
 import R from 'ramda';
-import TaskServices from '../../Database/TaskServices'
+import { NavigationActions } from 'react-navigation';
 import { getTodayDate } from '../../Lib/Utils'
 
 import ModalAlertConfirmation from '../../Component/ModalAlertConfirmation';
@@ -333,7 +333,17 @@ class KondisiBaris1 extends Component {
                         </View>
                     </View>]);
 		}
-	}
+    }
+    
+    cancelOrder(){
+        this.props.navigation.goBack(null)
+        // const navigation = this.props.navigation;
+        // let routeName = 'MainMenu'; 
+        // this.setState({showModal: false})
+        // Promise.all([navigation.dispatch(NavigationActions.navigate({ routeName : routeName}))]).
+        // then(() => navigation.navigate('Inspection')).then(() => navigation.navigate('DaftarInspeksi'));
+
+    }
 
     render() {
         return (
@@ -347,7 +357,7 @@ class KondisiBaris1 extends Component {
                     icon={this.state.icon}
                     visible={this.state.showModal}
                     onPressCancel={() => this.setState({ showModal: false })}
-                    onPressSubmit={() => { this.setState({ showModal: false }); this.props.navigation.goBack(null) }}
+                    onPressSubmit={() => { this.setState({ showModal: false }); this.cancelOrder() }}
                     title={this.state.title}
                     message={this.state.message}
                 />

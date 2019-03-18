@@ -4,7 +4,7 @@ import {
     TouchableOpacity,
     View,
     Image,
-    Dimensions, BackHandler,Platform, StatusBar
+    Dimensions, BackHandler,Platform, StatusBar, BackAndroid
   } from 'react-native';
 import Colors from '../../Constant/Colors';
 import { RNCamera as Camera } from 'react-native-camera';
@@ -67,11 +67,13 @@ class TakePhotoSelfie extends Component{
 
     componentDidMount(){
       this.setParameter();
-      BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+      // BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+      BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
     }
   
     componentWillUnmount(){
-      BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+      // BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+      BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
     }
 
     setParameter(){

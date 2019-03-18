@@ -45,6 +45,7 @@ export default class ListFinding extends Component {
       data7Hari: [],
       dataMore7Hari: [],
       dataNoDate: [],
+      dataSelesai:[],
       refreshing: false
     }
 
@@ -97,7 +98,9 @@ export default class ListFinding extends Component {
       }
     })
 
-    this.setState({ dataLewat, data7Hari, dataMore7Hari, dataNoDate })
+    var dataSelesai = TaskServices.query('TR_FINDING', `PROGRESS = 100 AND ASSIGN_TO = "${user_auth}"`);
+
+    this.setState({ dataLewat, data7Hari, dataMore7Hari, dataNoDate, dataSelesai })
   }
 
   actionButtonClick() {
@@ -315,6 +318,27 @@ export default class ListFinding extends Component {
           <View style={{ marginTop: 16, height: 120, marginBottom: 32 }}>
             <ScrollView contentContainerStyle={{ paddingRight: 16 }} horizontal={true} showsHorizontalScrollIndicator={false}>
               {this.state.dataMore7Hari.map(this._renderItem)}
+            </ScrollView >
+          </View>
+
+          {/* list done */}
+          <View style={styles.devider} />
+
+          <Text style={{ fontSize: 16, fontWeight: 'bold', paddingHorizontal: 16 }}>
+            Selesai
+          </Text>
+
+          <Dash
+            dashColor={'#ccc'}
+            dashThickness={1}
+            dashGap={5}
+            style={{
+              height: 1, marginLeft: 16, marginRight: 16, marginTop: 10
+            }} />
+
+          <View style={{ marginTop: 16, height: 120, marginBottom: 32 }}>
+            <ScrollView contentContainerStyle={{ paddingRight: 16 }} horizontal={true} showsHorizontalScrollIndicator={false}>
+              {this.state.dataSelesai.map(this._renderItem)}
             </ScrollView >
           </View>
 
