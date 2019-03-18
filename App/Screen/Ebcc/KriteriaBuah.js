@@ -90,6 +90,7 @@ class KriteriaBuah extends Component {
     }
 
     loadData(){        
+        let dataLogin = TaskServices.getAllData('TR_LOGIN')[0];
         var arrTph = this.state.tphAfdWerksBlockCode.split('-') //tph-afd-werks-blockcode
         var dataBlock = TaskServices.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', `${arrTph[2]}${arrTph[1]}${arrTph[3]}`)
         if(dataBlock !== undefined){
@@ -106,12 +107,13 @@ class KriteriaBuah extends Component {
                     let model = {
                         EBCC_VALIDATION_CODE_D: `${this.state.ebccValCode}${item.ID_KUALITAS}`,
                         EBCC_VALIDATION_CODE: this.state.ebccValCode,
-                        GROUP_KUALITAS: 'HASIL PANEN',
-                        UOM: 'JJG',
+                        GROUP_KUALITAS: item.GROUP_KUALITAS,
+                        UOM: item.UOM,
                         ID_KUALITAS: item.ID_KUALITAS,
                         NAMA_KUALITAS: item.NAMA_KUALITAS,
                         JUMLAH: '0',
                         INSERT_TIME: getTodayDate('YYYY-MM-DD kk:mm:ss'),
+                        INSERT_USER: dataLogin.USER_AUTH_CODE,
                         STATUS_SYNC: 'N',
                         SYNC_TIME: ''
                     }
@@ -127,12 +129,13 @@ class KriteriaBuah extends Component {
                     let model = {
                         EBCC_VALIDATION_CODE_D: `${this.state.ebccValCode}${item.ID_KUALITAS}`,
                         EBCC_VALIDATION_CODE: this.state.ebccValCode,
-                        GROUP_KUALITAS: 'HASIL PANEN',
-                        UOM: 'KG',
+                        GROUP_KUALITAS: item.GROUP_KUALITAS,
+                        UOM: item.UOM,
                         ID_KUALITAS: item.ID_KUALITAS,
                         NAMA_KUALITAS: item.NAMA_KUALITAS,
                         JUMLAH: '0',
                         INSERT_TIME: getTodayDate('YYYY-MM-DD kk:mm:ss'),
+                        INSERT_USER: dataLogin.USER_AUTH_CODE,
                         STATUS_SYNC: 'N',
                         SYNC_TIME: ''
                     }
@@ -148,12 +151,13 @@ class KriteriaBuah extends Component {
                     let model = {
                         EBCC_VALIDATION_CODE_D: `${this.state.ebccValCode}${item.ID_KUALITAS}`,
                         EBCC_VALIDATION_CODE: this.state.ebccValCode,
-                        GROUP_KUALITAS: 'KONDISI BUAH',
-                        UOM: 'JJG',
+                        GROUP_KUALITAS: item.GROUP_KUALITAS,
+                        UOM: item.UOM,
                         ID_KUALITAS: item.ID_KUALITAS,
                         NAMA_KUALITAS: item.NAMA_KUALITAS,
                         JUMLAH: '0',
                         INSERT_TIME: getTodayDate('YYYY-MM-DD kk:mm:ss'),
+                        INSERT_USER: dataLogin.USER_AUTH_CODE,
                         STATUS_SYNC: 'N',
                         SYNC_TIME: ''
                     }
@@ -169,16 +173,17 @@ class KriteriaBuah extends Component {
                     let model = {
                         EBCC_VALIDATION_CODE_D: `${this.state.ebccValCode}${item.ID_KUALITAS}`,
                         EBCC_VALIDATION_CODE: this.state.ebccValCode,
-                        GROUP_KUALITAS: 'PENALTY DI TPH',
-                        UOM: 'TPH',
+                        GROUP_KUALITAS: item.GROUP_KUALITAS,
+                        UOM: item.UOM,
                         ID_KUALITAS: item.ID_KUALITAS,
                         NAMA_KUALITAS: item.NAMA_KUALITAS,
                         JUMLAH: '',
                         INSERT_TIME: getTodayDate('YYYY-MM-DD kk:mm:ss'),
+                        INSERT_USER: dataLogin.USER_AUTH_CODE,
                         STATUS_SYNC: 'N',
                         SYNC_TIME: ''
                     }
-                    this.state.valuePenaltyTph.push(model)
+                    this.state.valuePenaltyTph.push(model)  
                 })
             }
         }else{
@@ -266,6 +271,7 @@ class KriteriaBuah extends Component {
         let newArray = [...arr];
         let data = newArray[index]
         let model = {
+            EBCC_VALIDATION_CODE_D: data.EBCC_VALIDATION_CODE_D,
             EBCC_VALIDATION_CODE: data.EBCC_VALIDATION_CODE,
             GROUP_KUALITAS: data.GROUP_KUALITAS,
             UOM: data.UOM,
@@ -273,9 +279,11 @@ class KriteriaBuah extends Component {
             NAMA_KUALITAS: data.NAMA_KUALITAS,
             JUMLAH: strUpdate,
             INSERT_TIME: data.INSERT_TIME,
+            INSERT_USER: data.INSERT_USER,
             STATUS_SYNC: data.STATUS_SYNC,
             SYNC_TIME: data.SYNC_TIME
-        }      
+        }  
+          
         newArray[index] = model;
         if(param == 'tph'){
             this.setState({valuePenaltyTph: newArray});

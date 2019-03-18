@@ -97,10 +97,10 @@ class ManualInputTPH extends React.Component{
     onClickButton(param){
         switch(param){
             case 'HILANG':
-                this.setState({btnHilang: styles.bubbleOn, btnRusak: styles.bubbleOff, textHilang: styles.buttonTextOn, textRusak: styles.buttonTextOff})
+                this.setState({btnHilang: styles.bubbleOn, btnRusak: styles.bubbleOff, textHilang: styles.buttonTextOn, textRusak: styles.buttonTextOff, reason : 'HILANG'})
                 break;
             case 'RUSAK':
-                this.setState({btnHilang: styles.bubbleOff, btnRusak: styles.bubbleOn, textHilang: styles.buttonTextOff, textRusak: styles.buttonTextOn})
+                this.setState({btnHilang: styles.bubbleOff, btnRusak: styles.bubbleOn, textHilang: styles.buttonTextOff, textRusak: styles.buttonTextOn, reason: 'RUSAK'})
                 break;
             default:
                 break;
@@ -175,7 +175,7 @@ class ManualInputTPH extends React.Component{
     validation(){
         let tph = `${this.state.text1}${this.state.text2}${this.state.text3}`
         let tphAfdWerksBlockCode = `${tph}-${this.state.afdCode}-${this.state.werks}-${this.state.blokCode}`   
-        this.props.navigation.navigate('FotoJanjang', {statusScan: 'MANUAL', tphAfdWerksBlockCode: tphAfdWerksBlockCode});
+        this.props.navigation.navigate('FotoJanjang', {statusScan: 'MANUAL', tphAfdWerksBlockCode: tphAfdWerksBlockCode, reason: this.state.reason});
     }
 
     render(){

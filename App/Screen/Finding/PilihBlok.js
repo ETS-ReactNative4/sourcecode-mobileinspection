@@ -14,7 +14,6 @@ import IconLoc from 'react-native-vector-icons/FontAwesome5';
 import MapView, {Marker } from 'react-native-maps';
 import TaskService from '../../Database/TaskServices';
 import { ProgressDialog } from 'react-native-simple-dialogs';
-const indonesia = require('../../Data/indonesia-province-simple.json')
 import Geojson from 'react-native-geojson';
 
 

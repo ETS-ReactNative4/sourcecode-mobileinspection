@@ -70,6 +70,7 @@ class FotoJanjang extends Component {
     let params = props.navigation.state.params;
     let tphAfdWerksBlockCode = R.clone(params.tphAfdWerksBlockCode)
     let statusScan = R.clone(params.statusScan)
+    let reason = R.clone(params.reason)
 
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     this.state = {
@@ -78,6 +79,7 @@ class FotoJanjang extends Component {
       pathImg: null,
       dataModel: null,
       tphAfdWerksBlockCode,
+      reason,
       pathCache: '',
       timestamp: getTodayDate('YYYYMMDDkkmmss'),
       ebccValCode: '',
@@ -165,6 +167,10 @@ class FotoJanjang extends Component {
     var imageName = imgCode + '.jpg';
     var arrTph = this.state.tphAfdWerksBlockCode.split('-') //tph-afd-werks-blockcode
     var ebccValCode = `V${dataLogin.USER_AUTH_CODE}${this.state.timestamp}${arrTph[0]}${arrTph[3]}`
+    var alasan = '';
+    if(this.state.reason !== ''){
+      alasan = this.state.reason == 'RUSAK' ? '1':'2'
+    }
     var image = {
       TR_CODE: ebccValCode,
       IMAGE_CODE: imgCode,
@@ -183,15 +189,15 @@ class FotoJanjang extends Component {
       BLOCK_CODE: arrTph[3],
       NO_TPH: arrTph[0],
       STATUS_TPH_SCAN: this.state.statusScan, //manual dan automatics
-      ALASAN: '',//1 rusak, 2 hilang
+      ALASAN_MANUAL: alasan,//1 rusak, 2 hilang
+      LAT_TPH: this.state.latitude.toString(),
+      LON_TPH: this.state.longitude.toString()  ,
       DELIVERY_CODE: '',
       STATUS_DELIVERY_CODE: '',
-      INSERT_USER: dataLogin.USER_AUTH_CODE,
-      INSERT_TIME: getTodayDate('YYYY-MM-DD kk:mm:ss'),
       STATUS_SYNC: 'N',
-      SYNC_TIME: '',      
-      LATITUDE: this.state.latitude.toString(),
-      LONGITUDE: this.state.longitude.toString()
+      SYNC_TIME: '',   
+      INSERT_USER: dataLogin.USER_AUTH_CODE,
+      INSERT_TIME: getTodayDate('YYYY-MM-DD kk:mm:ss')
     }
     this.setState({ dataModel: image, ebccValCode, dataHeader: header });
 

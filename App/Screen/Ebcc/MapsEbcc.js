@@ -16,7 +16,7 @@ import ModalAlert from '../../Component/ModalLoading'
 import ModalGps from '../../Component/ModalAlert';
 import R from 'ramda';
 
-const skm = require('../../Data/4421.json');
+const skm = require('../../Data/2121.json');
 const LATITUDE = -2.1890660;
 const LONGITUDE = 111.3609873;
 const { width, height } = Dimensions.get('window');
@@ -281,7 +281,7 @@ class MapsEbcc extends React.Component {
           onMapReady={()=>this.onMapReady()}
           >
           {/* {skm.data.polygons.map((poly, index) => ( */}
-           {this.state.poligons.length > 1 && this.state.poligons.map((poly, index) => (
+           {this.state.poligons.length > 0 && this.state.poligons.map((poly, index) => (
             <View key={index}>
               <Polygon
                 coordinates={poly.coords}
