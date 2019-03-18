@@ -47,8 +47,9 @@ class Scanner extends Component {
     const resetAction = StackActions.reset({
     index: 0,            
       actions: [NavigationActions.navigate({ routeName: screenName, params : { 
-        statusScan: 'AUTOMATIC',
-        tphAfdWerksBlockCode : decode
+          statusScan: 'AUTOMATIC',
+          tphAfdWerksBlockCode : decode,
+          reason: ''
         } 
       })]
     });
