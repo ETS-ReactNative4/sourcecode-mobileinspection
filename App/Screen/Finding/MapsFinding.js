@@ -19,11 +19,8 @@ import geolib from 'geolib';
 const ASPECT_RATIO = width / height;
 const LATITUDE = -2.1890660;
 const LONGITUDE = 111.3609873;
-//const LATITUDE = -1.3682;
-//const LONGITUDE = 103.3943;
 const LATITUDE_DELTA = 0.0922;
-//const skm = require('../../Data/2121.json');
-const skm = require('../../Data/4421.json');
+const skm = require('../../Data/2121.json');
 const { width, height } = Dimensions.get('window');
 
 class MapsInspeksi extends React.Component {
@@ -260,7 +257,7 @@ class MapsInspeksi extends React.Component {
           onMapReady={()=>this.onMapReady()}
           >
           {/* {skm.data.polygons.map((poly, index) => ( */}
-          {this.state.poligons.length > 1 && this.state.poligons.map((poly, index) => (
+          {this.state.poligons.length > 0 && this.state.poligons.map((poly, index) => (
             <View key={index}>
               <Polygon
                 coordinates={poly.coords}

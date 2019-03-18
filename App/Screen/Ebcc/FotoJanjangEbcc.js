@@ -183,15 +183,15 @@ class FotoJanjang extends Component {
       BLOCK_CODE: arrTph[3],
       NO_TPH: arrTph[0],
       STATUS_TPH_SCAN: this.state.statusScan, //manual dan automatics
-      ALASAN: '',//1 rusak, 2 hilang
+      ALASAN_MANUAL: '',//1 rusak, 2 hilang
+      LAT_TPH: this.state.latitude.toString(),
+      LON_TPH: this.state.longitude.toString()  ,
       DELIVERY_CODE: '',
       STATUS_DELIVERY_CODE: '',
-      INSERT_USER: dataLogin.USER_AUTH_CODE,
-      INSERT_TIME: getTodayDate('YYYY-MM-DD kk:mm:ss'),
       STATUS_SYNC: 'N',
-      SYNC_TIME: '',      
-      LATITUDE: this.state.latitude.toString(),
-      LONGITUDE: this.state.longitude.toString()
+      SYNC_TIME: '',   
+      INSERT_USER: dataLogin.USER_AUTH_CODE,
+      INSERT_TIME: getTodayDate('YYYY-MM-DD kk:mm:ss')
     }
     this.setState({ dataModel: image, ebccValCode, dataHeader: header });
 

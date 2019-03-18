@@ -564,7 +564,7 @@ class SyncScreen extends React.Component {
                     }else if (table == 'ebccH') {
                         this.updateEbccHeader(dataPost)
                     }else if (table == 'ebccD') {
-                        this.updateEbccDetail(dataPost)
+                        this.updateEbccDetail(dataPost, idInspection)
                     }
                 }
             })
@@ -622,10 +622,10 @@ class SyncScreen extends React.Component {
         }
     }
 
-    updateEbccDetail = param => {
+    updateEbccDetail = (param, ebccValCodeD) => {
         if (param !== undefined) {
             TaskServices.updateByPrimaryKey('TR_D_EBCC_VALIDATION', {
-				"EBCC_VALIDATION_CODE_D":param.EBCC_VALIDATION_CODE_D,
+				"EBCC_VALIDATION_CODE_D":ebccValCodeD,
 				"STATUS_SYNC":"Y"
 			});
         }
@@ -722,18 +722,19 @@ class SyncScreen extends React.Component {
             BLOCK_CODE: param.BLOCK_CODE,
             NO_TPH: param.NO_TPH,
             STATUS_TPH_SCAN: param.STATUS_TPH_SCAN,
-            ALASAN: param.ALASAN,
+            ALASAN_MANUAL: param.ALASAN,
+            LAT_TPH: param.LAT_TPH,
+            LON_TPH: param.LON_TPH,
             DELIVERY_CODE: param.DELIVERY_CODE,            
             STATUS_DELIVERY_CODE: param.STATUS_DELIVERY_CODE,
+            STATUS_SYNC: 'SYNC',
+            SYNC_TIME: getTodayDate('YYYYMMDDkkmmss'),  
             INSERT_USER: param.INSERT_USER,
             INSERT_TIME: convertTimestampToDate(param.INSERT_TIME, 'YYYYMMDDkkmmss'),
             UPDATE_USER: '',
-            UPDATE_TIME: 0,
-            LATITUDE: param.LATITUDE,
-            LONGITUDE: param.LONGITUDE
+            UPDATE_TIME: 0
         }
-        alert(JSON.stringify(data))
-        // this.uploadData(linkEbcc+'ebcc/validation/header', data, 'ebccH', '');
+        this.uploadData(linkEbcc+'ebcc/validation/header', data, 'ebccH', '');
     }
 
     postEbccDetail(param) {
@@ -741,12 +742,14 @@ class SyncScreen extends React.Component {
             EBCC_VALIDATION_CODE: param.EBCC_VALIDATION_CODE,
             ID_KUALITAS: param.ID_KUALITAS,
             JUMLAH: param.JUMLAH,
-            INSERT_USER: param.INSERT_USER,
+            STATUS_SYNC: 'SYNC',
+            SYNC_TIME: getTodayDate('YYYYMMDDkkmmss'), 
             INSERT_TIME: convertTimestampToDate(param.INSERT_TIME, 'YYYYMMDDkkmmss'),
+            INSERT_USER: param.INSERT_USER,
             UPDATE_USER: '',
             UPDATE_TIME: 0
         }
-        this.uploadData(linkEbcc+'ebcc/validation/header', data, 'ebccD', '');
+        this.uploadData(linkEbcc+'ebcc/validation/detail', data, 'ebccD', param.EBCC_VALIDATION_CODE_D);
     }
 
 
@@ -1394,8 +1397,8 @@ class SyncScreen extends React.Component {
                 this.loadData();
                 this.loadDataDetailInspeksi();
                 this.loadDataInspectionTrack();
-                //this.kirimEbccHeader();
-                //this.kirimEbccDetail();
+                this.kirimEbccHeader();
+                this.kirimEbccDetail();
 
                 //cara redux saga
                 setTimeout(() => {

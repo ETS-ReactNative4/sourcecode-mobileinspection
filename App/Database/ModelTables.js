@@ -348,21 +348,23 @@ const TR_H_EBCC_VALIDATION = {
         BLOCK_CODE: 'string',        
         NO_TPH: 'string',
         STATUS_TPH_SCAN: 'string',
-        ALASAN: 'string',
+        ALASAN_MANUAL: 'string',
+        LAT_TPH: 'string',
+        LON_TPH: 'string',
         DELIVERY_CODE: 'string',
         STATUS_DELIVERY_CODE: 'string',
-        INSERT_USER: 'string',
-        INSERT_TIME: 'string',
         STATUS_SYNC: 'string',
         SYNC_TIME: 'string',
-        LATITUDE: 'string',
-        LONGITUDE: 'string'
+        INSERT_USER: 'string',
+        INSERT_TIME: 'string',
     }
 }
 
 const TR_D_EBCC_VALIDATION = {
     name: 'TR_D_EBCC_VALIDATION',
+    primaryKey: 'EBCC_VALIDATION_CODE_D',
     properties: {
+        EBCC_VALIDATION_CODE_D: 'string',
         EBCC_VALIDATION_CODE: 'string',
         GROUP_KUALITAS: 'string',
         UOM: 'string',
@@ -370,6 +372,7 @@ const TR_D_EBCC_VALIDATION = {
         NAMA_KUALITAS: 'string',
         JUMLAH: 'string',
         INSERT_TIME: 'string',
+        INSERT_USER: 'string',
         STATUS_SYNC: 'string',
         SYNC_TIME: 'string'
     }
