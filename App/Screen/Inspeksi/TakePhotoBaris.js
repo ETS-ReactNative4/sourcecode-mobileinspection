@@ -7,7 +7,8 @@ import {
     Platform,
     BackHandler,
     Dimensions,
-    StatusBar
+    StatusBar,
+    BackAndroid
   } from 'react-native';
 import Colors from '../../Constant/Colors';
 const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
@@ -66,11 +67,13 @@ class TakePhotoBaris extends Component {
 
   componentDidMount(){
     this.setParameter();
-    BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+    // BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);    
+    BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
   }
 
   componentWillUnmount(){
-    BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+    // BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+    BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
   }
 
   handleBackButtonClick() { 

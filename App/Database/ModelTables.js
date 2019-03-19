@@ -281,9 +281,16 @@ const TM_CONTENT = {
         GROUP_CATEGORY: 'string',
         CATEGORY: 'string',
         CONTENT_NAME: 'string',
+        CONTENT_TYPE: 'string',
         UOM: 'string',
         FLAG_TYPE: 'string',
-        URUTAN: 'string'
+        BOBOT: { type: 'int', default: 0 },
+        URUTAN: 'string',
+        TBM0: 'string',
+        TBM1: 'string',
+        TBM2: 'string',
+        TBM3: 'string',
+        TM: 'string'
     }
 }
 

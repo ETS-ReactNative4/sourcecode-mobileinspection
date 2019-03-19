@@ -4,7 +4,8 @@ import {
     Text,
     View,
     StatusBar,
-    ScrollView
+    ScrollView,
+    Image
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/AntDesign'

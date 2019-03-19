@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, ScrollView, Text, View, Switch, StatusBar, Image, AsyncStorage } from 'react-native';
+import { TouchableOpacity, ScrollView, Text, View, Switch, StatusBar, Image, AsyncStorage, BackAndroid } from 'react-native';
 import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
 import BtnStyles from './Component/ButtonStyle'
@@ -10,6 +10,7 @@ import { NavigationActions, StackActions } from 'react-navigation';
 import { getTodayDate } from '../../Lib/Utils';
 import R from 'ramda';
 import ModalAlert from '../../Component/ModalAlert'
+import ModalAlertConfirmation from '../../Component/ModalAlertConfirmation';
 
 class KondisiBaris2 extends Component {
 
@@ -38,6 +39,9 @@ class KondisiBaris2 extends Component {
 
     constructor(props) {
         super(props);
+
+        
+        this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
 
         let params = props.navigation.state.params;
         let fotoBaris = R.clone(params.fotoBaris);
@@ -145,6 +149,7 @@ class KondisiBaris2 extends Component {
             title: 'Title',
             message: 'Message',
             showModal: false,
+            showModal2: false,
             icon: ''
 
         }
@@ -153,12 +158,24 @@ class KondisiBaris2 extends Component {
     componentDidMount() {
 		this._loadInput();
         this.props.navigation.setParams({ getData: this.state.inspeksiHeader })
+        BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
         this.hideAndShow();
     }
     componentWillUnmount() {
         this._saveInput();
+        BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
     }
-	
+    
+    handleBackButtonClick() {
+        this.props.navigation.goBack(null)
+        // this.setState({
+        //     showModal2: true, title: 'Data Hilang',
+        //     message: 'Inspeksi mu belum tersimpan loh. Yakin mau dilanjutin?',
+        //     icon: require('../../Images/ic-not-save.png')
+        // });
+        return true;
+    }
+
 	_loadInput = async () => {
 		try {
 			const value = await AsyncStorage.getItem('savedInput');
@@ -582,6 +599,14 @@ class KondisiBaris2 extends Component {
         navigation.dispatch(resetAction);
     }
 
+    cancelOrder(){
+        const navigation = this.props.navigation;
+        let routeName = 'MainMenu'; 
+        this.setState({showModal: false})
+        Promise.all([navigation.dispatch(NavigationActions.navigate({ routeName : routeName}))]).
+        then(() => navigation.navigate('Inspection')).then(() => navigation.navigate('DaftarInspeksi'));
+    }
+
     render() {
 
         return (
@@ -597,6 +622,15 @@ class KondisiBaris2 extends Component {
                     onPressCancel={() => this.setState({ showModal: false })}
                     title={this.state.title}
                     message={this.state.message} />
+
+                {/* <ModalAlertConfirmation
+                    icon={this.state.icon}
+                    visible={this.state.showModal2}
+                    onPressCancel={() => this.setState({ showModal: false })}
+                    onPressSubmit={() => { this.setState({ showModal: false }); this.props.navigation.goBack(null) }}
+                    title={this.state.title}
+                    message={this.state.message}
+                /> */}
 
                 {/*STEPPER*/}
                 <View style={{ flexDirection: 'row', marginLeft: 20, marginRight: 20, marginTop: 10, justifyContent: 'center', alignItems: 'center' }}>
