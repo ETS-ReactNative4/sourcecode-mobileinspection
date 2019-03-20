@@ -34,7 +34,7 @@ class DetailEbcc extends Component {
             valuePenaltyTph:[],
             arrJjg:[],
             valueJjg:[],
-            totalJanjang: '0',  
+            totalJanjang: data.TOTAL_JANJANG,  
             data,
             path: '',
             blockName: '', 

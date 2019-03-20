@@ -10,15 +10,13 @@ import CategoryAction from '../../Redux/CategoryRedux'
 import ContactAction from '../../Redux/ContactRedux'
 import RegionAction from '../../Redux/RegionRedux'
 import Moment from 'moment';
-var RNFS = require('react-native-fs');
 import RNFetchBlob from 'rn-fetch-blob'
 import { changeFormatDate, getThumnail } from '../../Lib/Utils';
 import FastImage from 'react-native-fast-image'
 import SwiperSlider from 'react-native-swiper'
-import { dirPhotoInspeksiBaris, dirPhotoInspeksiSelfie, dirPhotoTemuan, dirPhotoKategori } from '../../Lib/dirStorage';
-
-
-
+import { dirPhotoInspeksiBaris, dirPhotoInspeksiSelfie, 
+    dirPhotoTemuan, dirPhotoKategori, dirPhotoEbccJanjang, dirPhotoEbccSelfie } from '../../Lib/dirStorage';
+var RNFS = require('react-native-fs');
 var { width } = Dimensions.get('window')
 
 class HomeScreen extends React.Component {
@@ -88,6 +86,8 @@ class HomeScreen extends React.Component {
     RNFS.mkdir(dirPhotoInspeksiSelfie);
     RNFS.mkdir(dirPhotoTemuan);
     RNFS.mkdir(dirPhotoKategori);
+    RNFS.mkdir(dirPhotoEbccJanjang);
+    RNFS.mkdir(dirPhotoEbccSelfie);
   }
 
   _changeFilterList = data => {

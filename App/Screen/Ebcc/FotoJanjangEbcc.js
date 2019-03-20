@@ -96,6 +96,7 @@ class FotoJanjang extends Component {
   }
 
   componentDidMount(){
+    this.setParamImage()
     this.getLocation()
     this.props.navigation.setParams({ handleBackButtonClick: this.handleBackButtonClick })
     // BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
@@ -161,16 +162,13 @@ class FotoJanjang extends Component {
     this.setState({ path: null, hasPhoto: false });
   }
 
-  setParameter() {
+  setParamImage(){
     let dataLogin = TaskService.getAllData('TR_LOGIN')[0];
     var imgCode = `VP${dataLogin.USER_AUTH_CODE}${this.state.timestamp}`;
     var imageName = imgCode + '.jpg';
     var arrTph = this.state.tphAfdWerksBlockCode.split('-') //tph-afd-werks-blockcode
     var ebccValCode = `V${dataLogin.USER_AUTH_CODE}${this.state.timestamp}${arrTph[0]}${arrTph[3]}`
-    var alasan = '';
-    if(this.state.reason !== ''){
-      alasan = this.state.reason == 'RUSAK' ? '1':'2'
-    }
+
     var image = {
       TR_CODE: ebccValCode,
       IMAGE_CODE: imgCode,
@@ -181,6 +179,17 @@ class FotoJanjang extends Component {
       STATUS_SYNC: 'N',
       INSERT_USER: dataLogin.USER_AUTH_CODE,
       INSERT_TIME: ''
+    }
+    this.setState({ dataModel: image });
+  }
+
+  setParameter() {
+    let dataLogin = TaskService.getAllData('TR_LOGIN')[0];
+    var arrTph = this.state.tphAfdWerksBlockCode.split('-') //tph-afd-werks-blockcode
+    var ebccValCode = `V${dataLogin.USER_AUTH_CODE}${this.state.timestamp}${arrTph[0]}${arrTph[3]}`
+    var alasan = '';
+    if(this.state.reason !== ''){
+      alasan = this.state.reason == 'RUSAK' ? '1':'2'
     }
     var header = {
       EBCC_VALIDATION_CODE: ebccValCode,
@@ -194,12 +203,13 @@ class FotoJanjang extends Component {
       LON_TPH: this.state.longitude.toString()  ,
       DELIVERY_CODE: '',
       STATUS_DELIVERY_CODE: '',
+      TOTAL_JANJANG: '0',
       STATUS_SYNC: 'N',
       SYNC_TIME: '',   
       INSERT_USER: dataLogin.USER_AUTH_CODE,
       INSERT_TIME: getTodayDate('YYYY-MM-DD kk:mm:ss')
     }
-    this.setState({ dataModel: image, ebccValCode, dataHeader: header });
+    this.setState({ ebccValCode, dataHeader: header });
 
   }
 
@@ -256,7 +266,7 @@ class FotoJanjang extends Component {
   }
 
   async insertDB() {
-    if(this.state.dataHeader !== null && this.state.dataHeader.LATITUDE !== '0.0' && this.state.dataHeader.LONGITUDE !== '0.0'){
+    if(this.state.dataHeader !== null && this.state.dataHeader.LAT_TPH !== '0.0' && this.state.dataHeader.LON_TPH !== '0.0'){
       RNFS.unlink(this.state.pathCache);
       let isImageContain = await RNFS.exists(`file://${dirPhotoEbccJanjang}/${this.state.dataModel.IMAGE_NAME}`);
       if(isImageContain){
@@ -332,7 +342,7 @@ class FotoJanjang extends Component {
           {this.state.path ? this.renderImage() : this.renderCamera()}
         </View>
         <View style={{ flex: 0.5, alignItems: 'center', justifyContent: 'center' }}>
-          {this.state.dataHeader !== null &&
+          {this.state.dataModel !== null &&
           <TouchableOpacity style={[styles.takePicture, { marginTop: 15 }]} onPress={this.takePicture.bind(this)}>
             {this.renderIcon()}
           </TouchableOpacity>}

@@ -70,7 +70,7 @@ class BuatInspeksiRedesign extends Component {
         this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
         
         this.state = {
-            blokInspeksiCode: '',
+            blokInspeksiCode: `I${dataLogin[0].USER_AUTH_CODE}${getTodayDate('YYMMDDHHmmss')}`,
             dataLogin,
             latitude,
             longitude,
@@ -99,7 +99,7 @@ class BuatInspeksiRedesign extends Component {
             showModal2: false,
             icon: ''
         };
-		this.initBlokInspeksiCode(dataLogin[0].USER_AUTH_CODE);
+		// this.initBlokInspeksiCode(dataLogin[0].USER_AUTH_CODE);
     }   
     initBlokInspeksiCode(authCode){
 		let today = getTodayDate('YYMMDDHHmmss');
@@ -231,9 +231,9 @@ class BuatInspeksiRedesign extends Component {
 
     insertTrackLokasi(blokInsCode, lat, lon){
         try {
-			var today = getTodayDate('YYMMDDHHmmss');
+			var today = getTodayDate('YYYYMMDDkkmmss');
             var trInsCode = `T${this.state.dataLogin[0].USER_AUTH_CODE}${today}`;
-            var today = getTodayDate('YYYY-MM-DD HH:mm:ss');
+            // var today = getTodayDate('YYYY-MM-DD HH:mm:ss');
             data = {
                 TRACK_INSPECTION_CODE: trInsCode,
                 BLOCK_INSPECTION_CODE: blokInsCode,
@@ -340,7 +340,7 @@ class BuatInspeksiRedesign extends Component {
         let inspectionDate = getTodayDate('YYYY-MM-DD HH:mm:ss');
         // let idInspection = `B${this.state.dataLogin[0].USER_AUTH_CODE}${getTodayDate('YYMMDDHHmmss')}`
 		let today = getTodayDate('YYMMDD');
-        let idInspection = `B${this.state.dataLogin[0].USER_AUTH_CODE}${today}${this.state.blok}`
+        let idInspection = `B${this.state.dataLogin[0].USER_AUTH_CODE}${today}${this.state.werkAfdBlockCode}`
         
         let modelInspeksiH = {
             BLOCK_INSPECTION_CODE: this.state.blokInspeksiCode,
@@ -378,8 +378,10 @@ class BuatInspeksiRedesign extends Component {
             ID_INSPECTION: idInspection,
             BLOCK_INSPECTION_CODE: this.state.blokInspeksiCode,
             EST_NAME: this.getEstateName(this.state.werks),
+            WERKS: this.state.werks,
             BLOCK_CODE: this.state.blok,
             AFD_CODE: this.state.afdCode,
+            WERKS_AFD_BLOCK_CODE: this.state.werkAfdBlockCode,
             INSPECTION_DATE: inspectionDate,
             STATUS_SYNC: 'N',
             INSPECTION_RESULT: '',
@@ -403,6 +405,14 @@ class BuatInspeksiRedesign extends Component {
             intervalId: id,
             dataInspeksi: model
         });
+    }
+
+    checkSameBlock(idInspection){
+        let data = TaskService.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', idInspection)
+        if(data !== undefined){
+            let dataHeader = TaskService.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', idInspection)
+            dataHeader = dataHeader.sorted('AREAL')
+        }
     }
 
     navigateScreen(screenName, modelInspeksiH, params, statusBlok, intervalId, dataInspeksi) {

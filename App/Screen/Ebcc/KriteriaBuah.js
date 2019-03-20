@@ -193,11 +193,18 @@ class KriteriaBuah extends Component {
     }
 
     validation(){
-        let kriteriaBuah = this.state.valueHasilPanen.concat(this.state.valueJjg).concat(this.state.valueKondisiBuah).concat(this.state.valuePenaltyTph)
+        let kriteriaBuah = this.state.valueHasilPanen.concat(this.state.valueJjg).concat(this.state.valueKondisiBuah).concat(this.state.valuePenaltyTph);
+        let CheckItemVal = this.validationJumlah(this.state.valuePenaltyTph)
         if(this.state.totalJanjang == '0'){
             this.setState({
                 showModal: true, title: 'Validasi',
                 message: 'Total janjang tidak boleh kosong !',
+                icon: require('../../Images/ic-not-save.png')
+            });
+        }else if(CheckItemVal !== undefined && CheckItemVal.JUMLAH == ''){
+            this.setState({
+                showModal: true, title: 'Validasi',
+                message: `${CheckItemVal.NAMA_KUALITAS} harus diisi !`,
                 icon: require('../../Images/ic-not-save.png')
             });
         }else{
@@ -211,6 +218,17 @@ class KriteriaBuah extends Component {
             }); 
         }
         
+    }
+
+    validationJumlah(arr){
+        for(var i=0; i<arr.length; i++){
+            if(arr[i].JUMLAH == ''){
+                return  {
+                    NAMA_KUALITAS: arr[i].NAMA_KUALITAS,
+                    JUMLAH: arr[i].JUMLAH
+                }
+            }
+        }
     }
 
     renderDynamicComp(data, index, arr){
@@ -268,6 +286,7 @@ class KriteriaBuah extends Component {
     }
 
     updateArr(index, strUpdate, arr, param){
+        let dataHeader = this.state.dataHeader
         let newArray = [...arr];
         let data = newArray[index]
         let model = {
@@ -298,7 +317,25 @@ class KriteriaBuah extends Component {
                 newArray.map(item => {
                     total = total+parseInt(item.JUMLAH)
                 });
-                this.setState({totalJanjang: total.toString()})
+                var header = {
+                    EBCC_VALIDATION_CODE: dataHeader.EBCC_VALIDATION_CODE,
+                    WERKS: dataHeader.WERKS,
+                    AFD_CODE: dataHeader.AFD_CODE,
+                    BLOCK_CODE: dataHeader.BLOCK_CODE,
+                    NO_TPH: dataHeader.NO_TPH,
+                    STATUS_TPH_SCAN: dataHeader.STATUS_TPH_SCAN, //manual dan automatics
+                    ALASAN_MANUAL: dataHeader.ALASAN_MANUAL,//1 rusak, 2 hilang
+                    LAT_TPH: dataHeader.LAT_TPH,
+                    LON_TPH: dataHeader.LON_TPH ,
+                    DELIVERY_CODE: dataHeader.DELIVERY_CODE,
+                    STATUS_DELIVERY_CODE: dataHeader.STATUS_DELIVERY_CODE,
+                    TOTAL_JANJANG: total.toString(),
+                    STATUS_SYNC: dataHeader.STATUS_SYNC,
+                    SYNC_TIME: dataHeader.SYNC_TIME,   
+                    INSERT_USER: dataHeader.INSERT_USER,
+                    INSERT_TIME: dataHeader.INSERT_TIME
+                }                
+                this.setState({totalJanjang: total.toString(), dataHeader: header})
             }    
         }
        

@@ -150,7 +150,7 @@ export default class HistoryInspection extends Component {
     if(data.INSPECTION_RESULT === ''){
       
       let dataBaris = Taskservice.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', data.ID_INSPECTION);
-      if(dataBaris == undefined){
+      if(dataBaris !== undefined){
         if(dataBaris > 1){
           dataBaris = dataBaris[dataBaris.length-1]
         }else{

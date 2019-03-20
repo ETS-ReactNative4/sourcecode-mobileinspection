@@ -254,6 +254,8 @@ class KondisiBarisAkhir extends Component{
     };
 
     validation() {
+        let rangePlus = parseInt(this.state.dataUsual.BARIS)+5
+        let rangeMin = parseInt(this.state.dataUsual.BARIS) > 4 ? parseInt(this.state.dataUsual.BARIS)-5:0
         if (this.state.txtBaris == '' && this.state.switchLanjut) {
             this.setState({
                 showModal: true, title: 'Isi Baris', message: 'Kamu harus selalu pilih baris yaa :)',
@@ -264,18 +266,29 @@ class KondisiBarisAkhir extends Component{
                 showModal: true, title: 'Baris Sama', message: 'Opps, baris tidak boleh sama dengan sebelumnya ya',
                 icon: require('../../Images/ic-blm-input-lokasi.png')
             });
-        } else {
+        } else if (parseInt(this.state.txtBaris) < rangePlus) {
+            this.setState({
+                showModal: true, title: 'Baris terlalu dekat', message: 'Opps, minimum jarak barisnya lebih dari 5 ya ! ',
+                icon: require('../../Images/ic-blm-input-lokasi.png')
+            });
+        }else if (parseInt(this.state.txtBaris) < rangeMin) {
+            this.setState({
+                showModal: true, title: 'Baris terlalu dekat', message: 'Opps, minimum jarak barisnya lebih dari 5 ya ! ',
+                icon: require('../../Images/ic-blm-input-lokasi.png')
+            });
+        } 
+        else {
             this.saveData();
         }
     }
 
     calculateBaris() {
 
-        var piringan = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'BLOCK_INSPECTION_CODE'], ['CC0007', this.state.inspeksiHeader.BLOCK_INSPECTION_CODE]);
-        var sarkul = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'BLOCK_INSPECTION_CODE'], ['CC0008', this.state.inspeksiHeader.BLOCK_INSPECTION_CODE]);
-        var tph = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'BLOCK_INSPECTION_CODE'], ['CC0009', this.state.inspeksiHeader.BLOCK_INSPECTION_CODE]);
-        var gawangan = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'BLOCK_INSPECTION_CODE'], ['CC0010', this.state.inspeksiHeader.BLOCK_INSPECTION_CODE]);
-        var prunning = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'BLOCK_INSPECTION_CODE'], ['CC0011', this.state.inspeksiHeader.BLOCK_INSPECTION_CODE]);
+        var piringan = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'ID_INSPECTION'], ['CC0007', this.state.dataInspeksi.ID_INSPECTION]);
+        var sarkul = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'ID_INSPECTION'], ['CC0008', this.state.dataInspeksi.ID_INSPECTION]);
+        var tph = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'ID_INSPECTION'], ['CC0009', this.state.dataInspeksi.ID_INSPECTION]);
+        var gawangan = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'ID_INSPECTION'], ['CC0010', this.state.dataInspeksi.ID_INSPECTION]);
+        var prunning = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'ID_INSPECTION'], ['CC0011', this.state.dataInspeksi.ID_INSPECTION]);
 
         var jmlNilaiPiringan = this.getTotalNilaiComponent(piringan);
         var jmlNilaiSarkul = this.getTotalNilaiComponent(sarkul);
@@ -561,8 +574,10 @@ class KondisiBarisAkhir extends Component{
                 ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
                 BLOCK_INSPECTION_CODE: blokInspectionCode,
                 EST_NAME: this.state.dataInspeksi.EST_NAME,
+                WERKS: this.state.dataInspeksi.WERKS,
                 BLOCK_CODE: this.state.dataInspeksi.BLOCK_CODE,
                 AFD_CODE: this.state.dataInspeksi.AFD_CODE,
+                WERKS_AFD_BLOCK_CODE: this.state.dataInspeksi.WERKS_AFD_BLOCK_CODE,
                 INSPECTION_DATE: this.state.dataInspeksi.INSPECTION_DATE,
                 STATUS_SYNC: 'N',
                 INSPECTION_RESULT: '',
@@ -605,9 +620,9 @@ class KondisiBarisAkhir extends Component{
 
     insertTrackLokasi(blokInsCode, lat, lon){
         try {
-			var curr = getTodayDate('YYMMDDHHmmss');
+			var curr = getTodayDate('YYYYMMDDkkmmss');
             var trInsCode = `T${this.state.dataUsual.USER_AUTH}${curr}`;
-            var today = getTodayDate('YYYY-MM-DD HH:mm:ss');
+            // var today = getTodayDate('YYYY-MM-DD HH:mm:ss');
             data = {
                 TRACK_INSPECTION_CODE: trInsCode,
                 BLOCK_INSPECTION_CODE: blokInsCode,
@@ -615,7 +630,7 @@ class KondisiBarisAkhir extends Component{
                 LAT_TRACK: lat.toString(),
                 LONG_TRACK: lon.toString(),
                 INSERT_USER: this.state.dataUsual.USER_AUTH,
-                INSERT_TIME: today,
+                INSERT_TIME: curr,
                 STATUS_SYNC: 'N'
             }
             TaskService.saveData('TM_INSPECTION_TRACK', data)

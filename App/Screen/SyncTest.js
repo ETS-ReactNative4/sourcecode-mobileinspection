@@ -641,18 +641,18 @@ class SyncScreen extends React.Component {
             BLOCK_CODE: param.BLOCK_CODE,
             AREAL: param.AREAL,
             INSPECTION_TYPE: "PANEN",
-            INSPECTION_DATE: convertTimestampToDate(param.INSPECTION_DATE, 'YYYYMMDDkkmmss'),
+            INSPECTION_DATE: parseInt(convertTimestampToDate(param.INSPECTION_DATE, 'YYYYMMDDkkmmss')),
             INSPECTION_RESULT: param.INSPECTION_RESULT,
-            INSPECTION_SCORE: param.INSPECTION_SCORE,
+            INSPECTION_SCORE: param.INSPECTION_SCORE !== '' ? parseInt(param.INSPECTION_SCORE):0,
             STATUS_SYNC: 'Y',
-            SYNC_TIME: getTodayDate('YYYYMMDDkkmmss'),
-            START_INSPECTION: convertTimestampToDate(param.START_INSPECTION, 'YYYYMMDDkkmmss'),
+            SYNC_TIME: parseInt(getTodayDate('YYYYMMDDkkmmss')),
+            START_INSPECTION: parseInt(convertTimestampToDate(param.START_INSPECTION, 'YYYYMMDDkkmmss')),
             END_INSPECTION: param.END_INSPECTION,
             LAT_START_INSPECTION: param.LAT_START_INSPECTION,
             LONG_START_INSPECTION: param.LONG_START_INSPECTION,
             LAT_END_INSPECTION: param.LAT_END_INSPECTION,
             LONG_END_INSPECTION: param.LONG_END_INSPECTION,
-            INSERT_TIME: convertTimestampToDate(param.INSERT_TIME, 'YYYYMMDDkkmmss'),
+            INSERT_TIME: parseInt(convertTimestampToDate(param.INSERT_TIME, 'YYYYMMDDkkmmss')),
             INSERT_USER: user.USER_AUTH_CODE
         }
         this.uploadData(link+'inspection-header', data, 'header', param.ID_INSPECTION);
@@ -666,9 +666,9 @@ class SyncScreen extends React.Component {
             CONTENT_INSPECTION_CODE: result.CONTENT_INSPECTION_CODE,
             VALUE: result.VALUE,
             STATUS_SYNC: 'Y',
-            SYNC_TIME: getTodayDate('YYYYMMDDkkmmss'),
+            SYNC_TIME: parseInt(getTodayDate('YYYYMMDDkkmmss')),
             INSERT_USER: user.USER_AUTH_CODE,
-            INSERT_TIME: convertTimestampToDate(result.INSERT_TIME, 'YYYYMMDDkkmmss')
+            INSERT_TIME: parseInt(convertTimestampToDate(result.INSERT_TIME, 'YYYYMMDDkkmmss'))
         }
         this.uploadData(link+'inspection-detail', data, 'detailHeader', '');
     }
@@ -681,7 +681,7 @@ class SyncScreen extends React.Component {
             LAT_TRACK: param.LAT_TRACK,
             LONG_TRACK: param.LONG_TRACK,
             INSERT_USER: param.INSERT_USER,
-            INSERT_TIME: convertTimestampToDate(param.INSERT_TIME, 'YYYYMMDDkkmmss')//param.INSERT_TIME
+            INSERT_TIME: parseInt(param.INSERT_TIME)//param.INSERT_TIME
         }
         this.uploadData(link+'inspection-tracking', data, 'tracking', '');
     }
@@ -709,7 +709,7 @@ class SyncScreen extends React.Component {
             LONG_FINDING: param.LONG_FINDING,
             REFFERENCE_INS_CODE: param.REFFERENCE_INS_CODE,
             INSERT_USER: param.INSERT_USER,
-            INSERT_TIME: convertTimestampToDate(param.INSERT_TIME.toString(), 'YYYYMMDDkkmmss')//param.INSERT_TIME.toString()
+            INSERT_TIME: param.INSERT_TIME
         }
         this.uploadData(link+'finding', data, 'finding', '');
     }
@@ -728,9 +728,9 @@ class SyncScreen extends React.Component {
             DELIVERY_CODE: param.DELIVERY_CODE,            
             STATUS_DELIVERY_CODE: param.STATUS_DELIVERY_CODE,
             STATUS_SYNC: 'SYNC',
-            SYNC_TIME: getTodayDate('YYYYMMDDkkmmss'),  
+            SYNC_TIME: parseInt(getTodayDate('YYYYMMDDkkmmss')),  
             INSERT_USER: param.INSERT_USER,
-            INSERT_TIME: convertTimestampToDate(param.INSERT_TIME, 'YYYYMMDDkkmmss'),
+            INSERT_TIME: parseInt(convertTimestampToDate(param.INSERT_TIME, 'YYYYMMDDkkmmss')),
             UPDATE_USER: '',
             UPDATE_TIME: 0
         }
@@ -743,8 +743,8 @@ class SyncScreen extends React.Component {
             ID_KUALITAS: param.ID_KUALITAS,
             JUMLAH: param.JUMLAH,
             STATUS_SYNC: 'SYNC',
-            SYNC_TIME: getTodayDate('YYYYMMDDkkmmss'), 
-            INSERT_TIME: convertTimestampToDate(param.INSERT_TIME, 'YYYYMMDDkkmmss'),
+            SYNC_TIME: parseInt(getTodayDate('YYYYMMDDkkmmss')), 
+            INSERT_TIME: parseInt(convertTimestampToDate(param.INSERT_TIME, 'YYYYMMDDkkmmss')),
             INSERT_USER: param.INSERT_USER,
             UPDATE_USER: '',
             UPDATE_TIME: 0
