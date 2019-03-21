@@ -385,7 +385,8 @@ class BuatInspeksiRedesign extends Component {
             INSPECTION_DATE: inspectionDate,
             STATUS_SYNC: 'N',
             INSPECTION_RESULT: '',
-            INSPECTION_SCORE: ''
+            INSPECTION_SCORE: '',
+            FULFILL_BARIS: 'N'
         }        
 
 

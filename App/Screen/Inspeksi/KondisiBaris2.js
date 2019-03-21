@@ -58,10 +58,14 @@ class KondisiBaris2 extends Component {
 
             //piringan  
             piringan: '',
-            btnPiringanRehab: BtnStyles.btnBiasa,
-            btnPiringanKurang: BtnStyles.btnBiasa,
-            btnPiringanSedang: BtnStyles.btnBiasa,
-            btnPiringanBaik: BtnStyles.btnBiasa,
+            btnPiringanRehab: BtnStyles.btnBiasa2,
+            btnPiringanKurang: BtnStyles.btnBiasa2,
+            btnPiringanSedang: BtnStyles.btnBiasa2,
+            btnPiringanBaik: BtnStyles.btnBiasa2,
+            txtPiringanRehab: styles.buttonText2,
+            txtPiringanKurang: styles.buttonText2,
+            txtPiringanSedang: styles.buttonText2,
+            txtPiringanBaik: styles.buttonText2,
 
             //passar pikul
             sarKul: '',
@@ -287,13 +291,17 @@ class KondisiBaris2 extends Component {
 
     changeColor(param, value) {
         if (param == 'PIRINGAN' && value == 'REHAB') {
-            this.setState({ btnPiringanRehab: BtnStyles.btnRehab, btnPiringanKurang: BtnStyles.btnBiasa, btnPiringanSedang: BtnStyles.btnBiasa, btnPiringanBaik: BtnStyles.btnBiasa, piringan: 'REHAB' });
+            this.setState({ btnPiringanRehab: BtnStyles.btnRehab, btnPiringanKurang: BtnStyles.btnBiasa2, btnPiringanSedang: BtnStyles.btnBiasa2, btnPiringanBaik: BtnStyles.btnBiasa2, piringan: 'REHAB' });
+            this.setState({ txtPiringanRehab: styles.buttonText, txtPiringanKurang: styles.buttonText2, txtPiringanSedang: styles.buttonText2, txtPiringanBaik: styles.buttonText2 });
         } else if (param == 'PIRINGAN' && value == 'KURANG') {
-            this.setState({ btnPiringanRehab: BtnStyles.btnBiasa, btnPiringanKurang: BtnStyles.btnKurang, btnPiringanSedang: BtnStyles.btnBiasa, btnPiringanBaik: BtnStyles.btnBiasa, piringan: 'KURANG' });
+            this.setState({ btnPiringanRehab: BtnStyles.btnBiasa2, btnPiringanKurang: BtnStyles.btnKurang, btnPiringanSedang: BtnStyles.btnBiasa2, btnPiringanBaik: BtnStyles.btnBiasa2, piringan: 'KURANG' });
+            this.setState({ txtPiringanRehab: styles.buttonText2, txtPiringanKurang: styles.buttonText, txtPiringanSedang: styles.buttonText2, txtPiringanBaik: styles.buttonText2 });
         } else if (param == 'PIRINGAN' && value == 'SEDANG') {
-            this.setState({ btnPiringanRehab: BtnStyles.btnBiasa, btnPiringanKurang: BtnStyles.btnBiasa, btnPiringanSedang: BtnStyles.btnSedang, btnPiringanBaik: BtnStyles.btnBiasa, piringan: 'SEDANG' });
+            this.setState({ btnPiringanRehab: BtnStyles.btnBiasa2, btnPiringanKurang: BtnStyles.btnBiasa2, btnPiringanSedang: BtnStyles.btnSedang, btnPiringanBaik: BtnStyles.btnBiasa2, piringan: 'SEDANG' });
+            this.setState({ txtPiringanRehab: styles.buttonText2, txtPiringanKurang: styles.buttonText2, txtPiringanSedang: styles.buttonText, txtPiringanBaik: styles.buttonText2 });
         } else if (param == 'PIRINGAN' && value == 'BAIK') {
-            this.setState({ btnPiringanRehab: BtnStyles.btnBiasa, btnPiringanKurang: BtnStyles.btnBiasa, btnPiringanSedang: BtnStyles.btnBiasa, btnPiringanBaik: BtnStyles.btnBaik, piringan: 'BAIK' });
+            this.setState({ btnPiringanRehab: BtnStyles.btnBiasa2, btnPiringanKurang: BtnStyles.btnBiasa2, btnPiringanSedang: BtnStyles.btnBiasa2, btnPiringanBaik: BtnStyles.btnBaik, piringan: 'BAIK' });
+            this.setState({ txtPiringanRehab: styles.buttonText2, txtPiringanKurang: styles.buttonText2, txtPiringanSedang: styles.buttonText2, txtPiringanBaik: styles.buttonText });
         } else if (param == 'SARKUL' && value == 'REHAB') {
             this.setState({ btnSarkulRehab: BtnStyles.btnRehab, btnSarkulKurang: BtnStyles.btnBiasa, btnSarkulSedang: BtnStyles.btnBiasa, btnSarkulBaik: BtnStyles.btnBiasa, sarKul: 'REHAB' });
         } else if (param == 'SARKUL' && value == 'KURANG') {
@@ -696,19 +704,19 @@ class KondisiBaris2 extends Component {
                             <View style={{ flexDirection: 'row', marginTop: 10 }}>
                                 <TouchableOpacity style={this.state.btnPiringanRehab}
                                     onPress={() => this.changeColor('PIRINGAN', 'REHAB')}>
-                                    <Text style={styles.buttonText}>Rehab</Text>
+                                    <Text style={this.state.txtPiringanRehab}>Rehab</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={this.state.btnPiringanKurang}
                                     onPress={() => this.changeColor('PIRINGAN', 'KURANG')}>
-                                    <Text style={styles.buttonText}>Kurang</Text>
+                                    <Text style={this.state.txtPiringanKurang}>Kurang</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={this.state.btnPiringanSedang}
                                     onPress={() => this.changeColor('PIRINGAN', 'SEDANG')}>
-                                    <Text style={styles.buttonText}>Sedang</Text>
+                                    <Text style={this.state.txtPiringanSedang}>Sedang</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={this.state.btnPiringanBaik}
                                     onPress={() => this.changeColor('PIRINGAN', 'BAIK')}>
-                                    <Text style={styles.buttonText}>Baik</Text>
+                                    <Text style={this.state.txtPiringanBaik}>Baik</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>}
@@ -719,19 +727,19 @@ class KondisiBaris2 extends Component {
                             <View style={{ flexDirection: 'row', marginTop: 10 }}>
                                 <TouchableOpacity style={this.state.btnSarkulRehab}
                                     onPress={() => this.changeColor('SARKUL', 'REHAB')}>
-                                    <Text style={styles.buttonText}>Rehab</Text>
+                                    <Text style={styles.buttonText2}>Rehab</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={this.state.btnSarkulKurang}
                                     onPress={() => this.changeColor('SARKUL', 'KURANG')}>
-                                    <Text style={styles.buttonText}>Kurang</Text>
+                                    <Text style={styles.buttonText2}>Kurang</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={this.state.btnSarkulSedang}
                                     onPress={() => this.changeColor('SARKUL', 'SEDANG')}>
-                                    <Text style={styles.buttonText}>Sedang</Text>
+                                    <Text style={styles.buttonText2}>Sedang</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={this.state.btnSarkulBaik}
                                     onPress={() => this.changeColor('SARKUL', 'BAIK')}>
-                                    <Text style={styles.buttonText}>Baik</Text>
+                                    <Text style={styles.buttonText2}>Baik</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>}
@@ -1094,6 +1102,11 @@ const styles = {
     buttonText: {
         fontSize: 13,
         color: '#ffffff',
+        textAlign: 'center'
+    },
+    buttonText2: {
+        fontSize: 13,
+        color: '#000',
         textAlign: 'center'
     },
     buttonSlide: {

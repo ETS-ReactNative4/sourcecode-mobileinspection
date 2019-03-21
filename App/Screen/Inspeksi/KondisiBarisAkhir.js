@@ -282,13 +282,13 @@ class KondisiBarisAkhir extends Component{
         }
     }
 
-    calculateBaris() {
+    calculateBaris(blockInspectionCode) {
 
-        var piringan = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'ID_INSPECTION'], ['CC0007', this.state.dataInspeksi.ID_INSPECTION]);
-        var sarkul = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'ID_INSPECTION'], ['CC0008', this.state.dataInspeksi.ID_INSPECTION]);
-        var tph = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'ID_INSPECTION'], ['CC0009', this.state.dataInspeksi.ID_INSPECTION]);
-        var gawangan = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'ID_INSPECTION'], ['CC0010', this.state.dataInspeksi.ID_INSPECTION]);
-        var prunning = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'ID_INSPECTION'], ['CC0011', this.state.dataInspeksi.ID_INSPECTION]);
+        var piringan = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'BLOCK_INSPECTION_CODE'], ['CC0007', blockInspectionCode]);
+        var sarkul = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'BLOCK_INSPECTION_CODE'], ['CC0008', blockInspectionCode]);
+        var tph = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'BLOCK_INSPECTION_CODE'], ['CC0009', blockInspectionCode]);
+        var gawangan = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'BLOCK_INSPECTION_CODE'], ['CC0010', blockInspectionCode]);
+        var prunning = TaskService.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'BLOCK_INSPECTION_CODE'], ['CC0011', blockInspectionCode]);
 
         var jmlNilaiPiringan = this.getTotalNilaiComponent(piringan);
         var jmlNilaiSarkul = this.getTotalNilaiComponent(sarkul);
@@ -358,12 +358,12 @@ class KondisiBarisAkhir extends Component{
         var result = this.getKonversiNilaiKeHuruf(nilai);
 
 
-        let param = [nilai.toString(), result]
+        let param = [nilai.toString(), result, 'Y']
         let dataInspeksi = TaskService.getAllData('TR_BARIS_INSPECTION')
         let indexData = R.findIndex(R.propEq('ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION))(dataInspeksi);
         TaskService.updateScoreInspeksi(param, indexData);
 
-        let val = this.calculateBaris()
+        let val = this.calculateBaris(this.state.inspeksiHeader.BLOCK_INSPECTION_CODE)
         TaskService.updateInspectionHScore(this.state.inspeksiHeader.BLOCK_INSPECTION_CODE, val)
 
         const navigation = this.props.navigation;
@@ -546,7 +546,7 @@ class KondisiBarisAkhir extends Component{
             this.calculate();
         }else{  
         
-            let param = this.calculateBaris()
+            let param = this.calculateBaris(this.state.dataUsual.BLOCK_INSPECTION_CODE)
             TaskService.updateInspectionHScore(this.state.dataUsual.BLOCK_INSPECTION_CODE, param)
 
             var modelInspeksi = {
@@ -581,7 +581,8 @@ class KondisiBarisAkhir extends Component{
                 INSPECTION_DATE: this.state.dataInspeksi.INSPECTION_DATE,
                 STATUS_SYNC: 'N',
                 INSPECTION_RESULT: '',
-                INSPECTION_SCORE: ''
+                INSPECTION_SCORE: '',
+                FULFILL_BARIS: this.state.dataInspeksi.FULFILL_BARIS
             }
             
             if(this.state.from !== 'history'){

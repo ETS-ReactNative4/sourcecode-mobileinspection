@@ -149,11 +149,9 @@ class SyncScreen extends React.Component {
             dataFinding: [],
             dataInspeksi: [],
             dataInspeksiDetail: [],
-            dataBarisInspeksi: [],
             dataTrack: [],
 
             showButton: true,
-            blockInspectionCodes: [],
             isFirstInstall: false,
 
             //Add Modal Alert by Aminju 
@@ -388,28 +386,28 @@ class SyncScreen extends React.Component {
         var query = dataHeader.filtered('STATUS_SYNC = "N"');
         let countData = query;
 
-        this.setState({
-            progressInspeksiHeader: 1,
-            valueInspeksiHeaderUpload: countData.length,
-            totalInspeksiHeaderUpload: countData.length,
-        });
+        // this.setState({
+        //     progressInspeksiHeader: 1,
+        //     valueInspeksiHeaderUpload: countData.length,
+        //     totalInspeksiHeaderUpload: countData.length,
+        // });
 
         if (countData.length > 0) {
             for (var i = 0; i < countData.length; i++) {
-                if (!this.state.dataBarisInspeksi.includes(countData[i].ID_INSPECTION)) {
-                    this.state.dataBarisInspeksi.push(countData[i].ID_INSPECTION)
-                }
-                this.state.blockInspectionCodes.push(countData[i].BLOCK_INSPECTION_CODE)
-                this.kirimInspeksiHeader(countData[i]);
+                let fulfill = this.isFulfillBaris(countData[i].ID_INSPECTION)
+                if(fulfill){
+                    this.kirimInspeksiHeader(countData[i]);
+                    this.setState({valueInspeksiHeaderUpload: i+1, totalInspeksiHeaderUpload: i+1 });
+                }             
             }
+            this.setState({
+                progressInspeksiHeader: 1
+            });
         } else {
             this.setState({
                 progressInspeksiHeader: 1,
                 valueInspeksiHeaderUpload: 0,
                 totalInspeksiHeaderUpload: 0,
-                progressInspeksiDetail: 1,
-                valueInspeksiDetailUpload: 0,
-                totalInspeksiDetailUpload: 0
             });
         }
 
@@ -418,16 +416,35 @@ class SyncScreen extends React.Component {
     loadDataDetailInspeksi() {
         let data = TaskServices.getAllData('TR_BLOCK_INSPECTION_D');
         data = data.filtered('STATUS_SYNC = "N"');
-        this.setState({
-            progressInspeksiDetail: 1, valueInspeksiDetailUpload: data.length, totalInspeksiDetailUpload: data.length,
-        });
+        // this.setState({
+        //     progressInspeksiDetail: 1, valueInspeksiDetailUpload: data.length, totalInspeksiDetailUpload: data.length,
+        // });
         if (data.length > 1) {
             for (var i = 0; i < data.length; i++) {
-                this.kirimInspeksiDetail(data[i]);
+                let fulfill = this.isFulfillBaris(data[i].ID_INSPECTION)
+                if(fulfill){
+                    this.kirimInspeksiDetail(data[i]);
+                    this.setState({valueInspeksiDetailUpload: i+1, totalInspeksiDetailUpload: i+1 });
+                }
             }
+            this.setState({
+                progressInspeksiDetail: 1,
+            });
         } else {
             this.setState({ progressInspeksiDetail: 1, valueInspeksiDetailUpload: 0, totalInspeksiDetailUpload: 0 });
         }
+    }
+
+    isFulfillBaris(idInspection){
+        let data = TaskServices.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', idInspection)
+        if(data !== undefined){
+            if(data.FULFILL_BARIS == 'Y'){
+                return true
+            }else{
+                return false
+            }
+        }
+        return false
     }
 
     loadDataInspectionTrack() {
@@ -647,7 +664,7 @@ class SyncScreen extends React.Component {
             STATUS_SYNC: 'Y',
             SYNC_TIME: parseInt(getTodayDate('YYYYMMDDkkmmss')),
             START_INSPECTION: parseInt(convertTimestampToDate(param.START_INSPECTION, 'YYYYMMDDkkmmss')),
-            END_INSPECTION: param.END_INSPECTION,
+            END_INSPECTION: parseInt(convertTimestampToDate(param.END_INSPECTION, 'YYYYMMDDkkmmss')),
             LAT_START_INSPECTION: param.LAT_START_INSPECTION,
             LONG_START_INSPECTION: param.LONG_START_INSPECTION,
             LAT_END_INSPECTION: param.LAT_END_INSPECTION,

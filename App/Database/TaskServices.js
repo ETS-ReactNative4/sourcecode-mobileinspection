@@ -314,6 +314,7 @@ const TaskServices = {
     RealmSchemas.write(() => {
       data.INSPECTION_SCORE = param[0];
       data.INSPECTION_RESULT = param[1];
+      data.FULFILL_BARIS = param[2];
     });
   },
 

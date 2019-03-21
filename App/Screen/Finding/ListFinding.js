@@ -70,8 +70,7 @@ export default class ListFinding extends Component {
     const login = TaskServices.getAllData('TR_LOGIN');
     const user_auth = login[0].USER_AUTH_CODE;
 
-    //var data = TaskServices.query('TR_FINDING', `PROGRESS < 100 AND ASSIGN_TO = "${user_auth}"`);
-    var data = TaskServices.query('TR_FINDING', `PROGRESS < 100`);
+    var data = TaskServices.query('TR_FINDING', `PROGRESS < 100 AND ASSIGN_TO = "${user_auth}"`);
 
     var dataLewat = []
     var data7Hari = []

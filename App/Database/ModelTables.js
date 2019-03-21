@@ -68,12 +68,15 @@ const TR_BARIS_INSPECTION = {
         ID_INSPECTION: 'string',
         BLOCK_INSPECTION_CODE: 'string',
         EST_NAME: 'string',
+        WERKS: 'string',
         BLOCK_CODE: 'string',
         AFD_CODE: 'string',
+        WERKS_AFD_BLOCK_CODE: 'string',
         INSPECTION_DATE: 'string',
         STATUS_SYNC: 'string',
         INSPECTION_RESULT: 'string',
-        INSPECTION_SCORE: 'string'
+        INSPECTION_SCORE: 'string',
+        FULFILL_BARIS: 'string'
     }
 }
 
@@ -360,6 +363,7 @@ const TR_H_EBCC_VALIDATION = {
         LON_TPH: 'string',
         DELIVERY_CODE: 'string',
         STATUS_DELIVERY_CODE: 'string',
+        TOTAL_JANJANG: 'string',
         STATUS_SYNC: 'string',
         SYNC_TIME: 'string',
         INSERT_USER: 'string',

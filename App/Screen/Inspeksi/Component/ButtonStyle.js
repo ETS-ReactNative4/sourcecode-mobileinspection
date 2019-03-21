@@ -13,6 +13,18 @@ const btnBiasa = {
     justifyContent: 'center',
 }
 
+const btnBiasa2 = {
+    width:'22%', //70
+    borderWidth:1,
+    borderColor:'#C8C8C8',
+    backgroundColor: '#fff',
+    borderRadius: 25, 
+    margin:5,  
+    padding:10 ,
+    alignSelf:'center',
+    justifyContent: 'center',
+}
+
 const btnBaik = {
     width:'22%',
     backgroundColor: Colors.brand,
@@ -57,5 +69,5 @@ const btnRehab ={
 }
 
 export default {
-    btnBiasa, btnRehab, btnKurang, btnSedang, btnBaik
+    btnBiasa, btnBiasa2, btnRehab, btnKurang, btnSedang, btnBaik
 }
