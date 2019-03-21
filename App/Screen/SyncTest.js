@@ -1329,6 +1329,8 @@ class SyncScreen extends React.Component {
 
     _onSync() {
         this._deleteFinding();
+        this.deleteEbccHeader()
+        this.deleteEbccDetail()
         // Gani            
         this.resetSagas();
         NetInfo.isConnected.fetch().then(isConnected => {

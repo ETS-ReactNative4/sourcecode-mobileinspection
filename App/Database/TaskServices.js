@@ -279,7 +279,6 @@ const TaskServices = {
 
   updateFindingSync: function (table, param, index) {
     let data = RealmSchemas.objects(table)[index];
-    alert(JSON.stringify(param))
     RealmSchemas.write(() => {
       data.PROGRESS = param[0];
       data.STATUS_SYNC = param[1];

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { NavigationActions, StackActions } from 'react-navigation';
 import {
-    BackHandler, Text, FlatList, ScrollView, TouchableOpacity, View, Image, StatusBar, Platform
+    BackHandler, Text, FlatList, ScrollView, TouchableOpacity, View, Image, StatusBar, Platform,BackAndroid
 } from 'react-native';
 import {
     Container,
@@ -48,6 +48,7 @@ class Step1Finding extends Component {
         
         let params = props.navigation.state.params;
         let inspeksiHeader = R.clone(params.data);
+        let dataInspeksi = R.clone(params.dataInspeksi);
 
         this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
         this.clearFoto = this.clearFoto.bind(this);
@@ -65,6 +66,7 @@ class Step1Finding extends Component {
             fetchLocation: false,
             isMounted: false,
             inspeksiHeader,
+            dataInspeksi,
 
             //Add Modal Alert by Aminju 
             title: 'Title',
@@ -87,10 +89,12 @@ class Step1Finding extends Component {
        this.getLocation();
        this.props.navigation.setParams({ clearFoto: this.clearFoto })
        BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+        // BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)    
     }
 
     componentWillUnmount(){
         BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+        // BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
     }
 
     handleBackButtonClick() { 
@@ -133,8 +137,13 @@ class Step1Finding extends Component {
                 let da = item.split('/')
                 let imgName = da[da.length-1];
                 images.push(imgName);
-                this.props.navigation.navigate('Step2Finding', 
-                {image: images, lat: this.state.latitude, lon:this.state.longitude, data: this.state.inspeksiHeader, finish: this.finish});
+                this.props.navigation.navigate('Step2Finding', {
+                    image: images, 
+                    lat: this.state.latitude, 
+                    lon:this.state.longitude, 
+                    data: this.state.inspeksiHeader, 
+                    dataInspeksi: this.state.dataInspeksi, 
+                    finish: this.finish});
 
             });
         }
@@ -150,6 +159,9 @@ class Step1Finding extends Component {
     }
 
     finish = data => {
+        if(data !== 'data'){
+            this.props.navigation.state.params.updateTRBaris(data);
+        }
         this.props.navigation.goBack(null);
     }
 

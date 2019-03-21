@@ -76,7 +76,8 @@ const TR_BARIS_INSPECTION = {
         STATUS_SYNC: 'string',
         INSPECTION_RESULT: 'string',
         INSPECTION_SCORE: 'string',
-        FULFILL_BARIS: 'string'
+        FULFILL_BARIS: 'string',
+        TR_FINDING_CODES: 'string'
     }
 }
 

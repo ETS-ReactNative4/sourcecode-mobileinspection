@@ -231,7 +231,7 @@ class BuatInspeksiRedesign extends Component {
 
     insertTrackLokasi(blokInsCode, lat, lon){
         try {
-			var today = getTodayDate('YYYYMMDDkkmmss');
+			var today = getTodayDate('YYMMDDkkmmss');
             var trInsCode = `T${this.state.dataLogin[0].USER_AUTH_CODE}${today}`;
             // var today = getTodayDate('YYYY-MM-DD HH:mm:ss');
             data = {
@@ -386,7 +386,8 @@ class BuatInspeksiRedesign extends Component {
             STATUS_SYNC: 'N',
             INSPECTION_RESULT: '',
             INSPECTION_SCORE: '',
-            FULFILL_BARIS: 'N'
+            FULFILL_BARIS: 'N',
+            TR_FINDING_CODES:''
         }        
 
 
