@@ -46,7 +46,7 @@ class ManualInputTPH extends React.Component{
             btnRusak: styles.bubbleOff,
             textHilang: styles.buttonTextOff,
             textRusak: styles.buttonTextOff,
-            text1:'0', text2: '0', text3: '0',
+            text1:'', text2: '', text3: '',
             werks: '',
             afdCode: '',
             blokCode: '',
