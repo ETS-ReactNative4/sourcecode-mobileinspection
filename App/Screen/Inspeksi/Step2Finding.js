@@ -68,6 +68,7 @@ class Step2Finding extends Component {
         let latitude = R.clone(params.lat);
         let longitude = R.clone(params.lon);
         let inspeksiHeader = R.clone(params.data);
+        let dataInspeksi = R.clone(params.dataInspeksi);
 
 		let today = getTodayDate('YYMMDDHHmmss');
         var user = TaskServices.getAllData('TR_LOGIN')[0];
@@ -108,6 +109,8 @@ class Step2Finding extends Component {
             colorPriority: '#ddd',
             disableCalendar: true,
             inspeksiHeader,
+            dataInspeksi,
+            tr_finding_codes: [],
 
             //Add Modal Alert by Aminju 
             title: 'Title',
@@ -130,6 +133,36 @@ class Step2Finding extends Component {
             fontWeight: '400'
         },
     };
+
+    updateTrBaris(){
+        this.state.tr_finding_codes.push(this.state.TRANS_CODE);
+        let data = TaskServices.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION)
+        if(data !== undefined){
+            let trCodes = data.TR_FINDING_CODES
+            if(trCodes !== ''){
+                let arr = trCodes.split(',');
+                arr.map(item => {
+                    this.state.tr_finding_codes.push(item)
+                });
+            }
+        }
+        let model =  {
+            ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
+            BLOCK_INSPECTION_CODE: this.state.dataInspeksi.BLOCK_INSPECTION_CODE,
+            EST_NAME: this.state.dataInspeksi.EST_NAME,
+            WERKS: this.state.dataInspeksi.WERKS,
+            BLOCK_CODE: this.state.dataInspeksi.BLOCK_CODE,
+            AFD_CODE: this.state.dataInspeksi.AFD_CODE,
+            WERKS_AFD_BLOCK_CODE: this.state.dataInspeksi.WERKS_AFD_BLOCK_CODE,
+            INSPECTION_DATE: this.state.dataInspeksi.INSPECTION_DATE,
+            STATUS_SYNC: this.state.dataInspeksi.STATUS_SYNC,
+            INSPECTION_RESULT: this.state.dataInspeksi.INSPECTION_RESULT,
+            INSPECTION_SCORE: this.state.dataInspeksi.INSPECTION_SCORE,
+            FULFILL_BARIS: this.state.dataInspeksi.FULFILL_BARIS,
+            TR_FINDING_CODES: this.state.tr_finding_codes.toString()
+        }    
+        return model;    
+    }
 
     componentDidMount() {
         BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
@@ -195,7 +228,8 @@ class Step2Finding extends Component {
                 });
             },
             (error) => this.setState({ error: error.message }),
-            { enableHighAccuracy: false, timeout: 200000, maximumAge: 1000 },
+            // { enableHighAccuracy: false, timeout: 200000, maximumAge: 1000 },
+            { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 },
         );
     }
 
@@ -305,7 +339,7 @@ class Step2Finding extends Component {
             TaskServices.saveData('TR_IMAGE', imagetr);
         });
 
-        this.props.navigation.state.params.finish('data');
+        this.props.navigation.state.params.finish(this.updateTrBaris());
         this.props.navigation.goBack(null)
         // this.props.navigation.popToTop()
     }
@@ -391,7 +425,9 @@ class Step2Finding extends Component {
                         icon={this.state.icon}
                         visible={this.state.showModalConfirmation}
                         onPressCancel={() => this.setState({ showModalConfirmation: false })}
-                        onPressSubmit={() => { this.props.navigation.goBack(null) }}
+                        onPressSubmit={() => { 
+                            this.props.navigation.state.params.finish('data');
+                            this.props.navigation.goBack(null) }}
                         title={this.state.title}
                         message={this.state.message} />
 

@@ -44,6 +44,7 @@ class HistoryInspeksiDetail extends React.Component {
             blockCode: '',
             blockName: '',
             estateName: '', // Taskservices.getEstateName()
+            arrTemuan: []
         };
     }
 
@@ -59,14 +60,7 @@ class HistoryInspeksiDetail extends React.Component {
             marginHorizontal: 12
         },
         title: `Detail Inspeksi`,
-        headerTintColor: '#fff',
-        // headerRight: (
-        //     <TouchableOpacity onPress={() => navigation.navigate('FindingFormNavigator')}>
-        //         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingRight: 16 }}>
-        //             <Entypo name='flashlight' size={24} color='white' />
-        //         </View>
-        //     </TouchableOpacity>
-        // ),
+        headerTintColor: '#fff'
     };
 
     componentDidMount() {
@@ -83,6 +77,18 @@ class HistoryInspeksiDetail extends React.Component {
     }
 
     loadData() {
+
+        let data = Taskservices.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', this.state.data.ID_INSPECTION)
+        if(data != undefined){
+            let trCodes = data.TR_FINDING_CODES
+            if(trCodes !== ''){
+                let arr = trCodes.split(',');
+                arr.map((item,index) => {                    
+                    this.state.arrTemuan.push(this.renderTemuan(item, index))
+                });
+            }
+        }
+        
         let dataBaris = Taskservices.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', this.state.data.ID_INSPECTION);
         let barisPembagi = dataBaris.length;
         let time = 0;
@@ -99,15 +105,7 @@ class HistoryInspeksiDetail extends React.Component {
                 distance = distance + parseInt(dataBaris[i].DISTANCE);
             }
         }
-        // let dataHeader = Taskservices.findBy('TR_BLOCK_INSPECTION_H', 'BLOCK_INSPECTION_CODE', this.state.data.BLOCK_INSPECTION_CODE);
-        // let dataHeader = Taskservices.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', this.state.data.ID_INSPECTION);
         let dataBlock = Taskservices.findBy2('TM_BLOCK', 'BLOCK_CODE', dataBaris[0].BLOCK_CODE);
-        // let dataEst = Taskservices.getEstateName()
-
-        // let score = dataBaris[0].INSPECTION_SCORE;
-        // score = score.includes('.') ? parseFloat(score).toFixed(1).toString() : score;
-
-        // let estName = this.getEstateName(dataHeader[0].WERKS)
 
         var piringan = this.getTotalComponentBy('CC0007');
         var sarkul = this.getTotalComponentBy('CC0008');
@@ -338,7 +336,6 @@ class HistoryInspeksiDetail extends React.Component {
 
     getTotalComponentBy(compCode) {
         var data = Taskservices.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'ID_INSPECTION'], [compCode, this.state.data.ID_INSPECTION]);
-        // var data = Taskservices.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'BLOCK_INSPECTION_CODE'], [compCode, this.state.data.BLOCK_INSPECTION_CODE]); 
         return data;
     }
 
@@ -459,6 +456,60 @@ class HistoryInspeksiDetail extends React.Component {
         }
     }
 
+    getCategoryName = (categoryCode) => {
+        try {
+          let data = Taskservices.findBy2('TR_CATEGORY', 'CATEGORY_CODE', categoryCode);
+          return data.CATEGORY_NAME;
+        } catch (error) {
+          return ''
+        }
+    }
+
+    getContactName(user_auth_code){
+        try {
+            let data = Taskservices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', user_auth_code);
+            return data.FULLNAME;
+        } catch (error) {
+            return ''
+        }
+    }
+
+    renderTemuan = (item, idx) => {
+        let dataTemuan = Taskservices.findBy2('TR_FINDING', 'FINDING_CODE', item)
+        if(dataTemuan !== undefined){
+            const image = Taskservices.findBy2('TR_IMAGE', 'TR_CODE', dataTemuan.FINDING_CODE);
+            let showImage;
+            if (image == undefined) {
+            showImage = <Image style={{ alignItems: 'stretch', width: 65, height: 65, borderRadius: 10 }} source={require('../../Images/ic-default-thumbnail.png')} />
+            } else {
+            showImage = <Image style={{ alignItems: 'stretch', width: 65, height: 65, borderRadius: 10 }} source={{ uri: "file://" + image.IMAGE_PATH_LOCAL }} />
+            }
+            return (
+                <TouchableOpacity
+                    key={idx} 
+                    onPress={() => this.props.navigation.navigate('DetailFinding', { ID: dataTemuan.FINDING_CODE })}
+                    style={styles.sectionCardView}>
+                    {showImage}
+                    <View style={styles.sectionDesc} >
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={{ fontSize: 12, color: 'black', width: 100 }}>Kategori </Text>
+                            <Text style={{ fontSize: 12, color: 'grey' }}>:  {this.getCategoryName(dataTemuan.FINDING_CATEGORY)}</Text>
+                        </View>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={{ fontSize: 12, color: 'black', width: 100 }}>Priority </Text>
+                            <Text style={{ fontSize: 12, color: 'grey' }}>:  {dataTemuan.FINDING_PRIORITY}</Text>
+                        </View>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={{ fontSize: 12, color: 'black', width: 100 }}>Ditugaskan Ke </Text>
+                            <Text style={{ fontSize: 12, color: 'grey' }}>:  {this.getContactName(dataTemuan.ASSIGN_TO)}</Text>
+                        </View>
+                    </View>
+                </TouchableOpacity>
+    
+            )
+        }
+      }
+
     render() {
         return (
             <ScrollView>
@@ -540,6 +591,14 @@ class HistoryInspeksiDetail extends React.Component {
                         </View>
                         <View style={styles.lineDivider} />
                         <View>{this.state.arrBaris}</View>
+                    </View>
+
+                    <View style={[styles.section]}>
+                        <View style={styles.sectionRow}>
+                            <Text style={styles.textTitle}>Lihat Detail Temuan</Text>
+                        </View>
+                        <View style={styles.lineDivider} />
+                        <View>{this.state.arrTemuan}</View>
                     </View>
                 </View >
             </ScrollView>
@@ -629,5 +688,23 @@ const styles = StyleSheet.create({
         alignContent: 'center',
         textAlign: 'center',
     },
+
+    sectionCardView: {
+        alignItems: 'stretch',
+        height: 80,
+        backgroundColor: 'white',
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    sectionDesc: {
+        flex:1,
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        height: 80,
+        paddingTop: 7,
+        paddingBottom: 10,
+        paddingLeft: 10,
+        paddingRight: 10
+    }
 
 });

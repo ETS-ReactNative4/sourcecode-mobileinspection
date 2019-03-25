@@ -28,7 +28,8 @@ class KondisiBaris2 extends Component {
                 fontWeight: '400'
             },
             headerRight: (
-                <TouchableOpacity onPress={() => {navigation.navigate('Step1Finding', {data: params.getData})}}>
+                <TouchableOpacity onPress={() => { navigation.navigate('Step1Finding', { 
+                    data: params.getData, dataInspeksi: params.getDataInspeksi, updateTRBaris: params.updateTRBaris }) }}>
                     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingRight: 16 }}>
                         <Entypo name='flashlight' size={24} color='white' />
                     </View>
@@ -178,6 +179,24 @@ class KondisiBaris2 extends Component {
         //     icon: require('../../Images/ic-not-save.png')
         // });
         return true;
+    }
+    updateTRBaris = data => {
+        let model =  {
+            ID_INSPECTION: data.ID_INSPECTION,
+            BLOCK_INSPECTION_CODE: data.BLOCK_INSPECTION_CODE,
+            EST_NAME: data.EST_NAME,
+            WERKS: data.WERKS,
+            BLOCK_CODE: data.BLOCK_CODE,
+            AFD_CODE: data.AFD_CODE,
+            WERKS_AFD_BLOCK_CODE: data.WERKS_AFD_BLOCK_CODE,
+            INSPECTION_DATE: data.INSPECTION_DATE,
+            STATUS_SYNC: data.STATUS_SYNC,
+            INSPECTION_RESULT: data.INSPECTION_RESULT,
+            INSPECTION_SCORE: data.INSPECTION_SCORE,
+            FULFILL_BARIS: data.FULFILL_BARIS,
+            TR_FINDING_CODES: data.TR_FINDING_CODES
+        }    
+        this.setState({dataInspeksi: model})   
     }
 
 	_loadInput = async () => {
