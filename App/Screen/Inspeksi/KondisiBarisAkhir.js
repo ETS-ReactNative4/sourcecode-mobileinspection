@@ -341,11 +341,11 @@ class KondisiBarisAkhir extends Component{
         var avg_gwg = jmlNilaiGwg / barisPembagi.length;
         var avg_prun = jmlNilaiPrun / barisPembagi.length;
 
-        let bobotPiringan = TaskService.findBy2('TM_CONTENT', 'CONTENT_CODE', 'CC0007') //4;
-        let bobotSarkul = TaskService.findBy2('TM_CONTENT', 'CONTENT_CODE', 'CC0008') //5;
-        let bobotTph = TaskService.findBy2('TM_CONTENT', 'CONTENT_CODE', 'CC0009') //2;
-        let bobotGwg = TaskService.findBy2('TM_CONTENT', 'CONTENT_CODE', 'CC0010') //1;
-        let bobotPrun = TaskService.findBy2('TM_CONTENT', 'CONTENT_CODE', 'CC0011') //3;
+        let bobotPiringan = TaskService.findBy2('TM_CONTENT', 'CONTENT_CODE', 'CC0007').BOBOT //4;
+        let bobotSarkul = TaskService.findBy2('TM_CONTENT', 'CONTENT_CODE', 'CC0008').BOBOT //5;
+        let bobotTph = TaskService.findBy2('TM_CONTENT', 'CONTENT_CODE', 'CC0009').BOBOT //2;
+        let bobotGwg = TaskService.findBy2('TM_CONTENT', 'CONTENT_CODE', 'CC0010').BOBOT //1;
+        let bobotPrun = TaskService.findBy2('TM_CONTENT', 'CONTENT_CODE', 'CC0011').BOBOT //3;
 
         let nilai = 0;
         if (this.state.statusBlok === 'TM') {
