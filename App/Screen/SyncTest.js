@@ -159,7 +159,6 @@ class SyncScreen extends React.Component {
             message: 'Message',
             showModal: false,
             icon: '',
-            findingCode: [],
             isDeleteImage: false
         }
     }
@@ -409,7 +408,8 @@ class SyncScreen extends React.Component {
                 valueInspeksiHeaderUpload: 0,
                 totalInspeksiHeaderUpload: 0,
             });
-        }
+        }        
+        this.loadDataDetailInspeksi();
 
     }
 
@@ -549,8 +549,15 @@ class SyncScreen extends React.Component {
             }
             this.setState({ progressUploadImage: 1, valueImageUpload: 0, totalImagelUpload: 0 });
         } catch (error) {
-
+            this.setState({ progressUploadImage: 1, valueImageUpload: 0, totalImagelUpload: 0 });
         }
+        
+            
+        this.loadDataFinding();
+        this.loadData();
+        this.loadDataInspectionTrack();
+        this.kirimEbccHeader();
+        this.kirimEbccDetail();
     }
 
     uploadData(URL, dataPost, table, idInspection) {
@@ -571,20 +578,79 @@ class SyncScreen extends React.Component {
                 if (data.status) {
                     if (table == 'header') {
                         this.updateInspeksi(dataPost);
-                        this.updateInspeksiBaris(idInspection);
+                        // this.updateInspeksiBaris(idInspection);
                     } else if (table == 'detailHeader') {
                         this.updateInspeksiDetail(dataPost)
+                        this.updateSyncInpesctionBaris()
                     } else if (table == 'tracking') {
                         this.updateInspeksiTrack(dataPost)
                     } else if (table == 'finding') {
-                        this.updateFinding(dataPost)
+                        let imgHasSent = this.checkImageHasSent(dataPost.FINDING_CODE)
+                        if(imgHasSent){
+                            this.updateFinding(dataPost)
+                        }
                     }else if (table == 'ebccH') {
-                        this.updateEbccHeader(dataPost)
+                        let imgHasSent = this.checkImageHasSent(dataPost.EBCC_VALIDATION_CODE)
+                        if(imgHasSent){
+                            this.updateEbccHeader(dataPost)
+                        }
                     }else if (table == 'ebccD') {
                         this.updateEbccDetail(dataPost, idInspection)
                     }
                 }
             })
+    }
+
+    checkImageHasSent(trCode){
+        let images = TaskServices.findBy('TR_IMAGE', 'TR_CODE', trCode);
+        if(images !== undefined){
+            for(var i=0; i<images.length; i++){
+                if(images.STATUS_SYNC == 'N'){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    headerHasSent(idInspection){
+        let header = TaskServices.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', idInspection);
+        if(header !== undefined){
+            for(var i=0; i<header.length; i++){
+                let image = this.checkImageHasSent(header[i].BLOCK_INSPECTION_CODE)
+                if(image && header[i].STATUS_SYNC == 'N'){
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    detailHasSent(blockInsCode){
+        let detail = TaskServices.findBy('TR_BLOCK_INSPECTION_D', 'ID_INSPECTION', blockInsCode);
+        if(detail !== undefined){
+            for(var j=0; j<detail.length; j++){
+                if(detail[j].STATUS_SYNC == 'N'){
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    updateSyncInpesctionBaris(){
+        let barisIns = TaskServices.findBy('TR_BARIS_INSPECTION', 'STATUS_SYNC', 'N')
+        if(barisIns !== undefined){
+            barisIns.map(item => {
+                let header = this.headerHasSent(item.ID_INSPECTION)
+                let detail = this.detailHasSent(item.ID_INSPECTION)
+                if(header && detail){
+                    this.updateInspeksiBaris(item.ID_INSPECTION)
+                }
+            })           
+        }
     }
 
     updateInspeksi = param => {
@@ -1413,12 +1479,12 @@ class SyncScreen extends React.Component {
 
                 //POST TRANSAKSI
                 this.kirimImage();
-                this.loadDataFinding();
-                this.loadData();
-                this.loadDataDetailInspeksi();
-                this.loadDataInspectionTrack();
-                this.kirimEbccHeader();
-                this.kirimEbccDetail();
+                // this.loadDataFinding();
+                // this.loadData();
+                // this.loadDataDetailInspeksi();
+                // this.loadDataInspectionTrack();
+                // this.kirimEbccHeader();
+                // this.kirimEbccDetail();
 
                 //cara redux saga
                 setTimeout(() => {
@@ -1573,7 +1639,6 @@ class SyncScreen extends React.Component {
                 this._crudTM_Finding_Image(dataJSON);
             }
             this.props.resetFindingImage();
-            // this.props.blockRequest();
         }
 
         if (newProps.block.fetchingBlock !== null && !newProps.block.fetchingBlock) {
@@ -1696,7 +1761,6 @@ class SyncScreen extends React.Component {
             }
             this.props.resetKualitas();
 			this._reset_token();
-            this.setState({ showButton: true });
         }
 
     }

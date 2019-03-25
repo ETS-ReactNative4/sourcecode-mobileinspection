@@ -178,7 +178,7 @@ class FotoJanjang extends Component {
       STATUS_IMAGE: 'JANJANG',
       STATUS_SYNC: 'N',
       INSERT_USER: dataLogin.USER_AUTH_CODE,
-      INSERT_TIME: ''
+      INSERT_TIME: getTodayDate('YYYY-MM-DD kk:mm:ss')
     }
     this.setState({ dataModel: image });
   }

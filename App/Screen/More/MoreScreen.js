@@ -8,6 +8,7 @@ import TaskServices from '../../Database/TaskServices'
 import { NavigationActions, StackActions } from 'react-navigation';
 import ModalConfirmation from '../../Component/ModalAlertConfirmation'
 import ModalAlert from '../../Component/ModalAlert'
+import DeviceInfo from 'react-native-device-info';
 
 export default class MoreScreen extends Component {
 
@@ -196,6 +197,9 @@ export default class MoreScreen extends Component {
           </TouchableOpacity> */}
 
           {/*Sign Out*/}
+          <View style={{flex: 1, flexDirection: 'column', justifyContent:'center', alignItems: 'center', padding: 10}}>
+            <Text>Versi: {DeviceInfo.getVersion()}</Text>
+          </View>
           <TouchableOpacity style={styles.marginCard} onPress={() => { this.setState({ showConfirm: true }) }}>
             <CardView cardElevation={2} cardMaxElevation={2} cornerRadius={10}>
               <View style={styles.sectionCardView}>

@@ -286,7 +286,7 @@ class FormStep2 extends Component {
                 STATUS_IMAGE: 'SEBELUM',
                 STATUS_SYNC: 'N',
                 INSERT_USER: this.state.user.USER_AUTH_CODE,
-                INSERT_TIME: moment(new Date()).format("YYYY-MM-DD HH:mm:ss")
+                INSERT_TIME: moment(new Date()).format("YYYY-MM-DD kk:mm:ss")
             }
 
             TaskServices.saveData('TR_IMAGE', imagetr);
