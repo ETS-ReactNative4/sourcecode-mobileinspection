@@ -508,7 +508,7 @@ class HistoryInspeksiDetail extends React.Component {
     
             )
         }
-      }
+    }
 
     render() {
         return (

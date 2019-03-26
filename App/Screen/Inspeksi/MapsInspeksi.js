@@ -223,7 +223,9 @@ class MapsInspeksi extends React.Component {
     const resetAction = StackActions.reset({
     index: 0,            
       actions: [NavigationActions.navigate({ routeName: screenName, params : { 
-          werkAfdBlockCode : werkAfdBlockCode
+          werkAfdBlockCode : werkAfdBlockCode,
+          latitude: this.state.latitude,
+          longitude: this.state.longitude
         } 
       })]
     });
@@ -295,15 +297,15 @@ class MapsInspeksi extends React.Component {
             </View>
           ))}
            
-        <Marker
-            coordinate={{
-                latitude: this.state.latitude,
-                longitude: this.state.longitude,
-            }}
-            centerOffset={{ x: -42, y: -60 }}
-            anchor={{ x: 0.84, y: 1 }}
-        >
-        </Marker>  
+          <Marker
+              coordinate={{
+                  latitude: this.state.latitude,
+                  longitude: this.state.longitude,
+              }}
+              centerOffset={{ x: -42, y: -60 }}
+              anchor={{ x: 0.84, y: 1 }}
+          >
+          </Marker>  
         
         </MapView>
       </View>

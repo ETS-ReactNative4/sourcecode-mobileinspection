@@ -16,7 +16,6 @@ import Geojson from 'react-native-geojson';
 import R from 'ramda'
 import { NavigationActions, StackActions  } from 'react-navigation';
 import ModalAlert from '../../Component/ModalAlert';
-import ModalAlert2 from '../../Component/ModalAlert';
 
 class BuatInspeksiRedesign extends Component {
 
@@ -221,8 +220,10 @@ class BuatInspeksiRedesign extends Component {
                 let message = error && error.message ? error.message : 'Terjadi kesalahan ketika mencari lokasi anda !';
                 if (error && error.message == "No location provider available.") {
                     message = "Mohon nyalakan GPS anda terlebih dahulu.";
-                }                
-                this.insertTrackLokasi(blokInsCode, this.state.latitude, this.state.longitude)
+                }   
+                if(this.state.latitude !== null && this.state.longitude !== null){
+                    this.insertTrackLokasi(blokInsCode, this.state.latitude, this.state.longitude)
+                }           
                 // console.log(message);
             }, // go here if error while fetch location
             { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position

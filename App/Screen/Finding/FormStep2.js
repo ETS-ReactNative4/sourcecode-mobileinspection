@@ -182,7 +182,8 @@ class FormStep2 extends Component {
                 });
             },
             (error) => this.setState({ error: error.message }),
-            { enableHighAccuracy: false, timeout: 200000, maximumAge: 1000 },
+            { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 },
+            // { enableHighAccuracy: false, timeout: 200000, maximumAge: 1000 },
         );
     }
 

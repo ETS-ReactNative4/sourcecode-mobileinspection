@@ -396,7 +396,7 @@ class SyncScreen extends React.Component {
                 let fulfill = this.isFulfillBaris(countData[i].ID_INSPECTION)
                 if(fulfill){
                     this.kirimInspeksiHeader(countData[i]);
-                    this.setState({valueInspeksiHeaderUpload: i+1, totalInspeksiHeaderUpload: i+1 });
+                    this.setState({valueInspeksiHeaderUpload: i+1, totalInspeksiHeaderUpload: countData.length });
                 }             
             }
             this.setState({
@@ -495,13 +495,13 @@ class SyncScreen extends React.Component {
             let all = TaskServices.getAllData('TR_IMAGE')
             var dataImage = TaskServices.query('TR_IMAGE', `STATUS_SYNC = 'N'`);
             if (all !== undefined && dataImage !== undefined) {
+                this.setState({ totalImagelUpload: dataImage.length })
                 for (var i = 0; i < dataImage.length; i++) {
                     let model = dataImage[i]
                     RNFS.exists(`file://${model.IMAGE_PATH_LOCAL}`).
                         then((exists) => {
                             if (exists) {
                                 var data = new FormData();
-                                let idxOrder = null;
                                 data.append('IMAGE_CODE', model.IMAGE_CODE)
                                 data.append('IMAGE_PATH_LOCAL', model.IMAGE_PATH_LOCAL)
                                 data.append('TR_CODE', model.TR_CODE)
@@ -515,8 +515,9 @@ class SyncScreen extends React.Component {
                                     type: 'image/jpeg',
                                     name: model.IMAGE_NAME,
                                 });
-                                let indexData = R.findIndex(R.propEq('IMAGE_CODE', model.IMAGE_CODE))(all);
-                                idxOrder = indexData
+                                // let idxOrder = null;
+                                // let indexData = R.findIndex(R.propEq('IMAGE_CODE', model.IMAGE_CODE))(all);
+                                // idxOrder = indexData
                                 //const url = "http://149.129.245.230:3012/image/upload-file/"
                                 const url = baseUploadImageLink+"image/upload-file/"
                                 fetch(url, {
@@ -532,8 +533,12 @@ class SyncScreen extends React.Component {
                                     .then((response) => response.json())
                                     .then((responseJson) => {
                                         if (responseJson.status) {
-                                            this.setState({ progressUploadImage: 1, valueImageUpload: dataImage.length, totalImagelUpload: dataImage.length });
-                                            TaskServices.updateStatusImage('TR_IMAGE', 'Y', idxOrder);
+                                            this.setState({ valueImageUpload: i});
+                                            TaskServices.updateByPrimaryKey('TR_IMAGE', {
+                                                "IMAGE_CODE":model.IMAGE_CODE,
+                                                "STATUS_SYNC":"Y"
+                                            });
+                                            // TaskServices.updateStatusImage('TR_IMAGE', 'Y', idxOrder);
                                         }
                                     }).catch((error) => {
                                         console.error(error);
@@ -547,7 +552,7 @@ class SyncScreen extends React.Component {
                         })
                 }
             }
-            this.setState({ progressUploadImage: 1, valueImageUpload: 0, totalImagelUpload: 0 });
+            this.setState({ progressUploadImage: 1});
         } catch (error) {
             this.setState({ progressUploadImage: 1, valueImageUpload: 0, totalImagelUpload: 0 });
         }
@@ -894,8 +899,8 @@ class SyncScreen extends React.Component {
         }
         if (data.ubah.length > 0 && all.length > 0) {
             data.ubah.map(item => {
-                let indexData = R.findIndex(R.propEq('WERKS_AFD_BLOCK_CODE', item.WERKS_AFD_BLOCK_CODE))(allData);
                 TaskServices.updateByPrimaryKey('TM_BLOCK', item)
+                // let indexData = R.findIndex(R.propEq('WERKS_AFD_BLOCK_CODE', item.WERKS_AFD_BLOCK_CODE))(allData);
                 //TaskServices.updateBlock(item, indexData)
             })
         }
@@ -928,8 +933,8 @@ class SyncScreen extends React.Component {
         //update
         if (data.ubah.length > 0 && allData.length > 0) {
             data.ubah.map(item => {
-                let indexData = R.findIndex(R.propEq('WERKS_AFD_CODE', item.WERKS_AFD_CODE))(allData);
                 TaskServices.updateByPrimaryKey('TM_AFD', item)
+                // let indexData = R.findIndex(R.propEq('WERKS_AFD_CODE', item.WERKS_AFD_CODE))(allData);
                 //TaskServices.updateAfdeling(item, indexData)
             })
         }
@@ -961,8 +966,8 @@ class SyncScreen extends React.Component {
         }
         if (data.ubah.length > 0 && allData.length > 0) {
             data.ubah.map(item => {
-                let indexData = R.findIndex(R.propEq('REGION_CODE', item.REGION_CODE))(allData);
                 TaskServices.updateByPrimaryKey('TM_REGION', item)
+                // let indexData = R.findIndex(R.propEq('REGION_CODE', item.REGION_CODE))(allData);
                 //TaskServices.updateRegion(item, indexData)
             })
         }
@@ -993,8 +998,8 @@ class SyncScreen extends React.Component {
         }
         if (data.ubah.length > 0 && allData.length > 0) {
             data.ubah.map(item => {
-                let indexData = R.findIndex(R.propEq('WERKS', item.WERKS))(allData);
                 TaskServices.updateByPrimaryKey('TM_EST', item)
+                // let indexData = R.findIndex(R.propEq('WERKS', item.WERKS))(allData);
                 //TaskServices.updateEstate(item, indexData)
             })
         }
@@ -1026,8 +1031,8 @@ class SyncScreen extends React.Component {
         }
         if (data.ubah.length > 0 && allData.length > 0) {
             data.ubah.map(item => {
-                let indexData = R.findIndex(R.propEq('WERKS_AFD_BLOCK_CODE', item.WERKS_AFD_BLOCK_CODE))(allData);
                 TaskServices.updateByPrimaryKey('TM_LAND_USE', item)
+                // let indexData = R.findIndex(R.propEq('WERKS_AFD_BLOCK_CODE', item.WERKS_AFD_BLOCK_CODE))(allData);
                 //TaskServices.updateLandUse(item, indexData)
             })
         }
@@ -1059,8 +1064,8 @@ class SyncScreen extends React.Component {
         }
         if (data.ubah.length > 0 && allData.length > 0) {
             data.ubah.map(item => {
-                let indexData = R.findIndex(R.propEq('COMP_CODE', item.COMP_CODE))(allData);
                 TaskServices.updateByPrimaryKey('TM_COMP',item)
+                // let indexData = R.findIndex(R.propEq('COMP_CODE', item.COMP_CODE))(allData);
                 //TaskServices.updateComp(item, indexData)
             })
         }
@@ -1200,8 +1205,8 @@ class SyncScreen extends React.Component {
         }
         if (data.ubah.length > 0 && allData.length > 0) {
             data.ubah.map(item => {
-                let indexData = R.findIndex(R.propEq('FINDING_CODE', item.FINDING_CODE))(allData);
                 TaskServices.updateByPrimaryKey('TR_FINDING', item)
+                // let indexData = R.findIndex(R.propEq('FINDING_CODE', item.FINDING_CODE))(allData);
                 //TaskServices.updateFindingDownload(item, indexData)
             })
         }
@@ -1788,6 +1793,25 @@ class SyncScreen extends React.Component {
 
                     <View style={{ flex: 1, marginTop: 12 }}>
                         <View style={{ flexDirection: 'row' }}>
+                            <Text style={styles.labelProgress}>IMAGE</Text>
+                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
+                                <Text style={styles.labelProgress}>{this.state.valueImageUpload}</Text>
+                                <Text style={styles.labelProgress}>/</Text>
+                                <Text style={styles.labelProgress}>{this.state.totalImagelUpload}</Text>
+                            </View>
+                        </View>
+                        <Progress.Bar
+                            height={heightProgress}
+                            width={null}
+                            style={{ marginTop: 2 }}
+                            progress={this.state.progressUploadImage}
+                            backgroundColor={colorProgress}
+                            borderColor={'white'}
+                            indeterminate={this.state.indeterminate} />
+                    </View>
+
+                    <View style={{ flex: 1, marginTop: 12 }}>
+                        <View style={{ flexDirection: 'row' }}>
                             <Text style={styles.labelProgress}>INSPEKSI TRACK</Text>
                             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
                                 <Text style={styles.labelProgress}>{this.state.valueInspectionTrack}</Text>
@@ -1902,26 +1926,7 @@ class SyncScreen extends React.Component {
                             borderColor={'white'}
                             indeterminate={this.state.indeterminate} />
 
-                    </View>
-
-                    <View style={{ flex: 1, marginTop: 12 }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.labelProgress}>IMAGE</Text>
-                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text style={styles.labelProgress}>{this.state.valueImageUpload}</Text>
-                                <Text style={styles.labelProgress}>/</Text>
-                                <Text style={styles.labelProgress}>{this.state.totalImagelUpload}</Text>
-                            </View>
-                        </View>
-                        <Progress.Bar
-                            height={heightProgress}
-                            width={null}
-                            style={{ marginTop: 2 }}
-                            progress={this.state.progressUploadImage}
-                            backgroundColor={colorProgress}
-                            borderColor={'white'}
-                            indeterminate={this.state.indeterminate} />
-                    </View>
+                    </View>                    
 
                     <Text style={{ fontSize: 14, color: Colors.tintColor, marginTop: 16 }}>DOWNLOAD</Text>
                     <View style={{ backgroundColor: 'grey', height: 0.5, flex: 1, flexDirection: 'row', marginTop: 3 }} />
