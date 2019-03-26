@@ -154,6 +154,7 @@ const TM_BLOCK = {
         COMP_CODE: 'string',
         EST_CODE: 'string',
         WERKS: 'string',
+        JUMLAH_TPH:  { type: 'int', default: 0 },
         AFD_CODE: 'string',
         BLOCK_CODE: 'string',
         BLOCK_NAME: 'string',

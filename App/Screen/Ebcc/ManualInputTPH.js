@@ -52,7 +52,8 @@ class ManualInputTPH extends React.Component{
             blokCode: '',
             blokName: '',
             statusBlok: '',
-            estateName: '',  
+            estateName: '', 
+            totalTph: 0, 
             werkAfdBlockCode,
             statusScan,
             reason,
@@ -144,6 +145,7 @@ class ManualInputTPH extends React.Component{
                 blokName: data.BLOCK_NAME,
                 afdCode: data.AFD_CODE, 
                 werks: data.WERKS,
+                totalTph: data.JUMLAH_TPH,
                 statusBlok, estateName
             })
         }else{      
@@ -174,8 +176,16 @@ class ManualInputTPH extends React.Component{
 
     validation(){
         let tph = `${this.state.text1}${this.state.text2}${this.state.text3}`
-        let tphAfdWerksBlockCode = `${tph}-${this.state.afdCode}-${this.state.werks}-${this.state.blokCode}`   
-        this.props.navigation.navigate('FotoJanjang', {statusScan: 'MANUAL', tphAfdWerksBlockCode: tphAfdWerksBlockCode, reason: this.state.reason});
+        let tphAfdWerksBlockCode = `${tph}-${this.state.afdCode}-${this.state.werks}-${this.state.blokCode}` 
+        if(this.state.text1 == '' && this.state.text1 == '' && this.state.text1 == '') {
+            this.setState({ showModal: true, title: 'TPH Belum di Isi', message: 'Kamu harus isi TPH dulu', icon: require('../../Images/ic-blm-input-lokasi.png') });
+        }else if(tph === '000'){
+            this.setState({ showModal: true, title: 'TPH Salah cuy', message: 'Kamu ga boleh isi no TPH 000', icon: require('../../Images/ic-blm-input-lokasi.png') });
+        }else if(parseInt(tph) > this.state.totalTph){
+            this.setState({ showModal: true, title: 'TPH kelebihan', message: `TPH yang diinput melibihi jumlah total TPH ${this.state.blokName}`, icon: require('../../Images/ic-blm-input-lokasi.png') });
+        }else{
+            this.props.navigation.navigate('FotoJanjang', {statusScan: 'MANUAL', tphAfdWerksBlockCode: tphAfdWerksBlockCode, reason: this.state.reason});
+        }        
     }
 
     render(){
