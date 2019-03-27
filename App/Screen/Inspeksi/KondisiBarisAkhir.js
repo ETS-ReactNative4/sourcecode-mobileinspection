@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {
-    Text, Dimensions, StatusBar, TextInput, TouchableOpacity, View, Switch,
-    Button,
+    Text, Dimensions, StatusBar, TextInput, TouchableOpacity, View, Switch
 } from 'react-native';
 import {
 	Card,
@@ -10,10 +9,10 @@ import {
 import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import MapView, { Polygon, ProviderPropType, Marker } from 'react-native-maps';
+import MapView, { ProviderPropType, Marker } from 'react-native-maps';
 import {RNSlidingButton, SlideDirection} from 'rn-sliding-button';
 import TaskService from '../../Database/TaskServices';
-import {getTodayDate, getCalculateTime, getUUID} from '../../Lib/Utils'
+import {getTodayDate, getCalculateTime} from '../../Lib/Utils'
 import { NavigationActions, StackActions  } from 'react-navigation';
 import R from 'ramda';
 import geolib from 'geolib';
@@ -24,8 +23,6 @@ import ModalAlert from '../../Component/ModalAlert';
 
 const LATITUDE = -2.1890660;
 const LONGITUDE = 111.3609873;
-const { width, height } = Dimensions.get('window');
-const skm = require('../../Data/4421.json');
 
 
 const alcatraz = {

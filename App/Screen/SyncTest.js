@@ -897,14 +897,14 @@ class SyncScreen extends React.Component {
             let countDataInsert = TaskServices.getTotalData('TM_BLOCK');
             this.setState({ progress: 1, valueDownload: countDataInsert, totalDownload: 0 })
         }
-        if (data.ubah.length > 0 && all.length > 0) {
+        if (data.ubah.length > 0 && allData.length > 0) {
             data.ubah.map(item => {
                 TaskServices.updateByPrimaryKey('TM_BLOCK', item)
                 // let indexData = R.findIndex(R.propEq('WERKS_AFD_BLOCK_CODE', item.WERKS_AFD_BLOCK_CODE))(allData);
                 //TaskServices.updateBlock(item, indexData)
             })
         }
-        if (data.hapus.length > 0 && all.length > 0) {
+        if (data.hapus.length > 0 && allData.length > 0) {
             data.hapus.map(item => {
                 this.deleteRecordByPK('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', item.WERKS_AFD_BLOCK_CODE);
             });

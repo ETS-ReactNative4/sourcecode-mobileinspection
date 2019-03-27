@@ -244,6 +244,26 @@ class MapsEbcc extends React.Component {
     this.setState({fetchLocation: false});
   }
 
+  setMyLocation = event => {
+    const myLocation = event.nativeEvent.coordinate;
+    let region = {
+      latitude: myLocation.latitude,
+      longitude: myLocation.longitude,
+      latitudeDelta:0.0075,
+      longitudeDelta:0.00721
+    } 
+    if (myLocation.latitude && myLocation.longitude) {
+      // this.map.animateToCoordinate(region, 1)
+      this.setState({latitude: myLocation.latitude,longitude: myLocation.longitude, region})
+      this.map.animateToRegion({
+        latitude: myLocation.latitude,
+        longitude: myLocation.longitude,
+        latitudeDelta: region.latitudeDelta,
+        longitudeDelta: region.longitudeDelta
+      });
+    }
+  };
+
   render() {
     return (
       <View style={styles.container}>
@@ -279,6 +299,7 @@ class MapsEbcc extends React.Component {
           scrollEnabled={false}
           zoomEnabled={false}
           onMapReady={()=>this.onMapReady()}
+          // onUserLocationChange={this.setMyLocation}
           >
           {/* {skm.data.polygons.map((poly, index) => ( */}
            {this.state.poligons.length > 0 && this.state.poligons.map((poly, index) => (

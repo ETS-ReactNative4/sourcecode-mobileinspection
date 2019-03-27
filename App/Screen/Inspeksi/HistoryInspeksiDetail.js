@@ -10,13 +10,11 @@ import {
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/AntDesign'
-import Entypo from 'react-native-vector-icons/Entypo'
 import Size from '../../Constant/sizes'
 import Colors from '../../Constant/Colors'
 import Taskservices from '../../Database/TaskServices'
 import R from 'ramda';
 import { getSticker } from '../../Lib/Utils'
-import { NavigationActions, StackActions } from 'react-navigation';
 
 class HistoryInspeksiDetail extends React.Component {
 
