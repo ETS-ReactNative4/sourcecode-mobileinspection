@@ -178,7 +178,7 @@ class KondisiBarisAkhir extends Component{
             }, // go here if error while fetch location
             { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
         );
-      } 
+    } 
 
     centerCoordinate(coordinates) {
         let x = coordinates.map(c => c.latitude)
@@ -656,6 +656,11 @@ class KondisiBarisAkhir extends Component{
         navigation.dispatch(resetAction);
     }
 
+    onMapReady(){
+        //lakukan aoa yg mau dilakukan disini setelah map selesai
+        this.map.animateToCoordinate(this.state.region, 1)
+    }
+
     render(){
         return(
             <View style={styles.mainContainer}>
@@ -713,14 +718,24 @@ class KondisiBarisAkhir extends Component{
                     <View style={styles.containerMap}>
                         {this.state.latitude !== 0.0 && this.state.longitude !== 0.0 &&
                         <MapView
+                            ref={ map => this.map = map }
+                            provider={this.props.provider}
                             style={styles.map}
-                            initialRegion={{
-                                latitude:this.state.latitude,
-                                longitude:this.state.longitude,
-                                latitudeDelta:0.015,
-                                longitudeDelta:0.0121
-                            }}>
-                            <Geojson geojson={alcatraz} />
+                            showsUserLocation = {true}
+                            showsMyLocationButton = {true}
+                            showsCompass = {true}
+                            showScale = {true}
+                            showsIndoors = {true}
+                            initialRegion={this.state.region}
+                            followsUserLocation={true}
+                            onMapReady={()=>this.onMapReady()}
+                            // initialRegion={{
+                            //     latitude:this.state.latitude,
+                            //     longitude:this.state.longitude,
+                            //     latitudeDelta:0.015,
+                            //     longitudeDelta:0.0121
+                            // }}
+                            >
                             <Marker
                                 coordinate={{
                                 latitude: this.state.latitude,
@@ -782,7 +797,7 @@ class KondisiBarisAkhir extends Component{
                             onPress={()=>{this.searchLocation()}}
                             name="location-arrow"
                             size={24}
-                            style={{ alignSelf: 'flex-end', marginBottom:210, marginRight: 10}}/>  
+                            style={{ alignSelf: 'flex-start', marginBottom:210, marginLeft: 10}}/>  
 
                         <View style={{height:250, marginLeft:20, marginRight:20}}>
                             <Card style={[styles.cardContainer]}>

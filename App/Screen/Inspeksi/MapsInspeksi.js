@@ -270,7 +270,7 @@ class MapsInspeksi extends React.Component {
           initialRegion={this.state.region}
           followsUserLocation={false}
           scrollEnabled={false}
-          zoomEnabled={false}
+          zoomEnabled={true}
           onMapReady={()=>this.onMapReady()}
           >
           {/* {skm.data.polygons.map((poly, index) => ( */}

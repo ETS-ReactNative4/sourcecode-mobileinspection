@@ -297,7 +297,7 @@ class MapsEbcc extends React.Component {
           initialRegion={this.state.region}
           followsUserLocation={false}
           scrollEnabled={false}
-          zoomEnabled={false}
+          zoomEnabled={true}
           onMapReady={()=>this.onMapReady()}
           // onUserLocationChange={this.setMyLocation}
           >

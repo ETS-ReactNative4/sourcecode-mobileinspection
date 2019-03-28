@@ -370,11 +370,15 @@ class SyncScreen extends React.Component {
         let countData = TaskServices.getAllData('TR_FINDING');
         var query = countData.filtered('STATUS_SYNC = "N"');
         countData = query;
-        this.setState({ progressFindingData: 1, valueFindingDataUpload: countData.length, totalFindingDataUpload: countData.length });
+        // this.setState({ progressFindingData: 1, valueFindingDataUpload: countData.length, totalFindingDataUpload: countData.length });
         if (countData.length > 0) {
             for (var i = 0; i < countData.length; i++) {
                 this.kirimFinding(countData[i]);
+                this.setState({valueFindingDataUpload: i+1, totalFindingDataUpload: countData.length });
             }
+            this.setState({
+                progressFindingData: 1
+            });
         } else {
             this.setState({ progressFindingData: 1, valueFindingDataUpload: 0, totalFindingDataUpload: 0 });
         }

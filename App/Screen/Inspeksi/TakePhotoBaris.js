@@ -157,6 +157,8 @@ class TakePhotoBaris extends Component {
           this.camera = cam;
         }}
         style={styles.preview}
+        defaultOnFocusComponent={true}
+        onFocusChanged={()=>{}}
         flashMode={Camera.Constants.FlashMode.auto}
         permissionDialogTitle={'Permission to use camera'}
         permissionDialogMessage={'We need your permission to use your camera phone'}

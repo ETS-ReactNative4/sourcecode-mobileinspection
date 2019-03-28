@@ -252,7 +252,7 @@ class MapsInspeksi extends React.Component {
           showsIndoors = {true}
           initialRegion={this.state.region}
           followsUserLocation={false}
-          zoomEnabled={false}
+          zoomEnabled={true}
           scrollEnabled={false}
           onMapReady={()=>this.onMapReady()}
           >
