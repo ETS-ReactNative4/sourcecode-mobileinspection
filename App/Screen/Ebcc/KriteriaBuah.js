@@ -231,12 +231,19 @@ class KriteriaBuah extends Component {
         }
     }
 
-    onFocusInput(value){
+    remove0(value){
         if(value.charAt(0) == '0'){
             value = value.substring(1)
         }
         return value
     }
+
+    nextFocus (label,index,arr) {
+        let idx = index+1
+        if(idx < arr.length){
+            this[`${label}${idx}`].focus();
+        }
+    };
 
     renderDynamicComp(data, index, arr){
         return(
@@ -244,12 +251,14 @@ class KriteriaBuah extends Component {
                 <Text style={styles.txtLabel}>{data.NAMA_KUALITAS}</Text>
                 <View style={[styles.containerInput, { flex: 1 }]}>
                     <TextInput
+                        ref={(input) => {this[`textInput${index}`] = input}}
+                        onSubmitEditing={() => this.nextFocus('textInput', index, arr)}
                         underlineColorAndroid={'transparent'}
                         style={[styles.searchInput]}
                         maxLength={3}
                         keyboardType={'numeric'}
                         value={arr[index].JUMLAH}
-                        onChangeText={(text) => { text = text.replace(/[^0-9 ]/g, ''); text = this.onFocusInput(text); this.updateArr(index, text, arr, 'panen') }} />
+                        onChangeText={(text) => { text = text.replace(/[^0-9 ]/g, ''); text = this.remove0(text); this.updateArr(index, text, arr, 'panen') }} />
                 </View>
             </View>
         )
@@ -261,12 +270,14 @@ class KriteriaBuah extends Component {
                 <Text style={styles.txtLabel}>{data.NAMA_KUALITAS}</Text>
                 <View style={[styles.containerInput, { flex: 1 }]}>
                     <TextInput
+                        ref={(input) => {this[`input${index}`] = input}}
+                        onSubmitEditing={() => this.nextFocus('input', index, arr)}
                         underlineColorAndroid={'transparent'}
                         style={[styles.searchInput]}
                         maxLength={3}
                         keyboardType={'numeric'}
                         value={arr[index].JUMLAH}
-                        onChangeText={(text) => { text = text.replace(/[^0-9 ]/g, ''); text = this.onFocusInput(text); param == 'total'? this.updateArr(index, text, arr, 'jjg'):this.updateArr(index, text, arr, 'buah') }} />
+                        onChangeText={(text) => { text = text.replace(/[^0-9 ]/g, ''); text = this.remove0(text); param == 'total'? this.updateArr(index, text, arr, 'jjg'):this.updateArr(index, text, arr, 'buah') }} />
                 </View>
             </View>
         )
