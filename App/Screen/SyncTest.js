@@ -31,6 +31,7 @@ import R from 'ramda'
 import RNFetchBlob from 'rn-fetch-blob'
 import TaskServices from '../Database/TaskServices'
 import { getTodayDate, convertTimestampToDate } from '../Lib/Utils';
+<<<<<<< Updated upstream
 var RNFS = require('react-native-fs');
 
 // import moment from 'moment';
@@ -42,8 +43,12 @@ const link = 'http://149.129.250.199:3008/api/';
 const linkEbcc = 'http://149.129.250.199:3014/';
 //const link = "http://app.tap-agri.com/mobileinspection/ins-msa-auth/api/";
 
+=======
+>>>>>>> Stashed changes
 import ModalAlert from '../Component/ModalAlert';
 
+var RNFS = require('react-native-fs');
+const link = 'http://149.129.245.230:3008/api/';
 const heightProgress = 5;
 const colorProgress = '#D5D5D5'
 
@@ -72,8 +77,11 @@ class SyncScreen extends React.Component {
             progressUploadImage: 0,
             progressFindingData: 0,
             progressInspectionTrack: 0,
+<<<<<<< Updated upstream
             progressEbcc: 0,
             progressEbccDetail: 0,
+=======
+>>>>>>> Stashed changes
 
             //labelUpload
             valueInspeksiHeaderUpload: '0',
@@ -86,10 +94,13 @@ class SyncScreen extends React.Component {
             totalImagelUpload: '0',
             valueInspectionTrack: '0',
             totalInspectionTrack: '0',
+<<<<<<< Updated upstream
             valueEbcc: '0',
             totalEbcc: '0',
             valueEbccDetail: '0',
             totalEbccDetail: '0',
+=======
+>>>>>>> Stashed changes
 
             //downlaod
             progress: 0,
@@ -106,7 +117,10 @@ class SyncScreen extends React.Component {
             progressFinding: 0,
             progressFindingImage: 0,
             progressParamInspection: 0,
+<<<<<<< Updated upstream
             progressKualitas: 0,
+=======
+>>>>>>> Stashed changes
 
             //labelDownload
             downloadApa: 'Download sedang dalam proses',
@@ -138,8 +152,11 @@ class SyncScreen extends React.Component {
             totalFindingImageDownload: '0',
             valueParamInspection: '0',
             totalParamInspection: '0',
+<<<<<<< Updated upstream
             valueKualitas: '0',
             totalKualitas: '0',
+=======
+>>>>>>> Stashed changes
             
             indeterminate: false,
             downloadInspeksiParam: false,
@@ -519,11 +536,17 @@ class SyncScreen extends React.Component {
                                     type: 'image/jpeg',
                                     name: model.IMAGE_NAME,
                                 });
+<<<<<<< Updated upstream
                                 // let idxOrder = null;
                                 // let indexData = R.findIndex(R.propEq('IMAGE_CODE', model.IMAGE_CODE))(all);
                                 // idxOrder = indexData
                                 //const url = "http://149.129.245.230:3012/image/upload-file/"
                                 const url = baseUploadImageLink+"image/upload-file/"
+=======
+                                let indexData = R.findIndex(R.propEq('IMAGE_CODE', model.IMAGE_CODE))(all);
+                                idxOrder = indexData
+                                const url = "http://149.129.245.230:3012/image/upload-file/"
+>>>>>>> Stashed changes
                                 fetch(url, {
                                     method: 'POST',
                                     headers: {
@@ -1036,7 +1059,10 @@ class SyncScreen extends React.Component {
         if (data.ubah.length > 0 && allData.length > 0) {
             data.ubah.map(item => {
                 TaskServices.updateByPrimaryKey('TM_LAND_USE', item)
+<<<<<<< Updated upstream
                 // let indexData = R.findIndex(R.propEq('WERKS_AFD_BLOCK_CODE', item.WERKS_AFD_BLOCK_CODE))(allData);
+=======
+>>>>>>> Stashed changes
                 //TaskServices.updateLandUse(item, indexData)
             })
         }
@@ -1209,6 +1235,10 @@ class SyncScreen extends React.Component {
         }
         if (data.ubah.length > 0 && allData.length > 0) {
             data.ubah.map(item => {
+<<<<<<< Updated upstream
+=======
+                let indexData = R.findIndex(R.propEq('FINDING_CODE', item.FINDING_CODE))(allData);
+>>>>>>> Stashed changes
                 TaskServices.updateByPrimaryKey('TR_FINDING', item)
                 // let indexData = R.findIndex(R.propEq('FINDING_CODE', item.FINDING_CODE))(allData);
                 //TaskServices.updateFindingDownload(item, indexData)
@@ -1399,6 +1429,7 @@ class SyncScreen extends React.Component {
         this.props.resetCategory();
         this.props.resetContact();
         this.props.resetParamTrack();
+<<<<<<< Updated upstream
         this.props.resetKualitas();
     }
 
@@ -1483,9 +1514,88 @@ class SyncScreen extends React.Component {
 
                     fetchLocation: false,
                     isBtnEnable: false,
+=======
+    }
 
-                });
+    _onSync() {
+            this._deleteFinding();
+            // Gani            
+            this.resetSagas();
+            NetInfo.isConnected.fetch().then(isConnected => {
+                if (isConnected) {
+                    this.setState({
+>>>>>>> Stashed changes
 
+                        //upload
+                        progressInspeksiHeader: 0,
+                        progressInspeksiDetail: 0,
+                        progressUploadImage: 0,
+                        progressFindingData: 0,
+                        progressInspectionTrack: 0,                   
+
+                        //labelUpload
+                        valueInspeksiHeaderUpload: '0',
+                        totalInspeksiHeaderUpload: '0',
+                        valueInspeksiDetailUpload: '0',
+                        totalInspeksiDetailUpload: '0',
+                        valueFindingDataUpload: '0',
+                        totalFindingDataUpload: '0',
+                        valueImageUpload: '0',
+                        totalImagelUpload: '0',
+                        valueInspectionTrack: '0',
+                        totalInspectionTrack: '0',
+
+                        //download
+                        progressFinding: 0,
+                        progressFindingImage: 0,
+                        progress: 0,
+                        progressAfd: 0,
+                        progressRegion: 0,
+                        progressEst: 0,
+                        progressLandUse: 0,
+                        progressComp: 0,
+                        progressContent: 0,
+                        progressContentLabel: 0,
+                        progressKriteria: 0,
+                        progressCategory: 0,
+                        progressContact: 0,
+                        progressParamInspection: 0,     
+                        
+                        //labelDownload
+                        valueDownload: '0',
+                        valueAfdDownload: '0',
+                        valueRegionDownload: '0',
+                        valueEstDownload: '0',
+                        valueCompDownload: '0',
+                        valueLandUseDownload: '0',
+                        valueContentDownload: '0',
+                        valueContentLabelDownload: '0',
+                        valueKriteriaDownload: '0',
+                        valueFindingDownload: '0',
+                        valueCategoryDownload: '0',
+                        valueContactDownload: '0',
+                        valueFindingImageDownload: '0',
+                        valueParamInspection: '0',
+
+                        totalDownload: '0',
+                        totalAfdDownload: '0',
+                        totalRegionDownload: '0',
+                        totalEstDownload: '0',
+                        totalCompDownload: '0',
+                        totalLandUseDownload: '0',
+                        totalContentDownload: '0',
+                        totalContentLabelDownload: '0',
+                        totalKriteriaDownload: '0',
+                        totalFindingDownload: '0',
+                        totalCategoryDownload: '0',
+                        totalContactDownload: '0',
+                        totalFindingImageDownload: '0',
+                        totalParamInspection: '0',
+
+                        fetchLocation: false,
+                        isBtnEnable: false,
+
+<<<<<<< Updated upstream
                 //POST TRANSAKSI
                 this.kirimImage();
                 // this.loadDataFinding();
@@ -1500,29 +1610,130 @@ class SyncScreen extends React.Component {
                     this.props.findingRequest();
                     this.props.blockRequest();
                 }, 2000);
+=======
+                    });
+>>>>>>> Stashed changes
 
-            } else {
-                this.setState({
-                    showButton: true,
-                    showModal: true,
-                    title: 'Tidak Ada Jaringan',
-                    message: 'Untuk bisa sync, kamu harus terhubung ke Internet',
-                    icon: require('../Images/ic-no-internet.png')
-                });
+                    //POST TRANSAKSI
+                    this.kirimImage();
+                    this.loadDataFinding();
+                    this.loadData();
+                    this.loadDataDetailInspeksi();
+                    this.loadDataInspectionTrack();
+
+                    //cara biasa
+                    // setTimeout(() => {            
+                    // this.DownloadData(`${link}mobile-sync/finding`, 'finding');
+                    // }, 2000);
+
+                    //cara redux saga
+                    setTimeout(() => {
+                        this.props.findingRequest();
+                        this.props.blockRequest();
+                    }, 2000);
+
+                } else {
+                    this.setState({
+                        showButton: true,
+                        showModal: true,
+                        title: 'Tidak Ada Jaringan',
+                        message: 'Untuk bisa sync, kamu harus terhubung ke Internet',
+                        icon: require('../Images/ic-no-internet.png')
+                    });
+                }
+            });
+            function handleFirstConnectivityChange(isConnected) {
+                NetInfo.isConnected.removeEventListener(
+                    'connectionChange',
+                    handleFirstConnectivityChange
+                );
             }
+<<<<<<< Updated upstream
         });
         function handleFirstConnectivityChange(isConnected) {
             NetInfo.isConnected.removeEventListener(
+=======
+            NetInfo.isConnected.addEventListener(
+>>>>>>> Stashed changes
                 'connectionChange',
                 handleFirstConnectivityChange
             );
         }
-        NetInfo.isConnected.addEventListener(
-            'connectionChange',
-            handleFirstConnectivityChange
-        );
+
+<<<<<<< Updated upstream
+=======
+        DownloadData(URL, table) {
+            const user = TaskServices.getAllData('TR_LOGIN')[0];
+            fetch(URL, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.ACCESS_TOKEN}`
+                },
+            })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                alert(JSON.stringify(data));
+                if (data.status) {
+                    let payload = data.data;
+                    if (table == 'finding') {
+                        this._crudTM_Finding(payload);
+                        this.DownloadData(`${link}mobile-sync/finding-images`, 'image');
+                    } else if (table == 'image') {
+                        this._crudTM_Finding_Image(payload);
+                        // this.DownloadData(`${link}mobile-sync/hectare-statement/block`, 'block');
+                    } else if (table == 'block') {
+                        this._crudTM_Block(payload);
+                        this.DownloadData(`${link}mobile-sync/hectare-statement/afdeling`, 'afd');
+                    } else if (table == 'afd') {
+                        this._crudTM_Afd(payload);
+                        this.DownloadData(`${link}mobile-sync/hectare-statement/region`, 'region');
+                    } else if (table == 'region') {
+                        this._crudTM_Region(payload);
+                        this.DownloadData(`${link}mobile-sync/hectare-statement/est`, 'est');
+                    } else if (table == 'est') {
+                        this._crudTM_Est(payload);
+                        this.DownloadData(`${link}mobile-sync/hectare-statement/land-use`, 'landuse');
+                    } else if (table == 'landuse') {
+                        this._crudTM_LandUse(payload);
+                        this.DownloadData(`${link}mobile-sync/hectare-statement/comp`, 'comp');
+                    } else if (table == 'comp') {
+                        this._crudTM_Comp(payload);
+                        this.DownloadData(`${link}content`, 'content');
+                    } else if (table == 'content') {
+                        this._crudTM_Content(payload);
+                        this.DownloadData(`${link}content-label`, 'contentlabel');
+                    } else if (table == 'contentlabel') {
+                        this._crudTM_ContentLabel(payload);
+                        this.DownloadData(`${link}kriteria`, 'kriteria');
+                    } else if (table == 'kriteria') {
+                        this._crudTM_Kriteria(payload);
+                        this.DownloadData(`${link}category`, 'catogory');
+                    } else if (table == 'catogory') {
+                        this._crudTM_Category(payload);
+                        this.DownloadData(`${link}contacts`, 'contact');
+                    } else if (table == 'contact') {
+                        this._crudTM_Contact(payload);
+                        this.DownloadData(`${link}parameter/track`, 'track');
+                    } else if (table == 'track') {
+                        this._crudTM_Inspeksi_Param(payload);
+                    }
+                } else {
+                    // alert('Gagal proses download ' + table);
+                    this.setState({
+                        showButton: true,
+                        showModal: true,
+                        title: 'Sync Putus',
+                        message: 'Yaaah jaringannya mati, coba Sync lagi yaa.',
+                        icon: require('../Images/ic-sync-gagal.png')
+                    });
+                }
+            })
     }
 
+>>>>>>> Stashed changes
     fetchingMobileSync(param) {
         var moment = require('moment');
         const user = TaskServices.getAllData('TR_LOGIN')[0];

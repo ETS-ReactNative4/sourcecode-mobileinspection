@@ -231,6 +231,13 @@ class KriteriaBuah extends Component {
         }
     }
 
+    onFocusInput(value){
+        if(value.charAt(0) == '0'){
+            value = value.substring(1)
+        }
+        return value
+    }
+
     renderDynamicComp(data, index, arr){
         return(
             <View style={styles.containerLabel} key={index}>
@@ -239,10 +246,10 @@ class KriteriaBuah extends Component {
                     <TextInput
                         underlineColorAndroid={'transparent'}
                         style={[styles.searchInput]}
-                        maxLength={2}
+                        maxLength={3}
                         keyboardType={'numeric'}
                         value={arr[index].JUMLAH}
-                        onChangeText={(text) => { text = text.replace(/[^0-9 ]/g, ''); this.updateArr(index, text, arr, 'panen') }} />
+                        onChangeText={(text) => { text = text.replace(/[^0-9 ]/g, ''); text = this.onFocusInput(text); this.updateArr(index, text, arr, 'panen') }} />
                 </View>
             </View>
         )
@@ -256,10 +263,10 @@ class KriteriaBuah extends Component {
                     <TextInput
                         underlineColorAndroid={'transparent'}
                         style={[styles.searchInput]}
-                        maxLength={2}
+                        maxLength={3}
                         keyboardType={'numeric'}
                         value={arr[index].JUMLAH}
-                        onChangeText={(text) => { text = text.replace(/[^0-9 ]/g, ''); param == 'total'? this.updateArr(index, text, arr, 'jjg'):this.updateArr(index, text, arr, 'buah') }} />
+                        onChangeText={(text) => { text = text.replace(/[^0-9 ]/g, ''); text = this.onFocusInput(text); param == 'total'? this.updateArr(index, text, arr, 'jjg'):this.updateArr(index, text, arr, 'buah') }} />
                 </View>
             </View>
         )
@@ -431,7 +438,7 @@ class KriteriaBuah extends Component {
                                 editable={false}
                                 underlineColorAndroid={'transparent'}
                                 style={[styles.searchInput, {backgroundColor: Colors.abuabu}]}
-                                maxLength={2}
+                                maxLength={3}
                                 keyboardType={'numeric'}
                                 value={this.state.totalJanjang} />
                         </View>
