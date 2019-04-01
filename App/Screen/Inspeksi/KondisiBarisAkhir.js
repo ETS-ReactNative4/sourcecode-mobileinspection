@@ -9,7 +9,7 @@ import {
 import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import MapView, { ProviderPropType, Marker } from 'react-native-maps';
+import MapView, { ProviderPropType, Marker, Polyline } from 'react-native-maps';
 import {RNSlidingButton, SlideDirection} from 'rn-sliding-button';
 import TaskService from '../../Database/TaskServices';
 import {getTodayDate, getCalculateTime} from '../../Lib/Utils'
@@ -107,6 +107,7 @@ class KondisiBarisAkhir extends Component{
             fetchLocation: false,
             from,
             distance: '',
+            polyTrack: [],
 
             //Add Modal Alert by Aminju 
             title: 'Title',
@@ -126,6 +127,22 @@ class KondisiBarisAkhir extends Component{
             this.setState({menit:sda.toString()})
         }
         this.getLocation();
+        this.makeLineTrack();
+    }
+
+    makeLineTrack(){
+        let header = TaskService.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION)
+        if(header !== null){
+            header.map(hdr => {
+                let data = TaskService.findBy('TM_INSPECTION_TRACK', 'BLOCK_INSPECTION_CODE', hdr.BLOCK_INSPECTION_CODE)
+                if(data !== undefined){
+                    data.map(item =>{
+                        let arr = {latitude:parseFloat(item.LAT_TRACK), longitude:parseFloat(item.LONG_TRACK)}
+                        this.state.polyTrack.push(arr)
+                    })
+                }
+            })            
+        }        
     }
 
     totalWaktu(){
@@ -593,7 +610,7 @@ class KondisiBarisAkhir extends Component{
             if(time !== undefined){
                 duration = parseFloat(time.DESC);
             }
-            let id = 1//setInterval(()=> this.getLocation2(blokInspectionCode), duration);
+            let id = setInterval(()=> this.getLocation2(blokInspectionCode), duration);
             this.navigateScreen('TakeFotoBaris', params, modelInspeksi, model, id);
             
         }        
@@ -745,6 +762,12 @@ class KondisiBarisAkhir extends Component{
                                 anchor={{ x: 0.84, y: 1 }}
                             >
                             </Marker>
+
+                            <Polyline
+                                coordinates={this.state.polyTrack}
+                                strokeColor="#7F0000"
+                                strokeWidth={3}
+                                />
                         </MapView>                        
                         }
                         {/* <MapView
