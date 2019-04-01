@@ -68,10 +68,10 @@ export default class HistoryEbcc extends Component {
   renderList = (data, index) => {
     let status = '', colorStatus = '';
     if (data.STATUS_SYNC == 'N'){
-      status = 'Belum Dikirim'
+      status = 'Data Belum Dikirim'
       colorStatus = 'red';
     }else{
-      status = 'Sudah Terkirim'
+      status = 'Data Sudah Terkirim'
       colorStatus = Colors.brand
     }  
     let imgBaris = TaskServices.findByWithList('TR_IMAGE', ['TR_CODE', 'STATUS_IMAGE'], [data.EBCC_VALIDATION_CODE, 'JANJANG']);

@@ -10,7 +10,6 @@ import { NavigationActions, StackActions } from 'react-navigation';
 import { getTodayDate } from '../../Lib/Utils';
 import R from 'ramda';
 import ModalAlert from '../../Component/ModalAlert'
-import ModalAlertConfirmation from '../../Component/ModalAlertConfirmation';
 
 class KondisiBaris2 extends Component {
 

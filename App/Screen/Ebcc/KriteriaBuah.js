@@ -231,18 +231,34 @@ class KriteriaBuah extends Component {
         }
     }
 
+    remove0(value){
+        if(value.charAt(0) == '0'){
+            value = value.substring(1)
+        }
+        return value
+    }
+
+    nextFocus (label,index,arr) {
+        let idx = index+1
+        if(idx < arr.length){
+            this[`${label}${idx}`].focus();
+        }
+    };
+
     renderDynamicComp(data, index, arr){
         return(
             <View style={styles.containerLabel} key={index}>
                 <Text style={styles.txtLabel}>{data.NAMA_KUALITAS}</Text>
                 <View style={[styles.containerInput, { flex: 1 }]}>
                     <TextInput
+                        ref={(input) => {this[`textInput${index}`] = input}}
+                        onSubmitEditing={() => this.nextFocus('textInput', index, arr)}
                         underlineColorAndroid={'transparent'}
                         style={[styles.searchInput]}
-                        maxLength={2}
+                        maxLength={3}
                         keyboardType={'numeric'}
                         value={arr[index].JUMLAH}
-                        onChangeText={(text) => { text = text.replace(/[^0-9 ]/g, ''); this.updateArr(index, text, arr, 'panen') }} />
+                        onChangeText={(text) => { text = text.replace(/[^0-9 ]/g, ''); text = this.remove0(text); this.updateArr(index, text, arr, 'panen') }} />
                 </View>
             </View>
         )
@@ -254,12 +270,14 @@ class KriteriaBuah extends Component {
                 <Text style={styles.txtLabel}>{data.NAMA_KUALITAS}</Text>
                 <View style={[styles.containerInput, { flex: 1 }]}>
                     <TextInput
+                        ref={(input) => {this[`input${index}`] = input}}
+                        onSubmitEditing={() => this.nextFocus('input', index, arr)}
                         underlineColorAndroid={'transparent'}
                         style={[styles.searchInput]}
-                        maxLength={2}
+                        maxLength={3}
                         keyboardType={'numeric'}
                         value={arr[index].JUMLAH}
-                        onChangeText={(text) => { text = text.replace(/[^0-9 ]/g, ''); param == 'total'? this.updateArr(index, text, arr, 'jjg'):this.updateArr(index, text, arr, 'buah') }} />
+                        onChangeText={(text) => { text = text.replace(/[^0-9 ]/g, ''); text = this.remove0(text); param == 'total'? this.updateArr(index, text, arr, 'jjg'):this.updateArr(index, text, arr, 'buah') }} />
                 </View>
             </View>
         )
@@ -431,7 +449,7 @@ class KriteriaBuah extends Component {
                                 editable={false}
                                 underlineColorAndroid={'transparent'}
                                 style={[styles.searchInput, {backgroundColor: Colors.abuabu}]}
-                                maxLength={2}
+                                maxLength={3}
                                 keyboardType={'numeric'}
                                 value={this.state.totalJanjang} />
                         </View>

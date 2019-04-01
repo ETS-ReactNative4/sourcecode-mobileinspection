@@ -144,7 +144,7 @@ class MapsInspeksi extends React.Component {
         (position) => {
             var lat = parseFloat(position.coords.latitude);
             var lon = parseFloat(position.coords.longitude);  
-            region = {
+            let region = {
               latitude: lat,
               longitude: lon,
               latitudeDelta:0.0075,
@@ -154,8 +154,10 @@ class MapsInspeksi extends React.Component {
               latitude: lat, longitude: lon
             }
             let poligons = this.getPolygons(position);
-            this.map.animateToCoordinate(region, 1);
             this.setState({latitude:lat, longitude:lon, fetchLocation: false, region, poligons});
+            if(this.map !== undefined){
+              this.map.animateToCoordinate(region, 1);
+            }            
         },
         (error) => {
             let message = error && error.message ? error.message : 'Terjadi kesalahan ketika mencari lokasi anda !';

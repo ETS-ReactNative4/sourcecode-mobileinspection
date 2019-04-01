@@ -396,9 +396,9 @@ class BuatInspeksiRedesign extends Component {
         let time = TaskService.getAllData('TM_TIME_TRACK')[0];
         let duration = 10000
         if(time !== undefined){
-            duration = parseFloat(time.DESC);
+             duration = parseFloat(time.DESC);
         }
-        let id = 1//setInterval(()=> this.getLocation2(this.state.blokInspeksiCode), duration);
+        let id = setInterval(()=> this.getLocation2(this.state.blokInspeksiCode), duration);
 
         this.props.navigation.navigate('TakeFotoBaris', {
             inspeksiHeader: modelInspeksiH,

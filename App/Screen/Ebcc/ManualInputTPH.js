@@ -5,7 +5,7 @@ import TaskService from '../../Database/TaskServices';
 import ModalAlert from '../../Component/ModalAlert';
 import Icon2 from 'react-native-vector-icons/Ionicons';
 import ModalAlertConfirmation from '../../Component/ModalAlertConfirmation';
-import { NavigationActions } from 'react-navigation';
+import { NavigationActions, StackActions } from 'react-navigation';
 import R from 'ramda';
 
 class ManualInputTPH extends React.Component{
@@ -154,24 +154,20 @@ class ManualInputTPH extends React.Component{
     }
 
     selesai=()=>{
-        // const navigation = this.props.navigation;
-        // let routeName = 'MainMenu';
-        // Promise.all([
-        //     navigation.dispatch(
-        //         StackActions.reset({
-        //             index:0,
-        //             actions:[NavigationActions.navigate({ routeName : routeName})]
-        //         })
-        //     )]).then(() => navigation.navigate('Inspection')).then(() => navigation.navigate('DaftarInspeksi'))
-        
-        // const backAction = NavigationActions.back(null);
-        // this.props.navigation.dispatch(backAction);
 
         const navigation = this.props.navigation;
         let routeName = 'MainMenu'; 
         this.setState({showModal: false})
-        Promise.all([navigation.dispatch(NavigationActions.navigate({ routeName : routeName}))]).
-        then(() => navigation.navigate('EbccValidation')).then(() => navigation.navigate('DaftarEbcc'));
+        BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+        Promise.all([
+            navigation.dispatch(
+                StackActions.reset({
+                    index:0,
+                    actions:[NavigationActions.navigate({ routeName : routeName})]
+                })
+            )]).then(() => navigation.navigate('EbccValidation')).then(() => navigation.navigate('DaftarEbcc'))
+        // Promise.all([navigation.dispatch(NavigationActions.navigate({ routeName : routeName}))]).
+        // then(() => navigation.navigate('EbccValidation')).then(() => navigation.navigate('DaftarEbcc'));
     }
 
     validation(){
@@ -195,7 +191,7 @@ class ManualInputTPH extends React.Component{
                 <ModalAlert
                     icon={this.state.icon}
                     visible={this.state.showModal}
-                    onPressCancel={() => {this.setState({ showModal: false }); this.selesai()}}
+                    onPressCancel={() => {this.setState({ showModal: false })}}
                     title={this.state.title}
                     message={this.state.message} />
 

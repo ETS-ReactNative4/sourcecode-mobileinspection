@@ -5,7 +5,6 @@ import {
     View,
     Image,
     Platform,
-    BackHandler,
     Dimensions,
     StatusBar,
     BackAndroid
@@ -20,7 +19,7 @@ import { dirPhotoEbccJanjang } from '../../Lib/dirStorage'
 import TaskService from '../../Database/TaskServices'
 import R from 'ramda';
 import Icon2 from 'react-native-vector-icons/Ionicons';
-import { NavigationActions } from 'react-navigation';
+import { NavigationActions, StackActions } from 'react-navigation';
 
 import ModalAlertConfirmation from '../../Component/ModalAlertConfirmation';
 import ModalAlert from '../../Component/ModalAlert';
@@ -124,8 +123,18 @@ class FotoJanjang extends Component {
     const navigation = this.props.navigation;
     let routeName = 'MainMenu'; 
     this.setState({showModal: false})
-    Promise.all([navigation.dispatch(NavigationActions.navigate({ routeName : routeName}))]).
-      then(() => navigation.navigate('EbccValidation')).then(() => navigation.navigate('DaftarEbcc'));
+    BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+
+    Promise.all([
+        navigation.dispatch(
+            StackActions.reset({
+                index:0,
+                actions:[NavigationActions.navigate({ routeName : routeName})]
+            })
+        )]).then(() => navigation.navigate('EbccValidation')).then(() => navigation.navigate('DaftarEbcc'))
+
+    // Promise.all([navigation.dispatch(NavigationActions.navigate({ routeName : routeName}))]).
+    //   then(() => navigation.navigate('EbccValidation')).then(() => navigation.navigate('DaftarEbcc'));
   }
 
   getLocation() {
