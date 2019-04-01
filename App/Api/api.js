@@ -203,6 +203,11 @@ const create = () => {
         api.setHeader('Authorization', `Bearer ${user[0].ACCESS_TOKEN}`)
         return api.get('/mobile-sync/ebcc/kualitas')
     }
+	
+    const getServerTime = () => {
+        api.setHeader('Authorization', `Bearer ${user[0].ACCESS_TOKEN}`)
+        return api.get('/server/time')
+    }
 
     return {
         api,
@@ -247,7 +252,8 @@ const create = () => {
         getFinding,
         getFindingImage,
         getInspeksiParamTrackingPath,
-        getKualitas
+        getKualitas,
+		getServerTime
 
     };
 };

@@ -5,6 +5,7 @@ import * as Progress from 'react-native-progress';
 import Colors from '../Constant/Colors';
 import moment from 'moment';
 
+import ServerTimeAction from '../Redux/ServerTimeRedux';
 import RegionAction from '../Redux/RegionRedux';
 import BlockAction from '../Redux/BlockRedux';
 import AfdAction from '../Redux/AfdRedux';
@@ -801,7 +802,9 @@ class SyncScreen extends React.Component {
             LONG_FINDING: param.LONG_FINDING,
             REFFERENCE_INS_CODE: param.REFFERENCE_INS_CODE,
             INSERT_USER: param.INSERT_USER,
-            INSERT_TIME: param.INSERT_TIME
+            INSERT_TIME: param.INSERT_TIME,
+            UPDATE_USER: param.INSERT_USER,
+            UPDATE_TIME: param.INSERT_TIME
         }
         this.uploadData(link+'finding', data, 'finding', '');
     }
@@ -1386,7 +1389,8 @@ class SyncScreen extends React.Component {
     }
 
     resetSagas(){
-        this.props.resetFinding()
+        this.props.resetServerTime();
+        this.props.resetFinding();
         this.props.resetFindingImage();
         this.props.resetBlock();
         this.props.resetAfd();
@@ -1497,8 +1501,9 @@ class SyncScreen extends React.Component {
 
                 //cara redux saga
                 setTimeout(() => {
-                    this.props.findingRequest();
-                    this.props.blockRequest();
+					this.props.serverTimeRequest();
+                    //this.props.findingRequest();
+                    //this.props.blockRequest();
                 }, 2000);
 
             } else {
@@ -1632,6 +1637,32 @@ class SyncScreen extends React.Component {
             });
             this.resetSagas()
             return;
+        }
+		
+        if (newProps.serverTime.fetchingServerTime !== null && !newProps.serverTime.fetchingServerTime) {
+            let dataJSON = newProps.serverTime.serverTime;
+            if (dataJSON !== null) {
+				let serverTime = new Date(dataJSON.time.replace(' ','T')+"+07:00");
+				let localTime = new Date();
+				serverTime.setMinutes(0,0,0);
+				localTime.setMinutes(0,0,0);
+				console.log("check time",dataJSON.time.replace(' ','T'),serverTime,localTime);
+				if(serverTime.getTime()!== localTime.getTime()){
+                    this.setState({
+                        showButton: true,
+                        showModal: true,
+                        title: 'Tidak Sinkron',
+                        message: 'Jam di HP kamu salah',
+                        icon: require('../Images/ic-sync-gagal.png')
+                    })
+				}
+            }
+			else{
+				
+			}
+            this.props.resetServerTime()
+			this.props.findingRequest();
+			this.props.blockRequest();
         }
         if (newProps.finding.fetchingFinding !== null && !newProps.finding.fetchingFinding) {
             let dataJSON = newProps.finding.finding;
@@ -2245,6 +2276,7 @@ class SyncScreen extends React.Component {
 
 const mapStateToProps = state => {
     return {
+        serverTime: state.serverTime,
         region: state.region,
         block: state.block,
         afd: state.afd,
@@ -2267,6 +2299,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
+        serverTimeRequest: () => dispatch(ServerTimeAction.serverTimeRequest()),
         regionRequest: () => dispatch(RegionAction.regionRequest()),
         blockRequest: () => dispatch(BlockAction.blockRequest()),
         blockPost: obj => dispatch(BlockAction.blockPost(obj)),
@@ -2299,6 +2332,7 @@ const mapDispatchToProps = dispatch => {
         tmPost: obj => dispatch(TMobileAction.tmPost(obj)),
         kualitasRequest: obj => dispatch(KualitasAction.kualitasRequest(obj)),
 
+        resetServerTime: () => dispatch(ServerTimeAction.resetServerTime()),
         resetBlock: () => dispatch(BlockAction.resetBlock()),
         resetAfd: () => dispatch(AfdAction.resetAfd()),
         resetRegion: () => dispatch(RegionAction.resetRegion()),

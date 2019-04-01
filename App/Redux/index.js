@@ -29,6 +29,7 @@ export const reducers = combineReducers({
 	paramTrack: require('./ParamTrackRedux').reducer,
 	reset: require('./ResetRedux').reducer,
 	kualitas: require('./KualitasRedux').reducer,
+	serverTime: require('./ServerTimeRedux').reducer,
 
 	network
 });
