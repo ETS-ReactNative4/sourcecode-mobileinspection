@@ -185,6 +185,8 @@ class DetailFindingScreenRedesign extends Component {
         let data = TaskServices.getAllData('TR_FINDING')
         let indexData = R.findIndex(R.propEq('FINDING_CODE', this.state.data.FINDING_CODE))(data);
         let status = this.getStatusTemuan(this.state.progress);
+		var updateTime = getTodayDate('YYYYMMDDkkmmss');
+		updateTime = parseInt(updateTime);
 
         var save = {
             FINDING_CODE: this.state.data.FINDING_CODE,
@@ -202,6 +204,8 @@ class DetailFindingScreenRedesign extends Component {
             LAT_FINDING: this.state.data.LAT_FINDING,
             LONG_FINDING: this.state.data.LONG_FINDING,
             REFFERENCE_INS_CODE: this.state.data.REFFERENCE_INS_CODE,
+            UPDATE_USER: this.state.user.USER_AUTH_CODE,
+            UPDATE_TIME: updateTime
         }
 
         TaskServices.updateFinding('TR_FINDING', [status, save.PROGRESS, 'N', save.DUE_DATE], indexData);

@@ -11,6 +11,7 @@ const TR_LOGIN = {
         USERNAME: 'string',
         USER_AUTH_CODE: 'string',
         USER_ROLE: 'string',
+        SERVER_NAME_INDEX: 'string',
         STATUS: 'string'
     }
 }
@@ -210,6 +211,8 @@ const TR_FINDING = {
         REFFERENCE_INS_CODE: 'string',
         INSERT_USER: { type: 'string', optional: true },
         INSERT_TIME: { type: 'int', default: 0 },
+        UPDATE_USER: { type: 'string', optional: true },
+        UPDATE_TIME: { type: 'int', default: 0 },
         STATUS_SYNC: 'string'
     }
 }
@@ -393,9 +396,8 @@ const TR_D_EBCC_VALIDATION = {
 
 const TR_SYNC_LOG = {
     name: 'TR_SYNC_LOG',
-    primaryKey: 'SYNC_LOG_ID',
+    primaryKey: 'SYNC_TIME',
     properties: {
-		SYNC_LOG_ID: 'string',
         SYNC_TIME: 'string'
     }
 }

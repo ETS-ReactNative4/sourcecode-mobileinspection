@@ -6,6 +6,8 @@ import {
     TextInput,
     TouchableOpacity,
     NetInfo,
+	Picker,
+	Icon,
     Keyboard, Alert, Image
 } from 'react-native';
 import {
@@ -34,6 +36,7 @@ class Form extends Component {
         this.state = {
             strEmail: '',
             strPassword: '',
+            selectedServer: "1",
             title: 'Title',
             message: 'Message',
             showModal: false,
@@ -93,6 +96,11 @@ class Form extends Component {
         //     handleFirstConnectivityChange
         // );
     }
+    onValueChange(value) {
+        this.setState({
+            selectedServer: value
+        });
+    }
 
     render() {
 
@@ -137,6 +145,16 @@ class Form extends Component {
                         value={this.state.strPassword}
                         ref={(input) => this.password = input} />
                 </View>
+				<Picker
+					mode="dropdown"
+					iosHeader="Select your SIM"
+					iosIcon={<Icon name="arrow-dropdown-circle" style={{ color: "#007aff", fontSize: 25 }} />}
+					style={styles.inputBox}
+					selectedValue={this.state.selectedServer}
+					onValueChange={this.onValueChange.bind(this)}>
+					<Picker.Item label="Production" value="1" />
+					<Picker.Item label="Development" value="2" />
+				</Picker>
 
                 <TouchableOpacity style={[styles.button, { marginTop: 20 }]}
                     onPress={() => this.onBtnClick(props)}>

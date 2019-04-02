@@ -21,10 +21,10 @@ import TaskServices from '../Database/TaskServices';
 import RNFetchBlob from 'rn-fetch-blob'
 import { dirPhotoTemuan, dirPhotoInspeksiBaris, dirPhotoInspeksiSelfie, dirPhotoKategori, dirPhotoEbccJanjang, dirPhotoEbccSelfie } from '../Lib/dirStorage';
 import ModalAlert from '../Component/ModalAlert'
+import ServerName from '../Constant/ServerName'
 import IMEI from 'react-native-imei'
 
-const baseUri = "http://149.129.250.199:3008/api/";
-//const baseUri = "http://app.tap-agri.com/api/"
+var serverNameIndex = 1;
 
 class Login extends Component {
 
@@ -64,6 +64,7 @@ class Login extends Component {
             USERNAME: user.USERNAME,
             USER_AUTH_CODE: user.USER_AUTH_CODE,
             USER_ROLE: user.USER_ROLE,
+            SERVER_NAME_INDEX: serverNameIndex,
             STATUS: 'LOGIN'
         };
         TaskServices.saveData('TR_LOGIN', data);
@@ -101,7 +102,7 @@ class Login extends Component {
     }
 
     resetMobileSync(param, token) {
-        fetch(baseUri+'mobile-sync/reset', {
+        fetch(ServerName[serverNameIndex].data+'mobile-sync/reset', {
             method: 'POST',
             headers: {
                 'Cache-Control': 'no-cache',
@@ -166,11 +167,11 @@ class Login extends Component {
         navigation.dispatch(resetAction);
     }
 
-    onLogin(username, password){
+    onLogin(username, password, choosenServer){
         Keyboard.dismiss();
         var imei = this.get_IMEI_Number();
         this.setState({ fetching: true });
-        this.postLogin(username, password, imei);
+        this.postLogin(username, password, choosenServer, imei);
         setTimeout(() => {
             this.setState({ fetching: false });
         }, 3000);
@@ -182,8 +183,11 @@ class Login extends Component {
         // });
     }
 
-    postLogin(username, password, imei) {
-        fetch(baseUri+'login', {
+    postLogin(username, password, choosenServer, imei) {
+		
+		serverNameIndex = choosenServer;
+		console.log("masuk postLogin",ServerName[serverNameIndex].data+'login');
+        fetch(ServerName[serverNameIndex].data+'login', {
             method: 'POST',
             headers: {
                 'Cache-Control': 'no-cache',
@@ -255,7 +259,7 @@ class Login extends Component {
                         {/* <Logo/> */}
 
                         <Form
-                            onBtnClick={data => {this.onLogin(data.strEmail, data.strPassword) }} />
+                            onBtnClick={data => {this.onLogin(data.strEmail, data.strPassword, data.selectedServer) }} />
                         <View style={styles.footerView}>
                             <Text style={styles.footerText}>{'\u00A9'} 2018 Copyrights PT Triputra Agro Persada</Text>
                         </View>

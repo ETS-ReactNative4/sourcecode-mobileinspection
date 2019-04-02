@@ -31,17 +31,12 @@ import { connect } from 'react-redux';
 import R from 'ramda'
 import RNFetchBlob from 'rn-fetch-blob'
 import TaskServices from '../Database/TaskServices'
+import ServerName from '../Constant/ServerName'
 import { getTodayDate, convertTimestampToDate } from '../Lib/Utils';
 var RNFS = require('react-native-fs');
 
-// import moment from 'moment';
-
-//const baseUploadImageLink = 'http://149.129.245.230:3012/';
-//const link = 'http://149.129.245.230:3008/api/';
-const baseUploadImageLink = 'http://149.129.250.199:3012/';
-const link = 'http://149.129.250.199:3008/api/';
-const linkEbcc = 'http://149.129.250.199:3014/';
-//const link = "http://app.tap-agri.com/mobileinspection/ins-msa-auth/api/";
+var baseUploadImageLink;
+var link;
 
 import ModalAlert from '../Component/ModalAlert';
 
@@ -66,7 +61,11 @@ class SyncScreen extends React.Component {
 
     constructor() {
         super();
+        let user = TaskServices.getAllData('TR_LOGIN')[0];
+		baseUploadImageLink = ServerName[user.SERVER_NAME_INDEX].image;
+		link = ServerName[user.SERVER_NAME_INDEX].data;
         this.state = {
+			user,
             //upload            
             progressInspeksiHeader: 0,
             progressInspeksiDetail: 0,
@@ -803,8 +802,8 @@ class SyncScreen extends React.Component {
             REFFERENCE_INS_CODE: param.REFFERENCE_INS_CODE,
             INSERT_USER: param.INSERT_USER,
             INSERT_TIME: param.INSERT_TIME,
-            UPDATE_USER: param.INSERT_USER,
-            UPDATE_TIME: param.INSERT_TIME
+            UPDATE_USERUPDATE_USER: param.UPDATE_USER,
+            UPDATE_TIME: param.UPDATE_TIME
         }
         this.uploadData(link+'finding', data, 'finding', '');
     }
@@ -829,7 +828,7 @@ class SyncScreen extends React.Component {
             UPDATE_USER: '',
             UPDATE_TIME: 0
         }
-        this.uploadData(linkEbcc+'ebcc/validation/header', data, 'ebccH', '');
+        this.uploadData(link+'ebcc/validation/header', data, 'ebccH', '');
     }
 
     postEbccDetail(param) {
@@ -844,7 +843,7 @@ class SyncScreen extends React.Component {
             UPDATE_USER: '',
             UPDATE_TIME: 0
         }
-        this.uploadData(linkEbcc+'ebcc/validation/detail', data, 'ebccD', param.EBCC_VALIDATION_CODE_D);
+        this.uploadData(link+'ebcc/validation/detail', data, 'ebccD', param.EBCC_VALIDATION_CODE_D);
     }
 
 
@@ -1249,6 +1248,12 @@ class SyncScreen extends React.Component {
         TaskServices.saveData('TM_TIME_TRACK', data);
         this.setState({ progressParamInspection: 1, valueParamInspection: 1, totalParamInspection: 1 });      
     }
+	_save_sync_log(){
+        var data = {
+            SYNC_TIME: new Date()
+        }
+        TaskServices.saveData('TR_SYNC_LOG', data);
+	}
 	_reset_token(){
 		let allLoginData = TaskServices.findBy('TR_LOGIN','STATUS','LOGIN');
 		if(allLoginData.length>0){

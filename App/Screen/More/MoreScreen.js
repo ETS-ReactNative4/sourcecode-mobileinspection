@@ -8,6 +8,7 @@ import TaskServices from '../../Database/TaskServices'
 import { NavigationActions, StackActions } from 'react-navigation';
 import ModalConfirmation from '../../Component/ModalAlertConfirmation'
 import ModalAlert from '../../Component/ModalAlert'
+import ServerName from '../../Constant/ServerName';
 import DeviceInfo from 'react-native-device-info';
 
 export default class MoreScreen extends Component {
@@ -43,13 +44,14 @@ export default class MoreScreen extends Component {
 
   constructor(props) {
     super(props);
+	let user = TaskServices.getAllData('TR_LOGIN')[0];
     this.state = {
       showConfirm: false,
       showModal: false,
       //Add Modal Alert by Aminju 
       title: 'Title',
       message: 'Message',
-
+	  user,
     }
   }
 
@@ -199,6 +201,12 @@ export default class MoreScreen extends Component {
           {/*Sign Out*/}
           <View style={{flex: 1, flexDirection: 'column', justifyContent:'center', alignItems: 'center', padding: 10}}>
             <Text>Versi: {DeviceInfo.getVersion()}</Text>
+          </View>
+          <View style={{flex: 1, flexDirection: 'column', justifyContent:'center', alignItems: 'center', padding: 10}}>
+            <Text>Server Data: {ServerName[this.state.user.SERVER_NAME_INDEX].data}</Text>
+          </View>
+          <View style={{flex: 1, flexDirection: 'column', justifyContent:'center', alignItems: 'center', padding: 10}}>
+            <Text>Server Image: {ServerName[this.state.user.SERVER_NAME_INDEX].image}</Text>
           </View>
           <TouchableOpacity style={styles.marginCard} onPress={() => { this.setState({ showConfirm: true }) }}>
             <CardView cardElevation={2} cardMaxElevation={2} cornerRadius={10}>
