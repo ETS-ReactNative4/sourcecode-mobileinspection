@@ -62,6 +62,7 @@ class KondisiBaris2 extends Component {
             btnPiringanKurang: BtnStyles.btnBiasa2,
             btnPiringanSedang: BtnStyles.btnBiasa2,
             btnPiringanBaik: BtnStyles.btnBiasa2,
+
             txtPiringanRehab: styles.buttonText2,
             txtPiringanKurang: styles.buttonText2,
             txtPiringanSedang: styles.buttonText2,
@@ -69,66 +70,111 @@ class KondisiBaris2 extends Component {
 
             //passar pikul
             sarKul: '',
-            btnSarkulRehab: BtnStyles.btnBiasa,
-            btnSarkulKurang: BtnStyles.btnBiasa,
-            btnSarkulSedang: BtnStyles.btnBiasa,
-            btnSarkulBaik: BtnStyles.btnBiasa,
+            btnSarkulRehab: BtnStyles.btnBiasa2,
+            btnSarkulKurang: BtnStyles.btnBiasa2,
+            btnSarkulSedang: BtnStyles.btnBiasa2,
+            btnSarkulBaik: BtnStyles.btnBiasa2,
+            
+            txtSarkulRehab: styles.buttonText2,
+            txtSarkulKurang: styles.buttonText2,
+            txtSarkulSedang: styles.buttonText2,
+            txtSarkulBaik: styles.buttonText2,
 
             //TPH
             TPH: '',
-            btnTPHRehab: BtnStyles.btnBiasa,
-            btnTPHKurang: BtnStyles.btnBiasa,
-            btnTPHSedang: BtnStyles.btnBiasa,
-            btnTPHBaik: BtnStyles.btnBiasa,
+            btnTPHRehab: BtnStyles.btnBiasa2,
+            btnTPHKurang: BtnStyles.btnBiasa2,
+            btnTPHSedang: BtnStyles.btnBiasa2,
+            btnTPHBaik: BtnStyles.btnBiasa2,
+            
+            txtTphRehab: styles.buttonText2,
+            txtTphKurang: styles.buttonText2,
+            txtTphSedang: styles.buttonText2,
+            txtTphBaik: styles.buttonText2,
 
             //GAWANGAN
             GWG: '',
-            btnGWGRehab: BtnStyles.btnBiasa,
-            btnGWGKurang: BtnStyles.btnBiasa,
-            btnGWGSedang: BtnStyles.btnBiasa,
-            btnGWGBaik: BtnStyles.btnBiasa,
+            btnGWGRehab: BtnStyles.btnBiasa2,
+            btnGWGKurang: BtnStyles.btnBiasa2,
+            btnGWGSedang: BtnStyles.btnBiasa2,
+            btnGWGBaik: BtnStyles.btnBiasa2,
+
+            txtGwgRehab: styles.buttonText2,
+            txtGwgKurang: styles.buttonText2,
+            txtGwgSedang: styles.buttonText2,
+            txtGwgBaik: styles.buttonText2,
 
             //PRUNNINGAN
             PRUN: '',
-            btnPRUNRehab: BtnStyles.btnBiasa,
-            btnPRUNKurang: BtnStyles.btnBiasa,
-            btnPRUNSedang: BtnStyles.btnBiasa,
-            btnPRUNBaik: BtnStyles.btnBiasa,
+            btnPRUNRehab: BtnStyles.btnBiasa2,
+            btnPRUNKurang: BtnStyles.btnBiasa2,
+            btnPRUNSedang: BtnStyles.btnBiasa2,
+            btnPRUNBaik: BtnStyles.btnBiasa2,
+            
+            txtPrunRehab: styles.buttonText2,
+            txtPrunKurang: styles.buttonText2,
+            txtPrunSedang: styles.buttonText2,
+            txtPrunBaik: styles.buttonText2,
 
             //TITI PANEN
             TIPA: '',
-            btnTIPARehab: BtnStyles.btnBiasa,
-            btnTIPAKurang: BtnStyles.btnBiasa,
-            btnTIPASedang: BtnStyles.btnBiasa,
-            btnTIPABaik: BtnStyles.btnBiasa,
+            btnTIPARehab: BtnStyles.btnBiasa2,
+            btnTIPAKurang: BtnStyles.btnBiasa2,
+            btnTIPASedang: BtnStyles.btnBiasa2,
+            btnTIPABaik: BtnStyles.btnBiasa2,
+            
+            txtTipaRehab: styles.buttonText2,
+            txtTipaKurang: styles.buttonText2,
+            txtTipaSedang: styles.buttonText2,
+            txtTipaBaik: styles.buttonText2,
 
             //KASTRASI
             KASTRASI: '',
-            btnKastrasiRehab: BtnStyles.btnBiasa,
-            btnKastrasiKurang: BtnStyles.btnBiasa,
-            btnKastrasiSedang: BtnStyles.btnBiasa,
-            btnKastrasiBaik: BtnStyles.btnBiasa,
+            btnKastrasiRehab: BtnStyles.btnBiasa2,
+            btnKastrasiKurang: BtnStyles.btnBiasa2,
+            btnKastrasiSedang: BtnStyles.btnBiasa2,
+            btnKastrasiBaik: BtnStyles.btnBiasa2,
+            
+            txtKastrasiRehab: styles.buttonText2,
+            txtKastrasiKurang: styles.buttonText2,
+            txtKastrasiSedang: styles.buttonText2,
+            txtKastrasiBaik: styles.buttonText2,
 
             //SANITASI
             SANITASI: '',
-            btnSanitasiRehab: BtnStyles.btnBiasa,
-            btnSanitasiKurang: BtnStyles.btnBiasa,
-            btnSanitasiSedang: BtnStyles.btnBiasa,
-            btnSanitasiBaik: BtnStyles.btnBiasa,
+            btnSanitasiRehab: BtnStyles.btnBiasa2,
+            btnSanitasiKurang: BtnStyles.btnBiasa2,
+            btnSanitasiSedang: BtnStyles.btnBiasa2,
+            btnSanitasiBaik: BtnStyles.btnBiasa2,
+            
+            txtSanitasiRehab: styles.buttonText2,
+            txtSanitasiKurang: styles.buttonText2,
+            txtSanitasiSedang: styles.buttonText2,
+            txtSanitasiBaik: styles.buttonText2,
 
             //SISTEM PENABURAN
             PENABUR: '',
-            btnPENABURRehab: BtnStyles.btnBiasa,
-            btnPENABURKurang: BtnStyles.btnBiasa,
-            btnPENABURSedang: BtnStyles.btnBiasa,
-            btnPENABURBaik: BtnStyles.btnBiasa,
+            btnPENABURRehab: BtnStyles.btnBiasa2,
+            btnPENABURKurang: BtnStyles.btnBiasa2,
+            btnPENABURSedang: BtnStyles.btnBiasa2,
+            btnPENABURBaik: BtnStyles.btnBiasa2,
+            
+            txtPenaburRehab: styles.buttonText2,
+            txtPenaburKurang: styles.buttonText2,
+            txtPenaburSedang: styles.buttonText2,
+            txtPenaburBaik: styles.buttonText2,
 
             //KONDISI PUPUK
             PUPUK: '',
-            btnPUPUKRehab: BtnStyles.btnBiasa,
-            btnPUPUKKurang: BtnStyles.btnBiasa,
-            btnPUPUKSedang: BtnStyles.btnBiasa,
-            btnPUPUKBaik: BtnStyles.btnBiasa,
+            btnPUPUKRehab: BtnStyles.btnBiasa2,
+            btnPUPUKKurang: BtnStyles.btnBiasa2,
+            btnPUPUKSedang: BtnStyles.btnBiasa2,
+            btnPUPUKBaik: BtnStyles.btnBiasa2,
+
+            txtPupukRehab: styles.buttonText2,
+            txtPupukKurang: styles.buttonText2,
+            txtPupukSedang: styles.buttonText2,
+            txtPupukBaik: styles.buttonText2,
 
             switchTPH: false,
             switchTIPA: false,
@@ -321,81 +367,118 @@ class KondisiBaris2 extends Component {
             this.setState({ btnPiringanRehab: BtnStyles.btnBiasa2, btnPiringanKurang: BtnStyles.btnBiasa2, btnPiringanSedang: BtnStyles.btnBiasa2, btnPiringanBaik: BtnStyles.btnBaik, piringan: 'BAIK' });
             this.setState({ txtPiringanRehab: styles.buttonText2, txtPiringanKurang: styles.buttonText2, txtPiringanSedang: styles.buttonText2, txtPiringanBaik: styles.buttonText });
         } else if (param == 'SARKUL' && value == 'REHAB') {
-            this.setState({ btnSarkulRehab: BtnStyles.btnRehab, btnSarkulKurang: BtnStyles.btnBiasa, btnSarkulSedang: BtnStyles.btnBiasa, btnSarkulBaik: BtnStyles.btnBiasa, sarKul: 'REHAB' });
+            this.setState({ btnSarkulRehab: BtnStyles.btnRehab, btnSarkulKurang: BtnStyles.btnBiasa2, btnSarkulSedang: BtnStyles.btnBiasa2, btnSarkulBaik: BtnStyles.btnBiasa2, sarKul: 'REHAB' });
+            this.setState({ txtSarkulRehab: styles.buttonText, txtSarkulKurang: styles.buttonText2, txtSarkulSedang: styles.buttonText2, txtSarkulBaik: styles.buttonText2 });
+        } else if (param == 'PIRINGAN' && value == 'KURANG') {
         } else if (param == 'SARKUL' && value == 'KURANG') {
-            this.setState({ btnSarkulRehab: BtnStyles.btnBiasa, btnSarkulKurang: BtnStyles.btnKurang, btnSarkulSedang: BtnStyles.btnBiasa, btnSarkulBaik: BtnStyles.btnBiasa, sarKul: 'KURANG' });
+            this.setState({ btnSarkulRehab: BtnStyles.btnBiasa2, btnSarkulKurang: BtnStyles.btnKurang, btnSarkulSedang: BtnStyles.btnBiasa2, btnSarkulBaik: BtnStyles.btnBiasa2, sarKul: 'KURANG' });
+            this.setState({ txtSarkulRehab: styles.buttonText2, txtSarkulKurang: styles.buttonText, txtSarkulSedang: styles.buttonText2, txtSarkulBaik: styles.buttonText2 });
         } else if (param == 'SARKUL' && value == 'SEDANG') {
-            this.setState({ btnSarkulRehab: BtnStyles.btnBiasa, btnSarkulKurang: BtnStyles.btnBiasa, btnSarkulSedang: BtnStyles.btnSedang, btnSarkulBaik: BtnStyles.btnBiasa, sarKul: 'SEDANG' });
+            this.setState({ btnSarkulRehab: BtnStyles.btnBiasa2, btnSarkulKurang: BtnStyles.btnBiasa2, btnSarkulSedang: BtnStyles.btnSedang, btnSarkulBaik: BtnStyles.btnBiasa2, sarKul: 'SEDANG' });
+            this.setState({ txtSarkulRehab: styles.buttonText2, txtSarkulKurang: styles.buttonText2, txtSarkulSedang: styles.buttonText, txtSarkulBaik: styles.buttonText2 });
         } else if (param == 'SARKUL' && value == 'BAIK') {
-            this.setState({ btnSarkulRehab: BtnStyles.btnBiasa, btnSarkulKurang: BtnStyles.btnBiasa, btnSarkulSedang: BtnStyles.btnBiasa, btnSarkulBaik: BtnStyles.btnBaik, sarKul: 'BAIK' });
+            this.setState({ btnSarkulRehab: BtnStyles.btnBiasa2, btnSarkulKurang: BtnStyles.btnBiasa2, btnSarkulSedang: BtnStyles.btnBiasa2, btnSarkulBaik: BtnStyles.btnBaik, sarKul: 'BAIK' });
+            this.setState({ txtSarkulRehab: styles.buttonText2, txtSarkulKurang: styles.buttonText2, txtSarkulSedang: styles.buttonText2, txtSarkulBaik: styles.buttonText });
         } else if (param == 'TPH' && value == 'REHAB') {
-            this.setState({ btnTPHRehab: BtnStyles.btnRehab, btnTPHKurang: BtnStyles.btnBiasa, btnTPHSedang: BtnStyles.btnBiasa, btnTPHBaik: BtnStyles.btnBiasa, TPH: 'REHAB' });
+            this.setState({ btnTPHRehab: BtnStyles.btnRehab, btnTPHKurang: BtnStyles.btnBiasa2, btnTPHSedang: BtnStyles.btnBiasa2, btnTPHBaik: BtnStyles.btnBiasa2, TPH: 'REHAB' });
+            this.setState({ txtTphRehab: styles.buttonText, txtTphKurang: styles.buttonText, txtTphSedang: styles.buttonText2, txtTphBaik: styles.buttonText2 });
         } else if (param == 'TPH' && value == 'KURANG') {
-            this.setState({ btnTPHRehab: BtnStyles.btnBiasa, btnTPHKurang: BtnStyles.btnKurang, btnTPHSedang: BtnStyles.btnBiasa, btnTPHBaik: BtnStyles.btnBiasa, TPH: 'KURANG' });
+            this.setState({ btnTPHRehab: BtnStyles.btnBiasa2, btnTPHKurang: BtnStyles.btnKurang, btnTPHSedang: BtnStyles.btnBiasa2, btnTPHBaik: BtnStyles.btnBiasa2, TPH: 'KURANG' });
+            this.setState({ txtTphRehab: styles.buttonText2, txtTphKurang: styles.buttonText, txtTphSedang: styles.buttonText2, txtTphBaik: styles.buttonText2 });
         } else if (param == 'TPH' && value == 'SEDANG') {
-            this.setState({ btnTPHRehab: BtnStyles.btnBiasa, btnTPHKurang: BtnStyles.btnBiasa, btnTPHSedang: BtnStyles.btnSedang, btnTPHBaik: BtnStyles.btnBiasa, TPH: 'SEDANG' });
+            this.setState({ btnTPHRehab: BtnStyles.btnBiasa2, btnTPHKurang: BtnStyles.btnBiasa2, btnTPHSedang: BtnStyles.btnSedang, btnTPHBaik: BtnStyles.btnBiasa2, TPH: 'SEDANG' });
+            this.setState({ txtTphRehab: styles.buttonText2, txtTphKurang: styles.buttonText2, txtTphSedang: styles.buttonText, txtTphBaik: styles.buttonText2 });
         } else if (param == 'TPH' && value == 'BAIK') {
-            this.setState({ btnTPHRehab: BtnStyles.btnBiasa, btnTPHKurang: BtnStyles.btnBiasa, btnTPHSedang: BtnStyles.btnBiasa, btnTPHBaik: BtnStyles.btnBaik, TPH: 'BAIK' });
+            this.setState({ btnTPHRehab: BtnStyles.btnBiasa2, btnTPHKurang: BtnStyles.btnBiasa2, btnTPHSedang: BtnStyles.btnBiasa2, btnTPHBaik: BtnStyles.btnBaik, TPH: 'BAIK' });
+            this.setState({ txtTphRehab: styles.buttonText2, txtTphKurang: styles.buttonText2, txtTphSedang: styles.buttonText2, txtTphBaik: styles.buttonText });
         } else if (param == 'GWG' && value == 'REHAB') {
-            this.setState({ btnGWGRehab: BtnStyles.btnRehab, btnGWGKurang: BtnStyles.btnBiasa, btnGWGSedang: BtnStyles.btnBiasa, btnGWGBaik: BtnStyles.btnBiasa, GWG: 'REHAB' });
+            this.setState({ btnGWGRehab: BtnStyles.btnRehab, btnGWGKurang: BtnStyles.btnBiasa2, btnGWGSedang: BtnStyles.btnBiasa2, btnGWGBaik: BtnStyles.btnBiasa2, GWG: 'REHAB' });
+            this.setState({ txtGwgRehab: styles.buttonText, txtGwgKurang: styles.buttonText2, txtGwgSedang: styles.buttonText2, txtGwgBaik: styles.buttonText2 });
         } else if (param == 'GWG' && value == 'KURANG') {
-            this.setState({ btnGWGRehab: BtnStyles.btnBiasa, btnGWGKurang: BtnStyles.btnKurang, btnGWGSedang: BtnStyles.btnBiasa, btnGWGBaik: BtnStyles.btnBiasa, GWG: 'KURANG' });
+            this.setState({ btnGWGRehab: BtnStyles.btnBiasa2, btnGWGKurang: BtnStyles.btnKurang, btnGWGSedang: BtnStyles.btnBiasa2, btnGWGBaik: BtnStyles.btnBiasa2, GWG: 'KURANG' });
+            this.setState({ txtGwgRehab: styles.buttonText2, txtGwgKurang: styles.buttonText, txtGwgSedang: styles.buttonText2, txtGwgBaik: styles.buttonText2 });
         } else if (param == 'GWG' && value == 'SEDANG') {
-            this.setState({ btnGWGRehab: BtnStyles.btnBiasa, btnGWGKurang: BtnStyles.btnBiasa, btnGWGSedang: BtnStyles.btnSedang, btnGWGBaik: BtnStyles.btnBiasa, GWG: 'SEDANG' });
+            this.setState({ btnGWGRehab: BtnStyles.btnBiasa2, btnGWGKurang: BtnStyles.btnBiasa2, btnGWGSedang: BtnStyles.btnSedang, btnGWGBaik: BtnStyles.btnBiasa2, GWG: 'SEDANG' });
+            this.setState({ txtGwgRehab: styles.buttonText2, txtGwgKurang: styles.buttonText2, txtGwgSedang: styles.buttonText, txtGwgBaik: styles.buttonText2 });
         } else if (param == 'GWG' && value == 'BAIK') {
-            this.setState({ btnGWGRehab: BtnStyles.btnBiasa, btnGWGKurang: BtnStyles.btnBiasa, btnGWGSedang: BtnStyles.btnBiasa, btnGWGBaik: BtnStyles.btnBaik, GWG: 'BAIK' });
+            this.setState({ btnGWGRehab: BtnStyles.btnBiasa2, btnGWGKurang: BtnStyles.btnBiasa2, btnGWGSedang: BtnStyles.btnBiasa2, btnGWGBaik: BtnStyles.btnBaik, GWG: 'BAIK' });
+            this.setState({ txtGwgRehab: styles.buttonText2, txtGwgKurang: styles.buttonText2, txtGwgSedang: styles.buttonText2, txtGwgBaik: styles.buttonText });
         } else if (param == 'PRUN' && value == 'REHAB') {
-            this.setState({ btnPRUNRehab: BtnStyles.btnRehab, btnPRUNKurang: BtnStyles.btnBiasa, btnPRUNSedang: BtnStyles.btnBiasa, btnPRUNBaik: BtnStyles.btnBiasa, PRUN: 'REHAB' });
+            this.setState({ btnPRUNRehab: BtnStyles.btnRehab, btnPRUNKurang: BtnStyles.btnBiasa2, btnPRUNSedang: BtnStyles.btnBiasa2, btnPRUNBaik: BtnStyles.btnBiasa2, PRUN: 'REHAB' });
+            this.setState({ txtPrunRehab: styles.buttonText, txtPrunKurang: styles.buttonText2, txtPrunSedang: styles.buttonText2, txtPrunBaik: styles.buttonText2 });
         } else if (param == 'PRUN' && value == 'KURANG') {
-            this.setState({ btnPRUNRehab: BtnStyles.btnBiasa, btnPRUNKurang: BtnStyles.btnKurang, btnPRUNSedang: BtnStyles.btnBiasa, btnPRUNBaik: BtnStyles.btnBiasa, PRUN: 'KURANG' });
+            this.setState({ btnPRUNRehab: BtnStyles.btnBiasa2, btnPRUNKurang: BtnStyles.btnKurang, btnPRUNSedang: BtnStyles.btnBiasa2, btnPRUNBaik: BtnStyles.btnBiasa2, PRUN: 'KURANG' });
+            this.setState({ txtPrunRehab: styles.buttonText2, txtPrunKurang: styles.buttonText, txtPrunSedang: styles.buttonText2, txtPrunBaik: styles.buttonText2 });
         } else if (param == 'PRUN' && value == 'SEDANG') {
-            this.setState({ btnPRUNRehab: BtnStyles.btnBiasa, btnPRUNKurang: BtnStyles.btnBiasa, btnPRUNSedang: BtnStyles.btnSedang, btnPRUNBaik: BtnStyles.btnBiasa, PRUN: 'SEDANG' });
+            this.setState({ btnPRUNRehab: BtnStyles.btnBiasa2, btnPRUNKurang: BtnStyles.btnBiasa2, btnPRUNSedang: BtnStyles.btnSedang, btnPRUNBaik: BtnStyles.btnBiasa2, PRUN: 'SEDANG' });
+            this.setState({ txtPrunRehab: styles.buttonText2, txtPrunKurang: styles.buttonText2, txtPrunSedang: styles.buttonText, txtPrunBaik: styles.buttonText2 });
         } else if (param == 'PRUN' && value == 'BAIK') {
-            this.setState({ btnPRUNRehab: BtnStyles.btnBiasa, btnPRUNKurang: BtnStyles.btnBiasa, btnPRUNSedang: BtnStyles.btnBiasa, btnPRUNBaik: BtnStyles.btnBaik, PRUN: 'BAIK' });
+            this.setState({ btnPRUNRehab: BtnStyles.btnBiasa2, btnPRUNKurang: BtnStyles.btnBiasa2, btnPRUNSedang: BtnStyles.btnBiasa2, btnPRUNBaik: BtnStyles.btnBaik, PRUN: 'BAIK' });
+            this.setState({ txtPrunRehab: styles.buttonText2, txtPrunKurang: styles.buttonText2, txtPrunSedang: styles.buttonText2, txtPrunBaik: styles.buttonText });
         } else if (param == 'TIPA' && value == 'REHAB') {
-            this.setState({ btnTIPARehab: BtnStyles.btnRehab, btnTIPAKurang: BtnStyles.btnBiasa, btnTIPASedang: BtnStyles.btnBiasa, btnTIPABaik: BtnStyles.btnBiasa, TIPA: 'REHAB' });
+            this.setState({ btnTIPARehab: BtnStyles.btnRehab, btnTIPAKurang: BtnStyles.btnBiasa2, btnTIPASedang: BtnStyles.btnBiasa2, btnTIPABaik: BtnStyles.btnBiasa2, TIPA: 'REHAB' });
+            this.setState({ txtTipaRehab: styles.buttonText, txtTipaKurang: styles.buttonText2, txtTipaSedang: styles.buttonText2, txtTipaBaik: styles.buttonText2 });
         } else if (param == 'TIPA' && value == 'KURANG') {
-            this.setState({ btnTIPARehab: BtnStyles.btnBiasa, btnTIPAKurang: BtnStyles.btnKurang, btnTIPASedang: BtnStyles.btnBiasa, btnTIPABaik: BtnStyles.btnBiasa, TIPA: 'KURANG' });
+            this.setState({ btnTIPARehab: BtnStyles.btnBiasa2, btnTIPAKurang: BtnStyles.btnKurang, btnTIPASedang: BtnStyles.btnBiasa2, btnTIPABaik: BtnStyles.btnBiasa2, TIPA: 'KURANG' });
+            this.setState({ txtTipaRehab: styles.buttonText2, txtTipaKurang: styles.buttonText, txtTipaSedang: styles.buttonText2, txtTipaBaik: styles.buttonText2 });
         } else if (param == 'TIPA' && value == 'SEDANG') {
-            this.setState({ btnTIPARehab: BtnStyles.btnBiasa, btnTIPAKurang: BtnStyles.btnBiasa, btnTIPASedang: BtnStyles.btnSedang, btnTIPABaik: BtnStyles.btnBiasa, TIPA: 'SEDANG' });
+            this.setState({ btnTIPARehab: BtnStyles.btnBiasa2, btnTIPAKurang: BtnStyles.btnBiasa2, btnTIPASedang: BtnStyles.btnSedang, btnTIPABaik: BtnStyles.btnBiasa2, TIPA: 'SEDANG' });
+            this.setState({ txtTipaRehab: styles.buttonText2, txtTipaKurang: styles.buttonText2, txtTipaSedang: styles.buttonText, txtTipaBaik: styles.buttonText2 });
         } else if (param == 'TIPA' && value == 'BAIK') {
-            this.setState({ btnTIPARehab: BtnStyles.btnBiasa, btnTIPAKurang: BtnStyles.btnBiasa, btnTIPASedang: BtnStyles.btnBiasa, btnTIPABaik: BtnStyles.btnBaik, TIPA: 'BAIK' });
+            this.setState({ btnTIPARehab: BtnStyles.btnBiasa2, btnTIPAKurang: BtnStyles.btnBiasa2, btnTIPASedang: BtnStyles.btnBiasa2, btnTIPABaik: BtnStyles.btnBaik, TIPA: 'BAIK' });
+            this.setState({ txtTipaRehab: styles.buttonText2, txtTipaKurang: styles.buttonText2, txtTipaSedang: styles.buttonText2, txtTipaBaik: styles.buttonText });
         } else if (param == 'PENABUR' && value == 'REHAB') {
-            this.setState({ btnPENABURRehab: BtnStyles.btnRehab, btnPENABURKurang: BtnStyles.btnBiasa, btnPENABURSedang: BtnStyles.btnBiasa, btnPENABURBaik: BtnStyles.btnBiasa, PENABUR: 'REHAB' });
+            this.setState({ btnPENABURRehab: BtnStyles.btnRehab, btnPENABURKurang: BtnStyles.btnBiasa2, btnPENABURSedang: BtnStyles.btnBiasa2, btnPENABURBaik: BtnStyles.btnBiasa2, PENABUR: 'REHAB' });
+            this.setState({ txtPenaburRehab: styles.buttonText, txtPenaburKurang: styles.buttonText2, txtPenaburSedang: styles.buttonText2, txtPenaburBaik: styles.buttonText2 });
         } else if (param == 'PENABUR' && value == 'KURANG') {
-            this.setState({ btnPENABURRehab: BtnStyles.btnBiasa, btnPENABURKurang: BtnStyles.btnKurang, btnPENABURSedang: BtnStyles.btnBiasa, btnPENABURBaik: BtnStyles.btnBiasa, PENABUR: 'KURANG' });
+            this.setState({ btnPENABURRehab: BtnStyles.btnBiasa2, btnPENABURKurang: BtnStyles.btnKurang, btnPENABURSedang: BtnStyles.btnBiasa2, btnPENABURBaik: BtnStyles.btnBiasa2, PENABUR: 'KURANG' });
+            this.setState({ txtPenaburRehab: styles.buttonText2, txtPenaburKurang: styles.buttonText, txtPenaburSedang: styles.buttonText2, txtPenaburBaik: styles.buttonText2 });
         } else if (param == 'PENABUR' && value == 'SEDANG') {
-            this.setState({ btnPENABURRehab: BtnStyles.btnBiasa, btnPENABURKurang: BtnStyles.btnBiasa, btnPENABURSedang: BtnStyles.btnSedang, btnPENABURBaik: BtnStyles.btnBiasa, PENABUR: 'SEDANG' });
+            this.setState({ btnPENABURRehab: BtnStyles.btnBiasa2, btnPENABURKurang: BtnStyles.btnBiasa2, btnPENABURSedang: BtnStyles.btnSedang, btnPENABURBaik: BtnStyles.btnBiasa2, PENABUR: 'SEDANG' });
+            this.setState({ txtPenaburRehab: styles.buttonText2, txtPenaburKurang: styles.buttonText2, txtPenaburSedang: styles.buttonText, txtPenaburBaik: styles.buttonText2 });
         } else if (param == 'PENABUR' && value == 'BAIK') {
-            this.setState({ btnPENABURRehab: BtnStyles.btnBiasa, btnPENABURKurang: BtnStyles.btnBiasa, btnPENABURSedang: BtnStyles.btnBiasa, btnPENABURBaik: BtnStyles.btnBaik, PENABUR: 'BAIK' });
+            this.setState({ btnPENABURRehab: BtnStyles.btnBiasa2, btnPENABURKurang: BtnStyles.btnBiasa2, btnPENABURSedang: BtnStyles.btnBiasa2, btnPENABURBaik: BtnStyles.btnBaik, PENABUR: 'BAIK' });
+            this.setState({ txtPenaburRehab: styles.buttonText2, txtPenaburKurang: styles.buttonText2, txtPenaburSedang: styles.buttonText2, txtPenaburBaik: styles.buttonText });
         } else if (param == 'PUPUK' && value == 'REHAB') {
-            this.setState({ btnPUPUKRehab: BtnStyles.btnRehab, btnPUPUKKurang: BtnStyles.btnBiasa, btnPUPUKSedang: BtnStyles.btnBiasa, btnPUPUKBaik: BtnStyles.btnBiasa, PUPUK: 'REHAB' });
+            this.setState({ btnPUPUKRehab: BtnStyles.btnRehab, btnPUPUKKurang: BtnStyles.btnBiasa2, btnPUPUKSedang: BtnStyles.btnBiasa2, btnPUPUKBaik: BtnStyles.btnBiasa2, PUPUK: 'REHAB' });
+            this.setState({ txtPupukRehab: styles.buttonText, txtPupukKurang: styles.buttonText2, txtPupuksed: styles.buttonText2, txtPupukBaik: styles.buttonText2 });
         } else if (param == 'PUPUK' && value == 'KURANG') {
-            this.setState({ btnPUPUKRehab: BtnStyles.btnBiasa, btnPUPUKKurang: BtnStyles.btnKurang, btnPUPUKSedang: BtnStyles.btnBiasa, btnPUPUKBaik: BtnStyles.btnBiasa, PUPUK: 'KURANG' });
+            this.setState({ btnPUPUKRehab: BtnStyles.btnBiasa2, btnPUPUKKurang: BtnStyles.btnKurang, btnPUPUKSedang: BtnStyles.btnBiasa2, btnPUPUKBaik: BtnStyles.btnBiasa2, PUPUK: 'KURANG' });
+            this.setState({ txtPupukRehab: styles.buttonText2, txtPupukKurang: styles.buttonText, txtPupuksed: styles.buttonText2, txtPupukBaik: styles.buttonText2 });
         } else if (param == 'PUPUK' && value == 'SEDANG') {
-            this.setState({ btnPUPUKRehab: BtnStyles.btnBiasa, btnPUPUKKurang: BtnStyles.btnBiasa, btnPUPUKSedang: BtnStyles.btnSedang, btnPUPUKBaik: BtnStyles.btnBiasa, PUPUK: 'SEDANG' });
+            this.setState({ btnPUPUKRehab: BtnStyles.btnBiasa2, btnPUPUKKurang: BtnStyles.btnBiasa2, btnPUPUKSedang: BtnStyles.btnSedang, btnPUPUKBaik: BtnStyles.btnBiasa2, PUPUK: 'SEDANG' });
+            this.setState({ txtPupukRehab: styles.buttonText2, txtPupukKurang: styles.buttonText2, txtPupuksed: styles.buttonText, txtPupukBaik: styles.buttonText2 });
         } else if (param == 'PUPUK' && value == 'BAIK') {
-            this.setState({ btnPUPUKRehab: BtnStyles.btnBiasa, btnPUPUKKurang: BtnStyles.btnBiasa, btnPUPUKSedang: BtnStyles.btnBiasa, btnPUPUKBaik: BtnStyles.btnBaik, PUPUK: 'BAIK' });
+            this.setState({ btnPUPUKRehab: BtnStyles.btnBiasa2, btnPUPUKKurang: BtnStyles.btnBiasa2, btnPUPUKSedang: BtnStyles.btnBiasa2, btnPUPUKBaik: BtnStyles.btnBaik, PUPUK: 'BAIK' });
+            this.setState({ txtPupukRehab: styles.buttonText2, txtPupukKurang: styles.buttonText2, txtPupuksed: styles.buttonText2, txtPupukBaik: styles.buttonText });
         }
 
         else if (param == 'KAS' && value == 'REHAB') {
-            this.setState({ btnKastrasiRehab: BtnStyles.btnRehab, btnKastrasiKurang: BtnStyles.btnBiasa, btnKastrasiSedang: BtnStyles.btnBiasa, btnKastrasiBaik: BtnStyles.btnBiasa, KASTRASI: 'REHAB' });
+            this.setState({ btnKastrasiRehab: BtnStyles.btnRehab, btnKastrasiKurang: BtnStyles.btnBiasa2, btnKastrasiSedang: BtnStyles.btnBiasa2, btnKastrasiBaik: BtnStyles.btnBiasa2, KASTRASI: 'REHAB' });
+            this.setState({ txtKastrasiRehab: styles.buttonText, txtKastrasiKurang: styles.buttonText2, txtKastrasiSedang: styles.buttonText2, txtKastrasiBaik: styles.buttonText2 });
         } else if (param == 'KAS' && value == 'KURANG') {
-            this.setState({ btnKastrasiRehab: BtnStyles.btnBiasa, btnKastrasiKurang: BtnStyles.btnKurang, btnKastrasiSedang: BtnStyles.btnBiasa, btnKastrasiBaik: BtnStyles.btnBiasa, KASTRASI: 'KURANG' });
+            this.setState({ btnKastrasiRehab: BtnStyles.btnBiasa2, btnKastrasiKurang: BtnStyles.btnKurang, btnKastrasiSedang: BtnStyles.btnBiasa2, btnKastrasiBaik: BtnStyles.btnBiasa2, KASTRASI: 'KURANG' });
+            this.setState({ txtKastrasiRehab: styles.buttonText2, txtKastrasiKurang: styles.buttonText, txtKastrasiSedang: styles.buttonText2, txtKastrasiBaik: styles.buttonText2 });
         } else if (param == 'KAS' && value == 'SEDANG') {
-            this.setState({ btnKastrasiRehab: BtnStyles.btnBiasa, btnKastrasiKurang: BtnStyles.btnBiasa, btnKastrasiSedang: BtnStyles.btnSedang, btnKastrasiBaik: BtnStyles.btnBiasa, KASTRASI: 'SEDANG' });
+            this.setState({ btnKastrasiRehab: BtnStyles.btnBiasa2, btnKastrasiKurang: BtnStyles.btnBiasa2, btnKastrasiSedang: BtnStyles.btnSedang, btnKastrasiBaik: BtnStyles.btnBiasa2, KASTRASI: 'SEDANG' });
+            this.setState({ txtKastrasiRehab: styles.buttonText2, txtKastrasiKurang: styles.buttonText2, txtKastrasiSedang: styles.buttonText, txtKastrasiBaik: styles.buttonText2 });
         } else if (param == 'KAS' && value == 'BAIK') {
-            this.setState({ btnKastrasiRehab: BtnStyles.btnBiasa, btnKastrasiKurang: BtnStyles.btnBiasa, btnKastrasiSedang: BtnStyles.btnBiasa, btnKastrasiBaik: BtnStyles.btnBaik, KASTRASI: 'BAIK' });
+            this.setState({ btnKastrasiRehab: BtnStyles.btnBiasa2, btnKastrasiKurang: BtnStyles.btnBiasa2, btnKastrasiSedang: BtnStyles.btnBiasa2, btnKastrasiBaik: BtnStyles.btnBaik, KASTRASI: 'BAIK' });
+            this.setState({ txtKastrasiRehab: styles.buttonText2, txtKastrasiKurang: styles.buttonText2, txtKastrasiSedang: styles.buttonText2, txtKastrasiBaik: styles.buttonText });
         }
 
         else if (param == 'SANIT' && value == 'REHAB') {
-            this.setState({ btnSanitasiRehab: BtnStyles.btnRehab, btnSanitasiKurang: BtnStyles.btnBiasa, btnSanitasiSedang: BtnStyles.btnBiasa, btnSanitasiBaik: BtnStyles.btnBiasa, SANITASI: 'REHAB' });
+            this.setState({ btnSanitasiRehab: BtnStyles.btnRehab, btnSanitasiKurang: BtnStyles.btnBiasa2, btnSanitasiSedang: BtnStyles.btnBiasa2, btnSanitasiBaik: BtnStyles.btnBiasa2, SANITASI: 'REHAB' });
+            this.setState({ txtSanitasiRehab: styles.buttonText, txtSanitasiKurang: styles.buttonText2, txtSanitasiSedang: styles.buttonText2, txtSanitasiBaik: styles.buttonText2 });
         } else if (param == 'SANIT' && value == 'KURANG') {
-            this.setState({ btnSanitasiRehab: BtnStyles.btnBiasa, btnSanitasiKurang: BtnStyles.btnKurang, btnSanitasiSedang: BtnStyles.btnBiasa, btnSanitasiBaik: BtnStyles.btnBiasa, SANITASI: 'KURANG' });
+            this.setState({ btnSanitasiRehab: BtnStyles.btnBiasa2, btnSanitasiKurang: BtnStyles.btnKurang, btnSanitasiSedang: BtnStyles.btnBiasa2, btnSanitasiBaik: BtnStyles.btnBiasa2, SANITASI: 'KURANG' });
+            this.setState({ txtSanitasiRehab: styles.buttonText2, txtSanitasiKurang: styles.buttonText, txtSanitasiSedang: styles.buttonText2, txtSanitasiBaik: styles.buttonText2 });
         } else if (param == 'SANIT' && value == 'SEDANG') {
-            this.setState({ btnSanitasiRehab: BtnStyles.btnBiasa, btnSanitasiKurang: BtnStyles.btnBiasa, btnSanitasiSedang: BtnStyles.btnSedang, btnSanitasiBaik: BtnStyles.btnBiasa, SANITASI: 'SEDANG' });
+            this.setState({ btnSanitasiRehab: BtnStyles.btnBiasa2, btnSanitasiKurang: BtnStyles.btnBiasa2, btnSanitasiSedang: BtnStyles.btnSedang, btnSanitasiBaik: BtnStyles.btnBiasa2, SANITASI: 'SEDANG' });
+            this.setState({ txtSanitasiRehab: styles.buttonText2, txtSanitasiKurang: styles.buttonText2, txtSanitasiSedang: styles.buttonText, txtSanitasiBaik: styles.buttonText2 });
         } else if (param == 'SANIT' && value == 'BAIK') {
-            this.setState({ btnSanitasiRehab: BtnStyles.btnBiasa, btnSanitasiKurang: BtnStyles.btnBiasa, btnSanitasiSedang: BtnStyles.btnBiasa, btnSanitasiBaik: BtnStyles.btnBaik, SANITASI: 'BAIK' });
+            this.setState({ btnSanitasiRehab: BtnStyles.btnBiasa2, btnSanitasiKurang: BtnStyles.btnBiasa2, btnSanitasiSedang: BtnStyles.btnBiasa2, btnSanitasiBaik: BtnStyles.btnBaik, SANITASI: 'BAIK' });
+            this.setState({ txtSanitasiRehab: styles.buttonText2, txtSanitasiKurang: styles.buttonText2, txtSanitasiSedang: styles.buttonText2, txtSanitasiBaik: styles.buttonText });
         }
     }
 
@@ -745,19 +828,19 @@ class KondisiBaris2 extends Component {
                             <View style={{ flexDirection: 'row', marginTop: 10 }}>
                                 <TouchableOpacity style={this.state.btnSarkulRehab}
                                     onPress={() => this.changeColor('SARKUL', 'REHAB')}>
-                                    <Text style={styles.buttonText2}>Rehab</Text>
+                                    <Text style={this.state.txtSarkulRehab}>Rehab</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={this.state.btnSarkulKurang}
                                     onPress={() => this.changeColor('SARKUL', 'KURANG')}>
-                                    <Text style={styles.buttonText2}>Kurang</Text>
+                                    <Text style={this.state.txtSarkulKurang}>Kurang</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={this.state.btnSarkulSedang}
                                     onPress={() => this.changeColor('SARKUL', 'SEDANG')}>
-                                    <Text style={styles.buttonText2}>Sedang</Text>
+                                    <Text style={this.state.txtSarkulSedang}>Sedang</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={this.state.btnSarkulBaik}
                                     onPress={() => this.changeColor('SARKUL', 'BAIK')}>
-                                    <Text style={styles.buttonText2}>Baik</Text>
+                                    <Text style={this.state.txtSarkulBaik}>Baik</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>}
@@ -790,19 +873,19 @@ class KondisiBaris2 extends Component {
                                 <View style={{ flexDirection: 'row', marginTop: 10 }}>
                                     <TouchableOpacity style={this.state.btnTPHRehab}
                                         onPress={() => this.changeColor('TPH', 'REHAB')}>
-                                        <Text style={styles.buttonText}>Rehab</Text>
+                                        <Text style={this.state.txtTphRehab}>Rehab</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity style={this.state.btnTPHKurang}
                                         onPress={() => this.changeColor('TPH', 'KURANG')}>
-                                        <Text style={styles.buttonText}>Kurang</Text>
+                                        <Text style={this.state.txtTphKurang}>Kurang</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity style={this.state.btnTPHSedang}
                                         onPress={() => this.changeColor('TPH', 'SEDANG')}>
-                                        <Text style={styles.buttonText}>Sedang</Text>
+                                        <Text style={this.state.txtTphSedang}>Sedang</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity style={this.state.btnTPHBaik}
                                         onPress={() => this.changeColor('TPH', 'BAIK')}>
-                                        <Text style={styles.buttonText}>Baik</Text>
+                                        <Text style={this.state.txtTphBaik}>Baik</Text>
                                     </TouchableOpacity>
                                 </View>
                             }
@@ -814,19 +897,19 @@ class KondisiBaris2 extends Component {
                             <View style={{ flexDirection: 'row', marginTop: 10 }}>
                                 <TouchableOpacity style={this.state.btnGWGRehab}
                                     onPress={() => this.changeColor('GWG', 'REHAB')}>
-                                    <Text style={styles.buttonText}>Rehab</Text>
+                                    <Text style={this.state.txtGwgRehab}>Rehab</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={this.state.btnGWGKurang}
                                     onPress={() => this.changeColor('GWG', 'KURANG')}>
-                                    <Text style={styles.buttonText}>Kurang</Text>
+                                    <Text style={this.state.txtGwgKurang}>Kurang</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={this.state.btnGWGSedang}
                                     onPress={() => this.changeColor('GWG', 'SEDANG')}>
-                                    <Text style={styles.buttonText}>Sedang</Text>
+                                    <Text style={this.state.txtGwgSedang}>Sedang</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={this.state.btnGWGBaik}
                                     onPress={() => this.changeColor('GWG', 'BAIK')}>
-                                    <Text style={styles.buttonText}>Baik</Text>
+                                    <Text style={this.state.txtGwgBaik}>Baik</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>}
@@ -837,19 +920,19 @@ class KondisiBaris2 extends Component {
                             <View style={{ flexDirection: 'row', marginTop: 10 }}>
                                 <TouchableOpacity style={this.state.btnPRUNRehab}
                                     onPress={() => this.changeColor('PRUN', 'REHAB')}>
-                                    <Text style={styles.buttonText}>Rehab</Text>
+                                    <Text style={this.state.txtPrunRehab}>Rehab</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={this.state.btnPRUNKurang}
                                     onPress={() => this.changeColor('PRUN', 'KURANG')}>
-                                    <Text style={styles.buttonText}>Kurang</Text>
+                                    <Text style={this.state.txtPrunKurang}>Kurang</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={this.state.btnPRUNSedang}
                                     onPress={() => this.changeColor('PRUN', 'SEDANG')}>
-                                    <Text style={styles.buttonText}>Sedang</Text>
+                                    <Text style={this.state.txtPrunSedang}>Sedang</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={this.state.btnPRUNBaik}
                                     onPress={() => this.changeColor('PRUN', 'BAIK')}>
-                                    <Text style={styles.buttonText}>Baik</Text>
+                                    <Text style={this.state.txtPrunBaik}>Baik</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>}
@@ -871,19 +954,19 @@ class KondisiBaris2 extends Component {
                                 <View style={{ flexDirection: 'row', marginTop: 10 }}>
                                     <TouchableOpacity style={this.state.btnTIPARehab}
                                         onPress={() => this.changeColor('TIPA', 'REHAB')}>
-                                        <Text style={styles.buttonText}>Rehab</Text>
+                                        <Text style={this.state.txtTipaRehab}>Rehab</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity style={this.state.btnTIPAKurang}
                                         onPress={() => this.changeColor('TIPA', 'KURANG')}>
-                                        <Text style={styles.buttonText}>Kurang</Text>
+                                        <Text style={this.state.txtTipaKurang}>Kurang</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity style={this.state.btnTIPASedang}
                                         onPress={() => this.changeColor('TIPA', 'SEDANG')}>
-                                        <Text style={styles.buttonText}>Sedang</Text>
+                                        <Text style={this.state.txtTipaSedang}>Sedang</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity style={this.state.btnTIPABaik}
                                         onPress={() => this.changeColor('TIPA', 'BAIK')}>
-                                        <Text style={styles.buttonText}>Baik</Text>
+                                        <Text style={this.state.txtTipaBaik}>Baik</Text>
                                     </TouchableOpacity>
                                 </View>
                             }
@@ -896,19 +979,19 @@ class KondisiBaris2 extends Component {
                             <View style={{ flexDirection: 'row', marginTop: 10 }}>
                                 <TouchableOpacity style={this.state.btnKastrasiRehab}
                                     onPress={() => this.changeColor('KAS', 'REHAB')}>
-                                    <Text style={styles.buttonText}>Rehab</Text>
+                                    <Text style={this.state.txtKastrasiRehab}>Rehab</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={this.state.btnKastrasiKurang}
                                     onPress={() => this.changeColor('KAS', 'KURANG')}>
-                                    <Text style={styles.buttonText}>Kurang</Text>
+                                    <Text style={this.state.txtKastrasiKurang}>Kurang</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={this.state.btnKastrasiSedang}
                                     onPress={() => this.changeColor('KAS', 'SEDANG')}>
-                                    <Text style={styles.buttonText}>Sedang</Text>
+                                    <Text style={this.state.txtKastrasiSedang}>Sedang</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={this.state.btnKastrasiBaik}
                                     onPress={() => this.changeColor('KAS', 'BAIK')}>
-                                    <Text style={styles.buttonText}>Baik</Text>
+                                    <Text style={this.state.txtKastrasiBaik}>Baik</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>}
@@ -919,19 +1002,19 @@ class KondisiBaris2 extends Component {
                             <View style={{ flexDirection: 'row', marginTop: 10 }}>
                                 <TouchableOpacity style={this.state.btnSanitasiRehab}
                                     onPress={() => this.changeColor('SANIT', 'REHAB')}>
-                                    <Text style={styles.buttonText}>Rehab</Text>
+                                    <Text style={this.state.txtSanitasiRehab}>Rehab</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={this.state.btnSanitasiKurang}
                                     onPress={() => this.changeColor('SANIT', 'KURANG')}>
-                                    <Text style={styles.buttonText}>Kurang</Text>
+                                    <Text style={this.state.txtSanitasiKurang}>Kurang</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={this.state.btnSanitasiSedang}
                                     onPress={() => this.changeColor('SANIT', 'SEDANG')}>
-                                    <Text style={styles.buttonText}>Sedang</Text>
+                                    <Text style={this.state.txtSanitasiSedang}>Sedang</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={this.state.btnSanitasiBaik}
                                     onPress={() => this.changeColor('SANIT', 'BAIK')}>
-                                    <Text style={styles.buttonText}>Baik</Text>
+                                    <Text style={this.state.txtSanitasiBaik}>Baik</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>}
@@ -950,19 +1033,19 @@ class KondisiBaris2 extends Component {
                         <View style={{ flexDirection: 'row', marginTop: 10 }}>
                             <TouchableOpacity style={this.state.btnPENABURRehab}
                                 onPress={() => this.changeColor('PENABUR', 'REHAB')}>
-                                <Text style={styles.buttonText}>Rehab</Text>
+                                <Text style={this.state.txtPenaburRehab}>Rehab</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={this.state.btnPENABURKurang}
                                 onPress={() => this.changeColor('PENABUR', 'KURANG')}>
-                                <Text style={styles.buttonText}>Kurang</Text>
+                                <Text style={this.state.txtPenaburKurang}>Kurang</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={this.state.btnPENABURSedang}
                                 onPress={() => this.changeColor('PENABUR', 'SEDANG')}>
-                                <Text style={styles.buttonText}>Sedang</Text>
+                                <Text style={this.state.txtPenaburSedang}>Sedang</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={this.state.btnPENABURBaik}
                                 onPress={() => this.changeColor('PENABUR', 'BAIK')}>
-                                <Text style={styles.buttonText}>Baik</Text>
+                                <Text style={this.state.txtPenaburBaik}>Baik</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -972,19 +1055,19 @@ class KondisiBaris2 extends Component {
                         <View style={{ flexDirection: 'row', marginTop: 10 }}>
                             <TouchableOpacity style={this.state.btnPUPUKRehab}
                                 onPress={() => this.changeColor('PUPUK', 'REHAB')}>
-                                <Text style={styles.buttonText}>Rehab</Text>
+                                <Text style={this.state.txtPupukRehab}>Rehab</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={this.state.btnPUPUKKurang}
                                 onPress={() => this.changeColor('PUPUK', 'KURANG')}>
-                                <Text style={styles.buttonText}>Kurang</Text>
+                                <Text style={this.state.txtPupukKurang}>Kurang</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={this.state.btnPUPUKSedang}
                                 onPress={() => this.changeColor('PUPUK', 'SEDANG')}>
-                                <Text style={styles.buttonText}>Sedang</Text>
+                                <Text style={this.state.txtPupukSedang}>Sedang</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={this.state.btnPUPUKBaik}
                                 onPress={() => this.changeColor('PUPUK', 'BAIK')}>
-                                <Text style={styles.buttonText}>Baik</Text>
+                                <Text style={this.state.txtPupukBaik}>Baik</Text>
                             </TouchableOpacity>
                         </View>
                     </View>

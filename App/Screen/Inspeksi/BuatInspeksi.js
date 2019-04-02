@@ -286,9 +286,14 @@ class BuatInspeksiRedesign extends Component {
             this.setState({ showModal: true, title: 'Pilih Lokasi', message: message, icon: require('../../Images/ic-blm-input-lokasi.png') });
         } else if (this.state.baris === '') {
             this.setState({ showModal: true, title: 'Pilih Lokasi', message: message, icon: require('../../Images/ic-blm-input-lokasi.png') });
-        } else if(this.state.latitude === 0.0 && this.state.longitude === 0.0){
-            this.setState({ showModal: true, title: 'Lokasi', message: 'Titik lokasi kamu belum ada, coba refresh lokasi lagi yaa', icon: require('../../Images/ic-no-gps.png') });
-        } 
+        } else if(this.checkSameBaris()){
+            this.setState({ showModal: true, title: 'Baris sama', message: 'Opps, baris tidak boleh sama dengan sebelumnya ya', icon: require('../../Images/ic-blm-input-lokasi.png') });
+        } else if(this.checkJarakBaris()){
+            this.setState({ showModal: true, title: 'Baris terlalu dekat', message: 'Opps, minimum jarak barisnya lebih dari 5 dari baris terakhir ya !', icon: require('../../Images/ic-blm-input-lokasi.png') });
+        }
+        // else if(this.state.latitude === 0.0 && this.state.longitude === 0.0){
+        //     this.setState({ showModal: true, title: 'Lokasi', message: 'Titik lokasi kamu belum ada, coba refresh lokasi lagi yaa', icon: require('../../Images/ic-no-gps.png') });
+        // } 
         // else if(!this.state.clickLOV){
         //     alert('Blok harus dipilih dari LOV');
         //     this.setState({ showModal: true, title: 'Pilih Lokasi', message: message, icon: require('../../Images/ic-blm-input-lokasi.png') });
@@ -296,6 +301,46 @@ class BuatInspeksiRedesign extends Component {
         else {
             await this.insertDB(statusBlok);
         }    
+    }
+
+    checkSameBaris(){
+        let today = getTodayDate('YYMMDD');
+        let idInspection = `B${this.state.dataLogin[0].USER_AUTH_CODE}${today}${this.state.werkAfdBlockCode}`
+        let data = TaskService.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', idInspection)
+        if(data !== undefined){
+            let header = TaskService.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', idInspection)
+            if(header !== undefined){
+                for(var i=0; i<header.length; i++){
+                    if(this.state.baris == header[i].AREAL){
+                        return true
+                    }
+                }
+            }
+        }
+        return false
+    }
+
+    checkJarakBaris(){
+        let today = getTodayDate('YYMMDD');
+        let idInspection = `B${this.state.dataLogin[0].USER_AUTH_CODE}${today}${this.state.werkAfdBlockCode}`
+        let data = TaskService.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', idInspection)
+        console.log(data)
+        if(data !== undefined){
+            let header = TaskService.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', idInspection)
+            console.log(header)
+            if(header !== undefined && header.length > 1){
+                let rangeMin = parseInt(header[(header.length-1)].AREAL)
+                let rangePlus = parseInt(header[(header.length-1)].AREAL)+5
+                console.log(rangeMin)
+                console.log(rangePlus)
+                if(parseInt(this.state.baris) < rangePlus){
+                    return true
+                }else if(parseInt(this.state.baris) < rangeMin){
+                    return true
+                }
+            }
+        }
+        return false
     }
 
     getAfdeling(werk_afd_code){

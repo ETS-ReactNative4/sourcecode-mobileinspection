@@ -232,7 +232,7 @@ class KondisiBarisAkhir extends Component{
 
     changeColorSlide(){           
         if(this.has2Row() >= 1){
-            this.setState({fulFillMandatory:true})
+            this.setState({fulFillMandatory:true, txtBaris: ''})
             if(!this.state.switchLanjut){
                 btn = {
                     width: 55,
