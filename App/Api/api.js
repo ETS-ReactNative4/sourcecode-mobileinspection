@@ -1,13 +1,17 @@
 import apisauce from 'apisauce';
 import TaskServices from '../Database/TaskServices'
+import ServerName from '../Constant/ServerName'
 
 const user = TaskServices.getAllData('TR_LOGIN')
 
-const apiLogin = "http://app.tap-agri.com/mobileinspection/ins-msa-auth/api"
+//const apiLogin = "http://app.tap-agri.com/mobileinspection/ins-msa-auth/api"
 
 const create = () => {
+	let baseUrl = ServerName[user[0].SERVER_NAME_INDEX].data;
+	baseUrl = baseUrl.slice(0, baseUrl.length-1);
     let api = apisauce.create({
-        baseURL: 'http://149.129.250.199:3008/api',
+        baseURL: baseUrl,
+        //baseURL: 'http://149.129.250.199:3008/api',
         //baseURL: 'http://149.129.245.230:3008/api',
         //baseURL: apiLogin,
         headers: {

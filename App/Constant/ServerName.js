@@ -1,6 +1,6 @@
 export default {
 	1:{
-		data:"http://app.tap-agri.com/api/",
+		data:"http://app.tap-agri.com/mobileinspection/ins-msa-auth/api/",
 		image:"http://imagesapp.tap-agri.com:3012/"
 	},
 	2:{
