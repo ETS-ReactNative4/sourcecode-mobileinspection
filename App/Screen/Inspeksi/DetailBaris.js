@@ -195,22 +195,22 @@ class DetailBaris extends React.Component {
                     <View style={styles.section}>
                         <Text style={styles.textTitle}>Panen</Text>
                         <View style={styles.lineDivider} />
-                        {this.state.nilaiPokokPanen !== '' &&
+                        {this.state.nilaiPokokPanen !== '0' &&
                         <View style={styles.sectionRow}>
                             <Text style={styles.textLabel}>Pokok Panen</Text>
                             <Text style={styles.textContent}>{this.state.nilaiPokokPanen}</Text>
                         </View>}
-                        {this.state.nilaiBuahTinggal !== '' &&
+                        {this.state.nilaiBuahTinggal !== '0' &&
                         <View style={styles.sectionRow}>
                             <Text style={styles.textLabel}>Buah Tinggal</Text>
                             <Text style={styles.textContent}>{this.state.nilaiBuahTinggal}</Text>
                         </View>}
-                        {this.state.nilaiBrondolPiring !== '' &&
+                        {this.state.nilaiBrondolPiring !== '0' &&
                         <View style={styles.sectionRow}>
                             <Text style={styles.textLabel}>Brondolan di Piringan</Text>
                             <Text style={styles.textContent}>{this.state.nilaiBrondolPiring}</Text>
                         </View>}
-                        {this.state.nilaiBrondolTph !== '' &&
+                        {this.state.nilaiBrondolTph !== '0' &&
                         <View style={styles.sectionRow}>
                             <Text style={styles.textLabel}>Brondolan di TPH</Text>
                             <Text style={styles.textContent}>{this.state.nilaiBrondolTph}</Text>

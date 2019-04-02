@@ -1507,8 +1507,8 @@ class SyncScreen extends React.Component {
                 //cara redux saga
                 setTimeout(() => {
 					this.props.serverTimeRequest();
-                    //this.props.findingRequest();
-                    //this.props.blockRequest();
+                    this.props.findingRequest();
+                    this.props.blockRequest();
                 }, 2000);
 
             } else {

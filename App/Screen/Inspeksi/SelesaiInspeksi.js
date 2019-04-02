@@ -209,49 +209,63 @@ class SelesaiInspeksi extends React.Component {
             name : 'Pokok Panen',
             value: jmlNilaiPokokPanen
         }
-        listData.push(this.renderComponent(data));
+        if(jmlNilaiPokokPanen > 0){
+            listData.push(this.renderComponent(data));
+        }
 
         data = {
             idx: 1,
             name : 'Buah Tinggal',
             value: jmlNilaiBuahTgl
         }
-        listData.push(this.renderComponent(data));
+        if(jmlNilaiBuahTgl > 0){
+            listData.push(this.renderComponent(data));
+        }
 
         data = {
             idx: 2,
             name : 'Brondol Piringan',
             value: jmlNilaiBrondolPiring
         }
-        listData.push(this.renderComponent(data));
+        if(jmlNilaiBrondolPiring > 0){
+            listData.push(this.renderComponent(data));
+        }
 
         data = {
             idx: 3,
             name : 'Brondol TPH',
             value: jmlNilaiBrondolTph
         }
-        listData.push(this.renderComponent(data));
+        if(jmlNilaiBrondolTph > 0){
+            listData.push(this.renderComponent(data));
+        }
 
         data = {
             idx: 4,
             name : 'Pokok Tidak dipupuk',
             value: jmlNilaiTdkPupuk
         }
-        listData.push(this.renderComponent(data));
+        if(jmlNilaiTdkPupuk > 0){
+            listData.push(this.renderComponent(data));
+        }
 
         data = {
             idx: 10,
             name : 'Losses Brondolan',
             value: ((jmlNilaiBrondolPiring+jmlNilaiBrondolTph)/jmlNilaiPokokPanen).toFixed(2)
-        }
-        listData.push(this.renderComponent(data));
+        }    
+        if(data.value !== 'NaN'){
+            listData.push(this.renderComponent(data));
+        } 
 
         data = {
             idx: 11,
             name : 'Losses Janjang',
             value: (jmlNilaiBuahTgl/jmlNilaiPokokPanen).toFixed(3)
         }
-        listData.push(this.renderComponent(data));
+        if(data.value !== 'NaN'){
+            listData.push(this.renderComponent(data));
+        } 
 
         if(tipa.length > 0)  {
             var jmlNilaiTipa = this.getTotalNilaiComponent(tipa);
@@ -573,20 +587,22 @@ class SelesaiInspeksi extends React.Component {
                             <Text style={styles.textContent}>{this.state.nilaiSarkul}</Text>
                         </View>
                         
+                        {this.state.nilaiTph !== '-' &&
                         <View style={styles.sectionRow}>
                             <Text style={styles.textLabel}>TPH</Text>
                             <Text style={styles.textContent}>{this.state.nilaiTph}</Text>
-                        </View>
+                        </View>}
                         
                         <View style={styles.sectionRow}>
                             <Text style={styles.textLabel}>Gawangan</Text>
                             <Text style={styles.textContent}>{this.state.nilaiGwg}</Text>
                         </View>
                         
+                        {this.state.nilaiPrun !== '-' &&
                         <View style={styles.sectionRow}>
                             <Text style={styles.textLabel}>Prunning</Text>
                             <Text style={styles.textContent}>{this.state.nilaiPrun}</Text>
-                        </View>
+                        </View>}
                     </View>
 
                     <View style={[styles.section]}>
