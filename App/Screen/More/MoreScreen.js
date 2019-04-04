@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Image, TouchableOpacity, Text, ScrollView, Alert, NetInfo } from 'react-native';
-
+import { Thumbnail } from 'native-base';
 import Colors from '../../Constant/Colors';
 import Icon from 'react-native-vector-icons/Ionicons';
+import Icon2 from 'react-native-vector-icons/AntDesign'
 import CardView from 'react-native-cardview';
 import TaskServices from '../../Database/TaskServices'
 import { NavigationActions, StackActions } from 'react-navigation';
@@ -10,6 +11,7 @@ import ModalConfirmation from '../../Component/ModalAlertConfirmation'
 import ModalAlert from '../../Component/ModalAlert'
 import ServerName from '../../Constant/ServerName';
 import DeviceInfo from 'react-native-device-info';
+import { getThumnail } from '../../Lib/Utils';
 
 export default class MoreScreen extends Component {
 
@@ -48,10 +50,33 @@ export default class MoreScreen extends Component {
     this.state = {
       showConfirm: false,
       showModal: false,
+      name: '',
+      jabatan:'',
+      estate: '',
       //Add Modal Alert by Aminju 
       title: 'Title',
       message: 'Message',
 	  user,
+    }
+  }
+
+  componentDidMount(){
+    let data = TaskServices.getAllData('TR_LOGIN')[0]    
+    let dataUser = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', data.USER_AUTH_CODE);
+    if(dataUser !== undefined){
+      let name = dataUser.FULLNAME
+      let jabatan = dataUser.JOB
+      let estate = this.getEstateName(dataUser.LOCATION_CODE)
+      this.setState({name, jabatan, estate})
+    }    
+  }
+
+  getEstateName(werks) {
+    try {
+        let data = TaskServices.findBy2('TM_EST', 'WERKS', werks);
+        return data.EST_NAME;
+    } catch (error) {
+        return '';
     }
   }
 
@@ -87,7 +112,7 @@ export default class MoreScreen extends Component {
   render() {
     return (
       <ScrollView style={styles.container}>
-        <View style={{ padding: 6 }} >
+        <View>
 
           <ModalConfirmation
             icon={require('../../Images/ic-logout.png')}
@@ -107,6 +132,29 @@ export default class MoreScreen extends Component {
             onPressCancel={() => this.setState({ showModal: false })}
             title={this.state.title}
             message={this.state.message} />
+
+            <View style={[styles.containerLabel, {marginTop: 10}]}>
+                <View style={{ flex: 2 }}>
+                    {/* <Image source={require('../../Images/icon/ic_walking.png')} style={styles.icon} /> */}
+                    <Thumbnail style={{ borderColor: 'grey', height: 60, width: 60, marginRight: 5, marginLeft: 10 }} source={getThumnail()} />
+                </View>
+                <View style={{ flex: 7 }}>
+                    <Text style={{ fontSize: 18, fontWeight: '500' }}>{this.state.name}</Text>
+                    <Text style={{ fontSize: 12, color: 'grey', marginTop: 10 }}>{this.state.jabatan}</Text>
+                    <Text style={{ fontSize: 12, color: 'grey' }}>{this.state.estate}</Text>
+                </View>
+            </View>
+
+            <View style={{ height: 10, backgroundColor: '#F5F5F5', marginTop: 10 }} />
+
+            <TouchableOpacity style={styles.containerLabel}
+              onPress={()=> {this.props.navigation.navigate('PilihPeta')}}>
+                <Image source={require('../../Images/icon/ic_maps.png')} style={[styles.icon,{marginLeft:10, flex: 2}]} />
+                <Text style={{ fontSize: 14, color: 'grey', flex: 7, marginLeft: 10, marginTop: 5 }}>Peta Lokasi</Text>
+                <Icon2 name='right' size={18} style={{marginRight: 15}} />
+            </TouchableOpacity>
+
+            <View style={{ height: 10, backgroundColor: '#F5F5F5', marginTop: 10 }} />
 
           {/*Profile*/}
           {/* <TouchableOpacity style={styles.marginCard}>
@@ -249,5 +297,17 @@ const styles = StyleSheet.create({
   },
   marginCard: {
     marginTop: 12
-  }
+  },
+  icon: {
+    alignContent: 'flex-end',
+    height: 64,
+    width: 64,
+    resizeMode: 'stretch',
+    alignItems: 'center'
+  },
+  containerLabel: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
 });

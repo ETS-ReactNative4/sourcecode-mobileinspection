@@ -18,7 +18,7 @@ import R, { isEmpty, isNil } from 'ramda'
 import moment from 'moment'
 import DateTimePicker from 'react-native-modal-datetime-picker'
 import ImageSlider from 'react-native-image-slider';
-import { changeFormatDate,getTodayDate } from '../../Lib/Utils';
+import { changeFormatDate, getTodayDate } from '../../Lib/Utils';
 
 import ModalAlert from '../../Component/ModalAlert';
 import ModalAlertBack from '../../Component/ModalAlert';

@@ -52,6 +52,8 @@ import CalendarsScreen from '../Screen/Calendar';
 import PemberiTugas from '../Screen/PemberiTugas';
 // import OpenGl from '../Screen/OpenGl';
 
+import PilihPeta from '../Screen/Maps/PilihPeta'
+
 import Colors from '../Constant/Colors'
 
 
@@ -132,6 +134,8 @@ const main = createStackNavigator({
     // test: { screen: test },
     // TestUpload: {screen:TestUpload}
     // OpenGl: { screen: OpenGl }, 
+    
+    PilihPeta: { screen: PilihPeta }, 
 
 }, {
         headerMode: 'screen',

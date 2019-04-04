@@ -311,7 +311,6 @@ class HomeScreen extends React.Component {
   }
 
   renderCarousel = (item, status, i) => {
-    console.log('Item Path : ' + JSON.stringify(item));
     let uri;
     if (item.IMAGE_PATH_LOCAL != undefined) {
       uri = "file://" + item.IMAGE_PATH_LOCAL;
@@ -409,16 +408,14 @@ class HomeScreen extends React.Component {
 
   _renderItem = (item, index) => {
 
-    const nav = this.props.navigation
     const INSERT_USER = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', item.INSERT_USER);
     let user = INSERT_USER == undefined ? 'User belum terdaftar. Hubungi Admin.' : INSERT_USER.FULLNAME
     Moment.locale();
-    let dtInsertTime = Moment(changeFormatDate("" + item.INSERT_TIME, "YYYY-MM-DD hh-mm-ss")).format('LLL');
+    let dtInsertTime = Moment(changeFormatDate(item.INSERT_TIME.toString(), "YYYY-MM-DD hh-mm-ss")).format('LLL');
     let batasWaktu = item.DUE_DATE == '' ? 'Batas waktu belum ditentukan' : Moment(item.DUE_DATE).format('LL');
 
     const dataImage = TaskServices.findBy('TR_IMAGE', 'TR_CODE', item.FINDING_CODE);
     const image = dataImage.sorted('INSERT_TIME', true);
-    console.log('Image : ', image);
 
     let werkAfdBlockCode = this.getWerksAfdBlokCode(item.BLOCK_CODE)
     let lokasiBlok = `${this.getBlokName(item.BLOCK_CODE)}/${this.getStatusBlok(werkAfdBlockCode)}/${this.getEstateName(item.WERKS)}`

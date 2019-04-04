@@ -50,18 +50,18 @@ export default class HistoryFinding extends Component {
     }
   }
 
-  getColor(param) {
-    switch (param) {
-      case 'SELESAI':
-        return Colors.brand;
-      case 'SEDANG DIPROSES':
-        return '#feb236';
-      case 'BARU':
-        return 'red';
-      default:
-        return '#ff7b25';
-    }
-  }
+  // getColor(param) {
+  //   switch (param) {
+  //     case 'SELESAI':
+  //       return Colors.brand;
+  //     case 'SEDANG DIPROSES':
+  //       return '#feb236';
+  //     case 'BARU':
+  //       return 'red';
+  //     default:
+  //       return '#ff7b25';
+  //   }
+  // }
 
   onClickItem(id) {
     var images = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', id);
@@ -169,12 +169,14 @@ export default class HistoryFinding extends Component {
       showImage = <Image style={{ alignItems: 'stretch', width: 65, height: 65, borderRadius: 10 }} source={{ uri: "file://" + image.IMAGE_PATH_LOCAL }} />
     }
     let werkAfdBlokCode = `${item.WERKS}${item.AFD_CODE}${item.BLOCK_CODE}`;
-    let lokasi = `${this.getBlokName(item.BLOCK_CODE)}/${this.getStatusBlok(werkAfdBlokCode)}/${this.getEstateName(item.WERKS)}`
-    let status = '';
-    if (item.STATUS == 'N'){
+    let lokasi = `${this.getBlokName(item.BLOCK_CODE)}/${this.getStatusBlok(werkAfdBlokCode)}/${this.getEstateName(item.WERKS)}`    
+    let status = '', colorStatus = '';
+    if (item.STATUS_SYNC == 'N'){
       status = 'Data Belum Dikirim'
+      colorStatus = 'red';
     }else{
       status = 'Data Sudah Terkirim'
+      colorStatus = Colors.brand
     }  
     return (
       <TouchableOpacity
@@ -198,7 +200,7 @@ export default class HistoryFinding extends Component {
           </View>
           <View style={{ flexDirection: 'row' }}>
             <Text style={{ fontSize: 12, color: 'black', width: 50 }}>Status </Text>
-            <Text style={{ fontSize: 12, color: this.getColor(item.STATUS) }}>:  {status}</Text>
+            <Text style={{ fontSize: 12, color: colorStatus }}>:  {status}</Text>
           </View>
         </View>
       </TouchableOpacity>

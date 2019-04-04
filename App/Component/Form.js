@@ -145,16 +145,20 @@ class Form extends Component {
                         value={this.state.strPassword}
                         ref={(input) => this.password = input} />
                 </View>
-				<Picker
-					mode="dropdown"
-					iosHeader="Select your SIM"
-					iosIcon={<Icon name="arrow-dropdown-circle" style={{ color: "#007aff", fontSize: 25 }} />}
-					style={styles.inputBox}
-					selectedValue={this.state.selectedServer}
-					onValueChange={this.onValueChange.bind(this)}>
-					<Picker.Item label="Production" value="1" />
-					<Picker.Item label="Development" value="2" />
-				</Picker>
+                <View style={styles.sectionInput}>
+                  <Picker
+                      mode="dropdown"
+                      iosHeader="Select your SIM"
+                      iosIcon={<Icon name="arrow-dropdown-circle" style={{ color: "#007aff", fontSize: 25 }} />}
+                      style={styles.picker}
+                      selectedValue={this.state.selectedServer}
+                      onValueChange={this.onValueChange.bind(this)}>
+                      <Picker.Item label="Production" value="1" />
+                      <Picker.Item label="Development" value="2" />
+                  </Picker>
+                </View>
+                
+				
 
                 <TouchableOpacity style={[styles.button, { marginTop: 20 }]}
                     onPress={() => this.onBtnClick(props)}>
@@ -210,6 +214,15 @@ const styles = StyleSheet.create({
     },
     inputBox: {
         width: 320,
+        height: 42,
+        fontSize: 16,
+        color: '#51a977',
+        textAlign: "left",
+        paddingVertical: 10,
+
+    },
+    picker: {
+        width: 240,
         height: 42,
         fontSize: 16,
         color: '#51a977',

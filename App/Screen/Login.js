@@ -117,7 +117,7 @@ class Login extends Component {
             })
             .then((data) => {
                 // alert(data)
-                console.log("resetMobileSync",data)
+                // console.log("resetMobileSync",data)
                 this.deleteAllTableAndFolder(param)
             });
     }
@@ -186,7 +186,7 @@ class Login extends Component {
     postLogin(username, password, choosenServer, imei) {
 		
 		serverNameIndex = choosenServer;
-		console.log("masuk postLogin",ServerName[serverNameIndex].data+'login');
+		// console.log("masuk postLogin",ServerName[serverNameIndex].data+'login');
         fetch(ServerName[serverNameIndex].data+'login', {
             method: 'POST',
             headers: {
