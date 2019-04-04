@@ -304,6 +304,8 @@ const TaskServices = {
       data.PROGRESS = param[1];
       data.STATUS_SYNC = param[2];
       data.DUE_DATE = param[3];
+      data.UPDATE_USER = param[4];
+      data.UPDATE_TIME = param[5];
     });
   },
 

@@ -18,7 +18,7 @@ import R, { isEmpty, isNil } from 'ramda'
 import moment from 'moment'
 import DateTimePicker from 'react-native-modal-datetime-picker'
 import ImageSlider from 'react-native-image-slider';
-import { changeFormatDate } from '../../Lib/Utils';
+import { changeFormatDate,getTodayDate } from '../../Lib/Utils';
 
 import ModalAlert from '../../Component/ModalAlert';
 import ModalAlertBack from '../../Component/ModalAlert';
@@ -208,7 +208,7 @@ class DetailFindingScreenRedesign extends Component {
             UPDATE_TIME: updateTime
         }
 
-        TaskServices.updateFinding('TR_FINDING', [status, save.PROGRESS, 'N', save.DUE_DATE], indexData);
+        TaskServices.updateFinding('TR_FINDING', [status, save.PROGRESS, 'N', save.DUE_DATE, save.UPDATE_USER, save.UPDATE_TIME], indexData);
         if (this.state.progress == 100) {
             this._saveImageUpdate();
         }

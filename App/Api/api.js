@@ -7,7 +7,13 @@ const user = TaskServices.getAllData('TR_LOGIN')
 //const apiLogin = "http://app.tap-agri.com/mobileinspection/ins-msa-auth/api"
 
 const create = () => {
-	let baseUrl = ServerName[user[0].SERVER_NAME_INDEX].data;
+	let baseUrl = "";
+	if(user.length>0){
+		baseUrl = ServerName[user[0].SERVER_NAME_INDEX].data;
+	}
+	else{
+		baseUrl = ServerName[1].data;
+	}
 	baseUrl = baseUrl.slice(0, baseUrl.length-1);
     let api = apisauce.create({
         baseURL: baseUrl,
