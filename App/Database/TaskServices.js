@@ -387,26 +387,171 @@ const TaskServices = {
   },
 
   getEstateName: function () {
-    let auth = this.getAllData('TR_LOGIN')[0];
-    let refCode = auth.REFFERENCE_ROLE;
-    let valueRefCode = auth.LOCATION_CODE;
-    let est;
-    if (refCode === 'REGION_CODE') {
-      let reg = this.findBy2('TM_REGION', 'REGION_CODE', valueRefCode);
-      let comp = this.findBy2('TM_COMP', 'REGION_CODE', reg.REGION_CODE);
-      est = this.findBy2('TM_EST', 'COMP_CODE', comp.COMP_CODE);
-      return est.EST_NAME;
-    } else if (refCode === 'COMP_CODE') {
-      est = this.findBy2('TM_EST', 'COMP_CODE', valueRefCode);
-      return est.EST_NAME
-    } else if (refCode === 'BA_CODE') {
-      est = this.findBy2('TM_EST', 'WERKS', valueRefCode);
-      return est.EST_NAME
-    } else if (refCode === 'AFD_CODE') {
-      let afd = this.findBy2('TM_AFD', 'WERKS_AFD_CODE', valueRefCode);
-      // est = this.findBy2('TM_EST', 'WERKS', afd.WERKS);
-      return afd.EST_NAME
+    try {
+      let auth = this.getAllData('TR_LOGIN')[0];
+      let refCode = auth.REFFERENCE_ROLE;
+      let valueRefCode = auth.LOCATION_CODE;
+      let est;
+      let arrEst = []
+      if (refCode === 'REGION_CODE') {
+
+        // if(valueRefCode.includes(',')){
+        //   valueRefCode = valueRefCode.split(',')
+        //   valueRefCode.map(item =>{
+        //     let reg = this.findBy('TM_REGION', 'REGION_CODE', item);
+        //     let comp = this.findBy('TM_COMP', 'REGION_CODE', reg.REGION_CODE);
+        //     est = this.findBy('TM_EST', 'COMP_CODE', comp.COMP_CODE);
+        //     arrEst.push(est.EST_NAME)
+        //   })
+        // }else{
+        //   let reg = this.findBy('TM_REGION', 'REGION_CODE', valueRefCode);
+        //   let comp = this.findBy('TM_COMP', 'REGION_CODE', reg.REGION_CODE);
+        //   est = this.findBy('TM_EST', 'COMP_CODE', comp.COMP_CODE);
+        // }
+
+      } else if (refCode === 'COMP_CODE') {
+
+        if(valueRefCode.includes(',')){
+          valueRefCode = valueRefCode.split(',')
+          valueRefCode.map(item =>{
+            est = this.findBy2('TM_EST', 'COMP_CODE', item);
+            arrEst.push(est.EST_NAME)
+          })
+        }else{
+          est = this.findBy2('TM_EST', 'COMP_CODE', valueRefCode);
+          arrEst.push(est.EST_NAME)
+        }      
+
+      } else if (refCode === 'BA_CODE') {   
+        
+        if(valueRefCode.includes(',')){
+          valueRefCode = valueRefCode.split(',')
+          valueRefCode.map(item =>{
+            est = this.findBy2('TM_EST', 'WERKS', item);
+            arrEst.push(est.EST_NAME)
+          })
+        }else{
+          est = this.findBy2('TM_EST', 'WERKS', valueRefCode);
+          arrEst.push(est.EST_NAME)
+        } 
+
+      } else if (refCode === 'AFD_CODE') {
+        if(valueRefCode.includes(',')){
+          valueRefCode = valueRefCode.split(',')
+          valueRefCode.map(item =>{
+            let afd = this.findBy2('TM_AFD', 'WERKS_AFD_CODE', item);
+            est = this.findBy2('TM_EST', 'WERKS', afd.WERKS);
+            arrEst.push(est.EST_NAME)
+          })
+        }else{
+          let afd = this.findBy2('TM_AFD', 'WERKS_AFD_CODE', valueRefCode);
+          est = this.findBy('TM_EST', 'WERKS', afd.WERKS);
+          arrEst.push(est.EST_NAME)
+        }
+      }
+      return arrEst
+    } catch (error) {
+      return []
     }
+    
+  },
+  
+  getRegionName: function (){
+    try {
+      let auth = this.getAllData('TR_LOGIN')[0];
+      let refCode = auth.REFFERENCE_ROLE;
+      let valueRefCode = auth.LOCATION_CODE;      
+      let arrEst = []
+      let est;
+      if (refCode === 'REGION_CODE') {
+        if(valueRefCode.includes(',')){
+          valueRefCode = valueRefCode.split(',')
+          valueRefCode.map(item => {
+            let reg = TaskServices.findBy2('TM_REGION', 'REGION_CODE', item);
+            arrEst.push(reg.REGION_NAME)  
+          })
+        }else{
+          let reg = TaskServices.findBy2('TM_REGION', 'REGION_CODE', valueRefCode);
+          arrEst.push(reg.REGION_NAME)
+        }
+        
+      } else if (refCode === 'BA_CODE') {
+
+        if(valueRefCode.includes(',')){          
+          valueRefCode = valueRefCode.split(',')
+          valueRefCode = valueRefCode[0]
+        }
+        est = this.findBy2('TM_EST', 'WERKS', valueRefCode);
+        let reg = this.findBy2('TM_REGION', 'REGION_CODE', est.REGION_CODE);
+        arrEst.push(reg.REGION_NAME) 
+
+      } else if (refCode === 'AFD_CODE') { 
+
+        if(valueRefCode.includes(',')){          
+          valueRefCode = valueRefCode.split(',')
+          valueRefCode = valueRefCode[0]
+        }
+        
+        let afd = this.findBy2('TM_AFD', 'WERKS_AFD_CODE', valueRefCode);
+        est = this.findBy2('TM_EST', 'WERKS', afd.WERKS);
+        let reg = this.findBy2('TM_REGION', 'REGION_CODE', est.REGION_CODE);
+        arrEst.push(reg.REGION_NAME) 
+      }
+
+      return arrEst;
+    } catch (error) {
+      return []
+    }
+    
+  },
+
+  getRegionCode: function (){
+    try {
+      let auth = this.getAllData('TR_LOGIN')[0];
+      let refCode = auth.REFFERENCE_ROLE;
+      let valueRefCode = auth.LOCATION_CODE;      
+      let arrEst = []
+      let est;
+      if (refCode === 'REGION_CODE') {
+        if(valueRefCode.includes(',')){
+          valueRefCode = valueRefCode.split(',')
+          valueRefCode.map(item => {
+            let reg = TaskServices.findBy2('TM_REGION', 'REGION_CODE', item);
+            arrEst.push(reg.REGION_CODE)  
+          })
+        }else{
+          let reg = TaskServices.findBy2('TM_REGION', 'REGION_CODE', valueRefCode);
+          arrEst.push(reg.REGION_CODE)
+        }
+        
+      } else if (refCode === 'BA_CODE') {
+
+        if(valueRefCode.includes(',')){          
+          valueRefCode = valueRefCode.split(',')
+          valueRefCode = valueRefCode[0]
+        }
+        est = this.findBy2('TM_EST', 'WERKS', valueRefCode);
+        let reg = this.findBy2('TM_REGION', 'REGION_CODE', est.REGION_CODE);
+        arrEst.push(reg.REGION_CODE) 
+
+      } else if (refCode === 'AFD_CODE') { 
+
+        if(valueRefCode.includes(',')){          
+          valueRefCode = valueRefCode.split(',')
+          valueRefCode = valueRefCode[0]
+        }
+        
+        let afd = this.findBy2('TM_AFD', 'WERKS_AFD_CODE', valueRefCode);
+        est = this.findBy2('TM_EST', 'WERKS', afd.WERKS);
+        let reg = this.findBy2('TM_REGION', 'REGION_CODE', est.REGION_CODE);
+        arrEst.push(reg.REGION_CODE) 
+      }
+
+      return arrEst;
+    } catch (error) {
+      return []
+    }
+    
   },
 
   getWerks: function () {

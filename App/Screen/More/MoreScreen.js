@@ -46,7 +46,7 @@ export default class MoreScreen extends Component {
 
   constructor(props) {
     super(props);
-	let user = TaskServices.getAllData('TR_LOGIN')[0];
+	  let user = TaskServices.getAllData('TR_LOGIN')[0];
     this.state = {
       showConfirm: false,
       showModal: false,
@@ -56,19 +56,29 @@ export default class MoreScreen extends Component {
       //Add Modal Alert by Aminju 
       title: 'Title',
       message: 'Message',
-	  user,
+	    user,
     }
   }
 
-  componentDidMount(){
-    let data = TaskServices.getAllData('TR_LOGIN')[0]    
-    let dataUser = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', data.USER_AUTH_CODE);
+  willFocus = this.props.navigation.addListener(
+    'willFocus',
+    () => {
+      this.loadData()
+    }
+  )
+
+  componentWillUnmount() {
+    this.willFocus.remove()
+  }
+
+  loadData(){
+    let dataUser = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', this.state.user.USER_AUTH_CODE);
     if(dataUser !== undefined){
       let name = dataUser.FULLNAME
       let jabatan = dataUser.JOB
-      let estate = this.getEstateName(dataUser.LOCATION_CODE)
+      let estate = ''//TaskServices.getEstateName()
       this.setState({name, jabatan, estate})
-    }    
+    } 
   }
 
   getEstateName(werks) {
@@ -152,6 +162,13 @@ export default class MoreScreen extends Component {
                 <Image source={require('../../Images/icon/ic_maps.png')} style={[styles.icon,{marginLeft:10, flex: 2}]} />
                 <Text style={{ fontSize: 14, color: 'grey', flex: 7, marginLeft: 10, marginTop: 5 }}>Peta Lokasi</Text>
                 <Icon2 name='right' size={18} style={{marginRight: 15}} />
+            </TouchableOpacity>
+
+            <View style={{ height: 10, backgroundColor: '#F5F5F5', marginTop: 10 }} />
+
+            <TouchableOpacity style={styles.containerLabel} 
+              onPress={() => { this.setState({ showConfirm: true }) }}>
+                <Text style={{ fontSize: 14, color: 'red', flex: 1, padding: 5, textAlign: 'center' }}>Keluar</Text>
             </TouchableOpacity>
 
             <View style={{ height: 10, backgroundColor: '#F5F5F5', marginTop: 10 }} />
@@ -251,12 +268,10 @@ export default class MoreScreen extends Component {
             <Text>Versi: {DeviceInfo.getVersion()}</Text>
           </View>
           <View style={{flex: 1, flexDirection: 'column', justifyContent:'center', alignItems: 'center', padding: 10}}>
-            <Text>Server Data: {ServerName[this.state.user.SERVER_NAME_INDEX].data}</Text>
+            <Text style={{fontSize: 10}}>Server Data: {ServerName[this.state.user.SERVER_NAME_INDEX].data}</Text>
+            <Text style={{fontSize: 10}} >Server Image: {ServerName[this.state.user.SERVER_NAME_INDEX].image}</Text>
           </View>
-          <View style={{flex: 1, flexDirection: 'column', justifyContent:'center', alignItems: 'center', padding: 10}}>
-            <Text>Server Image: {ServerName[this.state.user.SERVER_NAME_INDEX].image}</Text>
-          </View>
-          <TouchableOpacity style={styles.marginCard} onPress={() => { this.setState({ showConfirm: true }) }}>
+          {/* <TouchableOpacity style={styles.marginCard} onPress={() => { this.setState({ showConfirm: true }) }}>
             <CardView cardElevation={2} cardMaxElevation={2} cornerRadius={10}>
               <View style={styles.sectionCardView}>
                 <View style={{ backgroundColor: 'white', flexDirection: 'row', alignItems: 'center' }} >
@@ -268,7 +283,7 @@ export default class MoreScreen extends Component {
                 </View>
               </View>
             </CardView>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </ScrollView>
     )
@@ -279,8 +294,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     paddingTop: 4,
-    paddingRight: 10,
-    paddingLeft: 10,
     paddingBottom: 10,
     flex: 1
   },

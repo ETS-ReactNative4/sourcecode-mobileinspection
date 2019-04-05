@@ -54,6 +54,7 @@ export default class PilihPeta extends Component {
     super(props);
     this.state = {
       arrMaps: [],
+      regions: [],
       estateName: ''
     }
 
@@ -63,14 +64,13 @@ export default class PilihPeta extends Component {
       this.initData()
   }
 
-  initData() {      
-      let login = TaskServices.getAllData('TR_LOGIN')[0];
-      let werks = login.LOCATION_CODE.substring(0, 4);
-      let estateName = this.getEstateName(werks)
-      this.setState({estateName})
-      for(var i=0; i<4; i++){
-          this.state.arrMaps.push(i)
-      }
+  initData() {     
+      let regions = TaskServices.getRegionName() 
+      // let estateName = TaskServices.getEstateName()
+      // this.setState({estateName})
+      // for(var i=0; i<4; i++){
+      //     this.state.arrMaps.push(i)
+      // }
   }
 
   getEstateName(werks) {
@@ -80,7 +80,7 @@ export default class PilihPeta extends Component {
     } catch (error) {
         return '';
     }
-}
+  }
 
   actionButtonClick() {
   }
@@ -110,6 +110,31 @@ export default class PilihPeta extends Component {
     }    
   }
 
+  renderMapsByRegion(regionCode, index){
+    let data = TaskServices.findBy2('TM_REGION', 'REGION_CODE', regionCode);
+    console.log(data)
+    let comp = TaskServices.findBy('TM_COMP', 'REGION_CODE', regionCode);
+    let est = [];
+    if(comp !== undefined){
+      comp.map(item =>{
+        let arr = TaskServices.findBy2('TM_EST', 'COMP_CODE', item.COMP_CODE);
+        est.push({WERKS: arr.WERKS, EST_NAME: arr.EST_NAME})
+      })      
+    }  
+    return(
+      <View style = {{marginTop: 15}} key = {index}>
+        <Text style={{ fontSize: 14,  paddingHorizontal: 16 }}>
+            {data !== undefined ? data.REGION_NAME : ''}
+        </Text>
+        <View style={{ marginTop: 16}}>
+            <ScrollView contentContainerStyle={{ paddingRight: 16 }} horizontal={true} showsHorizontalScrollIndicator={false}>
+              {est.map((item, index) => this._renderItem(item, index))}
+            </ScrollView >
+          </View>
+      </View>
+    )
+  }
+
   _renderItem = (item, index) => {
     // const nav = this.props.navigation;
     // const image = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', item.FINDING_CODE)
@@ -137,7 +162,7 @@ export default class PilihPeta extends Component {
           <View style={[styles.bgBelumDownload, {backgroundColor: 'rgba(169,169,169,0.8)'}]}>
             <Icon2 name={'clouddownload'} color={'white'} size={20}
               style={{ justifyContent:'center', alignItems: 'center'}} />
-            <Text style={{ fontSize: 8, color: 'white', textAlignVertical: 'center' }}>{this.state.estateName}</Text>
+            <Text style={{ fontSize: 8, color: 'white', textAlignVertical: 'center' }}>{item.EST_NAME}</Text>
           </View>
         </View>
       </TouchableOpacity >
@@ -145,6 +170,7 @@ export default class PilihPeta extends Component {
   }
 
   render() {
+    let data = TaskServices.getRegionCode()
     return (
       <Container style={{ flex: 1 }}>
         <Content style={styles.container} >
@@ -172,13 +198,15 @@ export default class PilihPeta extends Component {
               height: 1, marginLeft: 16, marginRight: 16, marginTop: 10
             }} />
 
-          <View style={{ marginTop: 16}}>
-            <ScrollView contentContainerStyle={{ paddingRight: 16 }} horizontal={true} showsHorizontalScrollIndicator={false}>
+          {/* <View style={{ marginTop: 16}}>
+            <Text style={{ fontSize: 12,  paddingHorizontal: 16 }}>
+              {TaskServices.getRegionName()}
+            </Text>
+            <ScrollView style = {{marginTop: 5}} contentContainerStyle={{ paddingRight: 16 }} horizontal={true} showsHorizontalScrollIndicator={false}>
               {this.state.arrMaps.map((item, index) => this._renderItem(item, index))}
             </ScrollView >
-          </View>
-
-          
+          </View> */}
+          {data !== null && data.map((item, index) => this.renderMapsByRegion(item, index))}
 
         </Content>
       </Container >
