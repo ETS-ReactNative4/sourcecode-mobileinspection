@@ -2,17 +2,19 @@ import apisauce from 'apisauce';
 import TaskServices from '../Database/TaskServices'
 import ServerName from '../Constant/ServerName'
 
-const user = TaskServices.getAllData('TR_LOGIN')
+var user = TaskServices.getAllData('TR_LOGIN')
 
 //const apiLogin = "http://app.tap-agri.com/mobileinspection/ins-msa-auth/api"
 
 const create = () => {
 	let baseUrl = "";
+	user = TaskServices.getAllData('TR_LOGIN');
+	console.log("user api",user);
 	if(user.length>0){
 		baseUrl = ServerName[user[0].SERVER_NAME_INDEX].data;
 	}
 	else{
-		baseUrl = ServerName[1].data;
+		baseUrl = ServerName[2].data;
 	}
 	baseUrl = baseUrl.slice(0, baseUrl.length-1);
     let api = apisauce.create({
@@ -140,6 +142,7 @@ const create = () => {
     }
 
     const getBlock = () => {
+		console.log("base url",api);
         api.setHeader('Authorization', `Bearer ${user[0].ACCESS_TOKEN}`)
         return api.get('/mobile-sync/hectare-statement/block')
     }
