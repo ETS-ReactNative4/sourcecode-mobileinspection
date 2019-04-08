@@ -11,6 +11,7 @@ import ModalConfirmation from '../../Component/ModalAlertConfirmation'
 import ModalAlert from '../../Component/ModalAlert'
 import ServerName from '../../Constant/ServerName';
 import DeviceInfo from 'react-native-device-info';
+import CustomHeader from '../../Component/CustomHeader'
 import { getThumnail } from '../../Lib/Utils';
 
 export default class MoreScreen extends Component {
@@ -41,7 +42,8 @@ export default class MoreScreen extends Component {
           <Image style={{ width: 28, height: 28 }} source={require('../../Images/icon/ic_sync.png')} />
         </View>
       </TouchableOpacity>
-    )
+    ),
+	header: props => <CustomHeader {...props} />
   });
 
   constructor(props) {

@@ -396,9 +396,10 @@ const TR_D_EBCC_VALIDATION = {
 
 const TR_SYNC_LOG = {
     name: 'TR_SYNC_LOG',
-    primaryKey: 'SYNC_TIME',
+    primaryKey: 'SYNC_TIME_ID',
     properties: {
-        SYNC_TIME: 'string'
+        SYNC_TIME_ID: 'int',
+        SYNC_TIME: 'date'
     }
 }
 

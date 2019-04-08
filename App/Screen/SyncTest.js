@@ -1249,8 +1249,10 @@ class SyncScreen extends React.Component {
         this.setState({ progressParamInspection: 1, valueParamInspection: 1, totalParamInspection: 1 });      
     }
 	_save_sync_log(){
-        var data = {
-            SYNC_TIME: new Date()
+		let today = new Date();
+        let data = {
+			SYNC_TIME_ID: today.getTime(),
+            SYNC_TIME: today
         }
         TaskServices.saveData('TR_SYNC_LOG', data);
 	}
@@ -1506,7 +1508,6 @@ class SyncScreen extends React.Component {
 
                 //cara redux saga
                 setTimeout(() => {
-					this.props.serverTimeRequest();
                     this.props.findingRequest();
                     this.props.blockRequest();
                 }, 2000);
@@ -1644,31 +1645,6 @@ class SyncScreen extends React.Component {
             return;
         }
 		
-        if (newProps.serverTime.fetchingServerTime !== null && !newProps.serverTime.fetchingServerTime) {
-            let dataJSON = newProps.serverTime.serverTime;
-            if (dataJSON !== null) {
-				let serverTime = new Date(dataJSON.time.replace(' ','T')+"+07:00");
-				let localTime = new Date();
-				serverTime.setMinutes(0,0,0);
-				localTime.setMinutes(0,0,0);
-				console.log("check time",dataJSON.time.replace(' ','T'),serverTime,localTime);
-				if(serverTime.getTime()!== localTime.getTime()){
-                    this.setState({
-                        showButton: true,
-                        showModal: true,
-                        title: 'Tidak Sinkron',
-                        message: 'Jam di HP kamu salah',
-                        icon: require('../Images/ic-sync-gagal.png')
-                    })
-				}
-            }
-			else{
-				
-			}
-            this.props.resetServerTime()
-			this.props.findingRequest();
-			this.props.blockRequest();
-        }
         if (newProps.finding.fetchingFinding !== null && !newProps.finding.fetchingFinding) {
             let dataJSON = newProps.finding.finding;
             if (dataJSON !== null) {
@@ -1805,9 +1781,30 @@ class SyncScreen extends React.Component {
                 this._crudTM_Kualitas(dataJSON);
             }
             this.props.resetKualitas();
-			this._reset_token();
+			this.props.serverTimeRequest();
         }
-
+        if (newProps.serverTime.fetchingServerTime !== null && !newProps.serverTime.fetchingServerTime) {
+            let dataJSON = newProps.serverTime.serverTime;
+            if (dataJSON !== null) {
+				let serverTime = new Date(dataJSON.time.replace(' ','T')+"+07:00");
+				let localTime = new Date();
+				serverTime.setMinutes(0,0,0);
+				localTime.setMinutes(0,0,0);
+				console.log("check time",dataJSON.time.replace(' ','T'),serverTime,localTime);
+				if(serverTime.getTime()!== localTime.getTime()){
+                    this.setState({
+                        showButton: true,
+                        showModal: true,
+                        title: 'Tidak Sinkron',
+                        message: 'Jam di HP kamu salah',
+                        icon: require('../Images/ic-sync-gagal.png')
+                    })
+				}
+            }
+            this.props.resetServerTime();
+			this._reset_token();
+			this._save_sync_log();
+        }
     }
 
     render() {

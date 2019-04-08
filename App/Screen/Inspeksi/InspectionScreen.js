@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Image, TouchableOpacity, StyleSheet } from 'react-native';
 
+import CustomHeader from '../../Component/CustomHeader'
 import Colors from '../../Constant/Colors'
 import InspectionTabNavigator from './InspectionTabNavigator'
 import { connect } from 'react-redux';
@@ -51,7 +52,8 @@ class InspectionScreen extends Component {
             <Image style={{ width: 28, height: 28 }} source={require('../../Images/icon/ic_inbox.png')} />
           </View>
         </TouchableOpacity>
-      )
+      ),
+		header: props => <CustomHeader {...props} />
     };
   }
 

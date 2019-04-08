@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, Image, TouchableOpacity, StyleSheet, Text } from 'react-native';
+import CustomHeader from '../../Component/CustomHeader'
 import Colors from '../../Constant/Colors'
 import FindingTabNavigator from './FindingTabNavigator'
 
@@ -32,7 +33,8 @@ export default class FindingScreen extends Component {
           <Image style={{ width: 28, height: 28 }} source={require('../../Images/icon/ic_sync.png')} />
         </View>
       </TouchableOpacity>
-    )
+    ),
+	header: props => <CustomHeader {...props} />
   });
 
   render() {

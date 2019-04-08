@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import EbccTabNavigator from './EbccTabNavigator'
 import Colors from '../../Constant/Colors'
+import CustomHeader from '../../Component/CustomHeader'
 
 export default class EbccValidationScreen extends Component {
   static router = EbccTabNavigator.router;
@@ -32,7 +33,8 @@ export default class EbccValidationScreen extends Component {
           <Image style={{ width: 28, height: 28 }} source={require('../../Images/icon/ic_sync.png')} />
         </View>
       </TouchableOpacity>
-    )
+    ),
+	header: props => <CustomHeader {...props} />
   });
 
   render() {

@@ -9,6 +9,7 @@ import TaskServices from '../../Database/TaskServices'
 import CategoryAction from '../../Redux/CategoryRedux'
 import ContactAction from '../../Redux/ContactRedux'
 import RegionAction from '../../Redux/RegionRedux'
+import CustomHeader from '../../Component/CustomHeader'
 import Moment from 'moment';
 import RNFetchBlob from 'rn-fetch-blob'
 import { changeFormatDate, getThumnail } from '../../Lib/Utils';
@@ -47,7 +48,8 @@ class HomeScreen extends React.Component {
           <Image style={{ width: 28, height: 28 }} source={require('../../Images/icon/ic_sync.png')} />
         </View>
       </TouchableOpacity>
-    )
+    ),
+	header: props => <CustomHeader {...props} />
   });
 
   constructor(props) {
