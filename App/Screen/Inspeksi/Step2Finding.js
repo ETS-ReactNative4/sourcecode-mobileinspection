@@ -168,7 +168,7 @@ class Step2Finding extends Component {
         BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
         if (this.state.inspeksiHeader !== undefined) {
             let werkAfdBlock = `${this.state.inspeksiHeader.WERKS}${this.state.inspeksiHeader.AFD_CODE}${this.state.inspeksiHeader.BLOCK_CODE}`
-            let detailBlock = `${this.getBlokName(this.state.inspeksiHeader.BLOCK_CODE)}/${this.getStatusBlok(werkAfdBlock)}/${this.getEstateName(this.state.inspeksiHeader.WERKS)}`
+            let detailBlock = `${this.getBlokName(werkAfdBlock)}/${this.getStatusBlok(werkAfdBlock)}/${this.getEstateName(this.state.inspeksiHeader.WERKS)}`
             this.setState({ blok: detailBlock, werks: this.state.inspeksiHeader.WERKS, blockCode: this.state.inspeksiHeader.BLOCK_CODE, afdCode: this.state.inspeksiHeader.AFD_CODE })
             this.getLocation();
         } else {
@@ -200,9 +200,9 @@ class Step2Finding extends Component {
         }
     }
 
-    getBlokName(blockCode) {
+    getBlokName(werkAfdBlock) {
         try {
-            let data = TaskServices.findBy2('TM_BLOCK', 'BLOCK_CODE', blockCode);
+            let data = TaskServices.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', werkAfdBlock);
             return data.BLOCK_NAME;
         } catch (error) {
             return ''

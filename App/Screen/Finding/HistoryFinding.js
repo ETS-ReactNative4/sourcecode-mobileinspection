@@ -168,9 +168,9 @@ export default class HistoryFinding extends Component {
     Moment.locale();
     let showImage;
     if (image == undefined) {
-      showImage = <Image style={{ alignItems: 'stretch', width: 80, height: 80, borderRadius: 10 }} source={require('../../Images/ic-default-thumbnail.png')} />
+      showImage = <Image style={{ alignItems: 'stretch', width: 65, height: 65, borderRadius: 10 }} source={require('../../Images/ic-default-thumbnail.png')} />
     } else {
-      showImage = <Image style={{ alignItems: 'stretch', width: 80, height: 80, borderRadius: 10 }} source={{ uri: "file://" + image.IMAGE_PATH_LOCAL }} />
+      showImage = <Image style={{ alignItems: 'stretch', width: 65, height: 65, borderRadius: 10 }} source={{ uri: "file://" + image.IMAGE_PATH_LOCAL }} />
     }
 	let assignTo = item.ASSIGN_TO;
 	let contact = TaskServices.query('TR_CONTACT', `USER_AUTH_CODE = "${assignTo}"`);
@@ -186,9 +186,8 @@ export default class HistoryFinding extends Component {
       colorStatus = 'red';
     }else{
       status = 'Data Sudah Terkirim'
-      colorStatus = 'grey';
+      colorStatus = Colors.brand
     }  
-	/*
     return (
       <TouchableOpacity
         style={styles.sectionCardView}
@@ -215,40 +214,7 @@ export default class HistoryFinding extends Component {
           </View>
         </View>
       </TouchableOpacity>
-    );*/
-	return (
-		<TouchableOpacity
-			style={styles.sectionCardView}
-			onPress={() => { this.onClickItem(item.FINDING_CODE) }}
-			key={idx}
-		>
-			{showImage}
-			<View style={styles.sectionDesc} >
-				<View style={{ flexDirection: 'row' }}>
-					<Text style={{ fontSize: 12, color: 'black', fontWeight: 'bold' }}>{lokasi}</Text>
-				</View>
-				<View style={{ flexDirection: 'row' }}>
-					<Text style={{ fontSize: 12, color: 'grey', width: 100 }}>Dibuat </Text>
-					<Text style={{ fontSize: 12, color: 'grey' }}>:  {createdTime}</Text>
-				</View>
-				<View style={{ flexDirection: 'row' }}>
-					<Text style={{ fontSize: 12, color: 'grey', width: 100 }}>Kategori </Text>
-					<Text style={{ fontSize: 12, color: 'grey' }}>:  {this.getCategoryName(item.FINDING_CATEGORY)}</Text>
-				</View>
-				<View style={{ flexDirection: 'row' }}>
-					<Text style={{ fontSize: 12, color: 'grey', width: 100 }}>Ditugaskan Ke</Text>
-					<Text style={{ fontSize: 12, color: 'grey' }}>:  {assignTo}</Text>
-				</View>
-				<View style={{ flexDirection: 'row' }}>
-					<Text style={{ fontSize: 12, color: 'grey', width: 100 }}>Status </Text>
-					<Text style={{ fontSize: 12, color: 'grey' }}>:  {item.STATUS}</Text>
-				</View>
-				<View style={{ flexDirection: 'row' }}>
-					<Text style={{ fontSize: 12, color: colorStatus, fontWeight: 'bold',fontStyle:'italic' }}>{status}</Text>
-				</View>
-			</View>
-		</TouchableOpacity>
-	);
+    );
   }
 
   _renderNoData() {
@@ -290,7 +256,7 @@ const styles = StyleSheet.create({
   },
   sectionCardView: {
     alignItems: 'stretch',
-    height: 130,
+    height: 80,
     backgroundColor: 'white',
     flexDirection: 'row',
     alignItems: 'center',
