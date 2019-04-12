@@ -169,9 +169,9 @@ export default class HistoryFinding extends Component {
     Moment.locale();
     let showImage;
     if (image == undefined) {
-      showImage = <Image style={{ alignItems: 'stretch', width: 65, height: 65, borderRadius: 10 }} source={require('../../Images/ic-default-thumbnail.png')} />
+      showImage = <Image style={{ alignItems: 'stretch', width: 90, height: 90, borderRadius: 10 }} source={require('../../Images/ic-default-thumbnail.png')} />
     } else {
-      showImage = <Image style={{ alignItems: 'stretch', width: 65, height: 65, borderRadius: 10 }} source={{ uri: "file://" + image.IMAGE_PATH_LOCAL }} />
+      showImage = <Image style={{ alignItems: 'stretch', width: 90, height: 90, borderRadius: 10 }} source={{ uri: "file://" + image.IMAGE_PATH_LOCAL }} />
     }
 	let assignTo = item.ASSIGN_TO;
 	let contact = TaskServices.query('TR_CONTACT', `USER_AUTH_CODE = "${assignTo}"`);
@@ -291,7 +291,7 @@ const styles = StyleSheet.create({
   },
   sectionCardView: {
     alignItems: 'stretch',
-    height: 80,
+    height: 100,
     backgroundColor: 'white',
     flexDirection: 'row',
     alignItems: 'center',
