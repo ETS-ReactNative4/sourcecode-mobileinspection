@@ -14,6 +14,7 @@ import { NavigationActions, StackActions  } from 'react-navigation';
 import IconLoc from 'react-native-vector-icons/FontAwesome5';
 import ModalAlert from '../../Component/ModalLoading'
 import ModalGps from '../../Component/ModalAlert';
+import TaskServices from '../../Database/TaskServices';
 
 const skm = require('../../Data/4421.json');
 const ASPECT_RATIO = width / height;
@@ -220,18 +221,39 @@ class MapsInspeksi extends React.Component {
     return false;
   }
   
+  checkAutorisasi(werkAfdBlockCode){
+    let datLogin = TaskServices.getAllData('TR_LOGIN')[0]
+    let refCode = datLogin.REFFERENCE_ROLE;
+    if(refCode == 'AFD_CODE'){
+      let dataBlok = TaskServices.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', werkAfdBlockCode)
+      if(dataBlok !== undefined){
+        let blockInAfd = TaskServices.getBlockInAFD()
+        if(blockInAfd.includes(dataBlok.BLOCK_NAME)){
+          return true
+        }
+      }
+      return false
+    }
+    return true
+  }
+  
   navigateScreen(screenName, werkAfdBlockCode) {
-    const navigation = this.props.navigation;
-    const resetAction = StackActions.reset({
-    index: 0,            
-      actions: [NavigationActions.navigate({ routeName: screenName, params : { 
-          werkAfdBlockCode : werkAfdBlockCode,
-          latitude: this.state.latitude,
-          longitude: this.state.longitude
-        } 
-      })]
-    });
-    navigation.dispatch(resetAction);
+    if(this.checkAutorisasi(werkAfdBlockCode)){
+      const navigation = this.props.navigation;
+      const resetAction = StackActions.reset({
+      index: 0,            
+        actions: [NavigationActions.navigate({ routeName: screenName, params : { 
+            werkAfdBlockCode : werkAfdBlockCode,
+            latitude: this.state.latitude,
+            longitude: this.state.longitude
+          } 
+        })]
+      });
+      navigation.dispatch(resetAction);
+    }else{      
+      this.setState({ fetchLocation: false, showModal: true, title: 'Salah Afdeling', 
+      message: "Kamu tidak bisa inspeksi di Afdeling ini", icon: require('../../Images/ic-blm-input-lokasi.png') });
+    }
   }
 
   onMapReady(){

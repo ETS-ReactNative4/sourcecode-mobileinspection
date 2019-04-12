@@ -105,9 +105,8 @@ class HomeScreen extends React.Component {
 
   _filterHome() {
     const login = TaskServices.getAllData('TR_LOGIN');
-    const user_auth = login[0].USER_AUTH_CODE;
     const ref_role = login[0].REFFERENCE_ROLE;
-    const loc_code = login[0].LOCATION_CODE;
+    let loc_code = login[0].LOCATION_CODE;
 
     var finding = TaskServices.getAllData('TR_FINDING');
     var findingSorted = finding.sorted('INSERT_TIME', true);
@@ -131,22 +130,63 @@ class HomeScreen extends React.Component {
             query += ` OR WERKS == `
           }
         }
-        //findingFilter = findingSorted.filtered(`${query} AND ASSIGN_TO != "${user_auth}"`);
         findingFilter = findingSorted.filtered(`${query}`);
       } else {
         findingFilter = finding.sorted('INSERT_TIME', true);
       }
     } else if (ref_role == 'COMP_CODE') {
-      //findingFilter = findingSorted.filtered(`WERKS CONTAINS[c] "${loc_code}" AND ASSIGN_TO != "${user_auth}"`);
-      findingFilter = findingSorted.filtered(`WERKS CONTAINS[c] "${loc_code}"`);
+      if(loc_code.includes(',')){
+        let arr = []
+        loc_code = loc_code.split(',')
+        loc_code.map(item =>{
+          let das = findingSorted.filtered(`WERKS CONTAINS[c] "${item}"`)
+          if(das.length > 0){
+            das.map(item2 => {
+              arr.push(item2)
+            })
+          }
+        })
+        findingFilter = arr
+      }else{
+        findingFilter = findingSorted.filtered(`WERKS CONTAINS[c] "${loc_code}"`);
+      }      
     } else if (ref_role == 'WERKS') {
-      //findingFilter = findingSorted.filtered(`WERKS = "${loc_code}" AND ASSIGN_TO != "${user_auth}"`);
-      findingFilter = findingSorted.filtered(`WERKS = "${loc_code}"`);
+      if(loc_code.includes(',')){
+        let arr = []
+        loc_code = loc_code.split(',')
+        loc_code.map(item =>{
+          let das = findingSorted.filtered(`WERKS = "${item}"`)
+          if(das.length > 0){
+            das.map(item2 => {
+              arr.push(item2)
+            })
+          }
+        })
+        findingFilter = arr
+      }else{
+        findingFilter = findingSorted.filtered(`WERKS = "${loc_code}"`);
+      }
     } else if (ref_role == 'AFD_CODE') {
-      const werks = loc_code.substring(0, 4);
-      const afd_code = loc_code.substring(4, 5);
-      //findingFilter = findingSorted.filtered(`WERKS = "${werks}" AND AFD_CODE = "${afd_code}" AND ASSIGN_TO != "${user_auth}"`);
-      findingFilter = findingSorted.filtered(`WERKS = "${werks}" AND AFD_CODE = "${afd_code}"`);
+      if(loc_code.includes(',')){
+        let arr = []
+        loc_code = loc_code.split(',')
+        loc_code.map(item =>{
+          const werks = item.substring(0, 4);
+          const afd_code = item.substring(4, 5);
+          let das = findingSorted.filtered(`WERKS = "${werks}" AND AFD_CODE = "${afd_code}"`);
+          if(das.length > 0){
+            das.map(item2 => {
+              arr.push(item2)
+            })
+          }
+        })
+        findingFilter = arr
+      }else{
+        const werks = loc_code.substring(0, 4);
+        const afd_code = loc_code.substring(4, 5);
+        findingFilter = findingSorted.filtered(`WERKS = "${werks}" AND AFD_CODE = "${afd_code}"`);
+      }
+      
     } else {
       findingFilter = finding.sorted('INSERT_TIME', true);
     }

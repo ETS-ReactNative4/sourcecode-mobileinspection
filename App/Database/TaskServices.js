@@ -554,6 +554,40 @@ const TaskServices = {
     
   },
 
+  getBlockInAFD: function (){
+    try {      
+      let auth = this.getAllData('TR_LOGIN')[0];
+      let refCode = auth.REFFERENCE_ROLE;
+      let valueRefCode = auth.LOCATION_CODE    
+      let arrBlock = []
+      if (refCode === 'AFD_CODE') {
+        if(valueRefCode.includes(',')){
+          valueRefCode.map(item => {
+            const afd_code = item.substring(4, 5);
+            let data = TaskServices.query('TM_BLOCK', `AFD_CODE = "${afd_code}"`)
+            if(data.length > 0){
+              data.map(item2 =>{
+                arrBlock.push(item2.BLOCK_NAME)
+              })
+            }
+          });
+        }else{
+          const afd_code = valueRefCode.substring(4, 5);
+          let data = TaskServices.query('TM_BLOCK', `AFD_CODE = "${afd_code}"`)
+          if(data.length > 0){
+            data.map(item2 =>{
+              arrBlock.push(item2.BLOCK_NAME)
+            })
+          }
+        }
+      }
+      return arrBlock
+    } catch (error) {
+      return arrBlock
+    }
+  },
+
+
   getWerks: function () {
     let auth = this.getAllData('TR_LOGIN')[0];
     let refCode = auth.REFFERENCE_ROLE;

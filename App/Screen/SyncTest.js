@@ -906,8 +906,6 @@ class SyncScreen extends React.Component {
         if (data.ubah.length > 0 && allData.length > 0) {
             data.ubah.map(item => {
                 TaskServices.updateByPrimaryKey('TM_BLOCK', item)
-                // let indexData = R.findIndex(R.propEq('WERKS_AFD_BLOCK_CODE', item.WERKS_AFD_BLOCK_CODE))(allData);
-                //TaskServices.updateBlock(item, indexData)
             })
         }
         if (data.hapus.length > 0 && allData.length > 0) {

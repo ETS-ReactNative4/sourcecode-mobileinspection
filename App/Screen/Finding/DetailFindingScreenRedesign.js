@@ -480,7 +480,7 @@ class DetailFindingScreenRedesign extends Component {
                         </View>
                     </View>
 
-                    {(this.state.data.PROGRESS == 100 && this.state.data.ASSIGN_TO == this.state.user.USER_AUTH_CODE) && <View style={{ flexDirection: 'row', marginTop: 20, paddingLeft: 15, paddingRight: 15 }}>
+                    {(this.state.progress == 100 && this.state.data.ASSIGN_TO == this.state.user.USER_AUTH_CODE) && <View style={{ flexDirection: 'row', marginTop: 20, paddingLeft: 15, paddingRight: 15 }}>
                         <Text style={styles.title}>Bukti Kerja:</Text>
                         <Card style={[styles.cardContainer, { marginLeft: 15 }]}>
                             <TouchableOpacity style={{ padding: 40 }}

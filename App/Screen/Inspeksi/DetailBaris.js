@@ -37,6 +37,8 @@ class DetailBaris extends React.Component {
             nilaiTipa: '',
             nilaiKastrasi: '',
             nilaiSanitasi: '',
+            nilaiPupuk: '',
+            nilaiPenabur: '',
             hideKriteria: false,
             barisPembagi:0,
             baris,
@@ -220,7 +222,7 @@ class DetailBaris extends React.Component {
                     <View style={styles.section}>
                         <Text style={styles.textTitle}>Pemupukan</Text>
                         <View style={styles.lineDivider} />
-                        {this.state.nilaiPokokTdkPupuk !== '' &&
+                        {this.state.nilaiPokokTdkPupuk !== '0' &&
                         <View style={styles.sectionRow}>
                             <Text style={styles.textLabel}>Pokok Tidak diPupuk</Text>
                             <Text style={styles.textContent}>{this.state.nilaiPokokTdkPupuk}</Text>
