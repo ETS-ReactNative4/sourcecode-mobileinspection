@@ -7,6 +7,7 @@ import Moment from 'moment'
 import RNFS from 'react-native-fs'
 import RNFetchBlob from 'rn-fetch-blob'
 import { dirPhotoTemuan } from '../../Lib/dirStorage';
+import ServerName from '../Constant/ServerName';
 const moment = require('moment');
 
 export default class HistoryFinding extends Component {
@@ -78,7 +79,7 @@ export default class HistoryFinding extends Component {
 
   getImageBaseOnFindingCode(findingCode) {
     const user = TaskServices.getAllData('TR_LOGIN')[0];
-    const url = "http://149.129.245.230:3012/images/" + findingCode;
+    const url = ServerName[user.SERVER_NAME_INDEX].image+"images/" + findingCode;
     fetch(url, {
       method: 'GET',
       headers: {
@@ -186,8 +187,9 @@ export default class HistoryFinding extends Component {
       colorStatus = 'red';
     }else{
       status = 'Data Sudah Terkirim'
-      colorStatus = Colors.brand
+      colorStatus = Colors.brand;
     }  
+	/*
     return (
       <TouchableOpacity
         style={styles.sectionCardView}
@@ -214,7 +216,40 @@ export default class HistoryFinding extends Component {
           </View>
         </View>
       </TouchableOpacity>
-    );
+    );*/
+	return (
+		<TouchableOpacity
+			style={styles.sectionCardView}
+			onPress={() => { this.onClickItem(item.FINDING_CODE) }}
+			key={idx}
+		>
+			{showImage}
+			<View style={styles.sectionDesc} >
+				<View style={{ flexDirection: 'row' }}>
+					<Text style={{ fontSize: 12, color: 'black', fontWeight: 'bold' }}>{lokasi}</Text>
+				</View>
+				<View style={{ flexDirection: 'row' }}>
+					<Text style={{ fontSize: 12, color: 'grey', width: 100 }}>Dibuat </Text>
+					<Text style={{ fontSize: 12, color: 'grey' }}>:  {createdTime}</Text>
+				</View>
+				<View style={{ flexDirection: 'row' }}>
+					<Text style={{ fontSize: 12, color: 'grey', width: 100 }}>Kategori </Text>
+					<Text style={{ fontSize: 12, color: 'grey' }}>:  {this.getCategoryName(item.FINDING_CATEGORY)}</Text>
+				</View>
+				<View style={{ flexDirection: 'row' }}>
+					<Text style={{ fontSize: 12, color: 'grey', width: 100 }}>Ditugaskan Ke</Text>
+					<Text style={{ fontSize: 12, color: 'grey' }}>:  {assignTo}</Text>
+				</View>
+				<View style={{ flexDirection: 'row' }}>
+					<Text style={{ fontSize: 12, color: 'grey', width: 100 }}>Status </Text>
+					<Text style={{ fontSize: 12, color: 'grey' }}>:  {item.STATUS}</Text>
+				</View>
+				<View style={{ flexDirection: 'row' }}>
+					<Text style={{ fontSize: 12, color: colorStatus, fontWeight: 'bold',fontStyle:'italic' }}>{status}</Text>
+				</View>
+			</View>
+		</TouchableOpacity>
+	);
   }
 
   _renderNoData() {
