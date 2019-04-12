@@ -7,7 +7,7 @@ import Moment from 'moment'
 import RNFS from 'react-native-fs'
 import RNFetchBlob from 'rn-fetch-blob'
 import { dirPhotoTemuan } from '../../Lib/dirStorage';
-import ServerName from '../Constant/ServerName';
+import ServerName from '../../Constant/ServerName';
 const moment = require('moment');
 
 export default class HistoryFinding extends Component {
