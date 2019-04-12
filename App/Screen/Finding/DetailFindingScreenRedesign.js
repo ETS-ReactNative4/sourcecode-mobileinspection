@@ -94,8 +94,8 @@ class DetailFindingScreenRedesign extends Component {
         moment.locale();
         let insertTime = moment(changeFormatDate("" + this.state.data.INSERT_TIME, "YYYY-MM-DD hh-mm-ss")).format('LLL');
         let contact = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', this.state.data.INSERT_USER);
-        let werkAfdBlockCode = this.getWerksAfdBlokCode(this.state.data.BLOCK_CODE)
-        let lokasiBlok = `${this.getBlokName(this.state.data.BLOCK_CODE)}/${this.getStatusBlok(werkAfdBlockCode)}/${this.getEstateName(this.state.data.WERKS)}`;
+        let werkAfdBlokCode = `${this.state.data.WERKS}${this.state.data.AFD_CODE}${this.state.data.BLOCK_CODE}`;
+        let lokasiBlok = `${this.getBlokName(werkAfdBlokCode)}/${this.getStatusBlok(werkAfdBlokCode)}/${this.getEstateName(this.state.data.WERKS)}`;
 
         this.setState({ insertTime, fullName: contact.FULLNAME, lokasiBlok })
     }
@@ -248,9 +248,9 @@ class DetailFindingScreenRedesign extends Component {
         }
     }
 
-    getBlokName(blockCode) {
+    getBlokName(werkAfdBlockCode) {
         try {
-            let data = TaskServices.findBy2('TM_BLOCK', 'BLOCK_CODE', blockCode);
+            let data = TaskServices.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', werkAfdBlockCode);
             return data.BLOCK_NAME;
         } catch (error) {
             return ''
