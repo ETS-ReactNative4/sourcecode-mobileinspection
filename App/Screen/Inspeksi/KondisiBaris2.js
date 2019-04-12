@@ -207,7 +207,6 @@ class KondisiBaris2 extends Component {
 
     componentDidMount() {
         this._loadInput();
-        //coba
         this.props.navigation.setParams({ getData: this.state.inspeksiHeader, getDataInspeksi: this.state.dataInspeksi, updateTRBaris: this.updateTRBaris })
         BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
         this.hideAndShow();

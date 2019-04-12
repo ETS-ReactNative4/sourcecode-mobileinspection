@@ -82,7 +82,7 @@ export default class HistoryEbcc extends Component {
     } catch (error) {
       path = '';
     }    
-    let dataBlock = Taskservice.findBy2('TM_BLOCK', 'BLOCK_CODE', data.BLOCK_CODE);
+    let dataBlock = Taskservice.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', `${data.WERKS}${data.AFD_CODE}${data.BLOCK_CODE}`);
     let statusBlok = this.getStatusBlok(dataBlock.WERKS_AFD_BLOCK_CODE)    
     let ebccDate = data.INSERT_TIME == '' ? 'Insert Time kosong' : moment(data.INSERT_TIME).format('LL');
 

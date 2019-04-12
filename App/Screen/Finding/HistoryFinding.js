@@ -142,9 +142,9 @@ export default class HistoryFinding extends Component {
     }
   }
 
-  getBlokName(blockCode) {
+  getBlokName(werkAfdBlokCode) {
     try {
-      let data = TaskServices.findBy2('TM_BLOCK', 'BLOCK_CODE', blockCode);
+      let data = TaskServices.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', werkAfdBlokCode);
       return data.BLOCK_NAME;
     } catch (error) {
       return ''
@@ -180,7 +180,7 @@ export default class HistoryFinding extends Component {
 	}
 	let createdTime = this.formatingInsertTime(INSERT_TIME);
     let werkAfdBlokCode = `${item.WERKS}${item.AFD_CODE}${item.BLOCK_CODE}`;
-    let lokasi = `${this.getBlokName(item.BLOCK_CODE)}/${this.getStatusBlok(werkAfdBlokCode)}/${this.getEstateName(item.WERKS)}`    
+    let lokasi = `${this.getBlokName(werkAfdBlokCode)}/${this.getStatusBlok(werkAfdBlokCode)}/${this.getEstateName(item.WERKS)}`    
     let status = '', colorStatus = '';
     if (item.STATUS_SYNC == 'N'){
       status = 'Data Belum Dikirim'
