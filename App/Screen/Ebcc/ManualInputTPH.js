@@ -41,6 +41,8 @@ class ManualInputTPH extends React.Component{
         let longitude = R.clone(params.longitude)
 
         this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
+        this.backSpaceFocus3 = this.backSpaceFocus3.bind(this);
+        this.backSpaceFocus2 = this.backSpaceFocus2.bind(this);
         this.state = {
             btnHilang: styles.bubbleOff,
             btnRusak: styles.bubbleOff,
@@ -113,6 +115,19 @@ class ManualInputTPH extends React.Component{
             this.txt2.focus()
         }else if(param !== '' && txt == '2'){
             this.txt3.focus()
+        }
+    }
+
+    backSpaceFocus3({ nativeEvent: { key: keyValue } }) {
+        if (keyValue === 'Backspace') {
+            this.txt2.focus()
+        }
+        
+    }
+
+    backSpaceFocus2({ nativeEvent: { key: keyValue } }) {
+        if (keyValue === 'Backspace') {
+            this.txt1.focus()
         }
     }
 
@@ -225,6 +240,7 @@ class ManualInputTPH extends React.Component{
                     <Text style={{ fontSize: 15, fontWeight: '500', marginTop: 20 }}>TPH</Text>
                     <View style={{marginTop: 5, flexDirection: 'row', marginTop: 5}}>
                         <TextInput
+                            ref={(input) => this.txt1 = input}
                             underlineColorAndroid={'transparent'}
                             style={[styles.searchInput, { width: 40, textAlign:'center'}]}
                             keyboardType="numeric"
@@ -239,6 +255,7 @@ class ManualInputTPH extends React.Component{
                             keyboardType="numeric" 
                             maxLength={1}
                             onSubmitEditing={() => this.txt3.focus()}
+                            onKeyPress={ this.backSpaceFocus2 }
                             value={this.state.text2}
                             onChangeText={(text) => { text = text.replace(/[^0-9 ]/g, ''); this.setState({text2: text}); this.nextFocus(text, '2') }}/>
                         <TextInput
@@ -247,6 +264,7 @@ class ManualInputTPH extends React.Component{
                             style={[styles.searchInput, {width: 40, textAlign:'center'}]}
                             keyboardType="numeric"
                             maxLength={1}
+                            onKeyPress={ this.backSpaceFocus3 }
                             value={this.state.text3}
                             onChangeText={(text) => { text = text.replace(/[^0-9 ]/g, ''); this.setState({text3: text}) }}/>
                     </View>

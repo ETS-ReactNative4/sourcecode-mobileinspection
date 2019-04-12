@@ -272,7 +272,9 @@ class FormStep2 extends Component {
             REFFERENCE_INS_CODE: "",
             INSERT_USER: this.state.user.USER_AUTH_CODE,
             INSERT_TIME: insertTime,
-            STATUS_SYNC: "N"
+            UPDATE_USER: this.state.user.USER_AUTH_CODE,
+            UPDATE_TIME: insertTime,
+            STATUS_SYNC: "N",
         }
 
         TaskServices.saveData('TR_FINDING', data);

@@ -802,7 +802,7 @@ class SyncScreen extends React.Component {
             REFFERENCE_INS_CODE: param.REFFERENCE_INS_CODE,
             INSERT_USER: param.INSERT_USER,
             INSERT_TIME: param.INSERT_TIME,
-            UPDATE_USERUPDATE_USER: param.UPDATE_USER,
+            UPDATE_USER: param.UPDATE_USER,
             UPDATE_TIME: param.UPDATE_TIME
         }
         this.uploadData(link+'finding', data, 'finding', '');

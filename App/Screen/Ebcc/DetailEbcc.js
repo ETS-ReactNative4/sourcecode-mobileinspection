@@ -64,18 +64,18 @@ class DetailEbcc extends Component {
         }
     }
 
-    getDataBlock(blockCode){
-        try {
-            let data = TaskServices.findBy2('TM_BLOCK', 'BLOCK_CODE', blockCode);
-            return data;            
-        } catch (error) {
-            return ''
-        }
-    }
+    // getDataBlock(werk_afd_blok_code){
+    //     try {
+    //         let data = TaskServices.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', werk_afd_blok_code);
+    //         return data;            
+    //     } catch (error) {
+    //         return ''
+    //     }
+    // }
 
     loadData(){
-
-        var dataBlock = TaskServices.findBy2('TM_BLOCK', 'BLOCK_CODE', this.state.data.BLOCK_CODE)
+        var werksAfdBlockCode = `${this.state.data.WERKS}${this.state.data.AFD_CODE}${this.state.data.BLOCK_CODE}`
+        var dataBlock = TaskServices.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', werksAfdBlockCode)
         var blockName = dataBlock !== undefined ? dataBlock.BLOCK_NAME:''
         var werk_afd_blok_code = dataBlock !== undefined ? dataBlock.WERKS_AFD_BLOCK_CODE:''
         var werks = dataBlock !== undefined ? dataBlock.WERKS:''
@@ -250,7 +250,7 @@ class DetailEbcc extends Component {
                                 editable={false}
                                 underlineColorAndroid={'transparent'}
                                 style={[styles.searchInput, {backgroundColor: Colors.abuabu}]}
-                                maxLength={2}
+                                maxLength={3}
                                 keyboardType={'numeric'}
                                 value={this.state.totalJanjang} />
                         </View>
