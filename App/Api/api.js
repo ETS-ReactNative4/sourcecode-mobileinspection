@@ -9,7 +9,6 @@ var user = TaskServices.getAllData('TR_LOGIN')
 const create = () => {
 	let baseUrl = "";
 	user = TaskServices.getAllData('TR_LOGIN');
-	console.log("user api",user);
 	if(user.length>0){
 		baseUrl = ServerName[user[0].SERVER_NAME_INDEX].data;
 	}
@@ -142,7 +141,6 @@ const create = () => {
     }
 
     const getBlock = () => {
-		console.log("base url",api);
         api.setHeader('Authorization', `Bearer ${user[0].ACCESS_TOKEN}`)
         return api.get('/mobile-sync/hectare-statement/block')
     }

@@ -1201,6 +1201,7 @@ class SyncScreen extends React.Component {
                 this.setState({ progressFinding: i / data.simpan.length, totalFindingDownload: data.simpan.length });
             }
             data.simpan.map(item => {
+				this._updateTR_Notif(item);
                 TaskServices.saveData('TR_FINDING', item);
                 let countDataInsert = TaskServices.getTotalData('TR_FINDING');
                 this.setState({ valueFindingDownload: countDataInsert });
@@ -1211,6 +1212,7 @@ class SyncScreen extends React.Component {
         }
         if (data.ubah.length > 0 && allData.length > 0) {
             data.ubah.map(item => {
+				this._updateTR_Notif(item);
                 TaskServices.updateByPrimaryKey('TR_FINDING', item)
                 // let indexData = R.findIndex(R.propEq('FINDING_CODE', item.FINDING_CODE))(allData);
                 //TaskServices.updateFindingDownload(item, indexData)
@@ -1218,11 +1220,49 @@ class SyncScreen extends React.Component {
         }
         if (data.hapus.length > 0 && allData.length > 0) {
             data.hapus.map(item => {
+				this._updateTR_Notif(item);
                 this.deleteRecordByPK('TR_FINDING', 'FINDING_CODE', item.FINDING_CODE);
             });
         }
     }
 
+	_updateTR_Notif(data){
+		let today = moment(new Date());
+		let newNotif = {
+			NOTIFICATION_ID: today.unix(),
+			NOTIFICATION_TIME: new Date(),
+			NOTIFICATION_STATUS: 0,
+			FINDING_CODE:data.FINDING_CODE
+		}
+		if(data.UPDATE_USER==undefined){
+			if(data.ASSIGN_TO==this.state.user.USER_AUTH_CODE){
+				//finding baru diasign ke user
+				newNotif.NOTIFICATION_TYPE=0;
+				TaskServices.saveData('TR_NOTIFICATION', newNotif);
+			}
+			let createDate = moment(data.INSERT_TIME,"YYYYMMDDHHmmss");
+			let diffDays = today.diff(createDate, 'days');
+			if(diffDays>6){
+				//belum di respon 7 hari setelah pembuatan
+				if(data.ASSIGN_TO==this.state.user.USER_AUTH_CODE){
+					//diasign tapi belum merespon
+					newNotif.NOTIFICATION_TYPE=2;
+					TaskServices.saveData('TR_NOTIFICATION', newNotif);
+				}
+				else if(data.INSERT_USER==this.state.user.USER_AUTH_CODE){
+					//membuat finding tapi belum mendapat respon
+					newNotif.NOTIFICATION_TYPE=3;
+					TaskServices.saveData('TR_NOTIFICATION', newNotif);
+				}
+			}
+		}
+		else if(data.INSERT_USER==this.state.user.USER_AUTH_CODE){
+			//terjadi update pada finding yang user buat
+			newNotif.NOTIFICATION_TYPE=1;
+			TaskServices.saveData('TR_NOTIFICATION', newNotif);
+		}
+	}
+	
     _crudTM_Finding_Image(data) {
         var dataSimpan = data.simpan;
         if (dataSimpan.length > 0) {

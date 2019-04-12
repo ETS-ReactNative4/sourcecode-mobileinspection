@@ -2,9 +2,24 @@ import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native'
 import { Container, Content } from 'native-base'
 import Colors from '../Constant/Colors';
+import TaskServices from '../Database/TaskServices'
 
 export default class Inbox extends React.Component {
 
+	constructor(props) {
+		super(props);
+		let data = this.getNotif();
+		this.state = {
+		  data: [],
+
+		  //Add Modal Alert by Aminju 
+		  title: 'Title',
+		  message: 'Message',
+		  showModal: false,
+		  icon: '',
+		  isFilter: false
+		}
+	}
     static navigationOptions = ({ navigation }) => ({
         headerStyle: {
             backgroundColor: Colors.tintColorPrimary
@@ -18,13 +33,57 @@ export default class Inbox extends React.Component {
         title: 'Inbox',
         headerTintColor: '#fff'
     })
+	
+	getNotif = () => {
+		let notifData = TaskServices.getAllData('TR_NOTIFICATION');
+		return notifData;
+	}
 
+	_renderItem = (item, index) => {
+		let title;
+		let sources;
+		if (item.NOTIFICATION_TYPE == 0) {
+			sources = require('../Images/icon/ic_task_new.png');
+			title = "TUGAS BARU";
+		} else if (item.NOTIFICATION_TYPE == 1) {
+			sources = require('../Images/icon/ic_task_wip.png');
+			title = "UPDATE PROGRESS";
+		}  else if (item.NOTIFICATION_TYPE == 2 ||  item.NOTIFICATION_TYPE == 3) {
+			sources = require('../Images/icon/ic_task_no_response.png');
+			title = "BELUM ADA RESPON";
+		}
+		return (
+			<View>
+				<Image style={{ marginTop: 2, height: 28, width: 28 }} source={sources}></Image>
+				<View style={styles.container}>
+					<Text>{title}</Text>
+				</View>
+			</View>
+		)
+	}
+	_renderData() {
+		return (
+			<View>
+				<ScrollView
+				showsHorizontalScrollIndicator={false}
+				showsVerticalScrollIndicator={false}>
+					<View style={{ marginBottom: 48 }}>
+						{this.state.data.map((item, index) => this._renderItem(item, index))}
+					</View>
+				</ScrollView>
+			</View>
+		)
+	}
     render() {
+		let show;
+		if (this.state.data.length > 0) {
+		  show = this._renderData()
+		}
         return (
             <Container style={{ flex: 1, padding: 16 }}>
                 <Content>
                     <View style={styles.container}>
-                        <Image style={{ width: 400, height: 300, marginTop: 110 }} source={require('../Images/img-cooming-soon-1.png')} />
+						{show}
                     </View>
                     {/* <TouchableOpacity>
                         <View style={styles.container}>
