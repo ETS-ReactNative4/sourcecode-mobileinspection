@@ -113,7 +113,8 @@ class SelesaiInspeksi extends React.Component {
                 distance = distance + parseInt(dataBaris[i].DISTANCE);
             }       
         }
-        let dataBlock = Taskservices.findBy2('TM_BLOCK', 'BLOCK_CODE', this.state.dataInspeksi.BLOCK_CODE);
+        let werkAfdBlokCode = `${this.state.dataInspeksi.WERKS}${this.state.dataInspeksi.AFD_CODE}${this.state.dataInspeksi.BLOCK_CODE}`;
+        let dataBlock = Taskservices.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', werkAfdBlokCode);
         this.setState({
             jmlBaris: barisPembagi, 
             totalWaktu: time.toString(), 
