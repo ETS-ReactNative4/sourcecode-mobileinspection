@@ -394,6 +394,17 @@ const TR_D_EBCC_VALIDATION = {
     }
 }
 
+const TR_NOTIFICATION = {
+    name: 'TR_NOTIFICATION',
+    primaryKey: 'NOTIFICATION_ID',
+    properties: {
+        NOTIFICATION_ID: 'int',
+        NOTIFICATION_TIME: 'date',
+		NOTIFICATION_STATUS: { type: 'int', default: 0 },
+		NOTIFICATION_TYPE: { type: 'int', default: 0 },
+        FINDING_CODE: { type: 'string' },
+    }
+}
 const TR_SYNC_LOG = {
     name: 'TR_SYNC_LOG',
     primaryKey: 'SYNC_TIME_ID',
@@ -432,6 +443,7 @@ export default {
     TR_D_EBCC_VALIDATION,
 	
 	TR_SYNC_LOG,
+	TR_NOTIFICATION,
 	
 	SCHEMA_VERSION
 }

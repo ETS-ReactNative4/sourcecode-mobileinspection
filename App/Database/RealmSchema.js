@@ -29,6 +29,7 @@ let realmSchema = new Realm({
         ModelTables.TM_KUALITAS,
         ModelTables.TR_H_EBCC_VALIDATION,
         ModelTables.TR_D_EBCC_VALIDATION,
+        ModelTables.TR_NOTIFICATION,
         ModelTables.TR_SYNC_LOG
     ], 
 	schemaVersion: ModelTables.SCHEMA_VERSION
