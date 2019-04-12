@@ -13,7 +13,7 @@
     "geolib": "^2.0.24",
     "moment": "^2.22.2",
     "moment-timezone": "^0.5.23",
-    "native-base": "^2.8.1",
+    "native-base": "^2.12.1",
     "prop-types": "^15.6.2",
     "ramda": "^0.25.0",
     "random-string": "^0.2.0",

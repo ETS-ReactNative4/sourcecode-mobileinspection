@@ -16,7 +16,7 @@ export default createMaterialTopTabNavigator({
     navigationOptions: {
       tabBarLabel: 'Daftar Inspeksi'
     }
-  }
+  },
 }, {
     initialRouteName: 'DaftarInspeksi',
     order: ['DaftarInspeksi', 'Riwayat'],

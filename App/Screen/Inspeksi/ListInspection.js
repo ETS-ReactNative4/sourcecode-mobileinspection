@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Image } from 'react-native';
+import { View, Image } from 'react-native';
 import ActionButton from 'react-native-action-button';
 import Colors from '../../Constant/Colors'
-import TaskServices from '../../Database/TaskServices'
 import { NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux';
 import InspeksiAction from '../../Redux/InspeksiRedux';
-import { getTodayDate } from '../../Lib/Utils';
 import Icon2 from 'react-native-vector-icons/MaterialIcons'
 
 import { ProgressDialog } from 'react-native-simple-dialogs';
 import { Container, Content } from 'native-base';
+
+import styles from 'list-inspection-style/ListInspectionStyle';
+import Function from 'list-inspection-function/ListInspectionFunction';
 
 class ListInspection extends Component {
 
@@ -21,70 +22,45 @@ class ListInspection extends Component {
     }
   }
 
-  loadData() {
-    let dataHeader = TaskServices.getAllData('TR_BLOCK_INSPECTION_H');
-    if (dataHeader !== null) {
-      for (var i = 0; i < dataHeader.length; i++) {
-        this.kirimInspeksiHeader(dataHeader[i]);
-      }
-    }
-  }
-
-  loadDataDetail(param) {
-    let data = TaskServices.findBy('TR_BLOCK_INSPECTION_D', 'BLOCK_INSPECTION_CODE', param);
-    if (data !== null) {
-      for (var i = 0; i < data.length; i++) {
-        this.kirimInspeksiDetail(data[i]);
-      }
-    }
-  }
-
-  kirimInspeksiHeader(param) {
-    this.props.postInspeksi({
-      BLOCK_INSPECTION_CODE: param.BLOCK_INSPECTION_CODE,
-      WERKS: param.WERKS,
-      AFD_CODE: param.AFD_CODE,
-      BLOCK_CODE: param.AFD_CODE,
-      INSPECTION_DATE: param.INSPECTION_DATE,
-      INSPECTION_RESULT: param.INSPECTION_RESULT,
-      STATUS_SYNC: 'YES',
-      SYNC_TIME: getTodayDate('YYYY-MM-DD HH:mm:ss'),
-      START_INSPECTION: param.START_INSPECTION,
-      END_INSPECTION: param.END_INSPECTION,
-      LAT_START_INSPECTION: param.LAT_START_INSPECTION,
-      LONG_START_INSPECTION: param.LONG_START_INSPECTION,
-      LAT_END_INSPECTION: param.LAT_END_INSPECTION,
-      LONG_END_INSPECTION: param.LONG_END_INSPECTION
-    });
-  }
-
-  kirimInspeksiDetail(param) {
-    this.props.postInspeksiDetail({
-      BLOCK_INSPECTION_CODE: param.BLOCK_INSPECTION_CODE,
-      BLOCK_INSPECTION_CODE_D: param.BLOCK_INSPECTION_CODE_D,
-      CONTENT_CODE: param.CONTENT_CODE,
-      AREAL: param.AREAL,
-      VALUE: param.VALUE,
-      STATUS_SYNC: 'YES',
-      SYNC_TIME: getTodayDate('YYYY-MM-DD HH:mm:ss')
-    });
-  }
-
-  actionButtonClick() {
-    // this.props.navigation.navigate('FormInspection');
-    // this.props.navigation.dispatch(NavigationActions.navigate({ routeName: 'BuatInspeksi' }));    
+  redirectToMapsInspeksi() {  
     this.props.navigation.dispatch(NavigationActions.navigate({ routeName: 'MapsInspeksi' }));
+  }
+
+  redirectToGenba() {   
+    this.props.navigation.dispatch(NavigationActions.navigate({ routeName: 'Genba' }));
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <Image style={{ width:300, height: 300 }} source={require('../../Images/icon/ic-no-inspeksi.png')} />
+        <Image  style={{ width:300, height: 300 }} 
+                source={require('../../Images/icon/ic-no-inspeksi.png')} />
 
         <ActionButton style={{ marginEnd: -10, marginBottom: -10 }}
           buttonColor={Colors.tintColor}
-          onPress={() => { this.actionButtonClick() }}
           icon={<Icon2 color='white' name='add' size={25} />}>
+
+            {/** FAB for Genba*/}
+            <ActionButton.Item 
+              size={40}
+              buttonColor={Colors.tintColor}
+              title="Genba" 
+              textStyle={{flex:1}}
+              onPress={this.redirectToGenba}>
+              <Icon2 name="group" 
+              style={{ fontSize: 20, height: 22, color: 'white' }} />
+            </ActionButton.Item>
+
+            {/** FAB for Inspection */}
+            <ActionButton.Item 
+              size={40}
+              buttonColor={Colors.tintColor}
+              title="Inspeksi" 
+              textStyle={{flex:1}}
+              onPress={this.redirectToMapsInspeksi}>
+              <Icon2 name="find-replace" 
+              style={{ fontSize: 20, height: 22, color: 'white' }} />
+            </ActionButton.Item>
         </ActionButton>
       </View>
     )
@@ -92,27 +68,3 @@ class ListInspection extends Component {
 }
 
 export default ListInspection;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#fff',
-    padding: 16
-  },
-  ActionButtonStyle: {
-    color: Colors.tintColor,
-    backgroundColor: Colors.tintColor
-  },
-  FloatingButtonStyle: {
-    resizeMode: 'contain',
-    width: 50,
-    height: 50,
-  },
-  actionButtonIcon: {
-    fontSize: 20,
-    height: 22,
-    color: 'white',
-  }
-});
