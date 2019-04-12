@@ -145,6 +145,7 @@ class SyncScreen extends React.Component {
             downloadInspeksiParam: false,
             fetchLocation: false,
             isBtnEnable: false,
+			syncTime: true,
 
             dataFinding: [],
             dataInspeksi: [],
@@ -1294,7 +1295,7 @@ class SyncScreen extends React.Component {
         }
         TaskServices.saveData('TR_SYNC_LOG', data);
 	}
-	_reset_token(){
+	_reset_token(trueSync){
 		let allLoginData = TaskServices.findBy('TR_LOGIN','STATUS','LOGIN');
 		if(allLoginData.length>0){
 			let token = allLoginData[0].ACCESS_TOKEN;
@@ -1308,27 +1309,38 @@ class SyncScreen extends React.Component {
 				return response.json();
 			})
 			.then((data) => {
-				if(data.status){
-					let newToken = data.data;
-					let allLoginData = TaskServices.findBy('TR_LOGIN','STATUS','LOGIN');
-					if(allLoginData.length>0){
-						let oldUser = Object.assign({}, allLoginData[0],{ACCESS_TOKEN:newToken});
-						TaskServices.updateByPrimaryKey('TR_LOGIN',oldUser);
-						let newLoginData = TaskServices.findBy('TR_LOGIN','STATUS','LOGIN');
-						RNFS.copyFile(TaskServices.getPath(), 'file:///storage/emulated/0/MobileInspection/data.realm');
-						this.setState({
-							showModal: true,
-							title: 'Sync Berhasil',
-							message: 'Yeay sinkronisasi udah selesai!',
-							icon: require('../Images/ic-sync-berhasil.png'), 
-							showButton: true
-						});
+				if(trueSync){
+					if(data.status){
+						let newToken = data.data;
+						let allLoginData = TaskServices.findBy('TR_LOGIN','STATUS','LOGIN');
+						if(allLoginData.length>0){
+							let oldUser = Object.assign({}, allLoginData[0],{ACCESS_TOKEN:newToken});
+							TaskServices.updateByPrimaryKey('TR_LOGIN',oldUser);
+							let newLoginData = TaskServices.findBy('TR_LOGIN','STATUS','LOGIN');
+							RNFS.copyFile(TaskServices.getPath(), 'file:///storage/emulated/0/MobileInspection/data.realm');
+							this.setState({
+								showModal: true,
+								title: 'Sync Berhasil',
+								message: 'Yeay sinkronisasi udah selesai!',
+								icon: require('../Images/ic-sync-berhasil.png'), 
+								showButton: true
+							});
+						}
+						else{
+							this.setState({
+								showModal: true,
+								title: 'Sync Gagal',
+								message: 'Gagal mendapatkan informasi user',
+								icon: require('../Images/ic-sync-gagal.png'), 
+								showButton: true
+							});
+						}
 					}
 					else{
 						this.setState({
 							showModal: true,
 							title: 'Sync Gagal',
-							message: 'Gagal mendapatkan informasi user',
+							message: 'Gagal memperbarui token',
 							icon: require('../Images/ic-sync-gagal.png'), 
 							showButton: true
 						});
@@ -1336,12 +1348,12 @@ class SyncScreen extends React.Component {
 				}
 				else{
 					this.setState({
+						showButton: true,
 						showModal: true,
-						title: 'Sync Gagal',
-						message: 'Gagal memperbarui token',
-						icon: require('../Images/ic-sync-gagal.png'), 
-						showButton: true
-					});
+						title: 'Tidak Sinkron',
+						message: 'Jam di HP kamu salah',
+						icon: require('../Images/ic-sync-gagal.png')
+					})
 				}
 			})
 			.catch((data)=>{
@@ -1823,24 +1835,18 @@ class SyncScreen extends React.Component {
         }
         if (newProps.serverTime.fetchingServerTime !== null && !newProps.serverTime.fetchingServerTime) {
             let dataJSON = newProps.serverTime.serverTime;
+			let trueSync = true;
             if (dataJSON !== null) {
 				let serverTime = new Date(dataJSON.time.replace(' ','T')+"+07:00");
 				let localTime = new Date();
 				serverTime.setMinutes(0,0,0);
 				localTime.setMinutes(0,0,0);
-				console.log("check time",dataJSON.time.replace(' ','T'),serverTime,localTime);
 				if(serverTime.getTime()!== localTime.getTime()){
-                    this.setState({
-                        showButton: true,
-                        showModal: true,
-                        title: 'Tidak Sinkron',
-                        message: 'Jam di HP kamu salah',
-                        icon: require('../Images/ic-sync-gagal.png')
-                    })
+                    trueSync = false;
 				}
             }
+			this._reset_token(trueSync);
             this.props.resetServerTime();
-			this._reset_token();
 			this._save_sync_log();
         }
     }
