@@ -39,8 +39,6 @@ class HistoryInspeksiDetail extends React.Component {
             totalJarak: '',
             nilaiInspeksi: '',
             nilaiScore: '',
-            blockCode: '',
-            blockName: '',
             estateName: '', // Taskservices.getEstateName()
             arrTemuan: []
         };
@@ -65,12 +63,21 @@ class HistoryInspeksiDetail extends React.Component {
         this.loadData()
     }
 
-    getEstateName(werks) {
+    getStatusBlok(werk_afd_blok_code){
         try {
-            let data = Taskservices.findBy2('TM_EST', 'WERKS', werks);
-            return data.EST_NAME;
+            let data = Taskservices.findBy2('TM_LAND_USE', 'WERKS_AFD_BLOCK_CODE', werk_afd_blok_code);
+            return data.MATURITY_STATUS;            
         } catch (error) {
-            return '';
+            return ''
+        }
+    }
+
+    getBlokName(werk_afd_blok_code){
+        try {
+            let data = Taskservices.findBy2('TM_LAND_USE', 'WERKS_AFD_BLOCK_CODE', werk_afd_blok_code);
+            return data.BLOCK_NAME;            
+        } catch (error) {
+            return ''
         }
     }
 
@@ -103,8 +110,6 @@ class HistoryInspeksiDetail extends React.Component {
                 distance = distance + parseInt(dataBaris[i].DISTANCE);
             }
         }
-        let werkAfdBlokCode = `${dataBaris[0].WERKS}${dataBaris[0].AFD_CODE}${dataBaris[0].BLOCK_CODE}`;
-        let dataBlock = Taskservices.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', werkAfdBlokCode);
 
         var piringan = this.getTotalComponentBy('CC0007');
         var sarkul = this.getTotalComponentBy('CC0008');
@@ -162,8 +167,6 @@ class HistoryInspeksiDetail extends React.Component {
             nilaiInspeksi: this.state.data.INSPECTION_RESULT,
             nilaiScore: parseFloat(this.state.data.INSPECTION_SCORE).toFixed(1).toString(), //score,
             distance: distance,
-            blockCode: dataBlock.BLOCK_CODE,
-            blockName: dataBlock.BLOCK_NAME,
             barisPembagi: dataBaris.length,
             estateName: this.state.data.EST_NAME
         })
@@ -536,7 +539,7 @@ class HistoryInspeksiDetail extends React.Component {
                         {this.renderSticker(this.state.nilaiInspeksi)}
                         <Text style={[styles.textNilai, { color: this.colorTextScore(this.state.nilaiInspeksi) }]}>{this.state.nilaiInspeksi}/{this.state.nilaiScore}</Text>
 
-                        <Text style={styles.textLokasi}>{this.state.estateName} - {this.state.data.AFD_CODE} - {this.state.blockName}/{this.state.blockCode}</Text>
+                        <Text style={styles.textLokasi}>{this.getBlokName(this.state.data.WERKS_AFD_BLOCK_CODE)}/{this.getStatusBlok(this.state.data.WERKS_AFD_BLOCK_CODE)}/{this.state.data.EST_NAME}</Text>
                         {/* <View style={styles.lineDivider} /> */}
                         <View style={styles.sectionRow}>
                             <View style={{ marginRight: 10 }} >

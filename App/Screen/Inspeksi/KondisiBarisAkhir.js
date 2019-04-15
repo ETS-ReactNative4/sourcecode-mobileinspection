@@ -120,29 +120,14 @@ class KondisiBarisAkhir extends Component{
     componentDidMount(){
         if(this.state.from === 'history'){         
             let time = this.state.inspeksiHeader.TIME;
-            let distance = this.state.inspeksiHeader.DISTANCE;    
+            let distance = this.state.inspeksiHeader.DISTANCE;   
             this.setState({menit:time, distance: distance, jarak: distance});
         }else{
             let sda = this.totalWaktu();
             this.setState({menit:sda.toString()})
         }
-        this.getLocation();
+        this.getLocation();       
         this.makeLineTrack();
-    }
-
-    makeLineTrack(){
-        let header = TaskService.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION)
-        if(header !== null){
-            header.map(hdr => {
-                let data = TaskService.findBy('TM_INSPECTION_TRACK', 'BLOCK_INSPECTION_CODE', hdr.BLOCK_INSPECTION_CODE)
-                if(data !== undefined){
-                    data.map(item =>{
-                        let arr = {latitude:parseFloat(item.LAT_TRACK), longitude:parseFloat(item.LONG_TRACK)}
-                        this.state.polyTrack.push(arr)
-                    })
-                }
-            })            
-        }        
     }
 
     totalWaktu(){
@@ -164,7 +149,7 @@ class KondisiBarisAkhir extends Component{
 
     searchLocation =() =>{
         this.setState({fetchLocation: true})
-        this.getLocation();
+        this.getLocation();      
     }
 
     getLocation() {
@@ -179,7 +164,7 @@ class KondisiBarisAkhir extends Component{
                   latitudeDelta:0.0075,
                   longitudeDelta:0.00721
                 } 
-                // this.map.animateToCoordinate(region, 1);
+                // this.map.animateToCoordinate(region, 1);    
                 this.setState({latitude:lat, longitude:lon, jarak: totalJarak.toString(), fetchLocation: false, region});
             },
             (error) => {
@@ -195,7 +180,32 @@ class KondisiBarisAkhir extends Component{
             }, // go here if error while fetch location
             { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
         );
-    } 
+    }     
+
+    makeLineTrack(){
+        if(this.state.from === 'history'){  
+            let header = TaskService.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION)
+            if(header !== null){
+                header.map(hdr => {
+                    let data = TaskService.findBy('TM_INSPECTION_TRACK', 'BLOCK_INSPECTION_CODE', hdr.BLOCK_INSPECTION_CODE)
+                    if(data !== undefined){
+                        data.map(item =>{
+                            let arr = {latitude:parseFloat(item.LAT_TRACK), longitude:parseFloat(item.LONG_TRACK)}
+                            this.state.polyTrack.push(arr)
+                        })
+                    }
+                })            
+            }    
+        }else{
+            let data = TaskService.findBy('TM_INSPECTION_TRACK', 'BLOCK_INSPECTION_CODE', this.state.dataInspeksi.BLOCK_INSPECTION_CODE)
+            if(data !== undefined){
+                data.map(item =>{
+                    let arr = {latitude:parseFloat(item.LAT_TRACK), longitude:parseFloat(item.LONG_TRACK)}
+                    this.state.polyTrack.push(arr)
+                })
+            }
+        }               
+    }
 
     centerCoordinate(coordinates) {
         let x = coordinates.map(c => c.latitude)

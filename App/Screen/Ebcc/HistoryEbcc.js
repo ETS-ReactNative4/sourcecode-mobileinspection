@@ -72,7 +72,7 @@ export default class HistoryEbcc extends Component {
       colorStatus = 'red';
     }else{
       status = 'Data Sudah Terkirim'
-      colorStatus = Colors.brand
+      colorStatus = '#999'//Colors.brand
     }  
     let imgBaris = TaskServices.findByWithList('TR_IMAGE', ['TR_CODE', 'STATUS_IMAGE'], [data.EBCC_VALIDATION_CODE, 'JANJANG']);
     let estName = this.getEstateName(data.WERKS);
@@ -84,7 +84,7 @@ export default class HistoryEbcc extends Component {
     }    
     let dataBlock = Taskservice.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', `${data.WERKS}${data.AFD_CODE}${data.BLOCK_CODE}`);
     let statusBlok = this.getStatusBlok(dataBlock.WERKS_AFD_BLOCK_CODE)    
-    let ebccDate = data.INSERT_TIME == '' ? 'Insert Time kosong' : moment(data.INSERT_TIME).format('LL');
+    let ebccDate = data.INSERT_TIME == '' ? 'Insert Time kosong' : moment(data.INSERT_TIME).format('LLL');
 
     return(
       <TouchableOpacity 
@@ -100,7 +100,7 @@ export default class HistoryEbcc extends Component {
                 <Text style={{ fontSize: 14, fontWeight: 'bold' }}>{`${dataBlock.BLOCK_NAME}/${statusBlok}/${estName}`}</Text>
                 <Text style={{ fontSize: 12, marginTop: 8 }}>{`TPH ${data.NO_TPH}`}</Text>
                 <Text style={{ fontSize: 12, marginTop: 5 }}>{ebccDate}</Text>
-                <Text style={{ fontSize: 12, color: colorStatus, marginTop: 15 }}>{status}</Text>
+                <Text style={{ fontSize: 12, color: colorStatus, marginTop: 15, fontStyle: 'italic' }}>{status}</Text>
               </View>
             </View>
           </Card>
