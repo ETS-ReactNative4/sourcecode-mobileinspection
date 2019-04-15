@@ -1200,8 +1200,12 @@ class SyncScreen extends React.Component {
                 this.setState({ progressFinding: i / data.simpan.length, totalFindingDownload: data.simpan.length });
             }
             data.simpan.map(item => {
-				this._updateTR_Notif(item);
-                TaskServices.saveData('TR_FINDING', item);
+				let newItem = Object.assign({}, item, {
+					INSERT_TIME: item.INSERT_TIME.replace(/[-|:| ]+/g, ''),
+					UPDATE_TIME: item.UPDATE_TIME.replace(/[-|:| ]+/g, '')
+				})
+				this._updateTR_Notif(newItem);
+                TaskServices.saveData('TR_FINDING', newItem);
                 let countDataInsert = TaskServices.getTotalData('TR_FINDING');
                 this.setState({ valueFindingDownload: countDataInsert });
             });
@@ -1211,8 +1215,12 @@ class SyncScreen extends React.Component {
         }
         if (data.ubah.length > 0 && allData.length > 0) {
             data.ubah.map(item => {
-				this._updateTR_Notif(item);
-                TaskServices.updateByPrimaryKey('TR_FINDING', item)
+				let newItem = Object.assign({}, item, {
+					INSERT_TIME: item.INSERT_TIME.replace(/[-|:| ]+/g, ''),
+					UPDATE_TIME: item.UPDATE_TIME.replace(/[-|:| ]+/g, '')
+				})
+				this._updateTR_Notif(newItem);
+                TaskServices.updateByPrimaryKey('TR_FINDING', newItem)
                 // let indexData = R.findIndex(R.propEq('FINDING_CODE', item.FINDING_CODE))(allData);
                 //TaskServices.updateFindingDownload(item, indexData)
             })
@@ -1233,7 +1241,7 @@ class SyncScreen extends React.Component {
 			NOTIFICATION_STATUS: 0,
 			FINDING_CODE:data.FINDING_CODE
 		}
-		if(data.UPDATE_USER==undefined){
+		if(data.UPDATE_USER==''){
 			if(data.ASSIGN_TO==this.state.user.USER_AUTH_CODE){
 				//finding baru diasign ke user
 				newNotif.NOTIFICATION_TYPE=0;

@@ -210,9 +210,9 @@ const TR_FINDING = {
         LONG_FINDING: 'string',
         REFFERENCE_INS_CODE: 'string',
         INSERT_USER: { type: 'string', optional: true },
-        INSERT_TIME: { type: 'int', default: 0 },
+        INSERT_TIME: { type: 'string', optional: true },
         UPDATE_USER: { type: 'string', optional: true },
-        UPDATE_TIME: { type: 'int', default: 0 },
+        UPDATE_TIME: { type: 'string', optional: true },
         STATUS_SYNC: 'string'
     }
 }

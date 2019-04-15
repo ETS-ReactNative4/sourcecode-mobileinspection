@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native'
+import { StyleSheet, View, Text, TouchableOpacity, Image, ScrollView } from 'react-native'
 import { Container, Content } from 'native-base'
 import Colors from '../Constant/Colors';
 import TaskServices from '../Database/TaskServices'
@@ -10,7 +10,7 @@ export default class Inbox extends React.Component {
 		super(props);
 		let data = this.getNotif();
 		this.state = {
-		  data: [],
+		  data,
 
 		  //Add Modal Alert by Aminju 
 		  title: 'Title',
@@ -39,6 +39,12 @@ export default class Inbox extends React.Component {
 		return notifData;
 	}
 
+	onClickItem(id) {
+		let notifData = TaskServices.findBy2('TR_NOTIFICATION','NOTIFICATION_ID',id);
+		notifData.NOTIFICATION_STATUS = 1;
+		TaskServices.updateByPrimaryKey('TR_NOTIFICATION', notifData)
+		this.props.navigation.navigate('DetailFinding', { ID: notifData.FINDING_CODE })
+	}
 	_renderItem = (item, index) => {
 		let title;
 		let sources;
@@ -53,12 +59,18 @@ export default class Inbox extends React.Component {
 			title = "BELUM ADA RESPON";
 		}
 		return (
-			<View>
-				<Image style={{ marginTop: 2, height: 28, width: 28 }} source={sources}></Image>
-				<View style={styles.container}>
-					<Text>{title}</Text>
+			<TouchableOpacity
+				style={styles.sectionCardView}
+				onPress={() => { this.onClickItem(item.NOTIFICATION_ID) }}
+				key={index}
+			>
+				<Image style={{ alignItems: 'stretch', width: 30, height: 30 }} source={sources}></Image>
+				<View style={styles.sectionDesc} >
+					<View style={{ flexDirection: 'row' }}>
+						<Text style={{ fontSize: 12, color: 'black', fontWeight: 'bold' }}>{title}</Text>
+					</View>
 				</View>
-			</View>
+			</TouchableOpacity>
 		)
 	}
 	_renderData() {
@@ -139,6 +151,15 @@ const styles = StyleSheet.create({
         height: 10,
         width: 10,
         borderRadius: 50
-    }
+    },
+	sectionCardView: {
+		flex: 1, 
+		flexDirection: 'row'
+	},
+	sectionDesc: {
+		flexDirection: 'column',
+		justifyContent: 'space-between',
+		height: 80,
+	}
 });
 

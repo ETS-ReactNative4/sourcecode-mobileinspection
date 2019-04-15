@@ -254,7 +254,7 @@ class FormStep2 extends Component {
 
     saveData() {
 		var insertTime = getTodayDate('YYYYMMDDkkmmss');
-		insertTime = parseInt(insertTime);
+		//insertTime = parseInt(insertTime);
         var data = {
             FINDING_CODE: this.state.TRANS_CODE,
             WERKS: this.state.werks,
