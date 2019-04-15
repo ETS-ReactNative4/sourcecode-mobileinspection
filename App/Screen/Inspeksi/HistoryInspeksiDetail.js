@@ -103,7 +103,8 @@ class HistoryInspeksiDetail extends React.Component {
                 distance = distance + parseInt(dataBaris[i].DISTANCE);
             }
         }
-        let dataBlock = Taskservices.findBy2('TM_BLOCK', 'BLOCK_CODE', dataBaris[0].BLOCK_CODE);
+        let werkAfdBlokCode = `${dataBaris[0].WERKS}${dataBaris[0].AFD_CODE}${dataBaris[0].BLOCK_CODE}`;
+        let dataBlock = Taskservices.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', werkAfdBlokCode);
 
         var piringan = this.getTotalComponentBy('CC0007');
         var sarkul = this.getTotalComponentBy('CC0008');

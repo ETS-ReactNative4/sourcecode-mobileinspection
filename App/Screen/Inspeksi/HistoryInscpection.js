@@ -6,6 +6,7 @@ import Colors from '../../Constant/Colors';
 import Taskservice from '../../Database/TaskServices'
 import { NavigationActions, StackActions  } from 'react-navigation';
 import TaskServices from '../../Database/TaskServices';
+import moment from 'moment'
 var RNFS = require('react-native-fs');
 const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
 
@@ -72,7 +73,8 @@ export default class HistoryInspection extends Component {
     }
 
     
-    let dataBlock = Taskservice.findBy2('TM_BLOCK', 'BLOCK_CODE', data.BLOCK_CODE);
+    let werkAfdBlokCode = `${data.WERKS}${data.AFD_CODE}${data.BLOCK_CODE}`;
+    let dataBlock = Taskservice.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', werkAfdBlokCode);
 
     return(
       <TouchableOpacity 
@@ -88,7 +90,7 @@ export default class HistoryInspection extends Component {
                 {/* <Text style={{ fontSize: 14, fontWeight: 'bold' }}>{this.getEstateName(dataBlock.WERKS)}</Text> */}                
                 <Text style={{ fontSize: 14, fontWeight: 'bold' }}>{data.EST_NAME}</Text>
                 <Text style={{ fontSize: 12 , marginTop: 15}}>{dataBlock.BLOCK_NAME}/{data.BLOCK_CODE.toLocaleUpperCase()}</Text>
-                <Text style={{ fontSize: 12, marginTop: 5}}>{data.INSPECTION_DATE}</Text>
+                <Text style={{ fontSize: 12, marginTop: 5}}>{moment(data.INSPECTION_DATE).format('LLL')}</Text>
                 <Text style={{ fontSize: 12, marginTop: 20, color: colorStatus }}>{status}</Text>
               </View>
               <View style={{flexDirection:'row', height:120}}>
