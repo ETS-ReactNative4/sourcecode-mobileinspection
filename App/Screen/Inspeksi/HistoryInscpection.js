@@ -54,6 +54,15 @@ export default class HistoryInspection extends Component {
     }    
   }
 
+  getStatusBlok(werk_afd_blok_code){
+    try {
+        let data = TaskServices.findBy2('TM_LAND_USE', 'WERKS_AFD_BLOCK_CODE', werk_afd_blok_code);
+        return data.MATURITY_STATUS;            
+    } catch (error) {
+        return ''
+    }
+  }
+
   renderList = (data, index) => {
     let status = '', colorStatus = '';
     if (data.STATUS_SYNC == 'N'){
@@ -72,9 +81,7 @@ export default class HistoryInspection extends Component {
       path = '';
     }
 
-    
-    let werkAfdBlokCode = `${data.WERKS}${data.AFD_CODE}${data.BLOCK_CODE}`;
-    let dataBlock = Taskservice.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', werkAfdBlokCode);
+    let dataBlock = Taskservice.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', data.WERKS_AFD_BLOCK_CODE);
 
     return(
       <TouchableOpacity 
@@ -83,18 +90,16 @@ export default class HistoryInspection extends Component {
         key={index}>
           <Card style={[styles.cardContainer]}>
             <View style={styles.sectionCardView}>
-              <View style={{ flexDirection: 'row', height: 120 }} >
+              <View style={{ flexDirection: 'row', height: 100 }} >
                 <Image style={{ alignItems: 'stretch', width: 100, borderRadius:10 }} source={{uri: path}}></Image>
               </View>
-              <View style={styles.sectionDesc} >
-                {/* <Text style={{ fontSize: 14, fontWeight: 'bold' }}>{this.getEstateName(dataBlock.WERKS)}</Text> */}                
-                <Text style={{ fontSize: 14, fontWeight: 'bold' }}>{data.EST_NAME}</Text>
-                <Text style={{ fontSize: 12 , marginTop: 15}}>{dataBlock.BLOCK_NAME}/{data.BLOCK_CODE.toLocaleUpperCase()}</Text>
-                <Text style={{ fontSize: 12, marginTop: 5}}>{moment(data.INSPECTION_DATE).format('LLL')}</Text>
-                <Text style={{ fontSize: 12, marginTop: 20, color: colorStatus }}>{status}</Text>
+              <View style={styles.sectionDesc} >              
+                <Text style={{ fontSize: 14, marginTop: 10, fontWeight: 'bold' }}>{dataBlock.BLOCK_NAME}/{this.getStatusBlok(data.WERKS_AFD_BLOCK_CODE)}/{data.EST_NAME}</Text>
+                <Text style={{ fontSize: 12, marginTop: 5, color: 'grey'}}>{moment(data.INSPECTION_DATE).format('LLL')}</Text>
+                <Text style={{ fontSize: 12, marginTop: 20, color: colorStatus, fontStyle:'italic' }}>{status}</Text>
               </View>
-              <View style={{flexDirection:'row', height:120}}>
-                <Text style={[styles.textValue,{marginTop: 40}]}>{data.INSPECTION_RESULT == 'string' ? '': data.INSPECTION_RESULT}</Text>
+              <View style={{flexDirection:'row', height:100}}>
+                <Text style={[styles.textValue,{marginTop: 20}]}>{data.INSPECTION_RESULT == 'string' ? '': data.INSPECTION_RESULT}</Text>
                 <View style={{ alignItems: 'stretch', width: 8, backgroundColor: color, borderRadius:10 }} />
               </View>
             </View>
@@ -134,7 +139,7 @@ export default class HistoryInspection extends Component {
   getColor(param){
     switch(param){
       case 'A':
-        return Colors.brand;
+        return '#999';//Colors.brand;
       case 'B':
         return '#feb236';
       case 'C':
@@ -259,7 +264,7 @@ const styles = StyleSheet.create({
   },
   sectionCardView: {
     alignItems: 'stretch',
-    height: 120,
+    height: 100,
     backgroundColor: 'white',
     flexDirection: 'row',
     alignItems: 'center',
@@ -272,7 +277,7 @@ const styles = StyleSheet.create({
   },
   sectionDesc: {
     flexDirection: 'column',
-    height: 120,
+    height: 100,
     // paddingRight: 10,
     // paddingTop: 10,
     // paddingBottom: 10,

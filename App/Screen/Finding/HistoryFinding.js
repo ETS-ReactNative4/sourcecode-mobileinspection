@@ -188,8 +188,7 @@ export default class HistoryFinding extends Component {
     }else{
       status = 'Data Sudah Terkirim'
       colorStatus = Colors.brand;
-    } 
-	console.log("history finding",status) 
+    }  
 	/*
     return (
       <TouchableOpacity

@@ -238,10 +238,16 @@ class KriteriaBuah extends Component {
         return value
     }
 
-    nextFocus (label,index,arr) {
+    nextFocus (label,index,arr, group) { 
         let idx = index+1
+        let valBefore = '';
+
         if(idx < arr.length){
             this[`${label}${idx}`].focus();
+        }       
+        valBefore = this[`${label}${index}`]._getText()
+        if(valBefore == ''){
+            this.updateArr(index, '0', arr, group)
         }
     };
 
@@ -252,7 +258,7 @@ class KriteriaBuah extends Component {
                 <View style={[styles.containerInput, { flex: 1 }]}>
                     <TextInput
                         ref={(input) => {this[`textInput${index}`] = input}}
-                        onSubmitEditing={() => this.nextFocus('textInput', index, arr)}
+                        onSubmitEditing={() => this.nextFocus('textInput', index, arr, 'panen')}
                         underlineColorAndroid={'transparent'}
                         style={[styles.searchInput]}
                         maxLength={3}
@@ -271,7 +277,7 @@ class KriteriaBuah extends Component {
                 <View style={[styles.containerInput, { flex: 1 }]}>
                     <TextInput
                         ref={(input) => {this[`input${index}`] = input}}
-                        onSubmitEditing={() => this.nextFocus('input', index, arr)}
+                        onSubmitEditing={() => {param == 'total'? this.nextFocus('input', index, arr, 'jjg') : this.nextFocus('input', index, arr, 'buah')}}
                         underlineColorAndroid={'transparent'}
                         style={[styles.searchInput]}
                         maxLength={3}
@@ -333,7 +339,8 @@ class KriteriaBuah extends Component {
             if(strUpdate !== ''){
                 let total = 0;
                 newArray.map(item => {
-                    total = total+parseInt(item.JUMLAH)
+                    let jml = item.JUMLAH == '' ? '0': item.JUMLAH
+                    total = total+parseInt(jml)
                 });
                 var header = {
                     EBCC_VALIDATION_CODE: dataHeader.EBCC_VALIDATION_CODE,
