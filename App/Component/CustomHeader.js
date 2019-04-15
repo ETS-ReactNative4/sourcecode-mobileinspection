@@ -20,7 +20,8 @@ const CustomHeader = props => {
 			{divDays>0 && <Text style={{
 						alignSelf: 'center',
 						justifyContent: 'center',
-						color:Color.errorText
+						color:Color.errorText,
+						fontSize: 12
 					}}
 			>Kamu belum melakukan sync data selama {divDays} hari</Text>}
 		</View>
