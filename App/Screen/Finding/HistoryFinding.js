@@ -188,7 +188,8 @@ export default class HistoryFinding extends Component {
     }else{
       status = 'Data Sudah Terkirim'
       colorStatus = Colors.brand;
-    }  
+    } 
+	console.log("history finding",status) 
 	/*
     return (
       <TouchableOpacity
@@ -291,7 +292,7 @@ const styles = StyleSheet.create({
   },
   sectionCardView: {
     alignItems: 'stretch',
-    height: 100,
+    height: 130,
     backgroundColor: 'white',
     flexDirection: 'row',
     alignItems: 'center',
