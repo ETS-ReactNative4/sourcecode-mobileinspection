@@ -14,7 +14,7 @@ export default createMaterialTopTabNavigator({
   DaftarEbcc: {
     screen: ListEbcc,
     navigationOptions: {
-      tabBarLabel: 'Daftar'
+      tabBarLabel: 'Daftar Sampling'
     }
   }
 }, {

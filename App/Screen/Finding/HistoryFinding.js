@@ -169,9 +169,9 @@ export default class HistoryFinding extends Component {
     Moment.locale();
     let showImage;
     if (image == undefined) {
-      showImage = <Image style={{ alignItems: 'stretch', width: 90, height: 90, borderRadius: 10 }} source={require('../../Images/ic-default-thumbnail.png')} />
+      showImage = <Image style={{ alignItems: 'stretch', width: 90, height: 100, borderRadius: 10 }} source={require('../../Images/ic-default-thumbnail.png')} />
     } else {
-      showImage = <Image style={{ alignItems: 'stretch', width: 90, height: 90, borderRadius: 10 }} source={{ uri: "file://" + image.IMAGE_PATH_LOCAL }} />
+      showImage = <Image style={{ alignItems: 'stretch', width: 90, height: 100, borderRadius: 10 }} source={{ uri: "file://" + image.IMAGE_PATH_LOCAL }} />
     }
 	let assignTo = item.ASSIGN_TO;
 	let contact = TaskServices.query('TR_CONTACT', `USER_AUTH_CODE = "${assignTo}"`);
@@ -304,10 +304,11 @@ const styles = StyleSheet.create({
   sectionDesc: {
     flexDirection: 'column',
     justifyContent: 'space-between',
-    height: 80,
-    paddingTop: 7,
-    paddingBottom: 10,
-    paddingLeft: 10,
-    paddingRight: 10,
+    height: 130,
+    padding: 10
+    // paddingTop: 7,
+    // paddingBottom: 10,
+    // paddingLeft: 10,
+    // paddingRight: 10,
   }
 });

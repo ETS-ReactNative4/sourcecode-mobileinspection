@@ -95,7 +95,7 @@ export default class HistoryInspection extends Component {
               </View>
               <View style={styles.sectionDesc} >              
                 <Text style={{ fontSize: 14, marginTop: 10, fontWeight: 'bold' }}>{dataBlock.BLOCK_NAME}/{this.getStatusBlok(data.WERKS_AFD_BLOCK_CODE)}/{data.EST_NAME}</Text>
-                <Text style={{ fontSize: 12, marginTop: 5, color: 'grey'}}>{moment(data.INSPECTION_DATE).format('LLL')}</Text>
+                <Text style={{ fontSize: 12, marginTop: 5, color: 'grey'}}>{moment(data.INSPECTION_DATE).format('DD MMM YYYY hh:mm A')}</Text>
                 <Text style={{ fontSize: 12, marginTop: 20, color: colorStatus, fontStyle:'italic' }}>{status}</Text>
               </View>
               <View style={{flexDirection:'row', height:100}}>
