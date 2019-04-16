@@ -145,6 +145,8 @@ class Login extends Component {
         TaskServices.deleteAllData('TM_TIME_TRACK');
         TaskServices.deleteAllData('TR_H_EBCC_VALIDATION');
         TaskServices.deleteAllData('TR_D_EBCC_VALIDATION');
+        TaskServices.deleteAllData('TR_SYNC_LOG');
+        TaskServices.deleteAllData('TR_NOTIFICATION');
 
         RNFetchBlob.fs.unlink(`file://${dirPhotoTemuan}`)
         RNFetchBlob.fs.unlink(`file://${dirPhotoInspeksiBaris}`)

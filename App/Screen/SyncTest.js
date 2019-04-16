@@ -1236,16 +1236,18 @@ class SyncScreen extends React.Component {
 	_updateTR_Notif(data){
 		let today = moment(new Date());
 		let newNotif = {
-			NOTIFICATION_ID: today.unix(),
+			NOTIFICATION_ID: data.FINDING_CODE+"$"+today.unix(),
 			NOTIFICATION_TIME: new Date(),
 			NOTIFICATION_STATUS: 0,
 			FINDING_CODE:data.FINDING_CODE
 		}
+		console.log("_updateTR_Notif",data);
 		if(data.UPDATE_USER==''){
 			if(data.ASSIGN_TO==this.state.user.USER_AUTH_CODE){
 				//finding baru diasign ke user
-				newNotif.NOTIFICATION_TYPE=0;
-				TaskServices.saveData('TR_NOTIFICATION', newNotif);
+				console.log("_updateTR_Notif","Tugas baru");
+				let newData = Object.assign({},newNotif,{NOTIFICATION_TYPE:0})
+				TaskServices.saveData('TR_NOTIFICATION', newData);
 			}
 			let createDate = moment(data.INSERT_TIME,"YYYYMMDDHHmmss");
 			let diffDays = today.diff(createDate, 'days');
@@ -1253,11 +1255,13 @@ class SyncScreen extends React.Component {
 				//belum di respon 7 hari setelah pembuatan
 				if(data.ASSIGN_TO==this.state.user.USER_AUTH_CODE){
 					//diasign tapi belum merespon
+					console.log("_updateTR_Notif","Belum ada respon[di asign]");
 					newNotif.NOTIFICATION_TYPE=2;
 					TaskServices.saveData('TR_NOTIFICATION', newNotif);
 				}
 				else if(data.INSERT_USER==this.state.user.USER_AUTH_CODE){
 					//membuat finding tapi belum mendapat respon
+					console.log("_updateTR_Notif","Belum ada respon[creator]");
 					newNotif.NOTIFICATION_TYPE=3;
 					TaskServices.saveData('TR_NOTIFICATION', newNotif);
 				}
@@ -1265,6 +1269,7 @@ class SyncScreen extends React.Component {
 		}
 		else if(data.INSERT_USER==this.state.user.USER_AUTH_CODE){
 			//terjadi update pada finding yang user buat
+			console.log("_updateTR_Notif","Ada update");
 			newNotif.NOTIFICATION_TYPE=1;
 			TaskServices.saveData('TR_NOTIFICATION', newNotif);
 		}

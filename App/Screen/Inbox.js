@@ -49,26 +49,40 @@ export default class Inbox extends React.Component {
 		let title;
 		let sources;
 		let desc;
+		let notifColor;
 		let findingData = TaskServices.findBy2('TR_FINDING','FINDING_CODE',item.FINDING_CODE);
-		console.log("render item",findingData);
 		let contactAsign = TaskServices.findBy2('TR_CONTACT','USER_AUTH_CODE',findingData.ASSIGN_TO);
 		let createTime = moment(findingData.INSERT_TIME,"YYYYMMDDHHmmss");
+		let creator = TaskServices.findBy2('TR_CONTACT','USER_AUTH_CODE',findingData.INSERT_USER);
+		let block = TaskServices.findBy2('TM_BLOCK','BLOCK_CODE',findingData.BLOCK_CODE);
+		let est = TaskServices.findBy2('TM_EST','EST_CODE',block.EST_CODE);
+		if(item.NOTIFICATION_STATUS==0){
+			notifColor="white";
+		}
+		else{
+			notifColor="#AFAFAF";
+		}
 		if (item.NOTIFICATION_TYPE == 0) {
 			sources = require('../Images/icon/ic_task_new.png');
 			title = "TUGAS BARU";
-			desc = "";
+			desc = "Kamu dapat tugas baru di "+est.EST_NAME+" Blok "+block.BLOCK_NAME+" dari "+creator.FULLNAME;
 		} else if (item.NOTIFICATION_TYPE == 1) {
 			sources = require('../Images/icon/ic_task_wip.png');
 			title = "UPDATE PROGRESS";
-			desc = contactAsign.FULLNAME+" baru melakukan update terhadap temuan yang ditugaskan tanggal "+createTime.format("DD MMM YYYY")+" di GAWI INTI - 2 Blok A10";
+			desc = contactAsign.FULLNAME+" baru melakukan update terhadap temuan yang ditugaskan tanggal "+createTime.format("DD MMM YYYY")+" di "+est.EST_NAME+" Blok "+block.BLOCK_NAME;
 		}  else if (item.NOTIFICATION_TYPE == 2 ||  item.NOTIFICATION_TYPE == 3) {
 			sources = require('../Images/icon/ic_task_no_response.png');
 			title = "BELUM ADA RESPON";
-			desc = "";
+			if(item.NOTIFICATION_TYPE == 3){
+				desc = "Kamu menugaskan "+contactAsign.FULLNAME+" untuk mengerjakan temuan di "+est.EST_NAME+" Blok "+block.BLOCK_NAME+" tanggal "+createTime.format("DD MMM YYYY")+" tapi ybs belum memberikan respon sampai hari ini";
+			}
+			else if(item.NOTIFICATION_TYPE == 2){
+				desc = "Kamu ditugaskan "+creator.FULLNAME+" untuk mengerjakan temuan di "+est.EST_NAME+" Blok "+block.BLOCK_NAME+" tanggal "+createTime.format("DD MMM YYYY")+" tapi belum memberikan respon sampai hari ini";
+			}
 		}
 		return (
 			<TouchableOpacity
-				style={styles.sectionCardView}
+				style={{ width: '100%',flex: 1, flexDirection: 'row',backgroundColor: notifColor}}
 				onPress={() => { this.onClickItem(item.NOTIFICATION_ID) }}
 				key={index}
 			>
@@ -79,7 +93,7 @@ export default class Inbox extends React.Component {
 						<Text style={{ fontSize: 14, color: 'black', fontWeight: 'bold' }}>{title}</Text>
 					</View>
 					<View style={{ flexDirection: 'row' }}>
-						<Text style={{ fontSize: 10, color: 'black'}}>{desc}</Text>
+						<Text style={{ fontSize: 12, color: 'black'}}>{desc}</Text>
 					</View>
 				</View>
 			</TouchableOpacity>
@@ -104,28 +118,9 @@ export default class Inbox extends React.Component {
 		  show = this._renderData()
 		}
         return (
-            <Container style={{ flex: 1, padding: 16 }}>
+            <Container>
                 <Content>
-                    <View style={styles.container}>
-						{show}
-                    </View>
-                    {/* <TouchableOpacity>
-                        <View style={styles.container}>
-                            <View style={{ flex: 2 }}>
-                                <Image style={styles.imageThumnail} source={require('../Images/dummy_image.png')} />
-                            </View>
-                            <View style={{ flex: 6, flexDirection: 'column', justifyContent: 'flex-start' }}>
-                                <View style={styles.sectionRow}>
-                                    <Text style={styles.name}>Jurgen Kloop</Text>
-                                    <View style={styles.dotNotif} />
-                                </View>
-                                <Text style={{ color: 'grey' }}>Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet</Text>
-                            </View>
-                            <View style={{ flexDirection: 'row', flex: 2, justifyContent: 'flex-end', alignContent: 'center' }}>
-                                <Text style={{ color: 'green', fontWeight: '500', fontSize: 16, alignItems: 'center', marginTop: 18, marginRight: 8 }}> 13:40</Text>
-                            </View>
-                        </View>
-                    </TouchableOpacity> */}
+					{show}
                 </Content>
             </Container>
         );

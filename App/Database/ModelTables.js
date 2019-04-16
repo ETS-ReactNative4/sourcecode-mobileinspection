@@ -398,7 +398,7 @@ const TR_NOTIFICATION = {
     name: 'TR_NOTIFICATION',
     primaryKey: 'NOTIFICATION_ID',
     properties: {
-        NOTIFICATION_ID: 'int',
+        NOTIFICATION_ID: 'string',
         NOTIFICATION_TIME: 'date',
 		NOTIFICATION_STATUS: { type: 'int', default: 0 },
 		NOTIFICATION_TYPE: { type: 'int', default: 0 },
