@@ -2,7 +2,8 @@ import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Image, ScrollView } from 'react-native'
 import { Container, Content } from 'native-base'
 import Colors from '../Constant/Colors';
-import TaskServices from '../Database/TaskServices'
+import TaskServices from '../Database/TaskServices';
+import moment from 'moment';
 
 export default class Inbox extends React.Component {
 
@@ -41,22 +42,29 @@ export default class Inbox extends React.Component {
 
 	onClickItem(id) {
 		let notifData = TaskServices.findBy2('TR_NOTIFICATION','NOTIFICATION_ID',id);
-		notifData.NOTIFICATION_STATUS = 1;
-		TaskServices.updateByPrimaryKey('TR_NOTIFICATION', notifData)
+		TaskServices.updateByPrimaryKey('TR_NOTIFICATION', Object.assign({}, notifData,{NOTIFICATION_STATUS:1}));
 		this.props.navigation.navigate('DetailFinding', { ID: notifData.FINDING_CODE })
 	}
 	_renderItem = (item, index) => {
 		let title;
 		let sources;
+		let desc;
+		let findingData = TaskServices.findBy2('TR_FINDING','FINDING_CODE',item.FINDING_CODE);
+		console.log("render item",findingData);
+		let contactAsign = TaskServices.findBy2('TR_CONTACT','USER_AUTH_CODE',findingData.ASSIGN_TO);
+		let createTime = moment(findingData.INSERT_TIME,"YYYYMMDDHHmmss");
 		if (item.NOTIFICATION_TYPE == 0) {
 			sources = require('../Images/icon/ic_task_new.png');
 			title = "TUGAS BARU";
+			desc = "";
 		} else if (item.NOTIFICATION_TYPE == 1) {
 			sources = require('../Images/icon/ic_task_wip.png');
 			title = "UPDATE PROGRESS";
+			desc = contactAsign.FULLNAME+" baru melakukan update terhadap temuan yang ditugaskan tanggal "+createTime.format("DD MMM YYYY")+" di GAWI INTI - 2 Blok A10";
 		}  else if (item.NOTIFICATION_TYPE == 2 ||  item.NOTIFICATION_TYPE == 3) {
 			sources = require('../Images/icon/ic_task_no_response.png');
 			title = "BELUM ADA RESPON";
+			desc = "";
 		}
 		return (
 			<TouchableOpacity
@@ -64,10 +72,14 @@ export default class Inbox extends React.Component {
 				onPress={() => { this.onClickItem(item.NOTIFICATION_ID) }}
 				key={index}
 			>
-				<Image style={{ alignItems: 'stretch', width: 30, height: 30 }} source={sources}></Image>
-				<View style={styles.sectionDesc} >
+				<Image style={{alignItems: 'stretch', alignSelf: 'center', resizeMode: 'contain',width: '30%', height:80}} 
+					source={sources}></Image>
+				<View style={{width: '60%' }} >
 					<View style={{ flexDirection: 'row' }}>
-						<Text style={{ fontSize: 12, color: 'black', fontWeight: 'bold' }}>{title}</Text>
+						<Text style={{ fontSize: 14, color: 'black', fontWeight: 'bold' }}>{title}</Text>
+					</View>
+					<View style={{ flexDirection: 'row' }}>
+						<Text style={{ fontSize: 10, color: 'black'}}>{desc}</Text>
 					</View>
 				</View>
 			</TouchableOpacity>

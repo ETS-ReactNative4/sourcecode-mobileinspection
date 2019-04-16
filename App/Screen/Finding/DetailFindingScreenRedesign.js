@@ -185,7 +185,7 @@ class DetailFindingScreenRedesign extends Component {
         // let data = TaskServices.getAllData('TR_FINDING')
         // let indexData = R.findIndex(R.propEq('FINDING_CODE', this.state.data.FINDING_CODE))(data);
         let status = this.getStatusTemuan(this.state.progress);
-		var updateTime = getTodayDate('YYYYMMDDkkmmss');
+		    var updateTime = getTodayDate('YYYYMMDDkkmmss');
 
         // var save = {
         //     FINDING_CODE: this.state.data.FINDING_CODE,
