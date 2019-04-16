@@ -112,7 +112,6 @@ export default class PilihPeta extends Component {
 
   renderMapsByRegion(regionCode, index){
     let data = TaskServices.findBy2('TM_REGION', 'REGION_CODE', regionCode);
-    console.log(data)
     let comp = TaskServices.findBy('TM_COMP', 'REGION_CODE', regionCode);
     let est = [];
     if(comp !== undefined){

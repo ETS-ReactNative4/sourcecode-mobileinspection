@@ -214,9 +214,8 @@ export default class ListFinding extends Component {
   }
 
   _renderItem = (item, index) => {
-    const nav = this.props.navigation;
     const image = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', item.FINDING_CODE)
-    var label = { backgroundColor: item.PROGRESS == '0' ? 'rgba(255, 0, 0, 0.7)' : 'rgba(254, 178, 54, 0.7)' };
+    var label = this.getColor(item.STATUS);
     let showImage;
     if (image == undefined) {
       showImage = <Image style={{ alignItems: 'stretch', width: 120, height: 120, borderRadius: 10 }} source={require('../../Images/ic-default-thumbnail.png')} />
@@ -231,7 +230,7 @@ export default class ListFinding extends Component {
       >
         <View style={{ height: 120, width: 120, marginLeft: 16 }}>
           {showImage}
-          <View style={[styles.labelBackground, label]}>
+          <View style={[styles.labelBackground, {backgroundColor: label}]}>
             <Icon name={'map-marker-alt'} color={'white'} size={12}
               style={{ marginRight: 5, marginTop: 1 }} />
             <Text style={{ fontSize: 8, color: 'white', textAlignVertical: 'center' }}>{showBlockDetail}</Text>

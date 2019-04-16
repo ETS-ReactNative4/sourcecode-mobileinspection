@@ -43,6 +43,7 @@ class DetailFindingScreenRedesign extends Component {
             updatedDueDate: R.isEmpty(data.DUE_DATE) ? "Select Calendar" : data.DUE_DATE,
             imgBukti: [],
             disabledProgress: true,
+            showImage: false,
             insertTime: '',
             fullName: '',
             lokasiBlok: '',
@@ -475,7 +476,8 @@ class DetailFindingScreenRedesign extends Component {
 
                                     } else {
                                         this.setState({
-                                            progress: parseInt(value)
+                                            progress: parseInt(value),
+                                            showImage: value == '100' ? true:false
                                         })
                                     }
                                 }}
@@ -488,7 +490,7 @@ class DetailFindingScreenRedesign extends Component {
                         </View>
                     </View>
 
-                    {(this.state.progress == 100 && this.state.data.ASSIGN_TO == this.state.user.USER_AUTH_CODE) && <View style={{ flexDirection: 'row', marginTop: 20, paddingLeft: 15, paddingRight: 15 }}>
+                    {(this.state.showImage && this.state.data.ASSIGN_TO == this.state.user.USER_AUTH_CODE) && <View style={{ flexDirection: 'row', marginTop: 20, paddingLeft: 15, paddingRight: 15 }}>
                         <Text style={styles.title}>Bukti Kerja:</Text>
                         <Card style={[styles.cardContainer, { marginLeft: 15 }]}>
                             <TouchableOpacity style={{ padding: 40 }}
