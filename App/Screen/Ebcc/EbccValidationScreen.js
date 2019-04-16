@@ -18,7 +18,7 @@ export default class EbccValidationScreen extends Component {
       fontWeight: '400',
       marginHorizontal: 12
     },
-    title: 'EBCC Validasi',
+    title: 'Sampling EBCC',
     headerTintColor: '#fff',
     headerRight: (
       <TouchableOpacity onPress={() => navigation.navigate('Inbox')}>

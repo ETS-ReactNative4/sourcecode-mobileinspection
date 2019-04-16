@@ -300,7 +300,7 @@ class Step2Finding extends Component {
 
     saveData() {
 		let insertTime = getTodayDate('YYYYMMDDHHmmss');
-		insertTime = parseInt(insertTime);
+		// insertTime = parseInt(insertTime);
         var data = {
             FINDING_CODE: this.state.TRANS_CODE,
             WERKS: this.state.werks,
@@ -318,7 +318,9 @@ class Step2Finding extends Component {
             REFFERENCE_INS_CODE: "",
             INSERT_USER: this.state.user.USER_AUTH_CODE,
             INSERT_TIME: insertTime,
-            STATUS_SYNC: "N"
+            UPDATE_USER: this.state.user.USER_AUTH_CODE,
+            UPDATE_TIME: insertTime,
+            STATUS_SYNC: "N",
         }
 
         TaskServices.saveData('TR_FINDING', data);

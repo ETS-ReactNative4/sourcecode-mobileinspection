@@ -182,33 +182,41 @@ class DetailFindingScreenRedesign extends Component {
     }
 
     _updateFinding() {
-        let data = TaskServices.getAllData('TR_FINDING')
-        let indexData = R.findIndex(R.propEq('FINDING_CODE', this.state.data.FINDING_CODE))(data);
+        // let data = TaskServices.getAllData('TR_FINDING')
+        // let indexData = R.findIndex(R.propEq('FINDING_CODE', this.state.data.FINDING_CODE))(data);
         let status = this.getStatusTemuan(this.state.progress);
 		var updateTime = getTodayDate('YYYYMMDDkkmmss');
-		updateTime = parseInt(updateTime);
 
-        var save = {
-            FINDING_CODE: this.state.data.FINDING_CODE,
-            WERKS: this.state.data.WERKS,
-            AFD_CODE: this.state.data.AFD_CODE,
-            BLOCK_CODE: this.state.data.BLOCK_CODE,
-            INSERT_TIME: this.state.data.INSERT_TIME,
-            FINDING_CATEGORY: this.state.data.FINDING_CATEGORY,
-            FINDING_DESC: this.state.data.FINDING_DESC,
-            FINDING_PRIORITY: this.state.data.FINDING_PRIORITY,
-            DUE_DATE: this.state.updatedDueDate == "Select Calendar" ? this.state.data.DUE_DATE : this.state.updatedDueDate,
-            STATUS: status,
-            ASSIGN_TO: this.state.data.ASSIGN_TO,
-            PROGRESS: this.state.progress,
-            LAT_FINDING: this.state.data.LAT_FINDING,
-            LONG_FINDING: this.state.data.LONG_FINDING,
-            REFFERENCE_INS_CODE: this.state.data.REFFERENCE_INS_CODE,
-            UPDATE_USER: this.state.user.USER_AUTH_CODE,
-            UPDATE_TIME: updateTime
-        }
+        // var save = {
+        //     FINDING_CODE: this.state.data.FINDING_CODE,
+        //     WERKS: this.state.data.WERKS,
+        //     AFD_CODE: this.state.data.AFD_CODE,
+        //     BLOCK_CODE: this.state.data.BLOCK_CODE,
+        //     FINDING_CATEGORY: this.state.data.FINDING_CATEGORY,
+        //     FINDING_DESC: this.state.data.FINDING_DESC,
+        //     FINDING_PRIORITY: this.state.data.FINDING_PRIORITY,
+        //     DUE_DATE: this.state.updatedDueDate == "Select Calendar" ? this.state.data.DUE_DATE : this.state.updatedDueDate,
+        //     INSERT_TIME: this.state.data.INSERT_TIME,
+        //     STATUS: status,
+        //     ASSIGN_TO: this.state.data.ASSIGN_TO,
+        //     PROGRESS: this.state.progress,
+        //     LAT_FINDING: this.state.data.LAT_FINDING,
+        //     LONG_FINDING: this.state.data.LONG_FINDING,
+        //     REFFERENCE_INS_CODE: this.state.data.REFFERENCE_INS_CODE,
+        //     UPDATE_USER: this.state.user.USER_AUTH_CODE,
+        //     UPDATE_TIME: updateTime
+        // }
 
-        TaskServices.updateFinding('TR_FINDING', [status, save.PROGRESS, 'N', save.DUE_DATE, save.UPDATE_USER, save.UPDATE_TIME], indexData);
+        // TaskServices.updateFinding('TR_FINDING', [status, save.PROGRESS, 'N', save.DUE_DATE, save.UPDATE_USER, save.UPDATE_TIME], indexData);
+        TaskServices.updateByPrimaryKey('TR_FINDING', {
+            "FINDING_CODE": this.state.data.FINDING_CODE,
+            "STATUS": status,
+            "PROGRESS": this.state.progress,
+            "STATUS_SYNC":"N",
+            "DUE_DATE": this.state.updatedDueDate == "Select Calendar" ? this.state.data.DUE_DATE : this.state.updatedDueDate,
+            "UPDATE_USER": this.state.user.USER_AUTH_CODE,
+            "UPDATE_TIME": updateTime
+        });
         if (this.state.progress == 100) {
             this._saveImageUpdate();
         }

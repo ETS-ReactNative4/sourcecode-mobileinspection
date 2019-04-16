@@ -10,6 +10,7 @@ import CategoryAction from '../../Redux/CategoryRedux'
 import ContactAction from '../../Redux/ContactRedux'
 import RegionAction from '../../Redux/RegionRedux'
 import CustomHeader from '../../Component/CustomHeader'
+import ServerName from '../../Constant/ServerName'
 import Moment from 'moment';
 import RNFetchBlob from 'rn-fetch-blob'
 import { changeFormatDate, getThumnail } from '../../Lib/Utils';
@@ -453,8 +454,8 @@ class HomeScreen extends React.Component {
     const INSERT_USER = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', item.INSERT_USER);
     let user = INSERT_USER == undefined ? 'User belum terdaftar. Hubungi Admin.' : INSERT_USER.FULLNAME
     Moment.locale();
-    let dtInsertTime = Moment(changeFormatDate(item.INSERT_TIME.toString(), "YYYY-MM-DD hh-mm-ss")).format('LLL');
-    let batasWaktu = item.DUE_DATE == '' ? 'Batas waktu belum ditentukan' : Moment(item.DUE_DATE).format('LL');
+    let dtInsertTime = Moment(changeFormatDate(item.INSERT_TIME.toString(), "YYYY-MM-DD hh-mm-ss")).format('DD MMM YYYY hh:mm A');
+    let batasWaktu = item.DUE_DATE == '' ? 'Batas waktu belum ditentukan' : Moment(item.DUE_DATE).format('DD MMM YYYY');
 
     const dataImage = TaskServices.findBy('TR_IMAGE', 'TR_CODE', item.FINDING_CODE);
     const image = dataImage.sorted('INSERT_TIME', true);
@@ -559,20 +560,21 @@ class HomeScreen extends React.Component {
 
   getImageBaseOnFindingCode(findingCode) {
     const user = TaskServices.getAllData('TR_LOGIN')[0];
-    const url = "http://149.129.245.230:3012/images/" + findingCode;
+    // const url = "http://149.129.245.230:3012/images/" + findingCode; //prod    
+    const url = `${ServerName[user.SERVER_NAME_INDEX].image}images/${findingCode}`;
+    // const url = "http://149.129.250.199:3012/images/" + findingCode;
     fetch(url, {
       method: 'GET',
       headers: {
         'Cache-Control': 'no-cache',
-        Accept: 'application/json',
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${user.ACCESS_TOKEN}`,
+        'Authorization': `Bearer ${user.ACCESS_TOKEN}`,
       }
     })
       .then((response) => response.json())
       .then((responseJson) => {
         if (responseJson.status) {
-          // alert(JSON.stringify(responseJson.data[0].IMAGE_NAME))
           if (responseJson.data.length > 0) {
             for (var i = 0; i < responseJson.data.length; i++) {
               let dataImage = responseJson.data[i];

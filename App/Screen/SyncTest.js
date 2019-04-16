@@ -802,9 +802,9 @@ class SyncScreen extends React.Component {
             LONG_FINDING: param.LONG_FINDING,
             REFFERENCE_INS_CODE: param.REFFERENCE_INS_CODE,
             INSERT_USER: param.INSERT_USER,
-            INSERT_TIME: param.INSERT_TIME,
+            INSERT_TIME: param.INSERT_TIME == '' ? parseInt(getTodayDate('YYYYMMDDkkmmss')) :parseInt(param.INSERT_TIME),
             UPDATE_USER: param.UPDATE_USER,
-            UPDATE_TIME: param.UPDATE_TIME
+            UPDATE_TIME: param.UPDATE_TIME == '' ? parseInt(getTodayDate('YYYYMMDDkkmmss')) :parseInt(param.UPDATE_TIME)
         }
         this.uploadData(link+'finding', data, 'finding', '');
     }
