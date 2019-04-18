@@ -17,7 +17,7 @@ import { changeFormatDate, getThumnail } from '../../Lib/Utils';
 import FastImage from 'react-native-fast-image'
 import SwiperSlider from 'react-native-swiper'
 import { dirPhotoInspeksiBaris, dirPhotoInspeksiSelfie, 
-    dirPhotoTemuan, dirPhotoKategori, dirPhotoEbccJanjang, dirPhotoEbccSelfie } from '../../Lib/dirStorage';
+    dirPhotoTemuan, dirPhotoKategori, dirPhotoEbccJanjang, dirPhotoEbccSelfie, dirMaps } from '../../Lib/dirStorage';
 var RNFS = require('react-native-fs');
 var { width } = Dimensions.get('window')
 
@@ -91,6 +91,7 @@ class HomeScreen extends React.Component {
     RNFS.mkdir(dirPhotoKategori);
     RNFS.mkdir(dirPhotoEbccJanjang);
     RNFS.mkdir(dirPhotoEbccSelfie);
+    RNFS.mkdir(dirMaps);
   }
 
   _changeFilterList = data => {

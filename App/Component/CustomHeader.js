@@ -21,7 +21,8 @@ const CustomHeader = props => {
 						alignSelf: 'center',
 						justifyContent: 'center',
 						color:Color.errorText,
-						fontSize: 12
+						fontSize: 12,
+						padding: 5
 					}}
 			>Kamu belum melakukan sync data selama {divDays} hari</Text>}
 		</View>
