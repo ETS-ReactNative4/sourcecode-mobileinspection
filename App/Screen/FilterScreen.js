@@ -59,10 +59,8 @@ class FilterScreen extends React.Component {
     }
 
     _setDataFilter(data) {
-        console.log('Data Set : ' + data);
         let parseData = JSON.parse(data);
         parseData.map(item => {
-            console.log('Data valBisnisArea : ' + item.ba)
             this.setState({
                 valBisnisArea: item.ba,
                 valAfdeling: item.afd?item.afd:'Pilih Afdeling',
@@ -81,7 +79,6 @@ class FilterScreen extends React.Component {
             const value = await AsyncStorage.getItem('data');
             if (value !== null) {
                 // We have data!!
-                console.log('Data : ' + value);
                 this._setDataFilter(value);
             }
         } catch (error) {
@@ -221,12 +218,17 @@ class FilterScreen extends React.Component {
                             <Text style={{ color: 'black', marginLeft: 8, fontSize: 16, marginTop: 8 }}>{this.state.valBisnisArea}</Text>
                             <View style={{ height: 0.5, flex: 1, flexDirection: 'row', backgroundColor: 'grey', marginTop: 8 }}></View>
                         </TouchableOpacity>
-						
-                        <Text style={{ fontWeight: '400', marginLeft: 8, fontSize: 14, color: 'grey' }}>Afdeling</Text>
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Afdeling', { changeAfd: this.changeAfd })} >
-                            <Text style={{ color: 'black', marginLeft: 8, fontSize: 16, marginTop: 8 }}>{this.state.valAfdeling}</Text>
-                            <View style={{ height: 0.5, flex: 1, flexDirection: 'row', backgroundColor: 'grey', marginTop: 8 }}></View>
-                        </TouchableOpacity>
+						{this.state.valBisnisArea!='Pilih Lokasi' &&
+							<Text style={{ fontWeight: '400', marginLeft: 8, fontSize: 14, color: 'grey' }}>Afdeling</Text>
+						}
+						{this.state.valBisnisArea!='Pilih Lokasi' &&
+							<TouchableOpacity onPress={() => this.props.navigation.navigate('Afdeling', {
+								changeAfd: this.changeAfd,
+								ba : this.state.valBisnisArea})} >
+								<Text style={{ color: 'black', marginLeft: 8, fontSize: 16, marginTop: 8 }}>{this.state.valAfdeling}</Text>
+								<View style={{ height: 0.5, flex: 1, flexDirection: 'row', backgroundColor: 'grey', marginTop: 8 }}></View>
+							</TouchableOpacity>
+						}
 
                         <Text style={{ fontWeight: '400', marginLeft: 8, fontSize: 14, marginTop: 16, color: 'grey' }}>Pemberi Tugas</Text>
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('PemberiTugas', { assignTo: this.assignTo })} >

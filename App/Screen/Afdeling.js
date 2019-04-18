@@ -37,7 +37,7 @@ class FilterScreen extends React.Component {
     }
 
     componentDidMount() {
-        let data = TaskServices.getAllData('TM_AFD');
+        let data = TaskServices.findBy('TM_AFD',"WERKS",this.props.navigation.state.params.ba).sorted('AFD_CODE');
         let arr = [];
         for (var i = 0; i < data.length; i++) {
             arr.push({
