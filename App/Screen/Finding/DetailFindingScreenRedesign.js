@@ -489,7 +489,8 @@ class DetailFindingScreenRedesign extends Component {
                             }}>{this.state.progress}%</Text>
                         </View>
                     </View>
-
+                    
+                    {/* foto */}
                     {(this.state.showImage && this.state.data.ASSIGN_TO == this.state.user.USER_AUTH_CODE) && <View style={{ flexDirection: 'row', marginTop: 20, paddingLeft: 15, paddingRight: 15 }}>
                         <Text style={styles.title}>Bukti Kerja:</Text>
                         <Card style={[styles.cardContainer, { marginLeft: 15 }]}>

@@ -1562,12 +1562,6 @@ class SyncScreen extends React.Component {
 
                 //POST TRANSAKSI
                 this.kirimImage();
-                // this.loadDataFinding();
-                // this.loadData();
-                // this.loadDataDetailInspeksi();
-                // this.loadDataInspectionTrack();
-                // this.kirimEbccHeader();
-                // this.kirimEbccDetail();
 
                 //cara redux saga
                 setTimeout(() => {
