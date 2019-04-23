@@ -56,6 +56,7 @@ class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
 
+	this.extraFilter = "";
     this.state = {
       data: [],
       thumnailImage: '',
@@ -112,6 +113,9 @@ class HomeScreen extends React.Component {
     var finding = TaskServices.getAllData('TR_FINDING');
     var findingSorted = finding.sorted('INSERT_TIME', true);
     var findingFilter;
+	if(this.extraFilter!==""){
+		this.extraFilter = " AND "+this.extraFilter;
+	}
 
     if (ref_role == 'REGION_CODE') {
       var estate = TaskServices.getAllData('TM_EST');
@@ -131,16 +135,17 @@ class HomeScreen extends React.Component {
             query += ` OR WERKS == `
           }
         }
-        findingFilter = findingSorted.filtered(`${query}`);
+        findingFilter = findingSorted.filtered(`${query} ${this.extraFilter}`);
       } else {
-        findingFilter = finding.sorted('INSERT_TIME', true);
+        findingFilter = finding.sorted('INSERT_TIME', true).filtered(this.extraFilter);
       }
     } else if (ref_role == 'COMP_CODE') {
       if(loc_code.includes(',')){
         let arr = []
+		let extraFilter = this.extraFilter
         loc_code = loc_code.split(',')
         loc_code.map(item =>{
-          let das = findingSorted.filtered(`WERKS CONTAINS[c] "${item}"`)
+          let das = findingSorted.filtered(`WERKS CONTAINS[c] "${item}" ${extraFilter}`);
           if(das.length > 0){
             das.map(item2 => {
               arr.push(item2)
@@ -149,14 +154,15 @@ class HomeScreen extends React.Component {
         })
         findingFilter = arr
       }else{
-        findingFilter = findingSorted.filtered(`WERKS CONTAINS[c] "${loc_code}"`);
+        findingFilter = findingSorted.filtered(`WERKS CONTAINS[c] "${loc_code}" ${this.extraFilter}`);
       }      
-    } else if (ref_role == 'WERKS') {
+    } else if (ref_role == 'BA_CODE') {
       if(loc_code.includes(',')){
         let arr = []
+		let extraFilter = this.extraFilter
         loc_code = loc_code.split(',')
         loc_code.map(item =>{
-          let das = findingSorted.filtered(`WERKS = "${item}"`)
+          let das = findingSorted.filtered(`WERKS = "${item}" ${extraFilter}`);
           if(das.length > 0){
             das.map(item2 => {
               arr.push(item2)
@@ -165,16 +171,17 @@ class HomeScreen extends React.Component {
         })
         findingFilter = arr
       }else{
-        findingFilter = findingSorted.filtered(`WERKS = "${loc_code}"`);
+        findingFilter = findingSorted.filtered(`WERKS = "${loc_code}" ${this.extraFilter}`);
       }
     } else if (ref_role == 'AFD_CODE') {
       if(loc_code.includes(',')){
         let arr = []
+		let extraFilter = this.extraFilter
         loc_code = loc_code.split(',')
         loc_code.map(item =>{
           const werks = item.substring(0, 4);
           const afd_code = item.substring(4, 5);
-          let das = findingSorted.filtered(`WERKS = "${werks}" AND AFD_CODE = "${afd_code}"`);
+          let das = findingSorted.filtered(`WERKS = "${werks}" AND AFD_CODE = "${afd_code}" ${extraFilter}`);
           if(das.length > 0){
             das.map(item2 => {
               arr.push(item2)
@@ -185,12 +192,13 @@ class HomeScreen extends React.Component {
       }else{
         const werks = loc_code.substring(0, 4);
         const afd_code = loc_code.substring(4, 5);
-        findingFilter = findingSorted.filtered(`WERKS = "${werks}" AND AFD_CODE = "${afd_code}"`);
+        findingFilter = findingSorted.filtered(`WERKS = "${werks}" AND AFD_CODE = "${afd_code} ${this.extraFilter}"`);
       }
       
     } else {
-      findingFilter = finding.sorted('INSERT_TIME', true);
+      findingFilter = finding.sorted('INSERT_TIME', true).filtered(this.extraFilter);
     }
+	this.extraFilter = "";
     return findingFilter;
   }
 
@@ -253,7 +261,8 @@ class HomeScreen extends React.Component {
         this.setState({ data, isFilter: false });
       } else {
 		  //bingung
-        data = this._filterHome().filtered(`AFD_CODE CONTAINS ""${stBa}${stAfd}${stUserAuth}${stStatus}${stInsertTime}`);
+		this.extraFilter = `AFD_CODE CONTAINS ""${stBa}${stAfd}${stUserAuth}${stStatus}${stInsertTime}`;
+        data = this._filterHome();//.filtered(`AFD_CODE CONTAINS ""${stBa}${stAfd}${stUserAuth}${stStatus}${stInsertTime}`);
         if (data.length == 0) {
           this.setState({ data, isFilter: true, showModal: true, title: 'Tidak Ada Data', message: 'Wah ga ada data berdasarkan filter ini.', icon: require('../../Images/ic-no-data.png') });
         } else {
