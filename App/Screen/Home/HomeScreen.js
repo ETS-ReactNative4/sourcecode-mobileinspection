@@ -17,7 +17,7 @@ import { changeFormatDate, getThumnail } from '../../Lib/Utils';
 import FastImage from 'react-native-fast-image'
 import SwiperSlider from 'react-native-swiper'
 import { dirPhotoInspeksiBaris, dirPhotoInspeksiSelfie, 
-    dirPhotoTemuan, dirPhotoKategori, dirPhotoEbccJanjang, dirPhotoEbccSelfie } from '../../Lib/dirStorage';
+    dirPhotoTemuan, dirPhotoKategori, dirPhotoEbccJanjang, dirPhotoEbccSelfie, dirMaps } from '../../Lib/dirStorage';
 var RNFS = require('react-native-fs');
 var { width } = Dimensions.get('window')
 
@@ -92,6 +92,7 @@ class HomeScreen extends React.Component {
     RNFS.mkdir(dirPhotoKategori);
     RNFS.mkdir(dirPhotoEbccJanjang);
     RNFS.mkdir(dirPhotoEbccSelfie);
+    RNFS.mkdir(dirMaps);
   }
 
   _changeFilterList = data => {
@@ -327,9 +328,9 @@ class HomeScreen extends React.Component {
     }
   }
 
-  getBlokName(blockCode) {
+  getBlokName(werkAfdBlokCode) {
     try {
-      let data = TaskServices.findBy2('TM_BLOCK', 'BLOCK_CODE', blockCode);
+      let data = TaskServices.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', werkAfdBlokCode);
       return data.BLOCK_NAME;
     } catch (error) {
       return ''
@@ -340,15 +341,6 @@ class HomeScreen extends React.Component {
     try {
       let data = TaskServices.findBy2('TM_LAND_USE', 'WERKS_AFD_BLOCK_CODE', werk_afd_blok_code);
       return data.MATURITY_STATUS;
-    } catch (error) {
-      return ''
-    }
-  }
-
-  getWerksAfdBlokCode(blockCode) {
-    try {
-      let data = TaskServices.findBy2('TM_BLOCK', 'BLOCK_CODE', blockCode);
-      return data.WERKS_AFD_BLOCK_CODE;
     } catch (error) {
       return ''
     }
@@ -469,8 +461,8 @@ class HomeScreen extends React.Component {
     const dataImage = TaskServices.findBy('TR_IMAGE', 'TR_CODE', item.FINDING_CODE);
     const image = dataImage.sorted('INSERT_TIME', true);
 
-    let werkAfdBlockCode = this.getWerksAfdBlokCode(item.BLOCK_CODE)
-    let lokasiBlok = `${this.getBlokName(item.BLOCK_CODE)}/${this.getStatusBlok(werkAfdBlockCode)}/${this.getEstateName(item.WERKS)}`
+    let werkAfdBlockCode = `${item.WERKS}${item.AFD_CODE}${item.BLOCK_CODE}`;
+    let lokasiBlok = `${this.getBlokName(werkAfdBlockCode)}/${this.getStatusBlok(werkAfdBlockCode)}/${this.getEstateName(item.WERKS)}`
     let status = item.STATUS;
     let sources;
     if (status == 'BARU') {

@@ -817,7 +817,7 @@ class SyncScreen extends React.Component {
             BLOCK_CODE: param.BLOCK_CODE,
             NO_TPH: param.NO_TPH,
             STATUS_TPH_SCAN: param.STATUS_TPH_SCAN,
-            ALASAN_MANUAL: param.ALASAN,
+            ALASAN_MANUAL: param.ALASAN_MANUAL,
             LAT_TPH: param.LAT_TPH,
             LON_TPH: param.LON_TPH,
             DELIVERY_CODE: param.DELIVERY_CODE,            
@@ -827,7 +827,7 @@ class SyncScreen extends React.Component {
             INSERT_USER: param.INSERT_USER,
             INSERT_TIME: parseInt(convertTimestampToDate(param.INSERT_TIME, 'YYYYMMDDkkmmss')),
             UPDATE_USER: '',
-            UPDATE_TIME: 0
+            UPDATE_TIME: parseInt(getTodayDate('YYYYMMDDkkmmss'))
         }
         this.uploadData(link+'ebcc/validation/header', data, 'ebccH', '');
     }
@@ -1562,12 +1562,6 @@ class SyncScreen extends React.Component {
 
                 //POST TRANSAKSI
                 this.kirimImage();
-                // this.loadDataFinding();
-                // this.loadData();
-                // this.loadDataDetailInspeksi();
-                // this.loadDataInspectionTrack();
-                // this.kirimEbccHeader();
-                // this.kirimEbccDetail();
 
                 //cara redux saga
                 setTimeout(() => {

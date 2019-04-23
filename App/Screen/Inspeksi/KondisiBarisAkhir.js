@@ -9,17 +9,18 @@ import {
 import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import MapView, { ProviderPropType, Marker, Polyline } from 'react-native-maps';
+import MapView, { Polygon, ProviderPropType, Marker, Polyline } from 'react-native-maps';
 import {RNSlidingButton, SlideDirection} from 'rn-sliding-button';
 import TaskService from '../../Database/TaskServices';
 import {getTodayDate, getCalculateTime} from '../../Lib/Utils'
 import { NavigationActions, StackActions  } from 'react-navigation';
 import R from 'ramda';
 import geolib from 'geolib';
-import Geojson from 'react-native-geojson';
 import { ProgressDialog } from 'react-native-simple-dialogs';
 import IconLoc from 'react-native-vector-icons/FontAwesome5';
 import ModalAlert from '../../Component/ModalAlert';
+
+const skm = require('../../Data/4421.json');
 
 const LATITUDE = -2.1890660;
 const LONGITUDE = 111.3609873;
@@ -108,6 +109,7 @@ class KondisiBarisAkhir extends Component{
             from,
             distance: '',
             polyTrack: [],
+            poligons: [],
 
             //Add Modal Alert by Aminju 
             title: 'Title',
@@ -128,6 +130,58 @@ class KondisiBarisAkhir extends Component{
         }
         this.getLocation();       
         this.makeLineTrack();
+    }
+
+    totalPolygons(){
+        return skm.data.polygons.length;
+    }
+
+    getPolygons(position){
+        let data = skm.data.polygons;
+        let poligons = [];
+        let index = 0;
+        for(var i=0; i<data.length; i++){
+            let coords = data[i];
+            if(geolib.isPointInside(position, coords.coords)){
+                this.state.poligons.push(coords)
+                poligons.push(coords)
+                index = i;
+                break;
+            }
+        } 
+        //ambil map jika posisi index kurang dari 4
+        // if(index < 4){
+        //   for(var j=0; j<index; j++){
+        //     let coords = data[j];
+        //     this.state.poligons.push(coords)
+        //     poligons.push(coords)
+        //   }
+        // } 
+    
+        
+        // if(index > 0){
+        //   //ambil map setelah index
+        //   let lebih = this.totalPolygons()-index
+        //   if(lebih > 4){
+        //     for(var j=1; j<4; j++){
+        //       let coords = data[index+j];
+        //       this.state.poligons.push(coords)
+        //       poligons.push(coords)
+        //     }
+        //     for(var j=1; j<4; j++){
+        //       let coords = data[index-j];
+        //       this.state.poligons.push(coords)
+        //       poligons.push(coords)
+        //     }
+        //   }else if(lebih > 0 && lebih < 4){
+        //     for(var j=0; j<lebih; j++){
+        //       let coords = data[j];
+        //       this.state.poligons.push(coords)
+        //       poligons.push(coords)
+        //     }
+        //   }
+        // }    
+        return poligons;
     }
 
     totalWaktu(){
@@ -158,14 +212,20 @@ class KondisiBarisAkhir extends Component{
                 var lat = parseFloat(position.coords.latitude);
                 var lon = parseFloat(position.coords.longitude);  
                 let totalJarak = this.state.from == 'history' ? this.state.distance : this.totalJarak({latitude:lat, longitude:lon});
-                region = {
+                let region = {
                   latitude: lat,
                   longitude: lon,
                   latitudeDelta:0.0075,
                   longitudeDelta:0.00721
                 } 
-                // this.map.animateToCoordinate(region, 1);    
-                this.setState({latitude:lat, longitude:lon, jarak: totalJarak.toString(), fetchLocation: false, region});
+                position = {
+                    latitude: lat, longitude: lon
+                }
+                let poligons = this.getPolygons(position);
+                this.setState({latitude:lat, longitude:lon, jarak: totalJarak.toString(), fetchLocation: false, region, poligons});
+                if(this.map !== undefined){
+                    this.map.animateToCoordinate(region, 1);
+                } 
             },
             (error) => {
                 let message = error && error.message ? error.message : 'Terjadi kesalahan ketika mencari lokasi anda !';
@@ -756,13 +816,27 @@ class KondisiBarisAkhir extends Component{
                             initialRegion={this.state.region}
                             followsUserLocation={true}
                             onMapReady={()=>this.onMapReady()}
-                            // initialRegion={{
-                            //     latitude:this.state.latitude,
-                            //     longitude:this.state.longitude,
-                            //     latitudeDelta:0.015,
-                            //     longitudeDelta:0.0121
-                            // }}
                             >
+                            {this.state.poligons.length > 0 && this.state.poligons.map((poly, index) => (
+                            <View key={index}>
+                                <Polygon
+                                    coordinates={poly.coords}
+                                    fillColor="rgba(0, 200, 0, 0.5)"
+                                    strokeColor="rgba(0,0,0,0.5)"
+                                    strokeWidth={2}
+                                    tappable={true}               
+                                />
+                                <Marker
+                                    ref={ref => poly.marker = ref}
+                                    coordinate={this.centerCoordinate(poly.coords)}>
+                                    <View style={{flexDirection: 'column',alignSelf: 'flex-start'}}>
+                                    <View style={styles.marker}>
+                                        <Text style={{color: '#000000', fontSize: 20}}>{poly.blokname}</Text>
+                                    </View>
+                                    </View>
+                                </Marker>
+                                </View>
+                            ))}
                             <Marker
                                 coordinate={{
                                 latitude: this.state.latitude,
@@ -780,51 +854,6 @@ class KondisiBarisAkhir extends Component{
                                 />
                         </MapView>                        
                         }
-                        {/* <MapView
-                            ref={ map =>  this.map = map }
-                            provider={this.props.provider}
-                            style={styles.map}
-                            showsUserLocation = {true}
-                            showsMyLocationButton = {true}
-                            showsCompass = {true}
-                            showScale = {true}
-                            showsIndoors = {true}
-                            initialRegion={this.state.region}                            
-                            zoomEnabled={false}
-                            followsUserLocation={true}
-                            scrollEnabled={false}
-                            >
-                            {skm.data.polygons.map((poly, index) => (
-                                <View key={index}>
-                                <Polygon
-                                    coordinates={poly.coords}
-                                    fillColor="rgba(0, 200, 0, 0.5)"
-                                    strokeColor="rgba(0,0,0,0.5)"
-                                    strokeWidth={2}
-                                />
-                                <Marker
-                                    ref={ref => poly.marker = ref}
-                                    coordinate={this.centerCoordinate(poly.coords)}>
-                                    <View style={{flexDirection: 'column',alignSelf: 'flex-start'}}>
-                                    <View style={styles.marker}>
-                                        <Text style={{color: '#000000', fontSize: 20}}>{poly.blokname}</Text>
-                                    </View>
-                                    </View>
-                                </Marker>
-                                </View>
-                            ))}
-                            
-                            <Marker
-                                coordinate={{
-                                    latitude: this.state.latitude,
-                                    longitude: this.state.longitude,
-                                }}
-                                centerOffset={{ x: -42, y: -60 }}
-                                anchor={{ x: 0.84, y: 1 }}
-                            >
-                            </Marker>  
-                            
-                        </MapView> */}
 
                         <IconLoc
                             onPress={()=>{this.searchLocation()}}

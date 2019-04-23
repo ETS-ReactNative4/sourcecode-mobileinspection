@@ -611,6 +611,7 @@ class HistoryInspeksiDetail extends React.Component {
                         <View>{this.state.arrBaris}</View>
                     </View>
 
+                    {/* detail temuan */}
                     <View style={[styles.section]}>
                         <View style={styles.sectionRow}>
                             <Text style={styles.textTitle}>Lihat Detail Temuan</Text>

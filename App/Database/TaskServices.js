@@ -463,7 +463,14 @@ const TaskServices = {
       let valueRefCode = auth.LOCATION_CODE;      
       let arrEst = []
       let est;
-      if (refCode === 'REGION_CODE') {
+      if(refCode === 'NATIONAL'){
+        let data = TaskServices.getAllData('TM_REGION')
+        if(data !== undefined){
+          data.map(item => {
+            arrEst.push(item.REGION_NAME)  
+          })
+        }
+      }else if (refCode === 'REGION_CODE') {
         if(valueRefCode.includes(',')){
           valueRefCode = valueRefCode.split(',')
           valueRefCode.map(item => {
@@ -512,7 +519,14 @@ const TaskServices = {
       let valueRefCode = auth.LOCATION_CODE;      
       let arrEst = []
       let est;
-      if (refCode === 'REGION_CODE') {
+      if(refCode === 'NATIONAL'){
+        let data = TaskServices.getAllData('TM_REGION')
+        if(data !== undefined){
+          data.map(item => {
+            arrEst.push(item.REGION_CODE)  
+          })
+        }
+      }else if (refCode === 'REGION_CODE') {
         if(valueRefCode.includes(',')){
           valueRefCode = valueRefCode.split(',')
           valueRefCode.map(item => {
@@ -555,16 +569,16 @@ const TaskServices = {
   },
 
   getBlockInAFD: function (){
+    let arrBlock = []
     try {      
       let auth = this.getAllData('TR_LOGIN')[0];
       let refCode = auth.REFFERENCE_ROLE;
-      let valueRefCode = auth.LOCATION_CODE    
-      let arrBlock = []
+      let valueRefCode = auth.LOCATION_CODE; 
       if (refCode === 'AFD_CODE') {
         if(valueRefCode.includes(',')){
           valueRefCode.map(item => {
             const afd_code = item.substring(4, 5);
-            let data = TaskServices.query('TM_BLOCK', `AFD_CODE = "${afd_code}"`)
+            let data = this.query('TM_BLOCK', `AFD_CODE = "${afd_code}"`)
             if(data.length > 0){
               data.map(item2 =>{
                 arrBlock.push(item2.BLOCK_NAME)
@@ -573,7 +587,7 @@ const TaskServices = {
           });
         }else{
           const afd_code = valueRefCode.substring(4, 5);
-          let data = TaskServices.query('TM_BLOCK', `AFD_CODE = "${afd_code}"`)
+          let data = this.query('TM_BLOCK', `AFD_CODE = "${afd_code}"`)
           if(data.length > 0){
             data.map(item2 =>{
               arrBlock.push(item2.BLOCK_NAME)

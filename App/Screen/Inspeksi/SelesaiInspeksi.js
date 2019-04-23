@@ -558,7 +558,7 @@ class SelesaiInspeksi extends React.Component {
                         {this.renderSticker(this.state.nilaiInspeksi)}
                         <Text style={[styles.textNilai,{color: this.colorTextScore(this.state.nilaiInspeksi)}]}>{this.state.nilaiInspeksi}/{this.state.nilaiScore}</Text> 
 
-                        <Text style={styles.textLokasi}>{this.state.estateName} - {this.state.inspeksiHeader.AFD_CODE} - {this.state.blockName}/{this.state.blockCode}</Text>
+                        <Text style={styles.textLokasi}>{this.state.blockName}/{this.state.statusBlok}/{this.state.estateName}</Text>
                         {/* <View style={styles.lineDivider} /> */}
                         <View style={styles.sectionRow}>
                             <View style={{marginRight:10}} >
@@ -628,6 +628,7 @@ class SelesaiInspeksi extends React.Component {
                         <View>{this.state.arrBaris}</View>
                     </View>
 
+                    {/* detail temuan */}
                     <View style={[styles.section]}>
                         <View style={styles.sectionRow}>
                             <Text style={styles.textTitle}>Lihat Detail Temuan</Text>

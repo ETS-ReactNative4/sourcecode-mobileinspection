@@ -6,20 +6,14 @@ import {
   Container,
   Content
 } from 'native-base'
-import moment from 'moment'
 import Colors from '../../Constant/Colors'
 import Dash from 'react-native-dash'
 import TaskServices from '../../Database/TaskServices'
-import Icon from 'react-native-vector-icons/FontAwesome5'
 import Icon2 from 'react-native-vector-icons/AntDesign'
 import RNFS from 'react-native-fs'
 import RNFetchBlob from 'rn-fetch-blob'
-import { dirPhotoTemuan } from '../../Lib/dirStorage';
+import { dirMaps } from '../../Lib/dirStorage';
 import { NavigationActions, StackActions } from 'react-navigation';
-// import layer from '../../Data/skm.json'
-
-import MapView from 'react-native-maps';
-import Geojson from 'react-native-geojson';
 
 const alcatraz = {
   type: 'FeatureCollection',
@@ -53,7 +47,6 @@ export default class PilihPeta extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      arrMaps: [],
       regions: [],
       estateName: ''
     }
@@ -65,12 +58,8 @@ export default class PilihPeta extends Component {
   }
 
   initData() {     
-      let regions = TaskServices.getRegionName() 
-      // let estateName = TaskServices.getEstateName()
-      // this.setState({estateName})
-      // for(var i=0; i<4; i++){
-      //     this.state.arrMaps.push(i)
-      // }
+      let regions = TaskServices.getRegionCode()
+      this.setState({regions})
   }
 
   getEstateName(werks) {
@@ -80,9 +69,6 @@ export default class PilihPeta extends Component {
     } catch (error) {
         return '';
     }
-  }
-
-  actionButtonClick() {
   }
 
   getColor(param) {
@@ -98,16 +84,30 @@ export default class PilihPeta extends Component {
     }
   }
 
-  onClickItem(id) {
-    var images = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', id);
-    if (images !== undefined) {
-      this.props.navigation.navigate('DetailFinding', { ID: id })
-    }else{
-      this.getImageBaseOnFindingCode(id)
-      setTimeout(() => {
-        this.props.navigation.navigate('DetailFinding', { ID: id })
-      }, 3000);
-    }    
+  async onClickItem(data) {
+    // let isExist = await RNFS.exists(`${dirMaps}/${data.EST_NAME}`)
+    // if (!isExist) {
+    //   var url = 'http:....'//data.IMAGE_URL;
+    //   const { config, fs } = RNFetchBlob
+    //   let options = {
+    //       fileCache: true,
+    //       addAndroidDownloads: {
+    //           useDownloadManager: true,
+    //           notification: true,
+    //           path: `${dirMaps}/${data.IMAGE_NAME}.json`,
+    //           mime : 'text/plain',
+    //           description: 'File Maps'
+    //       }
+    //   }
+    //   config(options).fetch('GET', url).then((res) => {        
+    //     this.setState({estateName: data.EST_NAME})
+    //   }).catch((error) => {
+    //       console.log(error);
+    //   });
+    // }else{      
+    //   this.setState({estateName: data.EST_NAME})
+    // }
+    this.setState({estateName: data.EST_NAME})
   }
 
   renderMapsByRegion(regionCode, index){
@@ -135,29 +135,16 @@ export default class PilihPeta extends Component {
   }
 
   _renderItem = (item, index) => {
-    // const nav = this.props.navigation;
-    // const image = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', item.FINDING_CODE)
-    // var label = { backgroundColor: item.PROGRESS == '0' ? 'rgba(255, 0, 0, 0.7)' : 'rgba(254, 178, 54, 0.7)' };
     let showImage;
-    // if (image == undefined) {
       showImage = <Image style={{ alignItems: 'stretch', height: 100, width: 150, borderRadius: 10 }} source={require('../../Images/forest.jpg')} />
-    // } else {
-    //   showImage = <Image style={{ alignItems: 'stretch', width: 120, height: 120, borderRadius: 10 }} source={{ uri: "file://" + image.IMAGE_PATH_LOCAL }} />
-    // }
     return (
       < TouchableOpacity
-        // onPress={() => { this.onClickItem(item.FINDING_CODE) }}
+        onPress={() => { this.onClickItem(item) }}
         style={{flex:1}}
         key={index}
       >
         <View style={{ height: 100, width: 150, marginLeft: 10 }}>
           {showImage}
-          {/* <View style={[styles.labelBackground, {backgroundColor: 'rgba(254, 178, 54, 0.7)'}]}>
-            <Icon name={'map-marker-alt'} color={'white'} size={12}
-              style={{ marginRight: 5, marginTop: 1 }} />
-            <Text style={{ fontSize: 8, color: 'white', textAlignVertical: 'center' }}>{showBlockDetail}</Text>
-          </View> */}
-
           <View style={[styles.bgBelumDownload, {backgroundColor: 'rgba(169,169,169,0.8)'}]}>
             <Icon2 name={'clouddownload'} color={'white'} size={20}
               style={{ justifyContent:'center', alignItems: 'center'}} />
@@ -169,7 +156,7 @@ export default class PilihPeta extends Component {
   }
 
   render() {
-    let data = TaskServices.getRegionCode()
+    let data = this.state.regions
     return (
       <Container style={{ flex: 1 }}>
         <Content style={styles.container} >
@@ -197,15 +184,9 @@ export default class PilihPeta extends Component {
               height: 1, marginLeft: 16, marginRight: 16, marginTop: 10
             }} />
 
-          {/* <View style={{ marginTop: 16}}>
-            <Text style={{ fontSize: 12,  paddingHorizontal: 16 }}>
-              {TaskServices.getRegionName()}
-            </Text>
-            <ScrollView style = {{marginTop: 5}} contentContainerStyle={{ paddingRight: 16 }} horizontal={true} showsHorizontalScrollIndicator={false}>
-              {this.state.arrMaps.map((item, index) => this._renderItem(item, index))}
-            </ScrollView >
-          </View> */}
-          {data !== null && data.map((item, index) => this.renderMapsByRegion(item, index))}
+          <View style={{paddingBottom: 30}}>
+            {data !== null && data.map((item, index) => this.renderMapsByRegion(item, index))}
+          </View>
 
         </Content>
       </Container >
