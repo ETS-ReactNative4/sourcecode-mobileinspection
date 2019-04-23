@@ -138,7 +138,13 @@ class HomeScreen extends React.Component {
         }
         findingFilter = findingSorted.filtered(`${query} ${this.extraFilter}`);
       } else {
-        findingFilter = finding.sorted('INSERT_TIME', true).filtered(this.extraFilter);
+			if(this.extraFilter!==""){
+				this.extraFilter = this.extraFilter.replace(" AND ","");
+				findingFilter = finding.sorted('INSERT_TIME', true).filtered(this.extraFilter);
+			}
+			else{
+				findingFilter = finding.sorted('INSERT_TIME', true);
+			}
       }
     } else if (ref_role == 'COMP_CODE') {
       if(loc_code.includes(',')){
@@ -197,7 +203,13 @@ class HomeScreen extends React.Component {
       }
       
     } else {
-      findingFilter = finding.sorted('INSERT_TIME', true).filtered(this.extraFilter);
+		if(this.extraFilter!==""){
+			this.extraFilter = this.extraFilter.replace(" AND ","");
+			findingFilter = finding.sorted('INSERT_TIME', true).filtered(this.extraFilter);
+		}
+		else{
+			findingFilter = finding.sorted('INSERT_TIME', true);
+		}
     }
 	this.extraFilter = "";
     return findingFilter;
