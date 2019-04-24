@@ -36,7 +36,7 @@ export default class Inbox extends React.Component {
     })
 	
 	getNotif = () => {
-		let notifData = TaskServices.getAllData('TR_NOTIFICATION');
+		let notifData = TaskServices.getAllData('TR_NOTIFICATION').sorted('NOTIFICATION_TIME', true);
 		return notifData;
 	}
 
@@ -50,6 +50,17 @@ export default class Inbox extends React.Component {
 		let sources;
 		let desc;
 		let notifColor;
+		let notifCreateDate = item.NOTIFICATION_TIME;
+		let today = new Date();
+		if(notifCreateDate.getDate()==today.getDate()
+			&&notifCreateDate.getMonth()==today.getMonth()
+			&&notifCreateDate.getFullYear()==today.getFullYear()){
+			notifCreateDate = "Hari ini,"+notifCreateDate.getHours()+":"+notifCreateDate.getMinutes();
+		}
+		else{
+			notifCreateDate = notifCreateDate.getDate()+"-"+(notifCreateDate.getMonth()+1)+"-"+notifCreateDate.getFullYear()
+								+","+notifCreateDate.getHours()+":"+notifCreateDate.getMinutes();
+		}
 		let findingData = TaskServices.findBy2('TR_FINDING','FINDING_CODE',item.FINDING_CODE);
 		let contactAsign = TaskServices.findBy2('TR_CONTACT','USER_AUTH_CODE',findingData.ASSIGN_TO);
 		let createTime = moment(findingData.INSERT_TIME,"YYYYMMDDHHmmss");
@@ -57,10 +68,10 @@ export default class Inbox extends React.Component {
 		let block = TaskServices.findBy2('TM_BLOCK','BLOCK_CODE',findingData.BLOCK_CODE);
 		let est = TaskServices.findBy2('TM_EST','EST_CODE',block.EST_CODE);
 		if(item.NOTIFICATION_STATUS==0){
-			notifColor="white";
+			notifColor="#AFAFAF";
 		}
 		else{
-			notifColor="#AFAFAF";
+			notifColor="white";
 		}
 		if (item.NOTIFICATION_TYPE == 0) {
 			sources = require('../Images/icon/ic_task_new.png');
@@ -82,15 +93,19 @@ export default class Inbox extends React.Component {
 		}
 		return (
 			<TouchableOpacity
-				style={{ width: '100%',flex: 1, flexDirection: 'row',backgroundColor: notifColor}}
+				style={{ width: '100%',flex: 1, flexDirection: 'row',backgroundColor: notifColor,
+						borderBottomColor: 'grey',borderBottomWidth: 2,paddingBottom: 10,paddingTop: 10}}
 				onPress={() => { this.onClickItem(item.NOTIFICATION_ID) }}
 				key={index}
 			>
-				<Image style={{alignItems: 'stretch', alignSelf: 'center', resizeMode: 'contain',width: '30%', height:80}} 
+				<Image style={{alignItems: 'stretch', alignSelf: 'center', resizeMode: 'contain',width: '15%', height:40}} 
 					source={sources}></Image>
-				<View style={{width: '60%' }} >
-					<View style={{ flexDirection: 'row' }}>
-						<Text style={{ fontSize: 14, color: 'black', fontWeight: 'bold' }}>{title}</Text>
+				<View style={{width: '85%',paddingRight: 10 }} >
+					<View style={{ flexDirection: 'row',justifyContent: 'space-between'}}>
+						<Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}>{title}</Text>
+						<Text style={{ fontSize: 10, color: Colors.textSecondary,alignSelf: 'flex-end', fontWeight: 'bold' }}>
+							{notifCreateDate}
+						</Text>
 					</View>
 					<View style={{ flexDirection: 'row' }}>
 						<Text style={{ fontSize: 12, color: 'black'}}>{desc}</Text>
