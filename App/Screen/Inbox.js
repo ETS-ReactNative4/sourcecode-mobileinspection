@@ -43,6 +43,10 @@ export default class Inbox extends React.Component {
 	onClickItem(id) {
 		let notifData = TaskServices.findBy2('TR_NOTIFICATION','NOTIFICATION_ID',id);
 		TaskServices.updateByPrimaryKey('TR_NOTIFICATION', Object.assign({}, notifData,{NOTIFICATION_STATUS:1}));
+		let notifCount = TaskServices.getAllData('TR_NOTIFICATION').filtered('NOTIFICATION_STATUS=0').length;
+		notifCount = (notifCount>=100)?"99+":notifCount+"";
+		this.setState({data : this.getNotif()});
+		this.props.navigation.setParams({notifCount: notifCount})
 		this.props.navigation.navigate('DetailFinding', { ID: notifData.FINDING_CODE })
 	}
 	_renderItem = (item, index) => {
