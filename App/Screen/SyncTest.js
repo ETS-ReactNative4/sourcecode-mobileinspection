@@ -545,6 +545,27 @@ class SyncScreen extends React.Component {
                                             });
                                             // TaskServices.updateStatusImage('TR_IMAGE', 'Y', idxOrder);
                                         }
+										else{
+											let tr_code = model.TR_CODE;
+											if(tr_code[0]=="I"){
+												TaskServices.updateByPrimaryKey('TR_BLOCK_INSPECTION_H', {
+													"BLOCK_INSPECTION_CODE":tr_code,
+													"STATUS_SYNC":"N"
+												});
+											}
+											else if(tr_code[0]=="F"){
+												TaskServices.updateByPrimaryKey('TR_FINDING', {
+													"FINDING_CODE":tr_code,
+													"STATUS_SYNC":"N"
+												});
+											}
+											else if(tr_code[0]=="V"){
+												TaskServices.updateByPrimaryKey('TR_H_EBCC_VALIDATION', {
+													"EBCC_VALIDATION_CODE":tr_code,
+													"STATUS_SYNC":"N"
+												});
+											}
+										}
                                     }).catch((error) => {
                                         console.error(error);
                                     });
@@ -595,15 +616,15 @@ class SyncScreen extends React.Component {
                     } else if (table == 'tracking') {
                         this.updateInspeksiTrack(dataPost)
                     } else if (table == 'finding') {
-                        let imgHasSent = this.checkImageHasSent(dataPost.FINDING_CODE)
-                        if(imgHasSent){
+                        //let imgHasSent = this.checkImageHasSent(dataPost.FINDING_CODE)
+                        //if(imgHasSent){
                             this.updateFinding(dataPost)
-                        }
+                        //}
                     }else if (table == 'ebccH') {
-                        let imgHasSent = this.checkImageHasSent(dataPost.EBCC_VALIDATION_CODE)
-                        if(imgHasSent){
+                        //let imgHasSent = this.checkImageHasSent(dataPost.EBCC_VALIDATION_CODE)
+                        //if(imgHasSent){
                             this.updateEbccHeader(dataPost)
-                        }
+                        //}
                     }else if (table == 'ebccD') {
                         this.updateEbccDetail(dataPost, idInspection)
                     }
@@ -801,6 +822,7 @@ class SyncScreen extends React.Component {
             LAT_FINDING: param.LAT_FINDING,
             LONG_FINDING: param.LONG_FINDING,
             REFFERENCE_INS_CODE: param.REFFERENCE_INS_CODE,
+			STATUS_SYNC: 'Y',
             INSERT_USER: param.INSERT_USER,
             INSERT_TIME: param.INSERT_TIME == '' ? parseInt(getTodayDate('YYYYMMDDkkmmss')) :parseInt(param.INSERT_TIME),
             UPDATE_USER: param.UPDATE_USER,

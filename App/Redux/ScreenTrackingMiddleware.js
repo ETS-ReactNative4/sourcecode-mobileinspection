@@ -34,7 +34,7 @@ const screenTracking = ({ getState }) => next => action => {
 			// console.tron.log(`NAVIGATING ${currentScreen} to ${nextScreen}`)
 			// Example: Analytics.trackEvent('user_navigation', {currentScreen, nextScreen})
 		} catch (e) {
-			console.tron.log(e);
+			//console.tron.log(e);
 		}
 	}
 	return result;

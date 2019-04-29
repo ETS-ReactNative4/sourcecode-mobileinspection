@@ -9,14 +9,14 @@ const eventTrackMiddleware = store => next => action => {
 	if (actionType) {
 		if (actionType.includes('CONNECTION_CHANGE')) {
 			if (action.payload != store.getState().network.isConnected) {
-				if (action.payload) {
+				/*if (action.payload) {
 					console.tron.log('== BACK ONLINE ==');
 					// TODO Process Queue
-				} else console.tron.log('== WORKING OFFLINE ==');
+				} else console.tron.log('== WORKING OFFLINE ==');*/
 			}
 		}
 		if (actionType.includes('FAILURE')) {
-			console.tron.log(`eventTrackMiddleware : ${JSON.stringify(action)}`);
+			//console.tron.log(`eventTrackMiddleware : ${JSON.stringify(action)}`);
 			if (actionType.includes('POST') && !store.getState().network.isConnected) {
 				// console.tron.log(`Put : ${actionType} on queue`);
 				// TODO Add Queue
