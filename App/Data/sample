@@ -1,0 +1,1194 @@
+{
+    "status": true,
+    "message": "Success! ",
+    "data": [
+        {
+            "USER_AUTH_CODE": "TAC00002",
+            "EMPLOYEE_NIK": "00000795",
+            "USER_ROLE": "SEM_GM",
+            "LOCATION_CODE": "04",
+            "REF_ROLE": "REGION_CODE",
+            "JOB": "ENTERPRISE SOLUTION SECTION HEAD",
+            "FULLNAME": "NICHOLAS BUDIHARDJA"
+        },
+        {
+            "USER_AUTH_CODE": "TAC00003",
+            "EMPLOYEE_NIK": "00001164",
+            "USER_ROLE": "ASISTEN_LAPANGAN",
+            "LOCATION_CODE": "4121A,4121B",
+            "REF_ROLE": "AFD_CODE",
+            "JOB": "SENIOR BUSINESS ANALYST",
+            "FULLNAME": "RIZKY OCTARINA PUSPITASARI"
+        },
+        {
+            "USER_AUTH_CODE": "TAC00004",
+            "EMPLOYEE_NIK": "123432",
+            "USER_ROLE": "ASISTEN_LAPANGAN",
+            "LOCATION_CODE": "41",
+            "REF_ROLE": "COMP_CODE",
+            "JOB": "ASISTEN LAPANGAN",
+            "FULLNAME": "Ferdinand"
+        },
+        {
+            "USER_AUTH_CODE": "TAC00011",
+            "EMPLOYEE_NIK": "00000118",
+            "USER_ROLE": "EM",
+            "LOCATION_CODE": "4321",
+            "REF_ROLE": "BA_CODE",
+            "JOB": "QUALITY ASSURANCE SEC. HEAD",
+            "FULLNAME": "SENTOT SANTOSA"
+        },
+        {
+            "USER_AUTH_CODE": "TAC00012",
+            "EMPLOYEE_NIK": "00000993",
+            "USER_ROLE": "EM",
+            "LOCATION_CODE": "4421",
+            "REF_ROLE": "BA_CODE",
+            "JOB": "IT SOLUTION DEPT. HEAD",
+            "FULLNAME": "DONI ROMDONI"
+        },
+        {
+            "USER_AUTH_CODE": "TAC00013",
+            "EMPLOYEE_NIK": "00001789",
+            "USER_ROLE": "ESTATE_DIV",
+            "LOCATION_CODE": "4121A",
+            "REF_ROLE": "AFD_CODE",
+            "JOB": "SAP SOLUTION SECTION HEAD",
+            "FULLNAME": "DEGA ANTONI SAPUTRA"
+        },
+        {
+            "USER_AUTH_CODE": "TAC00014",
+            "EMPLOYEE_NIK": "00001160",
+            "USER_ROLE": "GM_REGION",
+            "LOCATION_CODE": "4121A",
+            "REF_ROLE": "AFD_CODE",
+            "JOB": "QA & DBA DEVELOPMENT SECTION HEAD",
+            "FULLNAME": "RIZKI ATMAJIATI"
+        },
+        {
+            "USER_AUTH_CODE": "TAC00015",
+            "EMPLOYEE_NIK": "00002490",
+            "USER_ROLE": "KRANI_AFD",
+            "LOCATION_CODE": "4121A",
+            "REF_ROLE": "AFD_CODE",
+            "JOB": "ENTERPRISE SOLUTION SECTION HEAD",
+            "FULLNAME": "ARIES SHOLEHUDIN"
+        },
+        {
+            "USER_AUTH_CODE": "TAC00090",
+            "EMPLOYEE_NIK": "123123123",
+            "USER_ROLE": "SEM_GM",
+            "LOCATION_CODE": "04",
+            "REF_ROLE": "REGION_CODE",
+            "JOB": "ADMIN",
+            "FULLNAME": "UAT1"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001002",
+            "EMPLOYEE_NIK": "B1122332",
+            "USER_ROLE": "DATA_CENTER",
+            "LOCATION_CODE": "ALL",
+            "REF_ROLE": "NATIONAL",
+            "JOB": "ESTATE_DIV",
+            "FULLNAME": "uat2"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001003",
+            "EMPLOYEE_NIK": "B1122333",
+            "USER_ROLE": "BOD",
+            "LOCATION_CODE": "ALL",
+            "REF_ROLE": "NATIONAL",
+            "JOB": "BOD",
+            "FULLNAME": "uat3"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001004",
+            "EMPLOYEE_NIK": "B1122334",
+            "USER_ROLE": "SEM_GM",
+            "LOCATION_CODE": "44,43,46",
+            "REF_ROLE": "COMP_CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat4"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001005",
+            "EMPLOYEE_NIK": "B1122335",
+            "USER_ROLE": "EM",
+            "LOCATION_CODE": "4421",
+            "REF_ROLE": "BA_CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat5"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001006",
+            "EMPLOYEE_NIK": "B1122336",
+            "USER_ROLE": "ASISTEN_LAPANGAN",
+            "LOCATION_CODE": "4421A",
+            "REF_ROLE": "AFD_CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat6"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001007",
+            "EMPLOYEE_NIK": "B1122337",
+            "USER_ROLE": "EM",
+            "LOCATION_CODE": "43",
+            "REF_ROLE": "COMP_CODE",
+            "JOB": "",
+            "FULLNAME": ""
+        },
+        {
+            "USER_AUTH_CODE": "TAC001008",
+            "EMPLOYEE_NIK": "B1122338",
+            "USER_ROLE": "CEO_REG",
+            "LOCATION_CODE": "04,02",
+            "REF_ROLE": "REGION_CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat8"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001009",
+            "EMPLOYEE_NIK": "B1122339",
+            "USER_ROLE": "ASISTEN_LAPANGAN",
+            "LOCATION_CODE": "4421C",
+            "REF_ROLE": "AFD_CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat9"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001010",
+            "EMPLOYEE_NIK": "B1122340",
+            "USER_ROLE": "ASISTEN_LAPANGAN",
+            "LOCATION_CODE": "4421B,4421C",
+            "REF_ROLE": "AFD_CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat10"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001011",
+            "EMPLOYEE_NIK": "B1122341",
+            "USER_ROLE": "ASISTEN_LAPANGAN",
+            "LOCATION_CODE": "4421Z",
+            "REF_ROLE": "AFD_CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat11"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001012",
+            "EMPLOYEE_NIK": "B1122342",
+            "USER_ROLE": "ASISTEN_LAPANGAN",
+            "LOCATION_CODE": "4421F",
+            "REF_ROLE": "REGION_CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat12"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001013",
+            "EMPLOYEE_NIK": "B1122343",
+            "USER_ROLE": "ASISTEN_LAPANGAN",
+            "LOCATION_CODE": "4421C",
+            "REF_ROLE": "AFD_CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat13"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001014",
+            "EMPLOYEE_NIK": "B1122344",
+            "USER_ROLE": "ASISTEN_LAPANGAN",
+            "LOCATION_CODE": "4421D",
+            "REF_ROLE": "AFD_CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat14"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001015",
+            "EMPLOYEE_NIK": "B1122345",
+            "USER_ROLE": "ASISTEN_LAPANGAN",
+            "LOCATION_CODE": "4421E",
+            "REF_ROLE": "AFD_CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat15"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001016",
+            "EMPLOYEE_NIK": "B1122346",
+            "USER_ROLE": "ASISTEN_LAPANGAN",
+            "LOCATION_CODE": "4421F",
+            "REF_ROLE": "AFD_CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat16"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001017",
+            "EMPLOYEE_NIK": "B1122347",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121B",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat17"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001018",
+            "EMPLOYEE_NIK": "B1122348",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121B",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat18"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001019",
+            "EMPLOYEE_NIK": "B1122349",
+            "USER_ROLE": "ASISTEN_LAPANGAN",
+            "LOCATION_CODE": "4121B",
+            "REF_ROLE": "AFD_CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat19"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001020",
+            "EMPLOYEE_NIK": "B1122350",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121B",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat20"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001021",
+            "EMPLOYEE_NIK": "B1122351",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121B",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat21"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001022",
+            "EMPLOYEE_NIK": "B1122352",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121B",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat22"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001023",
+            "EMPLOYEE_NIK": "B1122353",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121B",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat23"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001024",
+            "EMPLOYEE_NIK": "B1122354",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121B",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat24"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001025",
+            "EMPLOYEE_NIK": "B1122355",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121C",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat25"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001026",
+            "EMPLOYEE_NIK": "B1122356",
+            "USER_ROLE": "CEO",
+            "LOCATION_CODE": "ALL",
+            "REF_ROLE": "NATIONAL",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat26"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001027",
+            "EMPLOYEE_NIK": "B1122357",
+            "USER_ROLE": "ASISTEN_LAPANGAN",
+            "LOCATION_CODE": "4121C",
+            "REF_ROLE": "AFD_CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat27"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001028",
+            "EMPLOYEE_NIK": "B1122358",
+            "USER_ROLE": "ASISTEN_LAPANGAN",
+            "LOCATION_CODE": "4121C",
+            "REF_ROLE": "AFD_CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat28"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001029",
+            "EMPLOYEE_NIK": "B1122359",
+            "USER_ROLE": "EM",
+            "LOCATION_CODE": "4121",
+            "REF_ROLE": "BA_CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat29"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001030",
+            "EMPLOYEE_NIK": "B1122360",
+            "USER_ROLE": "ASISTEN_LAPANGAN",
+            "LOCATION_CODE": "41221",
+            "REF_ROLE": "AFD_CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat30"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001031",
+            "EMPLOYEE_NIK": "B1122361",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4122F,4122FG,4122G",
+            "REF_ROLE": "NATIONAL",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat31"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001032",
+            "EMPLOYEE_NIK": "B1122362",
+            "USER_ROLE": "EM",
+            "LOCATION_CODE": "4122",
+            "REF_ROLE": "BA_CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat32"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001033",
+            "EMPLOYEE_NIK": "B1122363",
+            "USER_ROLE": "AQC",
+            "LOCATION_CODE": "4122,4123",
+            "REF_ROLE": "BA_CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat33"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001034",
+            "EMPLOYEE_NIK": "B1122364",
+            "USER_ROLE": "ASISTEN_LAPANGAN",
+            "LOCATION_CODE": "4122F",
+            "REF_ROLE": "AFD_CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat34"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001035",
+            "EMPLOYEE_NIK": "B1122365",
+            "USER_ROLE": "ASISTEN_LAPANGAN",
+            "LOCATION_CODE": "4122O",
+            "REF_ROLE": "AFD_CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat35"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001036",
+            "EMPLOYEE_NIK": "B1122366",
+            "USER_ROLE": "ASISTEN_LAPANGAN",
+            "LOCATION_CODE": "4122N",
+            "REF_ROLE": "AFD_CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat36"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001037",
+            "EMPLOYEE_NIK": "B1122367",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121D",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat37"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001038",
+            "EMPLOYEE_NIK": "B1122368",
+            "USER_ROLE": "EM",
+            "LOCATION_CODE": "4321",
+            "REF_ROLE": "BA_CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat38"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001039",
+            "EMPLOYEE_NIK": "B1122369",
+            "USER_ROLE": "ASISTEN_LAPANGAN",
+            "LOCATION_CODE": "4321K",
+            "REF_ROLE": "AFD_CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat39"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001040",
+            "EMPLOYEE_NIK": "B1122370",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121D",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat40"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001041",
+            "EMPLOYEE_NIK": "B1122371",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121D",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat41"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001042",
+            "EMPLOYEE_NIK": "B1122372",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121D",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat42"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001043",
+            "EMPLOYEE_NIK": "B1122373",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121D",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat43"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001044",
+            "EMPLOYEE_NIK": "B1122374",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121D",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat44"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001045",
+            "EMPLOYEE_NIK": "B1122375",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121E",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat45"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001046",
+            "EMPLOYEE_NIK": "B1122376",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4321",
+            "REF_ROLE": "BA_CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat46"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001047",
+            "EMPLOYEE_NIK": "B1122377",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121E",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat47"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001048",
+            "EMPLOYEE_NIK": "B1122378",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121E",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat48"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001049",
+            "EMPLOYEE_NIK": "B1122379",
+            "USER_ROLE": "EM",
+            "LOCATION_CODE": "42",
+            "REF_ROLE": "COMP_CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat49"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001050",
+            "EMPLOYEE_NIK": "B1122380",
+            "USER_ROLE": "ASISTEN_LAPANGAN",
+            "LOCATION_CODE": "4221A",
+            "REF_ROLE": "AFD_CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat50"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001051",
+            "EMPLOYEE_NIK": "B1122381",
+            "USER_ROLE": "ASISTEN_LAPANGAN",
+            "LOCATION_CODE": "4221B",
+            "REF_ROLE": "AFD_CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat51"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001052",
+            "EMPLOYEE_NIK": "B1122382",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121E",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat52"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001053",
+            "EMPLOYEE_NIK": "B1122383",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121E",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat53"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001054",
+            "EMPLOYEE_NIK": "B1122384",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121H",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat54"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001055",
+            "EMPLOYEE_NIK": "B1122385",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121H",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat55"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001056",
+            "EMPLOYEE_NIK": "B1122386",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121H",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat56"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001057",
+            "EMPLOYEE_NIK": "B1122387",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121H",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat57"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001058",
+            "EMPLOYEE_NIK": "B1122388",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121H",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat58"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001059",
+            "EMPLOYEE_NIK": "B1122389",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121H",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat59"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001060",
+            "EMPLOYEE_NIK": "B1122390",
+            "USER_ROLE": "ASISTEN_LAPANGAN",
+            "LOCATION_CODE": "4121H,4121A",
+            "REF_ROLE": "AFD_CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat60"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001061",
+            "EMPLOYEE_NIK": "B1122391",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121H",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat61"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001062",
+            "EMPLOYEE_NIK": "B1122392",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121H",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat62"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001063",
+            "EMPLOYEE_NIK": "B1122393",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121I",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat63"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001064",
+            "EMPLOYEE_NIK": "B1122394",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121I",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat64"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001065",
+            "EMPLOYEE_NIK": "B1122395",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121I",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat65"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001066",
+            "EMPLOYEE_NIK": "B1122396",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121I",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat66"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001067",
+            "EMPLOYEE_NIK": "B1122397",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121J",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat67"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001068",
+            "EMPLOYEE_NIK": "B1122398",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121J",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat68"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001069",
+            "EMPLOYEE_NIK": "B1122399",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121J",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat69"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001070",
+            "EMPLOYEE_NIK": "B1122400",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121J",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_LAPANGAN",
+            "FULLNAME": "uat70"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001071",
+            "EMPLOYEE_NIK": "B1122401",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121",
+            "REF_ROLE": "BA_CODE",
+            "JOB": "ASISTEN_KEPALA",
+            "FULLNAME": "uat71"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001072",
+            "EMPLOYEE_NIK": "B1122402",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121",
+            "REF_ROLE": "BA_CODE",
+            "JOB": "ASISTEN_KEPALA",
+            "FULLNAME": "uat72"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001073",
+            "EMPLOYEE_NIK": "B1122403",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_KEPALA",
+            "FULLNAME": "uat73"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001074",
+            "EMPLOYEE_NIK": "B1122404",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_KEPALA",
+            "FULLNAME": "uat74"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001075",
+            "EMPLOYEE_NIK": "B1122405",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_KEPALA",
+            "FULLNAME": "uat75"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001076",
+            "EMPLOYEE_NIK": "B1122406",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_KEPALA",
+            "FULLNAME": "uat76"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001077",
+            "EMPLOYEE_NIK": "B1122407",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_KEPALA",
+            "FULLNAME": "uat77"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001078",
+            "EMPLOYEE_NIK": "B1122408",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_KEPALA",
+            "FULLNAME": "uat78"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001079",
+            "EMPLOYEE_NIK": "B1122409",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_KEPALA",
+            "FULLNAME": "uat79"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001080",
+            "EMPLOYEE_NIK": "B1122410",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_KEPALA",
+            "FULLNAME": "uat80"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001081",
+            "EMPLOYEE_NIK": "B1122411",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_KEPALA",
+            "FULLNAME": "uat81"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001082",
+            "EMPLOYEE_NIK": "B1122412",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_KEPALA",
+            "FULLNAME": "uat82"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001083",
+            "EMPLOYEE_NIK": "B1122413",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_KEPALA",
+            "FULLNAME": "uat83"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001084",
+            "EMPLOYEE_NIK": "B1122414",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_KEPALA",
+            "FULLNAME": "uat84"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001085",
+            "EMPLOYEE_NIK": "B1122415",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_KEPALA",
+            "FULLNAME": "uat85"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001086",
+            "EMPLOYEE_NIK": "B1122416",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_KEPALA",
+            "FULLNAME": "uat86"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001087",
+            "EMPLOYEE_NIK": "B1122417",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_KEPALA",
+            "FULLNAME": "uat87"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001088",
+            "EMPLOYEE_NIK": "B1122418",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_KEPALA",
+            "FULLNAME": "uat88"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001089",
+            "EMPLOYEE_NIK": "B1122419",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_KEPALA",
+            "FULLNAME": "uat89"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001090",
+            "EMPLOYEE_NIK": "B1122420",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "ASISTEN_KEPALA",
+            "FULLNAME": "uat90"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001091",
+            "EMPLOYEE_NIK": "B1122421",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "EM",
+            "FULLNAME": "uat91"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001092",
+            "EMPLOYEE_NIK": "B1122422",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "EM",
+            "FULLNAME": "uat92"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001093",
+            "EMPLOYEE_NIK": "B1122423",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "EM",
+            "FULLNAME": "uat93"
+        },
+        {
+            "USER_AUTH_CODE": "TAC001094",
+            "EMPLOYEE_NIK": "B1122424",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "EM",
+            "FULLNAME": "uat94"
+        },
+        {
+            "USER_AUTH_CODE": "0008",
+            "EMPLOYEE_NIK": "B1122425",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "EM",
+            "FULLNAME": "uat95"
+        },
+        {
+            "USER_AUTH_CODE": "0007",
+            "EMPLOYEE_NIK": "B1122426",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "EM",
+            "FULLNAME": "uat96"
+        },
+        {
+            "USER_AUTH_CODE": "0006",
+            "EMPLOYEE_NIK": "B1122427",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "EM",
+            "FULLNAME": "uat97"
+        },
+        {
+            "USER_AUTH_CODE": "0005",
+            "EMPLOYEE_NIK": "B1122428",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "EM",
+            "FULLNAME": "uat98"
+        },
+        {
+            "USER_AUTH_CODE": "0004",
+            "EMPLOYEE_NIK": "B1122429",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121",
+            "REF_ROLE": "BA-CODE",
+            "JOB": "EM",
+            "FULLNAME": "uat99"
+        },
+        {
+            "USER_AUTH_CODE": "0003",
+            "EMPLOYEE_NIK": "B1122430",
+            "USER_ROLE": "EM",
+            "LOCATION_CODE": "4321",
+            "REF_ROLE": "BA_CODE",
+            "JOB": "EM",
+            "FULLNAME": "uat100"
+        },
+        {
+            "USER_AUTH_CODE": "0002",
+            "EMPLOYEE_NIK": "00001776",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4121,4122,4123,2121",
+            "REF_ROLE": "BA_CODE",
+            "JOB": "IT DIVISION HEAD",
+            "FULLNAME": "JANUANTO ARU WIDODO"
+        },
+        {
+            "USER_AUTH_CODE": "0001",
+            "EMPLOYEE_NIK": "43432109154400",
+            "USER_ROLE": "ADMIN",
+            "LOCATION_CODE": "41,21",
+            "REF_ROLE": "COMP_CODE",
+            "JOB": "",
+            "FULLNAME": ""
+        },
+        {
+            "USER_AUTH_CODE": "TAC212141010034",
+            "EMPLOYEE_NIK": "212141010034",
+            "USER_ROLE": "ADMIN",
+            "LOCATION_CODE": "41,21",
+            "REF_ROLE": "COMP_CODE",
+            "JOB": "",
+            "FULLNAME": ""
+        },
+        {
+            "USER_AUTH_CODE": "9997",
+            "EMPLOYEE_NIK": "00002225",
+            "USER_ROLE": "ASISTEN_LAPANGAN",
+            "LOCATION_CODE": "4321A",
+            "REF_ROLE": "AFD_CODE",
+            "JOB": "BUSINESS ANALYST",
+            "FULLNAME": "MEGA BRESTADA"
+        },
+        {
+            "USER_AUTH_CODE": "9998",
+            "EMPLOYEE_NIK": "00000001",
+            "USER_ROLE": "ADMIN",
+            "LOCATION_CODE": "ALL",
+            "REF_ROLE": "NATIONAL",
+            "JOB": "CHIEF EXECUTIVE OFFICER",
+            "FULLNAME": "ARIF RACHMAT"
+        },
+        {
+            "USER_AUTH_CODE": "0116",
+            "EMPLOYEE_NIK": "00000852",
+            "USER_ROLE": "EM",
+            "LOCATION_CODE": "4421",
+            "REF_ROLE": "BA_CODE",
+            "JOB": "BUSINESS PROCESS PROJECT MANAGER",
+            "FULLNAME": "WIDJANARKO ."
+        },
+        {
+            "USER_AUTH_CODE": "0117",
+            "EMPLOYEE_NIK": "00009999",
+            "USER_ROLE": "EM",
+            "LOCATION_CODE": "43",
+            "REF_ROLE": "COMP_CODE",
+            "JOB": "ENTERPRISE SOLUTION SECTION HEAD",
+            "FULLNAME": "SAMPLE CREATOR DOC CONTROL"
+        },
+        {
+            "USER_AUTH_CODE": "0118",
+            "EMPLOYEE_NIK": "00000032",
+            "USER_ROLE": "ADMIN",
+            "LOCATION_CODE": "41,21",
+            "REF_ROLE": "COMP_CODE",
+            "JOB": "ESTATE MANAGER",
+            "FULLNAME": "FRANS ANDI PURBA GIRSANG"
+        },
+        {
+            "USER_AUTH_CODE": "0119",
+            "EMPLOYEE_NIK": "SAP-41/4123/0112/248",
+            "USER_ROLE": "ADMIN",
+            "LOCATION_CODE": "4121A",
+            "REF_ROLE": "AFD_CODE",
+            "JOB": "",
+            "FULLNAME": ""
+        },
+        {
+            "USER_AUTH_CODE": "0120",
+            "EMPLOYEE_NIK": "SAP-41/4123/0112/248",
+            "USER_ROLE": "ADMIN",
+            "LOCATION_CODE": "4121A",
+            "REF_ROLE": "AFD_CODE",
+            "JOB": "",
+            "FULLNAME": ""
+        },
+        {
+            "USER_AUTH_CODE": "0121",
+            "EMPLOYEE_NIK": "00001062",
+            "USER_ROLE": "CEO",
+            "LOCATION_CODE": "ALL",
+            "REF_ROLE": "NATIONAL",
+            "JOB": "DEPUTY DIRECTOR IT, SPC, & BP",
+            "FULLNAME": "ADRIAN HERNANTO"
+        },
+        {
+            "USER_AUTH_CODE": "0122",
+            "EMPLOYEE_NIK": "00000638",
+            "USER_ROLE": "SEM_GM",
+            "LOCATION_CODE": "44",
+            "REF_ROLE": "COMP_CODE",
+            "JOB": "BUSINESS PROCESS SUB DIVISION HEAD",
+            "FULLNAME": "FERRY TJEN"
+        },
+        {
+            "USER_AUTH_CODE": "0122",
+            "EMPLOYEE_NIK": "00000009",
+            "USER_ROLE": "CEO_REG",
+            "LOCATION_CODE": "04",
+            "REF_ROLE": "REGION_CODE",
+            "JOB": "CEO - KALTENG & SUMATERA",
+            "FULLNAME": "GEORGE OETOMO"
+        },
+        {
+            "USER_AUTH_CODE": "0123",
+            "EMPLOYEE_NIK": "00001857",
+            "USER_ROLE": "ASISTEN_LAPANGAN",
+            "LOCATION_CODE": "4122G",
+            "REF_ROLE": "AFD_CODE",
+            "JOB": "ASISTEN OPERATIONAL DEVELOPMENT",
+            "FULLNAME": "CHRIST HANSPARI"
+        },
+        {
+            "USER_AUTH_CODE": "0124",
+            "EMPLOYEE_NIK": "00002560",
+            "USER_ROLE": "ASISTEN_LAPANGAN",
+            "LOCATION_CODE": "4122FG",
+            "REF_ROLE": "AFD_CODE",
+            "JOB": "ASISTEN LAND APLIKASI & EFB",
+            "FULLNAME": "ERVAN F. HUTAJULU"
+        },
+        {
+            "USER_AUTH_CODE": "0125",
+            "EMPLOYEE_NIK": "00001181",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4122F,4121FG,4122G,4122K,4122N",
+            "REF_ROLE": "BA_CODE",
+            "JOB": "KEPALA KEBUN",
+            "FULLNAME": "ABDUL WAHAB RAMBE"
+        },
+        {
+            "USER_AUTH_CODE": "0126",
+            "EMPLOYEE_NIK": "00002763",
+            "USER_ROLE": "AQC",
+            "LOCATION_CODE": "4122,4123",
+            "REF_ROLE": "BA_CODE",
+            "JOB": "ASISTEN AGRONOMY QUALITY CONTROL",
+            "FULLNAME": "IMANUEL SITUMEANG"
+        },
+        {
+            "USER_AUTH_CODE": "0127",
+            "EMPLOYEE_NIK": "00000624",
+            "USER_ROLE": "EM",
+            "LOCATION_CODE": "4122",
+            "REF_ROLE": "BA_CODE",
+            "JOB": "TECHNICAL LEARNING PROGRAM DEPT. HEAD",
+            "FULLNAME": "ZEKTAFER WIDODO HUTAGALUNG"
+        },
+        {
+            "USER_AUTH_CODE": "0128",
+            "EMPLOYEE_NIK": "00001464",
+            "USER_ROLE": "ASISTEN_LAPANGAN",
+            "LOCATION_CODE": "4122K",
+            "REF_ROLE": "AFD_CODE",
+            "JOB": "ASISTEN LAPANGAN",
+            "FULLNAME": "WAHYU HADI PUTRA"
+        },
+        {
+            "USER_AUTH_CODE": "0129",
+            "EMPLOYEE_NIK": "00002563",
+            "USER_ROLE": "ASISTEN_LAPANGAN",
+            "LOCATION_CODE": "4122M",
+            "REF_ROLE": "AFD_CODE",
+            "JOB": "ASISTEN LAPANGAN",
+            "FULLNAME": "REFANDI ."
+        },
+        {
+            "USER_AUTH_CODE": "0130",
+            "EMPLOYEE_NIK": "00001434",
+            "USER_ROLE": "ASISTEN_LAPANGAN",
+            "LOCATION_CODE": "4122N",
+            "REF_ROLE": "AFD_CODE",
+            "JOB": "ASISTEN AGRONOMY QUALITY CONTROL",
+            "FULLNAME": "NURDINDA DAMANIK"
+        },
+        {
+            "USER_AUTH_CODE": "0131",
+            "EMPLOYEE_NIK": "00002301",
+            "USER_ROLE": "ASISTEN_LAPANGAN",
+            "LOCATION_CODE": "4122O",
+            "REF_ROLE": "AFD_CODE",
+            "JOB": "ASISTEN LAPANGAN",
+            "FULLNAME": "YULIANTO EKO SAPUTRO"
+        },
+        {
+            "USER_AUTH_CODE": "0132",
+            "EMPLOYEE_NIK": "00001877",
+            "USER_ROLE": "ASISTEN_LAPANGAN",
+            "LOCATION_CODE": "4122P,4122S",
+            "REF_ROLE": "NATIONAL",
+            "JOB": "ASISTEN LAPANGAN",
+            "FULLNAME": "BAMBANG SATRIAWAN LUBIS"
+        },
+        {
+            "USER_AUTH_CODE": "0133",
+            "EMPLOYEE_NIK": "00001340",
+            "USER_ROLE": "KEPALA_KEBUN",
+            "LOCATION_CODE": "4122m,4122l,4122O,4122P,4122S",
+            "REF_ROLE": "AFD_CODE",
+            "JOB": "KEPALA KEBUN",
+            "FULLNAME": "HERRY ARMANDO SITUMORANG"
+        }
+    ]
+}

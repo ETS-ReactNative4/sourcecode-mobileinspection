@@ -43,7 +43,7 @@ const styles  = StyleSheet.create({
     },
 
     layoutSuggestionText : {
-        flex:5, 
+        flex:4, 
         flexDirection:'column', 
         marginTop:30
     },
@@ -53,6 +53,23 @@ const styles  = StyleSheet.create({
         fontWeight:'600',
         marginBottom:10, 
         marginLeft:20, 
+        marginTop:0
+    },
+
+    filterText : {
+        fontSize : 15,
+        fontWeight:'400',
+        marginBottom:10,
+        marginRight:20,
+        textAlign:'right',
+        color : '#9E9E9E'
+    },
+
+    selectedText : {
+        fontSize:15,
+        fontWeight:'600',
+        marginBottom:10, 
+        marginLeft:0, 
         marginTop:0
     },
 
@@ -101,10 +118,12 @@ const styles  = StyleSheet.create({
     layoutSelectedPeople : {
         flex:1, 
         flexDirection:'column', 
-        marginLeft:20, 
-        marginRight:20, 
-        width: wp('85%'),
-        height: hp('6.7%') 
+        marginLeft:10, 
+        marginRight:10, 
+        width: wp('90%'),
+        height: hp('6.7%'),
+        marginTop:10,
+        alignContent:'center',
     }
 
 });

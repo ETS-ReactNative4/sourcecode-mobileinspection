@@ -1171,7 +1171,11 @@ class SyncScreen extends React.Component {
             }
             data.map(item => {
                 TaskServices.saveData('TR_CONTACT', item);
+
+                //duplicate database to TR_CONTACT_GENBA :
+                TaskServices.insertSameObject('TR_CONTACT_GENBA', item);
                 let countDataInsert = TaskServices.getTotalData('TR_CONTACT');
+
                 this.setState({ valueContactDownload: countDataInsert });
             });
         } else {

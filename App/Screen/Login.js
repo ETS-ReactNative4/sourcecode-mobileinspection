@@ -1,15 +1,7 @@
 
 'use strict';
 import React, { Component } from 'react';
-import {
-    StyleSheet,
-    Text,
-    View,
-    KeyboardAvoidingView,
-    Keyboard,
-    StatusBar,
-    ImageBackground, BackHandler
-} from 'react-native';
+import { StyleSheet, Text, View, KeyboardAvoidingView, Keyboard, StatusBar, ImageBackground, BackHandler } from 'react-native';
 
 import HandleBack from '../Component/Back'
 import Form from '../Component/Form';
@@ -260,9 +252,11 @@ class Login extends Component {
 
                         <Form
                             onBtnClick={data => {this.onLogin(data.strEmail, data.strPassword, data.selectedServer) }} />
+
                         <View style={styles.footerView}>
                             <Text style={styles.footerText}>{'\u00A9'} 2018 Copyrights PT Triputra Agro Persada</Text>
                         </View>
+
                         <ProgressDialog
                             visible={this.state.fetching}
                             activityIndicatorSize="large"
@@ -310,16 +304,21 @@ const styles = StyleSheet.create({
         color: '#ffffff',
         fontSize: 16,
         fontWeight: '500',
-    }, footerView: {
+    }, 
+    
+    footerView: {
         flexGrow: 1,
         alignItems: 'flex-end',
         justifyContent: 'center',
         paddingVertical: 16,
-        flexDirection: 'row'
+        flexDirection: 'column',
+        //marginBottom : 30
     },
+
     footerText: {
         color: '#51a977',
         fontSize: 12,
+        textAlign : 'center'
     },
 });
 
