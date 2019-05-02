@@ -592,6 +592,7 @@ class SyncScreen extends React.Component {
     }
 
     uploadData(URL, dataPost, table, idInspection) {
+		console.log("masuk uploadData",dataPost)
         const user = TaskServices.getAllData('TR_LOGIN')[0];
         fetch(URL, {
             method: 'POST',
@@ -821,6 +822,7 @@ class SyncScreen extends React.Component {
             PROGRESS: param.PROGRESS.toString(),
             LAT_FINDING: param.LAT_FINDING,
             LONG_FINDING: param.LONG_FINDING,
+            STATUS_TRACK: param.STATUS_LAT_LONG,
             REFFERENCE_INS_CODE: param.REFFERENCE_INS_CODE,
 			STATUS_SYNC: 'Y',
             INSERT_USER: param.INSERT_USER,

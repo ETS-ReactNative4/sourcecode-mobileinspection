@@ -145,23 +145,46 @@ class MapsEbcc extends React.Component {
   }
 
   getLocation() {
-    navigator.geolocation.getCurrentPosition(
+	if(this.state.latitude&&this.state.longitude){
+		//var lat = parseFloat(position.coords.latitude);
+		//var lon = parseFloat(position.coords.longitude);
+		var lat = this.state.latitude;
+		var lon = this.state.longitude;
+		region = {
+			latitude: lat,
+			longitude: lon,
+			latitudeDelta:0.0075,
+			longitudeDelta:0.00721
+		}   
+		position = {
+			latitude: lat, longitude: lon
+		}
+		let poligons = this.getPolygons(position);
+		this.setState({latitude:lat, longitude:lon, fetchLocation: false, region, poligons});
+		if(this.map !== undefined){
+			this.map.animateToCoordinate(region, 1);
+		}    
+	}
+    /*navigator.geolocation.getCurrentPosition(
         (position) => {
-            var lat = parseFloat(position.coords.latitude);
-            var lon = parseFloat(position.coords.longitude);  
+            //var lat = parseFloat(position.coords.latitude);
+            //var lon = parseFloat(position.coords.longitude);
+            var lat = this.state.latitude;
+            var lon = this.state.longitude;
             region = {
               latitude: lat,
               longitude: lon,
               latitudeDelta:0.0075,
               longitudeDelta:0.00721
-            } 
+            }   
             position = {
               latitude: lat, longitude: lon
             }
             let poligons = this.getPolygons(position);
-            this.map.animateToCoordinate(region, 1);
-            this.setState({latitude:lat, longitude:lon, fetchLocation: false, region, poligons});
-        },
+            this.setState({latitude:lat, longitude:lon, fetchLocation: false, region, poligons});   
+            if(this.map !== undefined){
+              this.map.animateToCoordinate(region, 1);
+            }        },
         (error) => {
             let message = error && error.message ? error.message : 'Terjadi kesalahan ketika mencari lokasi anda !';
             if (error && error.message == "No location provider available.") {
@@ -170,7 +193,7 @@ class MapsEbcc extends React.Component {
             this.setState({ fetchLocation: false, showModal: true, title: 'Informasi', message: message, icon: require('../../Images/ic-no-gps.png') });
         }, // go here if error while fetch location
         { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
-    );
+    );*/
   }  
 
   centerCoordinate(coordinates) {
@@ -298,6 +321,16 @@ class MapsEbcc extends React.Component {
           followsUserLocation={false}
           scrollEnabled={false}
           zoomEnabled={true}
+          onUserLocationChange={event => {
+            let lat = event.nativeEvent.coordinate.latitude;
+            let lon = event.nativeEvent.coordinate.longitude;
+            this.setState({latitude:lat, longitude:lon,region : {
+                    latitude: lat,
+                    longitude: lon,
+                    latitudeDelta:0.0075,
+                    longitudeDelta:0.00721
+                  }});
+			}}
           onMapReady={()=>this.onMapReady()}
           // onUserLocationChange={this.setMyLocation}
           >
