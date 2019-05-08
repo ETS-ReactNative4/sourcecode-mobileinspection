@@ -1224,12 +1224,14 @@ class SyncScreen extends React.Component {
                 this.setState({ progressFinding: i / data.simpan.length, totalFindingDownload: data.simpan.length });
             }
             data.simpan.map(item => {
-				let newItem = Object.assign({}, item, {
+				/*let newItem = Object.assign({}, item, {
 					INSERT_TIME: item.INSERT_TIME.replace(/[-|:| ]+/g, ''),
 					UPDATE_TIME: item.UPDATE_TIME.replace(/[-|:| ]+/g, '')
-				})
-				this._updateTR_Notif(newItem);
-                TaskServices.saveData('TR_FINDING', newItem);
+				})*/
+				//this._updateTR_Notif(newItem);
+				this._updateTR_Notif(item);
+                TaskServices.saveData('TR_FINDING', item);
+                //TaskServices.saveData('TR_FINDING', newItem);
                 let countDataInsert = TaskServices.getTotalData('TR_FINDING');
                 this.setState({ valueFindingDownload: countDataInsert });
             });
@@ -1239,12 +1241,14 @@ class SyncScreen extends React.Component {
         }
         if (data.ubah.length > 0 && allData.length > 0) {
             data.ubah.map(item => {
-				let newItem = Object.assign({}, item, {
+				/*let newItem = Object.assign({}, item, {
 					INSERT_TIME: item.INSERT_TIME.replace(/[-|:| ]+/g, ''),
 					UPDATE_TIME: item.UPDATE_TIME.replace(/[-|:| ]+/g, '')
-				})
-				this._updateTR_Notif(newItem);
-                TaskServices.updateByPrimaryKey('TR_FINDING', newItem)
+				})*/
+				//this._updateTR_Notif(newItem);
+				this._updateTR_Notif(item);
+                TaskServices.updateByPrimaryKey('TR_FINDING', item)
+                //TaskServices.updateByPrimaryKey('TR_FINDING', newItem)
                 // let indexData = R.findIndex(R.propEq('FINDING_CODE', item.FINDING_CODE))(allData);
                 //TaskServices.updateFindingDownload(item, indexData)
             })
