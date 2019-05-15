@@ -21,6 +21,10 @@ import { dirPhotoInspeksiBaris } from '../../Lib/dirStorage'
 import { HeaderBackButton, StackNavigator } from 'react-navigation'
 var RNFS = require('react-native-fs');
 import R from 'ramda';
+import MapView from 'react-native-maps';
+import TaskService from '../../Database/TaskServices';
+const LATITUDE = -2.952421;
+const LONGITUDE = 112.354931;
 
 class TakePhotoBaris extends Component {
 
@@ -51,6 +55,16 @@ class TakePhotoBaris extends Component {
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
 
     this.state = {
+		track:true,
+        latitude: LATITUDE,
+        longitude: LONGITUDE, 
+        region: {
+          latitude: LATITUDE,
+          longitude: LONGITUDE,
+          latitudeDelta:0.0075,
+          longitudeDelta:0.00721
+        },
+		dataLogin:TaskService.getAllData('TR_LOGIN'),
       intervalId,
       hasPhoto: false,
       path: null,
@@ -149,6 +163,26 @@ class TakePhotoBaris extends Component {
       console.log(err)
     });
   }
+	insertTrackLokasi(blokInsCode, lat, lon,success){
+		try {
+			var trInsCode = `T${this.state.dataLogin[0].USER_AUTH_CODE}${getTodayDate('YYMMDDHHmmss')}`;
+			var today = getTodayDate('YYYY-MM-DD HH:mm:ss');
+			data = {
+				TRACK_INSPECTION_CODE: trInsCode,
+				BLOCK_INSPECTION_CODE: blokInsCode,
+				DATE_TRACK: today,
+				LAT_TRACK: lat.toString(),
+				LONG_TRACK: lon.toString(),
+				STATUS_TRACK:2,
+				INSERT_USER: this.state.dataLogin[0].USER_AUTH_CODE,
+				INSERT_TIME: today,
+				STATUS_SYNC: 'N'
+			}
+			TaskService.saveData('TM_INSPECTION_TRACK', data)
+		} catch (error) {
+			alert('insert track lokasi buat inspeksi '+ error)
+		}
+	}
 
   renderCamera() {
     return (
@@ -214,7 +248,51 @@ class TakePhotoBaris extends Component {
             barStyle="light-content"
             backgroundColor={Colors.tintColorPrimary}
         />
-        <View style={{ flex: 2 }}>
+		<MapView
+		  ref={ref => this.map = ref}
+		  style={styles.map}
+		  provider="google"
+          initialRegion={this.state.region}
+		  region={this.state.region}
+		  liteMode={true}
+		  showsUserLocation={true}
+		  showsMyLocationButton={false}
+		  showsPointsOfInterest={false}
+		  showsCompass={false}
+		  showsScale={false}
+		  showsBuildings={false}
+		  showsTraffic={false}
+		  showsIndoors={false}
+		  zoomEnabled={false}
+		  scrollEnabled={false}
+		  pitchEnabled={false}
+		  toolbarEnabled={false}
+		  moveOnMarkerPress={false}
+		  zoomControlEnabled={false}
+		  minZoomLevel={10}
+		  onUserLocationChange={event => {
+			if(this.state.track){
+				let lat = event.nativeEvent.coordinate.latitude;
+				let lon = event.nativeEvent.coordinate.longitude;
+				this.setState({
+					track:false,
+					latitude:lat, 
+					longitude:lon,
+					region : {
+						latitude: lat,
+						longitude: lon,
+						latitudeDelta:0.0075,
+						longitudeDelta:0.00721
+					}});
+				this.insertTrackLokasi(this.state.inspeksiHeader.BLOCK_INSPECTION_CODE, lat, lon,1);
+				setTimeout(()=>{
+					this.setState({track:true})
+				},5000);
+			}
+		  }}
+		>
+		</MapView >
+        <View style={{ flex: 2 ,marginTop:5}}>
           {this.state.path ? this.renderImage() : this.renderCamera()}
         </View>
         <View style={{ flex: 0.5, alignItems: 'center', justifyContent: 'center' }}>
@@ -230,6 +308,12 @@ class TakePhotoBaris extends Component {
 export default TakePhotoBaris;
 
 const styles = StyleSheet.create({
+  map: {
+	...StyleSheet.absoluteFillObject,
+	zIndex:100,
+	height:5,
+	top:0
+  },
   container: {
     flex: 1,
     alignItems: 'center',

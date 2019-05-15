@@ -109,6 +109,19 @@ class KondisiBaris1 extends Component {
         this.setState({dataInspeksi: model})       
     }
 
+	changeAreal(newArea){
+		newArea = newArea.replace(/[^0-9 ]/g, '');
+		if(newArea!=''){
+			let oldHeader = R.clone(this.state.inspeksiHeader);
+			let oldDataUsual = R.clone(this.state.dataUsual);
+			oldHeader.AREAL = newArea;
+			oldDataUsual.BARIS = newArea;
+			this.setState({ 
+				inspeksiHeader: oldHeader,
+				dataUsual:oldDataUsual
+			});
+		}
+	}
     insertDB() {
 		var today = getTodayDate('YYYYMMDDHHmmss');
         var kondisiBaris1 = []
@@ -434,6 +447,21 @@ class KondisiBaris1 extends Component {
 
                 <View style={{ height: 10, backgroundColor: '#F5F5F5', marginTop: 10 }} />
 
+                {/*GANTI BARIS*/}
+                <View style={{ backgroundColor: 'white' }}>
+                    <View style={styles.containerLabel}>
+                        <Text style={styles.txtLabel}>Baris</Text>
+                        <View style={[styles.containerInput, { flex: 5 }]}>
+                            <TextInput
+                                underlineColorAndroid={'transparent'}
+                                style={[styles.searchInput]}
+                                keyboardType={'numeric'}
+                                value={this.state.inspeksiHeader.AREAL}
+                                onChangeText={(text) => this.changeAreal(text) } />
+                        </View>
+                    </View>
+				</View>
+				
                 {/*INPUT*/}
                 <View style={{ backgroundColor: 'white' }}>
                     {this._render_variable_input()}

@@ -680,7 +680,7 @@ class KondisiBarisAkhir extends Component{
             if(time !== undefined){
                 duration = parseFloat(time.DESC);
             }
-            let id = setInterval(()=> this.getLocation2(blokInspectionCode), duration);
+            let id = 0;//setInterval(()=> this.getLocation2(blokInspectionCode), duration);
             this.navigateScreen('TakeFotoBaris', params, modelInspeksi, model, id);
             
         }        

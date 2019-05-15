@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { NavigationActions, StackActions } from 'react-navigation';
-import { BackHandler, Text, FlatList, ScrollView, TouchableOpacity, View, Image, Alert, Platform, BackAndroid
+import { StyleSheet,BackHandler, Text, FlatList, ScrollView, TouchableOpacity, View, Image, Alert, Platform, BackAndroid
 } from 'react-native';
 import {
     Container,
@@ -8,6 +8,7 @@ import {
     Card,
 } from 'native-base';
 import { connect } from 'react-redux'
+import ModalAlert from '../../Component/ModalAlert';
 import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
 import Icon from 'react-native-vector-icons/MaterialIcons'
@@ -18,9 +19,10 @@ import ImagePickerCrop from 'react-native-image-crop-picker'
 import random from 'random-string'
 import TaskServices from '../../Database/TaskServices'
 import RNFS from 'react-native-fs';
+import MapView from 'react-native-maps';
 const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
-
-import ModalAlert from '../../Component/ModalAlert';
+const LATITUDE = -2.952421;
+const LONGITUDE = 112.354931;
 
 class FormStep1 extends Component {
 
@@ -52,6 +54,15 @@ class FormStep1 extends Component {
         this.clearFoto = this.clearFoto.bind(this);
 
         this.state = {
+			track:true,
+			latitude: 0.0,
+			longitude: 0.0, 
+			region: {
+			  latitude: LATITUDE,
+			  longitude: LONGITUDE,
+			  latitudeDelta:0.0075,
+			  longitudeDelta:0.00721
+			},
             user: TaskServices.getAllData('TR_LOGIN')[0],
             photos: [],
             selectedPhotos: [],
@@ -223,7 +234,50 @@ class FormStep1 extends Component {
         const initialPage = '1';
         return (
             <Container style={{ flex: 1, backgroundColor: 'white' }}>
-                <Content style={{ flex: 1 }}>
+				<MapView
+				  ref={ref => this.map = ref}
+				  style={style.map}
+				  provider="google"
+				  initialRegion={this.state.region}
+				  region={this.state.region}
+				  liteMode={true}
+				  showsUserLocation={true}
+				  showsMyLocationButton={false}
+				  showsPointsOfInterest={false}
+				  showsCompass={false}
+				  showsScale={false}
+				  showsBuildings={false}
+				  showsTraffic={false}
+				  showsIndoors={false}
+				  zoomEnabled={false}
+				  scrollEnabled={false}
+				  pitchEnabled={false}
+				  toolbarEnabled={false}
+				  moveOnMarkerPress={false}
+				  zoomControlEnabled={false}
+				  minZoomLevel={10}
+				  onUserLocationChange={event => {
+					if(this.state.track){
+						let lat = event.nativeEvent.coordinate.latitude;
+						let lon = event.nativeEvent.coordinate.longitude;
+						this.setState({
+							track:false,
+							latitude:lat, 
+							longitude:lon,
+							region : {
+								latitude: lat,
+								longitude: lon,
+								latitudeDelta:0.0075,
+								longitudeDelta:0.00721
+							}});
+						setTimeout(()=>{
+							this.setState({track:true})
+						},5000);
+					}
+				  }}
+				>
+				</MapView >
+                <Content style={{ flex: 1 ,marginTop:5}}>
                     {/* STEPPER */}
 
                     <ModalAlert
@@ -328,6 +382,12 @@ const mapDispatchToProps = dispatch => {
 export default connect(mapStateToProps, mapDispatchToProps)(FormStep1);
 
 const style = {
+	map: {
+		...StyleSheet.absoluteFillObject,
+		zIndex:100,
+		height:5,
+		top:0
+	},
     stepperContainer: {
         flexDirection: 'row',
         height: 48,
