@@ -207,25 +207,30 @@ class KondisiBarisAkhir extends Component{
     }
 
     getLocation() {
-        navigator.geolocation.getCurrentPosition(
+		let lastTrack = TaskService.getLastTracking(this.state.dataUsual.BLOCK_INSPECTION_CODE);
+		var lat = parseFloat(lastTrack.LAT_TRACK);
+		var lon = parseFloat(lastTrack.LONG_TRACK);
+		let totalJarak = this.state.from == 'history' ? this.state.distance : this.totalJarak({latitude:lat, longitude:lon});
+		region = {
+		  latitude: lat,
+		  longitude: lon,
+		  latitudeDelta:0.0075,
+		  longitudeDelta:0.00721
+		}
+		this.setState({latitude:lat, longitude:lon, jarak: totalJarak.toString(), fetchLocation: false, region});
+        /*navigator.geolocation.getCurrentPosition(
             (position) => {
                 var lat = parseFloat(position.coords.latitude);
                 var lon = parseFloat(position.coords.longitude);  
                 let totalJarak = this.state.from == 'history' ? this.state.distance : this.totalJarak({latitude:lat, longitude:lon});
-                let region = {
+                region = {
                   latitude: lat,
                   longitude: lon,
                   latitudeDelta:0.0075,
                   longitudeDelta:0.00721
                 } 
-                position = {
-                    latitude: lat, longitude: lon
-                }
-                let poligons = this.getPolygons(position);
-                this.setState({latitude:lat, longitude:lon, jarak: totalJarak.toString(), fetchLocation: false, region, poligons});
-                if(this.map !== undefined){
-                    this.map.animateToCoordinate(region, 1);
-                } 
+                // this.map.animateToCoordinate(region, 1);
+                this.setState({latitude:lat, longitude:lon, jarak: totalJarak.toString(), fetchLocation: false, region});
             },
             (error) => {
                 let message = error && error.message ? error.message : 'Terjadi kesalahan ketika mencari lokasi anda !';
@@ -239,8 +244,8 @@ class KondisiBarisAkhir extends Component{
                 });
             }, // go here if error while fetch location
             { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
-        );
-    }     
+        );*/
+      }      
 
     makeLineTrack(){
         if(this.state.from === 'history'){  
