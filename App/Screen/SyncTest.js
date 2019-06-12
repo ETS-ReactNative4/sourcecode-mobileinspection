@@ -1187,6 +1187,7 @@ class SyncScreen extends React.Component {
 
 
     _crudTM_Contact(data) {
+		console.log("_crudTM_Contact",data);
         // let allData = TaskServices.getAllData('TR_CONTACT');
         if (data.length > 0) {
             for (var i = 1; i <= data.length; i++) {
@@ -1340,8 +1341,10 @@ class SyncScreen extends React.Component {
 		let allLoginData = TaskServices.findBy('TR_LOGIN','STATUS','LOGIN');
 		if(allLoginData.length>0){
 			let token = allLoginData[0].ACCESS_TOKEN;
-			fetch(link+'token/generate/', {
-				method: 'GET',
+			let serv = TaskServices.getAllData("TM_SERVICE")
+						.filtered('API_NAME="AUTH-GENERATE-TOKEN" AND MOBILE_VERSION="'+ServerName.verAPK+'"')[0];
+			fetch(serv.API_URL, {
+				method: serv.METHOD,
 				headers: {
 					'Authorization': `Bearer ${token}`
 				}
@@ -1418,6 +1421,7 @@ class SyncScreen extends React.Component {
                 this.setState({ progressKualitas: i / data.simpan.length, totalKualitas: data.simpan.length });
             }
             data.simpan.map(item => {
+				item.ID_KUALITAS = item.ID_KUALITAS.toString();
                 TaskServices.saveData('TM_KUALITAS', item);
                 let countDataInsert = TaskServices.getTotalData('TM_KUALITAS');
                 this.setState({ valueKualitas: countDataInsert });
@@ -1428,6 +1432,7 @@ class SyncScreen extends React.Component {
         }
         if (data.ubah.length > 0 && allData.length > 0) {
             data.ubah.map(item => {
+				item.ID_KUALITAS = item.ID_KUALITAS.toString();
                 TaskServices.updateByPrimaryKey('TM_KUALITAS', item)
                 // let indexData = R.findIndex(R.propEq('ID_KUALITAS', item.ID_KUALITAS))(allData);
                 //TaskServices.updateFindingDownload(item, indexData)
@@ -1435,6 +1440,7 @@ class SyncScreen extends React.Component {
         }
         if (data.hapus.length > 0 && allData.length > 0) {
             data.hapus.map(item => {
+				item.ID_KUALITAS = item.ID_KUALITAS.toString();
                 this.deleteRecordByPK('TM_KUALITAS', 'ID_KUALITAS', item.ID_KUALITAS);
             });
         }

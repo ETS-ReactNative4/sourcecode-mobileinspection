@@ -1,4 +1,3 @@
-
 'use strict';
 import React, { Component } from 'react';
 import {
@@ -24,12 +23,11 @@ import ModalAlert from '../Component/ModalAlert'
 import ServerName from '../Constant/ServerName'
 import IMEI from 'react-native-imei'
 
-var serverNameIndex = 1;
-
 class Login extends Component {
 
     constructor(props) {
         super(props);
+		this.serverNameIndex = 1;
         this.state = {
             fetching: false,
             user_id: '',
@@ -58,33 +56,57 @@ class Login extends Component {
         var data = {
             NIK: user.NIK,
             ACCESS_TOKEN: user.ACCESS_TOKEN,
-            JOB_CODE: user.JOB_CODE,
+            JOB_CODE: "ASD",//user.JOB_CODE,
             LOCATION_CODE: user.LOCATION_CODE,
             REFFERENCE_ROLE: user.REFFERENCE_ROLE,
             USERNAME: user.USERNAME,
             USER_AUTH_CODE: user.USER_AUTH_CODE,
             USER_ROLE: user.USER_ROLE,
-            SERVER_NAME_INDEX: serverNameIndex,
+            SERVER_NAME_INDEX: this.serverNameIndex,
             STATUS: 'LOGIN'
         };
         TaskServices.saveData('TR_LOGIN', data);
     }
+	
+	insertLink(param){
+		console.log("param",param);
+        fetch(ServerName[this.serverNameIndex].service, {
+            method: 'GET',
+            headers: {
+                'Cache-Control': 'no-cache',
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${param.ACCESS_TOKEN}`
+            }
+        })
+		.then((response) => {
+			return response.json();
+		})
+		.then((data) => {
+			TaskServices.deleteAllData('TM_SERVICE');
+			let index = 0;
+			for(let i in data.data){
+				let newService = {
+					SERVICE_ID: parseInt(i),
+					MOBILE_VERSION:data.data[i].MOBILE_VERSION,
+					API_NAME: data.data[i].API_NAME,
+					KETERANGAN: data.data[i].KETERANGAN,
+					METHOD: data.data[i].METHOD,
+					API_URL: data.data[i].API_URL
+				}
+				TaskServices.saveData('TM_SERVICE', newService);
+				index++;
+			}
+			this.insertUser(param);
+			this.navigateScreen('MainMenu');
+		});
+	}
 
     componentDidMount() {
         const { navigation } = this.props;
         const itemId = navigation.getParam('exit');
         this.state.logOut = itemId
     }
-
-    // componentWillReceiveProps(newProps) {
-    //     if (!isNil(newProps.auth)) {
-    //         this.setState({ fetching: newProps.auth.fetching });
-    //     }
-    //     if (!isNil(newProps.auth.user)) {
-    //         this.checkUser(newProps.auth.user)
-
-    //     }
-    // }
 
     checkUser(param) {
         if (TaskServices.getTotalData('TR_LOGIN') > 0) {
@@ -102,28 +124,30 @@ class Login extends Component {
     }
 
     resetMobileSync(param, token) {
-        fetch(ServerName[serverNameIndex].data+'mobile-sync/reset', {
-            method: 'POST',
-            headers: {
-                'Cache-Control': 'no-cache',
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({ RESET_SYNC: 1 })
-        })
+		let serviceReset = TaskServices.getAllData('TM_SERVICE')
+							.filtered('API_NAME="AUTH-SYNC-RESET" AND MOBILE_VERSION="'+ServerName.verAPK+'"');
+		if(serviceReset.length>0){
+			serviceReset = serviceReset[0];
+			fetch(serviceReset.API_URL, {
+				method: serviceReset.METHOD,
+				headers: {
+					'Cache-Control': 'no-cache',
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${token}`
+				},
+				body: JSON.stringify({ RESET_SYNC: 1 })
+			})
             .then((response) => {
                 return response.json();
             })
             .then((data) => {
-                // alert(data)
-                // console.log("resetMobileSync",data)
                 this.deleteAllTableAndFolder(param)
             });
+		}
     }
 
     deleteAllTableAndFolder(param) {
-
         TaskServices.deleteAllData('TR_LOGIN');
         TaskServices.deleteAllData('TR_BLOCK_INSPECTION_H');
         TaskServices.deleteAllData('TR_BLOCK_INSPECTION_D');
@@ -186,10 +210,8 @@ class Login extends Component {
     }
 
     postLogin(username, password, choosenServer, imei) {
-		
-		serverNameIndex = choosenServer;
-		// console.log("masuk postLogin",ServerName[serverNameIndex].data+'login');
-        fetch(ServerName[serverNameIndex].data+'login', {
+		this.serverNameIndex = choosenServer;
+        fetch(ServerName[this.serverNameIndex].data+'auth/login', {
             method: 'POST',
             headers: {
                 'Cache-Control': 'no-cache',
@@ -204,7 +226,7 @@ class Login extends Component {
         .then((data) => {
             this.setState({ fetching: false });
             if (data.status == true) {
-                this.checkUser(data.data)
+                this.insertLink(data.data)
             } else {
                 if (data.message == 'Request Timeout') {
                     this.setState({

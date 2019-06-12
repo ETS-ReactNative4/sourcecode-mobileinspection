@@ -154,7 +154,8 @@ class Form extends Component {
                       selectedValue={this.state.selectedServer}
                       onValueChange={this.onValueChange.bind(this)}>
                       <Picker.Item label="Production" value="1" />
-                      <Picker.Item label="Development" value="2" />
+                      <Picker.Item label="QA" value="2" />
+                      <Picker.Item label="Development" value="3" />
                   </Picker>
                 </View>
                 

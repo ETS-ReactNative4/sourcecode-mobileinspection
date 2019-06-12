@@ -18,20 +18,40 @@ const create = () => {
 	baseUrl = baseUrl.slice(0, baseUrl.length-1);
     let api = apisauce.create({
         baseURL: baseUrl,
-        //baseURL: 'http://149.129.250.199:3008/api',
-        //baseURL: 'http://149.129.245.230:3008/api',
-        //baseURL: apiLogin,
         headers: {
             'Cache-Control': 'no-cache',
             Accept: 'application/json',
             'Content-Type': 'application/json'
         },
     });
-
+	let getAPIURL = (apiName,body) => {
+		let serv = TaskServices.getAllData("TM_SERVICE").filtered('API_NAME="'+apiName+'" AND MOBILE_VERSION="'+ServerName.verAPK+'"');
+		if(serv.length>0){
+			serv = serv[0]
+		}
+		console.log("getAPIURL",serv,apiName,body);
+        api.setHeader('Authorization', `Bearer ${user[0].ACCESS_TOKEN}`)
+		if(serv.METHOD=='GET'){
+			if(body){
+				return api.get(serv.API_URL,body);
+			}
+			else{
+				return api.get(serv.API_URL);
+			}
+		}
+		else{
+			if(body){
+				return api.post(serv.API_URL,body);
+			}
+			else{
+				return api.post(serv.API_URL);
+			}
+		}
+	}
     // POST
-    const login = body => api.post('/login', body);
+    const login = body => getAPIURL('AUTH-LOGIN',body);
+/*
     const logout = body => api.post('/logut', body);
-
     const postRegion = body => {
         api.setHeader('Authorization', `Bearer ${user[0].ACCESS_TOKEN}`)
         return api.post('/mobile-sync', body);
@@ -96,128 +116,106 @@ const create = () => {
         api.setHeader('Authorization', `Bearer ${user[0].ACCESS_TOKEN}`)
         return api.post('/mobile-sync', body);
     }
-
+*/
     //insepksi
     const postInspeksiHeader = body => {
-        api.setHeader('Authorization', `Bearer ${user[0].ACCESS_TOKEN}`);
-        return api.post('/inspection-header', body);
+		return getAPIURL('INSPECTION-HEADER-INSERT');
     };
 
     const postInspeksiDetail = body => {
-        api.setHeader('Authorization', `Bearer ${user[0].ACCESS_TOKEN}`);
-        return api.post('/inspection-detail', body);
+		return getAPIURL('INSPECTION-DETAIL-INSERT');
     }
 
     const postFindingData = body => {
-        api.setHeader('Authorization', `Bearer ${user[0].ACCESS_TOKEN}`);
-        return api.post('/finding', body);
+		return getAPIURL('FINDING-INSERT');
     }
 
     const postInspeksiTrackingPath = body => {
-        api.setHeader('Authorization', `Bearer ${user[0].ACCESS_TOKEN}`);
-        return api.post('/inspection-tracking', body);
+		return getAPIURL('INSPECTION-TRACKING-INSERT');
     }
 
     const postReset = body => {
-        api.setHeader('Authorization', `Bearer ${user[0].ACCESS_TOKEN}`);
-        return api.post('/mobile-sync/reset', body);
+		return getAPIURL('AUTH-SYNC-RESET');
     }
 
     //GET
     const getCategory = () => {
-        api.setHeader('Authorization', `Bearer ${user[0].ACCESS_TOKEN}`)
-        return api.get('/category')
+		return getAPIURL('AUTH-CATEGORY');
     }
 
     const getContact = () => {
-        api.setHeader('Authorization', `Bearer ${user[0].ACCESS_TOKEN}`)
-        // return api.get('/mobile-sync/auth/contact')
-        return api.get('/contacts')
+		return getAPIURL('AUTH-SYNC-CONTACT');
     }
 
     const getRegion = () => {
-        api.setHeader('Authorization', `Bearer ${user[0].ACCESS_TOKEN}`)
-        return api.get('/mobile-sync/hectare-statement/region')
+		return getAPIURL('AUTH-SYNC-HS-REGION');
     }
 
     const getBlock = () => {
-        api.setHeader('Authorization', `Bearer ${user[0].ACCESS_TOKEN}`)
-        return api.get('/mobile-sync/hectare-statement/block')
+		return getAPIURL('AUTH-SYNC-HS-BLOCK');
     }
 
-    const getUserAuth = () => {
+    /*const getUserAuth = () => {
         api.setHeader('Authorization', `Bearer ${user[0].ACCESS_TOKEN}`)
         return api.get('/mobile-sync/hectare-statement/user-authorization')
-    }
+    }*/
 
     const getEst = () => {
-        api.setHeader('Authorization', `Bearer ${user[0].ACCESS_TOKEN}`)
-        return api.get('/mobile-sync/hectare-statement/est')
+		return getAPIURL('AUTH-SYNC-HS-EST');
     }
 
     const getKriteria = () => {
-        api.setHeader('Authorization', `Bearer ${user[0].ACCESS_TOKEN}`)
-        return api.get('/kriteria')
+		return getAPIURL('AUTH-SYNC-KRITERIA');
     }
 
     const getAfd = () => {
-        api.setHeader('Authorization', `Bearer ${user[0].ACCESS_TOKEN}`)
-        return api.get('/mobile-sync/hectare-statement/afdeling')
+		return getAPIURL('AUTH-SYNC-HS-AFD');
     }
 
-    const getPjs = () => {
+    /*const getPjs = () => {
         api.setHeader('Authorization', `Bearer ${user[0].ACCESS_TOKEN}`)
         return api.get('/mobile-sync/hectare-statement/afdeling')
-    }
+    }*/
 
-    const getEmployeeHris = () => {
+    /*const getEmployeeHris = () => {
         api.setHeader('Authorization', `Bearer ${user[0].ACCESS_TOKEN}`)
         return api.get('/mobile-sync/hectare-statement/employee-hris')
-    }
+    }*/
 
     const getLandUse = () => {
-        api.setHeader('Authorization', `Bearer ${user[0].ACCESS_TOKEN}`)
-        return api.get('/mobile-sync/hectare-statement/land-use')
+		return getAPIURL('AUTH-SYNC-HS-LANDUSE');
     }
 
     const getComp = () => {
-        api.setHeader('Authorization', `Bearer ${user[0].ACCESS_TOKEN}`)
-        return api.get('/mobile-sync/hectare-statement/comp')
+		return getAPIURL('AUTH-SYNC-HS-COMP');
     }
 
     const getContent = () => {
-        api.setHeader('Authorization', `Bearer ${user[0].ACCESS_TOKEN}`)
-        return api.get('/content')
+		return getAPIURL('AUTH-SYNC-CONTENT');
     }
 
     const getContentLabel = () => {
-        api.setHeader('Authorization', `Bearer ${user[0].ACCESS_TOKEN}`)
-        return api.get('/content-label')
+		return getAPIURL('AUTH-SYNC-CONTENT-LABEL');
     }
 
     const getFinding = () => {
-        api.setHeader('Authorization', `Bearer ${user[0].ACCESS_TOKEN}`)
-        return api.get('/mobile-sync/finding')
+		return getAPIURL('AUTH-SYNC-FINDING');
     }
 
     const getFindingImage = () => {
-        api.setHeader('Authorization', `Bearer ${user[0].ACCESS_TOKEN}`)
-        return api.get('/mobile-sync/finding-images')
+		return getAPIURL('AUTH-SYNC-FINDING-IMAGES');
     }
 
     const getInspeksiParamTrackingPath = () => {
-        api.setHeader('Authorization', `Bearer ${user[0].ACCESS_TOKEN}`)
-        return api.get('./parameter/track')
+		return getAPIURL('AUTH-PARAMETER-TRACK');
     }
 
     const getKualitas = () => {
-        api.setHeader('Authorization', `Bearer ${user[0].ACCESS_TOKEN}`)
-        return api.get('/mobile-sync/ebcc/kualitas')
+		return getAPIURL('AUTH-SYNC-EBCC-KUALITAS');
     }
 	
     const getServerTime = () => {
-        api.setHeader('Authorization', `Bearer ${user[0].ACCESS_TOKEN}`)
-        return api.get('/server/time')
+		return getAPIURL('AUTH-SERVER-TIME');
     }
 
     return {
@@ -226,14 +224,14 @@ const create = () => {
         getCategory,
         getContact,
         getRegion,
-        postRegion,
+        //postRegion,
         postInspeksiHeader,
         postInspeksiDetail,
         postFindingData,
 
         //Add by Aminju
         //Post
-        postBlock,
+        /*postBlock,
         postUserAuth,
         postEst,
         postKriteria,
@@ -244,19 +242,19 @@ const create = () => {
         postComp,
         postContent,
         postContentLabel,
-        postFinding,
+        postFinding,*/
         postInspeksiTrackingPath,
         postReset,
 
         //Get
         getBlock,
-        getUserAuth,
+        //getUserAuth,
         getEst,
         getKriteria,
         getAfd,
         getLandUse,
-        getPjs,
-        getEmployeeHris,
+        //getPjs,
+        //getEmployeeHris,
         getComp,
         getContent,
         getContentLabel,

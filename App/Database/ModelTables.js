@@ -413,6 +413,18 @@ const TR_SYNC_LOG = {
         SYNC_TIME: 'date'
     }
 }
+const TM_SERVICE = {
+    name: 'TM_SERVICE',
+    primaryKey: 'SERVICE_ID',
+    properties: {
+        SERVICE_ID: 'int',
+		MOBILE_VERSION:'string',
+		API_NAME: 'string',
+		KETERANGAN: 'string',
+		METHOD: 'string',
+		API_URL: 'string'
+    }
+}
 
 export default {
     TR_LOGIN,
@@ -444,6 +456,7 @@ export default {
 	
 	TR_SYNC_LOG,
 	TR_NOTIFICATION,
+	TM_SERVICE,
 	
 	SCHEMA_VERSION
 }
