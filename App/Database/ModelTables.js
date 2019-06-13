@@ -317,6 +317,7 @@ const TM_CONTENT_LABEL = {
 
 const TM_INSPECTION_TRACK = {
     name: 'TM_INSPECTION_TRACK',
+    primaryKey: 'TRACK_INSPECTION_CODE',
     properties: {
         TRACK_INSPECTION_CODE: 'string',
         BLOCK_INSPECTION_CODE: 'string',

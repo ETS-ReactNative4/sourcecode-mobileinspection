@@ -404,7 +404,22 @@ class SyncScreen extends React.Component {
                     this.setState({valueInspeksiHeaderUpload: i+1, totalInspeksiHeaderUpload: countData.length });
                 }             
             }
+			this.setState({
+				progressInspeksiHeader: 1,
+				valueInspeksiHeaderUpload: this.state.blockInspectionCodes.length,
+				totalInspeksiHeaderUpload: this.state.blockInspectionCodes.length,
+			});
+        } else {
             this.setState({
+                progressInspeksiHeader: 1,
+                valueInspeksiHeaderUpload: 0,
+                totalInspeksiHeaderUpload: 0,
+                progressInspeksiDetail: 1,
+                valueInspeksiDetailUpload: 0,
+                totalInspeksiDetailUpload: 0
+            });
+        }
+            /*this.setState({
                 progressInspeksiHeader: 1
             });
         } else {
@@ -413,7 +428,7 @@ class SyncScreen extends React.Component {
                 valueInspeksiHeaderUpload: 0,
                 totalInspeksiHeaderUpload: 0,
             });
-        }        
+        }*/   
         this.loadDataDetailInspeksi();
 
     }
@@ -687,38 +702,56 @@ class SyncScreen extends React.Component {
 
     updateInspeksi = param => {
         if (param !== null) {
-            let allData = TaskServices.getAllData('TR_BLOCK_INSPECTION_H')
+            /*let allData = TaskServices.getAllData('TR_BLOCK_INSPECTION_H')
             let indexData = R.findIndex(R.propEq('BLOCK_INSPECTION_CODE', param.BLOCK_INSPECTION_CODE))(allData);
-            TaskServices.updateInspeksiSync('TR_BLOCK_INSPECTION_H', 'Y', indexData);
+            TaskServices.updateInspeksiSync('TR_BLOCK_INSPECTION_H', 'Y', indexData);*/
+            TaskServices.updateByPrimaryKey('TR_BLOCK_INSPECTION_H', {
+				"BLOCK_INSPECTION_CODE":param.BLOCK_INSPECTION_CODE,
+				"STATUS_SYNC":"Y"
+			});
         }
     }
 
     updateInspeksiDetail = param => {
         if (param !== null) {
-            let allData = TaskServices.getAllData('TR_BLOCK_INSPECTION_D')
+            /*let allData = TaskServices.getAllData('TR_BLOCK_INSPECTION_D')
             let indexData = R.findIndex(R.propEq('BLOCK_INSPECTION_CODE_D', param.BLOCK_INSPECTION_CODE_D))(allData);
-            TaskServices.updateInspeksiSync('TR_BLOCK_INSPECTION_D', 'Y', indexData);
+            TaskServices.updateInspeksiSync('TR_BLOCK_INSPECTION_D', 'Y', indexData);*/
+            TaskServices.updateByPrimaryKey('TR_BLOCK_INSPECTION_D', {
+				"BLOCK_INSPECTION_CODE_D":param.BLOCK_INSPECTION_CODE_D,
+				"STATUS_SYNC":"Y"
+			});
         }
     }
 
     updateInspeksiTrack = param => {
         if (param !== null) {
-            let allData = TaskServices.getAllData('TM_INSPECTION_TRACK')
+            /*let allData = TaskServices.getAllData('TM_INSPECTION_TRACK')
             let indexData = R.findIndex(R.propEq('TRACK_INSPECTION_CODE', param.TRACK_INSPECTION_CODE))(allData);
-            TaskServices.updateInspeksiSync('TM_INSPECTION_TRACK', 'Y', indexData);
+            TaskServices.updateInspeksiSync('TM_INSPECTION_TRACK', 'Y', indexData);*/
+            TaskServices.updateByPrimaryKey('TM_INSPECTION_TRACK', {
+				"TRACK_INSPECTION_CODE":param.TRACK_INSPECTION_CODE,
+				"STATUS_SYNC":"Y"
+			});
         }
     }
 
     updateInspeksiBaris = param => {
         if (param !== null) {
-            let allData = TaskServices.getAllData('TR_BARIS_INSPECTION');
+            /*let allData = TaskServices.getAllData('TR_BARIS_INSPECTION');
             let indexData = R.findIndex(R.propEq('ID_INSPECTION', param))(allData);
-            TaskServices.updateInspeksiSync('TR_BARIS_INSPECTION', 'Y', indexData);
+            TaskServices.updateInspeksiSync('TR_BARIS_INSPECTION', 'Y', indexData);*/
+            TaskServices.updateByPrimaryKey('TR_BARIS_INSPECTION', {
+				"ID_INSPECTION":param,
+				"STATUS_SYNC":"Y"
+			});
         }
     }
 
     updateFinding = param => {
+			console.log("masuk updateFinding coy",param)
         if (param !== undefined) {
+			console.log("masuk updateFinding")
             /*let allData = TaskServices.getAllData('TR_FINDING')
             let indexData = R.findIndex(R.propEq('FINDING_CODE', param.FINDING_CODE))(allData);*/
             TaskServices.updateByPrimaryKey('TR_FINDING', {
@@ -727,7 +760,6 @@ class SyncScreen extends React.Component {
 			});
         }
     }
-
     updateEbccHeader = param => {
         if (param !== undefined) {
             TaskServices.updateByPrimaryKey('TR_H_EBCC_VALIDATION', {
