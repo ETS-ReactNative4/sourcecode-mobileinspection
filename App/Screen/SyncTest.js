@@ -446,9 +446,7 @@ class SyncScreen extends React.Component {
                 }             
             }
 			this.setState({
-				progressInspeksiHeader: 1,
-				valueInspeksiHeaderUpload: this.state.blockInspectionCodes.length,
-				totalInspeksiHeaderUpload: this.state.blockInspectionCodes.length,
+				progressInspeksiHeader: 1
 			});
         } else {
             this.setState({
@@ -471,7 +469,7 @@ class SyncScreen extends React.Component {
             });
         }*/   
         this.loadDataDetailInspeksi();
-
+        this.loadDataInspectionTrack();
     }
 
     loadDataDetailInspeksi() {
@@ -482,11 +480,11 @@ class SyncScreen extends React.Component {
         // });
         if (data.length > 1) {
             for (var i = 0; i < data.length; i++) {
-                let fulfill = this.isFulfillBaris(data[i].ID_INSPECTION)
+                /*let fulfill = this.isFulfillBaris(data[i].ID_INSPECTION)
                 if(fulfill){
-                    this.kirimInspeksiDetail(data[i]);
-                    this.setState({valueInspeksiDetailUpload: i+1, totalInspeksiDetailUpload: i+1 });
-                }
+                }*/
+				this.kirimInspeksiDetail(data[i]);
+				this.setState({valueInspeksiDetailUpload: i+1, totalInspeksiDetailUpload: i+1 });
             }
             this.setState({
                 progressInspeksiDetail: 1,
@@ -638,14 +636,12 @@ class SyncScreen extends React.Component {
             
         this.loadDataFinding();
         this.loadData();
-        this.loadDataInspectionTrack();
         this.kirimEbccHeader();
         this.kirimEbccDetail();
     }
 
     uploadData(URL, dataPost, table, idInspection) {
         const user = TaskServices.getAllData('TR_LOGIN')[0];
-		console.log("masuk uploadData",URL,dataPost, table, idInspection);
         fetch(URL.API_URL, {
             method: URL.METHOD,
             headers: {
@@ -658,7 +654,6 @@ class SyncScreen extends React.Component {
                 return response.json();
             })
             .then((data) => {
-                console.log("upload data coy",data)
                 if (data.status) {
                     if (table == 'header') {
                         this.updateInspeksi(dataPost);
@@ -683,6 +678,9 @@ class SyncScreen extends React.Component {
                     }
                 }
             })
+			.catch((e)=> {
+				console.log("error upload",URL,dataPost, table, user.ACCESS_TOKEN,e);
+			})
     }
 
     checkImageHasSent(trCode){
@@ -762,6 +760,7 @@ class SyncScreen extends React.Component {
     }
 
     updateInspeksiTrack = param => {
+		console.log("updateInspeksiTrack",param);
         if (param !== null) {
             /*let allData = TaskServices.getAllData('TM_INSPECTION_TRACK')
             let indexData = R.findIndex(R.propEq('TRACK_INSPECTION_CODE', param.TRACK_INSPECTION_CODE))(allData);
@@ -789,7 +788,7 @@ class SyncScreen extends React.Component {
         if (param !== undefined) {
             /*let allData = TaskServices.getAllData('TR_FINDING')
             let indexData = R.findIndex(R.propEq('FINDING_CODE', param.FINDING_CODE))(allData);*/
-            TaskServices.updateByPrimaryKey('TR_FINDING', {
+            TaskServices.updateByPrimaryKey('TR_FINDING',{
 				"FINDING_CODE":param.FINDING_CODE,
 				"STATUS_SYNC":"Y"
 			});
@@ -859,11 +858,13 @@ class SyncScreen extends React.Component {
         let data = {
             TRACK_INSPECTION_CODE: param.TRACK_INSPECTION_CODE,
             BLOCK_INSPECTION_CODE: param.BLOCK_INSPECTION_CODE,
-            DATE_TRACK: param.DATE_TRACK,
+            DATE_TRACK: parseInt(param.DATE_TRACK.replace(/-/g, '').replace(/ /g, '').replace(/:/g, '')),
             LAT_TRACK: param.LAT_TRACK,
             LONG_TRACK: param.LONG_TRACK,
             INSERT_USER: param.INSERT_USER,
-            INSERT_TIME: parseInt(param.INSERT_TIME)//param.INSERT_TIME
+            STATUS_SYNC: 'Y',
+			STATUS_TRACK: 1,
+            INSERT_TIME: parseInt(param.INSERT_TIME.replace(/-/g, '').replace(/ /g, '').replace(/:/g, ''))
         }
         this.uploadData(this.getAPIURL("INSPECTION-TRACKING-INSERT"), data, 'tracking', '');
     }
@@ -889,13 +890,13 @@ class SyncScreen extends React.Component {
             PROGRESS: param.PROGRESS.toString(),
             LAT_FINDING: param.LAT_FINDING,
             LONG_FINDING: param.LONG_FINDING,
-            STATUS_TRACK: param.STATUS_LAT_LONG,
+            //STATUS_TRACK: param.STATUS_LAT_LONG,
             REFFERENCE_INS_CODE: param.REFFERENCE_INS_CODE,
 			STATUS_SYNC: 'Y',
             INSERT_USER: param.INSERT_USER,
-            INSERT_TIME: param.INSERT_TIME == '' ? parseInt(getTodayDate('YYYYMMDDkkmmss')) :parseInt(param.INSERT_TIME),
+            INSERT_TIME: param.INSERT_TIME == '' ? parseInt(getTodayDate('YYYYMMDDkkmmss')) :parseInt(param.INSERT_TIME.replace(/-/g, '').replace(/ /g, '').replace(/:/g, '')),
             UPDATE_USER: param.UPDATE_USER,
-            UPDATE_TIME: param.UPDATE_TIME == '' ? parseInt(getTodayDate('YYYYMMDDkkmmss')) :parseInt(param.UPDATE_TIME)
+            UPDATE_TIME: param.UPDATE_TIME == '' ? parseInt(getTodayDate('YYYYMMDDkkmmss')) :parseInt(param.UPDATE_TIME.replace(/-/g, '').replace(/ /g, '').replace(/:/g, ''))
         }
         this.uploadData(this.getAPIURL("FINDING-INSERT"), data, 'finding', '');
     }
@@ -960,7 +961,6 @@ class SyncScreen extends React.Component {
     }
 
     hasDownload(item, total) {
-		console.log("hasDownload",item, total);
         if (this.state.isFirstInstall) {
             if (total > 0) {
                 this.fetchingMobileSync(item);
