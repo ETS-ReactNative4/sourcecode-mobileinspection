@@ -29,7 +29,6 @@ const create = () => {
 		if(serv.length>0){
 			serv = serv[0]
 		}
-		console.log("getAPIURL",serv,apiName,body);
         api.setHeader('Authorization', `Bearer ${user[0].ACCESS_TOKEN}`)
 		if(serv.METHOD=='GET'){
 			if(body){

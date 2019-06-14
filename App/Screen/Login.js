@@ -69,7 +69,6 @@ class Login extends Component {
     }
 	
 	insertLink(param){
-		console.log("param",param);
         fetch(ServerName[this.serverNameIndex].service, {
             method: 'GET',
             headers: {
@@ -83,22 +82,24 @@ class Login extends Component {
 			return response.json();
 		})
 		.then((data) => {
-			TaskServices.deleteAllData('TM_SERVICE');
-			let index = 0;
-			for(let i in data.data){
-				let newService = {
-					SERVICE_ID: parseInt(i),
-					MOBILE_VERSION:data.data[i].MOBILE_VERSION,
-					API_NAME: data.data[i].API_NAME,
-					KETERANGAN: data.data[i].KETERANGAN,
-					METHOD: data.data[i].METHOD,
-					API_URL: data.data[i].API_URL
+			if(data.status){
+				TaskServices.deleteAllData('TM_SERVICE');
+				let index = 0;
+				for(let i in data.data){
+					let newService = {
+						SERVICE_ID: parseInt(i),
+						MOBILE_VERSION:data.data[i].MOBILE_VERSION,
+						API_NAME: data.data[i].API_NAME,
+						KETERANGAN: data.data[i].KETERANGAN,
+						METHOD: data.data[i].METHOD,
+						API_URL: data.data[i].API_URL
+					}
+					TaskServices.saveData('TM_SERVICE', newService);
+					index++;
 				}
-				TaskServices.saveData('TM_SERVICE', newService);
-				index++;
+				this.insertUser(param);
+				this.navigateScreen('MainMenu');
 			}
-			this.insertUser(param);
-			this.navigateScreen('MainMenu');
 		});
 	}
 

@@ -164,6 +164,47 @@ class SyncScreen extends React.Component {
         }
     }
 
+	getAPIURL(apiName){
+		let serv = TaskServices.getAllData("TM_SERVICE").filtered('API_NAME="'+apiName+'" AND MOBILE_VERSION="'+ServerName.verAPK+'"');
+		if(serv.length>0){
+			serv = serv[0]
+		}
+		return serv;
+	}
+	insertLink(){
+        fetch(ServerName[this.state.user.SERVER_NAME_INDEX].service, {
+            method: 'GET',
+            headers: {
+                'Cache-Control': 'no-cache',
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${this.state.user.ACCESS_TOKEN}`
+            }
+        })
+		.then((response) => {
+			return response.json();
+		})
+		.then((data) => {
+			if(data.status){
+				TaskServices.deleteAllData('TM_SERVICE');
+				let index = 0;
+				for(let i in data.data){
+					let newService = {
+						SERVICE_ID: parseInt(i),
+						MOBILE_VERSION:data.data[i].MOBILE_VERSION,
+						API_NAME: data.data[i].API_NAME,
+						KETERANGAN: data.data[i].KETERANGAN,
+						METHOD: data.data[i].METHOD,
+						API_URL: data.data[i].API_URL
+					}
+					TaskServices.saveData('TM_SERVICE', newService);
+					index++;
+				}
+			}
+			this._onSync()
+		});
+	}
+
     /* obsolete data ebcc by akbar */
     deleteEbccHeader(){
         var data = TaskServices.getAllData('TR_H_EBCC_VALIDATION');
@@ -535,13 +576,10 @@ class SyncScreen extends React.Component {
                                     type: 'image/jpeg',
                                     name: model.IMAGE_NAME,
                                 });
-                                // let idxOrder = null;
-                                // let indexData = R.findIndex(R.propEq('IMAGE_CODE', model.IMAGE_CODE))(all);
-                                // idxOrder = indexData
-                                //const url = "http://149.129.245.230:3012/image/upload-file/"
-                                const url = baseUploadImageLink+"image/upload-file/"
-                                fetch(url, {
-                                    method: 'POST',
+                                const url = this.getAPIURL("IMAGES-UPLOAD");
+								console.log("IMAGES-UPLOAD",url);
+                                fetch(url.API_URL, {
+                                    method: url.METHOD,
                                     headers: {
                                         'Cache-Control': 'no-cache',
                                         Accept: 'application/json',
@@ -607,10 +645,10 @@ class SyncScreen extends React.Component {
     }
 
     uploadData(URL, dataPost, table, idInspection) {
-		console.log("masuk uploadData",dataPost)
         const user = TaskServices.getAllData('TR_LOGIN')[0];
-        fetch(URL, {
-            method: 'POST',
+		console.log("masuk uploadData",URL);
+        fetch(URL.API_URL, {
+            method: URL.METHOD,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${user.ACCESS_TOKEN}`
@@ -802,7 +840,7 @@ class SyncScreen extends React.Component {
             INSERT_TIME: parseInt(convertTimestampToDate(param.INSERT_TIME, 'YYYYMMDDkkmmss')),
             INSERT_USER: user.USER_AUTH_CODE
         }
-        this.uploadData(link+'inspection-header', data, 'header', param.ID_INSPECTION);
+        this.uploadData(this.getAPIURL("INSPECTION-HEADER-INSERT"), data, 'header', param.ID_INSPECTION);
     }
 
     kirimInspeksiDetail(result) {
@@ -817,7 +855,7 @@ class SyncScreen extends React.Component {
             INSERT_USER: user.USER_AUTH_CODE,
             INSERT_TIME: parseInt(convertTimestampToDate(result.INSERT_TIME, 'YYYYMMDDkkmmss'))
         }
-        this.uploadData(link+'inspection-detail', data, 'detailHeader', '');
+        this.uploadData(this.getAPIURL("INSPECTION-DETAIL-INSERT"), data, 'detailHeader', '');
     }
 
     kirimInspectionTrack(param) {
@@ -830,7 +868,7 @@ class SyncScreen extends React.Component {
             INSERT_USER: param.INSERT_USER,
             INSERT_TIME: parseInt(param.INSERT_TIME)//param.INSERT_TIME
         }
-        this.uploadData(link+'inspection-tracking', data, 'tracking', '');
+        this.uploadData(this.getAPIURL("INSPECTION-TRACKING-INSERT"), data, 'tracking', '');
     }
 
     kirimFinding(param) {
@@ -862,7 +900,7 @@ class SyncScreen extends React.Component {
             UPDATE_USER: param.UPDATE_USER,
             UPDATE_TIME: param.UPDATE_TIME == '' ? parseInt(getTodayDate('YYYYMMDDkkmmss')) :parseInt(param.UPDATE_TIME)
         }
-        this.uploadData(link+'finding', data, 'finding', '');
+        this.uploadData(this.getAPIURL("FINDING-INSERT"), data, 'finding', '');
     }
 
     postEbccHeader(param) {
@@ -885,7 +923,7 @@ class SyncScreen extends React.Component {
             UPDATE_USER: '',
             UPDATE_TIME: parseInt(getTodayDate('YYYYMMDDkkmmss'))
         }
-        this.uploadData(link+'ebcc/validation/header', data, 'ebccH', '');
+        this.uploadData(this.getAPIURL("EBCC-VALIDATION-HEADER-INSERT"), data, 'ebccH', '');
     }
 
     postEbccDetail(param) {
@@ -900,7 +938,7 @@ class SyncScreen extends React.Component {
             UPDATE_USER: '',
             UPDATE_TIME: 0
         }
-        this.uploadData(link+'ebcc/validation/detail', data, 'ebccD', param.EBCC_VALIDATION_CODE_D);
+        this.uploadData(this.getAPIURL("EBCC-VALIDATION-DETAIL-INSERT"), data, 'ebccD', param.EBCC_VALIDATION_CODE_D);
     }
 
 
@@ -1660,8 +1698,10 @@ class SyncScreen extends React.Component {
     fetchingMobileSync(param) {
         var moment = require('moment');
         const user = TaskServices.getAllData('TR_LOGIN')[0];
-        fetch(link+'mobile-sync', {
-            method: 'POST',
+		let api = this.getAPIURL("AUTH-SYNC");
+		console.log("AUTH-SYNC",api);
+        fetch(api.API_URL, {
+            method: api.METHOD,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${user.ACCESS_TOKEN}`
@@ -1937,7 +1977,8 @@ class SyncScreen extends React.Component {
                         message={this.state.message} />
 
                     {this.state.showButton && <View style={{ flex: 1, marginTop: 8 }}>
-                        <TouchableOpacity disabled={this.state.isBtnEnable} style={styles.button} onPress={() => { this.setState({ showButton: false }); this._onSync() }}>
+                        <TouchableOpacity disabled={this.state.isBtnEnable} style={styles.button} 
+							onPress={() => { this.setState({ showButton: false }); this.insertLink() }}>
                             <Text style={styles.buttonText}>Sync</Text>
                         </TouchableOpacity>
                     </View>}
