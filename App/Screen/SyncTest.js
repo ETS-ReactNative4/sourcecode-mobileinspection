@@ -786,12 +786,15 @@ class SyncScreen extends React.Component {
 
     updateFinding = param => {
         if (param !== undefined) {
-            /*let allData = TaskServices.getAllData('TR_FINDING')
-            let indexData = R.findIndex(R.propEq('FINDING_CODE', param.FINDING_CODE))(allData);*/
-            TaskServices.updateByPrimaryKey('TR_FINDING',{
-				"FINDING_CODE":param.FINDING_CODE,
-				"STATUS_SYNC":"Y"
-			});
+			try{
+				TaskServices.updateByPrimaryKey('TR_FINDING',{
+					"FINDING_CODE":param.FINDING_CODE,
+					"STATUS_SYNC":"Y"
+				});
+			}
+			catch(e){
+				console.log("error updateFinding",e);
+			}
         }
     }
     updateEbccHeader = param => {
@@ -1270,17 +1273,6 @@ class SyncScreen extends React.Component {
             let countDataInsert = TaskServices.getTotalData('TR_CONTACT');
             this.setState({ progressContact: 1, valueContactDownload: countDataInsert, totalContactDownload: 0 });
         }
-        // if (data.ubah.length > 0 && allData.length > 0) {   
-        //     data.ubah.map(item => {
-        //         let indexData = R.findIndex(R.propEq('USER_AUTH_CODE', item.USER_AUTH_CODE))(allData);
-        //         TaskServices.updateContact(item, indexData)
-        //     });
-        // }
-        // if(data.hapus.length > 0 && allData.length > 0){
-        //     data.hapus.map(item =>{
-        //         this.deleteData('TR_CONTACT', 'USER_AUTH_CODE', item.USER_AUTH_CODE);
-        //     });  
-        // }  
 
         let countDataInsert = TaskServices.getTotalData('TR_CONTACT');
         this.hasDownload('auth/contact', countDataInsert);
@@ -1293,14 +1285,27 @@ class SyncScreen extends React.Component {
                 this.setState({ progressFinding: i / data.simpan.length, totalFindingDownload: data.simpan.length });
             }
             data.simpan.map(item => {
-				/*let newItem = Object.assign({}, item, {
-					INSERT_TIME: item.INSERT_TIME.replace(/[-|:| ]+/g, ''),
-					UPDATE_TIME: item.UPDATE_TIME.replace(/[-|:| ]+/g, '')
-				})*/
-				//this._updateTR_Notif(newItem);
-				this._updateTR_Notif(item);
-                TaskServices.saveData('TR_FINDING', item);
-                //TaskServices.saveData('TR_FINDING', newItem);
+				/*let newItem={ STATUS_SYNC: 'Y',
+      FINDING_CODE: item.FINDING_CODE,
+      WERKS: item.WERKS,
+      AFD_CODE: item.AFD_CODE,
+      BLOCK_CODE: item.BLOCK_CODE,
+      FINDING_CATEGORY: item.FINDING_CATEGORY,
+      FINDING_DESC: item.FINDING_DESC,
+      FINDING_PRIORITY: item.FINDING_PRIORITY,
+      DUE_DATE: item.DUE_DATE,
+      STATUS: item.STATUS,
+      ASSIGN_TO: item.ASSIGN_TO,
+      PROGRESS: item.PROGRESS,
+      LAT_FINDING: item.LAT_FINDING,
+      LONG_FINDING: item.LONG_FINDING,
+      REFFERENCE_INS_CODE: item.REFFERENCE_INS_CODE,
+      INSERT_USER: item.INSERT_USER,
+      INSERT_TIME: item.INSERT_TIME,
+      UPDATE_USER: item.UPDATE_USER,
+      UPDATE_TIME: item.UPDATE_TIME };*/
+				let newItem=Object.assign({},item,{STATUS_SYNC:'Y'});
+                TaskServices.saveData('TR_FINDING', newItem);
                 let countDataInsert = TaskServices.getTotalData('TR_FINDING');
                 this.setState({ valueFindingDownload: countDataInsert });
             });
@@ -1310,21 +1315,15 @@ class SyncScreen extends React.Component {
         }
         if (data.ubah.length > 0 && allData.length > 0) {
             data.ubah.map(item => {
-				/*let newItem = Object.assign({}, item, {
-					INSERT_TIME: item.INSERT_TIME.replace(/[-|:| ]+/g, ''),
-					UPDATE_TIME: item.UPDATE_TIME.replace(/[-|:| ]+/g, '')
-				})*/
-				//this._updateTR_Notif(newItem);
-				this._updateTR_Notif(item);
+				let newItem=Object.assign({},item,{STATUS_SYNC:'Y'});
+				this._updateTR_Notif(newItem);
                 TaskServices.updateByPrimaryKey('TR_FINDING', item)
-                //TaskServices.updateByPrimaryKey('TR_FINDING', newItem)
-                // let indexData = R.findIndex(R.propEq('FINDING_CODE', item.FINDING_CODE))(allData);
-                //TaskServices.updateFindingDownload(item, indexData)
             })
         }
         if (data.hapus.length > 0 && allData.length > 0) {
             data.hapus.map(item => {
-				this._updateTR_Notif(item);
+				let newItem=Object.assign({},item,{STATUS_SYNC:'Y'});
+				this._updateTR_Notif(newItem);
                 this.deleteRecordByPK('TR_FINDING', 'FINDING_CODE', item.FINDING_CODE);
             });
         }
@@ -1338,11 +1337,9 @@ class SyncScreen extends React.Component {
 			NOTIFICATION_STATUS: 0,
 			FINDING_CODE:data.FINDING_CODE
 		}
-		console.log("_updateTR_Notif",data);
 		if(data.UPDATE_USER==''){
 			if(data.ASSIGN_TO==this.state.user.USER_AUTH_CODE){
 				//finding baru diasign ke user
-				console.log("_updateTR_Notif","Tugas baru");
 				let newData = Object.assign({},newNotif,{NOTIFICATION_TYPE:0})
 				TaskServices.saveData('TR_NOTIFICATION', newData);
 			}
@@ -1352,13 +1349,11 @@ class SyncScreen extends React.Component {
 				//belum di respon 7 hari setelah pembuatan
 				if(data.ASSIGN_TO==this.state.user.USER_AUTH_CODE){
 					//diasign tapi belum merespon
-					console.log("_updateTR_Notif","Belum ada respon[di asign]");
 					newNotif.NOTIFICATION_TYPE=2;
 					TaskServices.saveData('TR_NOTIFICATION', newNotif);
 				}
 				else if(data.INSERT_USER==this.state.user.USER_AUTH_CODE){
 					//membuat finding tapi belum mendapat respon
-					console.log("_updateTR_Notif","Belum ada respon[creator]");
 					newNotif.NOTIFICATION_TYPE=3;
 					TaskServices.saveData('TR_NOTIFICATION', newNotif);
 				}
@@ -1366,7 +1361,6 @@ class SyncScreen extends React.Component {
 		}
 		else if(data.INSERT_USER==this.state.user.USER_AUTH_CODE){
 			//terjadi update pada finding yang user buat
-			console.log("_updateTR_Notif","Ada update");
 			newNotif.NOTIFICATION_TYPE=1;
 			TaskServices.saveData('TR_NOTIFICATION', newNotif);
 		}
@@ -1697,7 +1691,6 @@ class SyncScreen extends React.Component {
         var moment = require('moment');
         const user = TaskServices.getAllData('TR_LOGIN')[0];
 		let api = this.getAPIURL("AUTH-SYNC");
-		console.log("AUTH-SYNC",api);
         fetch(api.API_URL, {
             method: api.METHOD,
             headers: {
