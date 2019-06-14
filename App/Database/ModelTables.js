@@ -387,7 +387,7 @@ const TR_D_EBCC_VALIDATION = {
         UOM: 'string',
         ID_KUALITAS: 'string',
         NAMA_KUALITAS: 'string',
-        JUMLAH: 'string',
+        JUMLAH: 'int',
         INSERT_TIME: 'string',
         INSERT_USER: 'string',
         STATUS_SYNC: 'string',

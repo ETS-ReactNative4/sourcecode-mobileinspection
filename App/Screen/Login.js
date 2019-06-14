@@ -97,8 +97,7 @@ class Login extends Component {
 					TaskServices.saveData('TM_SERVICE', newService);
 					index++;
 				}
-				this.insertUser(param);
-				this.navigateScreen('MainMenu');
+				this.checkUser(param);
 			}
 		});
 	}
@@ -111,7 +110,7 @@ class Login extends Component {
 
     checkUser(param) {
         if (TaskServices.getTotalData('TR_LOGIN') > 0) {
-            let data = TaskServices.getAllData('TR_LOGIN')[0]
+            let data = TaskServices.getAllData('TR_LOGIN')[0];
             if (param.USER_AUTH_CODE !== data.USER_AUTH_CODE) {
                 this.resetMobileSync(param, data.ACCESS_TOKEN)
             } else {
@@ -137,14 +136,17 @@ class Login extends Component {
 					'Content-Type': 'application/json',
 					'Authorization': `Bearer ${token}`
 				},
-				body: JSON.stringify({ RESET_SYNC: 1 })
+				body: JSON.stringify({ "RESET_SYNC": 1 })
 			})
             .then((response) => {
                 return response.json();
             })
             .then((data) => {
                 this.deleteAllTableAndFolder(param)
-            });
+            })
+			.catch((err) => {
+                                console.log("error AUTH-SYNC-RESET",err.message);
+                            });
 		}
     }
 

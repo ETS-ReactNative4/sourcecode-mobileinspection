@@ -111,15 +111,23 @@ export default class PilihPeta extends Component {
   }
 
   renderMapsByRegion(regionCode, index){
+	  let a = TaskServices.getAllData('TM_EST');
+	  
+	  for(let x in a){		  
+		console.log('TM_EST',x,a[x]);
+	  }
     let data = TaskServices.findBy2('TM_REGION', 'REGION_CODE', regionCode);
     let comp = TaskServices.findBy('TM_COMP', 'REGION_CODE', regionCode);
     let est = [];
     if(comp !== undefined){
       comp.map(item =>{
-        let arr = TaskServices.findBy2('TM_EST', 'COMP_CODE', item.COMP_CODE);
-        est.push({WERKS: arr.WERKS, EST_NAME: arr.EST_NAME})
+        let arr = TaskServices.findBy('TM_EST', 'COMP_CODE', item.COMP_CODE);
+		for(let x in arr){			
+			est.push({WERKS: arr[x].WERKS, EST_NAME: arr[x].EST_NAME})
+		}
       })      
     }  
+	console.log("est list",est);
     return(
       <View style = {{marginTop: 15}} key = {index}>
         <Text style={{ fontSize: 14,  paddingHorizontal: 16 }}>

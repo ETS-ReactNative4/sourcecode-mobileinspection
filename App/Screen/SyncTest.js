@@ -558,7 +558,7 @@ class SyncScreen extends React.Component {
             if (all !== undefined && dataImage !== undefined) {
                 this.setState({ totalImagelUpload: dataImage.length })
                 for (var i = 0; i < dataImage.length; i++) {
-                    let model = dataImage[i]
+                    let model = dataImage[i];
                     RNFS.exists(`file://${model.IMAGE_PATH_LOCAL}`).
                         then((exists) => {
                             if (exists) {
@@ -577,7 +577,6 @@ class SyncScreen extends React.Component {
                                     name: model.IMAGE_NAME,
                                 });
                                 const url = this.getAPIURL("IMAGES-UPLOAD");
-								console.log("IMAGES-UPLOAD",url);
                                 fetch(url.API_URL, {
                                     method: url.METHOD,
                                     headers: {
@@ -646,7 +645,7 @@ class SyncScreen extends React.Component {
 
     uploadData(URL, dataPost, table, idInspection) {
         const user = TaskServices.getAllData('TR_LOGIN')[0];
-		console.log("masuk uploadData",URL);
+		console.log("masuk uploadData",URL,dataPost, table, idInspection);
         fetch(URL.API_URL, {
             method: URL.METHOD,
             headers: {
@@ -787,9 +786,7 @@ class SyncScreen extends React.Component {
     }
 
     updateFinding = param => {
-			console.log("masuk updateFinding coy",param)
         if (param !== undefined) {
-			console.log("masuk updateFinding")
             /*let allData = TaskServices.getAllData('TR_FINDING')
             let indexData = R.findIndex(R.propEq('FINDING_CODE', param.FINDING_CODE))(allData);*/
             TaskServices.updateByPrimaryKey('TR_FINDING', {
@@ -963,6 +960,7 @@ class SyncScreen extends React.Component {
     }
 
     hasDownload(item, total) {
+		console.log("hasDownload",item, total);
         if (this.state.isFirstInstall) {
             if (total > 0) {
                 this.fetchingMobileSync(item);
