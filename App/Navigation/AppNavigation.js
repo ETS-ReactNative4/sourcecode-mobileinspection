@@ -3,6 +3,8 @@ import { createStackNavigator } from 'react-navigation'
 import SplashScreen from '../Screen/SplashScreen'
 import Login from '../Screen/Login'
 import MainMenu from '../Screen/Home/MainTabNavigator'
+import Genba from '../Screen/Inspeksi/Genba';
+
 
 //finding
 import FindingFormNavigator from '../Screen/Finding/FindingFormNavigator'
@@ -136,10 +138,16 @@ const main = createStackNavigator({
     // OpenGl: { screen: OpenGl }, 
     
     PilihPeta: { screen: PilihPeta }, 
+    Genba: { screen: Genba, 
+        navigationOptions : {
+            title : "Peserta Genba",
+            headerTintColor: '#fff',
+        }},
 
 }, {
         headerMode: 'screen',
         initialRouteName: 'SplashScreen',
+        //initialRouteName: 'Genba',
         navigationOptions: {
             headerStyle: {
                 backgroundColor: Colors.tintColorPrimary

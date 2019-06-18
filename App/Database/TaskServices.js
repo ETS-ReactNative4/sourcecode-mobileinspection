@@ -1,5 +1,6 @@
 import RealmSchemas from './RealmSchema'
 import R from 'ramda'
+import realmSchema from './RealmSchema';
 
 const TaskServices = {
 
@@ -59,6 +60,7 @@ const TaskServices = {
   getLastTracking: function (blokInsCode) {
     return RealmSchemas.objects('TM_INSPECTION_TRACK').filtered('BLOCK_INSPECTION_CODE = \"' + blokInsCode + '\" ').sorted('INSERT_TIME', true)[0];
   },
+
 
   getTotalData: function (table) {
     return RealmSchemas.objects(table).length;
@@ -626,7 +628,27 @@ const TaskServices = {
       // est = this.findBy2('TM_EST', 'WERKS', afd.WERKS);
       return afd.WERKS
     }
-  }
+  },
+
+
+  getAllContact : function() {
+    let data  = this.getAllData('TR_CONTACT')[0];
+    return data;
+  },
+
+  getAllContactGenba : function() {
+    let data = this.getAllData('TR_CONTACT_GENBA');
+    return data;
+  },
+
+  getLoginData : function() {
+    let data = this.getAllData('TR_LOGIN')[0];
+    return data;
+  },
+
+  getAllDataContact : function(table, column='', value='' ) {
+    return RealmSchemas.objects(table).filtered(column + "==" + "\'" + value + "\'")[0];
+  },
 };
 
 export default TaskServices;

@@ -15,6 +15,8 @@ let realmSchema = new Realm({
         ModelTables.TM_AFD,
         ModelTables.TR_CATEGORY,
         ModelTables.TR_CONTACT,
+        ModelTables.TR_CONTACT_GENBA,
+        ModelTables.TR_GENBA_SELECTED,
         ModelTables.TR_FINDING,
         ModelTables.TM_REGION,
         ModelTables.TM_BLOCK,

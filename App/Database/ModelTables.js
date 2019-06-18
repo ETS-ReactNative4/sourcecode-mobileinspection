@@ -37,9 +37,7 @@ const TR_BLOCK_INSPECTION_H = {
         END_INSPECTION: 'string',
         LAT_START_INSPECTION: 'string',
         LONG_START_INSPECTION: 'string',
-        LAT_END_INSPECTION: 'string',
-        LONG_END_INSPECTION: 'string',
-        INSERT_TIME: 'string',
+        LAT_END_INSPECTION: 'string',                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
         INSERT_USER: 'string',
         TIME: 'string',
         DISTANCE: 'string'
@@ -191,8 +189,24 @@ const TR_CONTACT = {
     }
 }
 
+
+const TR_CONTACT_GENBA = {
+    name: 'TR_CONTACT_GENBA',
+    primaryKey: 'USER_AUTH_CODE',
+    properties: {
+        USER_AUTH_CODE: 'string',
+        EMPLOYEE_NIK: 'string',
+        USER_ROLE: 'string',
+        LOCATION_CODE: { type: 'string', optional: true },
+        REF_ROLE: 'string',
+        JOB: 'string',
+        FULLNAME: 'string',
+        REGION_CODE : { type : 'string', optional: true }
+    }
+}
+
 const TR_FINDING = {
-    name: 'TR_FINDING',
+    name: 'TR_FINDING', 
     primaryKey: 'FINDING_CODE',
     properties: {
         FINDING_CODE: { type: 'string' },
@@ -427,6 +441,21 @@ const TM_SERVICE = {
     }
 }
 
+const TR_GENBA_SELECTED = {
+    name : 'TR_GENBA_SELECTED',
+    primaryKey : 'USER_AUTH_CODE',
+    properties : {
+        USER_AUTH_CODE: 'string',
+        EMPLOYEE_NIK: 'string',
+        USER_ROLE: 'string',
+        LOCATION_CODE: { type: 'string', optional: true },
+        REF_ROLE: 'string',
+        JOB: 'string',
+        FULLNAME: 'string',
+        REGION_CODE : { type : 'string', optional: true }
+    }
+}
+
 export default {
     TR_LOGIN,
     TR_BLOCK_INSPECTION_H,
@@ -437,6 +466,7 @@ export default {
     TR_FINDING,
     TR_CATEGORY,
     TR_CONTACT,
+    TR_CONTACT_GENBA,
 
     //Add by Aminju
     TM_REGION,
@@ -458,6 +488,7 @@ export default {
 	TR_SYNC_LOG,
 	TR_NOTIFICATION,
 	TM_SERVICE,
+	TR_GENBA_SELECTED,
 	
 	SCHEMA_VERSION
 }

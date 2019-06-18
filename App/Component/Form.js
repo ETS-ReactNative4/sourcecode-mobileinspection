@@ -18,6 +18,7 @@ import {
 } from 'react-native-responsive-screen';
 import ModalAlert from '../Component/ModalAlert'
 import PropTypes from 'prop-types';
+import Icon2 from 'react-native-vector-icons/MaterialIcons'
 
 class Form extends Component {
 
@@ -40,7 +41,8 @@ class Form extends Component {
             title: 'Title',
             message: 'Message',
             showModal: false,
-            icon: ''
+            icon: '',
+            secure : true
         }
     }
 
@@ -102,6 +104,12 @@ class Form extends Component {
         });
     }
 
+    triggerShowHide = ()=> {
+        this.setState({
+            secure : !this.state.secure
+        });
+    }
+
     render() {
 
         const props = this.props;
@@ -139,12 +147,14 @@ class Form extends Component {
                     <TextInput style={styles.inputBox}
                         underlineColorAndroid='rgba(0,0,0,0)'
                         placeholder="Password"
-                        secureTextEntry={true}
+                        secureTextEntry={this.state.secure}
                         placeholderTextColor="#51a977"
                         onChangeText={(strPassword) => { this.setState({ strPassword: strPassword }) }}
                         value={this.state.strPassword}
                         ref={(input) => this.password = input} />
+                        <TouchableOpacity style={{backgroundColor:'#212121'}} onPress={this.triggerShowHide}><Text>a</Text></TouchableOpacity>
                 </View>
+
                 <View style={styles.sectionInput}>
                   <Picker
                       mode="dropdown"
@@ -153,6 +163,7 @@ class Form extends Component {
                       style={styles.picker}
                       selectedValue={this.state.selectedServer}
                       onValueChange={this.onValueChange.bind(this)}>
+
                       <Picker.Item label="Production" value="1" />
                       <Picker.Item label="QA" value="2" />
                       <Picker.Item label="Development" value="3" />
@@ -180,7 +191,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: wp('70%')//200
+        marginTop: wp('50%')//200
     },
     tapText: {
         height: 41,
