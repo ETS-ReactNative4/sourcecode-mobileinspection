@@ -207,7 +207,8 @@ class FotoSelfieEbcc extends Component {
       // insert TR_D_EBCC_VALIDATION
       if(this.state.kriteriaBuah !== null){
         this.state.kriteriaBuah.map(item => {
-          TaskService.saveData('TR_D_EBCC_VALIDATION', item);
+			let newItem=Object.assign({},item,{JUMLAH:parseInt(item.JUMLAH)});
+			TaskService.saveData('TR_D_EBCC_VALIDATION', newItem);
         })
       }
 
