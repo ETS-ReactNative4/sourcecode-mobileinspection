@@ -105,7 +105,7 @@ class DetailEbcc extends Component {
                     INSERT_TIME: item.INSERT_TIME,
                     STATUS_SYNC: item.STATUS_SYNC,
                     SYNC_TIME: item.SYNC_TIME
-                }
+                };
                 this.state.valueHasilPanen.push(model)
             })
         }
@@ -180,7 +180,7 @@ class DetailEbcc extends Component {
                         editable={false}
                         underlineColorAndroid={'transparent'}
                         style={[styles.searchInput]}
-                        value={data.JUMLAH} />
+                        value={data.JUMLAH.toString()} />
                 </View>
             </View>
         )
@@ -195,7 +195,7 @@ class DetailEbcc extends Component {
                         editable={false}
                         underlineColorAndroid={'transparent'}
                         style={[styles.searchInput]}
-                        value={data.JUMLAH}/>
+                        value={data.JUMLAH.toString()}/>
                 </View>
             </View>
         )
