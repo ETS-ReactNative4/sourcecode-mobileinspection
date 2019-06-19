@@ -223,7 +223,7 @@ class HomeScreen extends React.Component {
       }else{
         const werks = loc_code.substring(0, 4);
         const afd_code = loc_code.substring(4, 5);
-        findingFilter = findingSorted.filtered(`WERKS = "${werks}" AND AFD_CODE = "${afd_code} ${this.extraFilter}"`);
+        findingFilter = findingSorted.filtered(`WERKS = "${werks}" AND AFD_CODE = "${afd_code}" ${this.extraFilter}`);
       }
 
     } else {
@@ -607,7 +607,7 @@ class HomeScreen extends React.Component {
 
   getImageBaseOnFindingCode(findingCode) {
     const user = TaskServices.getAllData('TR_LOGIN')[0];
-    // const url = "http://149.129.245.230:3012/images/" + findingCode; //prod    
+    // const url = "http://149.129.245.230:3012/images/" + findingCode; //prod
     const url = `${ServerName[user.SERVER_NAME_INDEX].image}images/${findingCode}`;
     // const url = "http://149.129.250.199:3012/images/" + findingCode;
     fetch(url, {
