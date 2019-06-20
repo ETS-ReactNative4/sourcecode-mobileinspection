@@ -41,14 +41,16 @@ export default class NewPicker extends React.Component {
 
     render() {
         return (
-            <View style={{ flex: 10, backgroundColor: ' white' }}>
+            <View style={{ flex: 1, backgroundColor: ' white' }}>
                 <View style={styles.container}>
 					<DateRangePicker
 						style={{position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}}
-						onSuccess={(s, e) => AsyncStorage.setItem('range', JSON.stringify({
-							startDate: s,
-							endDate: e
-						}))}
+						onSuccess={(s, e) => {
+                            AsyncStorage.setItem('range', JSON.stringify({
+                                startDate: s,
+                                endDate: e
+                            }))
+                        }}
 						theme={{ markColor: 'green', markTextColor: 'white' }}
 						maxDate={new Date()}/>
                     {/*<Calendar
@@ -87,7 +89,7 @@ export default class NewPicker extends React.Component {
                     // }}
                     />*/}
                 </View>
-                <View style={{ flex: 0.5}} >
+                <View>
                     <TouchableOpacity onPress={() => {
                         this._onChooseDate(this.state.tanggal);
                     }} style={[styles.button]}>
@@ -102,10 +104,10 @@ export default class NewPicker extends React.Component {
 
 const styles = StyleSheet.create({
     button: {
-		flex: 1,
         backgroundColor: Colors.tintColor
     },
     buttonText: {
+        marginVertical: 10,
         fontSize: 20,
         fontWeight: '400',
         color: 'white',
@@ -113,8 +115,8 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
 	container: {
-		flex: 9.5,
-		justifyContent: 'center',
+        flex: 1,
+		justifyContent: 'space-between',
 		alignItems: 'center',
 		backgroundColor: '#F5FCFF',
 	}
