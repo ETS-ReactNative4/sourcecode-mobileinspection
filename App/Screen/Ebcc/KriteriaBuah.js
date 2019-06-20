@@ -89,21 +89,25 @@ class KriteriaBuah extends Component {
         return true;
     }
 
-    loadData(){        
+    loadData(){
         let dataLogin = TaskServices.getAllData('TR_LOGIN')[0];
         var arrTph = this.state.tphAfdWerksBlockCode.split('-') //tph-afd-werks-blockcode
         var dataBlock = TaskServices.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', `${arrTph[2]}${arrTph[1]}${arrTph[3]}`)
         if(dataBlock !== undefined){
+            //get data buat tampilan nama header (blockname, block code, BA name
             var blockName = dataBlock !== undefined ? dataBlock.BLOCK_NAME:''
             var werk_afd_blok_code = `${arrTph[2]}${arrTph[1]}${arrTph[3]}`
             var werks = arrTph[2]
             this.setState({TPH: arrTph[0], blockCode: arrTph[3], blockName, werk_afd_blok_code, werks})
 
             //kondisi panen
+            //get data buat render dynamic form (grup kualias = hasil panen UOM = JJG)
             let hasilPanen = TaskServices.findByWithList('TM_KUALITAS', ['GROUP_KUALITAS', 'UOM'], ['HASIL PANEN', 'JJG'])
             if(hasilPanen !== undefined){
                 hasilPanen.map((item, index) =>{
+                    //ini data yg bakal di map buat renderan
                     this.state.arrHasilPanen.push(item)
+                    //data untuk write ke table
                     let model = {
                         EBCC_VALIDATION_CODE_D: `${this.state.ebccValCode}${item.ID_KUALITAS}`,
                         EBCC_VALIDATION_CODE: this.state.ebccValCode,
@@ -193,21 +197,26 @@ class KriteriaBuah extends Component {
     }
 
     validation(){
+        //kriteriabuah semua data dari loadData() di gabung
         let kriteriaBuah = this.state.valueHasilPanen.concat(this.state.valueJjg).concat(this.state.valueKondisiBuah).concat(this.state.valuePenaltyTph);
         let CheckItemVal = this.validationJumlah(this.state.valuePenaltyTph)
+        console.log("kriteriaBuah:"+JSON.stringify(kriteriaBuah))
+        console.log("checkitemval:"+JSON.stringify(CheckItemVal))
         if(this.state.totalJanjang == '0'){
             this.setState({
                 showModal: true, title: 'Validasi',
                 message: 'Total janjang tidak boleh kosong !',
                 icon: require('../../Images/ic-not-save.png')
             });
-        }else if(CheckItemVal !== undefined && CheckItemVal.JUMLAH == ''){
+        }
+        else if(CheckItemVal !== undefined && CheckItemVal.JUMLAH == ''){
             this.setState({
                 showModal: true, title: 'Validasi',
                 message: `${CheckItemVal.NAMA_KUALITAS} harus diisi !`,
                 icon: require('../../Images/ic-not-save.png')
             });
-        }else{
+        }
+        else{
             this.props.navigation.navigate('FotoSelfieEbcc', { 
                 fotoJanjang: this.state.fotoJanjang, 
                 tphAfdWerksBlockCode: this.state.tphAfdWerksBlockCode,
@@ -251,6 +260,8 @@ class KriteriaBuah extends Component {
         }
     };
 
+    //function untuk render hasil panen
+    //param arr = this.state.valueHasilPanen
     renderDynamicComp(data, index, arr){
         return(
             <View style={styles.containerLabel} key={index}>
@@ -264,7 +275,11 @@ class KriteriaBuah extends Component {
                         maxLength={3}
                         keyboardType={'numeric'}
                         value={arr[index].JUMLAH}
-                        onChangeText={(text) => { text = text.replace(/[^0-9 ]/g, ''); text = this.remove0(text); this.updateArr(index, text, arr, 'panen') }} />
+                        onChangeText={(text) => {
+                            text = text.replace(/[^0-9 ]/g, '');
+                            text = this.remove0(text);
+                            this.updateArr(index, text, arr, 'panen')
+                        }} />
                 </View>
             </View>
         )
@@ -283,7 +298,11 @@ class KriteriaBuah extends Component {
                         maxLength={3}
                         keyboardType={'numeric'}
                         value={arr[index].JUMLAH}
-                        onChangeText={(text) => { text = text.replace(/[^0-9 ]/g, ''); text = this.remove0(text); param == 'total'? this.updateArr(index, text, arr, 'jjg'):this.updateArr(index, text, arr, 'buah') }} />
+                        onChangeText={(text) => {
+                            text = text.replace(/[^0-9 ]/g, '');
+                            text = this.remove0(text);
+                            param == 'total'? this.updateArr(index, text, arr, 'jjg'):this.updateArr(index, text, arr, 'buah')
+                        }} />
                 </View>
             </View>
         )
@@ -309,10 +328,12 @@ class KriteriaBuah extends Component {
         )
     }
 
+    //param arr = stateValue
     updateArr(index, strUpdate, arr, param){
         let dataHeader = this.state.dataHeader
         let newArray = [...arr];
         let data = newArray[index]
+        //mode dari TR_D_EBCC_VALIDATION
         let model = {
             EBCC_VALIDATION_CODE_D: data.EBCC_VALIDATION_CODE_D,
             EBCC_VALIDATION_CODE: data.EBCC_VALIDATION_CODE,
@@ -325,23 +346,28 @@ class KriteriaBuah extends Component {
             INSERT_USER: data.INSERT_USER,
             STATUS_SYNC: data.STATUS_SYNC,
             SYNC_TIME: data.SYNC_TIME
-        }  
+        };
           
         newArray[index] = model;
         if(param == 'tph'){
             this.setState({valuePenaltyTph: newArray});
-        }else if(param == 'buah'){            
+        }
+        else if(param == 'buah'){
             this.setState({valueKondisiBuah: newArray});   
-        }else if(param == 'jjg'){      
+        }
+        else if(param == 'jjg'){
             this.setState({valueJjg: newArray});     
-        }else if(param == 'panen'){      
+        }
+        else if(param == 'panen'){
             this.setState({valueHasilPanen: newArray});
             if(strUpdate !== ''){
                 let total = 0;
+                //itung total janjang
                 newArray.map(item => {
                     let jml = item.JUMLAH == '' ? '0': item.JUMLAH
                     total = total+parseInt(jml)
                 });
+                //update total janjang
                 var header = {
                     EBCC_VALIDATION_CODE: dataHeader.EBCC_VALIDATION_CODE,
                     WERKS: dataHeader.WERKS,
@@ -447,6 +473,7 @@ class KriteriaBuah extends Component {
                 <View style={{ backgroundColor: 'white' }}>
 
                     <Text style={{ fontSize: 20, fontWeight: '500', paddingLeft: 20, marginTop: 10 }}>Hasil Panen</Text>
+                    {/*dynamic render Hasil Panen*/}
                     {this.state.arrHasilPanen.map((data, idx) => this.renderDynamicComp(data, idx, this.state.valueHasilPanen))}
                     {/* total janjang */}
                     <View style={styles.containerLabel}>
