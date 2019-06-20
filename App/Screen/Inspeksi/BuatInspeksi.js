@@ -99,7 +99,8 @@ class BuatInspeksiRedesign extends Component {
             icon: ''
         };
 		// this.initBlokInspeksiCode(dataLogin[0].USER_AUTH_CODE);
-    }   
+    }
+
     initBlokInspeksiCode(authCode){
 		let today = getTodayDate('YYMMDDHHmmss');
         let blokInspeksiCode = `I${authCode}${today}`;
@@ -107,6 +108,7 @@ class BuatInspeksiRedesign extends Component {
 			blokInspeksiCode : blokInspeksiCode
 		})
 	}
+
     findPerson(query){
         if (query === '') {
             return [];
@@ -324,20 +326,17 @@ class BuatInspeksiRedesign extends Component {
         let today = getTodayDate('YYMMDD');
         let idInspection = `B${this.state.dataLogin[0].USER_AUTH_CODE}${today}${this.state.werkAfdBlockCode}`
         let data = TaskService.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', idInspection)
-        console.log(data)
+        //cek baris inspection udh ada ato blom
         if(data !== undefined){
             let header = TaskService.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', idInspection)
-            console.log(header)
-            if(header !== undefined && header.length > 1){
-                let rangeMin = parseInt(header[(header.length-1)].AREAL)
-                let rangePlus = parseInt(header[(header.length-1)].AREAL)+5
-                console.log(rangeMin)
-                console.log(rangePlus)
-                if(parseInt(this.state.baris) < rangePlus){
-                    return true
-                }else if(parseInt(this.state.baris) < rangeMin){
-                    return true
-                }
+            //cek di TR_BLOCK_INSPECTION_H udh ad apa belum
+            if(header !== undefined && header.length > 0){
+                let rangeMin = parseInt(this.state.baris) <= 5 ? 1 : parseInt(this.state.baris)-4;
+                let rangeMax = parseInt(this.state.baris)+4;
+                let validation = header.some((val)=>{
+                    return (val.AREAL <= rangeMax && val.AREAL >= rangeMin)
+                });
+                return validation;
             }
         }
         return false
@@ -575,6 +574,7 @@ class BuatInspeksiRedesign extends Component {
                                 )}
                             /> */}
                             <TextInput
+                                editable={false}
                                 underlineColorAndroid={'transparent'}
                                 style={[styles.searchInput]}
                                 value={this.state.allShow}
