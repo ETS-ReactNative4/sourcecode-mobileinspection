@@ -11,6 +11,7 @@ const TR_LOGIN = {
         USERNAME: 'string',
         USER_AUTH_CODE: 'string',
         USER_ROLE: 'string',
+        CURR_WERKS: { type: 'string', default: '', optional: true },
         SERVER_NAME_INDEX: 'string',
         STATUS: 'string'
     }

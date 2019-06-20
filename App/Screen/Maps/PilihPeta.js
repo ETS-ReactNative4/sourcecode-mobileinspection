@@ -9,6 +9,7 @@ import {
 import Colors from '../../Constant/Colors'
 import Dash from 'react-native-dash'
 import TaskServices from '../../Database/TaskServices'
+import ServerName from '../../Constant/ServerName'
 import Icon2 from 'react-native-vector-icons/AntDesign'
 import RNFS from 'react-native-fs'
 import RNFetchBlob from 'rn-fetch-blob'
@@ -47,8 +48,13 @@ export default class PilihPeta extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      regions: [],
-      estateName: ''
+		regions: [],
+		estateName: '',
+		title: 'Title',
+		message: 'Message',
+		showModal: false,
+		icon: '',
+		isDeleteImage: false
     }
 
   }
@@ -57,8 +63,8 @@ export default class PilihPeta extends Component {
       this.initData()
   }
 
-  initData() {     
-      let regions = TaskServices.getRegionCode()
+  initData() {
+      let regions = TaskServices.getRegionCode();
       this.setState({regions})
   }
 
@@ -71,63 +77,87 @@ export default class PilihPeta extends Component {
     }
   }
 
-  getColor(param) {
-    switch (param) {
-      case 'SELESAI':
-        return 'rgba(35, 144, 35, 0.7)';
-      case 'SEDANG DIPROSES':
-        return 'rgba(254, 178, 54, 0.7)';
-      case 'BARU':
-        return 'rgba(255, 77, 77, 0.7)';
-      default:
-        return '#ff7b25';
-    }
-  }
+	getColor(param) {
+		switch (param) {
+			case 'SELESAI':
+				return 'rgba(35, 144, 35, 0.7)';
+			case 'SEDANG DIPROSES':
+				return 'rgba(254, 178, 54, 0.7)';
+			case 'BARU':
+				return 'rgba(255, 77, 77, 0.7)';
+			default:
+				return '#ff7b25';
+		}
+	}
 
-  async onClickItem(data) {
-    // let isExist = await RNFS.exists(`${dirMaps}/${data.EST_NAME}`)
-    // if (!isExist) {
-    //   var url = 'http:....'//data.IMAGE_URL;
-    //   const { config, fs } = RNFetchBlob
-    //   let options = {
-    //       fileCache: true,
-    //       addAndroidDownloads: {
-    //           useDownloadManager: true,
-    //           notification: true,
-    //           path: `${dirMaps}/${data.IMAGE_NAME}.json`,
-    //           mime : 'text/plain',
-    //           description: 'File Maps'
-    //       }
-    //   }
-    //   config(options).fetch('GET', url).then((res) => {        
-    //     this.setState({estateName: data.EST_NAME})
-    //   }).catch((error) => {
-    //       console.log(error);
-    //   });
-    // }else{      
-    //   this.setState({estateName: data.EST_NAME})
-    // }
-    this.setState({estateName: data.EST_NAME})
-  }
+	async onClickItem(data) {
+        let user = TaskServices.getAllData('TR_LOGIN')[0];
+		TaskServices.updateByPrimaryKey('TR_LOGIN', {
+			"USER_AUTH_CODE":user.USER_AUTH_CODE,
+			"CURR_WERKS":data.WERKS
+		});
+		this.setState({
+			showModal: true,
+			title: 'Tunggu sebentar',
+			message: 'Sedang download map '+data.EST_NAME,
+			icon: require('../../Images/ic-progress.png')
+		})
+		let downloadServ = TaskServices.getAllData("TM_SERVICE").filtered('API_NAME="HECTARESTATEMENT-GEOJSON" AND MOBILE_VERSION="'+ServerName.verAPK+'"');
+		if(downloadServ&&downloadServ.length>0){
+			downloadServ = downloadServ[0];
+		}
+		let param = {};
+		for(let x in downloadServ.BODY){
+			if(typeof(data[x]) !== "undefined"){
+				param[x] = data[x]
+			}
+		}
+        fetch(downloadServ.API_URL, {
+            method: downloadServ.METHOD,
+            headers: {
+                'Cache-Control': 'no-cache',
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${user.ACCESS_TOKEN}`
+            },
+			body: JSON.stringify(param)
+        })
+		.then((response) => {
+			return response.json();
+		})
+		.then((data) => {
+			if(data.status){
+				let result = data.data;
+				console.log("result",result);
+				this.setState({showModal:false});
+			}
+		})
+		.catch((e)=>{
+			console.log("error",e);
+			this.setState({
+				showModal: true,
+				title: 'Error',
+				message: e,
+				icon: require('../../Images/ic-sync-gagal.png')
+			})
+		});
+		this.setState({estateName: data.EST_NAME})
+	}
 
   renderMapsByRegion(regionCode, index){
-	  let a = TaskServices.getAllData('TM_EST');
-	  
-	  for(let x in a){		  
-		console.log('TM_EST',x,a[x]);
-	  }
     let data = TaskServices.findBy2('TM_REGION', 'REGION_CODE', regionCode);
     let comp = TaskServices.findBy('TM_COMP', 'REGION_CODE', regionCode);
     let est = [];
     if(comp !== undefined){
       comp.map(item =>{
         let arr = TaskServices.findBy('TM_EST', 'COMP_CODE', item.COMP_CODE);
-		for(let x in arr){			
-			est.push({WERKS: arr[x].WERKS, EST_NAME: arr[x].EST_NAME})
+		for(let x in arr){		
+			if(arr[x].WERKS[2]==4){
+				est.push({WERKS: arr[x].WERKS, EST_NAME: arr[x].EST_NAME})
+			}
 		}
       })      
-    }  
-	console.log("est list",est);
+    }
     return(
       <View style = {{marginTop: 15}} key = {index}>
         <Text style={{ fontSize: 14,  paddingHorizontal: 16 }}>
