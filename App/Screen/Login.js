@@ -48,7 +48,7 @@ class Login extends Component {
         var data = {
             NIK: user.NIK,
             ACCESS_TOKEN: user.ACCESS_TOKEN,
-            JOB_CODE: "ASD",//user.JOB_CODE,
+            JOB_CODE: user.JOB_CODE,
             LOCATION_CODE: user.LOCATION_CODE,
             REFFERENCE_ROLE: user.REFFERENCE_ROLE,
             USERNAME: user.USERNAME,
@@ -166,6 +166,8 @@ class Login extends Component {
         TaskServices.deleteAllData('TR_D_EBCC_VALIDATION');
         TaskServices.deleteAllData('TR_SYNC_LOG');
         TaskServices.deleteAllData('TR_NOTIFICATION');
+        TaskServices.deleteAllData('TR_CONTACT_GENBA');
+        TaskServices.deleteAllData('TR_GENBA_SELECTED');
 
         RNFetchBlob.fs.unlink(`file://${dirPhotoTemuan}`)
         RNFetchBlob.fs.unlink(`file://${dirPhotoInspeksiBaris}`)
