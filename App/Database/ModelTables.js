@@ -438,6 +438,7 @@ const TM_SERVICE = {
 		API_NAME: 'string',
 		KETERANGAN: 'string',
 		METHOD: 'string',
+		BODY: { type: 'string', optional: true },
 		API_URL: 'string'
     }
 }
@@ -454,6 +455,28 @@ const TR_GENBA_SELECTED = {
         JOB: 'string',
         FULLNAME: 'string',
         REGION_CODE : { type : 'string', optional: true }
+    }
+}
+
+const TR_COORD = {
+    name : 'TR_COORD',
+    primaryKey : 'LATLONG',
+    properties : {
+		LATLONG: 'string',
+        LONGITUDE: 'string',
+        LATITUDE: 'string'
+    }
+}
+
+const TR_POLYGON = {
+    name : 'TR_POLYGON',
+    primaryKey : 'WERKS_AFD_BLOCK_CODE',
+    properties : {
+        WERKS: 'string',
+        AFD_CODE: 'string',
+        WERKS_AFD_BLOCK_CODE: 'string',
+        BLOKNAME: 'string',
+		COORDS:{type: 'list', objectType: 'TR_COORD'}
     }
 }
 
@@ -490,6 +513,8 @@ export default {
 	TR_NOTIFICATION,
 	TM_SERVICE,
 	TR_GENBA_SELECTED,
+	TR_COORD,
+	TR_POLYGON,
 	
 	SCHEMA_VERSION
 }

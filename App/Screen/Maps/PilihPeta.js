@@ -15,6 +15,8 @@ import RNFS from 'react-native-fs'
 import RNFetchBlob from 'rn-fetch-blob'
 import { dirMaps } from '../../Lib/dirStorage';
 import { NavigationActions, StackActions } from 'react-navigation';
+import ModalLoading from '../../Component/ModalLoading'
+import ModalAlert from '../../Component/ModalAlert';
 
 const alcatraz = {
   type: 'FeatureCollection',
@@ -49,10 +51,12 @@ export default class PilihPeta extends Component {
     super(props);
     this.state = {
 		regions: [],
+		est:[],
 		estateName: '',
 		title: 'Title',
 		message: 'Message',
-		showModal: false,
+		showLoading: false,
+		showAlert: false,
 		icon: '',
 		isDeleteImage: false
     }
@@ -64,8 +68,29 @@ export default class PilihPeta extends Component {
   }
 
   initData() {
-      let regions = TaskServices.getRegionCode();
-      this.setState({regions})
+	let user = TaskServices.getAllData('TR_LOGIN')[0];
+	let regions = TaskServices.getRegionCode();
+	let est = [];
+	regions.map((regionCode, index, arr)=>{		
+		let data = TaskServices.findBy2('TM_REGION', 'REGION_CODE', regionCode);
+		let comp = TaskServices.findBy('TM_COMP', 'REGION_CODE', regionCode);
+		if(comp !== undefined){
+			comp.map(item =>{
+				let arr = TaskServices.findBy('TM_EST', 'COMP_CODE', item.COMP_CODE);
+				for(let x in arr){
+					if(arr[x].WERKS[2]!=4){
+						if(user.CURR_WERKS&&user.CURR_WERKS == arr[x].WERKS){
+							this.setState({estateName: arr[x].EST_NAME});
+						}
+						let exists = TaskServices.findBy2('TR_POLYGON', 'WERKS', arr[x].WERKS);
+						est.push({WERKS: arr[x].WERKS, EST_NAME: arr[x].EST_NAME, HAS_MAP:(exists !== undefined)});
+					}
+				}
+			})      
+		}
+		arr[index] = {regionCode,REGION_NAME:data.REGION_NAME};
+	})
+	this.setState({regions,est})
   }
 
   getEstateName(werks) {
@@ -96,76 +121,94 @@ export default class PilihPeta extends Component {
 			"USER_AUTH_CODE":user.USER_AUTH_CODE,
 			"CURR_WERKS":data.WERKS
 		});
-		this.setState({
-			showModal: true,
-			title: 'Tunggu sebentar',
-			message: 'Sedang download map '+data.EST_NAME,
-			icon: require('../../Images/ic-progress.png')
-		})
-		let downloadServ = TaskServices.getAllData("TM_SERVICE").filtered('API_NAME="HECTARESTATEMENT-GEOJSON" AND MOBILE_VERSION="'+ServerName.verAPK+'"');
-		if(downloadServ&&downloadServ.length>0){
-			downloadServ = downloadServ[0];
-		}
-		let param = {};
-		for(let x in downloadServ.BODY){
-			if(typeof(data[x]) !== "undefined"){
-				param[x] = data[x]
-			}
-		}
-        fetch(downloadServ.API_URL, {
-            method: downloadServ.METHOD,
-            headers: {
-                'Cache-Control': 'no-cache',
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${user.ACCESS_TOKEN}`
-            },
-			body: JSON.stringify(param)
-        })
-		.then((response) => {
-			return response.json();
-		})
-		.then((data) => {
-			if(data.status){
-				let result = data.data;
-				console.log("result",result);
-				this.setState({showModal:false});
-			}
-		})
-		.catch((e)=>{
-			console.log("error",e);
+		if(!data.HAS_MAP){
 			this.setState({
-				showModal: true,
-				title: 'Error',
-				message: e,
-				icon: require('../../Images/ic-sync-gagal.png')
+				showLoading: true,
+				title: 'Tunggu sebentar',
+				message: 'Sedang download map '+data.EST_NAME,
+				icon: require('../../Images/ic-progress.png')
 			})
-		});
+			let downloadServ = TaskServices.getAllData("TM_SERVICE").filtered('API_NAME="HECTARESTATEMENT-GEOJSON" AND MOBILE_VERSION="'+ServerName.verAPK+'"');
+			if(downloadServ&&downloadServ.length>0){
+				downloadServ = downloadServ[0];
+			}
+			let pickedWerks = data.WERKS;
+			let param = {};
+			let bodyService = JSON.parse(downloadServ.BODY);
+			for(let x in bodyService){
+				if(typeof(data[x]) !== "undefined"){
+					param[x] = data[x]
+				}
+			}
+			fetch(downloadServ.API_URL, {
+				method: downloadServ.METHOD,
+				headers: {
+					'Cache-Control': 'no-cache',
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${user.ACCESS_TOKEN}`
+				},
+				body: JSON.stringify(param)
+			})
+			.then((response) => {
+				return response.json();
+			})
+			.then((data) => {
+				if(data.status){
+					let result = data.data.polygons;
+					let tempPoly = {};
+					let tempCoords = [];
+					for(let x in result){
+						tempCoords = [];
+						for(let y in result[x].coords){
+							tempCoords.push({
+								LATLONG: result[x].coords[y].latitude+""+result[x].coords[y].longitude,
+								LONGITUDE: result[x].coords[y].longitude+"",
+								LATITUDE: result[x].coords[y].latitude+""
+							})
+						}
+						tempPoly = {
+							WERKS: pickedWerks,
+							AFD_CODE:result[x].afd_code,
+							WERKS_AFD_BLOCK_CODE:result[x].werks_afd_block_code,
+							BLOKNAME: result[x].blokname,
+							COORDS: tempCoords
+						}
+						TaskServices.saveData('TR_POLYGON', tempPoly);
+					}
+					this.setState({showLoading:false});
+					let currEst = this.state.est;
+					currEst.map(item=>{
+						if(item.WERKS==pickedWerks){
+							item.HAS_MAP = true;
+						}
+						return item;
+					});
+					this.setState({est:currEst});
+				}
+			})
+			.catch((e)=>{
+				console.log("error",e);
+				this.setState({
+					showAlert: false,
+					title: 'Error',
+					message: e,
+					icon: require('../../Images/ic-sync-gagal.png')
+				})
+			});
+		}
 		this.setState({estateName: data.EST_NAME})
 	}
 
-  renderMapsByRegion(regionCode, index){
-    let data = TaskServices.findBy2('TM_REGION', 'REGION_CODE', regionCode);
-    let comp = TaskServices.findBy('TM_COMP', 'REGION_CODE', regionCode);
-    let est = [];
-    if(comp !== undefined){
-      comp.map(item =>{
-        let arr = TaskServices.findBy('TM_EST', 'COMP_CODE', item.COMP_CODE);
-		for(let x in arr){		
-			if(arr[x].WERKS[2]==4){
-				est.push({WERKS: arr[x].WERKS, EST_NAME: arr[x].EST_NAME})
-			}
-		}
-      })      
-    }
+  renderMapsByRegion(item, index){
     return(
       <View style = {{marginTop: 15}} key = {index}>
         <Text style={{ fontSize: 14,  paddingHorizontal: 16 }}>
-            {data !== undefined ? data.REGION_NAME : ''}
+            {item.REGION_NAME !== undefined ? item.REGION_NAME : ''}
         </Text>
         <View style={{ marginTop: 16}}>
             <ScrollView contentContainerStyle={{ paddingRight: 16 }} horizontal={true} showsHorizontalScrollIndicator={false}>
-              {est.map((item, index) => this._renderItem(item, index))}
+              {this.state.est.map((item, index) => this._renderItem(item, index))}
             </ScrollView >
           </View>
       </View>
@@ -174,7 +217,11 @@ export default class PilihPeta extends Component {
 
   _renderItem = (item, index) => {
     let showImage;
-      showImage = <Image style={{ alignItems: 'stretch', height: 100, width: 150, borderRadius: 10 }} source={require('../../Images/forest.jpg')} />
+	showImage = <Image style={{ alignItems: 'stretch', height: 100, width: 150, borderRadius: 10 }} source={require('../../Images/forest.jpg')} />
+	let bgStyle = [styles.bgBelumDownload];
+	if(!item.HAS_MAP){
+		bgStyle = [styles.bgBelumDownload, {backgroundColor: 'rgba(169,169,169,0.8)'}];
+	}
     return (
       < TouchableOpacity
         onPress={() => { this.onClickItem(item) }}
@@ -183,9 +230,9 @@ export default class PilihPeta extends Component {
       >
         <View style={{ height: 100, width: 150, marginLeft: 10 }}>
           {showImage}
-          <View style={[styles.bgBelumDownload, {backgroundColor: 'rgba(169,169,169,0.8)'}]}>
-            <Icon2 name={'clouddownload'} color={'white'} size={20}
-              style={{ justifyContent:'center', alignItems: 'center'}} />
+          <View style={bgStyle}>
+            {!item.HAS_MAP && <Icon2 name={'clouddownload'} color={'white'} size={20}
+			style={{ justifyContent:'center', alignItems: 'center'}} /> }
             <Text style={{ fontSize: 8, color: 'white', textAlignVertical: 'center' }}>{item.EST_NAME}</Text>
           </View>
         </View>
@@ -197,6 +244,16 @@ export default class PilihPeta extends Component {
     let data = this.state.regions
     return (
       <Container style={{ flex: 1 }}>
+        <ModalLoading
+          visible={this.state.showLoading}
+          title={this.state.title}
+          message={this.state.message} />
+		<ModalAlert
+			icon={this.state.icon}
+			visible={this.state.showAlert}
+			onPressCancel={() => this.setState({ showAlert: false })}
+			title={this.state.title}
+			message={this.state.message} />
         <Content style={styles.container} >
            <View style={[styles.containerLabel, {marginTop:15, marginBottom: 15}]}>
             <View style={{ flex: 2 }}>

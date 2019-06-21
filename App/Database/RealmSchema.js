@@ -33,6 +33,8 @@ let realmSchema = new Realm({
         ModelTables.TR_D_EBCC_VALIDATION,
         ModelTables.TR_NOTIFICATION,
         ModelTables.TM_SERVICE,
+        ModelTables.TR_COORD,
+        ModelTables.TR_POLYGON,
         ModelTables.TR_SYNC_LOG
     ], 
 	schemaVersion: ModelTables.SCHEMA_VERSION
