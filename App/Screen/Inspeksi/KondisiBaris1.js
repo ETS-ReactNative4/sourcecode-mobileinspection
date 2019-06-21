@@ -10,6 +10,8 @@ import { NavigationActions } from 'react-navigation';
 import { getTodayDate } from '../../Lib/Utils'
 
 import ModalAlertConfirmation from '../../Component/ModalAlertConfirmation';
+import TaskService from "../../Database/TaskServices";
+import ModalAlert from "../../Component/ModalAlert";
 
 class KondisiBaris1 extends Component {
 
@@ -49,6 +51,7 @@ class KondisiBaris1 extends Component {
         let statusBlok = R.clone(params.statusBlok);
         let intervalId = R.clone(params.intervalId);
         let dataInspeksi = R.clone(params.dataInspeksi);
+        let barisIdInspection = R.clone(params.barisIdInspection);
 
         this.state = {
             intervalId,
@@ -68,6 +71,7 @@ class KondisiBaris1 extends Component {
             title: 'Title',
             message: 'Message',
             showModal: false,
+            showModalAlert: false,
             icon: ''
         }
     }
@@ -109,86 +113,105 @@ class KondisiBaris1 extends Component {
         this.setState({dataInspeksi: model})       
     }
 
-	changeAreal(newArea){
-		newArea = newArea.replace(/[^0-9 ]/g, '');
-		if(newArea!=''){
-			let oldHeader = R.clone(this.state.inspeksiHeader);
-			let oldDataUsual = R.clone(this.state.dataUsual);
-			oldHeader.AREAL = newArea;
-			oldDataUsual.BARIS = newArea;
-			this.setState({ 
-				inspeksiHeader: oldHeader,
-				dataUsual:oldDataUsual
-			});
-		}
-	}
+    checkJarakBaris(inputBaris){
+        let idInspection = this.state.inspeksiHeader.ID_INSPECTION;
+        let data = TaskService.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', idInspection)
+        //cek baris inspection udh ada ato blom
+        if(data !== undefined){
+            let header = TaskService.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', idInspection)
+            //cek di TR_BLOCK_INSPECTION_H udh ad apa belum
+            if(header !== undefined && header.length > 0){
+                let rangeMin = parseInt(inputBaris) <= 5 ? 1 : parseInt(inputBaris)-4;
+                let rangeMax = parseInt(inputBaris)+4;
+                let inputNo = [];
+                let validation = header.some((val)=>{
+                    inputNo.push(val.AREAL)
+                    return (val.AREAL <= rangeMax && val.AREAL >= rangeMin)
+                });
+                console.log("VALIDATION:"+JSON.stringify(inputNo), rangeMin, rangeMax)
+                return validation;
+            }
+        }
+        return false
+    }
+
     insertDB() {
-		var today = getTodayDate('YYYYMMDDHHmmss');
-        var kondisiBaris1 = []
-        var data = {
-            BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}2`,
-            BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
-            ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
-            CONTENT_INSPECTION_CODE: 'CC0002',
-            VALUE: this.state.pokokPanen,
-            AREAL: this.state.dataUsual.BARIS,
-            STATUS_SYNC: 'N',
-        }
-        kondisiBaris1.push(data);
+        if(this.state.inspeksiHeader.AREAL !== "" && this.state.inspeksiHeader.AREAL !== undefined){
+            if(!this.checkJarakBaris(this.state.inspeksiHeader.AREAL)){
+                var today = getTodayDate('YYYYMMDDHHmmss');
+                var kondisiBaris1 = []
+                var data = {
+                    BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}2`,
+                    BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
+                    ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
+                    CONTENT_INSPECTION_CODE: 'CC0002',
+                    VALUE: this.state.pokokPanen,
+                    AREAL: this.state.dataUsual.BARIS,
+                    STATUS_SYNC: 'N',
+                }
+                kondisiBaris1.push(data);
 
-        data = {
-            BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}3`,
-            BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
-            ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
-            CONTENT_INSPECTION_CODE: 'CC0003',
-            VALUE: this.state.buahTinggal,
-            AREAL: this.state.dataUsual.BARIS,
-            STATUS_SYNC: 'N'
-        }
-        kondisiBaris1.push(data);
+                data = {
+                    BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}3`,
+                    BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
+                    ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
+                    CONTENT_INSPECTION_CODE: 'CC0003',
+                    VALUE: this.state.buahTinggal,
+                    AREAL: this.state.dataUsual.BARIS,
+                    STATUS_SYNC: 'N'
+                }
+                kondisiBaris1.push(data);
 
-        data = {
-            BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}4`,
-            BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
-            ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
-            CONTENT_INSPECTION_CODE: 'CC0004',
-            VALUE: this.state.brondolPinggir,
-            AREAL: this.state.dataUsual.BARIS,
-            STATUS_SYNC: 'N'
-        }
-        kondisiBaris1.push(data);
+                data = {
+                    BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}4`,
+                    BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
+                    ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
+                    CONTENT_INSPECTION_CODE: 'CC0004',
+                    VALUE: this.state.brondolPinggir,
+                    AREAL: this.state.dataUsual.BARIS,
+                    STATUS_SYNC: 'N'
+                }
+                kondisiBaris1.push(data);
 
-        data = {
-            BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}5`,
-            BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
-            ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
-            CONTENT_INSPECTION_CODE: 'CC0005',
-            VALUE: this.state.brondolTPH,
-            AREAL: this.state.dataUsual.BARIS,
-            STATUS_SYNC: 'N'
-        }
-        kondisiBaris1.push(data);
+                data = {
+                    BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}5`,
+                    BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
+                    ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
+                    CONTENT_INSPECTION_CODE: 'CC0005',
+                    VALUE: this.state.brondolTPH,
+                    AREAL: this.state.dataUsual.BARIS,
+                    STATUS_SYNC: 'N'
+                }
+                kondisiBaris1.push(data);
 
-        data = {
-            BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}6`,
-            BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
-            ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
-            CONTENT_INSPECTION_CODE: 'CC0006',
-            VALUE: this.state.pokokTdkPupuk,
-            AREAL: this.state.dataUsual.BARIS,
-            STATUS_SYNC: 'N'
-        }
-        kondisiBaris1.push(data);
+                data = {
+                    BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}6`,
+                    BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
+                    ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
+                    CONTENT_INSPECTION_CODE: 'CC0006',
+                    VALUE: this.state.pokokTdkPupuk,
+                    AREAL: this.state.dataUsual.BARIS,
+                    STATUS_SYNC: 'N'
+                }
+                kondisiBaris1.push(data);
 
-        this.props.navigation.navigate('KondisiBaris2', {
-            fotoBaris: this.state.fotoBaris,
-            inspeksiHeader: this.state.inspeksiHeader,
-            kondisiBaris1: kondisiBaris1,
-            dataUsual: this.state.dataUsual,
-            statusBlok: this.state.statusBlok,
-            intervalId: this.state.intervalId,
-            dataInspeksi: this.state.dataInspeksi
-        });
+                this.props.navigation.navigate('KondisiBaris2', {
+                    fotoBaris: this.state.fotoBaris,
+                    inspeksiHeader: this.state.inspeksiHeader,
+                    kondisiBaris1: kondisiBaris1,
+                    dataUsual: this.state.dataUsual,
+                    statusBlok: this.state.statusBlok,
+                    intervalId: this.state.intervalId,
+                    dataInspeksi: this.state.dataInspeksi
+                });
+            }
+            else {
+                this.setState({ showModalAlert: true, title: 'Baris terlalu dekat', message: 'Opps, minimum jarak barisnya lebih dari 5 dari baris terakhir ya !', icon: require('../../Images/ic-blm-input-lokasi.png') });
+            }
+        }
+        else {
+            this.setState({ showModalAlert: true, title: 'Baris data salah', message: 'Opps, data baris salah atau kosong. Tolong cek ulang!', icon: require('../../Images/ic-no-data.png') });
+        }
     }
 
     increaseNumber(param) {
@@ -387,6 +410,14 @@ class KondisiBaris1 extends Component {
                     barStyle="light-content"
                     backgroundColor={Colors.tintColorPrimary}
                 />
+
+                <ModalAlert
+                    icon={this.state.icon}
+                    visible={this.state.showModalAlert}
+                    onPressCancel={() => this.setState({ showModalAlert: false })}
+                    title={this.state.title}
+                    message={this.state.message} />
+
                 <ModalAlertConfirmation
                     icon={this.state.icon}
                     visible={this.state.showModal}
@@ -457,7 +488,18 @@ class KondisiBaris1 extends Component {
                                 style={[styles.searchInput]}
                                 keyboardType={'numeric'}
                                 value={this.state.inspeksiHeader.AREAL}
-                                onChangeText={(text) => this.changeAreal(text) } />
+                                onChangeText={(value) => {
+                                    let text = value.replace(/[^0-9 ]/g, '');
+                                    let oldHeader = R.clone(this.state.inspeksiHeader);
+                                    let oldDataUsual = R.clone(this.state.dataUsual);
+                                    oldHeader.AREAL = text;
+                                    oldDataUsual.BARIS = text;
+                                    this.setState({
+                                        inspeksiHeader: oldHeader,
+                                        dataUsual:oldDataUsual
+                                    });
+
+                                } } />
                         </View>
                     </View>
 				</View>

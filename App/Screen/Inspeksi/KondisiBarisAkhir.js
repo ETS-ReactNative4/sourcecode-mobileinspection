@@ -342,33 +342,76 @@ class KondisiBarisAkhir extends Component{
         this.validation()
     };
 
+    checkJarakBaris(inputBaris){
+        let prevRangeMax = parseInt(this.state.dataUsual.BARIS)+4;
+        let prevRangeMin = parseInt(this.state.dataUsual.BARIS) <= 5 ? 1 : parseInt(this.state.dataUsual.BARIS)-4;
+
+        //check textInput kondisiBarisAkhir (musti di check lagi karena ini belum masuk database)
+        if(parseInt(this.state.txtBaris)<= prevRangeMax && parseInt(this.state.txtBaris) >= prevRangeMin){
+            return true
+        }
+
+        let idInspection = this.state.inspeksiHeader.ID_INSPECTION;
+        let data = TaskService.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', idInspection)
+        //cek baris inspection udh ada ato blom
+        if(data !== undefined){
+            let header = TaskService.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', idInspection)
+            //cek di TR_BLOCK_INSPECTION_H udh ad apa belum
+            if(header !== undefined && header.length > 0){
+                //check database
+                let rangeMin = parseInt(inputBaris) <= 5 ? 1 : parseInt(inputBaris)-4;
+                let rangeMax = parseInt(inputBaris)+4;
+                let inputNo = [];
+                let validation = header.some((val)=>{
+                    inputNo.push(val.AREAL)
+                    return (val.AREAL <= rangeMax && val.AREAL >= rangeMin)
+                });
+                console.log("VALIDATION:"+JSON.stringify(inputNo), rangeMin, rangeMax)
+                return validation;
+            }
+        }
+        return false
+    }
+
     validation() {
-        let rangePlus = parseInt(this.state.dataUsual.BARIS)+5
-        let rangeMin = parseInt(this.state.dataUsual.BARIS) > 4 ? parseInt(this.state.dataUsual.BARIS)-5:0
         if (this.state.txtBaris == '' && this.state.switchLanjut) {
             this.setState({
                 showModal: true, title: 'Isi Baris', message: 'Kamu harus selalu pilih baris yaa :)',
                 icon: require('../../Images/ic-blm-input-lokasi.png')
             });
-        } else if (this.state.txtBaris == this.state.dataUsual.BARIS && this.state.switchLanjut) {
+        }
+        else if (this.state.txtBaris == this.state.dataUsual.BARIS && this.state.switchLanjut) {
             this.setState({
                 showModal: true, title: 'Baris Sama', message: 'Opps, baris tidak boleh sama dengan sebelumnya ya',
                 icon: require('../../Images/ic-blm-input-lokasi.png')
             });
-        } else if (parseInt(this.state.txtBaris) < rangePlus) {
-            this.setState({
-                showModal: true, title: 'Baris terlalu dekat', message: 'Opps, minimum jarak barisnya lebih dari 5 ya ! ',
-                icon: require('../../Images/ic-blm-input-lokasi.png')
-            });
-        }else if (parseInt(this.state.txtBaris) < rangeMin) {
-            this.setState({
-                showModal: true, title: 'Baris terlalu dekat', message: 'Opps, minimum jarak barisnya lebih dari 5 ya ! ',
-                icon: require('../../Images/ic-blm-input-lokasi.png')
-            });
-        } 
-        else {
-            this.saveData();
         }
+        else {
+            if(!this.checkJarakBaris(this.state.txtBaris)){
+                this.saveData()
+            }
+            else {
+                this.setState({
+                    showModal: true, title: 'Baris terlalu dekat', message: 'Opps, minimum jarak barisnya lebih dari 5 ya ! ',
+                    icon: require('../../Images/ic-blm-input-lokasi.png')
+                });
+            }
+        }
+        // else if (parseInt(this.state.txtBaris) < rangePlus) {
+        //     this.setState({
+        //         showModal: true, title: 'Baris terlalu dekat', message: 'Opps, minimum jarak barisnya lebih dari 5 ya ! ',
+        //         icon: require('../../Images/ic-blm-input-lokasi.png')
+        //     });
+        // }
+        // else if (parseInt(this.state.txtBaris) < rangeMin) {
+        //     this.setState({
+        //         showModal: true, title: 'Baris terlalu dekat', message: 'Opps, minimum jarak barisnya lebih dari 5 ya ! ',
+        //         icon: require('../../Images/ic-blm-input-lokasi.png')
+        //     });
+        // }
+        // else {
+        //     this.saveData();
+        // }
     }
 
     calculateBaris(blockInspectionCode) {
@@ -891,7 +934,10 @@ class KondisiBarisAkhir extends Component{
                                                     underlineColorAndroid={'transparent'}
                                                     style={[styles.searchInput,{marginBottom:10, position:'absolute', right:0}]}
                                                     value={this.state.txtBaris}                                    
-                                                    onChangeText={(baris) => { baris = baris.replace(/[^0-9]/g, ''); this.setState({ txtBaris: baris }) }}/>
+                                                    onChangeText={(baris) => {
+                                                        baris = baris.replace(/[^0-9]/g, '');
+                                                        this.setState({ txtBaris: baris })
+                                                    }}/>
                                             </View>
                                         }
                                         {/*SLIDER*/}

@@ -31,7 +31,15 @@ export default class DateRangePicker extends Component<Props> {
 
   setupStartMarker = (day) => {
     let markedDates = {[day.dateString]: {startingDay: true, color: this.props.theme.markColor, textColor: this.props.theme.markTextColor}}
-    this.setState({isFromDatePicked: true, isToDatePicked: false, fromDate: day.dateString, markedDates: markedDates})
+    this.setState({
+          isFromDatePicked: true,
+          isToDatePicked: false,
+          fromDate: day.dateString,
+          markedDates: markedDates}
+    ,()=>{
+      //dipake kalo isToDatePick kosong (cuma pilih 1 tanggal)
+          this.props.onSuccess(this.state.fromDate, this.state.fromDate)
+    })
   }
 
   setupMarkedDates = (fromDate, toDate, markedDates) => {
