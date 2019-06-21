@@ -343,6 +343,14 @@ class KondisiBarisAkhir extends Component{
     };
 
     checkJarakBaris(inputBaris){
+        let prevRangeMax = parseInt(this.state.dataUsual.BARIS)+4;
+        let prevRangeMin = parseInt(this.state.dataUsual.BARIS) <= 5 ? 1 : parseInt(this.state.dataUsual.BARIS)-4;
+
+        //check textInput kondisiBarisAkhir (musti di check lagi karena ini belum masuk database)
+        if(parseInt(this.state.txtBaris)<= prevRangeMax && parseInt(this.state.txtBaris) >= prevRangeMin){
+            return true
+        }
+
         let idInspection = this.state.inspeksiHeader.ID_INSPECTION;
         let data = TaskService.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', idInspection)
         //cek baris inspection udh ada ato blom
@@ -350,6 +358,7 @@ class KondisiBarisAkhir extends Component{
             let header = TaskService.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', idInspection)
             //cek di TR_BLOCK_INSPECTION_H udh ad apa belum
             if(header !== undefined && header.length > 0){
+                //check database
                 let rangeMin = parseInt(inputBaris) <= 5 ? 1 : parseInt(inputBaris)-4;
                 let rangeMax = parseInt(inputBaris)+4;
                 let inputNo = [];
@@ -365,8 +374,6 @@ class KondisiBarisAkhir extends Component{
     }
 
     validation() {
-        let rangePlus = parseInt(this.state.dataUsual.BARIS)+5
-        let rangeMin = parseInt(this.state.dataUsual.BARIS) > 4 ? parseInt(this.state.dataUsual.BARIS)-5:0
         if (this.state.txtBaris == '' && this.state.switchLanjut) {
             this.setState({
                 showModal: true, title: 'Isi Baris', message: 'Kamu harus selalu pilih baris yaa :)',
