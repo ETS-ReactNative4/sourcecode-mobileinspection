@@ -194,6 +194,7 @@ class SyncScreen extends React.Component {
 						MOBILE_VERSION:data.data[i].MOBILE_VERSION,
 						API_NAME: data.data[i].API_NAME,
 						KETERANGAN: data.data[i].KETERANGAN,
+						BODY: data.data[i].BODY?JSON.stringify(data.data[i].BODY):'',
 						METHOD: data.data[i].METHOD,
 						API_URL: data.data[i].API_URL
 					}

@@ -12,6 +12,10 @@ export default {
 		image:"http://149.129.250.199:3012/"
 	},
 	3:{
+		data:"http://149.129.250.199:4008/api/v1.0/",
+		service:"http://149.129.250.199:4008/api/v1.0/server/service-list?v="+verAPK
+	},
+	10000:{
 		data:"http://app.tap-agri.com/mobileinspectiondev/ins-msa-dev-auth/api/v1.0/",
 		service:"http://app.tap-agri.com/mobileinspectiondev/ins-msa-dev-auth/api/v1.0/server/service-list?v="+verAPK
 	}
