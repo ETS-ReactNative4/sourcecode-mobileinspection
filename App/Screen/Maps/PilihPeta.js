@@ -176,7 +176,6 @@ export default class PilihPeta extends Component {
 						}
 						TaskServices.saveData('TR_POLYGON', tempPoly);
 					}
-					this.setState({showLoading:false});
 					let currEst = this.state.est;
 					currEst.map(item=>{
 						if(item.WERKS==pickedWerks){
@@ -186,11 +185,20 @@ export default class PilihPeta extends Component {
 					});
 					this.setState({est:currEst});
 				}
+				else{
+					this.setState({
+						showAlert: true,
+						title: 'Error',
+						message: "Peta belum tersedia. Mohon hubungi IT Site di wilayahmu.",
+						icon: require('../../Images/ic-sync-gagal.png')
+					})
+				}
+				this.setState({showLoading:false});
 			})
 			.catch((e)=>{
 				console.log("error",e);
 				this.setState({
-					showAlert: false,
+					showAlert: true,
 					title: 'Error',
 					message: e,
 					icon: require('../../Images/ic-sync-gagal.png')
