@@ -43,7 +43,8 @@ class MapsInspeksi extends React.Component {
         showModal: false,
         title: 'Sabar Ya..',
         message: 'Sedang mencari lokasi kamu nih.',        
-        icon: ''
+        icon: '',
+        inspectionType  : props.navigation.getParam('inspectionType', 'normal')
     };
   }
 
@@ -72,6 +73,7 @@ class MapsInspeksi extends React.Component {
   componentDidMount(){
     this.props.navigation.setParams({ searchLocation: this.searchLocation })
     this.getLocation()
+    console.log("mapinspeksi:"+this.state.inspectionType)
   }
 
   searchLocation =() =>{
@@ -86,11 +88,11 @@ class MapsInspeksi extends React.Component {
     return skm.data.polygons.length;
   }
 
-  getMapsAround(afdCode){
-    let pos = alfabet.indexOf(afdCode)
-    let posBeforeAfdNow = pos-1;
-    let posAfterAfdNow = pos+1;
-  }
+  // getMapsAround(afdCode){
+  //   let pos = alfabet.indexOf(afdCode)
+  //   let posBeforeAfdNow = pos-1;
+  //   let posAfterAfdNow = pos+1;
+  // }
 
   getPolygons(position){
     let data = skm.data.polygons;
@@ -208,39 +210,39 @@ class MapsInspeksi extends React.Component {
     }
   }
 
-  randomHex = () => {
-    let letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++ ) {
-        color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-  }
+  // randomHex = () => {
+  //   let letters = '0123456789ABCDEF';
+  //   let color = '#';
+  //   for (let i = 0; i < 6; i++ ) {
+  //       color += letters[Math.floor(Math.random() * 16)];
+  //   }
+  //   return color;
+  // }
 
-  onClickBlok(werkAfdBlockCode){
-    if(this.isOnBlok(werkAfdBlockCode)){
-      this.navigateScreen('BuatInspeksi', poly.werks_afd_block_code)
-    }else{
-      alert('km ga boleh salah pilih blok')
-    }
-    // this.props.navigation.navigate('BuatInspeksi', {werkAfdBlockCode: werkAfdBlockCode, latitude: this.state.latitude, longitude: this.state.longitude});
-  }
-
-  isOnBlok(werkAfdBlockCode){
-    let data = skm.data.polygons;
-    let position = {
-      latitude: this.state.latitude, longitude: this.state.longitude
-    }
-    for(var i=0; i<data.length; i++){
-        let coords = data[i];
-        if(geolib.isPointInside(position, coords.coords)){
-            if(werkAfdBlockCode == coords.werks_afd_block_code){
-              return true
-            }
-        }
-    } 
-    return false;
-  }
+  // onClickBlok(werkAfdBlockCode){
+  //   if(this.isOnBlok(werkAfdBlockCode)){
+  //     this.navigateScreen('BuatInspeksi', poly.werks_afd_block_code)
+  //   }else{
+  //     alert('km ga boleh salah pilih blok')
+  //   }
+  //   // this.props.navigation.navigate('BuatInspeksi', {werkAfdBlockCode: werkAfdBlockCode, latitude: this.state.latitude, longitude: this.state.longitude});
+  // }
+  //
+  // isOnBlok(werkAfdBlockCode){
+  //   let data = skm.data.polygons;
+  //   let position = {
+  //     latitude: this.state.latitude, longitude: this.state.longitude
+  //   }
+  //   for(var i=0; i<data.length; i++){
+  //       let coords = data[i];
+  //       if(geolib.isPointInside(position, coords.coords)){
+  //           if(werkAfdBlockCode == coords.werks_afd_block_code){
+  //             return true
+  //           }
+  //       }
+  //   }
+  //   return false;
+  // }
   
   checkAutorisasi(werkAfdBlockCode){
     let datLogin = TaskServices.getAllData('TR_LOGIN')[0]
@@ -266,7 +268,8 @@ class MapsInspeksi extends React.Component {
         actions: [NavigationActions.navigate({ routeName: screenName, params : { 
             werkAfdBlockCode : werkAfdBlockCode,
             latitude: this.state.latitude,
-            longitude: this.state.longitude
+            longitude: this.state.longitude,
+            inspectionType  : this.state.inspectionType === 'genba' ? 'genba' : 'normal'
           } 
         })]
       });

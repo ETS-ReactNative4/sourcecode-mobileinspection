@@ -61,7 +61,8 @@ class TakePhotoSelfie extends Component{
           dataUsual,
           pathCache:'',
           statusBlok,
-          dataInspeksi
+          dataInspeksi,
+          inspectionType: props.navigation.getParam('inspectionType', 'normal')
         }
     }
 
@@ -69,6 +70,7 @@ class TakePhotoSelfie extends Component{
       this.setParameter();
       // BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
       BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
+      console.log("takePhotoSelfie:"+this.state.inspectionType)
     }
   
     componentWillUnmount(){
@@ -163,7 +165,8 @@ class TakePhotoSelfie extends Component{
           dataUsual: this.state.dataUsual,
           statusBlok:this.state.statusBlok,
           intervalId: this.state.intervalId,
-          dataInspeksi: this.state.dataInspeksi
+          dataInspeksi: this.state.dataInspeksi,
+          inspectionType  : this.state.inspectionType === 'genba' ? 'genba' : 'normal'
         }); 
       }else{
         alert('Ada kesalahan, Ulangi ambil gambar selfie')

@@ -32,7 +32,10 @@ export default class ListInspection extends Component {
 
   // REDIRECT TO GENBA PAGE
   redirectToGenba = ()=> {
-    this.props.navigation.dispatch(NavigationActions.navigate({ routeName : 'Genba'}));
+    this.props.navigation.dispatch(NavigationActions.navigate({
+        routeName : 'Genba',
+        params:{inspectionType: 'genba'}
+    }));
   }
 
   // REDIRECT TO MAPS PAGE

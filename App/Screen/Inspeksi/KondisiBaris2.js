@@ -200,7 +200,8 @@ class KondisiBaris2 extends Component {
             message: 'Message',
             showModal: false,
             showModal2: false,
-            icon: ''
+            icon: '',
+            inspectionType: props.navigation.getParam('inspectionType', 'normal')
 
         }
     }
@@ -210,6 +211,7 @@ class KondisiBaris2 extends Component {
         this.props.navigation.setParams({ getData: this.state.inspeksiHeader, getDataInspeksi: this.state.dataInspeksi, updateTRBaris: this.updateTRBaris })
         BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
         this.hideAndShow();
+        console.log("kondisibaris2:"+this.state.inspectionType)
     }
     componentWillUnmount() {
         this._saveInput();
@@ -695,7 +697,8 @@ class KondisiBaris2 extends Component {
             dataUsual: this.state.dataUsual,
             statusBlok: this.state.statusBlok,
             intervalId: this.state.intervalId,
-            dataInspeksi: this.state.dataInspeksi
+            dataInspeksi: this.state.dataInspeksi,
+            inspectionType  : this.state.inspectionType === 'genba' ? 'genba' : 'normal'
         });
     }
 
