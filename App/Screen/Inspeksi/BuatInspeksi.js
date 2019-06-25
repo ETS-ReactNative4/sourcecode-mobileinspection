@@ -96,18 +96,19 @@ class BuatInspeksiRedesign extends Component {
             message: 'Message',
             showModal: false,
             showModal2: false,
-            icon: ''
+            icon: '',
+            inspectionType: props.navigation.getParam('inspectionType', 'normal')
         };
 		// this.initBlokInspeksiCode(dataLogin[0].USER_AUTH_CODE);
     }
 
-    initBlokInspeksiCode(authCode){
-		let today = getTodayDate('YYMMDDHHmmss');
-        let blokInspeksiCode = `I${authCode}${today}`;
-		this.setState({
-			blokInspeksiCode : blokInspeksiCode
-		})
-	}
+    // initBlokInspeksiCode(authCode){
+	// 	let today = getTodayDate('YYMMDDHHmmss');
+    //     let blokInspeksiCode = `I${authCode}${today}`;
+	// 	this.setState({
+	// 		blokInspeksiCode : blokInspeksiCode
+	// 	})
+	// }
 
     findPerson(query){
         if (query === '') {
@@ -135,6 +136,7 @@ class BuatInspeksiRedesign extends Component {
         this.props.navigation.setParams({ searchLocation: this.searchLocation })
         this.loadDataBlock(this.state.werkAfdBlockCode)    
         this.getLocation();
+
     }
 
     selesai=()=>{
@@ -450,39 +452,40 @@ class BuatInspeksiRedesign extends Component {
             statusBlok: param,
             waktu: getTodayDate('YYYY-MM-DD  HH:mm:ss'),
             intervalId: id,
-            dataInspeksi: model
+            dataInspeksi: model,
+            inspectionType  : this.state.inspectionType === 'genba' ? 'genba' : 'normal'
         });
     }
 
-    checkSameBlock(idInspection){
-        let data = TaskService.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', idInspection)
-        if(data !== undefined){
-            let dataHeader = TaskService.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', idInspection)
-            dataHeader = dataHeader.sorted('AREAL')
-        }
-    }
+    // checkSameBlock(idInspection){
+    //     let data = TaskService.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', idInspection)
+    //     if(data !== undefined){
+    //         let dataHeader = TaskService.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', idInspection)
+    //         dataHeader = dataHeader.sorted('AREAL')
+    //     }
+    // }
 
-    navigateScreen(screenName, modelInspeksiH, params, statusBlok, intervalId, dataInspeksi) {
-        const navigation = this.props.navigation;
-        const resetAction = StackActions.reset({
-        index: 0,            
-        actions: [NavigationActions.navigate({ routeName: screenName, params : { 
-            inspeksiHeader: modelInspeksiH,
-            dataUsual: params,
-            statusBlok: statusBlok,
-            waktu: getTodayDate('YYYY-MM-DD  HH:mm:ss'),
-            intervalId: intervalId,
-            dataInspeksi: dataInspeksi
-            } 
-          })]
-        });
-        navigation.dispatch(resetAction);
-    }
+    // navigateScreen(screenName, modelInspeksiH, params, statusBlok, intervalId, dataInspeksi) {
+    //     const navigation = this.props.navigation;
+    //     const resetAction = StackActions.reset({
+    //     index: 0,
+    //     actions: [NavigationActions.navigate({ routeName: screenName, params : {
+    //         inspeksiHeader: modelInspeksiH,
+    //         dataUsual: params,
+    //         statusBlok: statusBlok,
+    //         waktu: getTodayDate('YYYY-MM-DD  HH:mm:ss'),
+    //         intervalId: intervalId,
+    //         dataInspeksi: dataInspeksi
+    //         }
+    //       })]
+    //     });
+    //     navigation.dispatch(resetAction);
+    // }
 
     render() {  
-        const { query } = this.state;
-        const person = this.findPerson(query);
-        const comp = (a, b) => a.toLowerCase().trim() === b.toLowerCase().trim();
+        // const { query } = this.state;
+        // const person = this.findPerson(query);
+        // const comp = (a, b) => a.toLowerCase().trim() === b.toLowerCase().trim();
         return (
             <View style={styles.mainContainer}>
                 <StatusBar

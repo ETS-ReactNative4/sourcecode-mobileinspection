@@ -55,27 +55,28 @@ class TakePhotoBaris extends Component {
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
 
     this.state = {
-		track:true,
+        track:true,
         latitude: LATITUDE,
-        longitude: LONGITUDE, 
+        longitude: LONGITUDE,
         region: {
-          latitude: LATITUDE,
-          longitude: LONGITUDE,
-          latitudeDelta:0.0075,
-          longitudeDelta:0.00721
+            latitude: LATITUDE,
+            longitude: LONGITUDE,
+            latitudeDelta:0.0075,
+            longitudeDelta:0.00721
         },
-		dataLogin:TaskService.getAllData('TR_LOGIN'),
-      intervalId,
-      hasPhoto: false,
-      path: null,
-      pathImg: null,
-      dataModel: null,
-      inspeksiHeader,
-      dataUsual,
-      from,
-      pathCache: '',
-      statusBlok,
-      dataInspeksi
+        dataLogin:TaskService.getAllData('TR_LOGIN'),
+        intervalId,
+        hasPhoto: false,
+        path: null,
+        pathImg: null,
+        dataModel: null,
+        inspeksiHeader,
+        dataUsual,
+        from,
+        pathCache: '',
+        statusBlok,
+        dataInspeksi,
+        inspectionType: props.navigation.getParam('inspectionType', 'normal')
     };
   }
 
@@ -212,7 +213,8 @@ class TakePhotoBaris extends Component {
           dataUsual: this.state.dataUsual, 
           statusBlok: this.state.statusBlok,
           intervalId: this.state.intervalId,
-          dataInspeksi: this.state.dataInspeksi
+          dataInspeksi: this.state.dataInspeksi,
+          inspectionType  : this.state.inspectionType === 'genba' ? 'genba' : 'normal'
       }); 
     }else{
       alert('Ada kesalahan, Ulangi ambil gambar baris')

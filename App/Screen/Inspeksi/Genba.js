@@ -25,19 +25,21 @@ const titleLarge = 'Peserta Genba';
 const titleSmall = 'Siapa saja yang ikut Genba bersamamu ?';
 
 export default class Genba extends Component {
-
-    state = {
-        dataSource      : [],
-        dataSelected    : [],
-        dataSourceOri   : [],
-        totalSuggestion : null,
-        showFilter      : false,
-        choosenData     : false,
-        total_selected  : null
-    }
-
     constructor(props){
         super(props);
+
+        this.state = {
+            dataSource      : [],
+            dataSelected    : [],
+            dataSourceOri   : [],
+            totalSuggestion : null,
+            showFilter      : false,
+            choosenData     : false,
+            total_selected  : null,
+
+            inspectionType  : this.props.navigation.getParam('inspectionType', 'normal')
+        }
+
         this.loadContact();
 
         this.startInspection    = this.startInspection.bind(this);
@@ -48,7 +50,12 @@ export default class Genba extends Component {
      * GO TO MAPS INSPEKSI LAYOUT
      */
     startInspection = () =>{
-        this.props.navigation.dispatch(NavigationActions.navigate({ routeName: 'MapsInspeksi' }));
+        this.props.navigation.dispatch(NavigationActions.navigate({
+                routeName: 'MapsInspeksi',
+                params:{
+                    inspectionType: this.state.inspectionType === 'genba'? 'genba' : 'normal'
+                }}
+            ));
     }
 
 
@@ -314,7 +321,7 @@ export default class Genba extends Component {
 
                     <View style={styles.layoutButton}>
                         <Button block style={styles.buttonInspectionStart} onPress={this.startInspection}>
-                            <Text style={styles.textButtonInspection}>Mulai Inspecsi</Text>
+                            <Text style={styles.textButtonInspection}>Mulai Inspeksi</Text>
                         </Button>
                     </View>
                 </View>

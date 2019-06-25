@@ -20,7 +20,7 @@ import { ProgressDialog } from 'react-native-simple-dialogs';
 import IconLoc from 'react-native-vector-icons/FontAwesome5';
 import ModalAlert from '../../Component/ModalAlert';
 
-const skm = require('../../Data/4421.json');
+const skm = require('../../Data/MegaKuningan.json');
 
 const LATITUDE = -2.1890660;
 const LONGITUDE = 111.3609873;
@@ -115,7 +115,8 @@ class KondisiBarisAkhir extends Component{
             title: 'Title',
             message: 'Message',
             showModal: false,
-            icon: ''
+            icon: '',
+            inspectionType: props.navigation.getParam('inspectionType', 'normal')
         };
     }
 
@@ -132,57 +133,57 @@ class KondisiBarisAkhir extends Component{
         this.makeLineTrack();
     }
 
-    totalPolygons(){
-        return skm.data.polygons.length;
-    }
+    // totalPolygons(){
+    //     return skm.data.polygons.length;
+    // }
 
-    getPolygons(position){
-        let data = skm.data.polygons;
-        let poligons = [];
-        let index = 0;
-        for(var i=0; i<data.length; i++){
-            let coords = data[i];
-            if(geolib.isPointInside(position, coords.coords)){
-                this.state.poligons.push(coords)
-                poligons.push(coords)
-                index = i;
-                break;
-            }
-        } 
-        //ambil map jika posisi index kurang dari 4
-        // if(index < 4){
-        //   for(var j=0; j<index; j++){
-        //     let coords = data[j];
-        //     this.state.poligons.push(coords)
-        //     poligons.push(coords)
-        //   }
-        // } 
-    
-        
-        // if(index > 0){
-        //   //ambil map setelah index
-        //   let lebih = this.totalPolygons()-index
-        //   if(lebih > 4){
-        //     for(var j=1; j<4; j++){
-        //       let coords = data[index+j];
-        //       this.state.poligons.push(coords)
-        //       poligons.push(coords)
-        //     }
-        //     for(var j=1; j<4; j++){
-        //       let coords = data[index-j];
-        //       this.state.poligons.push(coords)
-        //       poligons.push(coords)
-        //     }
-        //   }else if(lebih > 0 && lebih < 4){
-        //     for(var j=0; j<lebih; j++){
-        //       let coords = data[j];
-        //       this.state.poligons.push(coords)
-        //       poligons.push(coords)
-        //     }
-        //   }
-        // }    
-        return poligons;
-    }
+    // getPolygons(position){
+    //     let data = skm.data.polygons;
+    //     let poligons = [];
+    //     let index = 0;
+    //     for(var i=0; i<data.length; i++){
+    //         let coords = data[i];
+    //         if(geolib.isPointInside(position, coords.coords)){
+    //             this.state.poligons.push(coords)
+    //             poligons.push(coords)
+    //             index = i;
+    //             break;
+    //         }
+    //     }
+    //     //ambil map jika posisi index kurang dari 4
+    //     // if(index < 4){
+    //     //   for(var j=0; j<index; j++){
+    //     //     let coords = data[j];
+    //     //     this.state.poligons.push(coords)
+    //     //     poligons.push(coords)
+    //     //   }
+    //     // }
+    //
+    //
+    //     // if(index > 0){
+    //     //   //ambil map setelah index
+    //     //   let lebih = this.totalPolygons()-index
+    //     //   if(lebih > 4){
+    //     //     for(var j=1; j<4; j++){
+    //     //       let coords = data[index+j];
+    //     //       this.state.poligons.push(coords)
+    //     //       poligons.push(coords)
+    //     //     }
+    //     //     for(var j=1; j<4; j++){
+    //     //       let coords = data[index-j];
+    //     //       this.state.poligons.push(coords)
+    //     //       poligons.push(coords)
+    //     //     }
+    //     //   }else if(lebih > 0 && lebih < 4){
+    //     //     for(var j=0; j<lebih; j++){
+    //     //       let coords = data[j];
+    //     //       this.state.poligons.push(coords)
+    //     //       poligons.push(coords)
+    //     //     }
+    //     //   }
+    //     // }
+    //     return poligons;
+    // }
 
     totalWaktu(){
         let now = new Date();
@@ -305,8 +306,8 @@ class KondisiBarisAkhir extends Component{
         }
     }
 
-    changeColorSlide(){           
-        if(this.has2Row() >= 1){
+    changeColorSlide(){
+        if(this.state.inspectionType === 'genba'){
             this.setState({fulFillMandatory:true, txtBaris: ''})
             if(!this.state.switchLanjut){
                 btn = {
@@ -328,12 +329,37 @@ class KondisiBarisAkhir extends Component{
                 }
             }
             this.setState({ tumbButtonSlide: btn })
-        } else {
-            this.setState({ switchLanjut: true })
-            this.setState({
-                showModal: true, title: 'Lanjutkan Inspeksi', message: 'Sesuai SOP nih, inspeksi tuh minimal 2 baris per blok.',
-                icon: require('../../Images/ic-1-baris-lagi.png')
-            });
+        }
+        else {
+            if(this.has2Row() >= 1){
+                this.setState({fulFillMandatory:true, txtBaris: ''})
+                if(!this.state.switchLanjut){
+                    btn = {
+                        width: 55,
+                        height:45,
+                        borderRadius: 20,
+                        borderWidth:1,
+                        borderColor:'#C8C8C8',
+                        backgroundColor: Colors.tintColor,
+                    }
+                }else{
+                    btn = {
+                        width: 55,
+                        height:45,
+                        borderRadius: 20,
+                        borderWidth:1,
+                        borderColor:'#C8C8C8',
+                        backgroundColor: Colors.brandSecondary,
+                    }
+                }
+                this.setState({ tumbButtonSlide: btn })
+            } else {
+                this.setState({ switchLanjut: true })
+                this.setState({
+                    showModal: true, title: 'Lanjutkan Inspeksi', message: 'Sesuai SOP nih, inspeksi tuh minimal 2 baris per blok.',
+                    icon: require('../../Images/ic-1-baris-lagi.png')
+                });
+            }
         }
 
     }
@@ -785,6 +811,7 @@ class KondisiBarisAkhir extends Component{
                     statusBlok: this.state.statusBlok,
                     intervalId: intervalId,
                     dataInspeksi: dataInspeksi,
+                    inspectionType  : this.state.inspectionType === 'genba' ? 'genba' : 'normal'
                 }
             })]
         });

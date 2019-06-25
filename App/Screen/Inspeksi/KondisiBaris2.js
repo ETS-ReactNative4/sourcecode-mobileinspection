@@ -200,7 +200,8 @@ class KondisiBaris2 extends Component {
             message: 'Message',
             showModal: false,
             showModal2: false,
-            icon: ''
+            icon: '',
+            inspectionType: props.navigation.getParam('inspectionType', 'normal')
 
         }
     }
@@ -695,7 +696,8 @@ class KondisiBaris2 extends Component {
             dataUsual: this.state.dataUsual,
             statusBlok: this.state.statusBlok,
             intervalId: this.state.intervalId,
-            dataInspeksi: this.state.dataInspeksi
+            dataInspeksi: this.state.dataInspeksi,
+            inspectionType  : this.state.inspectionType === 'genba' ? 'genba' : 'normal'
         });
     }
 
