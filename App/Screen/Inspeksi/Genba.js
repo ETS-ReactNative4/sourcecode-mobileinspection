@@ -213,7 +213,6 @@ export default class Genba extends Component {
     componentDidMount(){
         this.loadContact();
         this.getSelectedNameFromDB();
-        console.log("genba:"+this.state.inspectionType)
         //this.deleteChoosen();
     }
 

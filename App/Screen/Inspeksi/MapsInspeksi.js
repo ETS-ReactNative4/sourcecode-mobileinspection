@@ -73,7 +73,6 @@ class MapsInspeksi extends React.Component {
   componentDidMount(){
     this.props.navigation.setParams({ searchLocation: this.searchLocation })
     this.getLocation()
-    console.log("mapinspeksi:"+this.state.inspectionType)
   }
 
   searchLocation =() =>{

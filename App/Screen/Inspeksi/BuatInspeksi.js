@@ -136,7 +136,6 @@ class BuatInspeksiRedesign extends Component {
         this.props.navigation.setParams({ searchLocation: this.searchLocation })
         this.loadDataBlock(this.state.werkAfdBlockCode)    
         this.getLocation();
-        console.log("buatInspeksi:"+this.state.inspectionType)
 
     }
 

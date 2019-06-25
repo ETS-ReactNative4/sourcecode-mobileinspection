@@ -131,7 +131,6 @@ class KondisiBarisAkhir extends Component{
         }
         this.getLocation();       
         this.makeLineTrack();
-        console.log("kondisiBarisAkhir:"+this.state.inspectionType)
     }
 
     // totalPolygons(){
