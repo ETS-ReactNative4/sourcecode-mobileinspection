@@ -16,7 +16,7 @@ import ModalAlert from '../../Component/ModalLoading'
 import ModalGps from '../../Component/ModalAlert';
 import TaskServices from '../../Database/TaskServices';
 
-const skm = require('../../Data/TheEast.json');
+const skm = require('../../Data/MegaKuningan.json');
 const ASPECT_RATIO = width / height;
 const LATITUDE = -2.1890660;
 const LONGITUDE = 111.3609873;

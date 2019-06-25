@@ -20,7 +20,7 @@ import { ProgressDialog } from 'react-native-simple-dialogs';
 import IconLoc from 'react-native-vector-icons/FontAwesome5';
 import ModalAlert from '../../Component/ModalAlert';
 
-const skm = require('../../Data/4421.json');
+const skm = require('../../Data/MegaKuningan.json');
 
 const LATITUDE = -2.1890660;
 const LONGITUDE = 111.3609873;

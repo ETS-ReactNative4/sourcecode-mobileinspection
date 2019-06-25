@@ -16,7 +16,7 @@ import ModalAlert from '../../Component/ModalLoading'
 import ModalGps from '../../Component/ModalAlert';
 import R from 'ramda';
 
-const skm = require('../../Data/TheEast.json');
+const skm = require('../../Data/MegaKuningan.json');
 const LATITUDE = -2.1890660;
 const LONGITUDE = 111.3609873;
 const { width, height } = Dimensions.get('window');

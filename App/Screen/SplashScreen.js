@@ -16,7 +16,7 @@ import moment from 'moment'
 import geolib from 'geolib';
 
 var RNFS = require('react-native-fs');
-const skm = require('../Data/4421.json');
+const skm = require('../Data/MegaKuningan.json');
 
 class SplashScreen extends Component {
 
