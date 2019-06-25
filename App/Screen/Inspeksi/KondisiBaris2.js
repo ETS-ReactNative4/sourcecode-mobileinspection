@@ -701,22 +701,22 @@ class KondisiBaris2 extends Component {
         });
     }
 
-    navigateScreen(screenName) {
-        const navigation = this.props.navigation;
-        const resetAction = StackActions.reset({
-            index: 0,
-            actions: [NavigationActions.navigate({ routeName: screenName, params: { from: 'fags' } })]
-        });
-        navigation.dispatch(resetAction);
-    }
+    // navigateScreen(screenName) {
+    //     const navigation = this.props.navigation;
+    //     const resetAction = StackActions.reset({
+    //         index: 0,
+    //         actions: [NavigationActions.navigate({ routeName: screenName, params: { from: 'fags' } })]
+    //     });
+    //     navigation.dispatch(resetAction);
+    // }
 
-    cancelOrder(){
-        const navigation = this.props.navigation;
-        let routeName = 'MainMenu'; 
-        this.setState({showModal: false})
-        Promise.all([navigation.dispatch(NavigationActions.navigate({ routeName : routeName}))]).
-        then(() => navigation.navigate('Inspection')).then(() => navigation.navigate('DaftarInspeksi'));
-    }
+    // cancelOrder(){
+    //     const navigation = this.props.navigation;
+    //     let routeName = 'MainMenu';
+    //     this.setState({showModal: false})
+    //     Promise.all([navigation.dispatch(NavigationActions.navigate({ routeName : routeName}))]).
+    //     then(() => navigation.navigate('Inspection')).then(() => navigation.navigate('DaftarInspeksi'));
+    // }
 
     render() {
 
