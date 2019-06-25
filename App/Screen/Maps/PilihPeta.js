@@ -49,10 +49,13 @@ export default class PilihPeta extends Component {
 
   constructor(props) {
     super(props);
+	
+	let user = TaskServices.getAllData('TR_LOGIN')[0];
     this.state = {
 		regions: [],
 		est:[],
 		estateName: '',
+		currWerk:'',
 		title: 'Title',
 		message: 'Message',
 		showLoading: false,
@@ -80,7 +83,10 @@ export default class PilihPeta extends Component {
 				for(let x in arr){
 					if(arr[x].WERKS[2]!=4){
 						if(user.CURR_WERKS&&user.CURR_WERKS == arr[x].WERKS){
-							this.setState({estateName: arr[x].EST_NAME});
+							this.setState({
+								estateName: arr[x].EST_NAME,
+								currWerk:arr[x].WERKS
+							});
 						}
 						let exists = TaskServices.findBy2('TR_POLYGON', 'WERKS', arr[x].WERKS);
 						est.push({WERKS: arr[x].WERKS, EST_NAME: arr[x].EST_NAME, HAS_MAP:(exists !== undefined)});
@@ -116,11 +122,7 @@ export default class PilihPeta extends Component {
 	}
 
 	async onClickItem(data) {
-        let user = TaskServices.getAllData('TR_LOGIN')[0];
-		TaskServices.updateByPrimaryKey('TR_LOGIN', {
-			"USER_AUTH_CODE":user.USER_AUTH_CODE,
-			"CURR_WERKS":data.WERKS
-		});
+		let user = TaskServices.getAllData('TR_LOGIN')[0];
 		if(!data.HAS_MAP){
 			this.setState({
 				showLoading: true,
@@ -133,6 +135,7 @@ export default class PilihPeta extends Component {
 				downloadServ = downloadServ[0];
 			}
 			let pickedWerks = data.WERKS;
+			let pickedEst = data.EST_NAME;
 			let param = {};
 			let bodyService = JSON.parse(downloadServ.BODY);
 			for(let x in bodyService){
@@ -154,6 +157,7 @@ export default class PilihPeta extends Component {
 				return response.json();
 			})
 			.then((data) => {
+				console.log("download map",data);
 				if(data.status){
 					let result = data.data.polygons;
 					let tempPoly = {};
@@ -176,7 +180,6 @@ export default class PilihPeta extends Component {
 						}
 						TaskServices.saveData('TR_POLYGON', tempPoly);
 					}
-					this.setState({showLoading:false});
 					let currEst = this.state.est;
 					currEst.map(item=>{
 						if(item.WERKS==pickedWerks){
@@ -185,19 +188,39 @@ export default class PilihPeta extends Component {
 						return item;
 					});
 					this.setState({est:currEst});
+					TaskServices.updateByPrimaryKey('TR_LOGIN', {
+						"USER_AUTH_CODE":user.USER_AUTH_CODE,
+						"CURR_WERKS":pickedWerks
+					});
+					this.setState({estateName: pickedEst,currWerk:pickedWerks});
 				}
+				else{
+					this.setState({
+						showAlert: true,
+						title: 'Error',
+						message: "Peta belum tersedia. Mohon hubungi IT Site di wilayahmu.",
+						icon: require('../../Images/icon/icon_maps.png')
+					})
+				}
+				this.setState({showLoading:false});
 			})
 			.catch((e)=>{
 				console.log("error",e);
 				this.setState({
-					showAlert: false,
+					showAlert: true,
 					title: 'Error',
 					message: e,
-					icon: require('../../Images/ic-sync-gagal.png')
+					icon: require('../../Images/icon/icon_maps.png')
 				})
 			});
 		}
-		this.setState({estateName: data.EST_NAME})
+		else{
+			TaskServices.updateByPrimaryKey('TR_LOGIN', {
+				"USER_AUTH_CODE":user.USER_AUTH_CODE,
+				"CURR_WERKS":data.WERKS
+			});
+			this.setState({estateName: data.EST_NAME,currWerk:data.WERKS})
+		}
 	}
 
   renderMapsByRegion(item, index){
@@ -217,7 +240,7 @@ export default class PilihPeta extends Component {
 
   _renderItem = (item, index) => {
     let showImage;
-	showImage = <Image style={{ alignItems: 'stretch', height: 100, width: 150, borderRadius: 10 }} source={require('../../Images/forest.jpg')} />
+	showImage = <Image style={{ alignItems: 'stretch', height: 100, width: 150 }} source={require('../../Images/forest.jpg')} />
 	let bgStyle = [styles.bgBelumDownload];
 	if(!item.HAS_MAP){
 		bgStyle = [styles.bgBelumDownload, {backgroundColor: 'rgba(169,169,169,0.8)'}];
@@ -228,12 +251,21 @@ export default class PilihPeta extends Component {
         style={{flex:1}}
         key={index}
       >
-        <View style={{ height: 100, width: 150, marginLeft: 10 }}>
+        <View style={{ flex:1,height: 106, width: 156, marginLeft: 10,borderWidth:((this.state.currWerk==item.WERKS)*3),
+				borderColor: '#FFB300' }}>
           {showImage}
           <View style={bgStyle}>
-            {!item.HAS_MAP && <Icon2 name={'clouddownload'} color={'white'} size={20}
-			style={{ justifyContent:'center', alignItems: 'center'}} /> }
-            <Text style={{ fontSize: 8, color: 'white', textAlignVertical: 'center' }}>{item.EST_NAME}</Text>
+            {!item.HAS_MAP && 
+				<Icon2 name={'clouddownload'} color={'white'} size={20}
+					style={{ justifyContent:'center', alignItems: 'center'}} /> &&
+				<Text style={{ fontSize: 8, color: 'white', textAlignVertical: 'center' }}>{item.EST_NAME}</Text>
+			}
+			{item.HAS_MAP &&
+				<Text style={{ justifyContent:'center', padding:3,fontSize: 8,color: 'white',width:"100%",position: 'absolute',bottom:0,
+				backgroundColor:'rgba(0,0,0,0.8)',alignSelf: 'stretch' }}>
+					{item.EST_NAME}
+				</Text>	
+			}
           </View>
         </View>
       </TouchableOpacity >
@@ -316,15 +348,15 @@ const styles = StyleSheet.create({
   },
 
   labelBackground: {
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
+    //borderBottomLeftRadius: 10,
+    //borderBottomRightRadius: 10,
     width: 150, padding: 5, position: 'absolute', bottom: 0,
     justifyContent: 'center', flex: 1, flexDirection: 'row'
   }, 
   bgBelumDownload: {
     flex: 1, position: 'absolute', top: 0,
     width: 150, height:100, padding: 5,
-    borderRadius: 10,
+    //borderRadius: 10,
     justifyContent: 'center',alignItems:'center'
   },
   
