@@ -137,6 +137,10 @@ const create = () => {
 		return getAPIURL('AUTH-SYNC-RESET');
     }
 
+    const postGenbaInspection = body => {
+        return getAPIURL('INSPECTION-GENBA-INSERT')
+    }
+
     //GET
     const getCategory = () => {
 		return getAPIURL('AUTH-CATEGORY');
@@ -244,6 +248,7 @@ const create = () => {
         postFinding,*/
         postInspeksiTrackingPath,
         postReset,
+        postGenbaInspection,
 
         //Get
         getBlock,

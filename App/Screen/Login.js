@@ -168,6 +168,7 @@ class Login extends Component {
         TaskServices.deleteAllData('TR_NOTIFICATION');
         TaskServices.deleteAllData('TR_CONTACT_GENBA');
         TaskServices.deleteAllData('TR_GENBA_SELECTED');
+        TaskServices.deleteAllData('TR_GENBA_INSPECTION');
 
         RNFetchBlob.fs.unlink(`file://${dirPhotoTemuan}`)
         RNFetchBlob.fs.unlink(`file://${dirPhotoInspeksiBaris}`)
