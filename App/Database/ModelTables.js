@@ -481,6 +481,16 @@ const TR_POLYGON = {
     }
 }
 
+const TR_GENBA_INSPECTION = {
+    name : 'TR_GENBA_INSPECTION',
+    primaryKey : 'BLOCK_INSPECTION_CODE',
+    properties : {
+        BLOCK_INSPECTION_CODE: 'string',
+        GENBA_USER: {type: 'list', objectType: 'TR_GENBA_SELECTED'},
+        STATUS_SYNC: 'string'
+    }
+}
+
 export default {
     TR_LOGIN,
     TR_BLOCK_INSPECTION_H,
@@ -516,6 +526,7 @@ export default {
 	TR_GENBA_SELECTED,
 	TR_COORD,
 	TR_POLYGON,
-	
+    TR_GENBA_INSPECTION,
+
 	SCHEMA_VERSION
 }

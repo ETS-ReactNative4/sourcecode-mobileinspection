@@ -74,6 +74,7 @@ class SyncScreen extends React.Component {
             progressInspectionTrack: 0,
             progressEbcc: 0,
             progressEbccDetail: 0,
+            progressGenbaInspection: 0,
 
             //labelUpload
             valueInspeksiHeaderUpload: '0',
@@ -90,6 +91,8 @@ class SyncScreen extends React.Component {
             totalEbcc: '0',
             valueEbccDetail: '0',
             totalEbccDetail: '0',
+            valueGenbaInspection: '0',
+            totalGenbaInspection: '0',
 
             //downlaod
             progress: 0,
@@ -641,6 +644,79 @@ class SyncScreen extends React.Component {
         this.kirimEbccDetail();
     }
 
+    // == GENBA ==
+
+    uploadGenba() {
+        let countData = TaskServices.getAllData('TR_GENBA_INSPECTION');
+        let filteredData = countData.filtered('STATUS_SYNC = "N"');
+        if (filteredData.length > 0) {
+            for (let i = 0; i < filteredData.length; i++) {
+                let GENBA_USER = [];
+                filteredData.GENBA_USER.map((data)=>{
+                    GENBA_USER.push(data.USER_AUTH_CODE)
+                });
+                let genbaModel = {
+                    BLOCK_INSPECTION_CODE: filteredData.BLOCK_INSPECTION_CODE,
+                    GENBA_USER: GENBA_USER,
+                    STATUS_SYNC: 'N'
+                };
+                // this.postGenba(genbaModel);
+                this.setState({valueGenbaInspection: i+1, totalGenbaInspection: filteredData.length });
+            }
+            this.setState({
+                progressGenbaInspection: 1
+            });
+        } else {
+            console.log("No data on genba inspection")
+            this.setState({ progressGenbaInspection: 1, valueGenbaInspection: 0, totalGenbaInspection: 0 });
+        }
+    }
+
+    postGenba(genbaModel) {
+        const user = TaskServices.getAllData('TR_LOGIN')[0];
+        fetch(URL.API_URL, {
+            method: URL.METHOD,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${user.ACCESS_TOKEN}`
+            },
+            body: JSON.stringify({})
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                if (data.status) {
+                    if (table == 'header') {
+                        this.updateInspeksi(dataPost);
+                        // this.updateInspeksiBaris(idInspection);
+                    } else if (table == 'detailHeader') {
+                        this.updateInspeksiDetail(dataPost)
+                        this.updateSyncInpesctionBaris()
+                    } else if (table == 'tracking') {
+                        this.updateInspeksiTrack(dataPost)
+                    } else if (table == 'finding') {
+                        //let imgHasSent = this.checkImageHasSent(dataPost.FINDING_CODE)
+                        //if(imgHasSent){
+                        this.updateFinding(dataPost)
+                        //}
+                    }else if (table == 'ebccH') {
+                        //let imgHasSent = this.checkImageHasSent(dataPost.EBCC_VALIDATION_CODE)
+                        //if(imgHasSent){
+                        this.updateEbccHeader(dataPost)
+                        //}
+                    }else if (table == 'ebccD') {
+                        this.updateEbccDetail(dataPost, idInspection)
+                    }
+                }
+            })
+            .catch((e)=> {
+                console.log("error upload",URL,dataPost, table, user.ACCESS_TOKEN,e);
+            })
+    }
+
+    // ====
+
     uploadData(URL, dataPost, table, idInspection) {
         const user = TaskServices.getAllData('TR_LOGIN')[0];
         fetch(URL.API_URL, {
@@ -945,24 +1021,24 @@ class SyncScreen extends React.Component {
 
 
     // POST MOBILE SYNC
-    _postMobileSync(param) {
-        var moment = require('moment');
-        this.props.tmPost({
-            TGL_MOBILE_SYNC: moment().format('YYYY-MM-DD kk:mm:ss'),
-            TABEL_UPDATE: param
-        });
-    }
-
-    deleteData(table, whereClause, value) {
-        let allData = TaskServices.getAllData(table);
-        if (allData !== undefined && allData.length > 0) {
-            let indexData = R.findIndex(R.propEq(whereClause, value))(allData);
-            if (indexData >= 0) {
-                TaskServices.deleteRecord(table, indexData);
-            }
-
-        }
-    }
+    // _postMobileSync(param) {
+    //     var moment = require('moment');
+    //     this.props.tmPost({
+    //         TGL_MOBILE_SYNC: moment().format('YYYY-MM-DD kk:mm:ss'),
+    //         TABEL_UPDATE: param
+    //     });
+    // }
+    //
+    // deleteData(table, whereClause, value) {
+    //     let allData = TaskServices.getAllData(table);
+    //     if (allData !== undefined && allData.length > 0) {
+    //         let indexData = R.findIndex(R.propEq(whereClause, value))(allData);
+    //         if (indexData >= 0) {
+    //             TaskServices.deleteRecord(table, indexData);
+    //         }
+    //
+    //     }
+    // }
 
     hasDownload(item, total) {
         if (this.state.isFirstInstall) {
@@ -1664,6 +1740,9 @@ class SyncScreen extends React.Component {
                 //POST TRANSAKSI
                 this.kirimImage();
 
+                //MOBILE GENBA SYNC
+                this.uploadGenba();
+
                 //cara redux saga
                 setTimeout(() => {
                     this.props.findingRequest();
@@ -1680,16 +1759,16 @@ class SyncScreen extends React.Component {
                 });
             }
         });
-        function handleFirstConnectivityChange(isConnected) {
-            NetInfo.isConnected.removeEventListener(
-                'connectionChange',
-                handleFirstConnectivityChange
-            );
-        }
-        NetInfo.isConnected.addEventListener(
-            'connectionChange',
-            handleFirstConnectivityChange
-        );
+        // function handleFirstConnectivityChange(isConnected) {
+        //     NetInfo.isConnected.removeEventListener(
+        //         'connectionChange',
+        //         handleFirstConnectivityChange
+        //     );
+        // }
+        // NetInfo.isConnected.addEventListener(
+        //     'connectionChange',
+        //     handleFirstConnectivityChange
+        // );
     }
 
     fetchingMobileSync(param) {
@@ -2117,7 +2196,27 @@ class SyncScreen extends React.Component {
                             borderColor={'white'}
                             indeterminate={this.state.indeterminate} />
 
-                    </View>                    
+                    </View>
+
+                    <View style={{ flex: 1, marginTop: 12 }}>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={styles.labelProgress}>GENBA INSPECTION</Text>
+                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
+                                <Text style={styles.labelProgress}>{this.state.valueGenbaInspection}</Text>
+                                <Text style={styles.labelProgress}>/</Text>
+                                <Text style={styles.labelProgress}>{this.state.totalGenbaInspection}</Text>
+                            </View>
+                        </View>
+                        <Progress.Bar
+                            height={heightProgress}
+                            width={null}
+                            style={{ marginTop: 2 }}
+                            progress={this.state.progressGenbaInspection}
+                            backgroundColor={colorProgress}
+                            borderColor={'white'}
+                            indeterminate={this.state.indeterminate} />
+
+                    </View>
 
                     <Text style={{ fontSize: 14, color: Colors.tintColor, marginTop: 16 }}>DOWNLOAD</Text>
                     <View style={{ backgroundColor: 'grey', height: 0.5, flex: 1, flexDirection: 'row', marginTop: 3 }} />
@@ -2458,34 +2557,34 @@ const mapDispatchToProps = dispatch => {
         serverTimeRequest: () => dispatch(ServerTimeAction.serverTimeRequest()),
         regionRequest: () => dispatch(RegionAction.regionRequest()),
         blockRequest: () => dispatch(BlockAction.blockRequest()),
-        blockPost: obj => dispatch(BlockAction.blockPost(obj)),
+        // blockPost: obj => dispatch(BlockAction.blockPost(obj)),
         afdRequest: () => dispatch(AfdAction.afdRequest()),
-        afdPost: obj => dispatch(AfdAction.afdPost(obj)),
+        // afdPost: obj => dispatch(AfdAction.afdPost(obj)),
         estRequest: () => dispatch(EstAction.estRequest()),
-        estPost: obj => dispatch(EstAction.estPost(obj)),
+        // estPost: obj => dispatch(EstAction.estPost(obj)),
         kriteriaRequest: () => dispatch(KriteriaAction.kriteriaRequest()),
-        kriteriaPost: obj => dispatch(KriteriaAction.kriteriaPost(obj)),
+        // kriteriaPost: obj => dispatch(KriteriaAction.kriteriaPost(obj)),
         userAuthRequest: () => dispatch(UserAuthAction.userAuthRequest()),
-        userAuthPost: obj => dispatch(UserAuthAction.userAuthPost(obj)),
+        // userAuthPost: obj => dispatch(UserAuthAction.userAuthPost(obj)),
         landUseRequest: () => dispatch(LandUseAction.landUseRequest()),
-        landUsePost: obj => dispatch(LandUseAction.landUsePost(obj)),
+        // landUsePost: obj => dispatch(LandUseAction.landUsePost(obj)),
         compRequest: () => dispatch(CompAction.compRequest()),
-        compPost: obj => dispatch(CompAction.compPost(obj)),
+        // compPost: obj => dispatch(CompAction.compPost(obj)),
         contentRequest: () => dispatch(ContentAction.contentRequest()),
-        contentPost: obj => dispatch(ContentAction.contentPost(obj)),
+        // contentPost: obj => dispatch(ContentAction.contentPost(obj)),
         contentLabelRequest: () => dispatch(ContentLabelAction.contentLabelRequest()),
-        contentLabelPost: obj => dispatch(ContentLabelAction.contentLabelPost(obj)),
+        // contentLabelPost: obj => dispatch(ContentLabelAction.contentLabelPost(obj)),
         contactRequest: () => dispatch(ContactAction.contactRequest()),
         categoryRequest: () => dispatch(CategoryAction.categoryRequest()),
         findingRequest: () => dispatch(FindingAction.findingRequest()),
-        findingPost: obj => dispatch(FindingAction.findingPost(obj)),
+        // findingPost: obj => dispatch(FindingAction.findingPost(obj)),
         findingImageRequest: () => dispatch(FindingImageAction.findingImageRequest()),
-        inspeksiPostHeader: obj => dispatch(InspeksiAction.inspeksiPostHeader(obj)),
-        inspeksiPostDetail: obj => dispatch(InspeksiAction.inspeksiPostDetail(obj)),
-        inspeksiPostTrackingPath: obj => dispatch(InspeksiAction.inspeksiPostTrackingPath(obj)),
+        // inspeksiPostHeader: obj => dispatch(InspeksiAction.inspeksiPostHeader(obj)),
+        // inspeksiPostDetail: obj => dispatch(InspeksiAction.inspeksiPostDetail(obj)),
+        // inspeksiPostTrackingPath: obj => dispatch(InspeksiAction.inspeksiPostTrackingPath(obj)),
         paramTrackRequest: obj => dispatch(ParamTrackAction.paramTrackRequest(obj)),
-        findingPostData: obj => dispatch(FindingUploadAction.findingPostData(obj)),
-        tmPost: obj => dispatch(TMobileAction.tmPost(obj)),
+        // findingPostData: obj => dispatch(FindingUploadAction.findingPostData(obj)),
+        // tmPost: obj => dispatch(TMobileAction.tmPost(obj)),
         kualitasRequest: obj => dispatch(KualitasAction.kualitasRequest(obj)),
 
         resetServerTime: () => dispatch(ServerTimeAction.resetServerTime()),

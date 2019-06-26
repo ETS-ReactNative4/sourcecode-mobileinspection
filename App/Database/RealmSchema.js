@@ -35,7 +35,8 @@ let realmSchema = new Realm({
         ModelTables.TM_SERVICE,
         ModelTables.TR_COORD,
         ModelTables.TR_POLYGON,
-        ModelTables.TR_SYNC_LOG
+        ModelTables.TR_SYNC_LOG,
+        ModelTables.TR_GENBA_INSPECTION
     ], 
 	schemaVersion: ModelTables.SCHEMA_VERSION
 });

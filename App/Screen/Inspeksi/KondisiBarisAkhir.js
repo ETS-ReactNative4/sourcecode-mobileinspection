@@ -20,6 +20,8 @@ import { ProgressDialog } from 'react-native-simple-dialogs';
 import IconLoc from 'react-native-vector-icons/FontAwesome5';
 import ModalAlert from '../../Component/ModalAlert';
 
+import TaskServices from '../../Database/TaskServices';
+
 const skm = require('../../Data/MegaKuningan.json');
 
 const LATITUDE = -2.1890660;
@@ -687,6 +689,18 @@ class KondisiBarisAkhir extends Component{
             }
 
             TaskService.saveData('TR_BARIS_INSPECTION', this.state.dataInspeksi)
+
+            //TAMBAHAN GEMBA
+
+            if(this.state.inspectionType === "genba"){
+                let selectedGenbaUser = TaskServices.getAllData("TR_GENBA_SELECTED");
+                let model_TR_GENBA_INSPECTION = {
+                    BLOCK_INSPECTION_CODE: this.state.inspeksiHeader.BLOCK_INSPECTION_CODE,
+                    GENBA_USER: selectedGenbaUser,
+                    STATUS_SYNC: "N"
+                }
+                TaskService.saveData("TR_GENBA_INSPECTION", model_TR_GENBA_INSPECTION);
+            }
         }
 
 		let today = getTodayDate('YYMMDDHHmmss');
@@ -756,7 +770,6 @@ class KondisiBarisAkhir extends Component{
             }
             let id = 0;//setInterval(()=> this.getLocation2(blokInspectionCode), duration);
             this.navigateScreen('TakeFotoBaris', params, modelInspeksi, model, id);
-            
         }        
         
     }
@@ -953,7 +966,7 @@ class KondisiBarisAkhir extends Component{
                                                 style={{marginBottom: 10, position:'absolute', right:0}}
                                                 value={this.state.switchLanjut} />
                                         </View>
-                                        {!!this.state.switchLanjut &&
+                                        {this.state.switchLanjut &&
                                             <View style={{flexDirection:'row', marginTop:15}}>
                                                 <Text style={{color:'grey', marginTop:15}}>ke Baris Berapa ?</Text>
                                                 <TextInput
