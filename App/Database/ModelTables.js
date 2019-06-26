@@ -40,6 +40,7 @@ const TR_BLOCK_INSPECTION_H = {
         LONG_START_INSPECTION: 'string',
         LAT_END_INSPECTION: 'string',                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
         INSERT_USER: 'string',
+        INSERT_TIME: 'string',
         TIME: 'string',
         DISTANCE: 'string'
     }
@@ -463,20 +464,20 @@ const TR_COORD = {
     primaryKey : 'LATLONG',
     properties : {
 		LATLONG: 'string',
-        LONGITUDE: 'string',
-        LATITUDE: 'string'
+        longitude: 'double',
+        latitude: 'double'
     }
 }
 
 const TR_POLYGON = {
     name : 'TR_POLYGON',
-    primaryKey : 'WERKS_AFD_BLOCK_CODE',
+    primaryKey : 'werks_afd_block_code',
     properties : {
         WERKS: 'string',
-        AFD_CODE: 'string',
-        WERKS_AFD_BLOCK_CODE: 'string',
-        BLOKNAME: 'string',
-		COORDS:{type: 'list', objectType: 'TR_COORD'}
+        afd_code: 'string',
+        werks_afd_block_code: 'string',
+        blokname: 'string',
+		coords:{type: 'list', objectType: 'TR_COORD'}
     }
 }
 

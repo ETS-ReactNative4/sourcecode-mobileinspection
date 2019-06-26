@@ -16,7 +16,7 @@ import ModalAlert from '../../Component/ModalLoading'
 import ModalGps from '../../Component/ModalAlert';
 import TaskServices from '../../Database/TaskServices';
 
-const skm = require('../../Data/MegaKuningan.json');
+let polyMap = false;// = require('../../Data/MegaKuningan.json');
 const ASPECT_RATIO = width / height;
 const LATITUDE = -2.1890660;
 const LONGITUDE = 111.3609873;
@@ -46,6 +46,7 @@ class MapsInspeksi extends React.Component {
         icon: '',
         inspectionType  : props.navigation.getParam('inspectionType', 'normal')
     };
+	this.loadMap();
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -84,17 +85,80 @@ class MapsInspeksi extends React.Component {
   }  
 
   totalPolygons(){
-    return skm.data.polygons.length;
+	if(!polyMap){
+		this.setState({ 
+			fetchLocation: false, 
+			showModal: true, 
+			title: 'Tidak ada data', 
+			message: "Kamu belum download data map",
+			icon: require('../../Images/ic-blm-input-lokasi.png')
+		});
+		return 0;
+	}
+    return polyMap.data.polygons.length;
   }
-
-  // getMapsAround(afdCode){
-  //   let pos = alfabet.indexOf(afdCode)
-  //   let posBeforeAfdNow = pos-1;
-  //   let posAfterAfdNow = pos+1;
-  // }
+	loadMap(){
+		let user = TaskServices.getAllData('TR_LOGIN')[0];
+		if(user.CURR_WERKS){
+			let polygons = TaskServices.findBy('TR_POLYGON','WERKS',user.CURR_WERKS);
+			polygons = this.convertGeoJson(polygons);
+			if(polygons&&polygons.length>0){
+				let mapData = {
+					"data" : {
+						"polygons":polygons
+					}
+				}
+				polyMap = mapData;
+			}
+			else{
+				//belum download map
+				this.setState({ 
+					fetchLocation: false, 
+					showModal: true, 
+					title: 'Tidak ada data', 
+					message: "Kamu belum download data map",
+					icon: require('../../Images/ic-blm-input-lokasi.png')
+				});
+			}
+		}
+		else{
+			//belum pilih lokasi
+			this.setState({ 
+				fetchLocation: false, 
+				showModal: true, 
+				title: 'Tidak ada lokasi', 
+				message: "Kamu belum pilih lokasi kamu",
+				icon: require('../../Images/ic-blm-input-lokasi.png')
+			});
+		}
+	}
+	
+	convertGeoJson(raw){
+		let arrPoli = [];
+		for(let x in raw){
+			let tempItem = raw[x];
+			let tempArrCoords = [];
+			for(let y in tempItem.coords){
+				tempArrCoords.push(tempItem.coords[y]);
+			}
+			tempItem = Object.assign({},tempItem,{coords:tempArrCoords});
+			arrPoli.push(tempItem);
+		}
+		return arrPoli;
+	}
 
   getPolygons(position){
-    let data = skm.data.polygons;
+	if(!polyMap){
+		this.setState({ 
+			fetchLocation: false, 
+			showModal: true, 
+			title: 'Tidak ada data', 
+			message: "Kamu belum download data map",
+			icon: require('../../Images/ic-blm-input-lokasi.png')
+		});
+		return;
+	}
+    let data = polyMap.data.polygons;
     let poligons = [];
     let index = 0;
     for(var i=0; i<data.length; i++){
@@ -106,7 +170,6 @@ class MapsInspeksi extends React.Component {
             break;
         }
     } 
-    //ambil map jika posisi index kurang dari 4
     if(index < 4){
       for(var j=0; j<index; j++){
         let coords = data[j];
@@ -117,7 +180,6 @@ class MapsInspeksi extends React.Component {
 
     
     if(index > 0){
-      //ambil map setelah index
       let lebih = this.totalPolygons()-index
       if(lebih > 4){
         for(var j=1; j<4; j++){
@@ -143,8 +205,6 @@ class MapsInspeksi extends React.Component {
 
   getLocation() {
 	if(this.state.latitude&&this.state.longitude){
-		//var lat = parseFloat(position.coords.latitude);
-		//var lon = parseFloat(position.coords.longitude);
 		var lat = this.state.latitude;
 		var lon = this.state.longitude;
 		region = {
@@ -162,35 +222,6 @@ class MapsInspeksi extends React.Component {
 			this.map.animateToCoordinate(region, 1);
 		}    
 	}
-    /*navigator.geolocation.getCurrentPosition(
-        (position) => {
-            //var lat = parseFloat(position.coords.latitude);
-            //var lon = parseFloat(position.coords.longitude);
-            var lat = this.state.latitude;
-            var lon = this.state.longitude;
-            region = {
-              latitude: lat,
-              longitude: lon,
-              latitudeDelta:0.0075,
-              longitudeDelta:0.00721
-            }   
-            position = {
-              latitude: lat, longitude: lon
-            }
-            let poligons = this.getPolygons(position);
-            this.setState({latitude:lat, longitude:lon, fetchLocation: false, region, poligons});   
-            if(this.map !== undefined){
-              this.map.animateToCoordinate(region, 1);
-            }        },
-        (error) => {
-            let message = error && error.message ? error.message : 'Terjadi kesalahan ketika mencari lokasi anda !';
-            if (error && error.message == "No location provider available.") {
-                message = "Mohon nyalakan GPS anda terlebih dahulu.";
-            }
-            this.setState({ fetchLocation: false, showModal: true, title: 'Informasi', message: message, icon: require('../../Images/ic-no-gps.png') });
-        }, // go here if error while fetch location
-        { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
-    );*/
   }  
 
   centerCoordinate(coordinates) {
@@ -208,40 +239,6 @@ class MapsInspeksi extends React.Component {
       longitude: (minY + maxY) / 2
     }
   }
-
-  // randomHex = () => {
-  //   let letters = '0123456789ABCDEF';
-  //   let color = '#';
-  //   for (let i = 0; i < 6; i++ ) {
-  //       color += letters[Math.floor(Math.random() * 16)];
-  //   }
-  //   return color;
-  // }
-
-  // onClickBlok(werkAfdBlockCode){
-  //   if(this.isOnBlok(werkAfdBlockCode)){
-  //     this.navigateScreen('BuatInspeksi', poly.werks_afd_block_code)
-  //   }else{
-  //     alert('km ga boleh salah pilih blok')
-  //   }
-  //   // this.props.navigation.navigate('BuatInspeksi', {werkAfdBlockCode: werkAfdBlockCode, latitude: this.state.latitude, longitude: this.state.longitude});
-  // }
-  //
-  // isOnBlok(werkAfdBlockCode){
-  //   let data = skm.data.polygons;
-  //   let position = {
-  //     latitude: this.state.latitude, longitude: this.state.longitude
-  //   }
-  //   for(var i=0; i<data.length; i++){
-  //       let coords = data[i];
-  //       if(geolib.isPointInside(position, coords.coords)){
-  //           if(werkAfdBlockCode == coords.werks_afd_block_code){
-  //             return true
-  //           }
-  //       }
-  //   }
-  //   return false;
-  // }
   
   checkAutorisasi(werkAfdBlockCode){
     let datLogin = TaskServices.getAllData('TR_LOGIN')[0]
@@ -280,7 +277,6 @@ class MapsInspeksi extends React.Component {
   }
 
   onMapReady(){
-    //lakukan aoa yg mau dilakukan disini setelah map selesai
     this.setState({fetchLocation: false});
   }
 
@@ -330,7 +326,6 @@ class MapsInspeksi extends React.Component {
 			}}
           onMapReady={()=>this.onMapReady()}
           >
-          {/* {skm.data.polygons.map((poly, index) => ( */}
            {this.state.poligons.length > 0 && this.state.poligons.map((poly, index) => (
             <View key={index}>
               <Polygon
@@ -339,8 +334,7 @@ class MapsInspeksi extends React.Component {
                 strokeColor="rgba(0,0,0,0.5)"
                 strokeWidth={2}
                 tappable={true}
-                onPress={()=>this.navigateScreen('BuatInspeksi', poly.werks_afd_block_code)}                
-                // onPress={()=>this.onClickBlok(poly.werks_afd_block_code)}
+                onPress={()=>this.navigateScreen('BuatInspeksi', poly.werks_afd_block_code)}
               />
               <Marker
                 ref={ref => poly.marker = ref}
@@ -394,11 +388,7 @@ const styles = StyleSheet.create({
     flex: 0,
     flexDirection: 'row',
     alignSelf: 'flex-start',
-    // backgroundColor: '#FF5A5F',
     padding: 5,
-    // borderRadius: 3,
-    // borderColor: '#D23F44',
-    // borderWidth: 0.5
   },
   latlng: {
     width: 200,

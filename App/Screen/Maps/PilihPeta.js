@@ -167,16 +167,16 @@ export default class PilihPeta extends Component {
 						for(let y in result[x].coords){
 							tempCoords.push({
 								LATLONG: result[x].coords[y].latitude+""+result[x].coords[y].longitude,
-								LONGITUDE: result[x].coords[y].longitude+"",
-								LATITUDE: result[x].coords[y].latitude+""
+								longitude: result[x].coords[y].longitude,
+								latitude: result[x].coords[y].latitude
 							})
 						}
 						tempPoly = {
 							WERKS: pickedWerks,
-							AFD_CODE:result[x].afd_code,
-							WERKS_AFD_BLOCK_CODE:result[x].werks_afd_block_code,
-							BLOKNAME: result[x].blokname,
-							COORDS: tempCoords
+							afd_code:result[x].afd_code,
+							werks_afd_block_code:result[x].werks_afd_block_code,
+							blokname: result[x].blokname,
+							coords: tempCoords
 						}
 						TaskServices.saveData('TR_POLYGON', tempPoly);
 					}
