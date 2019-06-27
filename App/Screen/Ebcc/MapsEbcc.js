@@ -12,13 +12,14 @@ import MapView, { Polygon, ProviderPropType, Marker } from 'react-native-maps';
 import Colors from '../../Constant/Colors'
 import { NavigationActions, StackActions  } from 'react-navigation';
 import IconLoc from 'react-native-vector-icons/FontAwesome5';
-import ModalAlert from '../../Component/ModalLoading'
+import ModalAlert from '../../Component/ModalLoading';
 import ModalGps from '../../Component/ModalAlert';
+import TaskServices from '../../Database/TaskServices';
 import R from 'ramda';
 
-const skm = require('../../Data/MegaKuningan.json');
-const LATITUDE = -2.1890660;
-const LONGITUDE = 111.3609873;
+let polyMap = false;// = require('../../Data/MegaKuningan.json');
+let LATITUDE = -2.1890660;
+let LONGITUDE = 111.3609873;
 const { width, height } = Dimensions.get('window');
 const alfabet = ['A','B','C','D','E','F'];
 
@@ -31,6 +32,7 @@ class MapsEbcc extends React.Component {
     let statusScan = R.clone(params.statusScan)
     let reason = R.clone(params.reason)
 
+	this.loadMap();
     this.state = {
         latitude: 0.0,
         longitude: 0.0, 
@@ -87,8 +89,72 @@ class MapsEbcc extends React.Component {
   }  
 
   totalPolygons(){
-    return skm.data.polygons.length;
+	if(!polyMap){
+		this.setState({ 
+			fetchLocation: false, 
+			showModal: true, 
+			title: 'Tidak ada data', 
+			message: "Kamu belum download data map",
+			icon: require('../../Images/ic-blm-input-lokasi.png')
+		});
+		return 0;
+	}
+    return polyMap.data.polygons.length;
   }
+	loadMap(){
+		let user = TaskServices.getAllData('TR_LOGIN')[0];
+		if(user.CURR_WERKS){
+			let est = TaskServices.findBy('TM_EST','WERKS',user.CURR_WERKS);
+			if(est&&est.length>0&&est[0].LONGITUDE!=0&&est[0].LATITUDE!=0){
+				LATITUDE = est[0].LATITUDE;
+				LONGITUDE = est[0].LONGITUDE;
+			}
+			let polygons = TaskServices.findBy('TR_POLYGON','WERKS',user.CURR_WERKS);
+			polygons = this.convertGeoJson(polygons);
+			if(polygons&&polygons.length>0){
+				let mapData = {
+					"data" : {
+						"polygons":polygons
+					}
+				}
+				polyMap = mapData;
+			}
+			else{
+				//belum download map
+				this.setState({ 
+					fetchLocation: false, 
+					showModal: true, 
+					title: 'Tidak ada data', 
+					message: "Kamu belum download data map",
+					icon: require('../../Images/ic-blm-input-lokasi.png')
+				});
+			}
+		}
+		else{
+			//belum pilih lokasi
+			this.setState({ 
+				fetchLocation: false, 
+				showModal: true, 
+				title: 'Tidak ada lokasi', 
+				message: "Kamu belum pilih lokasi kamu",
+				icon: require('../../Images/ic-blm-input-lokasi.png')
+			});
+		}
+	}
+	
+	convertGeoJson(raw){
+		let arrPoli = [];
+		for(let x in raw){
+			let tempItem = raw[x];
+			let tempArrCoords = [];
+			for(let y in tempItem.coords){
+				tempArrCoords.push(tempItem.coords[y]);
+			}
+			tempItem = Object.assign({},tempItem,{coords:tempArrCoords});
+			arrPoli.push(tempItem);
+		}
+		return arrPoli;
+	}
 
   getMapsAround(afdCode){
     let pos = alfabet.indexOf(afdCode)
@@ -97,7 +163,17 @@ class MapsEbcc extends React.Component {
   }
 
   getPolygons(position){
-    let data = skm.data.polygons;
+	if(!polyMap){
+		this.setState({ 
+			fetchLocation: false, 
+			showModal: true, 
+			title: 'Tidak ada data', 
+			message: "Kamu belum download data map",
+			icon: require('../../Images/ic-blm-input-lokasi.png')
+		});
+		return;
+	}
+    let data = polyMap.data.polygons;
     let poligons = [];
     let index = 0;
     for(var i=0; i<data.length; i++){
@@ -146,8 +222,6 @@ class MapsEbcc extends React.Component {
 
   getLocation() {
 	if(this.state.latitude&&this.state.longitude){
-		//var lat = parseFloat(position.coords.latitude);
-		//var lon = parseFloat(position.coords.longitude);
 		var lat = this.state.latitude;
 		var lon = this.state.longitude;
 		region = {
@@ -165,35 +239,6 @@ class MapsEbcc extends React.Component {
 			this.map.animateToCoordinate(region, 1);
 		}    
 	}
-    /*navigator.geolocation.getCurrentPosition(
-        (position) => {
-            //var lat = parseFloat(position.coords.latitude);
-            //var lon = parseFloat(position.coords.longitude);
-            var lat = this.state.latitude;
-            var lon = this.state.longitude;
-            region = {
-              latitude: lat,
-              longitude: lon,
-              latitudeDelta:0.0075,
-              longitudeDelta:0.00721
-            }   
-            position = {
-              latitude: lat, longitude: lon
-            }
-            let poligons = this.getPolygons(position);
-            this.setState({latitude:lat, longitude:lon, fetchLocation: false, region, poligons});   
-            if(this.map !== undefined){
-              this.map.animateToCoordinate(region, 1);
-            }        },
-        (error) => {
-            let message = error && error.message ? error.message : 'Terjadi kesalahan ketika mencari lokasi anda !';
-            if (error && error.message == "No location provider available.") {
-                message = "Mohon nyalakan GPS anda terlebih dahulu.";
-            }
-            this.setState({ fetchLocation: false, showModal: true, title: 'Informasi', message: message, icon: require('../../Images/ic-no-gps.png') });
-        }, // go here if error while fetch location
-        { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
-    );*/
   }  
 
   centerCoordinate(coordinates) {
@@ -227,7 +272,6 @@ class MapsEbcc extends React.Component {
     }else{
       alert('km ga boleh salah pilih blok')
     }
-    // this.props.navigation.navigate('BuatInspeksi', {werkAfdBlockCode: werkAfdBlockCode, latitude: this.state.latitude, longitude: this.state.longitude});
   }
 
   isOnBlok(werkAfdBlockCode){
@@ -276,7 +320,6 @@ class MapsEbcc extends React.Component {
       longitudeDelta:0.00721
     } 
     if (myLocation.latitude && myLocation.longitude) {
-      // this.map.animateToCoordinate(region, 1)
       this.setState({latitude: myLocation.latitude,longitude: myLocation.longitude, region})
       this.map.animateToRegion({
         latitude: myLocation.latitude,
@@ -332,9 +375,7 @@ class MapsEbcc extends React.Component {
                   }});
 			}}
           onMapReady={()=>this.onMapReady()}
-          // onUserLocationChange={this.setMyLocation}
           >
-          {/* {skm.data.polygons.map((poly, index) => ( */}
            {this.state.poligons.length > 0 && this.state.poligons.map((poly, index) => (
             <View key={index}>
               <Polygon
@@ -343,8 +384,7 @@ class MapsEbcc extends React.Component {
                 strokeColor="rgba(0,0,0,0.5)"
                 strokeWidth={2}
                 tappable={true}
-                onPress={()=>this.navigateScreen('ManualInputTPH', poly.werks_afd_block_code)}                
-                // onPress={()=>this.onClickBlok(poly.werks_afd_block_code)}
+                onPress={()=>this.navigateScreen('ManualInputTPH', poly.werks_afd_block_code)}
               />
               <Marker
                 ref={ref => poly.marker = ref}

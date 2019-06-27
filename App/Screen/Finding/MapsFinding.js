@@ -14,19 +14,21 @@ import Colors from '../../Constant/Colors'
 import IconLoc from 'react-native-vector-icons/FontAwesome5';
 import ModalAlert from '../../Component/ModalLoading'
 import ModalGps from '../../Component/ModalAlert';
+import TaskServices from '../../Database/TaskServices';
 import geolib from 'geolib';
 
 const ASPECT_RATIO = width / height;
-const LATITUDE = -2.1890660;
-const LONGITUDE = 111.3609873;
+let LATITUDE = -2.1890660;
+let LONGITUDE = 111.3609873;
 const LATITUDE_DELTA = 0.0922;
-const skm = require('../../Data/MegaKuningan.json');
+let polyMap = false;// = require('../../Data/MegaKuningan.json');
 const { width, height } = Dimensions.get('window');
 
 class MapsInspeksi extends React.Component {
   constructor(props) {
     super(props);
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
+	this.loadMap();
     this.state = {
         latitude: 0.0,
         longitude: 0.0,  
@@ -90,11 +92,85 @@ class MapsInspeksi extends React.Component {
   }  
 
   totalPolygons(){
-    return skm.data.polygons.length;
+	if(!polyMap){
+		this.setState({ 
+			fetchLocation: false, 
+			showModal: true, 
+			title: 'Tidak ada data', 
+			message: "Kamu belum download data map",
+			icon: require('../../Images/ic-blm-input-lokasi.png')
+		});
+		return 0;
+	}
+    return polyMap.data.polygons.length;
   }
+	loadMap(){
+		let user = TaskServices.getAllData('TR_LOGIN')[0];
+		if(user.CURR_WERKS){
+			let est = TaskServices.findBy('TM_EST','WERKS',user.CURR_WERKS);
+			if(est&&est.length>0&&est[0].LONGITUDE!=0&&est[0].LATITUDE!=0){
+				LATITUDE = est[0].LATITUDE;
+				LONGITUDE = est[0].LONGITUDE;
+			}
+			let polygons = TaskServices.findBy('TR_POLYGON','WERKS',user.CURR_WERKS);
+			polygons = this.convertGeoJson(polygons);
+			if(polygons&&polygons.length>0){
+				let mapData = {
+					"data" : {
+						"polygons":polygons
+					}
+				}
+				polyMap = mapData;
+			}
+			else{
+				//belum download map
+				this.setState({ 
+					fetchLocation: false, 
+					showModal: true, 
+					title: 'Tidak ada data', 
+					message: "Kamu belum download data map",
+					icon: require('../../Images/ic-blm-input-lokasi.png')
+				});
+			}
+		}
+		else{
+			//belum pilih lokasi
+			this.setState({ 
+				fetchLocation: false, 
+				showModal: true, 
+				title: 'Tidak ada lokasi', 
+				message: "Kamu belum pilih lokasi kamu",
+				icon: require('../../Images/ic-blm-input-lokasi.png')
+			});
+		}
+	}
+	
+	convertGeoJson(raw){
+		let arrPoli = [];
+		for(let x in raw){
+			let tempItem = raw[x];
+			let tempArrCoords = [];
+			for(let y in tempItem.coords){
+				tempArrCoords.push(tempItem.coords[y]);
+			}
+			tempItem = Object.assign({},tempItem,{coords:tempArrCoords});
+			arrPoli.push(tempItem);
+		}
+		return arrPoli;
+	}
 
   getPolygons(position){
-    let data = skm.data.polygons;
+	if(!polyMap){
+		this.setState({ 
+			fetchLocation: false, 
+			showModal: true, 
+			title: 'Tidak ada data', 
+			message: "Kamu belum download data map",
+			icon: require('../../Images/ic-blm-input-lokasi.png')
+		});
+		return;
+	}
+    let data = polyMap.data.polygons;
     let poligons = [];
     let index = 0;
     for(var i=0; i<data.length; i++){
@@ -143,8 +219,6 @@ class MapsInspeksi extends React.Component {
 
   getLocation() {
 	if(this.state.latitude&&this.state.longitude){
-		//var lat = parseFloat(position.coords.latitude);
-		//var lon = parseFloat(position.coords.longitude);
 		var lat = this.state.latitude;
 		var lon = this.state.longitude;
 		region = {
@@ -162,35 +236,6 @@ class MapsInspeksi extends React.Component {
 			this.map.animateToCoordinate(region, 1);
 		}    
 	}
-    /*navigator.geolocation.getCurrentPosition(
-        (position) => {
-            //var lat = parseFloat(position.coords.latitude);
-            //var lon = parseFloat(position.coords.longitude);
-            var lat = this.state.latitude;
-            var lon = this.state.longitude;
-            region = {
-              latitude: lat,
-              longitude: lon,
-              latitudeDelta:0.0075,
-              longitudeDelta:0.00721
-            }   
-            position = {
-              latitude: lat, longitude: lon
-            }
-            let poligons = this.getPolygons(position);
-            this.setState({latitude:lat, longitude:lon, fetchLocation: false, region, poligons});   
-            if(this.map !== undefined){
-              this.map.animateToCoordinate(region, 1);
-            }        },
-        (error) => {
-            let message = error && error.message ? error.message : 'Terjadi kesalahan ketika mencari lokasi anda !';
-            if (error && error.message == "No location provider available.") {
-                message = "Mohon nyalakan GPS anda terlebih dahulu.";
-            }
-            this.setState({ fetchLocation: false, showModal: true, title: 'Informasi', message: message, icon: require('../../Images/ic-no-gps.png') });
-        }, // go here if error while fetch location
-        { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
-    );*/
   }  
 
   centerCoordinate(coordinates) {
@@ -289,7 +334,6 @@ class MapsInspeksi extends React.Component {
 			}}
           onMapReady={()=>this.onMapReady()}
           >
-          {/* {skm.data.polygons.map((poly, index) => ( */}
           {this.state.poligons.length > 0 && this.state.poligons.map((poly, index) => (
             <View key={index}>
               <Polygon
@@ -352,11 +396,7 @@ const styles = StyleSheet.create({
     flex: 0,
     flexDirection: 'row',
     alignSelf: 'flex-start',
-    // backgroundColor: '#FF5A5F',
-    padding: 5,
-    // borderRadius: 3,
-    // borderColor: '#D23F44',
-    // borderWidth: 0.5
+    padding: 5
   },
   latlng: {
     width: 200,

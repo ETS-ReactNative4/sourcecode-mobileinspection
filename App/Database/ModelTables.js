@@ -130,7 +130,9 @@ const TM_EST = {
         EST_CODE: 'string',
         EST_NAME: 'string',
         WERKS: 'string',
-        CITY: 'string'
+        CITY: 'string',
+		LONGITUDE: { type: 'double', default: 0, optional: true },
+		LATITUDE:{ type: 'double', default: 0, optional: true }
     }
 }
 
@@ -465,20 +467,20 @@ const TR_COORD = {
     primaryKey : 'LATLONG',
     properties : {
 		LATLONG: 'string',
-        LONGITUDE: 'string',
-        LATITUDE: 'string'
+        longitude: 'double',
+        latitude: 'double'
     }
 }
 
 const TR_POLYGON = {
     name : 'TR_POLYGON',
-    primaryKey : 'WERKS_AFD_BLOCK_CODE',
+    primaryKey : 'werks_afd_block_code',
     properties : {
         WERKS: 'string',
-        AFD_CODE: 'string',
-        WERKS_AFD_BLOCK_CODE: 'string',
-        BLOKNAME: 'string',
-		COORDS:{type: 'list', objectType: 'TR_COORD'}
+        afd_code: 'string',
+        werks_afd_block_code: 'string',
+        blokname: 'string',
+		coords:{type: 'list', objectType: 'TR_COORD'}
     }
 }
 

@@ -1499,7 +1499,9 @@ class SyncScreen extends React.Component {
 								title: 'Sync Berhasil',
 								message: 'Yeay sinkronisasi udah selesai!',
 								icon: require('../Images/ic-sync-berhasil.png'), 
-								showButton: true
+								showButton: true,
+								finishedSync:true,
+								pickedWerks:(newLoginData[0].CURR_WERKS?true:false)
 							});
 						}
 						else{
@@ -2036,7 +2038,12 @@ class SyncScreen extends React.Component {
                     <ModalAlert
                         icon={this.state.icon}
                         visible={this.state.showModal}
-                        onPressCancel={() => this.setState({ showModal: false })}
+                        onPressCancel={() => {
+							if(this.state.pickedWerks===false){
+								this.props.navigation.navigate('PilihPeta')
+							}
+							this.setState({ showModal: false ,finishedSync:false, pickedWerks:true});
+						}}
                         title={this.state.title}
                         message={this.state.message} />
 
