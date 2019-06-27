@@ -434,13 +434,7 @@ class SyncScreen extends React.Component {
         let dataHeader = TaskServices.getAllData('TR_BLOCK_INSPECTION_H');
         var query = dataHeader.filtered('STATUS_SYNC = "N"');
         let countData = query;
-
-        // this.setState({
-        //     progressInspeksiHeader: 1,
-        //     valueInspeksiHeaderUpload: countData.length,
-        //     totalInspeksiHeaderUpload: countData.length,
-        // });
-
+        console.log(JSON.stringify(query));
         if (countData.length > 0) {
             for (var i = 0; i < countData.length; i++) {
                 let fulfill = this.isFulfillBaris(countData[i].ID_INSPECTION)
@@ -660,7 +654,7 @@ class SyncScreen extends React.Component {
                 let genbaModel = {
                     BLOCK_INSPECTION_CODE: data.BLOCK_INSPECTION_CODE,
                     GENBA_USER: GENBA_USER
-                }
+                };
 
                 this.postGenba(genbaModel);
                 this.setState({valueGenbaInspection: index+1, totalGenbaInspection: filteredData.length });
@@ -675,57 +669,41 @@ class SyncScreen extends React.Component {
     }
 
     postGenba(genbaModel) {
+        let urlDetail = this.getAPIURL("INSPECTION-GENBA-INSERT")
         const user = TaskServices.getAllData('TR_LOGIN')[0];
-        console.log("genbaModel final:" + JSON.stringify(genbaModel));
-        // fetch(URL.API_URL, {
-        //     method: URL.METHOD,
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         'Authorization': `Bearer ${user.ACCESS_TOKEN}`
-        //     },
-        //     body: JSON.stringify({})
-        // })
-        //     .then((response) => {
-        //         return response.json();
-        //     })
-        //     .then((data) => {
-        //         if (data.status) {
-        //             if (table == 'header') {
-        //                 this.updateInspeksi(dataPost);
-        //                 // this.updateInspeksiBaris(idInspection);
-        //             } else if (table == 'detailHeader') {
-        //                 this.updateInspeksiDetail(dataPost)
-        //                 this.updateSyncInpesctionBaris()
-        //             } else if (table == 'tracking') {
-        //                 this.updateInspeksiTrack(dataPost)
-        //             } else if (table == 'finding') {
-        //                 //let imgHasSent = this.checkImageHasSent(dataPost.FINDING_CODE)
-        //                 //if(imgHasSent){
-        //                 this.updateFinding(dataPost)
-        //                 //}
-        //             }else if (table == 'ebccH') {
-        //                 //let imgHasSent = this.checkImageHasSent(dataPost.EBCC_VALIDATION_CODE)
-        //                 //if(imgHasSent){
-        //                 this.updateEbccHeader(dataPost)
-        //                 //}
-        //             }else if (table == 'ebccD') {
-        //                 this.updateEbccDetail(dataPost, idInspection)
-        //             }
-        //         }
-        //     })
-        //     .catch((e)=> {
-        //         console.log("error upload",URL,dataPost, table, user.ACCESS_TOKEN,e);
-        //     })
+        fetch(urlDetail.API_URL, {
+            method: urlDetail.METHOD,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${user.ACCESS_TOKEN}`
+            },
+            body: JSON.stringify(genbaModel)
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                console.log("GENBA INSERT : "+JSON.stringify(data))
+                if (data.status) {
+                    this.updateGenbaInspectionTable(genbaModel.BLOCK_INSPECTION_CODE)
+                }
+                else {
+                    console.log("genbaUpload failed, check your parameter / api!");
+                }
+            })
+            .catch((e)=> {
+                console.log("genbaUpload failed E:"+e);
+            })
     }
 
-    updateGenbaInspectionTable = param => {
-        if (param !== undefined) {
-            TaskServices.updateByPrimaryKey('TR_H_EBCC_VALIDATION', {
-                "EBCC_VALIDATION_CODE":param.EBCC_VALIDATION_CODE,
+    updateGenbaInspectionTable = (genbaInspectionCode) => {
+        if (genbaInspectionCode !== undefined) {
+            TaskServices.updateByPrimaryKey('TR_GENBA_INSPECTION', {
+                "BLOCK_INSPECTION_CODE": genbaInspectionCode,
                 "STATUS_SYNC":"Y"
             });
         }
-    }
+    };
     // ====
 
     uploadData(URL, dataPost, table, idInspection) {
@@ -1751,9 +1729,6 @@ class SyncScreen extends React.Component {
                 //POST TRANSAKSI
                 this.kirimImage();
 
-                //MOBILE GENBA SYNC
-                this.uploadGenba();
-
                 //cara redux saga
                 setTimeout(() => {
                     this.props.findingRequest();
@@ -1769,6 +1744,9 @@ class SyncScreen extends React.Component {
                     icon: require('../Images/ic-no-internet.png')
                 });
             }
+
+            //genba upload
+            this.uploadGenba();
         });
         // function handleFirstConnectivityChange(isConnected) {
         //     NetInfo.isConnected.removeEventListener(

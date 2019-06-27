@@ -394,7 +394,6 @@ class KondisiBarisAkhir extends Component{
                     inputNo.push(val.AREAL)
                     return (val.AREAL <= rangeMax && val.AREAL >= rangeMin)
                 });
-                console.log("VALIDATION:"+JSON.stringify(inputNo), rangeMin, rangeMax)
                 return validation;
             }
         }
@@ -622,7 +621,7 @@ class KondisiBarisAkhir extends Component{
                 INSERT_USER: this.state.dataUsual.USER_AUTH,
                 TIME: this.state.menit,
                 DISTANCE: this.state.jarak
-            }       
+            }
             TaskService.saveData('TR_BLOCK_INSPECTION_H', modelInspeksiH);
     
             var image = {

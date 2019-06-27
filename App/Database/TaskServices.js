@@ -10,7 +10,7 @@ const TaskServices = {
 
   saveData: async function (table, obj) {
     try {
-      console.log('Save Data : ' + table + ' ' + JSON.stringify(obj));
+      // console.log('Save Data : ' + table + ' ' + JSON.stringify(obj));
       await RealmSchemas.write(() => {
         RealmSchemas.create(table, obj, true);
       })
@@ -22,7 +22,7 @@ const TaskServices = {
   insertSameObject: async function (table, obj) {
     try {
       // var saved = null;
-      console.log('Save Data : ' + table + ' ' + JSON.stringify(obj));
+      // console.log('Save Data : ' + table + ' ' + JSON.stringify(obj));
 
       await RealmSchemas.write(() => {
         RealmSchemas.create(table, obj);
