@@ -108,38 +108,38 @@ export default class HistoryInspection extends Component {
     );    
   }  
 
-  getBaris1(blockInsCode){
-    let arrCompBaris1 = ['CC0002', 'CC0003', 'CC0004', 'CC0005', 'CC0006'];
-    let arrKondisiBaris1 = [];
-    arrCompBaris1.map(item =>{
-      var data = Taskservice.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'BLOCK_INSPECTION_CODE'], [item, blockInsCode]);
-      if(data.length > 0){
-        let dataAkhir = data[data.length-1]
-        arrKondisiBaris1.push(dataAkhir);
-      }
-    });
-    return arrKondisiBaris1; 
-    
-  }
+  // getBaris1(blockInsCode){
+  //   let arrCompBaris1 = ['CC0002', 'CC0003', 'CC0004', 'CC0005', 'CC0006'];
+  //   let arrKondisiBaris1 = [];
+  //   arrCompBaris1.map(item =>{
+  //     var data = Taskservice.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'BLOCK_INSPECTION_CODE'], [item, blockInsCode]);
+  //     if(data.length > 0){
+  //       let dataAkhir = data[data.length-1]
+  //       arrKondisiBaris1.push(dataAkhir);
+  //     }
+  //   });
+  //   return arrKondisiBaris1;
+  //
+  // }
 
-  getBaris2(blockInsCode){
-    let arrCompBaris2 = ['CC0007', 'CC0008', 'CC0009', 'CC0010', 'CC0011', 'CC0012', 'CC0013', 'CC0014', 'CC0015', 'CC0016'];
-    let arrKondisiBaris2 = [];
-    arrCompBaris2.map(item =>{
-      var data = Taskservice.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'BLOCK_INSPECTION_CODE'], [item, blockInsCode]);
-      if(data.length > 0){
-        let dataAkhir = data[data.length-1]
-        arrKondisiBaris2.push(dataAkhir);
-      }
-    });
-    return arrKondisiBaris2; 
-    
-  }
+  // getBaris2(blockInsCode){
+  //   let arrCompBaris2 = ['CC0007', 'CC0008', 'CC0009', 'CC0010', 'CC0011', 'CC0012', 'CC0013', 'CC0014', 'CC0015', 'CC0016'];
+  //   let arrKondisiBaris2 = [];
+  //   arrCompBaris2.map(item =>{
+  //     var data = Taskservice.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'BLOCK_INSPECTION_CODE'], [item, blockInsCode]);
+  //     if(data.length > 0){
+  //       let dataAkhir = data[data.length-1]
+  //       arrKondisiBaris2.push(dataAkhir);
+  //     }
+  //   });
+  //   return arrKondisiBaris2;
+  //
+  // }
 
   getColor(param){
     switch(param){
       case 'A':
-        return '#999';//Colors.brand;
+        return Colors.brand;
       case 'B':
         return '#feb236';
       case 'C':
