@@ -129,7 +129,9 @@ const TM_EST = {
         EST_CODE: 'string',
         EST_NAME: 'string',
         WERKS: 'string',
-        CITY: 'string'
+        CITY: 'string',
+		LONGITUDE: { type: 'double', default: 0, optional: true },
+		LATITUDE:{ type: 'double', default: 0, optional: true }
     }
 }
 

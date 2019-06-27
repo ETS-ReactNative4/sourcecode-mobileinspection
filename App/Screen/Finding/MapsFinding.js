@@ -18,8 +18,8 @@ import TaskServices from '../../Database/TaskServices';
 import geolib from 'geolib';
 
 const ASPECT_RATIO = width / height;
-const LATITUDE = -2.1890660;
-const LONGITUDE = 111.3609873;
+let LATITUDE = -2.1890660;
+let LONGITUDE = 111.3609873;
 const LATITUDE_DELTA = 0.0922;
 let polyMap = false;// = require('../../Data/MegaKuningan.json');
 const { width, height } = Dimensions.get('window');
@@ -28,6 +28,7 @@ class MapsInspeksi extends React.Component {
   constructor(props) {
     super(props);
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
+	this.loadMap();
     this.state = {
         latitude: 0.0,
         longitude: 0.0,  
@@ -44,7 +45,6 @@ class MapsInspeksi extends React.Component {
         message: 'Sedang mencari lokasi kamu nih.',        
         icon: ''
     };
-	this.loadMap();
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -107,6 +107,11 @@ class MapsInspeksi extends React.Component {
 	loadMap(){
 		let user = TaskServices.getAllData('TR_LOGIN')[0];
 		if(user.CURR_WERKS){
+			let est = TaskServices.findBy('TM_EST','WERKS',user.CURR_WERKS);
+			if(est&&est.length>0&&est[0].LONGITUDE!=0&&est[0].LATITUDE!=0){
+				LATITUDE = est[0].LATITUDE;
+				LONGITUDE = est[0].LONGITUDE;
+			}
 			let polygons = TaskServices.findBy('TR_POLYGON','WERKS',user.CURR_WERKS);
 			polygons = this.convertGeoJson(polygons);
 			if(polygons&&polygons.length>0){
