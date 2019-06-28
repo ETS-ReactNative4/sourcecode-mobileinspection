@@ -44,6 +44,7 @@ class DetailBaris extends React.Component {
             baris,
             idInspection,
             path: '',
+            detailType: params.detailType
         };
     }
 
@@ -63,6 +64,7 @@ class DetailBaris extends React.Component {
     };   
 
     componentDidMount(){
+        alert(this.state.detailType)
         this.loadData()
     }
 
@@ -140,7 +142,14 @@ class DetailBaris extends React.Component {
                 break;
         }
     }
-    
+
+    loadGenbaUser(){
+        if(this.state.detailType === "genba"){
+            // let genbaUser = Taskservices.getAllData('TR_GENBA_INSPECTION')
+            // let genbaUser = Taskservices.findBy2('TR_GENBA_INSPECTION', 'BLOCK_INSPECTION_CODE', )
+        }
+    }
+
     render() {
         return (
             <ScrollView>
@@ -239,6 +248,14 @@ class DetailBaris extends React.Component {
                         </View>}                 
                     </View>
 
+                    {
+                        this.state.detailType === 'genba' &&
+                        <View style={styles.section}>
+                            <Text style={styles.textTitle}>Genba User</Text>
+                            <View style={styles.lineDivider} />
+                            {this.loadGenbaUser()}
+                        </View>
+                    }
                 </View >
             </ScrollView>
         )

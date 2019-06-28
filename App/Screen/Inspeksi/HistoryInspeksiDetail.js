@@ -35,6 +35,7 @@ class HistoryInspeksiDetail extends React.Component {
             hideKriteria: false,
             barisPembagi: 0,
             arrBaris: [],
+            arrGenbaBaris: [],
             totalWaktu: '',
             totalJarak: '',
             nilaiInspeksi: '',
@@ -100,12 +101,22 @@ class HistoryInspeksiDetail extends React.Component {
         let distance = 0
         for (var i = 0; i < barisPembagi; i++) {
             if (i == 0) {
-                this.state.arrBaris.push(this.renderBaris(dataBaris[i].AREAL, i));
+                if(dataBaris[i].inspectionType === "normal"){
+                    this.state.arrBaris.push(this.renderBaris(dataBaris[i].AREAL, i, dataBaris[i].inspectionType));
+                }
+                else if(dataBaris[i].inspectionType === "genba"){
+                    this.state.arrGenbaBaris.push(this.renderBaris(dataBaris[i].AREAL, i, dataBaris[i].inspectionType));
+                }
                 time = parseInt(dataBaris[i].TIME);
                 distance = parseInt(dataBaris[i].DISTANCE);
 
             } else if (i > 0) {
-                this.state.arrBaris.push(this.renderBaris(dataBaris[i].AREAL, i));
+                if(dataBaris[i].inspectionType === "normal"){
+                    this.state.arrBaris.push(this.renderBaris(dataBaris[i].AREAL, i, dataBaris[i].inspectionType));
+                }
+                else if(dataBaris[i].inspectionType === "genba"){
+                    this.state.arrGenbaBaris.push(this.renderBaris(dataBaris[i].AREAL, i, dataBaris[i].inspectionType));
+                }
                 time = time + parseInt(dataBaris[i].TIME);
                 distance = distance + parseInt(dataBaris[i].DISTANCE);
             }
@@ -438,10 +449,10 @@ class HistoryInspeksiDetail extends React.Component {
         )
     }
 
-    renderBaris = (data, index) => {
+    renderBaris = (data, index, type) => {
         return (
             <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('DetailBaris', { baris: data, idInspection: this.state.data.ID_INSPECTION })}
+                onPress={() => this.props.navigation.navigate('DetailBaris', { baris: data, idInspection: this.state.data.ID_INSPECTION, detailType: type })}
                 key={index}>
                 <View style={styles.sectionRow}>
                     <Text style={styles.textLabel}>Baris Ke - {data}</Text>
@@ -609,6 +620,14 @@ class HistoryInspeksiDetail extends React.Component {
                         </View>
                         <View style={styles.lineDivider} />
                         <View>{this.state.arrBaris}</View>
+                    </View>
+
+                    <View style={[styles.section]}>
+                        <View style={styles.sectionRow}>
+                            <Text style={styles.textTitle}>Genba Baris</Text>
+                        </View>
+                        <View style={styles.lineDivider} />
+                        <View>{this.state.arrGenbaBaris}</View>
                     </View>
 
                     {/* detail temuan */}

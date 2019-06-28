@@ -620,7 +620,10 @@ class KondisiBarisAkhir extends Component{
                 INSERT_TIME: insertTime, 
                 INSERT_USER: this.state.dataUsual.USER_AUTH,
                 TIME: this.state.menit,
-                DISTANCE: this.state.jarak
+                DISTANCE: this.state.jarak,
+
+                //localParam:
+                inspectionType: this.state.inspectionType
             }
             TaskService.saveData('TR_BLOCK_INSPECTION_H', modelInspeksiH);
     
