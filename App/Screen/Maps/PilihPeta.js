@@ -207,6 +207,7 @@ export default class PilihPeta extends Component {
 			.catch((e)=>{
 				console.log("error",e);
 				this.setState({
+					showLoading:false,
 					showAlert: true,
 					title: 'Error',
 					message: e,

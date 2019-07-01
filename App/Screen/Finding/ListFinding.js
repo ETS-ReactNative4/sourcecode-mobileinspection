@@ -143,8 +143,10 @@ export default class ListFinding extends Component {
   getImageBaseOnFindingCode(findingCode) {
     const user = TaskServices.getAllData('TR_LOGIN')[0];
     const url = "http://149.129.245.230:3012/images/" + findingCode;
-    fetch(url, {
-      method: 'GET',
+	let serv = TaskServices.getAllData("TM_SERVICE")
+				.filtered('API_NAME="IMAGES-GET-BY-ID" AND MOBILE_VERSION="'+ServerName.verAPK+'"')[0];
+    fetch(serv.API_URL+""+findingCode, {
+      method: serv.METHOD,
       headers: {
         'Cache-Control': 'no-cache',
         Accept: 'application/json',

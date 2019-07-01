@@ -1532,6 +1532,7 @@ class SyncScreen extends React.Component {
 	}
   
       _crudTM_Kualitas(data) {
+        let allData = TaskServices.getAllData('TM_KUALITAS');
         if (data.simpan.length > 0) {
             for (var i = 1; i <= data.simpan.length; i++) {
                 this.setState({ progressKualitas: i / data.simpan.length, totalKualitas: data.simpan.length });

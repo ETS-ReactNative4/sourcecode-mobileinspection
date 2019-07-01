@@ -48,7 +48,9 @@ export default class MoreScreen extends Component {
 
   constructor(props) {
     super(props);
-	  let user = TaskServices.getAllData('TR_LOGIN')[0];
+	let user = TaskServices.getAllData('TR_LOGIN')[0];
+	let serv = TaskServices.getAllData("TM_SERVICE").filtered('API_NAME="IMAGES-UPLOAD" AND MOBILE_VERSION="'+ServerName.verAPK+'"');
+	let imageServerUrl = (serv.length>0?serv[0].API_URL:"");
     this.state = {
       showConfirm: false,
       showModal: false,
@@ -59,6 +61,7 @@ export default class MoreScreen extends Component {
       title: 'Title',
       message: 'Message',
 	    user,
+		imageServer:imageServerUrl
     }
   }
 
@@ -271,7 +274,7 @@ export default class MoreScreen extends Component {
           </View>
           <View style={{flex: 1, flexDirection: 'column', justifyContent:'center', alignItems: 'center', padding: 10}}>
             <Text style={{fontSize: 10}}>Server Data: {ServerName[this.state.user.SERVER_NAME_INDEX].data}</Text>
-            <Text style={{fontSize: 10}} >Server Image: {ServerName[this.state.user.SERVER_NAME_INDEX].image}</Text>
+            <Text style={{fontSize: 10}} >Server Image: {this.state.imageServer}</Text>
           </View>
           {/* <TouchableOpacity style={styles.marginCard} onPress={() => { this.setState({ showConfirm: true }) }}>
             <CardView cardElevation={2} cardMaxElevation={2} cornerRadius={10}>
