@@ -102,20 +102,20 @@ class HistoryInspeksiDetail extends React.Component {
         for (var i = 0; i < barisPembagi; i++) {
             if (i == 0) {
                 if(dataBaris[i].inspectionType === "normal"){
-                    this.state.arrBaris.push(this.renderBaris(dataBaris[i].AREAL, i, dataBaris[i].inspectionType));
+                    this.state.arrBaris.push(this.renderBaris(dataBaris[i].AREAL, i, dataBaris[i].inspectionType, null));
                 }
                 else if(dataBaris[i].inspectionType === "genba"){
-                    this.state.arrGenbaBaris.push(this.renderBaris(dataBaris[i].AREAL, i, dataBaris[i].inspectionType));
+                    this.state.arrGenbaBaris.push(this.renderBaris(dataBaris[i].AREAL, i, dataBaris[i].inspectionType, dataBaris[i].BLOCK_INSPECTION_CODE));
                 }
                 time = parseInt(dataBaris[i].TIME);
                 distance = parseInt(dataBaris[i].DISTANCE);
 
             } else if (i > 0) {
                 if(dataBaris[i].inspectionType === "normal"){
-                    this.state.arrBaris.push(this.renderBaris(dataBaris[i].AREAL, i, dataBaris[i].inspectionType));
+                    this.state.arrBaris.push(this.renderBaris(dataBaris[i].AREAL, i, dataBaris[i].inspectionType, null));
                 }
                 else if(dataBaris[i].inspectionType === "genba"){
-                    this.state.arrGenbaBaris.push(this.renderBaris(dataBaris[i].AREAL, i, dataBaris[i].inspectionType));
+                    this.state.arrGenbaBaris.push(this.renderBaris(dataBaris[i].AREAL, i, dataBaris[i].inspectionType, dataBaris[i].BLOCK_INSPECTION_CODE));
                 }
                 time = time + parseInt(dataBaris[i].TIME);
                 distance = distance + parseInt(dataBaris[i].DISTANCE);
@@ -449,10 +449,10 @@ class HistoryInspeksiDetail extends React.Component {
         )
     }
 
-    renderBaris = (data, index, type) => {
+    renderBaris = (data, index, type, BLOCK_INSPECTION_CODE) => {
         return (
             <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('DetailBaris', { baris: data, idInspection: this.state.data.ID_INSPECTION, detailType: type })}
+                onPress={() => this.props.navigation.navigate('DetailBaris', { baris: data, idInspection: this.state.data.ID_INSPECTION, detailType: type,  BLOCK_INSPECTION_CODE: BLOCK_INSPECTION_CODE})}
                 key={index}>
                 <View style={styles.sectionRow}>
                     <Text style={styles.textLabel}>Baris Ke - {data}</Text>

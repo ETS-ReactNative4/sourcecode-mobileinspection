@@ -21,6 +21,7 @@ class DetailBaris extends React.Component {
         let params = props.navigation.state.params;
         let baris = R.clone(params.baris);
         let idInspection = R.clone(params.idInspection);
+        let BLOCK_INSPECTION_CODE = R.clone(params.BLOCK_INSPECTION_CODE);
 
         this.state = {
             nilaiJmlPokok: '',
@@ -44,6 +45,10 @@ class DetailBaris extends React.Component {
             baris,
             idInspection,
             path: '',
+
+            //genba
+            userGenba: [],
+            BLOCK_INSPECTION_CODE: BLOCK_INSPECTION_CODE,
             detailType: params.detailType
         };
     }
@@ -63,9 +68,9 @@ class DetailBaris extends React.Component {
         headerTintColor: '#fff',
     };   
 
-    componentDidMount(){
-        alert(this.state.detailType)
-        this.loadData()
+    componentWillMount(){
+        this.loadData();
+        this.loadGenbaUser();
     }
 
     loadData(){        
@@ -144,10 +149,32 @@ class DetailBaris extends React.Component {
     }
 
     loadGenbaUser(){
-        if(this.state.detailType === "genba"){
-            // let genbaUser = Taskservices.getAllData('TR_GENBA_INSPECTION')
-            // let genbaUser = Taskservices.findBy2('TR_GENBA_INSPECTION', 'BLOCK_INSPECTION_CODE', )
+        if(this.state.detailType === "genba" && this.state.BLOCK_INSPECTION_CODE !== null){
+            let getData = Taskservices.findBy2('TR_GENBA_INSPECTION', 'BLOCK_INSPECTION_CODE', this.state.BLOCK_INSPECTION_CODE);
+            let genbaUser = Object.values(getData.GENBA_USER);
+            let tempData = [];
+            genbaUser.map((data)=>{
+                tempData.push(data)
+            });
+            if(tempData.length > 0){
+                this.setState({
+                    genbaUser: tempData
+                })
+            }
         }
+    }
+
+    renderGenbaUser(){
+            return(
+                this.state.genbaUser.map((data)=>{
+                    return(
+                        <View style={{flex:1, flexDirectmion:'column', justifyContent:'center', paddingVertical: 5}}>
+                            <Text style={{fontSize:14,fontWeight:'600'}}>{data.FULLNAME}</Text>
+                            <Text style={{fontSize:11, color:'#bdbdbd', marginTop:4}}>{data.JOB}</Text>
+                        </View>
+                    )
+                })
+            )
     }
 
     render() {
@@ -253,7 +280,7 @@ class DetailBaris extends React.Component {
                         <View style={styles.section}>
                             <Text style={styles.textTitle}>Genba User</Text>
                             <View style={styles.lineDivider} />
-                            {this.loadGenbaUser()}
+                            {this.renderGenbaUser()}
                         </View>
                     }
                 </View >
