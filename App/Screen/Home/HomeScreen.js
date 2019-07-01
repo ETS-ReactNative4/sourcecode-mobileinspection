@@ -610,33 +610,37 @@ class HomeScreen extends React.Component {
     // const url = "http://149.129.245.230:3012/images/" + findingCode; //prod
     const url = `${ServerName[user.SERVER_NAME_INDEX].image}images/${findingCode}`;
     // const url = "http://149.129.250.199:3012/images/" + findingCode;
-    fetch(url, {
-      method: 'GET',
-      headers: {
-        'Cache-Control': 'no-cache',
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${user.ACCESS_TOKEN}`,
-      }
-    })
-        .then((response) => response.json())
-        .then((responseJson) => {
-          if (responseJson.status) {
-            if (responseJson.data.length > 0) {
-              for (var i = 0; i < responseJson.data.length; i++) {
-                let dataImage = responseJson.data[i];
-                TaskServices.saveData('TR_IMAGE', dataImage);
-                this._downloadImageFinding(dataImage)
-              }
-            } else {
-              alert(`Image ${findingCode} kosong`);
-            }
-          } else { alert(`gagal download image untuk ${findingCode}`) }
-        }).catch((error) => {
-      console.error(error);
-      // alert(error);
-    });
-
+	let serv = TaskServices.getAllData("TM_SERVICE")
+				.filtered('API_NAME="IMAGES-GET-BY-ID" AND MOBILE_VERSION="'+ServerName.verAPK+'"');
+	if(serv.length>0){
+		serv = serv[0];
+		fetch(serv.API_URL+""+findingCode, {
+		  method: serv.METHOD,
+		  headers: {
+			'Cache-Control': 'no-cache',
+			'Accept': 'application/json',
+			'Content-Type': 'application/json',
+			'Authorization': `Bearer ${user.ACCESS_TOKEN}`,
+		  }
+		})
+			.then((response) => response.json())
+			.then((responseJson) => {
+			  if (responseJson.status) {
+				if (responseJson.data.length > 0) {
+				  for (var i = 0; i < responseJson.data.length; i++) {
+					let dataImage = responseJson.data[i];
+					TaskServices.saveData('TR_IMAGE', dataImage);
+					this._downloadImageFinding(dataImage)
+				  }
+				} else {
+				  alert(`Image ${findingCode} kosong`);
+				}
+			  } else { alert(`gagal download image untuk ${findingCode}`) }
+			}).catch((error) => {
+		  console.error(error);
+		  // alert(error);
+		});
+	}
   }
 
   async _downloadImageFinding(data) {
