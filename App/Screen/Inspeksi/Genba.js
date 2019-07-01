@@ -305,8 +305,8 @@ export default class Genba extends Component {
                                                     </View>
                         
                                                     <View style={{flex:1, flexDirectmion:'column', justifyContent:'center'}}>
-                                                        <Text style={{fontSize:17,fontWeight:'600'}}>{item.FULLNAME}</Text>
-                                                        <Text style={{fontSize:13, color:'#bdbdbd', marginTop:4}}>{item.JOB}</Text>
+                                                        <Text style={{fontSize:14,fontWeight:'600'}}>{item.FULLNAME}</Text>
+                                                        <Text style={{fontSize:11, color:'#bdbdbd', marginTop:4}}>{item.JOB}</Text>
                                                     </View>
 
                                                 </View>
