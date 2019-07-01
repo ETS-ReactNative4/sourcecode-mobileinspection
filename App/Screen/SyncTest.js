@@ -2156,7 +2156,7 @@ class SyncScreen extends React.Component {
 
                     <View style={{ flex: 1, marginTop: 12 }}>
                         <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.labelProgress}>EBCC VALIDATION HEADER</Text>
+                            <Text style={styles.labelProgress}>SAMPLING EBCC HEADER</Text>
                             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
                                 <Text style={styles.labelProgress}>{this.state.valueEbcc}</Text>
                                 <Text style={styles.labelProgress}>/</Text>
@@ -2176,7 +2176,7 @@ class SyncScreen extends React.Component {
 
                     <View style={{ flex: 1, marginTop: 12 }}>
                         <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.labelProgress}>EBCC VALIDATION DETAIL</Text>
+                            <Text style={styles.labelProgress}>SAMPLING EBCC DETAIL</Text>
                             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
                                 <Text style={styles.labelProgress}>{this.state.valueEbccDetail}</Text>
                                 <Text style={styles.labelProgress}>/</Text>
