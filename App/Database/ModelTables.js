@@ -43,7 +43,10 @@ const TR_BLOCK_INSPECTION_H = {
         INSERT_USER: 'string',
         INSERT_TIME: 'string',
         TIME: 'string',
-        DISTANCE: 'string'
+        DISTANCE: 'string',
+
+        //localParam
+        inspectionType: 'string'
     }
 }
 
@@ -59,7 +62,7 @@ const TR_BLOCK_INSPECTION_D = {
         AREAL: 'string',
         STATUS_SYNC: 'string',
         INSERT_USER: 'string',
-        INSERT_TIME: 'string'
+        INSERT_TIME: 'string',
     }
 }
 

@@ -15,8 +15,8 @@ export default class FindingScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={{ height: 48, backgroundColor: 'grey' }} />
-        <Image style={{ width: 400, height: 300 }} source={require('../../Images/img-cooming-soon-1.png')} />
+        {/*<View style={{ height: 48, backgroundColor: 'grey' }} />*/}
+        <Image style={{ width:300, height: 220 }} source={require('../../Images/img-no-data.png')} />
 
         <ActionButton style={{ marginEnd: -10, marginBottom: -10 }}
           buttonColor={Colors.tintColor}
