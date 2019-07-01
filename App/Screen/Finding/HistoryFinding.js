@@ -79,9 +79,11 @@ export default class HistoryFinding extends Component {
 
   getImageBaseOnFindingCode(findingCode) {
     const user = TaskServices.getAllData('TR_LOGIN')[0];
+	let serv = TaskServices.getAllData("TM_SERVICE")
+				.filtered('API_NAME="IMAGES-GET-BY-ID" AND MOBILE_VERSION="'+ServerName.verAPK+'"')[0];
     const url = ServerName[user.SERVER_NAME_INDEX].image+"images/" + findingCode;
-    fetch(url, {
-      method: 'GET',
+    fetch(serv.API_URL+""+findingCode, {
+      method: serv.METHOD,
       headers: {
         'Cache-Control': 'no-cache',
         Accept: 'application/json',
