@@ -1355,26 +1355,8 @@ class SyncScreen extends React.Component {
                 this.setState({ progressFinding: i / data.simpan.length, totalFindingDownload: data.simpan.length });
             }
             data.simpan.map(item => {
-				/*let newItem={ STATUS_SYNC: 'Y',
-      FINDING_CODE: item.FINDING_CODE,
-      WERKS: item.WERKS,
-      AFD_CODE: item.AFD_CODE,
-      BLOCK_CODE: item.BLOCK_CODE,
-      FINDING_CATEGORY: item.FINDING_CATEGORY,
-      FINDING_DESC: item.FINDING_DESC,
-      FINDING_PRIORITY: item.FINDING_PRIORITY,
-      DUE_DATE: item.DUE_DATE,
-      STATUS: item.STATUS,
-      ASSIGN_TO: item.ASSIGN_TO,
-      PROGRESS: item.PROGRESS,
-      LAT_FINDING: item.LAT_FINDING,
-      LONG_FINDING: item.LONG_FINDING,
-      REFFERENCE_INS_CODE: item.REFFERENCE_INS_CODE,
-      INSERT_USER: item.INSERT_USER,
-      INSERT_TIME: item.INSERT_TIME,
-      UPDATE_USER: item.UPDATE_USER,
-      UPDATE_TIME: item.UPDATE_TIME };*/
 				let newItem=Object.assign({},item,{STATUS_SYNC:'Y'});
+				this._updateTR_Notif(newItem);
                 TaskServices.saveData('TR_FINDING', newItem);
                 let countDataInsert = TaskServices.getTotalData('TR_FINDING');
                 this.setState({ valueFindingDownload: countDataInsert });
