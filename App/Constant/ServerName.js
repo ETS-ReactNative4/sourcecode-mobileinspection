@@ -1,5 +1,5 @@
 let verAPI = "v1.0";
-let verAPK = "2.9";
+let verAPK = "2.0";
 export default {
 	verAPK,
 	verAPI,
