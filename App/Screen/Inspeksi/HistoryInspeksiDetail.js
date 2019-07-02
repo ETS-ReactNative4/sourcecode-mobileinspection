@@ -85,7 +85,7 @@ class HistoryInspeksiDetail extends React.Component {
     loadData() {
 
         let data = Taskservices.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', this.state.data.ID_INSPECTION)
-        if(data != undefined){
+        if(data !== undefined){
             let trCodes = data.TR_FINDING_CODES
             if(trCodes !== ''){
                 let arr = trCodes.split(',');
@@ -100,7 +100,7 @@ class HistoryInspeksiDetail extends React.Component {
         let time = 0;
         let distance = 0
         for (var i = 0; i < barisPembagi; i++) {
-            if (i == 0) {
+            if (i === 0) {
                 if(dataBaris[i].inspectionType === "normal"){
                     this.state.arrBaris.push(this.renderBaris(dataBaris[i].AREAL, i, dataBaris[i].inspectionType, null));
                 }

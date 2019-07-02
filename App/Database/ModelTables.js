@@ -66,6 +66,7 @@ const TR_BLOCK_INSPECTION_D = {
     }
 }
 
+//local table
 const TR_BARIS_INSPECTION = {
     name: 'TR_BARIS_INSPECTION',
     primaryKey: 'ID_INSPECTION',

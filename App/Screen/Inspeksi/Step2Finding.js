@@ -242,26 +242,26 @@ class Step2Finding extends Component {
         navigation.dispatch(resetAction);
     }
 
-    exitAlert = () => {
-        Alert.alert(
-            'Peringatan',
-            'Transaksi kamu tidak akan tersimpan, kamu yakin akan melanjutkan?',
-            [
-                { text: 'NO', style: 'cancel' },
-                { text: 'YES', onPress: () => this.props.navigation.goBack(null) }
-            ]
-        );
-    };
+    // exitAlert = () => {
+    //     Alert.alert(
+    //         'Peringatan',
+    //         'Transaksi kamu tidak akan tersimpan, kamu yakin akan melanjutkan?',
+    //         [
+    //             { text: 'NO', style: 'cancel' },
+    //             { text: 'YES', onPress: () => this.props.navigation.goBack(null) }
+    //         ]
+    //     );
+    // };
 
-    handleAndroidBackButton = callback => {
-        BackHandler.addEventListener('hardwareBackPress', () => {
-            callback();
-            return true;
-        });
-    };
+    // handleAndroidBackButton = callback => {
+    //     BackHandler.addEventListener('hardwareBackPress', () => {
+    //         callback();
+    //         return true;
+    //     });
+    // };
 
     validation = () => {
-        let isSameUser = this.state.assignto == this.state.user.USER_AUTH_CODE ? true : false;
+        let isSameUser = this.state.assignto === this.state.user.USER_AUTH_CODE ? true : false;
         let title = 'Inputan Tidak Lengkap';
         if (isEmpty(this.state.keterangan)) {
             this.setState({
