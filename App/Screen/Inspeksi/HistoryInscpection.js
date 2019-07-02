@@ -20,20 +20,20 @@ export default class HistoryInspection extends Component {
     }
   }
 
-  willFocus = this.props.navigation.addListener(
-    'willFocus',
-    () => {
-      this.renderAll();
-    }
-  )
+  // willFocus = this.props.navigation.addListener(
+  //   'willFocus',
+  //   () => {
+  //     this.renderAll();
+  //   }
+  // )
 
-  componentWillUnmount() {
-    this.willFocus.remove()
-  }
+  // componentWillUnmount() {
+  //   this.willFocus.remove()
+  // }
 
-  componentWillMount() {
-    this.renderAll();
-  }
+  // componentWillMount() {
+  //   this.renderAll();
+  // }
 
   componentDidMount(){   
     this.renderAll();
@@ -42,7 +42,27 @@ export default class HistoryInspection extends Component {
   renderAll =()=>{    
     var dataSorted = TaskServices.getAllData('TR_BARIS_INSPECTION');
     let data = dataSorted.sorted('INSPECTION_DATE', true);
-    this.setState({ data })
+    let tempArray = []
+    if(data.length > 0){
+      data.map((data, index)=>{
+        // console.log("DATE:"+moment(data.INSPECTION_DATE, "YYYY-MM-DD HH:mm:ss").format("YYYY-MM-DD"))
+        //inspectionDateValue = [YYYY,MM,DD]
+        if(data.INSPECTION_RESULT !== "" && data.INSPECTION_RESULT.length !== 0){
+          tempArray.push(data);
+        }
+        else {
+          let currentTime = moment().format('YYYY-MM-DD');
+          let inspectionDate = moment(data.INSPECTION_DATE, "YYYY-MM-DD HH:mm:ss").format("YYYY-MM-DD");
+          if(moment(currentTime).isSameOrBefore(inspectionDate, 'day')){
+            tempArray.push(data)
+          }
+          else {
+            TaskServices.deleteRecordByPK('TR_BARIS_INSPECTION', 'ID_INSPECTION', data.ID_INSPECTION);
+          }
+        }
+      });
+    }
+    this.setState({ data: tempArray })
   }
 
   getEstateName(werks){
@@ -65,7 +85,11 @@ export default class HistoryInspection extends Component {
 
   renderList = (data, index) => {
     let status = '', colorStatus = '';
-    if (data.STATUS_SYNC == 'N'){
+    if (data.INSPECTION_RESULT === ""){
+      status = 'Inspeksi Belum Selesai'
+      colorStatus = '#C8C8C8';
+    }
+    else if (data.STATUS_SYNC == 'N'){
       status = 'Data Belum Dikirim'
       colorStatus = 'red';
     }else{
@@ -99,7 +123,7 @@ export default class HistoryInspection extends Component {
                 <Text style={{ fontSize: 12, marginTop: 20, color: colorStatus, fontStyle:'italic' }}>{status}</Text>
               </View>
               <View style={{flexDirection:'row', height:100}}>
-                <Text style={[styles.textValue,{marginTop: 20}]}>{data.INSPECTION_RESULT == 'string' ? '': data.INSPECTION_RESULT}</Text>
+                <Text style={[styles.textValue,{marginTop: 20}]}>{data.INSPECTION_RESULT}</Text>
                 <View style={{ alignItems: 'stretch', width: 8, backgroundColor: color, borderRadius:10 }} />
               </View>
             </View>
@@ -146,8 +170,6 @@ export default class HistoryInspection extends Component {
         return '#ff7b25';
       case 'F':
         return 'red';
-      case 'string':
-        return '#C8C8C8'
       default:
         return '#C8C8C8';
     }
