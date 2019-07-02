@@ -249,6 +249,45 @@ class SyncScreen extends React.Component {
             }
         }
     }    
+    /* obsolete data ebcc by akbar */
+    deleteGenbaSelected(){
+        var data = TaskServices.getAllData('TR_GENBA_SELECTED');
+        var now = moment(new Date());
+        if (data != undefined) {
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].INSERT_TIME !== '') {
+                    let insertTime = data[i].INSERT_TIME;
+                    if (insertTime.includes(' ')) {
+                        insertTime = insertTime.substring(0, insertTime.indexOf(' '))
+                    }
+                    var diff = moment(new Date(insertTime)).diff(now, 'day');
+                    if (diff < -7) {
+                        this.deleteImages(data[i].USER_AUTH_CODE)
+                        TaskServices.deleteRecordByPK('TR_GENBA_SELECTED', 'USER_AUTH_CODE', data[i].USER_AUTH_CODE)
+                    }
+                }
+            }
+        }
+    }
+    deleteGenbaInspection(){
+        var data = TaskServices.getAllData('TR_GENBA_INSPECTION');
+        var now = moment(new Date());
+        if (data != undefined) {
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].INSERT_TIME !== '') {
+                    let insertTime = data[i].INSERT_TIME;
+                    if (insertTime.includes(' ')) {
+                        insertTime = insertTime.substring(0, insertTime.indexOf(' '))
+                    }
+                    var diff = moment(new Date(insertTime)).diff(now, 'day');
+                    if (diff < -7) {
+                        this.deleteImages(data[i].BLOCK_INSPECTION_CODE)
+                        TaskServices.deleteRecordByPK('TR_GENBA_INSPECTION', 'BLOCK_INSPECTION_CODE', data[i].BLOCK_INSPECTION_CODE)
+                    }
+                }
+            }
+        }
+    }    
 
     deleteImages(trCode){
         let dataImage = TaskServices.findBy('TR_IMAGE', 'TR_CODE', trCode);
@@ -1629,8 +1668,10 @@ class SyncScreen extends React.Component {
 
     _onSync() {
         this._deleteFinding();
-        this.deleteEbccHeader()
-        this.deleteEbccDetail()
+        this.deleteEbccHeader();
+        this.deleteEbccDetail();
+		this.deleteGenbaSelected();
+		this.deleteGenbaInspection();
         // Gani            
         this.resetSagas();
         NetInfo.isConnected.fetch().then(isConnected => {
