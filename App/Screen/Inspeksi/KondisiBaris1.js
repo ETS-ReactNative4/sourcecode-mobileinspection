@@ -492,15 +492,16 @@ class KondisiBaris1 extends Component {
                                 value={this.state.inspeksiHeader.AREAL}
                                 onChangeText={(value) => {
                                     let text = value.replace(/[^0-9 ]/g, '');
-                                    let oldHeader = R.clone(this.state.inspeksiHeader);
-                                    let oldDataUsual = R.clone(this.state.dataUsual);
-                                    oldHeader.AREAL = text;
-                                    oldDataUsual.BARIS = text;
-                                    this.setState({
-                                        inspeksiHeader: oldHeader,
-                                        dataUsual:oldDataUsual
-                                    });
-
+                                    if(text !== "0"){
+                                        let oldHeader = R.clone(this.state.inspeksiHeader);
+                                        let oldDataUsual = R.clone(this.state.dataUsual);
+                                        oldHeader.AREAL = text;
+                                        oldDataUsual.BARIS = text;
+                                        this.setState({
+                                            inspeksiHeader: oldHeader,
+                                            dataUsual:oldDataUsual
+                                        });
+                                    }
                                 } } />
                         </View>
                     </View>
