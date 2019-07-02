@@ -1209,7 +1209,7 @@ const styles = {
     },
     buttonText2: {
         fontSize: 13,
-        color: '#000',
+        color: '#ffffff',
         textAlign: 'center'
     },
     buttonSlide: {

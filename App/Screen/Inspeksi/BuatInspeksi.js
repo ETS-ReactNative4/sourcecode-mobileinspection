@@ -110,15 +110,15 @@ class BuatInspeksiRedesign extends Component {
 	// 	})
 	// }
 
-    findPerson(query){
-        if (query === '') {
-            return [];
-        }
-        const { person } = this.state;
-        const regex = new RegExp(`${query.trim()}`, 'i');
-        return person.filter(person => person.allShow.search(regex) >= 0);
-        
-    }
+    // findPerson(query){
+    //     if (query === '') {
+    //         return [];
+    //     }
+    //     const { person } = this.state;
+    //     const regex = new RegExp(`${query.trim()}`, 'i');
+    //     return person.filter(person => person.allShow.search(regex) >= 0);
+    //
+    // }
 
     componentWillMount () {
         this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', ()=>{this.setState({showBtn:false})});
@@ -204,35 +204,35 @@ class BuatInspeksiRedesign extends Component {
         }
     }
 
-    hideAndShowBaris(param){
-        if(param.length > 0){
-            this.setState({showBaris: false, clickLOV: false});
-        }else{
-            this.setState({showBaris: true, clickLOV: false});
-        }        
-    }
-
-    getLocation2(blokInsCode) {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                var lat = parseFloat(position.coords.latitude);
-                var lon = parseFloat(position.coords.longitude);
-                this.insertTrackLokasi(blokInsCode, lat, lon)               
-            },
-            (error) => {
-                // this.setState({ error: error.message, fetchingLocation: false })
-                let message = error && error.message ? error.message : 'Terjadi kesalahan ketika mencari lokasi anda !';
-                if (error && error.message == "No location provider available.") {
-                    message = "Mohon nyalakan GPS anda terlebih dahulu.";
-                }   
-                if(this.state.latitude !== null && this.state.longitude !== null){
-                    this.insertTrackLokasi(blokInsCode, this.state.latitude, this.state.longitude)
-                }           
-                // console.log(message);
-            }, // go here if error while fetch location
-            { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
-        );
-    }
+    // hideAndShowBaris(param){
+    //     if(param.length > 0){
+    //         this.setState({showBaris: false, clickLOV: false});
+    //     }else{
+    //         this.setState({showBaris: true, clickLOV: false});
+    //     }
+    // }
+    //
+    // getLocation2(blokInsCode) {
+    //     navigator.geolocation.getCurrentPosition(
+    //         (position) => {
+    //             var lat = parseFloat(position.coords.latitude);
+    //             var lon = parseFloat(position.coords.longitude);
+    //             this.insertTrackLokasi(blokInsCode, lat, lon)
+    //         },
+    //         (error) => {
+    //             // this.setState({ error: error.message, fetchingLocation: false })
+    //             let message = error && error.message ? error.message : 'Terjadi kesalahan ketika mencari lokasi anda !';
+    //             if (error && error.message == "No location provider available.") {
+    //                 message = "Mohon nyalakan GPS anda terlebih dahulu.";
+    //             }
+    //             if(this.state.latitude !== null && this.state.longitude !== null){
+    //                 this.insertTrackLokasi(blokInsCode, this.state.latitude, this.state.longitude)
+    //             }
+    //             // console.log(message);
+    //         }, // go here if error while fetch location
+    //         { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
+    //     );
+    // }
 
     insertTrackLokasi(blokInsCode, lat, lon){
         try {
@@ -344,15 +344,15 @@ class BuatInspeksiRedesign extends Component {
         return false
     }
 
-    getAfdeling(werk_afd_code){
-        try {
-            let data = TaskService.findBy2('TM_AFD', 'WERKS_AFD_CODE', werk_afd_code);
-            return data.AFD_NAME.substring(data.AFD_NAME.indexOf(' ')+1);
-        } catch (error) {
-            return '';
-        }
-        
-    }
+    // getAfdeling(werk_afd_code){
+    //     try {
+    //         let data = TaskService.findBy2('TM_AFD', 'WERKS_AFD_CODE', werk_afd_code);
+    //         return data.AFD_NAME.substring(data.AFD_NAME.indexOf(' ')+1);
+    //     } catch (error) {
+    //         return '';
+    //     }
+    //
+    // }
 
     getStatusBlok(werk_afd_blok_code){
         try {
