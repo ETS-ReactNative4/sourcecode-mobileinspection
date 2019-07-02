@@ -771,6 +771,10 @@ class KondisiBarisAkhir extends Component{
                 duration = parseFloat(time.DESC);
             }
             let id = 0;//setInterval(()=> this.getLocation2(blokInspectionCode), duration);
+            console.log("params:"+JSON.stringify(params))
+            console.log("modelInspeksi:"+JSON.stringify(modelInspeksi))
+            console.log("model:"+JSON.stringify(model))
+            console.log("id:"+JSON.stringify(id))
             this.navigateScreen('TakeFotoBaris', params, modelInspeksi, model, id);
         }        
         
@@ -978,7 +982,9 @@ class KondisiBarisAkhir extends Component{
                                                     value={this.state.txtBaris}                                    
                                                     onChangeText={(baris) => {
                                                         baris = baris.replace(/[^0-9]/g, '');
-                                                        this.setState({ txtBaris: baris })
+                                                        if(baris !== "0"){
+                                                            this.setState({ txtBaris: baris })
+                                                        }
                                                     }}/>
                                             </View>
                                         }
