@@ -89,7 +89,8 @@ export default class PilihPeta extends Component {
 							});
 						}
 						let exists = TaskServices.findBy2('TR_POLYGON', 'WERKS', arr[x].WERKS);
-						est.push({WERKS: arr[x].WERKS, EST_NAME: arr[x].EST_NAME, HAS_MAP:(exists !== undefined)});
+						est.push({REGION_CODE: arr[x].REGION_CODE,WERKS: arr[x].WERKS, 
+									EST_NAME: arr[x].EST_NAME, HAS_MAP:(exists !== undefined)});
 					}
 				}
 			})      
@@ -130,7 +131,8 @@ export default class PilihPeta extends Component {
 				message: 'Sedang download map '+data.EST_NAME,
 				icon: require('../../Images/ic-progress.png')
 			})
-			let downloadServ = TaskServices.getAllData("TM_SERVICE").filtered('API_NAME="HECTARESTATEMENT-GEOJSON" AND MOBILE_VERSION="'+ServerName.verAPK+'"');
+			let downloadServ = TaskServices.getAllData("TM_SERVICE")
+								.filtered('API_NAME="HECTARESTATEMENT-GEOJSON" AND MOBILE_VERSION="'+ServerName.verAPK+'"');
 			if(downloadServ&&downloadServ.length>0){
 				downloadServ = downloadServ[0];
 			}
@@ -157,7 +159,6 @@ export default class PilihPeta extends Component {
 				return response.json();
 			})
 			.then((data) => {
-				console.log("download map",data);
 				if(data.status){
 					let result = data.data.polygons;
 					let tempPoly = {};
@@ -205,7 +206,6 @@ export default class PilihPeta extends Component {
 				this.setState({showLoading:false});
 			})
 			.catch((e)=>{
-				console.log("error",e);
 				this.setState({
 					showLoading:false,
 					showAlert: true,
@@ -232,7 +232,12 @@ export default class PilihPeta extends Component {
         </Text>
         <View style={{ marginTop: 16}}>
             <ScrollView contentContainerStyle={{ paddingRight: 16 }} horizontal={true} showsHorizontalScrollIndicator={false}>
-              {this.state.est.map((item, index) => this._renderItem(item, index))}
+              {this.state.est.map((est, iest) => {
+				if(est.REGION_CODE==item.regionCode){
+					return this._renderItem(est,iest);
+				}
+			  }
+			  )}
             </ScrollView >
           </View>
       </View>
@@ -349,15 +354,12 @@ const styles = StyleSheet.create({
   },
 
   labelBackground: {
-    //borderBottomLeftRadius: 10,
-    //borderBottomRightRadius: 10,
     width: 150, padding: 5, position: 'absolute', bottom: 0,
     justifyContent: 'center', flex: 1, flexDirection: 'row'
   }, 
   bgBelumDownload: {
     flex: 1, position: 'absolute', top: 0,
     width: 150, height:100, padding: 5,
-    //borderRadius: 10,
     justifyContent: 'center',alignItems:'center'
   },
   
