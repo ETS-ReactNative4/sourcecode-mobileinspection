@@ -17,6 +17,7 @@ import RNFS from 'react-native-fs'
 import RNFetchBlob from 'rn-fetch-blob'
 import { dirPhotoTemuan } from '../../Lib/dirStorage';
 import { NavigationActions, StackActions } from 'react-navigation';
+import ServerName from '../../Constant/ServerName'
 // import layer from '../../Data/skm.json'
 
 import MapView from 'react-native-maps';
