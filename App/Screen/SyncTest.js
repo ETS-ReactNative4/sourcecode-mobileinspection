@@ -249,7 +249,7 @@ class SyncScreen extends React.Component {
             }
         }
     }    
-    /* obsolete data ebcc by akbar */
+    /* obsolete data genba by gani */
     deleteGenbaSelected(){
         var data = TaskServices.getAllData('TR_GENBA_SELECTED');
         var now = moment(new Date());
@@ -1363,7 +1363,6 @@ class SyncScreen extends React.Component {
 
 
     _crudTM_Contact(data) {
-		console.log("_crudTM_Contact",data);
         // let allData = TaskServices.getAllData('TR_CONTACT');
         if (data.length > 0) {
             for (var i = 1; i <= data.length; i++) {
@@ -1423,7 +1422,7 @@ class SyncScreen extends React.Component {
 	_updateTR_Notif(data){
 		let today = moment(new Date());
 		let newNotif = {
-			NOTIFICATION_ID: data.FINDING_CODE+"$"+today.unix(),
+			NOTIFICATION_ID: data.FINDING_CODE+"$"+data.UPDATE_TIME,
 			NOTIFICATION_TIME: new Date(),
 			NOTIFICATION_STATUS: 0,
 			FINDING_CODE:data.FINDING_CODE

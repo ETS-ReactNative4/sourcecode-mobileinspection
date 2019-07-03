@@ -272,8 +272,8 @@ class FormStep2 extends Component {
             REFFERENCE_INS_CODE: "",
             INSERT_USER: this.state.user.USER_AUTH_CODE,
             INSERT_TIME: insertTime,
-            UPDATE_USER: this.state.user.USER_AUTH_CODE,
-            UPDATE_TIME: insertTime,
+            UPDATE_USER: '',
+            UPDATE_TIME: '',
             STATUS_SYNC: "N",
         }
 
