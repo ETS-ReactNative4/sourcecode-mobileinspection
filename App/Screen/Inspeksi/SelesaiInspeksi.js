@@ -40,6 +40,7 @@ class SelesaiInspeksi extends React.Component {
             hideKriteria: false,
             barisPembagi:0,
             arrBaris: [],
+            arrGenbaBaris: [],
             totalWaktu: '',
             totalJarak: '',
             nilaiInspeksi: '',
@@ -100,17 +101,27 @@ class SelesaiInspeksi extends React.Component {
         let barisPembagi = dataBaris.length;
         let time = 0;
         let distance = 0
-        for(var i=0; i<barisPembagi; i++){ 
-            if(i == 0){
-                this.state.arrBaris.push(this.renderBaris(dataBaris[i].AREAL, i));
+        for(var i=0; i<barisPembagi; i++){
+            if (i === 0) {
+                if(dataBaris[i].inspectionType === "normal"){
+                    this.state.arrBaris.push(this.renderBaris(dataBaris[i].AREAL, i, dataBaris[i].inspectionType, null));
+                }
+                else if(dataBaris[i].inspectionType === "genba"){
+                    this.state.arrGenbaBaris.push(this.renderBaris(dataBaris[i].AREAL, i, dataBaris[i].inspectionType, dataBaris[i].BLOCK_INSPECTION_CODE));
+                }
                 time = parseInt(dataBaris[i].TIME);
                 distance = parseInt(dataBaris[i].DISTANCE);
 
-            }else if(i > 0){
-                this.state.arrBaris.push(this.renderBaris(dataBaris[i].AREAL, i));
+            } else if (i > 0) {
+                if(dataBaris[i].inspectionType === "normal"){
+                    this.state.arrBaris.push(this.renderBaris(dataBaris[i].AREAL, i, dataBaris[i].inspectionType, null));
+                }
+                else if(dataBaris[i].inspectionType === "genba"){
+                    this.state.arrGenbaBaris.push(this.renderBaris(dataBaris[i].AREAL, i, dataBaris[i].inspectionType, dataBaris[i].BLOCK_INSPECTION_CODE));
+                }
                 time = time + parseInt(dataBaris[i].TIME);
                 distance = distance + parseInt(dataBaris[i].DISTANCE);
-            }       
+            }
         }
         let werkAfdBlokCode = `${this.state.dataInspeksi.WERKS}${this.state.dataInspeksi.AFD_CODE}${this.state.dataInspeksi.BLOCK_CODE}`;
         let dataBlock = Taskservices.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', werkAfdBlokCode);
@@ -625,6 +636,14 @@ class SelesaiInspeksi extends React.Component {
                         </View>
                         <View style={styles.lineDivider} />
                         <View>{this.state.arrBaris}</View>
+                    </View>
+
+                    <View style={[styles.section]}>
+                        <View style={styles.sectionRow}>
+                            <Text style={styles.textTitle}>Genba Baris</Text>
+                        </View>
+                        <View style={styles.lineDivider} />
+                        <View>{this.state.arrGenbaBaris}</View>
                     </View>
 
                     {/* detail temuan */}

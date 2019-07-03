@@ -125,6 +125,10 @@ const TaskServices = {
     });
   },
 
+  updateInspeksiFindingList(){
+
+  },
+
   updateAfdeling: function (param, index) {
     // let data = RealmSchemas.objects('TM_AFD')[index];
     let result = RealmSchemas.objects('TM_AFD').find(row => {
