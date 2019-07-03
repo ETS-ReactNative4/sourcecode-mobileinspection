@@ -20,23 +20,19 @@ export default class HistoryInspection extends Component {
     }
   }
 
-  // willFocus = this.props.navigation.addListener(
-  //   'willFocus',
-  //   () => {
-  //     this.renderAll();
-  //   }
-  // )
+  willFocus = this.props.navigation.addListener(
+    'willFocus',
+    () => {
+      this.renderAll()
+    }
+  )
 
-  // componentWillUnmount() {
-  //   this.willFocus.remove()
-  // }
+  componentWillUnmount() {
+    this.willFocus.remove()
+  }
 
-  // componentWillMount() {
-  //   this.renderAll();
-  // }
-
-  componentDidMount(){   
-    this.renderAll();
+  componentWillMount() {
+    this.renderAll()
   }
   
   renderAll =()=>{    
@@ -45,6 +41,10 @@ export default class HistoryInspection extends Component {
     let tempArray = []
     if(data.length > 0){
       data.map((data, index)=>{
+        if(data.INSPECTION_RESULT !== "" && data.INSPECTION_RESULT.length !== 0){
+          tempArray.push(data);
+        }
+        else {
           let currentTime = moment().format('YYYY-MM-DD');
           let inspectionDate = moment(data.INSPECTION_DATE, "YYYY-MM-DD HH:mm:ss").format("YYYY-MM-DD");
         if(typeof data.INSPECTION_RESULT !== undefined){
@@ -132,35 +132,7 @@ export default class HistoryInspection extends Component {
           </Card>
         </TouchableOpacity>
     );    
-  }  
-
-  // getBaris1(blockInsCode){
-  //   let arrCompBaris1 = ['CC0002', 'CC0003', 'CC0004', 'CC0005', 'CC0006'];
-  //   let arrKondisiBaris1 = [];
-  //   arrCompBaris1.map(item =>{
-  //     var data = Taskservice.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'BLOCK_INSPECTION_CODE'], [item, blockInsCode]);
-  //     if(data.length > 0){
-  //       let dataAkhir = data[data.length-1]
-  //       arrKondisiBaris1.push(dataAkhir);
-  //     }
-  //   });
-  //   return arrKondisiBaris1;
-  //
-  // }
-
-  // getBaris2(blockInsCode){
-  //   let arrCompBaris2 = ['CC0007', 'CC0008', 'CC0009', 'CC0010', 'CC0011', 'CC0012', 'CC0013', 'CC0014', 'CC0015', 'CC0016'];
-  //   let arrKondisiBaris2 = [];
-  //   arrCompBaris2.map(item =>{
-  //     var data = Taskservice.findByWithList('TR_BLOCK_INSPECTION_D', ['CONTENT_INSPECTION_CODE', 'BLOCK_INSPECTION_CODE'], [item, blockInsCode]);
-  //     if(data.length > 0){
-  //       let dataAkhir = data[data.length-1]
-  //       arrKondisiBaris2.push(dataAkhir);
-  //     }
-  //   });
-  //   return arrKondisiBaris2;
-  //
-  // }
+  }
 
   getColor(param){
     switch(param){
@@ -302,10 +274,6 @@ const styles = StyleSheet.create({
   sectionDesc: {
     flexDirection: 'column',
     height: 100,
-    // paddingRight: 10,
-    // paddingTop: 10,
-    // paddingBottom: 10,
-    // marginRight: 20
   },
   cardContainer: {
     flex: 1,

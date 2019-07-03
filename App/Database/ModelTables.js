@@ -426,6 +426,7 @@ const TR_NOTIFICATION = {
         NOTIFICATION_TIME: 'date',
 		NOTIFICATION_STATUS: { type: 'int', default: 0 },
 		NOTIFICATION_TYPE: { type: 'int', default: 0 },
+        FINDING_UPDATE_TIME: { type: 'string' },
         FINDING_CODE: { type: 'string' },
     }
 }
