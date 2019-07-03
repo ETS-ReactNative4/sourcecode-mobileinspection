@@ -125,8 +125,12 @@ const TaskServices = {
     });
   },
 
-  updateInspeksiFindingList(){
-
+  //di pake buat update TR_BARIS_INSPECTION.TR_FINDING_CODES
+  updateInspeksiFindingList(TR_BARIS_INSPECTION_id, TR_FINDING_CODES_value){
+    let selectedBarisInspection = this.findBy2("TR_BARIS_INSPECTION", "ID_INSPECTION", TR_BARIS_INSPECTION_id);
+    RealmSchemas.write(()=>{
+      selectedBarisInspection.TR_FINDING_CODES = TR_FINDING_CODES_value
+    })
   },
 
   updateAfdeling: function (param, index) {

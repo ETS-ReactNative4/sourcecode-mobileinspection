@@ -110,7 +110,9 @@ export default class HistoryInspection extends Component {
     return(
       <TouchableOpacity 
         style={{ marginTop: 12 }} 
-        onPress={()=> this.actionButtonClick(data)}
+        onPress={()=> {
+          this.actionButtonClick(data)
+        }}
         key={index}>
           <Card style={[styles.cardContainer]}>
             <View style={styles.sectionCardView}>
