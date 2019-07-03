@@ -110,7 +110,7 @@ class Step2Finding extends Component {
             disableCalendar: true,
             inspeksiHeader,
             dataInspeksi,
-            tr_finding_codes: [],
+            tr_finding_codes: dataInspeksi.TR_FINDING_CODES,
 
             //Add Modal Alert by Aminju 
             title: 'Title',
@@ -135,17 +135,17 @@ class Step2Finding extends Component {
     };
 
     updateTrBaris(){
-        this.state.tr_finding_codes.push(this.state.TRANS_CODE);
-        let data = TaskServices.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION)
-        if(data !== undefined){
-            let trCodes = data.TR_FINDING_CODES
-            if(trCodes !== ''){
-                let arr = trCodes.split(',');
-                arr.map(item => {
-                    this.state.tr_finding_codes.push(item)
-                });
-            }
-        }
+        // this.state.tr_finding_codes.push(this.state.TRANS_CODE);
+        // let data = TaskServices.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION)
+        // if(data !== undefined){
+        //     let trCodes = data.TR_FINDING_CODES
+        //     if(trCodes !== ''){
+        //         let arr = trCodes.split(',');
+        //         arr.map(item => {
+        //             this.state.tr_finding_codes.push(item)
+        //         });
+        //     }
+        // }
         let model =  {
             ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
             BLOCK_INSPECTION_CODE: this.state.dataInspeksi.BLOCK_INSPECTION_CODE,
@@ -159,8 +159,9 @@ class Step2Finding extends Component {
             INSPECTION_RESULT: this.state.dataInspeksi.INSPECTION_RESULT,
             INSPECTION_SCORE: this.state.dataInspeksi.INSPECTION_SCORE,
             FULFILL_BARIS: this.state.dataInspeksi.FULFILL_BARIS,
-            TR_FINDING_CODES: this.state.tr_finding_codes.toString()
-        }    
+            TR_FINDING_CODES: [...this.state.dataInspeksi.TR_FINDING_CODES, this.state.TRANS_CODE]
+        }
+        alert(JSON.stringify(model.TR_FINDING_CODES));
         return model;    
     }
 

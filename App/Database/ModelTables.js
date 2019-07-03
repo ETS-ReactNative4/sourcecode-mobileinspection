@@ -83,7 +83,7 @@ const TR_BARIS_INSPECTION = {
         INSPECTION_RESULT: 'string',
         INSPECTION_SCORE: 'string',
         FULFILL_BARIS: 'string',
-        TR_FINDING_CODES: 'string'
+        TR_FINDING_CODES: {type: 'list', objectType: 'string'}
     }
 }
 

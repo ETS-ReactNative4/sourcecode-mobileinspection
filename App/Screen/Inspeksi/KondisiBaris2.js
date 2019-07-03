@@ -28,7 +28,10 @@ class KondisiBaris2 extends Component {
             },
             headerRight: (
                 <TouchableOpacity onPress={() => { navigation.navigate('Step1Finding', { 
-                    data: params.getData, dataInspeksi: params.getDataInspeksi, updateTRBaris: params.updateTRBaris }) }}>
+                    data: params.getData,
+                    dataInspeksi: params.getDataInspeksi,
+                    updateTRBaris: params.updateTRBaris
+                })}}>
                     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingRight: 16 }}>
                         <Entypo name='flashlight' size={24} color='white' />
                     </View>

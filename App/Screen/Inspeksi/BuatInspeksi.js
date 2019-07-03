@@ -434,7 +434,7 @@ class BuatInspeksiRedesign extends Component {
             INSPECTION_RESULT: '',
             INSPECTION_SCORE: '',
             FULFILL_BARIS: 'N',
-            TR_FINDING_CODES:''
+            TR_FINDING_CODES:[]
         }        
 
 
