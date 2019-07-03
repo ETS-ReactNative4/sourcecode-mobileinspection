@@ -69,7 +69,14 @@ export default class Inbox extends React.Component {
 		let contactAsign = TaskServices.findBy2('TR_CONTACT','USER_AUTH_CODE',findingData.ASSIGN_TO);
 		let createTime = moment(findingData.INSERT_TIME,"YYYYMMDDHHmmss");
 		let creator = TaskServices.findBy2('TR_CONTACT','USER_AUTH_CODE',findingData.INSERT_USER);
-		let block = TaskServices.findBy2('TM_BLOCK','BLOCK_CODE',findingData.BLOCK_CODE);
+		let block = TaskServices.getAllData('TM_BLOCK')
+						.filtered('BLOCK_CODE = "'+findingData.BLOCK_CODE+'" AND WERKS="'+findingData.WERKS+'"');
+		if(block.length==0){
+			return;
+		}
+		else{
+			block = block[0]
+		}
 		let est = TaskServices.findBy2('TM_EST','EST_CODE',block.EST_CODE);
 		if(item.NOTIFICATION_STATUS==0){
 			notifColor="#AFAFAF";
