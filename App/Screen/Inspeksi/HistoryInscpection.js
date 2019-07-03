@@ -60,6 +60,7 @@ export default class HistoryInspection extends Component {
             TaskServices.deleteRecordByPK('TR_BARIS_INSPECTION', 'ID_INSPECTION', data.ID_INSPECTION);
           }
         }
+        }
       });
     }
     this.setState({ data: tempArray })
