@@ -382,7 +382,7 @@ class KondisiBaris2 extends Component {
             this.setState({ txtSarkulRehab: styles.buttonText2, txtSarkulKurang: styles.buttonText2, txtSarkulSedang: styles.buttonText2, txtSarkulBaik: styles.buttonText });
         } else if (param == 'TPH' && value == 'REHAB') {
             this.setState({ btnTPHRehab: BtnStyles.btnRehab, btnTPHKurang: BtnStyles.btnBiasa2, btnTPHSedang: BtnStyles.btnBiasa2, btnTPHBaik: BtnStyles.btnBiasa2, TPH: 'REHAB' });
-            this.setState({ txtTphRehab: styles.buttonText, txtTphKurang: styles.buttonText, txtTphSedang: styles.buttonText2, txtTphBaik: styles.buttonText2 });
+            this.setState({ txtTphRehab: styles.buttonText, txtTphKurang: styles.buttonText2, txtTphSedang: styles.buttonText2, txtTphBaik: styles.buttonText2 });
         } else if (param == 'TPH' && value == 'KURANG') {
             this.setState({ btnTPHRehab: BtnStyles.btnBiasa2, btnTPHKurang: BtnStyles.btnKurang, btnTPHSedang: BtnStyles.btnBiasa2, btnTPHBaik: BtnStyles.btnBiasa2, TPH: 'KURANG' });
             this.setState({ txtTphRehab: styles.buttonText2, txtTphKurang: styles.buttonText, txtTphSedang: styles.buttonText2, txtTphBaik: styles.buttonText2 });
@@ -442,16 +442,16 @@ class KondisiBaris2 extends Component {
             this.setState({ txtPenaburRehab: styles.buttonText2, txtPenaburKurang: styles.buttonText2, txtPenaburSedang: styles.buttonText2, txtPenaburBaik: styles.buttonText });
         } else if (param == 'PUPUK' && value == 'REHAB') {
             this.setState({ btnPUPUKRehab: BtnStyles.btnRehab, btnPUPUKKurang: BtnStyles.btnBiasa2, btnPUPUKSedang: BtnStyles.btnBiasa2, btnPUPUKBaik: BtnStyles.btnBiasa2, PUPUK: 'REHAB' });
-            this.setState({ txtPupukRehab: styles.buttonText, txtPupukKurang: styles.buttonText2, txtPupuksed: styles.buttonText2, txtPupukBaik: styles.buttonText2 });
+            this.setState({ txtPupukRehab: styles.buttonText, txtPupukKurang: styles.buttonText2, txtPupukSedang: styles.buttonText2, txtPupukBaik: styles.buttonText2 });
         } else if (param == 'PUPUK' && value == 'KURANG') {
             this.setState({ btnPUPUKRehab: BtnStyles.btnBiasa2, btnPUPUKKurang: BtnStyles.btnKurang, btnPUPUKSedang: BtnStyles.btnBiasa2, btnPUPUKBaik: BtnStyles.btnBiasa2, PUPUK: 'KURANG' });
-            this.setState({ txtPupukRehab: styles.buttonText2, txtPupukKurang: styles.buttonText, txtPupuksed: styles.buttonText2, txtPupukBaik: styles.buttonText2 });
+            this.setState({ txtPupukRehab: styles.buttonText2, txtPupukKurang: styles.buttonText, txtPupukSedang: styles.buttonText2, txtPupukBaik: styles.buttonText2 });
         } else if (param == 'PUPUK' && value == 'SEDANG') {
             this.setState({ btnPUPUKRehab: BtnStyles.btnBiasa2, btnPUPUKKurang: BtnStyles.btnBiasa2, btnPUPUKSedang: BtnStyles.btnSedang, btnPUPUKBaik: BtnStyles.btnBiasa2, PUPUK: 'SEDANG' });
-            this.setState({ txtPupukRehab: styles.buttonText2, txtPupukKurang: styles.buttonText2, txtPupuksed: styles.buttonText, txtPupukBaik: styles.buttonText2 });
+            this.setState({ txtPupukRehab: styles.buttonText2, txtPupukKurang: styles.buttonText2, txtPupukSedang: styles.buttonText, txtPupukBaik: styles.buttonText2 });
         } else if (param == 'PUPUK' && value == 'BAIK') {
             this.setState({ btnPUPUKRehab: BtnStyles.btnBiasa2, btnPUPUKKurang: BtnStyles.btnBiasa2, btnPUPUKSedang: BtnStyles.btnBiasa2, btnPUPUKBaik: BtnStyles.btnBaik, PUPUK: 'BAIK' });
-            this.setState({ txtPupukRehab: styles.buttonText2, txtPupukKurang: styles.buttonText2, txtPupuksed: styles.buttonText2, txtPupukBaik: styles.buttonText });
+            this.setState({ txtPupukRehab: styles.buttonText2, txtPupukKurang: styles.buttonText2, txtPupukSedang: styles.buttonText2, txtPupukBaik: styles.buttonText });
         }
 
         else if (param == 'KAS' && value == 'REHAB') {
