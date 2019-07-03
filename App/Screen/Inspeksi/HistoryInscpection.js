@@ -45,14 +45,17 @@ export default class HistoryInspection extends Component {
     let tempArray = []
     if(data.length > 0){
       data.map((data, index)=>{
-        // console.log("DATE:"+moment(data.INSPECTION_DATE, "YYYY-MM-DD HH:mm:ss").format("YYYY-MM-DD"))
-        //inspectionDateValue = [YYYY,MM,DD]
-        if(data.INSPECTION_RESULT !== "" && data.INSPECTION_RESULT.length !== 0){
-          tempArray.push(data);
-        }
-        else {
           let currentTime = moment().format('YYYY-MM-DD');
           let inspectionDate = moment(data.INSPECTION_DATE, "YYYY-MM-DD HH:mm:ss").format("YYYY-MM-DD");
+        // console.log("DATE:"+moment(data.INSPECTION_DATE, "YYYY-MM-DD HH:mm:ss").format("YYYY-MM-DD"))
+        //inspectionDateValue = [YYYY,MM,DD]
+        if(typeof data.INSPECTION_RESULT !== undefined){
+            console.log(JSON.stringify("ADA:"+data.INSPECTION_RESULT));
+            if(data.INSPECTION_RESULT !== "" || moment(currentTime).isSameOrBefore(inspectionDate, 'day')){
+                tempArray.push(data);
+            }
+        }
+        else {
           if(moment(currentTime).isSameOrBefore(inspectionDate, 'day')){
             tempArray.push(data)
           }

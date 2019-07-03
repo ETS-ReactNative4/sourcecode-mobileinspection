@@ -159,9 +159,8 @@ class Step2Finding extends Component {
             INSPECTION_RESULT: this.state.dataInspeksi.INSPECTION_RESULT,
             INSPECTION_SCORE: this.state.dataInspeksi.INSPECTION_SCORE,
             FULFILL_BARIS: this.state.dataInspeksi.FULFILL_BARIS,
-            TR_FINDING_CODES: [...this.state.dataInspeksi.TR_FINDING_CODES, this.state.TRANS_CODE]
-        }
-        alert(JSON.stringify(model.TR_FINDING_CODES));
+            TR_FINDING_CODES: this.state.tr_finding_codes
+        };
         return model;    
     }
 
@@ -323,7 +322,6 @@ class Step2Finding extends Component {
             UPDATE_TIME: insertTime,
             STATUS_SYNC: "N",
         }
-
         TaskServices.saveData('TR_FINDING', data);
 
         this.state.foto.map((image, i) => {
@@ -342,8 +340,12 @@ class Step2Finding extends Component {
             TaskServices.saveData('TR_IMAGE', imagetr);
         });
 
-        this.props.navigation.state.params.finish(this.updateTrBaris());
-        this.props.navigation.goBack(null)
+        this.setState({
+            tr_finding_codes: [...this.state.tr_finding_codes, this.state.TRANS_CODE]
+        },()=>{
+            this.props.navigation.state.params.finish(this.updateTrBaris());
+            this.props.navigation.goBack(null)
+        })
         // this.props.navigation.popToTop()
     }
 

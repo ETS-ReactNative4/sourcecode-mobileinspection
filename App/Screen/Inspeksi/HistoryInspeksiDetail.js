@@ -83,13 +83,11 @@ class HistoryInspeksiDetail extends React.Component {
     }
 
     loadData() {
-
         let data = Taskservices.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', this.state.data.ID_INSPECTION)
-        if(data !== undefined){
-            let trCodes = data.TR_FINDING_CODES
-            if(trCodes !== ''){
-                let arr = trCodes.split(',');
-                arr.map((item,index) => {                    
+        if(data != undefined){
+            let trCodes = Object.values(data.TR_FINDING_CODES);
+            if(trCodes.length > 0){
+                trCodes.map((item,index) => {
                     this.state.arrTemuan.push(this.renderTemuan(item, index))
                 });
             }
