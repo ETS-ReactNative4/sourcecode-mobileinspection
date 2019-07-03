@@ -155,18 +155,18 @@ class Form extends Component {
                         <TouchableOpacity style={{backgroundColor:'#212121'}} onPress={this.triggerShowHide}><Text>a</Text></TouchableOpacity>
                 </View>
 
-                <View style={styles.sectionInput}>
+                <View style={styles.sectionInput,{width:0,height:0}}>
                   <Picker
                       mode="dropdown"
                       iosHeader="Select your SIM"
                       iosIcon={<Icon name="arrow-dropdown-circle" style={{ color: "#007aff", fontSize: 25 }} />}
-                      style={styles.picker}
+                      style={styles.picker,{width:0,height:0}}
                       selectedValue={this.state.selectedServer}
                       onValueChange={this.onValueChange.bind(this)}>
 
                       <Picker.Item label="Production" value="1" />
-                      <Picker.Item label="QA" value="2" />
-                      <Picker.Item label="Development" value="3" />
+                      {/*<Picker.Item label="QA" value="2" />
+                      <Picker.Item label="Development" value="3" />*/}
                   </Picker>
                 </View>
                 
