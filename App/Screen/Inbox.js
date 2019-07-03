@@ -36,7 +36,7 @@ export default class Inbox extends React.Component {
     })
 	
 	getNotif = () => {
-		let notifData = TaskServices.getAllData('TR_NOTIFICATION').sorted('NOTIFICATION_TIME', true);
+		let notifData = TaskServices.getAllData('TR_NOTIFICATION').sorted('FINDING_UPDATE_TIME', true);
 		return notifData;
 	}
 

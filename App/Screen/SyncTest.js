@@ -1422,9 +1422,9 @@ class SyncScreen extends React.Component {
 	_updateTR_Notif(data){
 		let today = moment(new Date());
 		let newNotif = {
-			NOTIFICATION_ID: data.FINDING_CODE+"$"+data.UPDATE_TIME,
+			NOTIFICATION_ID: data.FINDING_CODE+"$",
 			NOTIFICATION_TIME: new Date(),
-			NOTIFICATION_STATUS: 0,
+			FINDING_UPDATE_TIME: data.UPDATE_TIME,
 			FINDING_CODE:data.FINDING_CODE
 		}
 		if(data.UPDATE_USER==''){
