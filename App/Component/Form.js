@@ -152,21 +152,21 @@ class Form extends Component {
                         onChangeText={(strPassword) => { this.setState({ strPassword: strPassword }) }}
                         value={this.state.strPassword}
                         ref={(input) => this.password = input} />
-                        <TouchableOpacity style={{backgroundColor:'#212121'}} onPress={this.triggerShowHide}><Text>a</Text></TouchableOpacity>
+                        <TouchableOpacity style={{backgroundColor:'#212121'}} onPress={this.triggerShowHide}><Text></Text></TouchableOpacity>
                 </View>
 
-                <View style={styles.sectionInput,{width:0,height:0}}>
+                <View style={styles.sectionInput}>
                   <Picker
                       mode="dropdown"
                       iosHeader="Select your SIM"
                       iosIcon={<Icon name="arrow-dropdown-circle" style={{ color: "#007aff", fontSize: 25 }} />}
-                      style={styles.picker,{width:0,height:0}}
+                      style={styles.picker}
                       selectedValue={this.state.selectedServer}
                       onValueChange={this.onValueChange.bind(this)}>
 
                       <Picker.Item label="Production" value="1" />
-                      {/*<Picker.Item label="QA" value="2" />
-                      <Picker.Item label="Development" value="3" />*/}
+                      <Picker.Item label="QA" value="2" />
+                      <Picker.Item label="Development" value="3" />
                   </Picker>
                 </View>
                 

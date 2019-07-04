@@ -52,15 +52,15 @@ export default class ListInspection extends Component {
           buttonColor={Colors.tintColor}
           onPress={() => { }}
           icon={<Icon2 color='white' name='add' size={25} />}>
-            {/*<ActionButton.Item*/}
-            {/*  size={40}*/}
-            {/*  buttonColor={Colors.tintColor}*/}
-            {/*  title="Genba "*/}
-            {/*  textStyle={{flex:1}}*/}
-            {/*  onPress={this.redirectToGenba}>*/}
-            {/*  <Icon2 name="group"*/}
-            {/*  style={{ fontSize: 20, height: 22, color: 'white' }} />*/}
-            {/*</ActionButton.Item>*/}
+            <ActionButton.Item
+              size={40}
+              buttonColor={Colors.tintColor}
+              title="Genba "
+              textStyle={{flex:1}}
+              onPress={this.redirectToGenba}>
+              <Icon2 name="group"
+              style={{ fontSize: 20, height: 22, color: 'white' }} />
+            </ActionButton.Item>
 
             <ActionButton.Item 
               size={40}
