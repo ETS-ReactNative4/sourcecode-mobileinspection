@@ -250,25 +250,6 @@ class SyncScreen extends React.Component {
         }
     }    
     /* obsolete data genba by gani */
-    deleteInspection(){
-        var data = TaskServices.getAllData('TR_BARIS_INSPECTION');
-        var now = moment(new Date());
-        if (data != undefined) {
-            for (var i = 0; i < data.length; i++) {
-                if (data[i].INSERT_TIME !== '') {
-                    let insertTime = data[i].INSERT_TIME;
-					console.log("deleteInspection",data[i],insertTime)
-                    if (insertTime.includes(' ')) {
-                        insertTime = insertTime.substring(0, insertTime.indexOf(' '))
-                    }
-                    var diff = moment(new Date(insertTime)).diff(now, 'day');
-                    if (diff < -7) {
-                        TaskServices.deleteRecordByPK('TR_BARIS_INSPECTION', 'ID_INSPECTION', data[i].ID_INSPECTION)
-                    }
-                }
-            }
-        }
-    }
     deleteInspectionHeader(){
         var data = TaskServices.getAllData('TR_BLOCK_INSPECTION_H');
         var now = moment(new Date());
@@ -284,6 +265,7 @@ class SyncScreen extends React.Component {
                         this.deleteImages(data[i].BLOCK_INSPECTION_CODE)
                         TaskServices.deleteRecordByPK('TR_BLOCK_INSPECTION_H', 'BLOCK_INSPECTION_CODE', data[i].BLOCK_INSPECTION_CODE)
                         TaskServices.deleteRecordByPK('TR_GENBA_INSPECTION', 'BLOCK_INSPECTION_CODE', data[i].BLOCK_INSPECTION_CODE)
+                        TaskServices.deleteRecordByPK('TR_BARIS_INSPECTION', 'BLOCK_INSPECTION_CODE', data[i].BLOCK_INSPECTION_CODE)
                     }
                 }
             }
@@ -1590,7 +1572,6 @@ class SyncScreen extends React.Component {
         this._deleteFinding();
         this.deleteEbccHeader();
         this.deleteEbccDetail();
-		this.deleteInspection();
 		this.deleteInspectionHeader();
 		this.deleteInspectionDetail();
 	}
