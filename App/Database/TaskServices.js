@@ -624,6 +624,7 @@ const TaskServices = {
       let valueRefCode = auth.LOCATION_CODE; 
       if (refCode === 'AFD_CODE') {
         if(valueRefCode.includes(',')){
+			valueRefCode = valueRefCode.split(",");
           valueRefCode.map(item => {
             const afd_code = item.substring(4, 5);
             let data = this.query('TM_BLOCK', `AFD_CODE = "${afd_code}"`)
