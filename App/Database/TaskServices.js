@@ -99,9 +99,11 @@ const TaskServices = {
       console.log('Row : ', row)
       return row[PK_NAME] == primary_key
     })
-    RealmSchemas.write(() => {
-      RealmSchemas.delete(result);
-    });
+	if(result){
+		RealmSchemas.write(() => {
+		  RealmSchemas.delete(result);
+		});
+	}
   },
 
   deleteRecordPrimaryKey: function (table, primary_key) {
