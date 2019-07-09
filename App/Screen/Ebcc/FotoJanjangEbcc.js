@@ -138,12 +138,12 @@ class FotoJanjang extends Component {
   }
 
   getLocation() {
-    navigator.geolocation.getCurrentPosition(
+	this.setParameter();
+    /*navigator.geolocation.getCurrentPosition(
         (position) => {
             var lat = parseFloat(position.coords.latitude);
             var lon = parseFloat(position.coords.longitude);  
             this.setState({latitude: lat, longitude: lon});
-            this.setParameter();
                      
         },
         (error) => {
@@ -159,7 +159,7 @@ class FotoJanjang extends Component {
           }); 
         }, // go here if error while fetch location
         { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
-    );
+    );*/
   }
 
   deleteFoto(){
@@ -332,6 +332,49 @@ class FotoJanjang extends Component {
             barStyle="light-content"
             backgroundColor={Colors.tintColorPrimary}
         />
+		<MapView
+		  ref={ref => this.map = ref}
+		  style={styles.map}
+		  provider="google"
+          initialRegion={this.state.region}
+		  region={this.state.region}
+		  liteMode={true}
+		  showsUserLocation={true}
+		  showsMyLocationButton={false}
+		  showsPointsOfInterest={false}
+		  showsCompass={false}
+		  showsScale={false}
+		  showsBuildings={false}
+		  showsTraffic={false}
+		  showsIndoors={false}
+		  zoomEnabled={false}
+		  scrollEnabled={false}
+		  pitchEnabled={false}
+		  toolbarEnabled={false}
+		  moveOnMarkerPress={false}
+		  zoomControlEnabled={false}
+		  minZoomLevel={10}
+		  onUserLocationChange={event => {
+			if(this.state.track){
+				let lat = event.nativeEvent.coordinate.latitude;
+				let lon = event.nativeEvent.coordinate.longitude;
+				this.setState({
+					track:false,
+					latitude:lat, 
+					longitude:lon,
+					region : {
+						latitude: lat,
+						longitude: lon,
+						latitudeDelta:0.0075,
+						longitudeDelta:0.00721
+					}});
+				setTimeout(()=>{
+					this.setState({track:true})
+				},5000);
+			}
+		  }}
+		>
+		</MapView >
         <ModalAlert
             icon={this.state.Icon}
             visible={this.state.showModal2}
@@ -364,6 +407,12 @@ class FotoJanjang extends Component {
 export default FotoJanjang;
 
 const styles = StyleSheet.create({
+  map: {
+	...StyleSheet.absoluteFillObject,
+	zIndex:100,
+	height:5,
+	top:0
+  },
   container: {
     flex: 1,
     alignItems: 'center',
