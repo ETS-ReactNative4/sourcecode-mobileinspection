@@ -220,7 +220,7 @@ class Step1Finding extends Component {
                         backgroundColor={Colors.tintColorPrimary}
                     />
                     <ModalAlert
-                        icon={this.state.icon}
+                        icon={this.state.Icon}
                         visible={this.state.showModal}
                         onPressCancel={() => this.setState({ showModal: false })}
                         title={this.state.title}

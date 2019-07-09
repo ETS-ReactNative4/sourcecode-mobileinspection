@@ -18,6 +18,9 @@ import FastImage from 'react-native-fast-image'
 import SwiperSlider from 'react-native-swiper'
 import { dirPhotoInspeksiBaris, dirPhotoInspeksiSelfie,
   dirPhotoTemuan, dirPhotoKategori, dirPhotoEbccJanjang, dirPhotoEbccSelfie, dirMaps } from '../../Lib/dirStorage';
+
+import HomeScreenComment from "./HomeScreenComment";
+
 var RNFS = require('react-native-fs');
 var { width } = Dimensions.get('window')
 
@@ -497,7 +500,6 @@ class HomeScreen extends React.Component {
   }
 
   _renderItem = (item, index) => {
-
     const INSERT_USER = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', item.INSERT_USER);
     let user = INSERT_USER == undefined ? 'User belum terdaftar. Hubungi Admin.' : INSERT_USER.FULLNAME
     Moment.locale();
@@ -561,31 +563,71 @@ class HomeScreen extends React.Component {
                 </SwiperSlider>
               </View>}
             </View>
-            <View style={{ marginTop: 12 }}>
-              <TouchableOpacity onPress={() => { this.onClickItem(item.FINDING_CODE) }}>
-                <View style={{ flex: 2, marginLeft: 16 }}>
+            <View style={{
+              marginTop: 12,
+              marginHorizontal: 16
+            }}>
+              <View style={{
+                flexDirection: 'row'
+              }}>
+                <Text style={{
+                  fontSize: 12,
+                  fontWeight: 'bold'
+                }}>
+                  {lokasiBlok} - {this.getCategoryName(item.FINDING_CATEGORY)}
+                </Text>
+              </View>
+              {/*<TouchableOpacity onPress={() => { this.onClickItem(item.FINDING_CODE) }}>*/}
+              {/*  <View style={{ flex: 2, marginLeft: 16 }}>*/}
 
-                  <View style={styles.column}>
-                    <Text style={styles.label}>Lokasi </Text>
-                    <Text style={styles.item}>: {lokasiBlok} </Text>
-                  </View>
+              {/*    <View style={styles.column}>*/}
+              {/*      <Text style={styles.label}>Lokasi </Text>*/}
+              {/*      <Text style={styles.item}>: {lokasiBlok} </Text>*/}
+              {/*    </View>*/}
 
-                  <View style={styles.column}>
-                    <Text style={styles.label}>Kategori </Text>
-                    <Text style={styles.item}>: {this.getCategoryName(item.FINDING_CATEGORY)} </Text>
-                  </View>
+              {/*    <View style={styles.column}>*/}
+              {/*      <Text style={styles.label}>Kategori </Text>*/}
+              {/*      <Text style={styles.item}>: {this.getCategoryName(item.FINDING_CATEGORY)} </Text>*/}
+              {/*    </View>*/}
 
-                  <View style={styles.column}>
-                    <Text style={styles.label}>Ditugaskan Kepada </Text>
-                    <Text style={styles.item}>: {this.getContactName(item.ASSIGN_TO)}</Text>
-                  </View>
+              {/*    <View style={styles.column}>*/}
+              {/*      <Text style={styles.label}>Ditugaskan Kepada </Text>*/}
+              {/*      <Text style={styles.item}>: {this.getContactName(item.ASSIGN_TO)}</Text>*/}
+              {/*    </View>*/}
 
-                  <View style={styles.column}>
-                    <Text style={styles.label}>Batas Waktu </Text>
-                    <Text style={{ width: '60%', color: this.getColor(batasWaktu), fontSize: 14 }}>: {batasWaktu} </Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
+              {/*    <View style={styles.column}>*/}
+              {/*      <Text style={styles.label}>Batas Waktu </Text>*/}
+              {/*      <Text style={{ width: '60%', color: this.getColor(batasWaktu), fontSize: 14 }}>: {batasWaktu} </Text>*/}
+              {/*    </View>*/}
+              {/*  </View>*/}
+              {/*</TouchableOpacity>*/}
+              <View>
+                <Text
+                  numberOfLines={3}
+                >
+                  <Text style={{
+                    fontWeight: 'bold'
+                  }}>
+                    uat8{" "}
+                  </Text>
+                  <Text
+                    onPress={()=>{
+                      this.props.navigation.navigate("HomeScreenComment", {findingCode: item.FINDING_CODE})
+                    }}
+                  >
+                    1234567890
+                    1234567890
+                    1234567890
+                    1234567890
+                    1234567890
+                    1234567890
+                    1234567890
+                    1234567890
+                    1234567890
+                    1234567890
+                  </Text>
+                </Text>
+              </View>
             </View>
             <View style={{ marginTop: 10, backgroundColor: '#E5E5E5', height: 0.5 }} />
           </View>

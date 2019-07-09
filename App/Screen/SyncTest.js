@@ -2061,7 +2061,7 @@ class SyncScreen extends React.Component {
                 <Content>
 
                     <ModalAlert
-                        icon={this.state.icon}
+                        icon={this.state.Icon}
                         visible={this.state.showModal}
                         onPressCancel={() => {
 							if(this.state.pickedWerks===false){

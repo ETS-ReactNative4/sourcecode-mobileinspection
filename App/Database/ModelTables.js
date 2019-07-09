@@ -240,6 +240,21 @@ const TR_FINDING = {
     }
 }
 
+const TR_FINDING_COMMENT = {
+    name: 'TR_FINDING_COMMENT',
+    primaryKey: 'FINDING_COMMENT_ID',
+    properties: {
+        FINDING_COMMENT_ID: {type: 'string'},
+        FINDING_CODE: {type: 'string'},
+        USER_AUTH_CODE: {type: 'string'},
+        MESSAGE: {type: 'string'},
+        INSERT_TIME: {type:'string'},
+        TAG_USER: {type: 'list', objectType: 'TR_CONTACT'},
+        //LOCAL PARAM
+        USERNAME: {type: 'string'}
+    }
+}
+
 const TM_KRITERIA = {
     name: 'TM_KRITERIA',
     primaryKey: 'KRITERIA_CODE',
@@ -507,6 +522,7 @@ export default {
     TR_BARIS_INSPECTION,
     TM_AFD,
     TR_FINDING,
+    TR_FINDING_COMMENT,
     TR_CATEGORY,
     TR_CONTACT,
     TR_CONTACT_GENBA,

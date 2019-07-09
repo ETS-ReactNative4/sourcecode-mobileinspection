@@ -345,7 +345,7 @@ class MapsEbcc extends React.Component {
           message={this.state.message} />
 
         <ModalGps
-          icon={this.state.icon}
+          icon={this.state.Icon}
           visible={this.state.showModal}
           onPressCancel={() => this.setState({ showModal: false })}
           title={this.state.title}

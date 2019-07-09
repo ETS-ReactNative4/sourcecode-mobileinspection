@@ -204,14 +204,14 @@ class ManualInputTPH extends React.Component{
             <KeyboardAvoidingView style={styles.mainContainer} behavior="padding" enabled>
 
                 <ModalAlert
-                    icon={this.state.icon}
+                    icon={this.state.Icon}
                     visible={this.state.showModal}
                     onPressCancel={() => {this.setState({ showModal: false })}}
                     title={this.state.title}
                     message={this.state.message} />
 
                 <ModalAlertConfirmation
-                    icon={this.state.icon}
+                    icon={this.state.Icon}
                     visible={this.state.showModal2}
                     onPressCancel={() => this.setState({ showModal2: false })}
                     onPressSubmit={() => {this.selesai(); this.setState({ showModal2: false })}}

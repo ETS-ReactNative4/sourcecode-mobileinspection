@@ -379,14 +379,14 @@ class FormStep2 extends Component {
                 <Content style={{ flex: 1, paddingHorizontal: 16, }}>
 
                     <ModalAlert
-                        icon={this.state.icon}
+                        icon={this.state.Icon}
                         visible={this.state.showModal}
                         onPressCancel={() => this.setState({ showModal: false })}
                         title={this.state.title}
                         message={this.state.message} />
 
                     <ModalAlertConfirmation
-                        icon={this.state.icon}
+                        icon={this.state.Icon}
                         visible={this.state.showModalConfirmation}
                         onPressCancel={() => this.setState({ showModalConfirmation: false })}
                         onPressSubmit={() => { this.clearFoto() }}

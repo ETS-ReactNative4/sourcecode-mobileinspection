@@ -15,6 +15,7 @@ export default {
   noticeBackground: tintColor,
   noticeText: '#fff',
   abuabu: '#D8D8D8',
+  abu1: '#e6e6e6',
 
   brand: '#239023',
   brandSecondary: '#EDAE49',

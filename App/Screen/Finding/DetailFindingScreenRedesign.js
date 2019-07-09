@@ -312,14 +312,14 @@ class DetailFindingScreenRedesign extends Component {
 
                     <ModalAlert
                         visible={this.state.showModal}
-                        icon={this.state.icon}
+                        icon={this.state.Icon}
                         onPressCancel={() => this.setState({ showModal: false })}
                         title={this.state.title}
                         message={this.state.message} />
 
                     <ModalAlertBack
                         visible={this.state.showModalBack}
-                        icon={this.state.icon}
+                        icon={this.state.Icon}
                         onPressCancel={() => this.props.navigation.goBack(null)}
                         title={this.state.title}
                         message={this.state.message} />

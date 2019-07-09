@@ -494,14 +494,14 @@ class BuatInspeksiRedesign extends Component {
                     backgroundColor={Colors.tintColorPrimary}
                 />
                 <ModalAlert
-                    icon={this.state.icon}
+                    icon={this.state.Icon}
                     visible={this.state.showModal}
                     onPressCancel={() => this.setState({ showModal: false })}
                     title={this.state.title}
                     message={this.state.message} />
 
                 <ModalAlert
-                    icon={this.state.icon}
+                    icon={this.state.Icon}
                     visible={this.state.showModal2}
                     onPressCancel={() => {this.setState({ showModal2: false }); this.selesai()}}
                     title={this.state.title}

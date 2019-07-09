@@ -421,14 +421,14 @@ class KondisiBaris1 extends Component {
                 />
 
                 <ModalAlert
-                    icon={this.state.icon}
+                    icon={this.state.Icon}
                     visible={this.state.showModalAlert}
                     onPressCancel={() => this.setState({ showModalAlert: false })}
                     title={this.state.title}
                     message={this.state.message} />
 
                 <ModalAlertConfirmation
-                    icon={this.state.icon}
+                    icon={this.state.Icon}
                     visible={this.state.showModal}
                     onPressCancel={() => this.setState({ showModal: false })}
                     onPressSubmit={() => { this.setState({ showModal: false }); this.cancelOrder() }}

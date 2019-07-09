@@ -191,7 +191,7 @@ class FormStep1 extends Component {
                 <Content style={{ flex: 1, marginTop: 30 }}>
                     <ModalAlert
                         visible={this.state.showModal}
-                        icon={this.state.icon}
+                        icon={this.state.Icon}
                         onPressCancel={() => this.setState({ showModal: false })}
                         title={this.state.title}
                         message={this.state.message} />

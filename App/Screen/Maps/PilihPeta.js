@@ -287,7 +287,7 @@ export default class PilihPeta extends Component {
           title={this.state.title}
           message={this.state.message} />
 		<ModalAlert
-			icon={this.state.icon}
+			icon={this.state.Icon}
 			visible={this.state.showAlert}
 			onPressCancel={() => this.setState({ showAlert: false })}
 			title={this.state.title}

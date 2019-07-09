@@ -333,14 +333,14 @@ class FotoJanjang extends Component {
             backgroundColor={Colors.tintColorPrimary}
         />
         <ModalAlert
-            icon={this.state.icon}
+            icon={this.state.Icon}
             visible={this.state.showModal2}
             onPressCancel={() => {this.getLocation(); this.setState({ showModal2: false })}}
             title={this.state.title}
             message={this.state.message}
         />
         <ModalAlertConfirmation
-            icon={this.state.icon}
+            icon={this.state.Icon}
             visible={this.state.showModal}
             onPressCancel={() => this.setState({ showModal: false })}
             onPressSubmit={() => {this.backAndDeletePhoto(); this.setState({ showModal: false })}}
