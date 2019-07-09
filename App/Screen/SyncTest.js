@@ -1453,7 +1453,7 @@ class SyncScreen extends React.Component {
 		}
 		else if(data.INSERT_USER==this.state.user.USER_AUTH_CODE){
 			if(data.PROGRESS>=100){
-				//terjadi update pada finding yang user buat
+				//Progress sudah selesai
 				newNotif.NOTIFICATION_TYPE=4;
 				TaskServices.saveData('TR_NOTIFICATION', newNotif);
 			}

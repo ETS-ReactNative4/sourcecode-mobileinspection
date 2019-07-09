@@ -232,6 +232,7 @@ const TR_FINDING = {
         LAT_FINDING: 'string',
         LONG_FINDING: 'string',
         REFFERENCE_INS_CODE: 'string',
+        RATING: { type: 'TR_RATING', optional: true },
         INSERT_USER: { type: 'string', optional: true },
         INSERT_TIME: { type: 'string', optional: true },
         UPDATE_USER: { type: 'string', optional: true },
@@ -498,6 +499,15 @@ const TR_GENBA_INSPECTION = {
         STATUS_SYNC: 'string'
     }
 }
+const TR_RATING = {
+    name : 'TR_RATING',
+    primaryKey : 'FINDING_CODE',
+    properties : {
+        FINDING_CODE: 'string',
+        RATE: 'int'
+        MESSAGE: {type:'string', optional: true, default:''}
+    }
+}
 
 export default {
     TR_LOGIN,
@@ -535,6 +545,7 @@ export default {
 	TR_COORD,
 	TR_POLYGON,
     TR_GENBA_INSPECTION,
+    TR_RATING,
 
 	SCHEMA_VERSION
 }
