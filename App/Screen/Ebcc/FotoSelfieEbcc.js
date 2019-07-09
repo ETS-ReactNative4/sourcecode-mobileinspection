@@ -262,7 +262,7 @@ class FotoSelfieEbcc extends Component {
         />
         <ModalAlertBack
           visible={this.state.showModalBack}
-          icon={this.state.Icon}
+          icon={this.state.icon}
           onPressCancel={() => this.selesai()}
           title={this.state.title}
           message={this.state.message} />

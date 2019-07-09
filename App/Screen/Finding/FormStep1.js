@@ -281,7 +281,7 @@ class FormStep1 extends Component {
                     {/* STEPPER */}
 
                     <ModalAlert
-                        icon={this.state.Icon}
+                        icon={this.state.icon}
                         visible={this.state.showModal}
                         onPressCancel={() => this.setState({ showModal: false })}
                         title={this.state.title}

@@ -143,7 +143,7 @@ export default class MoreScreen extends Component {
 
           <ModalAlert
             visible={this.state.showModal}
-            icon={this.state.Icon}
+            icon={this.state.icon}
             onPressCancel={() => this.setState({ showModal: false })}
             title={this.state.title}
             message={this.state.message} />

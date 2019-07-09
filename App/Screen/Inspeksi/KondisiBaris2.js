@@ -734,7 +734,7 @@ class KondisiBaris2 extends Component {
                     backgroundColor={Colors.tintColorPrimary}
                 />
                 <ModalAlert
-                    icon={this.state.Icon}
+                    icon={this.state.icon}
                     visible={this.state.showModal}
                     onPressCancel={() => this.setState({ showModal: false })}
                     title={this.state.title}

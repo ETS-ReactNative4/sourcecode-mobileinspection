@@ -430,14 +430,14 @@ class Step2Finding extends Component {
                         backgroundColor={Colors.tintColorPrimary}
                     />
                     <ModalAlert
-                        icon={this.state.Icon}
+                        icon={this.state.icon}
                         visible={this.state.showModal}
                         onPressCancel={() => this.setState({ showModal: false })}
                         title={this.state.title}
                         message={this.state.message} />
 
                     <ModalAlertConfirmation
-                        icon={this.state.Icon}
+                        icon={this.state.icon}
                         visible={this.state.showModalConfirmation}
                         onPressCancel={() => this.setState({ showModalConfirmation: false })}
                         onPressSubmit={() => { 

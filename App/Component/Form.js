@@ -118,7 +118,7 @@ class Form extends Component {
             <View style={styles.container}>
 
                 <ModalAlert
-                    icon={this.state.Icon}
+                    icon={this.state.icon}
                     visible={this.state.showModal}
                     onPressCancel={() => this.setState({ showModal: false })}
                     title={this.state.title}
