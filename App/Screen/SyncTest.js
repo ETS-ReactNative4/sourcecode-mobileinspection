@@ -1452,9 +1452,16 @@ class SyncScreen extends React.Component {
 			}
 		}
 		else if(data.INSERT_USER==this.state.user.USER_AUTH_CODE){
-			//terjadi update pada finding yang user buat
-			newNotif.NOTIFICATION_TYPE=1;
-			TaskServices.saveData('TR_NOTIFICATION', newNotif);
+			if(data.PROGRESS>=100){
+				//terjadi update pada finding yang user buat
+				newNotif.NOTIFICATION_TYPE=4;
+				TaskServices.saveData('TR_NOTIFICATION', newNotif);
+			}
+			else{
+				//terjadi update pada finding yang user buat
+				newNotif.NOTIFICATION_TYPE=1;
+				TaskServices.saveData('TR_NOTIFICATION', newNotif);
+			}
 		}
 	}
 	

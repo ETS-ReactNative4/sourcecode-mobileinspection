@@ -305,6 +305,7 @@ class DetailFindingScreenRedesign extends Component {
             //this.state.images.push(require('../../Images/img-no-picture.png'))
             this.state.images.push("NO IMAGES")
         }
+		let contactAsign = TaskServices.findBy2('TR_CONTACT','USER_AUTH_CODE',this.state.data.ASSIGN_TO);
 
         return (
             <Container style={{ flex: 1, backgroundColor: 'white' }}>
@@ -512,8 +513,28 @@ class DetailFindingScreenRedesign extends Component {
                             <Text style={styles.buttonText}>Simpan</Text>
                         </TouchableOpacity>}
 
-                    {(this.state.data.PROGRESS == 100) &&
-                        <View style={{ flex: 1, height: 30 }}></View>
+                    {(this.state.data.PROGRESS == 100) && 
+						this.state.data.ASSIGN_TO != this.state.user.USER_AUTH_CODE &&
+						this.state.data.INSERT_USER == this.state.user.USER_AUTH_CODE &&
+                        <View style={{ flex: 1, height: 30 }}>
+							<Text>Berikan rating untuk tugas ini?</Text>
+							<View></View>
+							<Text>Ada pesan untuk {contactAsign.FULLNAME}?</Text>
+							<TextInput
+								style={styles.inputBox}
+								underlineColorAndroid='rgba(0,0,0,0)'
+								placeholder="Ketik di sini..."
+								placeholderTextColor="#51a977"
+								selectionColor="#51a977"
+								keyboardType="email-address"
+								onChangeText={(strEmail) => { this.setState({ strEmail: strEmail }) }}
+								value={this.state.strEmail}
+								onSubmitEditing={() => this.password.focus()} />
+							<TouchableOpacity style={[styles.button, { marginTop: 25, marginBottom: 30 }]}
+								onPress={() => { this.validation() }}>
+								<Text style={styles.buttonText}>Simpan</Text>
+							</TouchableOpacity>
+						</View>
                     }
 
                 </Content>
