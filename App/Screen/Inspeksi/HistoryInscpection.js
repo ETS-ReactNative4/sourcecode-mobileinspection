@@ -203,6 +203,7 @@ export default class HistoryInspection extends Component {
           statusBlok:dataBaris.STATUS_BLOCK,
           dataInspeksi: data,
           dataUsual: dataUsual,
+            inspectionType  : dataBaris.inspectionType === 'genba' ? 'genba' : 'normal',
           from: 'history' }}));
       }else{
         alert(`data TR_BLOCK_INSPECTION_H untuk ID_INSPECTION = ${data.ID_INSPECTION} tidak ada`)

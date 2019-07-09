@@ -690,6 +690,10 @@ class KondisiBarisAkhir extends Component{
                 }
             }
 
+            let getBarisInspection = TaskService.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION);
+            if(getBarisInspection !== null && typeof getBarisInspection !== undefined){
+                TaskService.deleteRecordByPK('TR_BARIS_INSPECTION', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION);
+            }
             TaskService.saveData('TR_BARIS_INSPECTION', this.state.dataInspeksi)
 
             //TAMBAHAN GEMBA

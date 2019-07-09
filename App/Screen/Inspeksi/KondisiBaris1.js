@@ -116,7 +116,6 @@ class KondisiBaris1 extends Component {
             TR_FINDING_CODES: data.TR_FINDING_CODES
         }
         this.setState({dataInspeksi: model}, ()=>{
-            console.log(JSON.stringify(this.state.dataInspeksi));
             this.props.navigation.setParams({getDataInspeksi: this.state.dataInspeksi})
         })
     }
