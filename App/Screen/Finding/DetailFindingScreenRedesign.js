@@ -283,6 +283,14 @@ class DetailFindingScreenRedesign extends Component {
             return ''
         }
     }
+    inputRating() {
+        try {
+            let data = TaskServices.findBy2('TM_BLOCK', 'BLOCK_CODE', blockCode);
+            return data.WERKS_AFD_BLOCK_CODE;
+        } catch (error) {
+            return ''
+        }
+    }
 
     render() {
         const category = TaskServices.findBy2('TR_CATEGORY', 'CATEGORY_CODE', this.state.data.FINDING_CATEGORY);
@@ -531,7 +539,7 @@ class DetailFindingScreenRedesign extends Component {
 								value={this.state.strEmail}
 								onSubmitEditing={() => this.password.focus()} />
 							<TouchableOpacity style={[styles.button, { marginTop: 25, marginBottom: 30 }]}
-								onPress={() => { this.validation() }}>
+								onPress={() => { this.inputRating() }}>
 								<Text style={styles.buttonText}>Simpan</Text>
 							</TouchableOpacity>
 						</View>
