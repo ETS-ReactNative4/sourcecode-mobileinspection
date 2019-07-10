@@ -18,6 +18,7 @@ let realmSchema = new Realm({
         ModelTables.TR_CONTACT_GENBA,
         ModelTables.TR_GENBA_SELECTED,
         ModelTables.TR_FINDING,
+        ModelTables.TR_FINDING_COMMENT,
         ModelTables.TM_REGION,
         ModelTables.TM_BLOCK,
         ModelTables.TM_EST,

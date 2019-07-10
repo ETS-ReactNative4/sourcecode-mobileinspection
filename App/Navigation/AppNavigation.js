@@ -4,7 +4,7 @@ import SplashScreen from '../Screen/SplashScreen'
 import Login from '../Screen/Login'
 import MainMenu from '../Screen/Home/MainTabNavigator'
 import Genba from '../Screen/Inspeksi/Genba';
-
+import HomeScreenComment from '../Screen/Home/HomeScreenComment';
 
 //finding
 import FindingFormNavigator from '../Screen/Finding/FindingFormNavigator'
@@ -63,6 +63,8 @@ const main = createStackNavigator({
     MainMenu: { screen: MainMenu, navigationOptions: { header: null } },
     SplashScreen: { screen: SplashScreen },
     Login: { screen: Login },
+
+    HomeScreenComment: { screen: HomeScreenComment },
 
     FindingFormNavigator: {
         screen: FindingFormNavigator,
