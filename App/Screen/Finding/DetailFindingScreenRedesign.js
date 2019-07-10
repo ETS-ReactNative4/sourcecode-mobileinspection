@@ -47,6 +47,9 @@ class DetailFindingScreenRedesign extends Component {
             insertTime: '',
             fullName: '',
             lokasiBlok: '',
+            ratingMsg: (data.RATING==null?'':data.RATING.MESSAGE),
+			rating:(data.RATING==null?0:data.RATING.RATE),//0 default,1 bad,2 ok,3 good,4 great
+			newRating:0,
             //Add Modal Alert by Aminju 
             title: 'Title',
             message: 'Message',
@@ -186,7 +189,7 @@ class DetailFindingScreenRedesign extends Component {
         // let data = TaskServices.getAllData('TR_FINDING')
         // let indexData = R.findIndex(R.propEq('FINDING_CODE', this.state.data.FINDING_CODE))(data);
         let status = this.getStatusTemuan(this.state.progress);
-		    var updateTime = getTodayDate('YYYYMMDDkkmmss');
+		var updateTime = getTodayDate('YYYYMMDDkkmmss');
 
         // var save = {
         //     FINDING_CODE: this.state.data.FINDING_CODE,
@@ -285,10 +288,19 @@ class DetailFindingScreenRedesign extends Component {
     }
     inputRating() {
         try {
-            let data = TaskServices.findBy2('TM_BLOCK', 'BLOCK_CODE', blockCode);
-            return data.WERKS_AFD_BLOCK_CODE;
+			TaskServices.updateByPrimaryKey('TR_FINDING', {
+				"FINDING_CODE":this.state.id,
+				"RATING":{
+					"FINDING_CODE":this.state.id,
+					"RATE":this.state.newRating,
+					"MESSAGE":this.state.ratingMsg
+				}
+			});
+			this.setState({
+				rating:this.state.newRating
+			})
         } catch (error) {
-            return ''
+		console.log("masuk input rating",error)
         }
     }
 
@@ -314,6 +326,21 @@ class DetailFindingScreenRedesign extends Component {
             this.state.images.push("NO IMAGES")
         }
 		let contactAsign = TaskServices.findBy2('TR_CONTACT','USER_AUTH_CODE',this.state.data.ASSIGN_TO);
+		let iconRating = "";
+		if(this.state.rating!=0){
+			if(this.state.rating==1){
+				iconRating = require('../../Images/icon/ic-rating-bad.png');
+			}
+			else if(this.state.rating==2){
+				iconRating = require('../../Images/icon/ic-rating-ok.png');
+			}
+			else if(this.state.rating==3){
+				iconRating = require('../../Images/icon/ic-rating-good.png');
+			}
+			else if(this.state.rating==4){
+				iconRating = require('../../Images/icon/ic-rating-great.png');
+			}
+		}
 
         return (
             <Container style={{ flex: 1, backgroundColor: 'white' }}>
@@ -524,26 +551,73 @@ class DetailFindingScreenRedesign extends Component {
                     {(this.state.data.PROGRESS == 100) && 
 						this.state.data.ASSIGN_TO != this.state.user.USER_AUTH_CODE &&
 						this.state.data.INSERT_USER == this.state.user.USER_AUTH_CODE &&
-                        <View style={{ flex: 1, height: 30 }}>
-							<Text>Berikan rating untuk tugas ini?</Text>
-							<View></View>
+						this.state.rating == 0 &&
+                        <View style={{ flex: 1,width:'90%',borderTopWidth:1,alignSelf: 'center', }}>
+							<View style={{ 
+								flex: 1,
+								alignItems: 'center',
+								marginTop: 15, 
+								marginBottom: 15, 
+								width:'100%',
+								justifyContent: 'center'}}>
+								<Text>Berikan rating untuk tugas ini?</Text>
+								<View style={{ flexDirection: 'row', marginTop: 10 }}>
+									<TouchableOpacity
+										onPress={() => this.setState({newRating:1})}>
+										<Image style={{ alignItems: 'stretch', width: 50,height:50 }}
+											source={require('../../Images/icon/ic-rating-bad.png')}>
+										</Image>
+									</TouchableOpacity>
+									<TouchableOpacity
+										onPress={() => this.setState({newRating:2})}>
+										<Image style={{ alignItems: 'stretch', width: 50,height:50 }}
+											source={require('../../Images/icon/ic-rating-ok.png')}>
+										</Image>
+									</TouchableOpacity>
+									<TouchableOpacity
+										onPress={() => this.setState({newRating:3})}>
+										<Image style={{ alignItems: 'stretch', width: 50,height:50 }}
+											source={require('../../Images/icon/ic-rating-good.png')}>
+										</Image>
+									</TouchableOpacity>
+									<TouchableOpacity
+										onPress={() => this.setState({newRating:4})}>
+										<Image style={{ alignItems: 'stretch', width: 50,height:50 }}
+											source={require('../../Images/icon/ic-rating-great.png')}>
+										</Image>
+									</TouchableOpacity>
+								</View>
+							</View>
 							<Text>Ada pesan untuk {contactAsign.FULLNAME}?</Text>
 							<TextInput
-								style={styles.inputBox}
+								style={{
+									borderWidth:1,
+									borderColor:'rgba(0,0,0,0.3)'
+								}}
 								underlineColorAndroid='rgba(0,0,0,0)'
 								placeholder="Ketik di sini..."
-								placeholderTextColor="#51a977"
+								placeholderTextColor="rgba(0,0,0,0.3)"
 								selectionColor="#51a977"
 								keyboardType="email-address"
-								onChangeText={(strEmail) => { this.setState({ strEmail: strEmail }) }}
-								value={this.state.strEmail}
-								onSubmitEditing={() => this.password.focus()} />
+								onChangeText={(str) => { this.setState({ ratingMsg: str }) }}
+								value={this.state.ratingMsg} />
 							<TouchableOpacity style={[styles.button, { marginTop: 25, marginBottom: 30 }]}
-								onPress={() => { this.inputRating() }}>
+								onPress={() => this.inputRating() }>
 								<Text style={styles.buttonText}>Simpan</Text>
 							</TouchableOpacity>
 						</View>
                     }
+                    {(this.state.data.PROGRESS == 100) && 
+						this.state.data.ASSIGN_TO != this.state.user.USER_AUTH_CODE &&
+						this.state.data.INSERT_USER == this.state.user.USER_AUTH_CODE &&
+						this.state.rating != 0 &&
+                        <View style={{ flex: 1 }}>
+							<Image style={{ alignItems: 'stretch', width: 50,height:50 }}
+								source={iconRating}>
+							</Image>
+							<Text>{this.state.ratingMsg}</Text>
+						</View>
+					}
 
                 </Content>
             </Container>
