@@ -5,6 +5,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import Icon1 from '../../Component/Icon1'
 import TaskServices from "../../Database/TaskServices";
 import moment from 'moment'
+let ic_org_placeholder = require('../../Images/ic-orang.png');
 
 export default class HomeScreenComment extends Component{
     static navigationOptions = ({ navigation }) => {
@@ -95,17 +96,17 @@ export default class HomeScreenComment extends Component{
                     borderTopColor: 'black',
                     height: 65,
                     alignItems: "center",
-                    justifyContent: "center"
+                    justifyContent: "center",
+                    paddingHorizontal: 10
                 }}>
                     <Image
                         style={{
                             width: 50,
                             height: 50,
-                            borderRadius: 25,
-                            backgroundColor:'red'
+                            borderRadius: 25
                         }}
                         resizeMode={"stretch"}
-                        source={require('../../Images/icon/ic_inbox.png')}
+                        source={ic_org_placeholder}
                     />
                     <View
                         style={{
@@ -116,7 +117,7 @@ export default class HomeScreenComment extends Component{
                             borderRadius: 5,
                             alignItems:"center",
                             margin: 10,
-                            paddingHorizontal: 10
+                            paddingLeft: 10
                         }}
                     >
                         <Image
@@ -131,6 +132,7 @@ export default class HomeScreenComment extends Component{
                         />
                         <TextInput
                             style={{flex: 1}}
+                            multiline={true}
                             underlineColorAndroid='rgba(0,0,0,0)'
                             placeholder="Ketik di sini ..."
                             secureTextEntry={this.state.secure}
@@ -180,11 +182,10 @@ export default class HomeScreenComment extends Component{
                                     style={{
                                         width: 50,
                                         height: 50,
-                                        borderRadius: 25,
-                                        backgroundColor:'red'
+                                        borderRadius: 25
                                     }}
                                     resizeMode={"stretch"}
-                                    source={require('../../Images/icon/ic_inbox.png')}
+                                    source={ic_org_placeholder}
                                 />
                                 <View
                                     style={{
