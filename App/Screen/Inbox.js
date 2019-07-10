@@ -102,7 +102,7 @@ export default class Inbox extends React.Component {
 				desc = "Kamu ditugaskan "+creator.FULLNAME+" untuk mengerjakan temuan di "+est.EST_NAME+" Blok "+block.BLOCK_NAME+" tanggal "+createTime.format("DD MMM YYYY")+" tapi belum memberikan respon sampai hari ini";
 			}
 		}else if (item.NOTIFICATION_TYPE == 4) {
-			sources = require('../Images/icon/ic_task_wip.png');
+			sources = require('../Images/icon/icon_rating.png');
 			title = "TUGAS SELESAI";
 			desc = contactAsign.FULLNAME+" telah menyelesaikan temuan yang ditugaskan kepadanya tanggal "+
 					createTime.format("DD MMM YYYY")+" di "+est.EST_NAME+" Blok "+block.BLOCK_NAME+

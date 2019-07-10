@@ -519,7 +519,7 @@ const TR_RATING = {
     primaryKey : 'FINDING_CODE',
     properties : {
         FINDING_CODE: 'string',
-        RATE: 'int'
+        RATE: 'int',
         MESSAGE: {type:'string', optional: true, default:''}
     }
 }

@@ -2,7 +2,7 @@
 import React, { Component } from 'react'
 import {
     ImageBackground, View, Image, TouchableOpacity, TouchableHighlight, StyleSheet, Text,
-    Alert
+    Alert, TextInput
 } from 'react-native'
 import Colors from '../../Constant/Colors'
 import FastImage from 'react-native-fast-image'
