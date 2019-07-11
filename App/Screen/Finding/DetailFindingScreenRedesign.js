@@ -560,7 +560,7 @@ class DetailFindingScreenRedesign extends Component {
 								marginBottom: 15, 
 								width:'100%',
 								justifyContent: 'center'}}>
-								<Text>Berikan rating untuk tugas ini?</Text>
+								<Text style={{fontWeight:'bold'}}>Berikan rating untuk tugas ini?</Text>
 								<View style={{ flexDirection: 'row', marginTop: 10 }}>
 									<TouchableOpacity
 										onPress={() => this.setState({newRating:1})}>
@@ -588,7 +588,7 @@ class DetailFindingScreenRedesign extends Component {
 									</TouchableOpacity>
 								</View>
 							</View>
-							<Text>Ada pesan untuk {contactAsign.FULLNAME}?</Text>
+							<Text style={{fontWeight:'bold'}}>Ada pesan untuk {contactAsign.FULLNAME}?</Text>
 							<TextInput
 								style={{
 									borderWidth:1,
@@ -611,10 +611,22 @@ class DetailFindingScreenRedesign extends Component {
 						this.state.data.ASSIGN_TO != this.state.user.USER_AUTH_CODE &&
 						this.state.data.INSERT_USER == this.state.user.USER_AUTH_CODE &&
 						this.state.rating != 0 &&
-                        <View style={{ flex: 1 }}>
-							<Image style={{ alignItems: 'stretch', width: 50,height:50 }}
-								source={iconRating}>
-							</Image>
+						<View style={{ flex: 1,width:'90%',borderTopWidth:1,alignSelf: 'center', }}>
+							<View style={{ 
+								flex: 1,
+								alignItems: 'center',
+								marginTop: 15, 
+								marginBottom: 15, 
+								width:'100%',
+								justifyContent: 'center'}}>
+								<Text style={{fontWeight:'bold'}}>Rating untuk tugas ini</Text>
+								<View style={{ flexDirection: 'row', marginTop: 10 }}>
+									<Image style={{ alignItems: 'stretch', width: 50,height:50 }}
+										source={iconRating}>
+									</Image>
+								</View>
+							</View>
+							<Text style={{fontWeight:'bold'}}>Pesan untuk {contactAsign.FULLNAME}</Text>
 							<Text>{this.state.ratingMsg}</Text>
 						</View>
 					}
