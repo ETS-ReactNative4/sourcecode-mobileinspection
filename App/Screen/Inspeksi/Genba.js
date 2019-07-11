@@ -14,6 +14,7 @@ import styles from 'list-inspection-style/GenbaStyle';
 import funct from 'list-inspection-function/GenbaFunction';
 import TaskServices from "../../Database/TaskServices";
 import Colors from "../../Constant/Colors";
+import ModalAlert from "../../Component/ModalAlert";
 
 // IMPORT ASSETS
 let image_genba = require('../../Images/ic-orang.png');
@@ -40,7 +41,13 @@ export default class Genba extends Component {
             total_selected  : null,
             listSelectedUserCode: [],
 
-            inspectionType  : this.props.navigation.getParam('inspectionType', 'normal')
+            inspectionType  : this.props.navigation.getParam('inspectionType', 'normal'),
+
+            //modal
+            icon: "",
+            title: "",
+            message: "",
+            showModal: false,
         }
 
         this.loadContact();
@@ -53,12 +60,22 @@ export default class Genba extends Component {
      * GO TO MAPS INSPEKSI LAYOUT
      */
     startInspection = () =>{
-        this.props.navigation.dispatch(NavigationActions.navigate({
+        if(this.state.dataSelected.length > 0){
+            this.props.navigation.dispatch(NavigationActions.navigate({
                 routeName: 'MapsInspeksi',
                 params:{
                     inspectionType: this.state.inspectionType === 'genba'? 'genba' : 'normal'
                 }}
             ));
+        }
+        else {
+            this.setState({
+                icon: require('../../Images/icon/ic_no_user.png'),
+                title: "Pilih Peserta Genba",
+                message: "Kamu harus memilih peserta genba dulu.",
+                showModal: true,
+            })
+        }
     }
 
 
@@ -215,15 +232,25 @@ export default class Genba extends Component {
         }
     }
 
-    
+
+    componentWillMount(): void {
+        this.loadContact();
+        this.getSelectedNameFromDB();
+    }
     /**
      * WATCH STATE CHANGED
      */
     componentDidMount(){
-        this.loadContact();
-        this.getSelectedNameFromDB();
-        //this.deleteChoosen();
+        if(this.state.dataSource.length < 1){
+            this.setState({
+                icon: require('../../Images/icon/ic_inbox.png'),
+                title: "Peserta Genba Kosong",
+                message: "Kamu harus sync terlebih dahulu!",
+                showModal: true,
+            })
+        }
     }
+
 
     render(){
         return(
@@ -243,9 +270,13 @@ export default class Genba extends Component {
                     <View style={{
                         width: "100%",
                         flexDirection:'row',
-                        marginVertical: 10
+                        marginVertical: 10,
+                        alignItems:"center",
+                        justifyContent:"center"
                     }}>
-                        {this.renderSelectedUser()}
+                        <ScrollView style={{flex: 1, maxHeight: 53}}>
+                            {this.renderSelectedUser()}
+                        </ScrollView>
                         <TouchableOpacity
                             onPress={()=>{
                                 this.deleteSelectedAll()
@@ -358,6 +389,12 @@ export default class Genba extends Component {
                         </Text>
                     </Button>
                 </View>
+                <ModalAlert
+                    icon={this.state.icon}
+                    visible={this.state.showModal}
+                    onPressCancel={() => this.setState({ showModal: false })}
+                    title={this.state.title}
+                    message={this.state.message} />
             </KeyboardAvoidingView>
         );
     }
@@ -414,36 +451,67 @@ export default class Genba extends Component {
 
     renderSelectedUser(){
         return(
-            <FlatList
-                data = { this.state.dataSelected }
-                stlye={{
-                    flex: 1
-                }}
-                horizontal={true}
-                showsVerticalScrollIndicator = { false }
-                keyExtractor = { ( item ) => item.USER_AUTH_CODE }
-                renderItem = { ( { item } ) => {
-                    return(
-                        <TouchableOpacity onPress={this.deleteChoosen.bind(this,item.USER_AUTH_CODE)}>
+            <View style={{
+                flexWrap: 'wrap',
+                flexDirection:'row',
+            }}>
+                {
+                    this.state.dataSelected.map((data)=>{
+                        return(
                             <View style={{
                                 borderColor:'#E0E0E0',
                                 backgroundColor:'white',
                                 borderWidth:1,
                                 borderRadius:5,
                                 padding: 5,
-                                marginHorizontal: 3
+                                margin: 3
                             }}>
-                                <Text style={{
-                                    fontSize:12,
-                                    color:'black'
-                                }}>
-                                    {item.FULLNAME}
-                                </Text>
+                                <TouchableOpacity
+                                    onPress={this.deleteChoosen.bind(this, data.USER_AUTH_CODE)}>
+                                    <Text style={{
+                                        fontSize:12,
+                                        color:'black'
+                                    }}>
+                                        {data.FULLNAME}
+                                    </Text>
+                                </TouchableOpacity>
                             </View>
-                        </TouchableOpacity>
-                    )
-                }}
-            />
+                        )
+                    })
+                }
+            </View>
         )
+        // return(
+        //     <FlatList
+        //         data = { this.state.dataSelected }
+        //         stlye={{
+        //             flex: 1
+        //         }}
+        //         // horizontal={true}
+        //         showsVerticalScrollIndicator = { false }
+        //         keyExtractor = { ( item ) => item.USER_AUTH_CODE }
+        //         renderItem = { ( { item } ) => {
+        //             return(
+        //                 <TouchableOpacity onPress={this.deleteChoosen.bind(this,item.USER_AUTH_CODE)}>
+        //                     <View style={{
+        //                         borderColor:'#E0E0E0',
+        //                         backgroundColor:'white',
+        //                         borderWidth:1,
+        //                         borderRadius:5,
+        //                         padding: 5,
+        //                         marginHorizontal: 3
+        //                     }}>
+        //                         <Text style={{
+        //                             fontSize:12,
+        //                             color:'black'
+        //                         }}>
+        //                             {item.FULLNAME}
+        //                         </Text>
+        //                     </View>
+        //                 </TouchableOpacity>
+        //             )
+        //         }}
+        //     />
+        // )
     }
 }
