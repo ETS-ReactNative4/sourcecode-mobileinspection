@@ -21,6 +21,8 @@ import { dirPhotoInspeksiBaris, dirPhotoInspeksiSelfie,
 
 import HomeScreenComment from "./HomeScreenComment";
 
+import {clipString} from '../../Constant/Function';
+
 var RNFS = require('react-native-fs');
 var { width } = Dimensions.get('window')
 
@@ -239,6 +241,14 @@ class HomeScreen extends React.Component {
       }
     }
     this.extraFilter = "";
+
+    let statusFindingText = [];
+    findingFilter.map((data, index)=>{
+      statusFindingText.push(false);
+    });
+    this.setState({
+      statusFindingText: statusFindingText
+    });
     return findingFilter;
   }
 
@@ -520,6 +530,17 @@ class HomeScreen extends React.Component {
     } else {
       sources = require('../../Images/icon/ic_inprogress_timeline.png')
     }
+
+    //Get Finding Comment
+    let getComment = TaskServices.findBy("TR_FINDING_COMMENT", "FINDING_CODE", item.FINDING_CODE).sorted('INSERT_TIME', true);
+    let commentCount = getComment.length;
+    let latestComment = null;
+    if(commentCount > 0){
+      latestComment = getComment[0];
+    }
+
+    let show = false;
+
     return (
         <View key={index}>
           <View >
@@ -601,33 +622,106 @@ class HomeScreen extends React.Component {
               {/*    </View>*/}
               {/*  </View>*/}
               {/*</TouchableOpacity>*/}
-              <View>
-                <Text
-                  numberOfLines={3}
-                >
+              <View style={{
+                flexDirection: 'row',
+                flexWrap: "wrap"
+              }}>
+                <Text>
                   <Text style={{
+                    fontSize: 12,
                     fontWeight: 'bold'
                   }}>
-                    uat8{" "}
+                    {user}{" "}
                   </Text>
                   <Text
-                    onPress={()=>{
-                      this.props.navigation.navigate("HomeScreenComment", {findingCode: item.FINDING_CODE})
+                    style={{
+                      fontSize: 12
                     }}
                   >
-                    1234567890
-                    1234567890
-                    1234567890
-                    1234567890
-                    1234567890
-                    1234567890
-                    1234567890
-                    1234567890
-                    1234567890
-                    1234567890
+                    {
+                      this.state.statusFindingText[index] ? item.FINDING_DESC : clipString(item.FINDING_DESC, 150)
+                    }
                   </Text>
+                  {
+                    item.FINDING_DESC.length > 150 && !this.state.statusFindingText[index] &&
+                    <Text
+                        onPress={()=>{
+                          let tempStatus = this.state.statusFindingText;
+                          tempStatus[index] = true;
+                          this.setState({
+                            statusFindingText: tempStatus
+                          })
+                        }}
+                        style={{
+                          fontSize: 12,
+                          color:"rgba(202,194,194, 1)"
+                        }}
+                    >
+                      {" "}Read more
+                    </Text>
+                  }
                 </Text>
+                {/*<TouchableOpacity*/}
+                {/*  style={{*/}
+                {/*    alignSelf:"flex-end"*/}
+                {/*  }}*/}
+                {/*>*/}
+                {/*  <Text style={{*/}
+                {/*    fontSize: 12,*/}
+                {/*    color:"rgba(202,194,194, 1)"*/}
+                {/*  }}>Read more</Text>*/}
+                {/*</TouchableOpacity>*/}
               </View>
+              {
+                commentCount > 0 ?
+                <View style={{marginVertical: 5}}>
+                  <TouchableOpacity onPress={()=>{
+                    this.props.navigation.navigate("HomeScreenComment", {findingCode: item.FINDING_CODE})
+                  }}>
+                    <Text style={{
+                      fontSize: 12,
+                      color:"rgba(202,194,194, 1)"
+                    }}>
+                      Lihat {commentCount} Komentar
+                    </Text>
+                  </TouchableOpacity>
+                  <Text style={{
+                    marginTop: 10
+                  }}>
+                    <Text style={{
+                      fontSize: 12,
+                      fontWeight: 'bold'
+                    }}>
+                      {latestComment.USERNAME}{" "}
+                    </Text>
+                    <Text
+                        style={{
+                          fontSize: 12
+                        }}
+                        onPress={()=>{
+                          this.props.navigation.navigate("HomeScreenComment", {findingCode: item.FINDING_CODE})
+                        }}
+                    >
+                      {latestComment.MESSAGE}
+                    </Text>
+                  </Text>
+                </View>
+                    :
+                <View style={{
+                  marginVertical: 10
+                }}>
+                  <TouchableOpacity onPress={()=>{
+                    this.props.navigation.navigate("HomeScreenComment", {findingCode: item.FINDING_CODE})
+                  }}>
+                    <Text style={{
+                      fontSize: 12,
+                      color:"rgba(202,194,194, 1)"
+                    }}>
+                      Tambah Komentar
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              }
             </View>
             <View style={{ marginTop: 10, backgroundColor: '#E5E5E5', height: 0.5 }} />
           </View>

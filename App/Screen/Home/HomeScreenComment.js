@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, TouchableOpacity, Image, FlatList, TextInput} from 'react-native';
+import {View, Text, TouchableOpacity, Image, FlatList, TextInput, Keyboard} from 'react-native';
 import Colors from "../../Constant/Colors";
 import Icon from "react-native-vector-icons/Ionicons";
 import Icon1 from '../../Component/Icon1'
@@ -49,6 +49,8 @@ export default class HomeScreenComment extends Component{
             this.setState({
                 commentData: commentData,
                 commentValue: null
+            }, ()=>{
+                Keyboard.dismiss()
             })
         }
     }
