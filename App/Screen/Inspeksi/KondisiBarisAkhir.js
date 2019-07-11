@@ -533,7 +533,8 @@ class KondisiBarisAkhir extends Component{
                 params: {
                     inspeksiHeader: this.state.inspeksiHeader,
                     statusBlok: this.state.statusBlok,
-                    dataInspeksi: dataInspeksi[indexData]
+                    dataInspeksi: dataInspeksi[indexData],
+                    inspectionType: this.state.inspectionType
                 }
             })]
         });
@@ -761,7 +762,7 @@ class KondisiBarisAkhir extends Component{
                 INSPECTION_RESULT: '',
                 INSPECTION_SCORE: '',
                 FULFILL_BARIS: this.state.dataInspeksi.FULFILL_BARIS,
-                TR_FINDING_CODES: this.state.dataInspeksi.TR_FINDING_CODES
+                TR_FINDING_CODES: []
             }
             
             if(this.state.from !== 'history'){
@@ -775,10 +776,6 @@ class KondisiBarisAkhir extends Component{
                 duration = parseFloat(time.DESC);
             }
             let id = 0;//setInterval(()=> this.getLocation2(blokInspectionCode), duration);
-            console.log("params:"+JSON.stringify(params))
-            console.log("modelInspeksi:"+JSON.stringify(modelInspeksi))
-            console.log("model:"+JSON.stringify(model))
-            console.log("id:"+JSON.stringify(id))
             this.navigateScreen('TakeFotoBaris', params, modelInspeksi, model, id);
         }        
         

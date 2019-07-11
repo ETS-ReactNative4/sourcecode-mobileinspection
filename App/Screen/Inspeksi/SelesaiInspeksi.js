@@ -26,6 +26,7 @@ class SelesaiInspeksi extends React.Component {
         let inspeksiHeader = R.clone(params.inspeksiHeader);
         let statusBlok = R.clone(params.statusBlok);
         let dataInspeksi = R.clone(params.dataInspeksi);
+        let inspectionType = R.clone(params.inspectionType);
         //alert(JSON.stringify(dataInspeksi))
 
         this.state = {
@@ -54,7 +55,8 @@ class SelesaiInspeksi extends React.Component {
             showTph: false,
             showGwg: false,
             showPrun: false,
-            arrTemuan: []
+            arrTemuan: [],
+            inspectionType
         };
     }
 
@@ -458,7 +460,7 @@ class SelesaiInspeksi extends React.Component {
     renderBaris = (data, index) => {
         return (
             <TouchableOpacity 
-                onPress={()=> this.props.navigation.navigate('DetailBaris',{baris: data, idInspection: this.state.dataInspeksi.ID_INSPECTION})}
+                onPress={()=> this.props.navigation.navigate('DetailBaris',{baris: data, idInspection: this.state.dataInspeksi.ID_INSPECTION, detailType: this.state.inspectionType,  BLOCK_INSPECTION_CODE: this.state.dataInspeksi.BLOCK_INSPECTION_CODE})}
                 key={index}>
                 <View style={styles.sectionRow}>
                     <Text style={styles.textLabel}>Baris Ke - {data}</Text>
