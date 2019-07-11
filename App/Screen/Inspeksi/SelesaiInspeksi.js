@@ -632,7 +632,7 @@ class SelesaiInspeksi extends React.Component {
 
                     <View style={[styles.section]}>
                         <View style={styles.sectionRow}>
-                            <Text style={styles.textTitle}>Detail Baris</Text>
+                            <Text style={styles.textTitle}>Lihat Detail Baris Inspeksi</Text>
                         </View>
                         <View style={styles.lineDivider} />
                         <View>{this.state.arrBaris}</View>
@@ -640,7 +640,7 @@ class SelesaiInspeksi extends React.Component {
 
                     <View style={[styles.section]}>
                         <View style={styles.sectionRow}>
-                            <Text style={styles.textTitle}>Genba Baris</Text>
+                            <Text style={styles.textTitle}>Lihat Detail Baris Genba</Text>
                         </View>
                         <View style={styles.lineDivider} />
                         <View>{this.state.arrGenbaBaris}</View>

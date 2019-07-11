@@ -4,8 +4,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp, listenOrientatio
 const styles  = StyleSheet.create({
     container : {
         flex : 1, 
-        backgroundColor : '#ffff',
-        flexDirection : 'column'
+        backgroundColor : '#ffff'
     },
 
     layoutTextTitle : {
@@ -43,8 +42,7 @@ const styles  = StyleSheet.create({
     },
 
     layoutSuggestionText : {
-        flex:4, 
-        flexDirection:'column', 
+        flex:1,
         marginTop:30
     },
 

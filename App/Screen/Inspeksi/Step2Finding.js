@@ -349,10 +349,13 @@ class Step2Finding extends Component {
             })
         }
         tempFindingID = [...tempFindingID, ...this.state.tr_finding_codes, this.state.TRANS_CODE];
-
+        console.log(JSON.stringify(tempFindingID));
+        console.log(JSON.stringify(this.state.tr_finding_codes));
+        console.log(JSON.stringify(this.state.TRANS_CODE));
         this.setState({
             tr_finding_codes: tempFindingID
         },()=>{
+            console.log("STEP2FINDING:"+JSON.stringify(this.state.tr_finding_codes));
             this.props.navigation.state.params.finish(this.updateTrBaris());
             this.props.navigation.goBack(null)
         })
