@@ -307,50 +307,51 @@ class KondisiBarisAkhir extends Component{
             }
         }
     }
-
-    changeColorSlide(){
-        if(this.state.inspectionType === 'genba'){
-            this.setState({fulFillMandatory:true, txtBaris: ''})
-            if(!this.state.switchLanjut){
+changeColorSlide() {
+        if (this.state.inspectionType === 'genba') {
+            if (!this.state.switchLanjut) {
+                this.setState({ fulFillMandatory: false, txtBaris: '' })
                 btn = {
                     width: 55,
-                    height:45,
+                    height: 45,
                     borderRadius: 20,
-                    borderWidth:1,
-                    borderColor:'#C8C8C8',
+                    borderWidth: 1,
+                    borderColor: '#C8C8C8',
                     backgroundColor: Colors.tintColor,
                 }
-            }else{
+            } else {
+                this.setState({ fulFillMandatory: true, txtBaris: '' })
                 btn = {
                     width: 55,
-                    height:45,
+                    height: 45,
                     borderRadius: 20,
-                    borderWidth:1,
-                    borderColor:'#C8C8C8',
+                    borderWidth: 1,
+                    borderColor: '#C8C8C8',
                     backgroundColor: Colors.brandSecondary,
                 }
             }
             this.setState({ tumbButtonSlide: btn })
         }
         else {
-            if(this.has2Row() >= 1){
-                this.setState({fulFillMandatory:true, txtBaris: ''})
-                if(!this.state.switchLanjut){
+            if (this.has2Row() >= 1) {
+                if (!this.state.switchLanjut) {
+                    this.setState({ fulFillMandatory: false, txtBaris: '' })
                     btn = {
                         width: 55,
-                        height:45,
+                        height: 45,
                         borderRadius: 20,
-                        borderWidth:1,
-                        borderColor:'#C8C8C8',
+                        borderWidth: 1,
+                        borderColor: '#C8C8C8',
                         backgroundColor: Colors.tintColor,
                     }
-                }else{
+                } else {
+                    this.setState({ fulFillMandatory: true, txtBaris: '' })
                     btn = {
                         width: 55,
-                        height:45,
+                        height: 45,
                         borderRadius: 20,
-                        borderWidth:1,
-                        borderColor:'#C8C8C8',
+                        borderWidth: 1,
+                        borderColor: '#C8C8C8',
                         backgroundColor: Colors.brandSecondary,
                     }
                 }
