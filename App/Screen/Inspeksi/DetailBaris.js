@@ -5,7 +5,7 @@ import {
     View,
     StatusBar,
     ScrollView,
-    Image
+    Image, TouchableOpacity
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/AntDesign'
@@ -13,6 +13,7 @@ import Size from '../../Constant/sizes'
 import Colors from '../../Constant/Colors'
 import Taskservices from '../../Database/TaskServices'
 import R from 'ramda';
+import Entypo from "react-native-vector-icons/Entypo";
 
 class DetailBaris extends React.Component {
 
@@ -53,22 +54,28 @@ class DetailBaris extends React.Component {
         };
     }
 
-    static navigationOptions = {
-        headerStyle: {
-            backgroundColor: Colors.tintColorPrimary
-        },
-        headerTitleStyle: {
-            textAlign: "left",
-            flex: 1,
-            fontSize: 18,
-            fontWeight: '400',
-            marginHorizontal: 12
-        },
-        title: 'Detail Baris Inspeksi',
-        headerTintColor: '#fff',
-    };   
+    static navigationOptions = ({ navigation }) => {
+        const { params = {} } = navigation.state;
+        return {
+            headerStyle: {
+                backgroundColor: Colors.tintColorPrimary
+            },
+            headerTitleStyle: {
+                textAlign: "left",
+                flex: 1,
+                fontSize: 18,
+                fontWeight: '400',
+                marginHorizontal: 12
+            },
+            title: params.detailType === "genba" ? 'Detail Baris Genba' : 'Detail Baris Inspeksi',
+            headerTintColor: '#fff',
+        }
+    };
 
     componentWillMount(){
+        this.props.navigation.setParams({
+            detailType: this.state.detailType
+        });
         this.loadData();
         this.loadGenbaUser();
     }
