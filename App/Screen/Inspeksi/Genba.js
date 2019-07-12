@@ -1,31 +1,20 @@
 // CORE REACT NATIVE
 import React, { Component } from 'react';
-import { View, Image, Text, TouchableOpacity, FlatList, KeyboardAvoidingView, ScrollView, TextInput } from 'react-native';
+import { View, Image, Text, TouchableOpacity, FlatList, KeyboardAvoidingView, ScrollView, TextInput, AsyncStorage } from 'react-native';
 
 // PLUGIN
 import { Form, Item, Input, Button } from 'native-base';
 import { NavigationActions } from 'react-navigation';
 import Icon1 from '../../Component/Icon1';
 
-// STYLE GENBA
-import styles from 'list-inspection-style/GenbaStyle';
 
 // FUNCTION GENBA
 import funct from 'list-inspection-function/GenbaFunction';
 import TaskServices from "../../Database/TaskServices";
-import Colors from "../../Constant/Colors";
 import ModalAlert from "../../Component/ModalAlert";
-
+import moment from 'moment';
 // IMPORT ASSETS
 let image_genba = require('../../Images/ic-orang.png');
-
-// VARIABLE
-let choosenNames        = [];
-let contact_from_db     = null;
-
-// STATIC STRING
-const titleLarge = 'Peserta Genba';
-const titleSmall = 'Siapa saja yang ikut Genba bersamamu ?';
 
 export default class Genba extends Component {
     constructor(props){
@@ -48,7 +37,7 @@ export default class Genba extends Component {
             title: "",
             message: "",
             showModal: false,
-        }
+        };
 
         this.loadContact();
 
@@ -79,8 +68,8 @@ export default class Genba extends Component {
     }
 
 
-    /** 
-     * TRIGGER FILTER TEXT 
+    /**
+     * TRIGGER FILTER TEXT
      */
     showFilter = () => {
         this.setState({
@@ -235,7 +224,24 @@ export default class Genba extends Component {
 
     componentWillMount(): void {
         this.loadContact();
-        this.getSelectedNameFromDB();
+        this.getTimeLastAccess()
+            .then((value)=>{
+                if(value){
+                    let currentDate = moment().format("YYYY-MM-DD");
+                    if(moment(value, "YYYY-MM-DD").isSame(currentDate)){
+                        this.getSelectedNameFromDB();
+                        this.loadContact();
+                    }
+                    else {
+                        this.deleteSelectedAll()
+                    }
+                }
+                else{
+                    this.setTimeLastAccess();
+                    this.getSelectedNameFromDB();
+                    this.loadContact();
+                }
+            })
     }
     /**
      * WATCH STATE CHANGED
@@ -248,6 +254,30 @@ export default class Genba extends Component {
                 message: "Kamu harus sync terlebih dahulu!",
                 showModal: true,
             })
+        }
+    }
+
+    setTimeLastAccess(){
+        let currentDate = moment().format("YYYY-MM-DD");
+        try {
+            AsyncStorage.setItem('LastGenbaAccessTime', currentDate.toString());
+            return true
+        } catch (error) {
+            alert("ASYNC SET GENBA:"+error);
+            return false;
+        }
+    }
+
+    async getTimeLastAccess(){
+        try {
+            let value = await AsyncStorage.getItem('LastGenbaAccessTime');
+            if (value !== null) {
+                return value
+            }
+            return false;
+        } catch (error) {
+            alert("ASYNC GET GENBA:"+error);
+            return false;
         }
     }
 

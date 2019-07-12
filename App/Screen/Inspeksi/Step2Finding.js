@@ -522,8 +522,6 @@ class Step2Finding extends Component {
                     </View>
 
                     <View style={style.line} />
-
-
                     <View style={{ flex: 1, flexDirection: 'row' }}>
                         <Text style={style.label}>Lokasi <Text style={style.mandatory}>*</Text></Text>
                         <TouchableOpacity disabled={disableLoc}
