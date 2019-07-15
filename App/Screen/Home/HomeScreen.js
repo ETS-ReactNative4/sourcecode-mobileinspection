@@ -1,6 +1,7 @@
 "use strict";
 import React from 'react';
-import { ImageBackground, StatusBar, TouchableOpacity, TouchableNativeFeedback, View, ScrollView, Image, StyleSheet, Dimensions } from 'react-native';
+import { ImageBackground, StatusBar, TouchableOpacity, TouchableNativeFeedback, View, ScrollView, Image, StyleSheet, Dimensions,
+		ActivityIndicator } from 'react-native';
 import { Thumbnail, Text } from 'native-base';
 import { connect } from 'react-redux'
 import Entypo from 'react-native-vector-icons/Entypo'
@@ -77,7 +78,9 @@ class HomeScreen extends React.Component {
       message: 'Message',
       showModal: false,
       icon: '',
-      isFilter: false
+      isFilter: false,
+      page: 0,
+      isLoading: false,
     }
   }
 
@@ -85,7 +88,15 @@ class HomeScreen extends React.Component {
       'willFocus',
       () => {
         if (this.state.loadAll) {
-          this._initData()
+			//this._initData()
+			this.setState({
+			  data: [],
+			  page: 0,
+			  dataSet: this._filterHome()
+			}, function () {
+			  // call the function to pull initial 12 records
+			  this.addRecords(0);
+			});
         }
       }
   )
@@ -112,8 +123,22 @@ class HomeScreen extends React.Component {
     }
   }
 
-  _initData() {
+  /*_initData() {
     this.setState({ data: this._filterHome() });
+  }*/
+  //Aminju
+  addRecords = (page) => {
+    // assuming this.state.dataPosts hold all the records
+    console.log('Page : ', page)
+    const newRecords = []
+    for (var i = page * 5, il = i + 5; i < il && i <
+      this.state.dataSet.length; i++) {
+      newRecords.push(this.state.dataSet[i]);
+    }
+    this.setState({
+      data: [...this.state.data, ...newRecords],
+      isLoading: false
+    });
   }
 
   _filterHome() {
@@ -318,7 +343,16 @@ class HomeScreen extends React.Component {
       if (ba == 'Pilih Lokasi' && afd == 'Pilih Afdeling' &&
           valAssignto == 'Pilih Pemberi Tugas' && status == 'Pilih Status' && valBatasWaktu == 'Pilih Batas Waktu') {
         data = this._filterHome();
-        this.setState({ data, isFilter: false });
+        //this.setState({ data, isFilter: false });
+        this.setState({
+          data: [],
+          page: 0,
+          dataSet: data,
+          isFilter: true
+        }, function () {
+          // call the function to pull initial 12 records
+          this.addRecords(0);
+        });
       } else {
         //bingung
         this.extraFilter = `AFD_CODE CONTAINS ""${stBa}${stAfd}${stUserAuth}${stStatus}`;
@@ -326,7 +360,16 @@ class HomeScreen extends React.Component {
         if (data.length == 0) {
           this.setState({ data, isFilter: true, showModal: true, title: 'Tidak Ada Data', message: 'Wah ga ada data berdasarkan filter ini.', icon: require('../../Images/ic-no-data.png') });
         } else {
-          this.setState({ data, isFilter: true });
+          //this.setState({ data, isFilter: true });
+          this.setState({
+            data: [],
+            page: 0,
+            dataSet: data,
+            isFilter: true
+          }, function () {
+            // call the function to pull initial 12 records
+            this.addRecords(0);
+          });
         }
       }
     })
@@ -815,13 +858,41 @@ class HomeScreen extends React.Component {
               showsHorizontalScrollIndicator={false}
               showsVerticalScrollIndicator={false}>
             <View style={{ marginBottom: 48 }}>
-              {this.state.data.map((item, index) => this._renderItem(item, index))}
+				{this.state.data.map((item, index) => this._renderItem(item, index))}
+				{/* Aminju */}
+				<View style={{ justifyContent: 'center', alignItems: 'center', padding: 16 }}>
+				  <TouchableOpacity
+					activeOpacity={0.9}
+					style={{
+					  height: 48,
+					  width: 200,
+					  backgroundColor: Colors.tintColorPrimary,
+					  justifyContent: 'center',
+					  alignItems: 'center',
+					  borderRadius: 10
+					}} onPress={this.onScrollHandler}>
+					{this.state.isLoading ? <ActivityIndicator color={'white'} /> : <Text style={{ textAlign: 'center', fontSize: 14, color: 'white' }}>Lebih Banyak</Text>}
+				  </TouchableOpacity>
+				</View>
             </View>
           </ScrollView>
         </View>
     )
   }
 
+  //Aminju
+  onScrollHandler = () => {
+    this.setState({ isLoading: true })
+
+    setTimeout(() => {
+      this.setState({
+        page: this.state.page + 1
+      }, () => {
+        this.addRecords(this.state.page);
+      });
+    }, 2000);
+  }
+  
   render() {
     let show;
     if (this.state.data.length > 0) {

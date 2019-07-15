@@ -307,7 +307,7 @@ class KondisiBarisAkhir extends Component{
             }
         }
     }
-changeColorSlide() {
+	changeColorSlide() {
         if (this.state.inspectionType === 'genba') {
             if (!this.state.switchLanjut) {
                 this.setState({ fulFillMandatory: false, txtBaris: '' })
@@ -835,7 +835,7 @@ changeColorSlide() {
                     statusBlok: this.state.statusBlok,
                     intervalId: intervalId,
                     dataInspeksi: dataInspeksi,
-                    inspectionType  : this.state.inspectionType === 'genba' ? 'genba' : 'normal'
+					inspectionType: dataBaris.inspectionType === 'genba' ? 'genba' : 'normal'
                 }
             })]
         });
