@@ -86,6 +86,7 @@ class FotoJanjang extends Component {
       statusScan,
       latitude: 0.0,
       longitude: 0.0,
+	  track:true,
       title: 'Title',
       message: 'Message',
       showModal: false,
@@ -275,7 +276,7 @@ class FotoJanjang extends Component {
   }
 
   async insertDB() {
-    if(this.state.dataHeader !== null && this.state.dataHeader.LAT_TPH !== '0.0' && this.state.dataHeader.LON_TPH !== '0.0'){
+    if(this.state.dataHeader !== null && this.state.dataHeader.LAT_TPH != 0 && this.state.dataHeader.LON_TPH !=0 ){
       RNFS.unlink(this.state.pathCache);
       let isImageContain = await RNFS.exists(`file://${dirPhotoEbccJanjang}/${this.state.dataModel.IMAGE_NAME}`);
       if(isImageContain){
@@ -368,6 +369,7 @@ class FotoJanjang extends Component {
 						latitudeDelta:0.0075,
 						longitudeDelta:0.00721
 					}});
+				this.setParameter();
 				setTimeout(()=>{
 					this.setState({track:true})
 				},5000);

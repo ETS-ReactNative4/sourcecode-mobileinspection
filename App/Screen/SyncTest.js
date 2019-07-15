@@ -62,10 +62,10 @@ class SyncScreen extends React.Component {
     constructor() {
         super();
         let user = TaskServices.getAllData('TR_LOGIN')[0];
-		baseUploadImageLink = ServerName[user.SERVER_NAME_INDEX].image;
-		link = ServerName[user.SERVER_NAME_INDEX].data;
+        baseUploadImageLink = ServerName[user.SERVER_NAME_INDEX].image;
+        link = ServerName[user.SERVER_NAME_INDEX].data;
         this.state = {
-			user,
+            user,
             //upload            
             progressInspeksiHeader: 0,
             progressInspeksiDetail: 0,
@@ -143,12 +143,12 @@ class SyncScreen extends React.Component {
             totalParamInspection: '0',
             valueKualitas: '0',
             totalKualitas: '0',
-            
+
             indeterminate: false,
             downloadInspeksiParam: false,
             fetchLocation: false,
             isBtnEnable: false,
-			syncTime: true,
+            syncTime: true,
 
             dataFinding: [],
             dataInspeksi: [],
@@ -167,14 +167,14 @@ class SyncScreen extends React.Component {
         }
     }
 
-	getAPIURL(apiName){
-		let serv = TaskServices.getAllData("TM_SERVICE").filtered('API_NAME="'+apiName+'" AND MOBILE_VERSION="'+ServerName.verAPK+'"');
-		if(serv.length>0){
-			serv = serv[0]
-		}
-		return serv;
-	}
-	insertLink(){
+    getAPIURL(apiName) {
+        let serv = TaskServices.getAllData("TM_SERVICE").filtered('API_NAME="' + apiName + '" AND MOBILE_VERSION="' + ServerName.verAPK + '"');
+        if (serv.length > 0) {
+            serv = serv[0]
+        }
+        return serv;
+    }
+    insertLink() {
         fetch(ServerName[this.state.user.SERVER_NAME_INDEX].service, {
             method: 'GET',
             headers: {
@@ -184,34 +184,34 @@ class SyncScreen extends React.Component {
                 'Authorization': `Bearer ${this.state.user.ACCESS_TOKEN}`
             }
         })
-		.then((response) => {
-			return response.json();
-		})
-		.then((data) => {
-			if(data.status){
-				TaskServices.deleteAllData('TM_SERVICE');
-				let index = 0;
-				for(let i in data.data){
-					let newService = {
-						SERVICE_ID: parseInt(i),
-						MOBILE_VERSION:data.data[i].MOBILE_VERSION,
-						API_NAME: data.data[i].API_NAME,
-						KETERANGAN: data.data[i].KETERANGAN,
-						BODY: data.data[i].BODY?JSON.stringify(data.data[i].BODY):'',
-						METHOD: data.data[i].METHOD,
-						API_URL: data.data[i].API_URL
-					}
-					TaskServices.saveData('TM_SERVICE', newService);
-					index++;
-				}
-			}
-			this._onSync()
-		});
-	}
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                if (data.status) {
+                    TaskServices.deleteAllData('TM_SERVICE');
+                    let index = 0;
+                    for (let i in data.data) {
+                        let newService = {
+                            SERVICE_ID: parseInt(i),
+                            MOBILE_VERSION: data.data[i].MOBILE_VERSION,
+                            API_NAME: data.data[i].API_NAME,
+                            KETERANGAN: data.data[i].KETERANGAN,
+                            BODY: data.data[i].BODY ? JSON.stringify(data.data[i].BODY) : '',
+                            METHOD: data.data[i].METHOD,
+                            API_URL: data.data[i].API_URL
+                        }
+                        TaskServices.saveData('TM_SERVICE', newService);
+                        index++;
+                    }
+                }
+                this._onSync()
+            });
+    }
 
     /* obsolete data ebcc by akbar */
-    deleteEbccHeader(){
-        var data = TaskServices.getAllData('TR_H_EBCC_VALIDATION');
+    deleteEbccHeader() {
+        var data = TaskServices.getAllData('TR_H_EBCC_VALIDATION').filtered('SYNC_TIME == "Y"');
         var now = moment(new Date());
         if (data != undefined) {
             for (var i = 0; i < data.length; i++) {
@@ -230,7 +230,7 @@ class SyncScreen extends React.Component {
         }
     }
 
-    deleteEbccDetail(){
+    deleteEbccDetail() {
         var data = TaskServices.getAllData('TR_D_EBCC_VALIDATION');
         var now = moment(new Date());
         if (data != undefined) {
@@ -248,10 +248,29 @@ class SyncScreen extends React.Component {
                 }
             }
         }
-    }    
+    }
     /* obsolete data genba by gani */
-    deleteInspectionHeader(){
-        var data = TaskServices.getAllData('TR_BLOCK_INSPECTION_H');
+    deleteGenbaSelected() {
+        var data = TaskServices.getAllData('TR_GENBA_SELECTED');
+        var now = moment(new Date());
+        if (data !== undefined) {
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].INSERT_TIME !== '') {
+                    let insertTime = data[i].INSERT_TIME;
+                    if (insertTime.includes(' ')) {
+                        insertTime = insertTime.substring(0, insertTime.indexOf(' '))
+                    }
+                    var diff = moment(new Date(insertTime)).diff(now, 'day');
+                    if (diff < -7) {
+                        this.deleteImages(data[i].USER_AUTH_CODE)
+                        TaskServices.deleteRecordByPK('TR_GENBA_SELECTED', 'USER_AUTH_CODE', data[i].USER_AUTH_CODE)
+                    }
+                }
+            }
+        }
+    }
+    deleteGenbaInspection() {
+        var data = TaskServices.getAllData('TR_GENBA_INSPECTION').filtered('STATUS_SYNC = "Y"');
         var now = moment(new Date());
         if (data != undefined) {
             for (var i = 0; i < data.length; i++) {
@@ -263,36 +282,17 @@ class SyncScreen extends React.Component {
                     var diff = moment(new Date(insertTime)).diff(now, 'day');
                     if (diff < -7) {
                         this.deleteImages(data[i].BLOCK_INSPECTION_CODE)
-                        TaskServices.deleteRecordByPK('TR_BLOCK_INSPECTION_H', 'BLOCK_INSPECTION_CODE', data[i].BLOCK_INSPECTION_CODE)
                         TaskServices.deleteRecordByPK('TR_GENBA_INSPECTION', 'BLOCK_INSPECTION_CODE', data[i].BLOCK_INSPECTION_CODE)
-                        TaskServices.deleteRecordByPK('TR_BARIS_INSPECTION', 'BLOCK_INSPECTION_CODE', data[i].BLOCK_INSPECTION_CODE)
                     }
                 }
             }
         }
     }
-    deleteInspectionDetail(){
-        var data = TaskServices.getAllData('TR_BLOCK_INSPECTION_D');
-        var now = moment(new Date());
-        if (data != undefined) {
-            for (var i = 0; i < data.length; i++) {
-                if (data[i].INSERT_TIME !== '') {
-                    let insertTime = data[i].INSERT_TIME;
-					console.log("deleteInspectionDetail",data[i],insertTime)
-                    if (insertTime.includes(' ')) {
-                        insertTime = insertTime.substring(0, insertTime.indexOf(' '))
-                    }
-                    var diff = moment(new Date(insertTime)).diff(now, 'day');
-                    if (diff < -7) {
-                        TaskServices.deleteRecordByPK('TR_BLOCK_INSPECTION_D', 'BLOCK_INSPECTION_CODE_D', data[i].BLOCK_INSPECTION_CODE_D)
-                    }
-                }
-            }
-        }
-    }  
 
-    deleteImages(trCode){
-        let dataImage = TaskServices.findBy('TR_IMAGE', 'TR_CODE', trCode);
+    deleteImages(trCode) {
+        // let dataImage = TaskServices.findBy('TR_IMAGE', 'TR_CODE', trCode);
+        let dataImage = TaskServices.query('TR_IMAGE', `STATUS_SYNC = "Y" AND TR_CODE = "${trCode}"`);
+
         if (dataImage != undefined) {
             dataImage.map(item => {
                 this.deleteImageFile2(item.IMAGE_PATH_LOCAL)
@@ -302,24 +302,24 @@ class SyncScreen extends React.Component {
 
     deleteImageFile2(path) {
         RNFS.exists(path)
-        .then((result) => {
-            if (result) {
-                RNFS.unlink(`${FILE_PREFIX}${path}`)
-                .then(() => {
-                    console.log(`${path} DELETED`);
+            .then((result) => {
+                if (result) {
+                    RNFS.unlink(`${FILE_PREFIX}${path}`)
+                        .then(() => {
+                            console.log(`${path} DELETED`);
+                            TaskServices.deleteRecordByPK('TR_IMAGE', 'TR_CODE', trCode)
+                        });
+                } else {
                     TaskServices.deleteRecordByPK('TR_IMAGE', 'TR_CODE', trCode)
-                });
-            }else{
-                TaskServices.deleteRecordByPK('TR_IMAGE', 'TR_CODE', trCode)
-            }
-        })
-        .catch((err) => {
-            console.log(err.message);
-        });
+                }
+            })
+            .catch((err) => {
+                console.log(err.message);
+            });
     }
 
     _deleteFinding() {
-		this._deleteInspeksiHeader();
+        this._deleteInspeksiHeader();
         var data = TaskServices.query('TR_FINDING', `PROGRESS = '100' AND STATUS_SYNC = 'Y'`);
         var now = moment(new Date());
 
@@ -341,7 +341,7 @@ class SyncScreen extends React.Component {
     }
 
     _deleteInspeksiHeader() {
-        var data = TaskServices.getAllData('TR_BLOCK_INSPECTION_H');
+        var data = TaskServices.getAllData('TR_BLOCK_INSPECTION_H').filtered('STATUS_SYNC = "Y"');
         var now = moment(new Date());
         if (data != undefined) {
             for (var i = 0; i < data.length; i++) {
@@ -352,31 +352,33 @@ class SyncScreen extends React.Component {
                     }
                     var diff = moment(new Date(insertTime)).diff(now, 'day');
                     if (diff < -7) {
-                        this.deleteImageInspeksi(data[i].BLOCK_INSPECTION_CODE,data[i].ID_INSPECTION,
-							          this.deleteImageFileInspeksi,this.deleteRecordByPK);
+                        this.deleteImageInspeksi(data[i].BLOCK_INSPECTION_CODE, data[i].ID_INSPECTION,
+                            this.deleteImageFileInspeksi, this.deleteRecordByPK);
                     }
                 }
             }
         }
     }
 
-    async deleteImageInspeksi(INSPECTION_CODE,ID_INSPECTION,delImgFunc,delFunc) {
-        let dataImage = TaskServices.findBy('TR_IMAGE', 'TR_CODE', INSPECTION_CODE);
+    async deleteImageInspeksi(INSPECTION_CODE, ID_INSPECTION, delImgFunc, delFunc) {
+        // let dataImage = TaskServices.findBy('TR_IMAGE', 'TR_CODE', INSPECTION_CODE);
+        let dataImage = TaskServices.query('TR_IMAGE', `STATUS_SYNC = "Y" AND TR_CODE = "${INSPECTION_CODE}"`);
         if (dataImage != undefined) {
-            delImgFunc(dataImage, INSPECTION_CODE,ID_INSPECTION,delFunc);
+            delImgFunc(dataImage, INSPECTION_CODE, ID_INSPECTION, delFunc);
         }
     }
     async deleteImage(FINDING_CODE) {
-        let dataImage = TaskServices.findBy('TR_IMAGE', 'TR_CODE', FINDING_CODE.FINDING_CODE);
+        // let dataImage = TaskServices.findBy('TR_IMAGE', 'TR_CODE', FINDING_CODE.FINDING_CODE);
+        let dataImage = TaskServices.query('TR_IMAGE', `STATUS_SYNC = "Y" AND TR_CODE = "${FINDING_CODE}"`);
         if (dataImage != undefined) {
             this.deleteImageFile(dataImage, FINDING_CODE);
         }
     }
-	
+
     async deleteRecordByPK(table, whereClause, value) {
-		  return TaskServices.deleteRecordByPK(table, whereClause, value);
+        return TaskServices.deleteRecordByPK(table, whereClause, value);
     }
-    
+
     deleteData(table, whereClause, value) {
         let allData = TaskServices.getAllData(table);
         if (allData !== undefined && allData.length > 0) {
@@ -389,27 +391,27 @@ class SyncScreen extends React.Component {
 
     async deleteImageFileInspeksi(image, INSPECTION_CODE, ID_INSPECTION, callback) {
         const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
-        for (let i = 0; i < image.length; i++) {			
+        for (let i = 0; i < image.length; i++) {
             const PATH = `${FILE_PREFIX}${image[i].IMAGE_PATH_LOCAL}`;
             RNFS.exists(PATH)
                 .then((result) => {
                     if (result) {
                         return RNFS.unlink(PATH)
                             .then(() => {
-                                callback('TR_BLOCK_INSPECTION_D','BLOCK_INSPECTION_CODE', INSPECTION_CODE)
-                                callback('TR_BLOCK_INSPECTION_H','BLOCK_INSPECTION_CODE', INSPECTION_CODE)
-                                callback('TR_BARIS_INSPECTION','ID_INSPECTION', ID_INSPECTION)
+                                callback('TR_BLOCK_INSPECTION_D', 'BLOCK_INSPECTION_CODE', INSPECTION_CODE)
+                                callback('TR_BLOCK_INSPECTION_H', 'BLOCK_INSPECTION_CODE', INSPECTION_CODE)
+                                callback('TR_BARIS_INSPECTION', 'ID_INSPECTION', ID_INSPECTION)
                             })
                             // `unlink` will throw an error, if the item to unlink does not exist
                             .catch((err) => {
                                 console.log(err.message);
                             });
                     }
-					else{
-						callback('TR_BLOCK_INSPECTION_D','BLOCK_INSPECTION_CODE', INSPECTION_CODE)
-						callback('TR_BLOCK_INSPECTION_H','BLOCK_INSPECTION_CODE', INSPECTION_CODE)
-						callback('TR_BARIS_INSPECTION','ID_INSPECTION', ID_INSPECTION)
-					}
+                    else {
+                        callback('TR_BLOCK_INSPECTION_D', 'BLOCK_INSPECTION_CODE', INSPECTION_CODE)
+                        callback('TR_BLOCK_INSPECTION_H', 'BLOCK_INSPECTION_CODE', INSPECTION_CODE)
+                        callback('TR_BARIS_INSPECTION', 'ID_INSPECTION', ID_INSPECTION)
+                    }
                 })
                 .catch((err) => {
                     console.log(err.message);
@@ -433,9 +435,9 @@ class SyncScreen extends React.Component {
                                 console.log(err.message);
                             });
                     }
-					else{
-						TaskServices.deleteRecordPrimaryKey('TR_FINDING', FINDING_CODE)
-					}
+                    else {
+                        TaskServices.deleteRecordPrimaryKey('TR_FINDING', FINDING_CODE)
+                    }
                 })
                 .catch((err) => {
                     console.log(err.message);
@@ -461,7 +463,7 @@ class SyncScreen extends React.Component {
         if (countData.length > 0) {
             for (var i = 0; i < countData.length; i++) {
                 this.kirimFinding(countData[i]);
-                this.setState({valueFindingDataUpload: i+1, totalFindingDataUpload: countData.length });
+                this.setState({ valueFindingDataUpload: i + 1, totalFindingDataUpload: countData.length });
             }
             this.setState({
                 progressFindingData: 1
@@ -479,14 +481,14 @@ class SyncScreen extends React.Component {
         if (countData.length > 0) {
             for (var i = 0; i < countData.length; i++) {
                 let fulfill = this.isFulfillBaris(countData[i].ID_INSPECTION)
-                if(fulfill){
+                if (fulfill) {
                     this.kirimInspeksiHeader(countData[i]);
-                    this.setState({valueInspeksiHeaderUpload: i+1, totalInspeksiHeaderUpload: countData.length });
-                }             
+                    this.setState({ valueInspeksiHeaderUpload: i + 1, totalInspeksiHeaderUpload: countData.length });
+                }
             }
-			this.setState({
-				progressInspeksiHeader: 1
-			});
+            this.setState({
+                progressInspeksiHeader: 1
+            });
         } else {
             this.setState({
                 progressInspeksiHeader: 1,
@@ -497,16 +499,16 @@ class SyncScreen extends React.Component {
                 totalInspeksiDetailUpload: 0
             });
         }
-            /*this.setState({
-                progressInspeksiHeader: 1
-            });
-        } else {
-            this.setState({
-                progressInspeksiHeader: 1,
-                valueInspeksiHeaderUpload: 0,
-                totalInspeksiHeaderUpload: 0,
-            });
-        }*/   
+        /*this.setState({
+            progressInspeksiHeader: 1
+        });
+    } else {
+        this.setState({
+            progressInspeksiHeader: 1,
+            valueInspeksiHeaderUpload: 0,
+            totalInspeksiHeaderUpload: 0,
+        });
+    }*/
         this.loadDataDetailInspeksi();
         this.loadDataInspectionTrack();
     }
@@ -522,8 +524,8 @@ class SyncScreen extends React.Component {
                 /*let fulfill = this.isFulfillBaris(data[i].ID_INSPECTION)
                 if(fulfill){
                 }*/
-				this.kirimInspeksiDetail(data[i]);
-				this.setState({valueInspeksiDetailUpload: i+1, totalInspeksiDetailUpload: i+1 });
+                this.kirimInspeksiDetail(data[i]);
+                this.setState({ valueInspeksiDetailUpload: i + 1, totalInspeksiDetailUpload: i + 1 });
             }
             this.setState({
                 progressInspeksiDetail: 1,
@@ -533,12 +535,12 @@ class SyncScreen extends React.Component {
         }
     }
 
-    isFulfillBaris(idInspection){
+    isFulfillBaris(idInspection) {
         let data = TaskServices.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', idInspection)
-        if(data !== undefined){
-            if(data.FULFILL_BARIS == 'Y'){
+        if (data !== undefined) {
+            if (data.FULFILL_BARIS == 'Y') {
                 return true
-            }else{
+            } else {
                 return false
             }
         }
@@ -559,7 +561,7 @@ class SyncScreen extends React.Component {
         }
     }
 
-    kirimEbccHeader(){
+    kirimEbccHeader() {
         let dataHeader = TaskServices.getAllData('TR_H_EBCC_VALIDATION');
         var query = dataHeader.filtered('STATUS_SYNC = "N"');
         let countData = query;
@@ -573,7 +575,7 @@ class SyncScreen extends React.Component {
         }
     }
 
-    kirimEbccDetail(){
+    kirimEbccDetail() {
         let dataHeader = TaskServices.getAllData('TR_D_EBCC_VALIDATION');
         var query = dataHeader.filtered('STATUS_SYNC = "N"');
         let countData = query;
@@ -627,34 +629,34 @@ class SyncScreen extends React.Component {
                                     .then((response) => response.json())
                                     .then((responseJson) => {
                                         if (responseJson.status) {
-                                            this.setState({ valueImageUpload: i});
+                                            this.setState({ valueImageUpload: i });
                                             TaskServices.updateByPrimaryKey('TR_IMAGE', {
-                                                "IMAGE_CODE":model.IMAGE_CODE,
-                                                "STATUS_SYNC":"Y"
+                                                "IMAGE_CODE": model.IMAGE_CODE,
+                                                "STATUS_SYNC": "Y"
                                             });
                                             // TaskServices.updateStatusImage('TR_IMAGE', 'Y', idxOrder);
                                         }
-										else{
-											let tr_code = model.TR_CODE;
-											if(tr_code[0]=="I"){
-												TaskServices.updateByPrimaryKey('TR_BLOCK_INSPECTION_H', {
-													"BLOCK_INSPECTION_CODE":tr_code,
-													"STATUS_SYNC":"N"
-												});
-											}
-											else if(tr_code[0]=="F"){
-												TaskServices.updateByPrimaryKey('TR_FINDING', {
-													"FINDING_CODE":tr_code,
-													"STATUS_SYNC":"N"
-												});
-											}
-											else if(tr_code[0]=="V"){
-												TaskServices.updateByPrimaryKey('TR_H_EBCC_VALIDATION', {
-													"EBCC_VALIDATION_CODE":tr_code,
-													"STATUS_SYNC":"N"
-												});
-											}
-										}
+                                        else {
+                                            let tr_code = model.TR_CODE;
+                                            if (tr_code[0] == "I") {
+                                                TaskServices.updateByPrimaryKey('TR_BLOCK_INSPECTION_H', {
+                                                    "BLOCK_INSPECTION_CODE": tr_code,
+                                                    "STATUS_SYNC": "N"
+                                                });
+                                            }
+                                            else if (tr_code[0] == "F") {
+                                                TaskServices.updateByPrimaryKey('TR_FINDING', {
+                                                    "FINDING_CODE": tr_code,
+                                                    "STATUS_SYNC": "N"
+                                                });
+                                            }
+                                            else if (tr_code[0] == "V") {
+                                                TaskServices.updateByPrimaryKey('TR_H_EBCC_VALIDATION', {
+                                                    "EBCC_VALIDATION_CODE": tr_code,
+                                                    "STATUS_SYNC": "N"
+                                                });
+                                            }
+                                        }
                                     }).catch((error) => {
                                         console.error(error);
                                     });
@@ -667,12 +669,12 @@ class SyncScreen extends React.Component {
                         })
                 }
             }
-            this.setState({ progressUploadImage: 1});
+            this.setState({ progressUploadImage: 1 });
         } catch (error) {
             this.setState({ progressUploadImage: 1, valueImageUpload: 0, totalImagelUpload: 0 });
         }
-        
-            
+
+
         this.loadDataFinding();
         this.loadData();
         this.kirimEbccHeader();
@@ -685,10 +687,10 @@ class SyncScreen extends React.Component {
         let countData = TaskServices.getAllData('TR_GENBA_INSPECTION');
         let filteredData = Object.values(countData.filtered('STATUS_SYNC = "N"'));
         if (filteredData.length > 0) {
-            filteredData.map((data, index)=>{
+            filteredData.map((data, index) => {
                 let GENBA_USER = [];
                 let genbaUserArray = Object.values(data.GENBA_USER);
-                genbaUserArray.map((data)=>{
+                genbaUserArray.map((data) => {
                     GENBA_USER.push(data.USER_AUTH_CODE)
                 });
 
@@ -698,7 +700,7 @@ class SyncScreen extends React.Component {
                 };
 
                 this.postGenba(genbaModel);
-                this.setState({valueGenbaInspection: index+1, totalGenbaInspection: filteredData.length });
+                this.setState({ valueGenbaInspection: index + 1, totalGenbaInspection: filteredData.length });
             });
             this.setState({
                 progressGenbaInspection: 1
@@ -724,7 +726,7 @@ class SyncScreen extends React.Component {
                 return response.json();
             })
             .then((data) => {
-                console.log("GENBA INSERT : "+JSON.stringify(data))
+                console.log("GENBA INSERT : " + JSON.stringify(data))
                 if (data.status) {
                     this.updateGenbaInspectionTable(genbaModel.BLOCK_INSPECTION_CODE)
                 }
@@ -732,8 +734,8 @@ class SyncScreen extends React.Component {
                     console.log("genbaUpload failed, check your parameter / api!");
                 }
             })
-            .catch((e)=> {
-                console.log("genbaUpload failed E:"+e);
+            .catch((e) => {
+                console.log("genbaUpload failed E:" + e);
             })
     }
 
@@ -741,7 +743,7 @@ class SyncScreen extends React.Component {
         if (genbaInspectionCode !== undefined) {
             TaskServices.updateByPrimaryKey('TR_GENBA_INSPECTION', {
                 "BLOCK_INSPECTION_CODE": genbaInspectionCode,
-                "STATUS_SYNC":"Y"
+                "STATUS_SYNC": "Y"
             });
         }
     };
@@ -773,28 +775,28 @@ class SyncScreen extends React.Component {
                     } else if (table == 'finding') {
                         //let imgHasSent = this.checkImageHasSent(dataPost.FINDING_CODE)
                         //if(imgHasSent){
-                            this.updateFinding(dataPost)
+                        this.updateFinding(dataPost)
                         //}
-                    }else if (table == 'ebccH') {
+                    } else if (table == 'ebccH') {
                         //let imgHasSent = this.checkImageHasSent(dataPost.EBCC_VALIDATION_CODE)
                         //if(imgHasSent){
-                            this.updateEbccHeader(dataPost)
+                        this.updateEbccHeader(dataPost)
                         //}
-                    }else if (table == 'ebccD') {
+                    } else if (table == 'ebccD') {
                         this.updateEbccDetail(dataPost, idInspection)
                     }
                 }
             })
-			.catch((e)=> {
-				console.log("error upload",URL,dataPost, table, user.ACCESS_TOKEN,e);
-			})
+            .catch((e) => {
+                console.log("error upload", URL, dataPost, table, user.ACCESS_TOKEN, e);
+            })
     }
 
-    checkImageHasSent(trCode){
+    checkImageHasSent(trCode) {
         let images = TaskServices.findBy('TR_IMAGE', 'TR_CODE', trCode);
-        if(images !== undefined){
-            for(var i=0; i<images.length; i++){
-                if(images.STATUS_SYNC == 'N'){
+        if (images !== undefined) {
+            for (var i = 0; i < images.length; i++) {
+                if (images.STATUS_SYNC == 'N') {
                     return false;
                 }
             }
@@ -802,12 +804,12 @@ class SyncScreen extends React.Component {
         return true;
     }
 
-    headerHasSent(idInspection){
+    headerHasSent(idInspection) {
         let header = TaskServices.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', idInspection);
-        if(header !== undefined){
-            for(var i=0; i<header.length; i++){
+        if (header !== undefined) {
+            for (var i = 0; i < header.length; i++) {
                 let image = this.checkImageHasSent(header[i].BLOCK_INSPECTION_CODE)
-                if(image && header[i].STATUS_SYNC == 'N'){
+                if (image && header[i].STATUS_SYNC == 'N') {
                     return false;
                 }
             }
@@ -816,11 +818,11 @@ class SyncScreen extends React.Component {
         return false;
     }
 
-    detailHasSent(blockInsCode){
+    detailHasSent(blockInsCode) {
         let detail = TaskServices.findBy('TR_BLOCK_INSPECTION_D', 'ID_INSPECTION', blockInsCode);
-        if(detail !== undefined){
-            for(var j=0; j<detail.length; j++){
-                if(detail[j].STATUS_SYNC == 'N'){
+        if (detail !== undefined) {
+            for (var j = 0; j < detail.length; j++) {
+                if (detail[j].STATUS_SYNC == 'N') {
                     return false;
                 }
             }
@@ -829,16 +831,16 @@ class SyncScreen extends React.Component {
         return false;
     }
 
-    updateSyncInpesctionBaris(){
+    updateSyncInpesctionBaris() {
         let barisIns = TaskServices.findBy('TR_BARIS_INSPECTION', 'STATUS_SYNC', 'N')
-        if(barisIns !== undefined){
+        if (barisIns !== undefined) {
             barisIns.map(item => {
                 let header = this.headerHasSent(item.ID_INSPECTION)
                 let detail = this.detailHasSent(item.ID_INSPECTION)
-                if(header && detail){
+                if (header && detail) {
                     this.updateInspeksiBaris(item.ID_INSPECTION)
                 }
-            })           
+            })
         }
     }
 
@@ -848,9 +850,9 @@ class SyncScreen extends React.Component {
             let indexData = R.findIndex(R.propEq('BLOCK_INSPECTION_CODE', param.BLOCK_INSPECTION_CODE))(allData);
             TaskServices.updateInspeksiSync('TR_BLOCK_INSPECTION_H', 'Y', indexData);*/
             TaskServices.updateByPrimaryKey('TR_BLOCK_INSPECTION_H', {
-				"BLOCK_INSPECTION_CODE":param.BLOCK_INSPECTION_CODE,
-				"STATUS_SYNC":"Y"
-			});
+                "BLOCK_INSPECTION_CODE": param.BLOCK_INSPECTION_CODE,
+                "STATUS_SYNC": "Y"
+            });
         }
     }
 
@@ -860,22 +862,22 @@ class SyncScreen extends React.Component {
             let indexData = R.findIndex(R.propEq('BLOCK_INSPECTION_CODE_D', param.BLOCK_INSPECTION_CODE_D))(allData);
             TaskServices.updateInspeksiSync('TR_BLOCK_INSPECTION_D', 'Y', indexData);*/
             TaskServices.updateByPrimaryKey('TR_BLOCK_INSPECTION_D', {
-				"BLOCK_INSPECTION_CODE_D":param.BLOCK_INSPECTION_CODE_D,
-				"STATUS_SYNC":"Y"
-			});
+                "BLOCK_INSPECTION_CODE_D": param.BLOCK_INSPECTION_CODE_D,
+                "STATUS_SYNC": "Y"
+            });
         }
     }
 
     updateInspeksiTrack = param => {
-		console.log("updateInspeksiTrack",param);
+        console.log("updateInspeksiTrack", param);
         if (param !== null) {
             /*let allData = TaskServices.getAllData('TM_INSPECTION_TRACK')
             let indexData = R.findIndex(R.propEq('TRACK_INSPECTION_CODE', param.TRACK_INSPECTION_CODE))(allData);
             TaskServices.updateInspeksiSync('TM_INSPECTION_TRACK', 'Y', indexData);*/
             TaskServices.updateByPrimaryKey('TM_INSPECTION_TRACK', {
-				"TRACK_INSPECTION_CODE":param.TRACK_INSPECTION_CODE,
-				"STATUS_SYNC":"Y"
-			});
+                "TRACK_INSPECTION_CODE": param.TRACK_INSPECTION_CODE,
+                "STATUS_SYNC": "Y"
+            });
         }
     }
 
@@ -885,40 +887,40 @@ class SyncScreen extends React.Component {
             let indexData = R.findIndex(R.propEq('ID_INSPECTION', param))(allData);
             TaskServices.updateInspeksiSync('TR_BARIS_INSPECTION', 'Y', indexData);*/
             TaskServices.updateByPrimaryKey('TR_BARIS_INSPECTION', {
-				"ID_INSPECTION":param,
-				"STATUS_SYNC":"Y"
-			});
+                "ID_INSPECTION": param,
+                "STATUS_SYNC": "Y"
+            });
         }
     }
 
     updateFinding = param => {
         if (param !== undefined) {
-			try{
-				TaskServices.updateByPrimaryKey('TR_FINDING',{
-					"FINDING_CODE":param.FINDING_CODE,
-					"STATUS_SYNC":"Y"
-				});
-			}
-			catch(e){
-				console.log("error updateFinding",e);
-			}
+            try {
+                TaskServices.updateByPrimaryKey('TR_FINDING', {
+                    "FINDING_CODE": param.FINDING_CODE,
+                    "STATUS_SYNC": "Y"
+                });
+            }
+            catch (e) {
+                console.log("error updateFinding", e);
+            }
         }
     }
     updateEbccHeader = param => {
         if (param !== undefined) {
             TaskServices.updateByPrimaryKey('TR_H_EBCC_VALIDATION', {
-				"EBCC_VALIDATION_CODE":param.EBCC_VALIDATION_CODE,
-				"STATUS_SYNC":"Y"
-			});
+                "EBCC_VALIDATION_CODE": param.EBCC_VALIDATION_CODE,
+                "STATUS_SYNC": "Y"
+            });
         }
     }
 
     updateEbccDetail = (param, ebccValCodeD) => {
         if (param !== undefined) {
             TaskServices.updateByPrimaryKey('TR_D_EBCC_VALIDATION', {
-				"EBCC_VALIDATION_CODE_D":ebccValCodeD,
-				"STATUS_SYNC":"Y"
-			});
+                "EBCC_VALIDATION_CODE_D": ebccValCodeD,
+                "STATUS_SYNC": "Y"
+            });
         }
     }
 
@@ -934,7 +936,7 @@ class SyncScreen extends React.Component {
             INSPECTION_TYPE: "PANEN",
             INSPECTION_DATE: parseInt(convertTimestampToDate(param.INSPECTION_DATE, 'YYYYMMDDkkmmss')),
             INSPECTION_RESULT: param.INSPECTION_RESULT,
-            INSPECTION_SCORE: param.INSPECTION_SCORE !== '' ? parseInt(param.INSPECTION_SCORE):0,
+            INSPECTION_SCORE: param.INSPECTION_SCORE !== '' ? parseInt(param.INSPECTION_SCORE) : 0,
             STATUS_SYNC: 'Y',
             SYNC_TIME: parseInt(getTodayDate('YYYYMMDDkkmmss')),
             START_INSPECTION: parseInt(convertTimestampToDate(param.START_INSPECTION, 'YYYYMMDDkkmmss')),
@@ -973,7 +975,7 @@ class SyncScreen extends React.Component {
             LONG_TRACK: param.LONG_TRACK,
             INSERT_USER: param.INSERT_USER,
             STATUS_SYNC: 'Y',
-			STATUS_TRACK: 1,
+            STATUS_TRACK: 1,
             INSERT_TIME: parseInt(param.INSERT_TIME.replace(/-/g, '').replace(/ /g, '').replace(/:/g, ''))
         }
         this.uploadData(this.getAPIURL("INSPECTION-TRACKING-INSERT"), data, 'tracking', '');
@@ -981,12 +983,12 @@ class SyncScreen extends React.Component {
 
     kirimFinding(param) {
         let dueDate = param.DUE_DATE;
-		if (dueDate.includes(' ')) {
-			dueDate = dueDate.substring(0, dueDate.indexOf(' '))
-		}
-		if(dueDate.length>0){
-			dueDate += " 00:00:00"
-		}
+        if (dueDate.includes(' ')) {
+            dueDate = dueDate.substring(0, dueDate.indexOf(' '))
+        }
+        if (dueDate.length > 0) {
+            dueDate += " 00:00:00"
+        }
         let data = {
             FINDING_CODE: param.FINDING_CODE,
             WERKS: param.WERKS,
@@ -1002,11 +1004,11 @@ class SyncScreen extends React.Component {
             LONG_FINDING: param.LONG_FINDING,
             //STATUS_TRACK: param.STATUS_LAT_LONG,
             REFFERENCE_INS_CODE: param.REFFERENCE_INS_CODE,
-			STATUS_SYNC: 'Y',
+            STATUS_SYNC: 'Y',
             INSERT_USER: param.INSERT_USER,
-            INSERT_TIME: param.INSERT_TIME == '' ? parseInt(getTodayDate('YYYYMMDDkkmmss')) :parseInt(param.INSERT_TIME.replace(/-/g, '').replace(/ /g, '').replace(/:/g, '')),
+            INSERT_TIME: param.INSERT_TIME == '' ? parseInt(getTodayDate('YYYYMMDDkkmmss')) : parseInt(param.INSERT_TIME.replace(/-/g, '').replace(/ /g, '').replace(/:/g, '')),
             UPDATE_USER: param.UPDATE_USER,
-            UPDATE_TIME: param.UPDATE_TIME == '' ? parseInt(getTodayDate('YYYYMMDDkkmmss')) :parseInt(param.UPDATE_TIME.replace(/-/g, '').replace(/ /g, '').replace(/:/g, ''))
+            UPDATE_TIME: param.UPDATE_TIME == '' ? parseInt(getTodayDate('YYYYMMDDkkmmss')) : parseInt(param.UPDATE_TIME.replace(/-/g, '').replace(/ /g, '').replace(/:/g, ''))
         }
         this.uploadData(this.getAPIURL("FINDING-INSERT"), data, 'finding', '');
     }
@@ -1022,10 +1024,10 @@ class SyncScreen extends React.Component {
             ALASAN_MANUAL: param.ALASAN_MANUAL,
             LAT_TPH: param.LAT_TPH,
             LON_TPH: param.LON_TPH,
-            DELIVERY_CODE: param.DELIVERY_CODE,            
+            DELIVERY_CODE: param.DELIVERY_CODE,
             STATUS_DELIVERY_CODE: param.STATUS_DELIVERY_CODE,
             STATUS_SYNC: 'SYNC',
-            SYNC_TIME: parseInt(getTodayDate('YYYYMMDDkkmmss')),  
+            SYNC_TIME: parseInt(getTodayDate('YYYYMMDDkkmmss')),
             INSERT_USER: param.INSERT_USER,
             INSERT_TIME: parseInt(convertTimestampToDate(param.INSERT_TIME, 'YYYYMMDDkkmmss')),
             UPDATE_USER: '',
@@ -1040,7 +1042,7 @@ class SyncScreen extends React.Component {
             ID_KUALITAS: param.ID_KUALITAS,
             JUMLAH: param.JUMLAH,
             STATUS_SYNC: 'SYNC',
-            SYNC_TIME: parseInt(getTodayDate('YYYYMMDDkkmmss')), 
+            SYNC_TIME: parseInt(getTodayDate('YYYYMMDDkkmmss')),
             INSERT_TIME: parseInt(convertTimestampToDate(param.INSERT_TIME, 'YYYYMMDDkkmmss')),
             INSERT_USER: param.INSERT_USER,
             UPDATE_USER: '',
@@ -1075,7 +1077,7 @@ class SyncScreen extends React.Component {
             if (total > 0) {
                 this.fetchingMobileSync(item);
             } else {
-                if(item !== 'finding'){
+                if (item !== 'finding') {
                     this.setState({
                         showButton: true,
                         showModal: true,
@@ -1271,7 +1273,7 @@ class SyncScreen extends React.Component {
         }
         if (data.ubah.length > 0 && allData.length > 0) {
             data.ubah.map(item => {
-                TaskServices.updateByPrimaryKey('TM_COMP',item)
+                TaskServices.updateByPrimaryKey('TM_COMP', item)
                 // let indexData = R.findIndex(R.propEq('COMP_CODE', item.COMP_CODE))(allData);
                 //TaskServices.updateComp(item, indexData)
             })
@@ -1395,8 +1397,8 @@ class SyncScreen extends React.Component {
                 this.setState({ progressFinding: i / data.simpan.length, totalFindingDownload: data.simpan.length });
             }
             data.simpan.map(item => {
-				let newItem=Object.assign({},item,{STATUS_SYNC:'Y'});
-				this._updateTR_Notif(newItem);
+                let newItem = Object.assign({}, item, { STATUS_SYNC: 'Y' });
+                this._updateTR_Notif(newItem);
                 TaskServices.saveData('TR_FINDING', newItem);
                 let countDataInsert = TaskServices.getTotalData('TR_FINDING');
                 this.setState({ valueFindingDownload: countDataInsert });
@@ -1407,50 +1409,50 @@ class SyncScreen extends React.Component {
         }
         if (data.ubah.length > 0 && allData.length > 0) {
             data.ubah.map(item => {
-				let newItem=Object.assign({},item,{STATUS_SYNC:'Y'});
-				this._updateTR_Notif(newItem);
+                let newItem = Object.assign({}, item, { STATUS_SYNC: 'Y' });
+                this._updateTR_Notif(newItem);
                 TaskServices.updateByPrimaryKey('TR_FINDING', item)
             })
         }
         if (data.hapus.length > 0 && allData.length > 0) {
             data.hapus.map(item => {
-				let newItem=Object.assign({},item,{STATUS_SYNC:'Y'});
-				this._updateTR_Notif(newItem);
+                let newItem = Object.assign({}, item, { STATUS_SYNC: 'Y' });
+                this._updateTR_Notif(newItem);
                 this.deleteRecordByPK('TR_FINDING', 'FINDING_CODE', item.FINDING_CODE);
             });
         }
     }
 
-	_updateTR_Notif(data){
-		let today = moment(new Date());
-		let newNotif = {
-			NOTIFICATION_ID: data.FINDING_CODE+"$",
-			NOTIFICATION_TIME: new Date(),
-			FINDING_UPDATE_TIME: data.UPDATE_TIME,
-			FINDING_CODE:data.FINDING_CODE
-		}
-		if(data.UPDATE_USER==''){
-			if(data.ASSIGN_TO==this.state.user.USER_AUTH_CODE){
-				//finding baru diasign ke user
-				let newData = Object.assign({},newNotif,{NOTIFICATION_TYPE:0})
-				TaskServices.saveData('TR_NOTIFICATION', newData);
-			}
-			let createDate = moment(data.INSERT_TIME,"YYYYMMDDHHmmss");
-			let diffDays = today.diff(createDate, 'days');
-			if(diffDays>6){
-				//belum di respon 7 hari setelah pembuatan
-				if(data.ASSIGN_TO==this.state.user.USER_AUTH_CODE){
-					//diasign tapi belum merespon
-					newNotif.NOTIFICATION_TYPE=2;
-					TaskServices.saveData('TR_NOTIFICATION', newNotif);
-				}
-				else if(data.INSERT_USER==this.state.user.USER_AUTH_CODE){
-					//membuat finding tapi belum mendapat respon
-					newNotif.NOTIFICATION_TYPE=3;
-					TaskServices.saveData('TR_NOTIFICATION', newNotif);
-				}
-			}
-		}
+    _updateTR_Notif(data) {
+        let today = moment(new Date());
+        let newNotif = {
+            NOTIFICATION_ID: data.FINDING_CODE + "$",
+            NOTIFICATION_TIME: new Date(),
+            FINDING_UPDATE_TIME: data.UPDATE_TIME,
+            FINDING_CODE: data.FINDING_CODE
+        }
+        if (data.UPDATE_USER == '') {
+            if (data.ASSIGN_TO == this.state.user.USER_AUTH_CODE) {
+                //finding baru diasign ke user
+                let newData = Object.assign({}, newNotif, { NOTIFICATION_TYPE: 0 })
+                TaskServices.saveData('TR_NOTIFICATION', newData);
+            }
+            let createDate = moment(data.INSERT_TIME, "YYYYMMDDHHmmss");
+            let diffDays = today.diff(createDate, 'days');
+            if (diffDays > 6) {
+                //belum di respon 7 hari setelah pembuatan
+                if (data.ASSIGN_TO == this.state.user.USER_AUTH_CODE) {
+                    //diasign tapi belum merespon
+                    newNotif.NOTIFICATION_TYPE = 2;
+                    TaskServices.saveData('TR_NOTIFICATION', newNotif);
+                }
+                else if (data.INSERT_USER == this.state.user.USER_AUTH_CODE) {
+                    //membuat finding tapi belum mendapat respon
+                    newNotif.NOTIFICATION_TYPE = 3;
+                    TaskServices.saveData('TR_NOTIFICATION', newNotif);
+                }
+            }
+        }
 		else if(data.INSERT_USER==this.state.user.USER_AUTH_CODE){
 			if(data.PROGRESS>=100){
 				//Progress sudah selesai
@@ -1464,7 +1466,6 @@ class SyncScreen extends React.Component {
 			}
 		}
 	}
-	
     _crudTM_Finding_Image(data) {
         var dataSimpan = data.simpan;
         if (dataSimpan.length > 0) {
@@ -1488,109 +1489,104 @@ class SyncScreen extends React.Component {
 
     _crudTM_Inspeksi_Param(data) {
         TaskServices.saveData('TM_TIME_TRACK', data);
-        this.setState({ progressParamInspection: 1, valueParamInspection: 1, totalParamInspection: 1 });      
+        this.setState({ progressParamInspection: 1, valueParamInspection: 1, totalParamInspection: 1 });
     }
-	_save_sync_log(){
-		let today = new Date();
+    _save_sync_log() {
+        let today = new Date();
         let data = {
-			SYNC_TIME_ID: today.getTime(),
+            SYNC_TIME_ID: today.getTime(),
             SYNC_TIME: today
         }
         TaskServices.saveData('TR_SYNC_LOG', data);
-	}
-	_reset_token(trueSync){
-		let allLoginData = TaskServices.findBy('TR_LOGIN','STATUS','LOGIN');
-		if(allLoginData.length>0){
-			let token = allLoginData[0].ACCESS_TOKEN;
-			let serv = TaskServices.getAllData("TM_SERVICE")
-						.filtered('API_NAME="AUTH-GENERATE-TOKEN" AND MOBILE_VERSION="'+ServerName.verAPK+'"')[0];
-			fetch(serv.API_URL, {
-				method: serv.METHOD,
-				headers: {
-					'Authorization': `Bearer ${token}`
-				}
-			})
-			.then((response) => {
-				return response.json();
-			})
-			.then((data) => {
-				if(trueSync){
-					if(data.status){
-						let newToken = data.data;
-						let allLoginData = TaskServices.findBy('TR_LOGIN','STATUS','LOGIN');
-						if(allLoginData.length>0){
-							let oldUser = Object.assign({}, allLoginData[0],{ACCESS_TOKEN:newToken});
-							TaskServices.updateByPrimaryKey('TR_LOGIN',oldUser);
-							let newLoginData = TaskServices.findBy('TR_LOGIN','STATUS','LOGIN');
-							RNFS.copyFile(TaskServices.getPath(), 'file:///storage/emulated/0/MobileInspection/data.realm');
-							this.setState({
-								showModal: true,
-								title: 'Sync Berhasil',
-								message: 'Yeay sinkronisasi udah selesai!',
-								icon: require('../Images/ic-sync-berhasil.png'), 
-								showButton: true,
-								finishedSync:true,
-								pickedWerks:(newLoginData[0].CURR_WERKS?true:false)
-							});
-						}
-						else{
-							this.setState({
-								showModal: true,
-								title: 'Sync Gagal',
-								message: 'Gagal mendapatkan informasi user',
-								icon: require('../Images/ic-sync-gagal.png'), 
-								showButton: true
-							});
-						}
-					}
-					else{
-						this.setState({
-							showModal: true,
-							title: 'Sync Gagal',
-							message: 'Gagal memperbarui token',
-							icon: require('../Images/ic-sync-gagal.png'), 
-							showButton: true
-						});
-					}
-				}
-				else{
-					this.setState({
-						showButton: true,
-						showModal: true,
-						title: 'Tidak Sinkron',
-						message: 'Jam di HP kamu salah',
-						icon: require('../Images/ic-sync-gagal.png')
-					})
-				}
-			})
-			.catch((data)=>{
-				console.log("catch",data)
-			});
-		}
-		else{
-			this.setState({
-				showModal: true,
-				title: 'Sync Gagal',
-				message: 'Anda belum login',
-				icon: require('../Images/ic-sync-gagal.png'), 
-				showButton: true
-			});
-		}
-        this._deleteFinding();
-        this.deleteEbccHeader();
-        this.deleteEbccDetail();
-		this.deleteInspectionHeader();
-		this.deleteInspectionDetail();
-	}
-  
-      _crudTM_Kualitas(data) {
+    }
+    _reset_token(trueSync) {
+        let allLoginData = TaskServices.findBy('TR_LOGIN', 'STATUS', 'LOGIN');
+        if (allLoginData.length > 0) {
+            let token = allLoginData[0].ACCESS_TOKEN;
+            let serv = TaskServices.getAllData("TM_SERVICE")
+                .filtered('API_NAME="AUTH-GENERATE-TOKEN" AND MOBILE_VERSION="' + ServerName.verAPK + '"')[0];
+            fetch(serv.API_URL, {
+                method: serv.METHOD,
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+                .then((response) => {
+                    return response.json();
+                })
+                .then((data) => {
+                    if (trueSync) {
+                        if (data.status) {
+                            let newToken = data.data;
+                            let allLoginData = TaskServices.findBy('TR_LOGIN', 'STATUS', 'LOGIN');
+                            if (allLoginData.length > 0) {
+                                let oldUser = Object.assign({}, allLoginData[0], { ACCESS_TOKEN: newToken });
+                                TaskServices.updateByPrimaryKey('TR_LOGIN', oldUser);
+                                let newLoginData = TaskServices.findBy('TR_LOGIN', 'STATUS', 'LOGIN');
+                                RNFS.copyFile(TaskServices.getPath(), 'file:///storage/emulated/0/MobileInspection/data.realm');
+                                this.setState({
+                                    showModal: true,
+                                    title: 'Sync Berhasil',
+                                    message: 'Yeay sinkronisasi udah selesai!',
+                                    icon: require('../Images/ic-sync-berhasil.png'),
+                                    showButton: true,
+                                    finishedSync: true,
+                                    pickedWerks: (newLoginData[0].CURR_WERKS ? true : false)
+                                });
+                            }
+                            else {
+                                this.setState({
+                                    showModal: true,
+                                    title: 'Sync Gagal',
+                                    message: 'Gagal mendapatkan informasi user',
+                                    icon: require('../Images/ic-sync-gagal.png'),
+                                    showButton: true
+                                });
+                            }
+                        }
+                        else {
+                            this.setState({
+                                showModal: true,
+                                title: 'Sync Gagal',
+                                message: 'Gagal memperbarui token',
+                                icon: require('../Images/ic-sync-gagal.png'),
+                                showButton: true
+                            });
+                        }
+                    }
+                    else {
+                        this.setState({
+                            showButton: true,
+                            showModal: true,
+                            title: 'Tidak Sinkron',
+                            message: 'Jam di HP kamu salah',
+                            icon: require('../Images/ic-sync-gagal.png')
+                        })
+                    }
+                })
+                .catch((data) => {
+                    console.log("catch", data)
+                });
+        }
+        else {
+            this.setState({
+                showModal: true,
+                title: 'Sync Gagal',
+                message: 'Anda belum login',
+                icon: require('../Images/ic-sync-gagal.png'),
+                showButton: true
+            });
+        }
+    }
+
+    _crudTM_Kualitas(data) {
         let allData = TaskServices.getAllData('TM_KUALITAS');
         if (data.simpan.length > 0) {
             for (var i = 1; i <= data.simpan.length; i++) {
                 this.setState({ progressKualitas: i / data.simpan.length, totalKualitas: data.simpan.length });
             }
             data.simpan.map(item => {
-				item.ID_KUALITAS = item.ID_KUALITAS.toString();
+                item.ID_KUALITAS = item.ID_KUALITAS.toString();
                 TaskServices.saveData('TM_KUALITAS', item);
                 let countDataInsert = TaskServices.getTotalData('TM_KUALITAS');
                 this.setState({ valueKualitas: countDataInsert });
@@ -1601,7 +1597,7 @@ class SyncScreen extends React.Component {
         }
         if (data.ubah.length > 0 && allData.length > 0) {
             data.ubah.map(item => {
-				item.ID_KUALITAS = item.ID_KUALITAS.toString();
+                item.ID_KUALITAS = item.ID_KUALITAS.toString();
                 TaskServices.updateByPrimaryKey('TM_KUALITAS', item)
                 // let indexData = R.findIndex(R.propEq('ID_KUALITAS', item.ID_KUALITAS))(allData);
                 //TaskServices.updateFindingDownload(item, indexData)
@@ -1609,7 +1605,7 @@ class SyncScreen extends React.Component {
         }
         if (data.hapus.length > 0 && allData.length > 0) {
             data.hapus.map(item => {
-				item.ID_KUALITAS = item.ID_KUALITAS.toString();
+                item.ID_KUALITAS = item.ID_KUALITAS.toString();
                 this.deleteRecordByPK('TM_KUALITAS', 'ID_KUALITAS', item.ID_KUALITAS);
             });
         }
@@ -1661,7 +1657,7 @@ class SyncScreen extends React.Component {
         }
     }
 
-    resetSagas(){
+    resetSagas() {
         this.props.resetServerTime();
         this.props.resetFinding();
         this.props.resetFindingImage();
@@ -1680,6 +1676,11 @@ class SyncScreen extends React.Component {
     }
 
     _onSync() {
+        this._deleteFinding();
+        this.deleteEbccHeader();
+        this.deleteEbccDetail();
+        this.deleteGenbaSelected();
+        this.deleteGenbaInspection();
         // Gani            
         this.resetSagas();
         NetInfo.isConnected.fetch().then(isConnected => {
@@ -1691,7 +1692,7 @@ class SyncScreen extends React.Component {
                     progressInspeksiDetail: 0,
                     progressUploadImage: 0,
                     progressFindingData: 0,
-                    progressInspectionTrack: 0,                   
+                    progressInspectionTrack: 0,
 
                     //labelUpload
                     valueInspeksiHeaderUpload: '0',
@@ -1719,9 +1720,9 @@ class SyncScreen extends React.Component {
                     progressKriteria: 0,
                     progressCategory: 0,
                     progressContact: 0,
-                    progressParamInspection: 0,     
+                    progressParamInspection: 0,
                     progressKualitas: 0,
-                    
+
                     //labelDownload
                     valueDownload: '0',
                     valueAfdDownload: '0',
@@ -1797,7 +1798,7 @@ class SyncScreen extends React.Component {
     fetchingMobileSync(param) {
         var moment = require('moment');
         const user = TaskServices.getAllData('TR_LOGIN')[0];
-		let api = this.getAPIURL("AUTH-SYNC");
+        let api = this.getAPIURL("AUTH-SYNC");
         fetch(api.API_URL, {
             method: api.METHOD,
             headers: {
@@ -1905,7 +1906,7 @@ class SyncScreen extends React.Component {
             this.resetSagas()
             return;
         }
-		
+
         if (newProps.finding.fetchingFinding !== null && !newProps.finding.fetchingFinding) {
             let dataJSON = newProps.finding.finding;
             if (dataJSON !== null) {
@@ -2024,7 +2025,7 @@ class SyncScreen extends React.Component {
             }
             this.props.resetContact();
             this.props.paramTrackRequest();
-        }        
+        }
 
         if (newProps.paramTrack.fetchingParamTrack !== null && !newProps.paramTrack.fetchingParamTrack) {
             let dataJSON = newProps.paramTrack.paramTrack;
@@ -2033,7 +2034,7 @@ class SyncScreen extends React.Component {
             }
             this.props.resetParamTrack();
             this.props.kualitasRequest();
-            
+
         }
 
         if (newProps.kualitas.fetchingKualitas !== null && !newProps.kualitas.fetchingKualitas) {
@@ -2042,23 +2043,23 @@ class SyncScreen extends React.Component {
                 this._crudTM_Kualitas(dataJSON);
             }
             this.props.resetKualitas();
-			this.props.serverTimeRequest();
+            this.props.serverTimeRequest();
         }
         if (newProps.serverTime.fetchingServerTime !== null && !newProps.serverTime.fetchingServerTime) {
             let dataJSON = newProps.serverTime.serverTime;
-			let trueSync = true;
+            let trueSync = true;
             if (dataJSON !== null) {
-				let serverTime = new Date(dataJSON.time.replace(' ','T')+"+07:00");
-				let localTime = new Date();
-				serverTime.setMinutes(0,0,0);
-				localTime.setMinutes(0,0,0);
-				if(serverTime.getTime()!== localTime.getTime()){
+                let serverTime = new Date(dataJSON.time.replace(' ', 'T') + "+07:00");
+                let localTime = new Date();
+                serverTime.setMinutes(0, 0, 0);
+                localTime.setMinutes(0, 0, 0);
+                if (serverTime.getTime() !== localTime.getTime()) {
                     trueSync = false;
-				}
+                }
             }
-			this._reset_token(trueSync);
+            this._reset_token(trueSync);
             this.props.resetServerTime();
-			this._save_sync_log();
+            this._save_sync_log();
         }
     }
 
@@ -2071,17 +2072,17 @@ class SyncScreen extends React.Component {
                         icon={this.state.icon}
                         visible={this.state.showModal}
                         onPressCancel={() => {
-							if(this.state.pickedWerks===false){
-								this.props.navigation.navigate('PilihPeta')
-							}
-							this.setState({ showModal: false ,finishedSync:false, pickedWerks:true});
-						}}
+                            if (this.state.pickedWerks === false) {
+                                this.props.navigation.navigate('PilihPeta')
+                            }
+                            this.setState({ showModal: false, finishedSync: false, pickedWerks: true });
+                        }}
                         title={this.state.title}
                         message={this.state.message} />
 
                     {this.state.showButton && <View style={{ flex: 1, marginTop: 8 }}>
-                        <TouchableOpacity disabled={this.state.isBtnEnable} style={styles.button} 
-							onPress={() => { this.setState({ showButton: false }); this.insertLink() }}>
+                        <TouchableOpacity disabled={this.state.isBtnEnable} style={styles.button}
+                            onPress={() => { this.setState({ showButton: false }); this.insertLink() }}>
                             <Text style={styles.buttonText}>Sync</Text>
                         </TouchableOpacity>
                     </View>}
@@ -2575,7 +2576,7 @@ const mapStateToProps = state => {
         findingImage: state.findingImage,
         inspeksi: state.inspeksi,
         findingUpload: state.findingUpload,
-        paramTrack: state.paramTrack,        
+        paramTrack: state.paramTrack,
         kualitas: state.kualitas
     };
 };
