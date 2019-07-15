@@ -304,7 +304,7 @@ export default class Genba extends Component {
                         alignItems:"center",
                         justifyContent:"center"
                     }}>
-                        <ScrollView style={{flex: 1, maxHeight: 53}}>
+                        <ScrollView style={{flex: 1, maxHeight: 100}}>
                             {this.renderSelectedUser()}
                         </ScrollView>
                         <TouchableOpacity
@@ -334,7 +334,7 @@ export default class Genba extends Component {
                                 fontWeight:'600',
                                 marginBottom:10,
                                 marginTop:5
-                            }}>Saran {this.state.totalSuggestion}</Text>
+                            }}>Terpilih {"("+this.state.dataSelected.length+")"}</Text>
 
                             <View style={{
                                 width: "50%",
@@ -454,7 +454,7 @@ export default class Genba extends Component {
                                 flexDirection:'row'
                             }}>
                                 <View>
-                                    <Image source={image_genba} style={{width : 60, height:60, marginRight: 15}}/>
+                                    <Image source={image_genba} style={{width : 40, height:40, marginRight: 15}}/>
                                 </View>
                                 <View style={{flex:1, justifyContent:'center'}}>
                                     <Text style={{fontSize:14, fontWeight:'600', color: selectStatus ? '#008BAC' : 'black'}}>{item.FULLNAME}</Text>

@@ -33,14 +33,72 @@ export default class HomeScreenComment extends Component{
 
         this.state={
             FINDING_CODE:props.navigation.getParam("findingCode", null),
-            commentData: [1,2,3],
-
+            commentData: [],
             commentValue:  null,
+
+            listUserData: [],
         }
     }
 
     componentDidMount(){
         this.getComment();
+        this.getListUser();
+    }
+
+    renderTagList(){
+        return(
+            <View style={{
+                width: "100%",
+                height: "100%",
+                position: 'absolute'
+            }}>
+                <FlatList
+                    ref={component => this._flatlistCatalog = component}
+                    style={{flex: 1}}
+                    data={this.state.listUserData}
+                    extraData={this.state}
+                    removeClippedSubviews={true}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({item, index}) => {
+                        return(
+                            <TouchableOpacity
+                                style={{
+                                    flex:1,
+                                    paddingBottom: 10
+                                }}
+                                onPress={()=>{
+
+                                }}>
+                                <View style={{
+                                    flex:1,
+                                    flexDirection:'row'
+                                }}>
+                                    <View>
+                                        <Image source={require('../../Images/ic-orang.png')} style={{width : 40, height:40, marginRight: 15}}/>
+                                    </View>
+                                    <View style={{flex:1, justifyContent:'center'}}>
+                                        <Text style={{fontSize:14, fontWeight:'600', color: 'black'}}>{item.FULLNAME}</Text>
+                                        <Text style={{fontSize:11, color: '#bdbdbd', marginTop:4}}>{item.JOB}</Text>
+                                    </View>
+                                </View>
+                            </TouchableOpacity>
+                        )
+                    }}
+                />
+            </View>
+        )
+    }
+
+    getListUser(){
+        let listUser = Object.values(TaskServices.getAllData("TR_CONTACT"));
+
+        if(listUser !== null){
+            this.setState({
+                listUserData: listUser
+            },()=>{
+                alert(JSON.stringify(this.state.listUserData))
+            })
+        }
     }
 
     getComment(){
@@ -90,9 +148,13 @@ export default class HomeScreenComment extends Component{
                 <View style={{
                     flex: 1
                 }}>
-                    {this.renderFlatlist()}
+                    {
+                        // this.renderTagList()
+                        this.renderFlatlist()
+                    }
                 </View>
-                <View style={{
+                <View
+                style={{
                     flexDirection:'row',
                     borderTopWidth: 1,
                     borderTopColor: 'black',
@@ -100,7 +162,8 @@ export default class HomeScreenComment extends Component{
                     alignItems: "center",
                     justifyContent: "center",
                     paddingHorizontal: 10
-                }}>
+                }}
+                >
                     <Image
                         style={{
                             width: 50,
