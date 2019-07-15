@@ -835,7 +835,7 @@ class KondisiBarisAkhir extends Component{
                     statusBlok: this.state.statusBlok,
                     intervalId: intervalId,
                     dataInspeksi: dataInspeksi,
-					inspectionType: dataBaris.inspectionType === 'genba' ? 'genba' : 'normal'
+                    inspectionType  : this.state.inspectionType === 'genba' ? 'genba' : 'normal'
                 }
             })]
         });
