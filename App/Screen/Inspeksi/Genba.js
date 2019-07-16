@@ -304,9 +304,9 @@ export default class Genba extends Component {
                         alignItems:"center",
                         justifyContent:"center"
                     }}>
-                        <ScrollView style={{flex: 1, maxHeight: 100}}>
+                        <a style={{flex: 1, maxHeight: 100}}>
                             {this.renderSelectedUser()}
-                        </ScrollView>
+                        </a>
                         <TouchableOpacity
                             onPress={()=>{
                                 this.deleteSelectedAll()

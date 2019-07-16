@@ -285,7 +285,7 @@ class DetailBaris extends React.Component {
                     {
                         this.state.detailType === 'genba' &&
                         <View style={styles.section}>
-                            <Text style={styles.textTitle}>Peserta User</Text>
+                            <Text style={styles.textTitle}>Peserta Genba</Text>
                             <View style={styles.lineDivider} />
                             {this.renderGenbaUser()}
                         </View>
