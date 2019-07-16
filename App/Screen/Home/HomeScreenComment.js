@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, TouchableOpacity, Image, FlatList, TextInput, Keyboard} from 'react-native';
+import {ScrollView, View, Text, TouchableOpacity, Image, FlatList, TextInput, Keyboard, KeyboardAvoidingView} from 'react-native';
 import Colors from "../../Constant/Colors";
 import Icon from "react-native-vector-icons/Ionicons";
 import Icon1 from '../../Component/Icon1'
@@ -34,15 +34,92 @@ export default class HomeScreenComment extends Component{
         this.state={
             FINDING_CODE:props.navigation.getParam("findingCode", null),
             commentData: [],
-            commentValue:  null,
+            commentValue: null,
+            commentProcessed: null,
 
-            listUserData: [],
+            listUser: [],
+            filteredUser: [],
+            filterShow: false,
+
+            taggedUser : []
         }
     }
 
     componentDidMount(){
         this.getComment();
         this.getListUser();
+    }
+
+    getListUser(){
+        let listUser = Object.values(TaskServices.getAllData("TR_CONTACT"));
+
+        if(listUser !== null){
+            this.setState({
+                listUser: listUser
+            },()=>{
+                alert(JSON.stringify(this.state.listUser))
+            })
+        }
+    }
+
+    getComment(){
+        let commentData = Object.values(TaskServices.findBy("TR_FINDING_COMMENT", "FINDING_CODE", this.state.FINDING_CODE));
+        if(commentData !== null){
+            this.setState({
+                commentData: commentData,
+                commentValue: null,
+                commentProcessed: null,
+            }, ()=>{
+                Keyboard.dismiss()
+            })
+        }
+    }
+
+    insertComment(){
+        let dataLogin = TaskServices.getAllData('TR_LOGIN')[0];
+        let dateTime = moment().format('YYMMDDHHmmss');
+        let saveTaggedUser = [];
+        this.state.taggedUser.map((taggedUser)=>{
+            if(this.state.commentValue.includes("@"+taggedUser.FULLNAME)){
+                saveTaggedUser.push(taggedUser);
+            }
+        });
+
+        let tempComment = {
+            FINDING_COMMENT_ID: "FC"+dataLogin.USER_AUTH_CODE+dateTime,
+            FINDING_CODE: this.state.FINDING_CODE,
+            USER_AUTH_CODE: dataLogin.USER_AUTH_CODE,
+            MESSAGE: this.state.commentValue,
+            INSERT_TIME: dateTime,
+            TAG_USER: saveTaggedUser,
+            //LOCAL PARAM
+            USERNAME: dataLogin.USERNAME
+        };
+        TaskServices.saveData('TR_FINDING_COMMENT', tempComment);
+
+        this.setState({
+            filterShow: false
+        }, ()=>{
+            this.getComment();
+        })
+    }
+
+    timeConverter(insertTime){
+        if(typeof insertTime !== undefined && insertTime !== null){
+            let finalTime = moment(insertTime, 'YYMMDDHHmmss').format('DD MMM YYYY, HH:mm:ss');
+            return finalTime.toString()
+        }
+        return null;
+    }
+
+    filterData(keyword){
+        let tempArray = [];
+        this.state.listUser.filter((item)=>{
+            if(item.FULLNAME.toLowerCase().includes(keyword.toLowerCase())){
+                tempArray.push(item)
+            }
+        });
+        return tempArray;
     }
 
     renderTagList(){
@@ -54,8 +131,8 @@ export default class HomeScreenComment extends Component{
             }}>
                 <FlatList
                     ref={component => this._flatlistCatalog = component}
-                    style={{flex: 1}}
-                    data={this.state.listUserData}
+                    style={{flex: 1, padding: 5}}
+                    data={this.state.filteredUser}
                     extraData={this.state}
                     removeClippedSubviews={true}
                     keyExtractor={(item, index) => index.toString()}
@@ -67,8 +144,17 @@ export default class HomeScreenComment extends Component{
                                     paddingBottom: 10
                                 }}
                                 onPress={()=>{
-
+                                    //update input text label + tagged user
+                                    let tempTaggedUser = this.state.taggedUser;
+                                    tempTaggedUser.push(item);
+                                    let splitText=this.state.commentValue.lastIndexOf("@");
+                                    this.setState({
+                                        commentValue: this.state.commentValue.slice(0,splitText)+ "@"+item.FULLNAME,
+                                        filterShow: false,
+                                        taggedUser: tempTaggedUser
+                                    })
                                 }}>
+
                                 <View style={{
                                     flex:1,
                                     flexDirection:'row'
@@ -89,55 +175,6 @@ export default class HomeScreenComment extends Component{
         )
     }
 
-    getListUser(){
-        let listUser = Object.values(TaskServices.getAllData("TR_CONTACT"));
-
-        if(listUser !== null){
-            this.setState({
-                listUserData: listUser
-            },()=>{
-                alert(JSON.stringify(this.state.listUserData))
-            })
-        }
-    }
-
-    getComment(){
-        let commentData = Object.values(TaskServices.findBy("TR_FINDING_COMMENT", "FINDING_CODE", this.state.FINDING_CODE));
-        if(commentData !== null){
-            this.setState({
-                commentData: commentData,
-                commentValue: null
-            }, ()=>{
-                Keyboard.dismiss()
-            })
-        }
-    }
-
-    insertComment(){
-        let dataLogin = TaskServices.getAllData('TR_LOGIN')[0];
-        let dateTime = moment().format('YYMMDDHHmmss');
-        let tempComment = {
-            FINDING_COMMENT_ID: "FC"+dataLogin.USER_AUTH_CODE+dateTime,
-            FINDING_CODE: this.state.FINDING_CODE,
-            USER_AUTH_CODE: dataLogin.USER_AUTH_CODE,
-            MESSAGE: this.state.commentValue,
-            INSERT_TIME: dateTime,
-            TAG_USER: [],
-            //LOCAL PARAM
-            USERNAME: dataLogin.USERNAME
-        };
-        TaskServices.saveData('TR_FINDING_COMMENT', tempComment);
-        this.getComment();
-    }
-
-    timeConverter(insertTime){
-        if(typeof insertTime !== undefined && insertTime !== null){
-            let finalTime = moment(insertTime, 'YYMMDDHHmmss').format('DD MMM YYYY, HH:mm:ss');
-            return finalTime.toString()
-        }
-        return null;
-    }
-
     render(){
         return(
             <View
@@ -145,13 +182,12 @@ export default class HomeScreenComment extends Component{
                     flex: 1,
                     backgroundColor:Colors.background
                 }}>
-                <View style={{
-                    flex: 1
-                }}>
-                    {
-                        // this.renderTagList()
-                        this.renderFlatlist()
-                    }
+                <View
+                    style={{
+                        flex: 1
+                    }}
+                >
+                    {this.state.filterShow ? this.renderTagList() : this.renderFlatlist()}
                 </View>
                 <View
                 style={{
@@ -200,15 +236,32 @@ export default class HomeScreenComment extends Component{
                             multiline={true}
                             underlineColorAndroid='rgba(0,0,0,0)'
                             placeholder="Ketik di sini ..."
-                            secureTextEntry={this.state.secure}
                             placeholderTextColor={Colors.abu1}
+                            blurOnSubmit = {true}
                             onChangeText={(value) => {
+                                let showFilter: false;
+                                let tagValue = value.split(" ");
+                                let filteredUser = [];
+                                if(tagValue.length > 0){
+                                    let tempWord = tagValue[tagValue.length - 1];
+                                    if(tempWord.charAt(0) === "@"){
+                                        filteredUser = this.filterData(tempWord.replace("@", ""))
+                                        showFilter = filteredUser.length > 0;
+                                    }
+                                    else{
+                                        showFilter = false
+                                    }
+                                    // alert(tagValue[tagValue.length - 1])
+                                }
                                 this.setState({
+                                    filteredUser: filteredUser,
+                                    filterShow: showFilter,
                                     commentValue: value
-                                })
+                                }, ()=>{console.log(this.state.commentValue)})
                             }}
-                            value={this.state.commentValue}
-                        />
+                        >
+                            {this.state.commentValue}
+                        </TextInput>
                         <TouchableOpacity onPress={()=>{
                             this.insertComment()
                         }}>
