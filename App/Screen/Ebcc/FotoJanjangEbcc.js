@@ -12,6 +12,7 @@ import {
 import Colors from '../../Constant/Colors';
 import imgTakePhoto from '../../Images/icon/ic_take_photo.png';
 import imgNextPhoto from '../../Images/icon/ic_next_photo.png';
+import MapView, { Polygon, ProviderPropType, Marker } from 'react-native-maps';
 import { RNCamera as Camera } from 'react-native-camera';
 import { getTodayDate } from '../../Lib/Utils'
 import ImageResizer from 'react-native-image-resizer';

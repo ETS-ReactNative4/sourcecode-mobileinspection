@@ -19,6 +19,7 @@ import { dirPhotoTemuan } from '../../Lib/dirStorage';
 var RNFS = require('react-native-fs');
 import R from 'ramda';
 import { getTodayDate } from '../../Lib/Utils';
+import ModalAlert from '../../Component/ModalAlert';
 
 class TakeFoto extends Component{
 
@@ -111,6 +112,7 @@ class TakeFoto extends Component{
 
     } catch (err) {
       console.log('err: ', err);
+		this.validatePhotoExists();
     }
   };
 
@@ -123,6 +125,7 @@ class TakeFoto extends Component{
       });
     }).catch((err) => {
       console.log(err)
+		this.validatePhotoExists();
     });
   }
 
@@ -142,17 +145,32 @@ class TakeFoto extends Component{
   }
 
   goBack() {
-    if(this.state.from == 'BuktiKerja'){
-      this.props.navigation.state.params.addImage(this.state.path);
-    }else{
-      this.props.navigation.state.params.onRefresh(this.state.path);
-    }
-    
-    RNFS.unlink(this.state.pathCacheInternal);
-    RNFS.unlink(this.state.pathCacheResize);
-    this.props.navigation.goBack();
+    RNFS.exists(this.state.path)
+    .then( (exists) => {
+		if (exists) {
+			if(this.state.from == 'BuktiKerja'){
+			  this.props.navigation.state.params.addImage(this.state.path);
+			}else{
+			  this.props.navigation.state.params.onRefresh(this.state.path);
+			}
+			RNFS.unlink(this.state.pathCacheInternal);
+			RNFS.unlink(this.state.pathCacheResize);
+			this.props.navigation.goBack();
+        } else {
+            this.validatePhotoExists();
+        }
+    });
     
   }
+  
+	validatePhotoExists(){
+		this.setState({
+			showModal: true, 
+			title: 'Pengambilan Foto Gagal',
+			message: 'Lakukan pengambilan foto lagi',
+			icon: require('../../Images/icon/ic_ambil_foto_gagal.png')
+		});
+	}
 
   renderImage() {
     return (
@@ -178,6 +196,12 @@ class TakeFoto extends Component{
   render() {
     return (
       <View style={styles.container}>
+		<ModalAlert
+			icon={this.state.icon}
+			visible={this.state.showModal}
+			onPressCancel={() => this.props.navigation.goBack()}
+			title={this.state.title}
+			message={this.state.message} />
         <View style={{ flex: 2 }}>
           {this.state.path ? this.renderImage() : this.renderCamera()}
         </View>
