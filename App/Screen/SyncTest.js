@@ -1010,6 +1010,10 @@ class SyncScreen extends React.Component {
             UPDATE_USER: param.UPDATE_USER,
             UPDATE_TIME: param.UPDATE_TIME == '' ? parseInt(getTodayDate('YYYYMMDDkkmmss')) : parseInt(param.UPDATE_TIME.replace(/-/g, '').replace(/ /g, '').replace(/:/g, ''))
         }
+		if(param.RATING){
+			data.RATING = param.RATING;
+		}
+		console.log("Upload finding",data);
         this.uploadData(this.getAPIURL("FINDING-INSERT"), data, 'finding', '');
     }
 

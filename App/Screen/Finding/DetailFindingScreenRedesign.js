@@ -294,13 +294,14 @@ class DetailFindingScreenRedesign extends Component {
 					"FINDING_CODE":this.state.id,
 					"RATE":this.state.newRating,
 					"MESSAGE":this.state.ratingMsg
-				}
+				},
+				"STATUS_SYNC":"N"
 			});
 			this.setState({
 				rating:this.state.newRating
 			})
         } catch (error) {
-		console.log("masuk input rating",error)
+			console.log("masuk input rating",error)
         }
     }
 
