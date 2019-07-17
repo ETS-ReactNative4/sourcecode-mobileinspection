@@ -53,6 +53,7 @@ import AfdelingScreen from '../Screen/Afdeling';
 import CalendarsScreen from '../Screen/Calendar';
 import PemberiTugas from '../Screen/PemberiTugas';
 // import OpenGl from '../Screen/OpenGl';
+import FotoUser from '../Screen/More/FotoUser';
 
 import PilihPeta from '../Screen/Maps/PilihPeta'
 
@@ -65,6 +66,7 @@ const main = createStackNavigator({
     Login: { screen: Login },
 
     HomeScreenComment: { screen: HomeScreenComment },
+    FotoUser: { screen: FotoUser },
 
     FindingFormNavigator: {
         screen: FindingFormNavigator,

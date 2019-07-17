@@ -12,7 +12,8 @@ import ModalAlert from '../../Component/ModalAlert'
 import ServerName from '../../Constant/ServerName';
 import DeviceInfo from 'react-native-device-info';
 import CustomHeader from '../../Component/CustomHeader'
-import { getThumnail } from '../../Lib/Utils';
+import {getPhoto, getThumnail} from '../../Lib/Utils';
+import RNFS from 'react-native-fs';
 
 export default class MoreScreen extends Component {
 
@@ -60,8 +61,9 @@ export default class MoreScreen extends Component {
       //Add Modal Alert by Aminju 
       title: 'Title',
       message: 'Message',
-	    user,
-		imageServer:imageServerUrl
+      user,
+      imageServer:imageServerUrl,
+      userPhoto: null
     }
   }
 
@@ -74,6 +76,13 @@ export default class MoreScreen extends Component {
 
   componentWillUnmount() {
     this.willFocus.remove()
+  }
+
+  componentDidMount(){
+    let pathPhoto = getPhoto(null);
+    this.setState({
+      userPhoto: pathPhoto
+    })
   }
 
   loadData(){
@@ -151,7 +160,11 @@ export default class MoreScreen extends Component {
             <View style={[styles.containerLabel, {marginTop: 10}]}>
                 <View style={{ flex: 2 }}>
                     {/* <Image source={require('../../Images/icon/ic_walking.png')} style={styles.icon} /> */}
-                    <Thumbnail style={{ borderColor: 'grey', height: 60, width: 60, marginRight: 5, marginLeft: 10 }} source={getThumnail()} />
+                    <TouchableOpacity onPress={()=>{
+                      this.props.navigation.navigate('FotoUser', {setPhoto: (photoPath)=>{this.setState({userPhoto: photoPath})}});
+                    }}>
+                      <Thumbnail style={{ borderColor: 'grey', height: 60, width: 60, marginRight: 5, marginLeft: 10 }} source={this.state.userPhoto === null ? getThumnail() : {uri:this.state.userPhoto}} />
+                    </TouchableOpacity>
                 </View>
                 <View style={{ flex: 7 }}>
                     <Text style={{ fontSize: 18, fontWeight: '500' }}>{this.state.name}</Text>
@@ -307,7 +320,6 @@ const styles = StyleSheet.create({
     height: 64,
     backgroundColor: 'white',
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between'
   },
   textTitle: {

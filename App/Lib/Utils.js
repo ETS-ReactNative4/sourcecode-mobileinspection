@@ -1,8 +1,10 @@
 import { isNil, isEmpty } from 'ramda';
 import DeviceInfo from 'react-native-device-info';
 import { Platform, PixelRatio, Dimensions, PermissionsAndroid, Alert } from 'react-native';
+import {dirPhotoUser} from "./dirStorage";
 const moment = require('moment');
 const momentTimezone = require('moment-timezone');
+import RNFS from 'react-native-fs';
 var uuid = require('react-native-uuid');
 
 export function downloadImage(url, path){
@@ -93,6 +95,29 @@ export function getThumnail() {
 		require('../Images/icon/ic-orang-7.png')];
 
 	return randomItem = arrA[Math.floor(Math.random() * arrA.length)];
+}
+
+export function getPhoto(imageName){
+	if(imageName !== null){
+		let isImageContain = RNFS.exists("file://"+dirPhotoUser+"/"+imageName);
+		if(isImageContain){
+			return "file://"+dirPhotoUser+"/"+imageName;
+		}
+		else{
+			let arrA = [
+				require('../Images/icon/ic-orang-1.png'),
+				require('../Images/icon/ic-orang-2.png'),
+				require('../Images/icon/ic-orang-3.png'),
+				require('../Images/icon/ic-orang-4.png'),
+				require('../Images/icon/ic-orang-5.png'),
+				require('../Images/icon/ic-orang-6.png'),
+				require('../Images/icon/ic-orang-7.png')];
+
+			return arrA[Math.floor(Math.random() * arrA.length)];
+		}
+	}
+	return null;
+
 }
 
 export function getCalculateTime(date1, date2) {

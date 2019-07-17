@@ -46,5 +46,8 @@ export default {
   shade: 'rgba(0,0,0,0.54)',
   stepper: 'rgba(0,0,0,0.12)',
   spinner: 'white',
-  spinnerBackground: 'rgba(25, 149, 173,0.7)'
+  spinnerBackground: 'rgba(25, 149, 173,0.7)',
+
+  //text
+  taggedUser: 'red'
 };

@@ -11,7 +11,7 @@ import ContactAction from '../Redux/ContactRedux'
 import RegionAction from '../Redux/RegionRedux'
 import R from 'ramda'
 import { dirPhotoInspeksiBaris, dirPhotoInspeksiSelfie, 
-    dirPhotoTemuan, dirPhotoKategori, dirPhotoEbccJanjang, dirPhotoEbccSelfie, dirMaps } from '../Lib/dirStorage';
+    dirPhotoTemuan, dirPhotoKategori, dirPhotoEbccJanjang, dirPhotoEbccSelfie, dirMaps, dirPhotoUser } from '../Lib/dirStorage';
 import moment from 'moment'
 import geolib from 'geolib';
 
@@ -66,6 +66,7 @@ class SplashScreen extends Component {
         RNFS.mkdir(dirPhotoKategori);
         RNFS.mkdir(dirPhotoEbccJanjang);
         RNFS.mkdir(dirPhotoEbccSelfie);
+        RNFS.mkdir(dirPhotoUser);
         RNFS.mkdir(dirMaps);
     }
 

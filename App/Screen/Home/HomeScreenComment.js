@@ -41,7 +41,8 @@ export default class HomeScreenComment extends Component{
             filteredUser: [],
             filterShow: false,
 
-            taggedUser : []
+            taggedUser : [],
+            processText: null
         }
     }
 
@@ -56,8 +57,6 @@ export default class HomeScreenComment extends Component{
         if(listUser !== null){
             this.setState({
                 listUser: listUser
-            },()=>{
-                alert(JSON.stringify(this.state.listUser))
             })
         }
     }
@@ -93,6 +92,7 @@ export default class HomeScreenComment extends Component{
             INSERT_TIME: dateTime,
             TAG_USER: saveTaggedUser,
             //LOCAL PARAM
+            STATUS_SYNC: 'N',
             USERNAME: dataLogin.USERNAME
         };
         TaskServices.saveData('TR_FINDING_COMMENT', tempComment);
@@ -173,6 +173,37 @@ export default class HomeScreenComment extends Component{
                 />
             </View>
         )
+    }
+
+    processText(commentValue, listTaggedUser){
+        let arrayComment = [];
+        let processedText = null;
+        if(listTaggedUser.length > 0){
+            let tempComment = commentValue;
+            listTaggedUser.map((data)=>{
+                if(tempComment.includes("@"+data.FULLNAME)){
+                    let splitWords = tempComment.split("@"+data.FULLNAME);
+                    arrayComment.push(splitWords[0]);
+                    arrayComment.push("@"+data.FULLNAME);
+                    tempComment = splitWords[1];
+                }
+            })
+
+            processedText = <Text>{
+                arrayComment.map((data)=>{
+                    if(data.charAt(0) === "@"){
+                        return <Text style={{color:Colors.taggedUser}}>{data}</Text>
+                    }
+                    else {
+                        return <Text>{data}</Text>
+                    }
+                })
+                }</Text>
+        }
+        else {
+            return commentValue;
+        }
+        return processedText;
     }
 
     render(){
@@ -257,7 +288,7 @@ export default class HomeScreenComment extends Component{
                                     filteredUser: filteredUser,
                                     filterShow: showFilter,
                                     commentValue: value
-                                }, ()=>{console.log(this.state.commentValue)})
+                                })
                             }}
                         >
                             {this.state.commentValue}
@@ -287,6 +318,7 @@ export default class HomeScreenComment extends Component{
                     removeClippedSubviews={true}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({item, index}) => {
+                        let finalMessage = this.processText(item.MESSAGE, item.TAG_USER);
                         return (
                             <View
                                 style={{
@@ -317,10 +349,9 @@ export default class HomeScreenComment extends Component{
                                         }}>
                                             {item.USERNAME}{" "}
                                         </Text>
-                                        <Text
-                                            numberOfLines={3}
-                                        >
-                                            {item.MESSAGE}
+                                        <Text>
+                                            {finalMessage}
+                                            {/*{item.MESSAGE}*/}
                                         </Text>
                                     </Text>
                                     <Text style={{fontSize: 12}}>

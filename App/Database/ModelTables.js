@@ -252,6 +252,7 @@ const TR_FINDING_COMMENT = {
         INSERT_TIME: {type:'string'},
         TAG_USER: {type: 'list', objectType: 'TR_CONTACT'},
         //LOCAL PARAM
+        STATUS_SYNC: {type:'string'},
         USERNAME: {type: 'string'}
     }
 }

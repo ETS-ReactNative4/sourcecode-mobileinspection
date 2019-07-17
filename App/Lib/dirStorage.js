@@ -14,4 +14,5 @@ export const dirPhotoInspeksiBaris = `${dirHome}/Photo/Inspeksi/Baris`;
 export const dirPhotoInspeksiSelfie = `${dirHome}/Photo/Inspeksi/Selfie`;
 export const dirPhotoEbccJanjang = `${dirHome}/Photo/Ebcc/Janjang`;
 export const dirPhotoEbccSelfie = `${dirHome}/Photo/Ebcc/Selfie`;
+export const dirPhotoUser = `${dirHome}/Photo/User`;
 export const dirMaps = `${dirHome}/Maps`;
