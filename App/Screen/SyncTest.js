@@ -70,6 +70,7 @@ class SyncScreen extends React.Component {
             progressInspeksiHeader: 0,
             progressInspeksiDetail: 0,
             progressUploadImage: 0,
+            progressUploadImageUser: 0,
             progressFindingData: 0,
             progressInspectionTrack: 0,
             progressEbcc: 0,
@@ -85,6 +86,8 @@ class SyncScreen extends React.Component {
             totalFindingDataUpload: '0',
             valueImageUpload: '0',
             totalImagelUpload: '0',
+            valueImageUserUpload: '0',
+            totalImageUserUpload: '0',
             valueInspectionTrack: '0',
             totalInspectionTrack: '0',
             valueEbcc: '0',
@@ -596,7 +599,7 @@ class SyncScreen extends React.Component {
             var dataImage = TaskServices.query('TR_IMAGE', `STATUS_SYNC = 'N'`);
             if (all !== undefined && dataImage !== undefined) {
                 this.setState({ totalImagelUpload: dataImage.length })
-                for (var i = 0; i < dataImage.length; i++) {
+                for (let i = 0; i < dataImage.length; i++) {
                     let model = dataImage[i];
                     RNFS.exists(`file://${model.IMAGE_PATH_LOCAL}`).
                         then((exists) => {
@@ -629,7 +632,7 @@ class SyncScreen extends React.Component {
                                     .then((response) => response.json())
                                     .then((responseJson) => {
                                         if (responseJson.status) {
-                                            this.setState({ valueImageUpload: i });
+                                            this.setState({ valueImageUserUpload: i });
                                             TaskServices.updateByPrimaryKey('TR_IMAGE', {
                                                 "IMAGE_CODE": model.IMAGE_CODE,
                                                 "STATUS_SYNC": "Y"
@@ -679,6 +682,62 @@ class SyncScreen extends React.Component {
         this.loadData();
         this.kirimEbccHeader();
         this.kirimEbccDetail();
+    }
+
+    kirimUserImage(){
+        try {
+            const user = TaskServices.getAllData('TR_LOGIN')[0];
+            let all = TaskServices.getAllData('TR_IMAGE_PROFILE');
+            var dataImageUser = TaskServices.query('TR_IMAGE_PROFILE', `STATUS_SYNC = 'N'`);
+            if (all !== undefined && dataImageUser !== undefined) {
+                this.setState({ totalImageUserUpload: dataImageUser.length })
+                for (let i = 0; i < dataImageUser.length; ++i) {
+                    let model = dataImageUser[i];
+                    RNFS.exists(`file://${model.IMAGE_PATH_LOCAL}`).
+                    then((exists) => {
+                        if (exists) {
+                            var data = new FormData();
+                            data.append('FILENAME', {
+                                uri: `file://${model.IMAGE_PATH_LOCAL}`,
+                                type: 'image/jpeg',
+                                name: model.IMAGE_NAME,
+                            });
+                            const url = this.getAPIURL("IMAGES-PROFILE");
+                            fetch(url.API_URL, {
+                                method: url.METHOD,
+                                headers: {
+                                    'Cache-Control': 'no-cache',
+                                    Accept: 'application/json',
+                                    'Content-Type': 'multipart/form-data',
+                                    Authorization: `Bearer ${user.ACCESS_TOKEN}`,
+                                },
+                                body: data
+                            })
+                                .then((response) => response.json())
+                                .then((responseJson) => {
+                                    if (responseJson.status) {
+                                        this.setState({ valueImageUserUpload: i+1 });
+                                        TaskServices.updateByPrimaryKey('TR_IMAGE_PROFILE', {
+                                            "USER_AUTH_CODE": model.USER_AUTH_CODE,
+                                            "STATUS_SYNC": "Y"
+                                        });
+                                        // TaskServices.updateStatusImage('TR_IMAGE', 'Y', idxOrder);
+                                    }
+                                }).catch((error) => {
+                                    console.error(error);
+                                });
+                        } else {
+                            let data = TaskServices.getAllData('TR_IMAGE');
+                            let indexData = R.findIndex(R.propEq('IMAGE_CODE', model.IMAGE_CODE))(data);
+                            TaskServices.deleteRecord('TR_IMAGE', indexData)
+                        }
+                    })
+                }
+            }
+            this.setState({ progressUploadImageUser: 1 });
+        } catch (error) {
+            this.setState({ progressUploadImageUser: 1, valueImageUserUpload: 0, totalImageUserUpload: 0 });
+        }
     }
 
     // == GENBA ==
@@ -1767,6 +1826,7 @@ class SyncScreen extends React.Component {
 
                 //POST TRANSAKSI
                 this.kirimImage();
+                this.kirimUserImage();
 
                 //cara redux saga
                 setTimeout(() => {
@@ -2108,6 +2168,25 @@ class SyncScreen extends React.Component {
                             width={null}
                             style={{ marginTop: 2 }}
                             progress={this.state.progressUploadImage}
+                            backgroundColor={colorProgress}
+                            borderColor={'white'}
+                            indeterminate={this.state.indeterminate} />
+                    </View>
+
+                    <View style={{ flex: 1, marginTop: 12 }}>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={styles.labelProgress}>IMAGE USER</Text>
+                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
+                                <Text style={styles.labelProgress}>{this.state.valueImageUserUpload}</Text>
+                                <Text style={styles.labelProgress}>/</Text>
+                                <Text style={styles.labelProgress}>{this.state.totalImageUserUpload}</Text>
+                            </View>
+                        </View>
+                        <Progress.Bar
+                            height={heightProgress}
+                            width={null}
+                            style={{ marginTop: 2 }}
+                            progress={this.state.progressUploadImageUser}
                             backgroundColor={colorProgress}
                             borderColor={'white'}
                             indeterminate={this.state.indeterminate} />

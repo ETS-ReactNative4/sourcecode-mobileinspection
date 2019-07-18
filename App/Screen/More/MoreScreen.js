@@ -79,10 +79,11 @@ export default class MoreScreen extends Component {
   }
 
   componentDidMount(){
-    let pathPhoto = getPhoto(null);
-    this.setState({
-      userPhoto: pathPhoto
-    })
+      let getPath = TaskServices.findBy2("TR_IMAGE_PROFILE", "USER_AUTH_CODE", this.state.user.USER_AUTH_CODE);
+      let pathPhoto = getPhoto(typeof getPath === 'undefined' ? null : getPath.IMAGE_PATH_LOCAL);
+      this.setState({
+        userPhoto: pathPhoto
+      })
   }
 
   loadData(){
@@ -161,7 +162,18 @@ export default class MoreScreen extends Component {
                 <View style={{ flex: 2 }}>
                     {/* <Image source={require('../../Images/icon/ic_walking.png')} style={styles.icon} /> */}
                     <TouchableOpacity onPress={()=>{
-                      this.props.navigation.navigate('FotoUser', {setPhoto: (photoPath)=>{this.setState({userPhoto: photoPath})}});
+                      if(this.state.name !== ""){
+                        this.props.navigation.navigate('FotoUser', {setPhoto: (photoPath)=>{this.setState({userPhoto: photoPath})}});
+                      }
+                      else {
+                        this.setState({
+                          showConfirm: false,
+                          showModal: true,
+                          title: 'Data kosong!',
+                          message: 'Data tidak di temukan, Tolong sync terlebih dahulu sebulum merubah foto!',
+                          icon: require('../../Images/ic-no-internet.png')
+                        })
+                      }
                     }}>
                       <Thumbnail style={{ borderColor: 'grey', height: 60, width: 60, marginRight: 5, marginLeft: 10 }} source={this.state.userPhoto === null ? getThumnail() : {uri:this.state.userPhoto}} />
                     </TouchableOpacity>

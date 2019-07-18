@@ -103,6 +103,20 @@ const TR_IMAGE = {
     }
 }
 
+const TR_IMAGE_PROFILE = {
+    name: 'TR_IMAGE_PROFILE',
+    primaryKey: 'USER_AUTH_CODE',
+    properties: {
+        USER_AUTH_CODE: 'string',
+        IMAGE_NAME: 'string',
+        IMAGE_PATH_LOCAL: 'string',
+        IMAGE_URL: 'string',
+        STATUS_IMAGE: 'string',
+        STATUS_SYNC: 'string',
+        INSERT_TIME: 'string',
+    }
+}
+
 const TM_REGION = {
     name: 'TM_REGION',
     primaryKey: 'REGION_CODE',
@@ -530,6 +544,7 @@ export default {
     TR_BLOCK_INSPECTION_H,
     TR_BLOCK_INSPECTION_D,
     TR_IMAGE,
+    TR_IMAGE_PROFILE,
     TR_BARIS_INSPECTION,
     TM_AFD,
     TR_FINDING,

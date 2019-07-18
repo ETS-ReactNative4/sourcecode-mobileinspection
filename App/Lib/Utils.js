@@ -99,9 +99,9 @@ export function getThumnail() {
 
 export function getPhoto(imageName){
 	if(imageName !== null){
-		let isImageContain = RNFS.exists("file://"+dirPhotoUser+"/"+imageName);
+		let isImageContain = RNFS.exists("file://"+imageName);
 		if(isImageContain){
-			return "file://"+dirPhotoUser+"/"+imageName;
+			return "file://"+imageName;
 		}
 		else{
 			let arrA = [

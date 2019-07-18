@@ -19,6 +19,7 @@ import ImageResizer from 'react-native-image-resizer';
 import { dirPhotoUser } from '../../Lib/dirStorage'
 import TaskService from '../../Database/TaskServices'
 import ModalAlertBack from '../../Component/ModalAlert';
+import moment from 'moment';
 
 let RNFS = require('react-native-fs');
 const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
@@ -84,19 +85,17 @@ export default class FotoUser extends Component {
 
     setParameter() {
         let dataLogin = TaskService.getAllData('TR_LOGIN')[0];
-        let imgCode = `VP${dataLogin.USER_AUTH_CODE}${this.state.timestamp}`;
+        let imgCode = `FP${dataLogin.USER_AUTH_CODE}${this.state.timestamp}`;
         let imageName = imgCode + '.jpg';
         let image = {
-            TR_CODE: this.state.ebccValCode,
-            IMAGE_CODE: imgCode,
+            USER_AUTH_CODE: dataLogin.USER_AUTH_CODE,
             IMAGE_NAME: imageName,
             IMAGE_PATH_LOCAL: dirPhotoUser + '/' + imageName,
             IMAGE_URL: '',
             STATUS_IMAGE: 'SELFIE_V',
             STATUS_SYNC: 'N',
-            INSERT_USER: dataLogin.USER_AUTH_CODE,
-            INSERT_TIME: ''
-        }
+            INSERT_TIME: moment().format("YYYY-MM-DD HH:mm:ss")
+        };
         this.setState({ dataModel: image });
 
     }
@@ -166,15 +165,30 @@ export default class FotoUser extends Component {
         RNFS.unlink(this.state.pathCache);
         let isImageContain = await RNFS.exists(`file://${dirPhotoUser}/${this.state.dataModel.IMAGE_NAME}`);
         if(isImageContain){
-            //insert TR_IMAGE
-            TaskService.saveData('TR_IMAGE', this.state.dataModel);
+            let model = this.state.dataModel;
+            let fotoUserChecker = TaskService.findBy2("TR_IMAGE_PROFILE", "USER_AUTH_CODE", this.state.dataModel.USER_AUTH_CODE);
+            if(fotoUserChecker !== undefined && fotoUserChecker.length > 0){
+                TaskService.updateByPrimaryKey('TR_IMAGE_PROFILE', {
+                    USER_AUTH_CODE: this.state.dataModel.USER_AUTH_CODE,
+                    IMAGE_NAME: model.IMAGE_NAME,
+                    IMAGE_PATH_LOCAL: model.IMAGE_PATH_LOCAL,
+                    IMAGE_URL: model.IMAGE_URL,
+                    STATUS_IMAGE: model.STATUS_IMAGE,
+                    STATUS_SYNC: "N",
+                    INSERT_TIME: model.INSERT_TIME,
+                });
+            }
+            else{
+                TaskService.saveData('TR_IMAGE_PROFILE', model);
+            }
+
             this.setState({
                 showModalBack: true,
                 title: 'Berhasil Disimpan',
                 message: 'Yeaay! Data kamu berhasil disimpan',
                 icon: require('../../Images/ic-save-berhasil.png'),
                 photoDirectory: "file://"+dirPhotoUser+"/"+this.state.dataModel.IMAGE_NAME
-        });
+            });
         }else{
             alert('Ada kesalahan, Ulangi ambil foto!')
         }
