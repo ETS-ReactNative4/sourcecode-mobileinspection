@@ -72,6 +72,7 @@ class SyncScreen extends React.Component {
             progressUploadImage: 0,
             progressUploadImageUser: 0,
             progressFindingData: 0,
+            progressFindingCommentData: 0,
             progressInspectionTrack: 0,
             progressEbcc: 0,
             progressEbccDetail: 0,
@@ -84,6 +85,8 @@ class SyncScreen extends React.Component {
             totalInspeksiDetailUpload: '0',
             valueFindingDataUpload: '0',
             totalFindingDataUpload: '0',
+            valueFindingCommentDataUpload: '0',
+            totalFindingCommentDataUpload: '0',
             valueImageUpload: '0',
             totalImagelUpload: '0',
             valueImageUserUpload: '0',
@@ -738,6 +741,68 @@ class SyncScreen extends React.Component {
         } catch (error) {
             this.setState({ progressUploadImageUser: 1, valueImageUserUpload: 0, totalImageUserUpload: 0 });
         }
+    }
+
+
+    // == COMMENT ==
+    uploadFindingComment(){
+        let getTRComment = TaskServices.getAllData('TR_FINDING_COMMENT');
+        let filteredComment = Object.values(getTRComment.filtered('STATUS_SYNC = "N"'));
+        if (filteredComment.length > 0) {
+            filteredComment.map((data, index) => {
+                let taggedUser = [];
+                data.TAG_USER.map((data)=>{
+                    taggedUser.push({
+                        "USER_AUTH_CODE": data.USER_AUTH_CODE
+                    })
+                });
+                let commentModel = {
+                    "FINDING_COMMENT_ID": data.FINDING_COMMENT_ID,
+                    "FINDING_CODE": data.FINDING_CODE,
+                    "USER_AUTH_CODE": data.USER_AUTH_CODE,
+                    "MESSAGE": data.MESSAGE,
+                    "INSERT_TIME": data.INSERT_TIME,
+                    "TAG_USER": taggedUser
+                };
+                this.postFindingComment(commentModel);
+                this.setState({ valueFindingCommentDataUpload: index + 1, totalFindingCommentDataUpload: filteredComment.length });
+            });
+            this.setState({
+                progressFindingCommentData: 1
+            });
+        } else {
+            this.setState({ progressFindingCommentData: 1, valueFindingCommentDataUpload: 0, totalFindingCommentDataUpload: 0 });
+        }
+    }
+
+    postFindingComment(model) {
+        let urlDetail = this.getAPIURL("FINDING-COMMENT-INSERT")
+        const user = TaskServices.getAllData('TR_LOGIN')[0];
+        fetch(urlDetail.API_URL, {
+            method: urlDetail.METHOD,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${user.ACCESS_TOKEN}`
+            },
+            body: JSON.stringify(model)
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                if (data.status) {
+                    TaskServices.updateByPrimaryKey('TR_FINDING_COMMENT', {
+                        "FINDING_COMMENT_ID": model.FINDING_COMMENT_ID,
+                        "STATUS_SYNC": "Y"
+                    });
+                }
+                else {
+                    console.log("findingcomment upload failed, check your parameter / api!");
+                }
+            })
+            .catch((e) => {
+                console.log("findingcomment upload failed E:" + e);
+            })
     }
 
     // == GENBA ==
@@ -1755,6 +1820,7 @@ class SyncScreen extends React.Component {
                     progressInspeksiDetail: 0,
                     progressUploadImage: 0,
                     progressFindingData: 0,
+                    progressFindingUploadData: 0,
                     progressInspectionTrack: 0,
 
                     //labelUpload
@@ -1764,6 +1830,8 @@ class SyncScreen extends React.Component {
                     totalInspeksiDetailUpload: '0',
                     valueFindingDataUpload: '0',
                     totalFindingDataUpload: '0',
+                    valueFindingCommentDataUpload: '0',
+                    totalFindingCommentDataUpload: '0',
                     valueImageUpload: '0',
                     totalImagelUpload: '0',
                     valueInspectionTrack: '0',
@@ -1844,6 +1912,7 @@ class SyncScreen extends React.Component {
                 });
             }
 
+            this.uploadFindingComment();
             //genba upload
             this.uploadGenba();
         });
@@ -2267,7 +2336,25 @@ class SyncScreen extends React.Component {
                             backgroundColor={colorProgress}
                             borderColor={'white'}
                             indeterminate={this.state.indeterminate} />
+                    </View>
 
+                    <View style={{ flex: 1, marginTop: 12 }}>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={styles.labelProgress}>FINDING COMMENT</Text>
+                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
+                                <Text style={styles.labelProgress}>{this.state.valueFindingCommentDataUpload}</Text>
+                                <Text style={styles.labelProgress}>/</Text>
+                                <Text style={styles.labelProgress}>{this.state.totalFindingCommentDataUpload}</Text>
+                            </View>
+                        </View>
+                        <Progress.Bar
+                            height={heightProgress}
+                            width={null}
+                            style={{ marginTop: 2 }}
+                            progress={this.state.progressFindingCommentData}
+                            backgroundColor={colorProgress}
+                            borderColor={'white'}
+                            indeterminate={this.state.indeterminate} />
                     </View>
 
                     <View style={{ flex: 1, marginTop: 12 }}>
