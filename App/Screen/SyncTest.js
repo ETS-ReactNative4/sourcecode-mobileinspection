@@ -39,6 +39,7 @@ var baseUploadImageLink;
 var link;
 
 import ModalAlert from '../Component/ModalAlert';
+import { fetchPostAPI } from '../Api/FetchingApi';
 
 const heightProgress = 5;
 const colorProgress = '#D5D5D5'
@@ -687,7 +688,7 @@ class SyncScreen extends React.Component {
         this.kirimEbccDetail();
     }
 
-    kirimUserImage(){
+    kirimUserImage() {
         try {
             const user = TaskServices.getAllData('TR_LOGIN')[0];
             let all = TaskServices.getAllData('TR_IMAGE_PROFILE');
@@ -697,44 +698,44 @@ class SyncScreen extends React.Component {
                 for (let i = 0; i < dataImageUser.length; ++i) {
                     let model = dataImageUser[i];
                     RNFS.exists(`file://${model.IMAGE_PATH_LOCAL}`).
-                    then((exists) => {
-                        if (exists) {
-                            var data = new FormData();
-                            data.append('FILENAME', {
-                                uri: `file://${model.IMAGE_PATH_LOCAL}`,
-                                type: 'image/jpeg',
-                                name: model.IMAGE_NAME,
-                            });
-                            const url = this.getAPIURL("IMAGES-PROFILE");
-                            fetch(url.API_URL, {
-                                method: url.METHOD,
-                                headers: {
-                                    'Cache-Control': 'no-cache',
-                                    Accept: 'application/json',
-                                    'Content-Type': 'multipart/form-data',
-                                    Authorization: `Bearer ${user.ACCESS_TOKEN}`,
-                                },
-                                body: data
-                            })
-                                .then((response) => response.json())
-                                .then((responseJson) => {
-                                    if (responseJson.status) {
-                                        this.setState({ valueImageUserUpload: i+1 });
-                                        TaskServices.updateByPrimaryKey('TR_IMAGE_PROFILE', {
-                                            "USER_AUTH_CODE": model.USER_AUTH_CODE,
-                                            "STATUS_SYNC": "Y"
-                                        });
-                                        // TaskServices.updateStatusImage('TR_IMAGE', 'Y', idxOrder);
-                                    }
-                                }).catch((error) => {
-                                    console.error(error);
+                        then((exists) => {
+                            if (exists) {
+                                var data = new FormData();
+                                data.append('FILENAME', {
+                                    uri: `file://${model.IMAGE_PATH_LOCAL}`,
+                                    type: 'image/jpeg',
+                                    name: model.IMAGE_NAME,
                                 });
-                        } else {
-                            let data = TaskServices.getAllData('TR_IMAGE');
-                            let indexData = R.findIndex(R.propEq('IMAGE_CODE', model.IMAGE_CODE))(data);
-                            TaskServices.deleteRecord('TR_IMAGE', indexData)
-                        }
-                    })
+                                const url = this.getAPIURL("IMAGES-PROFILE");
+                                fetch(url.API_URL, {
+                                    method: url.METHOD,
+                                    headers: {
+                                        'Cache-Control': 'no-cache',
+                                        Accept: 'application/json',
+                                        'Content-Type': 'multipart/form-data',
+                                        Authorization: `Bearer ${user.ACCESS_TOKEN}`,
+                                    },
+                                    body: data
+                                })
+                                    .then((response) => response.json())
+                                    .then((responseJson) => {
+                                        if (responseJson.status) {
+                                            this.setState({ valueImageUserUpload: i + 1 });
+                                            TaskServices.updateByPrimaryKey('TR_IMAGE_PROFILE', {
+                                                "USER_AUTH_CODE": model.USER_AUTH_CODE,
+                                                "STATUS_SYNC": "Y"
+                                            });
+                                            // TaskServices.updateStatusImage('TR_IMAGE', 'Y', idxOrder);
+                                        }
+                                    }).catch((error) => {
+                                        console.error(error);
+                                    });
+                            } else {
+                                let data = TaskServices.getAllData('TR_IMAGE');
+                                let indexData = R.findIndex(R.propEq('IMAGE_CODE', model.IMAGE_CODE))(data);
+                                TaskServices.deleteRecord('TR_IMAGE', indexData)
+                            }
+                        })
                 }
             }
             this.setState({ progressUploadImageUser: 1 });
@@ -744,14 +745,14 @@ class SyncScreen extends React.Component {
     }
 
 
-    // == COMMENT ==
-    uploadFindingComment(){
+    // == COMMENT KEVIN ==
+    uploadFindingComment() {
         let getTRComment = TaskServices.getAllData('TR_FINDING_COMMENT');
         let filteredComment = Object.values(getTRComment.filtered('STATUS_SYNC = "N"'));
         if (filteredComment.length > 0) {
             filteredComment.map((data, index) => {
                 let taggedUser = [];
-                data.TAG_USER.map((data)=>{
+                data.TAG_USER.map((data) => {
                     taggedUser.push({
                         "USER_AUTH_CODE": data.USER_AUTH_CODE
                     })
@@ -775,35 +776,45 @@ class SyncScreen extends React.Component {
         }
     }
 
-    postFindingComment(model) {
+    postFindingComment(param) {
         let urlDetail = this.getAPIURL("FINDING-COMMENT-INSERT")
         const user = TaskServices.getAllData('TR_LOGIN')[0];
-        fetch(urlDetail.API_URL, {
-            method: urlDetail.METHOD,
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${user.ACCESS_TOKEN}`
-            },
-            body: JSON.stringify(model)
-        })
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                if (data.status) {
+        fetchPostAPI(user.ACCESS_TOKEN, urlDetail.API_URL, urlDetail.METHOD, param).then(((result) => {
+            if (result != undefined) {
+                if (result.status) {
                     TaskServices.updateByPrimaryKey('TR_FINDING_COMMENT', {
-                        "FINDING_COMMENT_ID": model.FINDING_COMMENT_ID,
+                        "FINDING_COMMENT_ID": param.FINDING_COMMENT_ID,
                         "STATUS_SYNC": "Y"
                     });
-                }
-                else {
+                } else {
                     console.log("findingcomment upload failed, check your parameter / api!");
                 }
-            })
-            .catch((e) => {
-                console.log("findingcomment upload failed E:" + e);
-            })
+            } else {
+                console.log("Server Timeout");
+            }
+        }));
     }
+
+    // Aminju => Summary Inspeksi
+    postSummaryInspeksi(param) {
+        let urlDetail = this.getAPIURL("FINDING-COMMENT-INSERT")
+        const user = TaskServices.getAllData('TR_LOGIN')[0];
+        fetchPostAPI(user.ACCESS_TOKEN, urlDetail.API_URL, urlDetail.METHOD, param).then(((result) => {
+            if (result != undefined) {
+                if (result.status) {
+                    TaskServices.updateByPrimaryKey('TR_FINDING_COMMENT', {
+                        "FINDING_COMMENT_ID": param.FINDING_COMMENT_ID,
+                        "STATUS_SYNC": "Y"
+                    });
+                } else {
+                    console.log("summaryinspeksi upload failed, check your parameter / api!");
+                }
+            } else {
+                console.log("Server Timeout");
+            }
+        }));
+    }
+
 
     // == GENBA ==
 
@@ -1134,10 +1145,10 @@ class SyncScreen extends React.Component {
             UPDATE_USER: param.UPDATE_USER,
             UPDATE_TIME: param.UPDATE_TIME == '' ? parseInt(getTodayDate('YYYYMMDDkkmmss')) : parseInt(param.UPDATE_TIME.replace(/-/g, '').replace(/ /g, '').replace(/:/g, ''))
         }
-		if(param.RATING){
-			data.RATING = param.RATING;
-		}
-		console.log("Upload finding",data);
+        if (param.RATING) {
+            data.RATING = param.RATING;
+        }
+        console.log("Upload finding", data);
         this.uploadData(this.getAPIURL("FINDING-INSERT"), data, 'finding', '');
     }
 
@@ -1581,19 +1592,19 @@ class SyncScreen extends React.Component {
                 }
             }
         }
-		else if(data.INSERT_USER==this.state.user.USER_AUTH_CODE){
-			if(data.PROGRESS>=100){
-				//Progress sudah selesai
-				newNotif.NOTIFICATION_TYPE=4;
-				TaskServices.saveData('TR_NOTIFICATION', newNotif);
-			}
-			else{
-				//terjadi update pada finding yang user buat
-				newNotif.NOTIFICATION_TYPE=1;
-				TaskServices.saveData('TR_NOTIFICATION', newNotif);
-			}
-		}
-	}
+        else if (data.INSERT_USER == this.state.user.USER_AUTH_CODE) {
+            if (data.PROGRESS >= 100) {
+                //Progress sudah selesai
+                newNotif.NOTIFICATION_TYPE = 4;
+                TaskServices.saveData('TR_NOTIFICATION', newNotif);
+            }
+            else {
+                //terjadi update pada finding yang user buat
+                newNotif.NOTIFICATION_TYPE = 1;
+                TaskServices.saveData('TR_NOTIFICATION', newNotif);
+            }
+        }
+    }
     _crudTM_Finding_Image(data) {
         var dataSimpan = data.simpan;
         if (dataSimpan.length > 0) {
