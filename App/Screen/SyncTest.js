@@ -1536,7 +1536,8 @@ class SyncScreen extends React.Component {
                 this.setState({ progressFinding: i / data.simpan.length, totalFindingDownload: data.simpan.length });
             }
             data.simpan.map(item => {
-                let newItem = Object.assign({}, item, { STATUS_SYNC: 'Y' });
+				let newRating = item.RATING?item.RATING[0]:null;
+                let newItem = Object.assign({}, item, { STATUS_SYNC: 'Y',RATING:newRating });
                 this._updateTR_Notif(newItem);
                 TaskServices.saveData('TR_FINDING', newItem);
                 let countDataInsert = TaskServices.getTotalData('TR_FINDING');
@@ -1548,14 +1549,16 @@ class SyncScreen extends React.Component {
         }
         if (data.ubah.length > 0 && allData.length > 0) {
             data.ubah.map(item => {
-                let newItem = Object.assign({}, item, { STATUS_SYNC: 'Y' });
+				let newRating = item.RATING?item.RATING[0]:null;
+                let newItem = Object.assign({}, item, { STATUS_SYNC: 'Y',RATING:newRating });
                 this._updateTR_Notif(newItem);
                 TaskServices.updateByPrimaryKey('TR_FINDING', item)
             })
         }
         if (data.hapus.length > 0 && allData.length > 0) {
             data.hapus.map(item => {
-                let newItem = Object.assign({}, item, { STATUS_SYNC: 'Y' });
+				let newRating = item.RATING?item.RATING[0]:null;
+                let newItem = Object.assign({}, item, { STATUS_SYNC: 'Y',RATING:newRating });
                 this._updateTR_Notif(newItem);
                 this.deleteRecordByPK('TR_FINDING', 'FINDING_CODE', item.FINDING_CODE);
             });
