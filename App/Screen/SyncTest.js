@@ -824,19 +824,21 @@ class SyncScreen extends React.Component {
                                 TAG_USER: data.TAG_USER,
                                 //LOCAL PARAM
                                 STATUS_SYNC: 'Y',
-                                USERNAME: userContact.FULLNAME
+                                USERNAME: userContact !== undefined ? userContact.FULLNAME : "NO_NAME"
                             };
                             TaskServices.saveData("TR_FINDING_COMMENT", model);
-                            console.log("SUCCESS SAVE DATA")
                         });
 
                         this.setState({
-                            valueFindingCommentDownload: callback.data.simpan.length,
-                            totalFindingCommentDownload: callback.data.simpan.length,
-                            progressFindingCommentDownload: '1'
+                            valueFindingCommentDownload: callback.data.simpan.length.toString(),
+                            totalFindingCommentDownload: callback.data.simpan.length.toString(),
+                            progressFindingCommentDownload: 1
                         })
                     }
                 }
+            })
+            .catch((e)=>{
+                console.log()
             })
     }
 
@@ -1869,11 +1871,11 @@ class SyncScreen extends React.Component {
         this.deleteGenbaSelected();
         this.deleteGenbaInspection();
         // Gani
+        //comment
+        // this.downloadFindingComment();
         this.resetSagas();
         NetInfo.isConnected.fetch().then(isConnected => {
             if (isConnected) {
-                //comment
-                this.downloadFindingComment();
                 this.setState({
 
                     //upload
@@ -1959,6 +1961,8 @@ class SyncScreen extends React.Component {
                 //POST TRANSAKSI
                 this.kirimImage();
                 this.kirimUserImage();
+                //comment
+                this.downloadFindingComment();
                 //cara redux saga
                 setTimeout(() => {
                     this.props.findingRequest();
