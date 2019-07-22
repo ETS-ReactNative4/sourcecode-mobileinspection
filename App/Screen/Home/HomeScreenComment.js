@@ -80,7 +80,7 @@ export default class HomeScreenComment extends Component{
         let dateTime = moment().format('YYMMDDHHmmss');
         let saveTaggedUser = [];
         this.state.taggedUser.map((taggedUser)=>{
-            if(this.state.commentValue.includes("@"+taggedUser.FULLNAME)){
+            if(this.state.commentValue.includes(taggedUser.FULLNAME)){
                 saveTaggedUser.push(taggedUser);
             }
         });

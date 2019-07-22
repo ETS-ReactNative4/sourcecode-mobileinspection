@@ -115,6 +115,7 @@ class SyncScreen extends React.Component {
             progressContact: 0,
             progressFinding: 0,
             progressFindingImage: 0,
+            progressFindingCommentDownload: 0,
             progressParamInspection: 0,
             progressKualitas: 0,
 
@@ -140,6 +141,8 @@ class SyncScreen extends React.Component {
             totalKriteriaDownload: '0',
             valueFindingDownload: '0',
             totalFindingDownload: '0',
+            valueFindingCommentDownload: '0',
+            totalFindingCommentDownload: '0',
             valueCategoryDownload: '0',
             totalCategoryDownload: '0',
             valueContactDownload: '0',
@@ -793,6 +796,48 @@ class SyncScreen extends React.Component {
                 console.log("Server Timeout");
             }
         }));
+    }
+
+    downloadFindingComment(){
+        let TM_SERVICE = TaskServices.findBy2("TM_SERVICE",'API_NAME', 'AUTH-SYNC-FINDING-COMMENT');
+        const user = TaskServices.getAllData('TR_LOGIN')[0];
+        fetch(TM_SERVICE.API_URL, {
+            method: TM_SERVICE.METHOD,
+            headers: {
+                'Authorization': `Bearer ${user.ACCESS_TOKEN}`
+            }
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((callback)=>{
+                if(callback.status){
+                    if(callback.data.simpan.length > 0){
+                        callback.data.simpan.map((data)=>{
+                            let userContact = TaskServices.findBy2("TR_CONTACT", "USER_AUTH_CODE", data.USER_AUTH_CODE);
+                            let model = {
+                                FINDING_COMMENT_ID: data.FINDING_COMMENT_ID,
+                                FINDING_CODE: data.FINDING_CODE,
+                                USER_AUTH_CODE: data.USER_AUTH_CODE,
+                                MESSAGE: data.MESSAGE,
+                                INSERT_TIME: data.INSERT_TIME.toString(),
+                                TAG_USER: data.TAG_USER,
+                                //LOCAL PARAM
+                                STATUS_SYNC: 'Y',
+                                USERNAME: userContact.FULLNAME
+                            };
+                            TaskServices.saveData("TR_FINDING_COMMENT", model);
+                            console.log("SUCCESS SAVE DATA")
+                        });
+
+                        this.setState({
+                            valueFindingCommentDownload: callback.data.simpan.length,
+                            totalFindingCommentDownload: callback.data.simpan.length,
+                            progressFindingCommentDownload: '1'
+                        })
+                    }
+                }
+            })
     }
 
     // Aminju => Summary Inspeksi
@@ -1823,10 +1868,12 @@ class SyncScreen extends React.Component {
         this.deleteEbccDetail();
         this.deleteGenbaSelected();
         this.deleteGenbaInspection();
-        // Gani            
+        // Gani
         this.resetSagas();
         NetInfo.isConnected.fetch().then(isConnected => {
             if (isConnected) {
+                //comment
+                this.downloadFindingComment();
                 this.setState({
 
                     //upload
@@ -1906,16 +1953,17 @@ class SyncScreen extends React.Component {
 
                 });
 
+                this.uploadFindingComment();
+                //genba upload
+                this.uploadGenba();
                 //POST TRANSAKSI
                 this.kirimImage();
                 this.kirimUserImage();
-
                 //cara redux saga
                 setTimeout(() => {
                     this.props.findingRequest();
                     this.props.blockRequest();
                 }, 2000);
-
             } else {
                 this.setState({
                     showButton: true,
@@ -1925,10 +1973,6 @@ class SyncScreen extends React.Component {
                     icon: require('../Images/ic-no-internet.png')
                 });
             }
-
-            this.uploadFindingComment();
-            //genba upload
-            this.uploadGenba();
         });
         // function handleFirstConnectivityChange(isConnected) {
         //     NetInfo.isConnected.removeEventListener(
@@ -2469,6 +2513,26 @@ class SyncScreen extends React.Component {
                             color={Colors.brand}
                             style={{ marginTop: 2 }}
                             progress={this.state.progressFindingImage}
+                            backgroundColor={colorProgress}
+                            borderColor={'white'}
+                            indeterminate={this.state.indeterminate} />
+                    </View>
+
+                    <View style={{ flex: 1, marginTop: 12 }}>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={styles.labelProgress}>FINDING COMMENT</Text>
+                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
+                                <Text style={styles.labelProgress}>{this.state.valueFindingCommentDownload}</Text>
+                                <Text style={styles.labelProgress}>/</Text>
+                                <Text style={styles.labelProgress}>{this.state.totalFindingCommentDownload}</Text>
+                            </View>
+                        </View>
+                        <Progress.Bar
+                            height={heightProgress}
+                            width={null}
+                            color={Colors.brand}
+                            style={{ marginTop: 2 }}
+                            progress={this.state.progressFindingCommentDownload}
                             backgroundColor={colorProgress}
                             borderColor={'white'}
                             indeterminate={this.state.indeterminate} />
