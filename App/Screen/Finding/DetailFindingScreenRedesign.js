@@ -554,6 +554,7 @@ class DetailFindingScreenRedesign extends Component {
                         </TouchableOpacity>}
 
                     {(this.state.data.PROGRESS == 100) &&
+                     (this.state.data.ASSIGN_TO !== this.state.user.USER_AUTH_CODE) &&
                         this.state.rating == 0 &&
                         <View style={{ flex: 1, width: '90%', borderTopWidth: 1, alignSelf: 'center', }}>
                             <View style={{
