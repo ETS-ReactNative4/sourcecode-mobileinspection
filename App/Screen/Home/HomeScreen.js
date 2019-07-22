@@ -267,12 +267,15 @@ class HomeScreen extends React.Component {
     }
     this.extraFilter = "";
 
-    let statusFindingText = [];
+    let statusFindingDesc = [];
+    let statusFindingComment = [];
     findingFilter.map((data, index)=>{
-      statusFindingText.push(false);
+      statusFindingDesc.push(false);
+      statusFindingComment.push(false);
     });
     this.setState({
-      statusFindingText: statusFindingText
+      statusFindingDesc: statusFindingDesc,
+      statusFindingComment: statusFindingComment
     });
     return findingFilter;
   }
@@ -682,17 +685,17 @@ class HomeScreen extends React.Component {
                     }}
                   >
                     {
-                      this.state.statusFindingText[index] ? item.FINDING_DESC : clipString(item.FINDING_DESC, 150)
+                      this.state.statusFindingDesc[index] ? item.FINDING_DESC : clipString(item.FINDING_DESC, 150)
                     }
                   </Text>
                   {
-                    item.FINDING_DESC.length > 150 && !this.state.statusFindingText[index] &&
+                    item.FINDING_DESC.length > 150 && !this.state.statusFindingDesc[index] &&
                     <Text
                         onPress={()=>{
-                          let tempStatus = this.state.statusFindingText;
+                          let tempStatus = this.state.statusFindingDesc;
                           tempStatus[index] = true;
                           this.setState({
-                            statusFindingText: tempStatus
+                            statusFindingDesc: tempStatus
                           })
                         }}
                         style={{
@@ -700,7 +703,7 @@ class HomeScreen extends React.Component {
                           color:"rgba(202,194,194, 1)"
                         }}
                     >
-                      {" "}Read more
+                      {" "}Selengkapnya
                     </Text>
                   }
                 </Text>
@@ -745,8 +748,28 @@ class HomeScreen extends React.Component {
                           this.props.navigation.navigate("HomeScreenComment", {findingCode: item.FINDING_CODE})
                         }}
                     >
-                      {latestComment.MESSAGE}
+                      {
+                        this.state.statusFindingComment[index] ? latestComment.MESSAGE : clipString(latestComment.MESSAGE, 150)
+                      }
                     </Text>
+                    {
+                      latestComment.MESSAGE.length > 150 && !this.state.statusFindingComment[index] &&
+                      <Text
+                          onPress={()=>{
+                            let tempStatus = this.state.statusFindingComment;
+                            tempStatus[index] = true;
+                            this.setState({
+                              statusFindingComment: tempStatus
+                            })
+                          }}
+                          style={{
+                            fontSize: 12,
+                            color:"rgba(202,194,194, 1)"
+                          }}
+                      >
+                        {" "}Selengkapnya
+                      </Text>
+                    }
                   </Text>
                 </View>
                     :
