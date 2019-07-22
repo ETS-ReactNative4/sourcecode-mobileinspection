@@ -814,7 +814,8 @@ class SyncScreen extends React.Component {
                 if(callback.status){
                     if(callback.data.simpan.length > 0){
                         callback.data.simpan.map((data)=>{
-                            let userContact = TaskServices.findBy2("TR_CONTACT", "USER_AUTH_CODE", data.USER_AUTH_CODE);
+                            // let userContact = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', data.USER_AUTH_CODE);
+                            // console.log(JSON.stringify(userContact));
                             let model = {
                                 FINDING_COMMENT_ID: data.FINDING_COMMENT_ID,
                                 FINDING_CODE: data.FINDING_CODE,
@@ -824,7 +825,7 @@ class SyncScreen extends React.Component {
                                 TAG_USER: data.TAG_USER,
                                 //LOCAL PARAM
                                 STATUS_SYNC: 'Y',
-                                USERNAME: userContact !== undefined ? userContact.FULLNAME : "NO_NAME"
+                                USERNAME: data.FULLNAME
                             };
                             TaskServices.saveData("TR_FINDING_COMMENT", model);
                         });
