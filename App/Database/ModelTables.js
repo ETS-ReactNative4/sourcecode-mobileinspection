@@ -83,7 +83,7 @@ const TR_BARIS_INSPECTION = {
         INSPECTION_RESULT: 'string',
         INSPECTION_SCORE: 'string',
         FULFILL_BARIS: 'string',
-        TR_FINDING_CODES: {type: 'list', objectType: 'string'}
+        TR_FINDING_CODES: { type: 'list', objectType: 'string' }
     }
 }
 
@@ -149,8 +149,8 @@ const TM_EST = {
         EST_NAME: 'string',
         WERKS: 'string',
         CITY: 'string',
-		LONGITUDE: { type: 'double', default: 0, optional: true },
-		LATITUDE:{ type: 'double', default: 0, optional: true }
+        LONGITUDE: { type: 'double', default: 0, optional: true },
+        LATITUDE: { type: 'double', default: 0, optional: true }
     }
 }
 
@@ -176,7 +176,7 @@ const TM_BLOCK = {
         COMP_CODE: 'string',
         EST_CODE: 'string',
         WERKS: 'string',
-        JUMLAH_TPH:  { type: 'int', default: 0 },
+        JUMLAH_TPH: { type: 'int', default: 0 },
         AFD_CODE: 'string',
         BLOCK_CODE: 'string',
         BLOCK_NAME: 'string',
@@ -224,12 +224,12 @@ const TR_CONTACT_GENBA = {
         REF_ROLE: 'string',
         JOB: 'string',
         FULLNAME: 'string',
-        REGION_CODE : { type : 'string', optional: true }
+        REGION_CODE: { type: 'string', optional: true }
     }
 }
 
 const TR_FINDING = {
-    name: 'TR_FINDING', 
+    name: 'TR_FINDING',
     primaryKey: 'FINDING_CODE',
     properties: {
         FINDING_CODE: { type: 'string' },
@@ -246,7 +246,7 @@ const TR_FINDING = {
         LAT_FINDING: 'string',
         LONG_FINDING: 'string',
         REFFERENCE_INS_CODE: 'string',
-        RATING: { type: 'TR_RATING', optional: true },
+        RATING: { type: 'list', objectType: 'TR_RATING' },
         INSERT_USER: { type: 'string', optional: true },
         INSERT_TIME: { type: 'string', optional: true },
         UPDATE_USER: { type: 'string', optional: true },
@@ -255,19 +255,29 @@ const TR_FINDING = {
     }
 }
 
+const TR_RATING = {
+    name: 'TR_RATING',
+    primaryKey: 'FINDING_CODE',
+    properties: {
+        FINDING_CODE: 'string',
+        RATE: 'int',
+        MESSAGE: { type: 'string', optional: true, default: '' }
+    }
+}
+
 const TR_FINDING_COMMENT = {
     name: 'TR_FINDING_COMMENT',
     primaryKey: 'FINDING_COMMENT_ID',
     properties: {
-        FINDING_COMMENT_ID: {type: 'string'},
-        FINDING_CODE: {type: 'string'},
-        USER_AUTH_CODE: {type: 'string'},
-        MESSAGE: {type: 'string'},
-        INSERT_TIME: {type:'string'},
-        TAG_USER: {type: 'list', objectType: 'TR_CONTACT'},
+        FINDING_COMMENT_ID: { type: 'string' },
+        FINDING_CODE: { type: 'string' },
+        USER_AUTH_CODE: { type: 'string' },
+        MESSAGE: { type: 'string' },
+        INSERT_TIME: { type: 'string' },
+        TAG_USER: { type: 'list', objectType: 'TR_CONTACT' },
         //LOCAL PARAM
-        STATUS_SYNC: {type:'string'},
-        USERNAME: {type: 'string'}
+        STATUS_SYNC: { type: 'string' },
+        USERNAME: { type: 'string' }
     }
 }
 
@@ -401,8 +411,8 @@ const TM_KUALITAS = {
         ID_KUALITAS: 'string',
         NAMA_KUALITAS: 'string',
         UOM: 'string',
-        GROUP_KUALITAS: 'string',        
-        ACTIVE_STATUS: 'string',   
+        GROUP_KUALITAS: 'string',
+        ACTIVE_STATUS: 'string',
         PENALTY_STATUS: 'string',
         SHORT_NAME: 'string'
     }
@@ -415,7 +425,7 @@ const TR_H_EBCC_VALIDATION = {
         EBCC_VALIDATION_CODE: 'string',
         WERKS: 'string',
         AFD_CODE: 'string',
-        BLOCK_CODE: 'string',        
+        BLOCK_CODE: 'string',
         NO_TPH: 'string',
         STATUS_TPH_SCAN: 'string',
         ALASAN_MANUAL: 'string',
@@ -455,8 +465,8 @@ const TR_NOTIFICATION = {
     properties: {
         NOTIFICATION_ID: 'string',
         NOTIFICATION_TIME: 'date',
-		NOTIFICATION_STATUS: { type: 'int', default: 0 },
-		NOTIFICATION_TYPE: { type: 'int', default: 0 },
+        NOTIFICATION_STATUS: { type: 'int', default: 0 },
+        NOTIFICATION_TYPE: { type: 'int', default: 0 },
         FINDING_UPDATE_TIME: { type: 'string' },
         FINDING_CODE: { type: 'string' },
     }
@@ -474,19 +484,19 @@ const TM_SERVICE = {
     primaryKey: 'SERVICE_ID',
     properties: {
         SERVICE_ID: 'int',
-		MOBILE_VERSION:'string',
-		API_NAME: 'string',
-		KETERANGAN: 'string',
-		METHOD: 'string',
-		BODY: { type: 'string', optional: true },
-		API_URL: 'string'
+        MOBILE_VERSION: 'string',
+        API_NAME: 'string',
+        KETERANGAN: 'string',
+        METHOD: 'string',
+        BODY: { type: 'string', optional: true },
+        API_URL: 'string'
     }
 }
 
 const TR_GENBA_SELECTED = {
-    name : 'TR_GENBA_SELECTED',
-    primaryKey : 'USER_AUTH_CODE',
-    properties : {
+    name: 'TR_GENBA_SELECTED',
+    primaryKey: 'USER_AUTH_CODE',
+    properties: {
         USER_AUTH_CODE: 'string',
         EMPLOYEE_NIK: 'string',
         USER_ROLE: 'string',
@@ -494,49 +504,66 @@ const TR_GENBA_SELECTED = {
         REF_ROLE: 'string',
         JOB: 'string',
         FULLNAME: 'string',
-        REGION_CODE : { type : 'string', optional: true }
+        REGION_CODE: { type: 'string', optional: true }
     }
 }
 
 const TR_COORD = {
-    name : 'TR_COORD',
-    primaryKey : 'LATLONG',
-    properties : {
-		LATLONG: 'string',
+    name: 'TR_COORD',
+    primaryKey: 'LATLONG',
+    properties: {
+        LATLONG: 'string',
         longitude: 'double',
         latitude: 'double'
     }
 }
 
 const TR_POLYGON = {
-    name : 'TR_POLYGON',
-    primaryKey : 'werks_afd_block_code',
-    properties : {
+    name: 'TR_POLYGON',
+    primaryKey: 'werks_afd_block_code',
+    properties: {
         WERKS: 'string',
         afd_code: 'string',
         werks_afd_block_code: 'string',
         blokname: 'string',
-		coords:{type: 'list', objectType: 'TR_COORD'}
+        coords: { type: 'list', objectType: 'TR_COORD' }
     }
 }
 
 const TR_GENBA_INSPECTION = {
-    name : 'TR_GENBA_INSPECTION',
-    primaryKey : 'BLOCK_INSPECTION_CODE',
-    properties : {
+    name: 'TR_GENBA_INSPECTION',
+    primaryKey: 'BLOCK_INSPECTION_CODE',
+    properties: {
         BLOCK_INSPECTION_CODE: 'string',
-        GENBA_USER: {type: 'list', objectType: 'TR_GENBA_SELECTED'},
+        GENBA_USER: { type: 'list', objectType: 'TR_GENBA_SELECTED' },
         STATUS_SYNC: 'string'
     }
 }
-const TR_RATING = {
-    name : 'TR_RATING',
-    primaryKey : 'FINDING_CODE',
-    properties : {
-        FINDING_CODE: 'string',
-        RATE: 'int',
-        MESSAGE: {type:'string', optional: true, default:''}
+
+const TR_SUMMARY = {
+    name: 'TR_SUMMARY',
+    primaryKey: 'SUMMARY_CODE',
+    properties: {
+        SUMMARY_CODE: 'string',
+        WEEKLY_STATUS: 'string',
+
+        SUMMARY_INSPEKSI: 'string',
+        VALUE_INSPEKSI: 'string',
+        TARGET_INSPEKSI: 'string',
+
+        SUMMARY_TEMUAN: 'string',
+        VALUE_TEMUAN: 'string',
+        TARGET_TEMUAN: 'string',
+
+        SUMMARY_EBCC: 'string',
+        VALUE_EBCC: 'string',
+        TARGET_EBCC: 'string',
+
+        SUMMARY_WALK: 'string',
+        VALUE_WALK: 'string',
+        TARGET_WALK: 'string',
     }
+
 }
 
 export default {
@@ -569,15 +596,16 @@ export default {
     TM_KUALITAS,
     TR_H_EBCC_VALIDATION,
     TR_D_EBCC_VALIDATION,
-	
-	TR_SYNC_LOG,
-	TR_NOTIFICATION,
-	TM_SERVICE,
-	TR_GENBA_SELECTED,
-	TR_COORD,
-	TR_POLYGON,
+
+    TR_SYNC_LOG,
+    TR_NOTIFICATION,
+    TM_SERVICE,
+    TR_GENBA_SELECTED,
+    TR_COORD,
+    TR_POLYGON,
     TR_GENBA_INSPECTION,
     TR_RATING,
+    TR_SUMMARY,
 
-	SCHEMA_VERSION
+    SCHEMA_VERSION
 }
