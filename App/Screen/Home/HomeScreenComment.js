@@ -150,7 +150,7 @@ export default class HomeScreenComment extends Component{
                                     tempTaggedUser.push(item);
                                     let splitText=this.state.commentValue.lastIndexOf("@");
                                     this.setState({
-                                        commentValue: this.state.commentValue.slice(0,splitText)+ "@"+item.FULLNAME,
+                                        commentValue: this.state.commentValue.slice(0,splitText)+ "@"+item.FULLNAME + " ",
                                         filterShow: false,
                                         taggedUser: tempTaggedUser
                                     })

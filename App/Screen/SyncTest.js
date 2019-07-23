@@ -812,31 +812,55 @@ class SyncScreen extends React.Component {
             })
             .then((callback)=>{
                 if(callback.status){
-                    if(callback.data.simpan.length > 0){
-                        callback.data.simpan.map((data)=>{
-                            let userContact = TaskServices.findBy2("TR_CONTACT", "USER_AUTH_CODE", data.USER_AUTH_CODE);
+                    let getComment = TaskServices.getAllData("TR_FINDING_COMMENT");
+                    if (callback.data.hapus.length > 0 && getComment.length > 0) {
+                        callback.data.hapus.map(data => {
+                            TaskServices.deleteRecordByPK('TR_FINDING_COMMENT', 'FINDING_COMMENT_ID', data.FINDING_COMMENT_ID);
+                        });
+                    }
+                    if (callback.data.ubah.length > 0 && getComment.length > 0) {
+                        callback.data.ubah.map(data => {
                             let model = {
                                 FINDING_COMMENT_ID: data.FINDING_COMMENT_ID,
                                 FINDING_CODE: data.FINDING_CODE,
                                 USER_AUTH_CODE: data.USER_AUTH_CODE,
                                 MESSAGE: data.MESSAGE,
-                                INSERT_TIME: data.INSERT_TIME.toString(),
-                                TAG_USER: data.TAG_USER,
+                                INSERT_TIME: data.INSERT_TIME !== undefined ? data.INSERT_TIME.toString() : "0",
+                                TAG_USER: data.TAG_USER !== undefined ? data.TAG_USER : [],
                                 //LOCAL PARAM
                                 STATUS_SYNC: 'Y',
-                                USERNAME: userContact.FULLNAME
+                                USERNAME: data.FULLNAME !== undefined ? data.FULLNAME : "NO_NAME"
                             };
-                            TaskServices.saveData("TR_FINDING_COMMENT", model);
-                            console.log("SUCCESS SAVE DATA")
-                        });
-
-                        this.setState({
-                            valueFindingCommentDownload: callback.data.simpan.length,
-                            totalFindingCommentDownload: callback.data.simpan.length,
-                            progressFindingCommentDownload: '1'
+                            TaskServices.updateByPrimaryKey('TR_FINDING_COMMENT', model)
                         })
                     }
+                    if(callback.data.simpan.length > 0){
+                        this.setState({
+                            totalFindingCommentDownload: callback.data.simpan.length.toString()
+                        })
+                        callback.data.simpan.map((data)=>{
+                            let model = {
+                                FINDING_COMMENT_ID: data.FINDING_COMMENT_ID,
+                                FINDING_CODE: data.FINDING_CODE,
+                                USER_AUTH_CODE: data.USER_AUTH_CODE,
+                                MESSAGE: data.MESSAGE,
+                                INSERT_TIME: data.INSERT_TIME !== undefined ? data.INSERT_TIME.toString() : "0",
+                                TAG_USER: data.TAG_USER !== undefined ? data.TAG_USER : [],
+                                //LOCAL PARAM
+                                STATUS_SYNC: 'Y',
+                                USERNAME: data.FULLNAME !== undefined ? data.FULLNAME : "NO_NAME"
+                            };
+                            TaskServices.saveData("TR_FINDING_COMMENT", model);
+                        });
+                    }
+                    this.setState({
+                        valueFindingCommentDownload: callback.data.simpan.length.toString(),
+                        progressFindingCommentDownload: 1
+                    })
                 }
+            })
+            .catch((e)=>{
+                console.log(e)
             })
     }
 
@@ -1596,8 +1620,10 @@ class SyncScreen extends React.Component {
             data.ubah.map(item => {
 				let newRating = item.RATING?item.RATING[0]:null;
                 let newItem = Object.assign({}, item, { STATUS_SYNC: 'Y',RATING:newRating });
+                console.log("crudTM:"+JSON.stringify(newItem));
                 this._updateTR_Notif(newItem);
-                TaskServices.updateByPrimaryKey('TR_FINDING', item)
+                TaskServices.updateByPrimaryKey('TR_FINDING', newItem)
+                // TaskServices.updateByPrimaryKey('TR_FINDING', item)
             })
         }
         if (data.hapus.length > 0 && allData.length > 0) {
@@ -1869,11 +1895,12 @@ class SyncScreen extends React.Component {
         this.deleteGenbaSelected();
         this.deleteGenbaInspection();
         // Gani
+
+        //comment
+        this.downloadFindingComment();
         this.resetSagas();
         NetInfo.isConnected.fetch().then(isConnected => {
             if (isConnected) {
-                //comment
-                this.downloadFindingComment();
                 this.setState({
 
                     //upload
@@ -1956,9 +1983,11 @@ class SyncScreen extends React.Component {
                 this.uploadFindingComment();
                 //genba upload
                 this.uploadGenba();
+
                 //POST TRANSAKSI
                 this.kirimImage();
                 this.kirimUserImage();
+
                 //cara redux saga
                 setTimeout(() => {
                     this.props.findingRequest();
