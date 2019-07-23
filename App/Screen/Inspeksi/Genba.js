@@ -1,6 +1,6 @@
 // CORE REACT NATIVE
 import React, { Component } from 'react';
-import { View, Image, Text, TouchableOpacity, FlatList, KeyboardAvoidingView, ScrollView, TextInput, AsyncStorage } from 'react-native';
+import { View, Image, Text, TouchableOpacity, FlatList, KeyboardAvoidingView, ScrollView, TextInput, AsyncStorage, Platform } from 'react-native';
 
 // PLUGIN
 import { Form, Item, Input, Button } from 'native-base';
@@ -291,9 +291,9 @@ export default class Genba extends Component {
                     backgroundColor : '#ffff'
                 }}
                 behavior="padding"
-                enabled
+                keyboardVerticalOffset={Platform.OS === "ios"? 0 : -550}
             >
-                <View style={{
+                <ScrollView style={{
                     flex:1,
                     marginTop:10
                 }}>
@@ -391,7 +391,7 @@ export default class Genba extends Component {
                         </View>
                         {this.renderListUser()}
                     </View>
-                </View>
+                </ScrollView>
 
                 <View style={{
                     alignItems: "center",
