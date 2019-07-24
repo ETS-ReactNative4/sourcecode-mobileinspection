@@ -31,6 +31,7 @@ class DetailFindingScreenRedesign extends Component {
 
         var ID = this.props.navigation.state.params.ID
         var data = TaskServices.findBy2('TR_FINDING', 'FINDING_CODE', ID);
+        console.log('data.RATING : ', data.RATING)
         this.state = {
             user: TaskServices.getAllData('TR_LOGIN')[0],
             id: ID,
@@ -292,6 +293,9 @@ class DetailFindingScreenRedesign extends Component {
     }
     inputRating() {
         try {
+            this.setState({
+                rating: this.state.newRating
+            })
             TaskServices.updateByPrimaryKey('TR_FINDING', {
                 "FINDING_CODE": this.state.id,
                 "RATING": {
@@ -301,9 +305,6 @@ class DetailFindingScreenRedesign extends Component {
                 },
                 "STATUS_SYNC": "N"
             });
-            this.setState({
-                rating: this.state.newRating
-            })
         } catch (error) {
             console.log("masuk input rating", error)
         }
@@ -554,7 +555,7 @@ class DetailFindingScreenRedesign extends Component {
                         </TouchableOpacity>}
 
                     {(this.state.data.PROGRESS == 100) &&
-                        (this.state.data.ASSIGN_TO !== this.state.user.USER_AUTH_CODE) &&
+                        (this.state.data.INSERT_USER == this.state.user.USER_AUTH_CODE) &&
                         this.state.rating == 0 &&
                         <View style={{ flex: 1, width: '90%', borderTopWidth: 1, alignSelf: 'center', }}>
                             <View style={{

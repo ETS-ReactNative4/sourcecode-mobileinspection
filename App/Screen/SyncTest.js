@@ -1644,7 +1644,7 @@ class SyncScreen extends React.Component {
             }
             data.simpan.map(item => {
                 let newRating = item.RATING;
-                console.log('item.RATING : ', newRating);
+                // console.log('item.RATING : ', newRating);
                 let newItem = Object.assign({}, item, { STATUS_SYNC: 'Y', RATING: newRating });
                 this._updateTR_Notif(newItem);
                 TaskServices.saveData('TR_FINDING', newItem);
@@ -1659,7 +1659,7 @@ class SyncScreen extends React.Component {
             data.ubah.map(item => {
                 let newRating = item.RATING ? item.RATING[0] : null;
                 let newItem = Object.assign({}, item, { STATUS_SYNC: 'Y', RATING: newRating });
-                console.log("crudTM:" + JSON.stringify(newItem));
+                // console.log("crudTM:" + JSON.stringify(newItem));
                 this._updateTR_Notif(newItem);
                 TaskServices.updateByPrimaryKey('TR_FINDING', newItem)
                 // TaskServices.updateByPrimaryKey('TR_FINDING', item)
@@ -1725,6 +1725,7 @@ class SyncScreen extends React.Component {
                 this.setState({ progressFindingImage: i / dataSimpan.length, totalFindingImageDownload: dataSimpan.length });
             }
             dataSimpan.map(item => {
+                console.log('Finding Image : ', item)
                 TaskServices.saveData('TR_IMAGE', item);
                 this._downloadImageFinding(item);
                 let countDataInsert = TaskServices.getTotalData('TR_IMAGE');
@@ -1871,6 +1872,7 @@ class SyncScreen extends React.Component {
         let isExist = await RNFS.exists(`${dirPhotoTemuan}/${data.IMAGE_NAME}`)
         if (!isExist) {
             var url = data.IMAGE_URL;
+            console.log('URL Image : ', url)
             const { config, fs } = RNFetchBlob
             let options = {
                 fileCache: true,
@@ -2334,7 +2336,7 @@ class SyncScreen extends React.Component {
                         visible={this.state.showModal}
                         onPressCancel={() => {
                             if (this.state.pickedWerks === false) {
-                                this.props.navigation.navigate('PilihPeta')
+                                this.props.navigation.navigate('PilihPeta', { more: 'Sync' })
                             }
                             this.setState({ showModal: false, finishedSync: false, pickedWerks: true });
                         }}
