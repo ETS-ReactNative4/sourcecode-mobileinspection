@@ -782,7 +782,7 @@ class SyncScreen extends React.Component {
     postFindingComment(param) {
         let urlDetail = this.getAPIURL("FINDING-COMMENT-INSERT")
         const user = TaskServices.getAllData('TR_LOGIN')[0];
-        fetchPostAPI(user.ACCESS_TOKEN, urlDetail.API_URL, urlDetail.METHOD, param).then(((result) => {
+        fetchPostAPI(user.ACCESS_TOKEN, urlDetail.API_URL, param).then(((result) => {
             if (result != undefined) {
                 if (result.status) {
                     TaskServices.updateByPrimaryKey('TR_FINDING_COMMENT', {
@@ -798,8 +798,8 @@ class SyncScreen extends React.Component {
         }));
     }
 
-    downloadFindingComment(){
-        let TM_SERVICE = TaskServices.findBy2("TM_SERVICE",'API_NAME', 'AUTH-SYNC-FINDING-COMMENT');
+    downloadFindingComment() {
+        let TM_SERVICE = TaskServices.findBy2("TM_SERVICE", 'API_NAME', 'AUTH-SYNC-FINDING-COMMENT');
         const user = TaskServices.getAllData('TR_LOGIN')[0];
         fetch(TM_SERVICE.API_URL, {
             method: TM_SERVICE.METHOD,
@@ -810,8 +810,8 @@ class SyncScreen extends React.Component {
             .then((response) => {
                 return response.json();
             })
-            .then((callback)=>{
-                if(callback.status){
+            .then((callback) => {
+                if (callback.status) {
                     let getComment = TaskServices.getAllData("TR_FINDING_COMMENT");
                     if (callback.data.hapus.length > 0 && getComment.length > 0) {
                         callback.data.hapus.map(data => {
@@ -834,11 +834,11 @@ class SyncScreen extends React.Component {
                             TaskServices.updateByPrimaryKey('TR_FINDING_COMMENT', model)
                         })
                     }
-                    if(callback.data.simpan.length > 0){
+                    if (callback.data.simpan.length > 0) {
                         this.setState({
                             totalFindingCommentDownload: callback.data.simpan.length.toString()
                         })
-                        callback.data.simpan.map((data)=>{
+                        callback.data.simpan.map((data) => {
                             let model = {
                                 FINDING_COMMENT_ID: data.FINDING_COMMENT_ID,
                                 FINDING_CODE: data.FINDING_CODE,
@@ -859,24 +859,62 @@ class SyncScreen extends React.Component {
                     })
                 }
             })
-            .catch((e)=>{
+            .catch((e) => {
                 console.log(e)
             })
     }
 
     // Aminju => Summary Inspeksi
-    postSummaryInspeksi(param) {
-        let urlDetail = this.getAPIURL("FINDING-COMMENT-INSERT")
+    uploadWeeklySummary() {
+        // console.log('Masuk Weekly Summary ')
+        // const data = {
+        //     SUMMARY_CODE: 'F01',
+        //     TOTAL_INSPEKSI: 1,
+        //     TOTAL_BARIS: 10,
+        //     TARGET: 10,
+        //     DISTANCE_METER: 120,
+        //     DISTANCE_KM: 1,
+        //     DURATION: 11
+        // }
+        // TaskServices.saveData('TR_SUMMARY', data);
+
+        console.log('Masuk Weekly Summary ')
+        const today = getTodayDate('YYYY-MM-DD')
+        const param = {
+            TANGGAL: today
+        }
+        let urlDetail = this.getAPIURL("INSPECTION-SUMMARY")
+        console.log('urlDetail : ', urlDetail)
+        console.log('urlDetail API_URL : ', urlDetail.API_URL)
         const user = TaskServices.getAllData('TR_LOGIN')[0];
-        fetchPostAPI(user.ACCESS_TOKEN, urlDetail.API_URL, urlDetail.METHOD, param).then(((result) => {
+        fetchPostAPI(user.ACCESS_TOKEN, urlDetail.API_URL, param).then(((result) => {
+            console.log('Response : ', result)
             if (result != undefined) {
+                console.log('Result Summary : ', result)
                 if (result.status) {
-                    TaskServices.updateByPrimaryKey('TR_FINDING_COMMENT', {
-                        "FINDING_COMMENT_ID": param.FINDING_COMMENT_ID,
-                        "STATUS_SYNC": "Y"
-                    });
+                    const dummyData = {
+                        SUMMARY_CODE: 'SUM01',
+                        WEEKLY_STATUS: 'true',
+
+                        SUMMARY_INSPEKSI: 'inspeksi',
+                        VALUE_INSPEKSI: '10 (25 Baris)',
+                        TARGET_INSPEKSI: '10',
+
+                        SUMMARY_TEMUAN: 'temuan',
+                        VALUE_TEMUAN: '10',
+                        TARGET_TEMUAN: '100',
+
+                        SUMMARY_EBCC: 'ebcc validation',
+                        VALUE_EBCC: '25',
+                        TARGET_EBCC: '100',
+
+                        SUMMARY_WALK: 'berjalan kaki',
+                        VALUE_WALK: '1,040 KM',
+                        TARGET_WALK: '10 jam 50 menit',
+                    }
+                    TaskServices.saveData('TR_SUMMARY', dummyData);
                 } else {
-                    console.log("summaryinspeksi upload failed, check your parameter / api!");
+                    console.log("weeklysummary upload failed, check your parameter / api!");
                 }
             } else {
                 console.log("Server Timeout");
@@ -1605,8 +1643,9 @@ class SyncScreen extends React.Component {
                 this.setState({ progressFinding: i / data.simpan.length, totalFindingDownload: data.simpan.length });
             }
             data.simpan.map(item => {
-				let newRating = item.RATING?item.RATING[0]:null;
-                let newItem = Object.assign({}, item, { STATUS_SYNC: 'Y',RATING:newRating });
+                let newRating = item.RATING;
+                console.log('item.RATING : ', newRating);
+                let newItem = Object.assign({}, item, { STATUS_SYNC: 'Y', RATING: newRating });
                 this._updateTR_Notif(newItem);
                 TaskServices.saveData('TR_FINDING', newItem);
                 let countDataInsert = TaskServices.getTotalData('TR_FINDING');
@@ -1618,9 +1657,9 @@ class SyncScreen extends React.Component {
         }
         if (data.ubah.length > 0 && allData.length > 0) {
             data.ubah.map(item => {
-				let newRating = item.RATING?item.RATING[0]:null;
-                let newItem = Object.assign({}, item, { STATUS_SYNC: 'Y',RATING:newRating });
-                console.log("crudTM:"+JSON.stringify(newItem));
+                let newRating = item.RATING ? item.RATING[0] : null;
+                let newItem = Object.assign({}, item, { STATUS_SYNC: 'Y', RATING: newRating });
+                console.log("crudTM:" + JSON.stringify(newItem));
                 this._updateTR_Notif(newItem);
                 TaskServices.updateByPrimaryKey('TR_FINDING', newItem)
                 // TaskServices.updateByPrimaryKey('TR_FINDING', item)
@@ -1628,8 +1667,8 @@ class SyncScreen extends React.Component {
         }
         if (data.hapus.length > 0 && allData.length > 0) {
             data.hapus.map(item => {
-				let newRating = item.RATING?item.RATING[0]:null;
-                let newItem = Object.assign({}, item, { STATUS_SYNC: 'Y',RATING:newRating });
+                let newRating = item.RATING ? item.RATING[0] : null;
+                let newItem = Object.assign({}, item, { STATUS_SYNC: 'Y', RATING: newRating });
                 this._updateTR_Notif(newItem);
                 this.deleteRecordByPK('TR_FINDING', 'FINDING_CODE', item.FINDING_CODE);
             });
@@ -1892,7 +1931,7 @@ class SyncScreen extends React.Component {
         this._deleteFinding();
         this.deleteEbccHeader();
         this.deleteEbccDetail();
-        this.deleteGenbaSelected();
+        // this.deleteGenbaSelected();
         this.deleteGenbaInspection();
         // Gani
 
@@ -1987,6 +2026,7 @@ class SyncScreen extends React.Component {
                 //POST TRANSAKSI
                 this.kirimImage();
                 this.kirimUserImage();
+                this.uploadWeeklySummary();
 
                 //cara redux saga
                 setTimeout(() => {
@@ -2129,6 +2169,7 @@ class SyncScreen extends React.Component {
 
         if (newProps.finding.fetchingFinding !== null && !newProps.finding.fetchingFinding) {
             let dataJSON = newProps.finding.finding;
+            console.log('Data JSON : ', dataJSON)
             if (dataJSON !== null) {
                 this._crudTM_Finding(dataJSON);
             }

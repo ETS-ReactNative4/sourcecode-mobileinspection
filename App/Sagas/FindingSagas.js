@@ -37,6 +37,7 @@ export function* getFinding(api, action) {
 export function* postFinding(api, action) {
     try {
         const { data } = action;
+        console.log('data Param : ', data)
         const response = yield call(api.postFindingData, data);
     
         if (typeof atob !== 'undefined') {

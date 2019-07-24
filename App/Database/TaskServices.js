@@ -10,7 +10,10 @@ const TaskServices = {
 
   saveData: async function (table, obj) {
     try {
-       // console.log('Save Data : ' + table + ' ' + JSON.stringify(obj));
+      if (table == 'TR_SUMMARY') {
+        console.log('Save Data : ' + table + ' ' + JSON.stringify(obj));
+      }
+
       await RealmSchemas.write(() => {
         RealmSchemas.create(table, obj, true);
       })
@@ -93,17 +96,17 @@ const TaskServices = {
       RealmSchemas.delete(RealmSchemas.objects(table)[index]);
     });
   },
-  deleteRecordByPK: function (table,PK_NAME, primary_key) {
+  deleteRecordByPK: function (table, PK_NAME, primary_key) {
     console.log('Primary Key Finding Code PK: ' + JSON.stringify(primary_key))
     let result = RealmSchemas.objects(table).find(row => {
       console.log('Row : ', row)
       return row[PK_NAME] == primary_key
     })
-	if(result){
-		RealmSchemas.write(() => {
-		  RealmSchemas.delete(result);
-		});
-	}
+    if (result) {
+      RealmSchemas.write(() => {
+        RealmSchemas.delete(result);
+      });
+    }
   },
 
   deleteRecordPrimaryKey: function (table, primary_key) {
@@ -114,9 +117,9 @@ const TaskServices = {
       RealmSchemas.delete(result);
     });
   },
-  updateByPrimaryKey: function (table,param) {
+  updateByPrimaryKey: function (table, param) {
     RealmSchemas.write(() => {
-        RealmSchemas.create(table, param,true)
+      RealmSchemas.create(table, param, true)
     });
   },
 
@@ -128,9 +131,9 @@ const TaskServices = {
   },
 
   //di pake buat update TR_BARIS_INSPECTION.TR_FINDING_CODES
-  updateInspeksiFindingList(TR_BARIS_INSPECTION_id, TR_FINDING_CODES_value){
+  updateInspeksiFindingList(TR_BARIS_INSPECTION_id, TR_FINDING_CODES_value) {
     let selectedBarisInspection = this.findBy2("TR_BARIS_INSPECTION", "ID_INSPECTION", TR_BARIS_INSPECTION_id);
-    RealmSchemas.write(()=>{
+    RealmSchemas.write(() => {
       selectedBarisInspection.TR_FINDING_CODES = TR_FINDING_CODES_value
     })
   },
@@ -205,8 +208,8 @@ const TaskServices = {
       data.COMP_CODE = result.COMP_CODE;
       data.WERKS = result.WERKS;
       data.SUB_BA_CODE = result.SUB_BA_CODE,
-      data.KEBUN_CODE = result.KEBUN_CODE,
-      data.AFD_CODE = result.AFD_CODE;
+        data.KEBUN_CODE = result.KEBUN_CODE,
+        data.AFD_CODE = result.AFD_CODE;
       data.AFD_NAME = result.AFD_NAME;
       data.WERKS_AFD_CODE = result.WERKS_AFD_CODE;
       data.BLOCK_CODE = result.BLOCK_CODE;
@@ -426,39 +429,39 @@ const TaskServices = {
 
       } else if (refCode === 'COMP_CODE') {
 
-        if(valueRefCode.includes(',')){
+        if (valueRefCode.includes(',')) {
           valueRefCode = valueRefCode.split(',')
-          valueRefCode.map(item =>{
+          valueRefCode.map(item => {
             est = this.findBy2('TM_EST', 'COMP_CODE', item);
             arrEst.push(est.EST_NAME)
           })
-        }else{
+        } else {
           est = this.findBy2('TM_EST', 'COMP_CODE', valueRefCode);
           arrEst.push(est.EST_NAME)
-        }      
+        }
 
-      } else if (refCode === 'BA_CODE') {   
-        
-        if(valueRefCode.includes(',')){
+      } else if (refCode === 'BA_CODE') {
+
+        if (valueRefCode.includes(',')) {
           valueRefCode = valueRefCode.split(',')
-          valueRefCode.map(item =>{
+          valueRefCode.map(item => {
             est = this.findBy2('TM_EST', 'WERKS', item);
             arrEst.push(est.EST_NAME)
           })
-        }else{
+        } else {
           est = this.findBy2('TM_EST', 'WERKS', valueRefCode);
           arrEst.push(est.EST_NAME)
-        } 
+        }
 
       } else if (refCode === 'AFD_CODE') {
-        if(valueRefCode.includes(',')){
+        if (valueRefCode.includes(',')) {
           valueRefCode = valueRefCode.split(',')
-          valueRefCode.map(item =>{
+          valueRefCode.map(item => {
             let afd = this.findBy2('TM_AFD', 'WERKS_AFD_CODE', item);
             est = this.findBy2('TM_EST', 'WERKS', afd.WERKS);
             arrEst.push(est.EST_NAME)
           })
-        }else{
+        } else {
           let afd = this.findBy2('TM_AFD', 'WERKS_AFD_CODE', valueRefCode);
           est = this.findBy('TM_EST', 'WERKS', afd.WERKS);
           arrEst.push(est.EST_NAME)
@@ -468,179 +471,179 @@ const TaskServices = {
     } catch (error) {
       return []
     }
-    
+
   },
-  getRegionName: function (){
+  getRegionName: function () {
     try {
       let auth = this.getAllData('TR_LOGIN')[0];
       let refCode = auth.REFFERENCE_ROLE;
-      let valueRefCode = auth.LOCATION_CODE;      
+      let valueRefCode = auth.LOCATION_CODE;
       let arrEst = []
       let est;
-      if(refCode === 'NATIONAL'){
+      if (refCode === 'NATIONAL') {
         let data = TaskServices.getAllData('TM_REGION')
-        if(data !== undefined){
+        if (data !== undefined) {
           data.map(item => {
             arrEst.push(item.REGION_NAME)
           })
         }
-      }else if (refCode === 'REGION_CODE') {
-        if(valueRefCode.includes(',')){
+      } else if (refCode === 'REGION_CODE') {
+        if (valueRefCode.includes(',')) {
           valueRefCode = valueRefCode.split(',')
           valueRefCode.map(item => {
             let reg = TaskServices.findBy2('TM_REGION', 'REGION_CODE', item);
-            arrEst.push(reg.REGION_NAME)  
+            arrEst.push(reg.REGION_NAME)
           })
-        }else{
+        } else {
           let reg = TaskServices.findBy2('TM_REGION', 'REGION_CODE', valueRefCode);
           arrEst.push(reg.REGION_NAME)
         }
-        
+
       } else if (refCode === 'BA_CODE') {
 
-        if(valueRefCode.includes(',')){          
+        if (valueRefCode.includes(',')) {
           valueRefCode = valueRefCode.split(',')
           valueRefCode = valueRefCode[0]
         }
         est = this.findBy2('TM_EST', 'WERKS', valueRefCode);
         let reg = this.findBy2('TM_REGION', 'REGION_CODE', est.REGION_CODE);
-        arrEst.push(reg.REGION_NAME) 
+        arrEst.push(reg.REGION_NAME)
 
-      } else if (refCode === 'AFD_CODE') { 
+      } else if (refCode === 'AFD_CODE') {
 
-        if(valueRefCode.includes(',')){          
+        if (valueRefCode.includes(',')) {
           valueRefCode = valueRefCode.split(',')
           valueRefCode = valueRefCode[0]
         }
-        
+
         let afd = this.findBy2('TM_AFD', 'WERKS_AFD_CODE', valueRefCode);
         est = this.findBy2('TM_EST', 'WERKS', afd.WERKS);
         let reg = this.findBy2('TM_REGION', 'REGION_CODE', est.REGION_CODE);
-        arrEst.push(reg.REGION_NAME) 
+        arrEst.push(reg.REGION_NAME)
       }
 
       return arrEst;
     } catch (error) {
       return []
     }
-    
+
   },
 
-	getRegionCode: function (){
-		try {
-			let auth = this.getAllData('TR_LOGIN')[0];
-			let refCode = auth.REFFERENCE_ROLE;
-			let valueRefCode = auth.LOCATION_CODE;      
-			let arrEst = []
-			let est;
-			if(refCode === 'NATIONAL'){
-				let data = TaskServices.getAllData('TM_REGION');
-				if(data !== undefined){
-					data.map(item => {
-						if(!arrEst.includes(item.REGION_CODE)){
-							arrEst.push(item.REGION_CODE);
-						}
-					})
-				}
-			}else if (refCode === 'COMP_CODE') {
-				if(valueRefCode.includes(',')){
-					valueRefCode = valueRefCode.split(',')
-					valueRefCode.map(item => {
-						let comp = TaskServices.findBy2('TM_COMP', 'COMP_CODE', item);
-						if(!arrEst.includes(comp.REGION_CODE)){
-							arrEst.push(comp.REGION_CODE)  
-						}
-					});
-				}else{
-					let comp = TaskServices.findBy2('TM_COMP', 'COMP_CODE', valueRefCode);
-					if(!arrEst.includes(comp.REGION_CODE)){
-						arrEst.push(comp.REGION_CODE)
-					}
-				}
-			}else if (refCode === 'REGION_CODE') {
-				if(valueRefCode.includes(',')){
-					valueRefCode = valueRefCode.split(',')
-					valueRefCode.map(item => {
-						let reg = TaskServices.findBy2('TM_REGION', 'REGION_CODE', item);
-						if(!arrEst.includes(reg.REGION_CODE)){
-							arrEst.push(reg.REGION_CODE)  
-						}
-					});
-				}else{
-					let reg = TaskServices.findBy2('TM_REGION', 'REGION_CODE', valueRefCode);
-					if(!arrEst.includes(reg.REGION_CODE)){
-						arrEst.push(reg.REGION_CODE)
-					}
-				}
-			} else if (refCode === 'BA_CODE') {
-				if(valueRefCode.includes(',')){
-					valueRefCode = valueRefCode.split(',')
-					valueRefCode.map(item => {
-						est = this.findBy2('TM_EST', 'WERKS', item);
-						let reg = this.findBy2('TM_REGION', 'REGION_CODE', est.REGION_CODE);
-						if(!arrEst.includes(reg.REGION_CODE)){
-							arrEst.push(reg.REGION_CODE)
-						}
-					});
-				}
-				else{
-					est = this.findBy2('TM_EST', 'WERKS', valueRefCode);
-					let reg = this.findBy2('TM_REGION', 'REGION_CODE', est.REGION_CODE);
-					if(!arrEst.includes(reg.REGION_CODE)){
-						arrEst.push(reg.REGION_CODE)
-					}
-				}
-			} else if (refCode === 'AFD_CODE') {
-				if(valueRefCode.includes(',')){
-					valueRefCode = valueRefCode.split(',')
-					valueRefCode.map(item => {
-						let afd = this.findBy2('TM_AFD', 'WERKS_AFD_CODE', item);
-						est = this.findBy2('TM_EST', 'WERKS', afd.WERKS);
-						let reg = this.findBy2('TM_REGION', 'REGION_CODE', est.REGION_CODE);
-						if(!arrEst.includes(reg.REGION_CODE)){
-							arrEst.push(reg.REGION_CODE);
-						}
-					});
-				}
-				else{
-					let afd = this.findBy2('TM_AFD', 'WERKS_AFD_CODE', valueRefCode);
-					est = this.findBy2('TM_EST', 'WERKS', afd.WERKS);
-					let reg = this.findBy2('TM_REGION', 'REGION_CODE', est.REGION_CODE);
-					if(!arrEst.includes(reg.REGION_CODE)){
-						arrEst.push(reg.REGION_CODE) 	
-					}
-				}
-			}
-			return arrEst;
-		} catch (error) {
-			console.log("catch getRegionCode",error);
-			return []
-		}
-	},
-
-  getBlockInAFD: function (){
-    let arrBlock = []
-    try {      
+  getRegionCode: function () {
+    try {
       let auth = this.getAllData('TR_LOGIN')[0];
       let refCode = auth.REFFERENCE_ROLE;
-      let valueRefCode = auth.LOCATION_CODE; 
+      let valueRefCode = auth.LOCATION_CODE;
+      let arrEst = []
+      let est;
+      if (refCode === 'NATIONAL') {
+        let data = TaskServices.getAllData('TM_REGION');
+        if (data !== undefined) {
+          data.map(item => {
+            if (!arrEst.includes(item.REGION_CODE)) {
+              arrEst.push(item.REGION_CODE);
+            }
+          })
+        }
+      } else if (refCode === 'COMP_CODE') {
+        if (valueRefCode.includes(',')) {
+          valueRefCode = valueRefCode.split(',')
+          valueRefCode.map(item => {
+            let comp = TaskServices.findBy2('TM_COMP', 'COMP_CODE', item);
+            if (!arrEst.includes(comp.REGION_CODE)) {
+              arrEst.push(comp.REGION_CODE)
+            }
+          });
+        } else {
+          let comp = TaskServices.findBy2('TM_COMP', 'COMP_CODE', valueRefCode);
+          if (!arrEst.includes(comp.REGION_CODE)) {
+            arrEst.push(comp.REGION_CODE)
+          }
+        }
+      } else if (refCode === 'REGION_CODE') {
+        if (valueRefCode.includes(',')) {
+          valueRefCode = valueRefCode.split(',')
+          valueRefCode.map(item => {
+            let reg = TaskServices.findBy2('TM_REGION', 'REGION_CODE', item);
+            if (!arrEst.includes(reg.REGION_CODE)) {
+              arrEst.push(reg.REGION_CODE)
+            }
+          });
+        } else {
+          let reg = TaskServices.findBy2('TM_REGION', 'REGION_CODE', valueRefCode);
+          if (!arrEst.includes(reg.REGION_CODE)) {
+            arrEst.push(reg.REGION_CODE)
+          }
+        }
+      } else if (refCode === 'BA_CODE') {
+        if (valueRefCode.includes(',')) {
+          valueRefCode = valueRefCode.split(',')
+          valueRefCode.map(item => {
+            est = this.findBy2('TM_EST', 'WERKS', item);
+            let reg = this.findBy2('TM_REGION', 'REGION_CODE', est.REGION_CODE);
+            if (!arrEst.includes(reg.REGION_CODE)) {
+              arrEst.push(reg.REGION_CODE)
+            }
+          });
+        }
+        else {
+          est = this.findBy2('TM_EST', 'WERKS', valueRefCode);
+          let reg = this.findBy2('TM_REGION', 'REGION_CODE', est.REGION_CODE);
+          if (!arrEst.includes(reg.REGION_CODE)) {
+            arrEst.push(reg.REGION_CODE)
+          }
+        }
+      } else if (refCode === 'AFD_CODE') {
+        if (valueRefCode.includes(',')) {
+          valueRefCode = valueRefCode.split(',')
+          valueRefCode.map(item => {
+            let afd = this.findBy2('TM_AFD', 'WERKS_AFD_CODE', item);
+            est = this.findBy2('TM_EST', 'WERKS', afd.WERKS);
+            let reg = this.findBy2('TM_REGION', 'REGION_CODE', est.REGION_CODE);
+            if (!arrEst.includes(reg.REGION_CODE)) {
+              arrEst.push(reg.REGION_CODE);
+            }
+          });
+        }
+        else {
+          let afd = this.findBy2('TM_AFD', 'WERKS_AFD_CODE', valueRefCode);
+          est = this.findBy2('TM_EST', 'WERKS', afd.WERKS);
+          let reg = this.findBy2('TM_REGION', 'REGION_CODE', est.REGION_CODE);
+          if (!arrEst.includes(reg.REGION_CODE)) {
+            arrEst.push(reg.REGION_CODE)
+          }
+        }
+      }
+      return arrEst;
+    } catch (error) {
+      console.log("catch getRegionCode", error);
+      return []
+    }
+  },
+
+  getBlockInAFD: function () {
+    let arrBlock = []
+    try {
+      let auth = this.getAllData('TR_LOGIN')[0];
+      let refCode = auth.REFFERENCE_ROLE;
+      let valueRefCode = auth.LOCATION_CODE;
       if (refCode === 'AFD_CODE') {
-        if(valueRefCode.includes(',')){
-			valueRefCode = valueRefCode.split(",");
+        if (valueRefCode.includes(',')) {
+          valueRefCode = valueRefCode.split(",");
           valueRefCode.map(item => {
             const afd_code = item.substring(4, 5);
             let data = this.query('TM_BLOCK', `AFD_CODE = "${afd_code}"`)
-            if(data.length > 0){
-              data.map(item2 =>{
+            if (data.length > 0) {
+              data.map(item2 => {
                 arrBlock.push(item2.BLOCK_NAME)
               })
             }
           });
-        }else{
+        } else {
           const afd_code = valueRefCode.substring(4, 5);
           let data = this.query('TM_BLOCK', `AFD_CODE = "${afd_code}"`)
-          if(data.length > 0){
-            data.map(item2 =>{
+          if (data.length > 0) {
+            data.map(item2 => {
               arrBlock.push(item2.BLOCK_NAME)
             })
           }
@@ -677,22 +680,22 @@ const TaskServices = {
   },
 
 
-  getAllContact : function() {
-    let data  = this.getAllData('TR_CONTACT')[0];
+  getAllContact: function () {
+    let data = this.getAllData('TR_CONTACT')[0];
     return data;
   },
 
-  getAllContactGenba : function() {
+  getAllContactGenba: function () {
     let data = this.getAllData('TR_CONTACT_GENBA');
     return data;
   },
 
-  getLoginData : function() {
+  getLoginData: function () {
     let data = this.getAllData('TR_LOGIN')[0];
     return data;
   },
 
-  getAllDataContact : function(table, column='', value='' ) {
+  getAllDataContact: function (table, column = '', value = '') {
     return RealmSchemas.objects(table).filtered(column + "==" + "\'" + value + "\'")[0];
   },
 };

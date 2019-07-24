@@ -47,8 +47,8 @@ class DetailFindingScreenRedesign extends Component {
             insertTime: '',
             fullName: '',
             lokasiBlok: '',
-            ratingMsg: (data.RATING == null ? '' : data.RATING.MESSAGE),
-            rating: (data.RATING == null ? 0 : data.RATING.RATE),//0 default,1 bad,2 ok,3 good,4 great
+            ratingMsg: (data.RATING == undefined ? '' : data.RATING.MESSAGE),
+            rating: (data.RATING == undefined ? 0 : data.RATING.RATE),//0 default,1 bad,2 ok,3 good,4 great
             newRating: 0,
             //Add Modal Alert by Aminju 
             title: 'Title',
@@ -554,7 +554,7 @@ class DetailFindingScreenRedesign extends Component {
                         </TouchableOpacity>}
 
                     {(this.state.data.PROGRESS == 100) &&
-                     (this.state.data.ASSIGN_TO !== this.state.user.USER_AUTH_CODE) &&
+                        (this.state.data.ASSIGN_TO !== this.state.user.USER_AUTH_CODE) &&
                         this.state.rating == 0 &&
                         <View style={{ flex: 1, width: '90%', borderTopWidth: 1, alignSelf: 'center', }}>
                             <View style={{
@@ -630,7 +630,7 @@ class DetailFindingScreenRedesign extends Component {
 
                     {(this.state.data.PROGRESS == 100) &&
                         this.state.rating != 0 &&
-                        <View style={{ flex: 1, width: '90%', borderTopWidth: 1, alignSelf: 'center', }}>
+                        <View style={{ flex: 1, width: '90%', borderTopWidth: 1, alignSelf: 'center', marginBottom: 30 }}>
                             <View style={{
                                 flex: 1,
                                 alignItems: 'center',

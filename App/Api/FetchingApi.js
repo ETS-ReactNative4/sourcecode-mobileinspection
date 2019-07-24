@@ -1,7 +1,7 @@
 
-export function fetchGetAPI(url, method) {
+export function fetchGetAPI(url) {
     return fetch(url, {
-        method: method,
+        method: 'GET',
         headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
@@ -17,9 +17,9 @@ export function fetchGetAPI(url, method) {
     });
 }
 
-export function fetchPostAPI(token, url, method, param) {
+export function fetchPostAPI(token, url, param) {
     return fetch(url, {
-        method: method,
+        method: 'POST',
         headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
@@ -27,6 +27,7 @@ export function fetchPostAPI(token, url, method, param) {
         },
         body: JSON.stringify(param)
     }).then((response) => {
+        // console.log('Response : ', response.json)
         if (response.status == 200) {
             return response.json()
         }
