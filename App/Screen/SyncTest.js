@@ -762,7 +762,6 @@ class SyncScreen extends React.Component {
                     "INSERT_TIME": data.INSERT_TIME,
                     "TAGS": taggedUser
                 };
-                console.log(commentModel);
                 this.postFindingComment(commentModel);
                 this.setState({ valueFindingCommentDataUpload: index + 1, totalFindingCommentDataUpload: filteredComment.length });
             });
@@ -815,7 +814,6 @@ class SyncScreen extends React.Component {
                     }
                     if (callback.data.ubah.length > 0 && getComment.length > 0) {
                         callback.data.ubah.map(data => {
-                            console.log("CIBAY LA mamen:"+JSON.stringify(data));
                             let model = {
                                 FINDING_COMMENT_ID: data.FINDING_COMMENT_ID,
                                 FINDING_CODE: data.FINDING_CODE,
@@ -835,7 +833,6 @@ class SyncScreen extends React.Component {
                             totalFindingCommentDownload: callback.data.simpan.length.toString()
                         })
                         callback.data.simpan.map((data) => {
-                            console.log("CIBAY LA mamen:"+JSON.stringify(data));
                             let model = {
                                 FINDING_COMMENT_ID: data.FINDING_COMMENT_ID,
                                 FINDING_CODE: data.FINDING_CODE,
@@ -2432,6 +2429,13 @@ class SyncScreen extends React.Component {
                         value={this.state.valueFindingImageDownload}
                         total={this.state.totalFindingImageDownload}
                         progress={this.state.progressFindingImage} />
+
+                    <ProgressSync
+                        title={'FINDING COMMENT'}
+                        color={Colors.brand}
+                        value={this.state.valueFindingCommentDownload}
+                        total={this.state.totalFindingCommentDownload}
+                        progress={this.state.progressFindingCommentDownload} />
 
                     <ProgressSync
                         title={'BLOCK'}

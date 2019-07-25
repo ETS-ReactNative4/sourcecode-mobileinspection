@@ -50,7 +50,6 @@ export default {
 
   //text
   taggedUser: 'blue',
-  taggedUser: 'red',
 
   //Aminju
   //Color Component
