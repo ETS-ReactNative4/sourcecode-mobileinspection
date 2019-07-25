@@ -1,31 +1,28 @@
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
-    StyleSheet,
-    TouchableOpacity,
-    View,
-    Image,
-    BackHandler,
-    Dimensions,
-    StatusBar
-  } from 'react-native';
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Image,
+  BackHandler,
+  Dimensions,
+  StatusBar
+} from 'react-native';
 import Colors from '../../Constant/Colors';
 import Icon from 'react-native-vector-icons/Ionicons';
 import imgTakePhoto from '../../Images/icon/ic_take_photo.png';
 import imgNextPhoto from '../../Images/icon/ic_next_photo.png';
 import { RNCamera as Camera } from 'react-native-camera';
 import TaskServices from '../../Database/TaskServices';
-import { NavigationActions, StackActions } from 'react-navigation';
 import ImageResizer from 'react-native-image-resizer';
 import { dirPhotoTemuan } from '../../Lib/dirStorage'
-import random from 'random-string'
-
-const moment = require('moment');
 var RNFS = require('react-native-fs');
 import R from 'ramda';
 import { getTodayDate } from '../../Lib/Utils';
+import ModalAlert from '../../Component/ModalAlert';
 
-class TakeFoto extends Component{
+class TakeFoto extends Component {
 
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
@@ -41,19 +38,19 @@ class TakeFoto extends Component{
         fontWeight: '400'
       },
       headerLeft: (
-          <TouchableOpacity onPress={() => {params.clearFoto()}}>
-              <Icon style={{marginLeft: 12}} name={'ios-arrow-round-back'} size={45} color={'white'} />
-          </TouchableOpacity>
+        <TouchableOpacity onPress={() => { params.clearFoto() }}>
+          <Icon style={{ marginLeft: 12 }} name={'ios-arrow-round-back'} size={45} color={'white'} />
+        </TouchableOpacity>
       )
     };
   }
-    
+
   constructor(props) {
     super(props);
 
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     this.clearFoto = this.clearFoto.bind(this);
-    
+
     let params = props.navigation.state.params;
     let baris = R.clone(params.authCode);
     let from = R.clone(params.from)
@@ -68,44 +65,44 @@ class TakeFoto extends Component{
       baris,
       from
     };
-  }     
-      
-  clearFoto(){
-    if(this.state.hasPhoto){
+  }
+
+  clearFoto() {
+    if (this.state.hasPhoto) {
       RNFS.unlink(this.state.path);
       RNFS.unlink(this.state.pathCacheInternal);
       RNFS.unlink(this.state.pathCacheResize);
       this.setState({ pathView: '', hasPhoto: false });
     }
-    this.props.navigation.goBack(); 
+    this.props.navigation.goBack();
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.props.navigation.setParams({ clearFoto: this.clearFoto })
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
   }
 
-  handleBackButtonClick() { 
+  handleBackButtonClick() {
     this.clearFoto();
     return true;
   }
 
   takePicture = async () => {
     try {
-      if(this.state.hasPhoto){  
-        this.goBack();     
-      }else{
+      if (this.state.hasPhoto) {
+        this.goBack();
+      } else {
         const takeCameraOptions = {
           // quality : 0.5,  //just in case want to reduce the quality too
           skipProcessing: false,
           fixOrientation: true
         };
-        const data = await this.camera.takePictureAsync(takeCameraOptions); 
-		var today = getTodayDate('YYMMDDHHmmss')
+        const data = await this.camera.takePictureAsync(takeCameraOptions);
+        var today = getTodayDate('YYMMDDHHmmss')
         var pname = `P${this.state.user.USER_AUTH_CODE}${today}.jpg`//'F' + this.state.user.USER_AUTH_CODE + random({ length: 3 }).toUpperCase() + ".jpg";
         var imgPath = dirPhotoTemuan + '/' + pname;
 
@@ -116,6 +113,7 @@ class TakeFoto extends Component{
 
     } catch (err) {
       console.log('err: ', err);
+      this.validatePhotoExists();
     }
   };
 
@@ -128,6 +126,16 @@ class TakeFoto extends Component{
       });
     }).catch((err) => {
       console.log(err)
+      this.validatePhotoExists();
+    });
+  }
+
+  validatePhotoExists() {
+    this.setState({
+      showModal: true,
+      title: 'Pengambilan Foto Gagal',
+      message: 'Lakukan pengambilan foto lagi',
+      icon: require('../../Images/icon/ic_ambil_foto_gagal.png')
     });
   }
 
@@ -147,16 +155,23 @@ class TakeFoto extends Component{
   }
 
   goBack() {
-    if(this.state.from == 'BuktiKerja'){
-      this.props.navigation.state.params.addImage(this.state.path);
-    }else{
-      this.props.navigation.state.params.onRefresh(this.state.path);
-    }
-    
-    RNFS.unlink(this.state.pathCacheInternal);
-    RNFS.unlink(this.state.pathCacheResize);
-    this.props.navigation.goBack();
-    
+    RNFS.exists(this.state.path)
+      .then((exists) => {
+        if (exists) {
+          if (this.state.from == 'BuktiKerja') {
+            this.props.navigation.state.params.addImage(this.state.path);
+          } else {
+            this.props.navigation.state.params.onRefresh(this.state.path);
+          }
+
+          RNFS.unlink(this.state.pathCacheInternal);
+          RNFS.unlink(this.state.pathCacheResize);
+          this.props.navigation.goBack();
+        } else {
+          this.validatePhotoExists();
+        }
+      });
+
   }
 
   renderImage() {
@@ -184,10 +199,16 @@ class TakeFoto extends Component{
     return (
       <View style={styles.container}>
         <StatusBar
-            hidden={false}
-            barStyle="light-content"
-            backgroundColor={Colors.tintColorPrimary}
+          hidden={false}
+          barStyle="light-content"
+          backgroundColor={Colors.tintColorPrimary}
         />
+        <ModalAlert
+          icon={this.state.icon}
+          visible={this.state.showModal}
+          onPressCancel={() => this.props.navigation.goBack()}
+          title={this.state.title}
+          message={this.state.message} />
         <View style={{ flex: 2 }}>
           {this.state.path ? this.renderImage() : this.renderCamera()}
         </View>
@@ -204,42 +225,42 @@ class TakeFoto extends Component{
 export default TakeFoto;
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: 'white',
-    },
-    preview: {
-      flex: 1,
-      justifyContent: 'flex-end',
-      alignItems: 'center',
-      height: Dimensions.get('window').height,
-      width: Dimensions.get('window').width
-    },
-    capture: {
-      width: 70,
-      height: 70,
-      borderRadius: 35,
-      borderWidth: 5,
-      borderColor: '#FFF',
-      marginBottom: 15,
-    },
-    cancel: {
-      position: 'absolute',
-      right: 20,
-      top: 20,
-      backgroundColor: 'transparent',
-      color: '#FFF',
-      fontWeight: '600',
-      fontSize: 17,
-    },
-    icon: {
-      alignContent: 'flex-end',
-      height: 64,
-      width: 64,
-      resizeMode: 'stretch',
-      alignItems: 'center',
-    }
-  });
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'white',
+  },
+  preview: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    height: Dimensions.get('window').height,
+    width: Dimensions.get('window').width
+  },
+  capture: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    borderWidth: 5,
+    borderColor: '#FFF',
+    marginBottom: 15,
+  },
+  cancel: {
+    position: 'absolute',
+    right: 20,
+    top: 20,
+    backgroundColor: 'transparent',
+    color: '#FFF',
+    fontWeight: '600',
+    fontSize: 17,
+  },
+  icon: {
+    alignContent: 'flex-end',
+    height: 64,
+    width: 64,
+    resizeMode: 'stretch',
+    alignItems: 'center',
+  }
+});
 
