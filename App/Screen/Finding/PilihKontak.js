@@ -4,6 +4,7 @@
 import React, { Component } from 'react';
 import { View, TextInput, Text, StyleSheet, ListView, TouchableOpacity, BackAndroid } from 'react-native';
 import TaskServices from '../../Database/TaskServices';
+import R from 'ramda';
 
 var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
@@ -12,8 +13,7 @@ class PilihKontak extends Component {
     super(props);
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     this.state = {
-      searchedAdresses: [],
-      adresses: [],
+      dataList: [],
       user: null
     };
   };
@@ -77,14 +77,23 @@ class PilihKontak extends Component {
       })
     }
 
-    this.setState({ adresses: arr, searchedAdresses: arr })
+    let tempId = [];
+    let tempValue = [];
+    arr.map((data)=>{
+        if(!tempId.includes(data.userAuth)){
+            tempValue.push(data);
+            tempId.push(data.userAuth);
+        }
+    });
+
+    this.setState({ adresses: tempValue, dataList: tempValue })
   }
 
   searchedAdresses = (searchedText) => {
-    var searchedAdresses = this.state.adresses.filter(function (adress) {
+    var result = this.state.adresses.filter(function (adress) {
       return adress.fullName.toLowerCase().indexOf(searchedText.toLowerCase()) > -1;
     });
-    this.setState({ searchedAdresses: searchedAdresses });
+    this.setState({ dataList: result });
   };
 
   renderAdress = (user) => {
@@ -109,7 +118,7 @@ class PilihKontak extends Component {
         </View>
         <View style={{ marginTop: 5 }}>
           <ListView
-            dataSource={ds.cloneWithRows(this.state.searchedAdresses)}
+            dataSource={ds.cloneWithRows(this.state.dataList)}
             renderRow={this.renderAdress}
             renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator} />}
           />
