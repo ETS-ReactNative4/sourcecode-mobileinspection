@@ -271,6 +271,7 @@ export default class HomeScreenComment extends Component {
                             placeholder="Ketik di sini ..."
                             placeholderTextColor={Colors.abu1}
                             blurOnSubmit={true}
+                            maxLength={100}
                             onChangeText={(value) => {
                                 let showFilter = false;
                                 let tagValue = value.split(" ");
