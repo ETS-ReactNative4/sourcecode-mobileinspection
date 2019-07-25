@@ -35,15 +35,12 @@ export default class HomeScreenComment extends Component {
             FINDING_CODE: props.navigation.getParam("findingCode", null),
             commentData: [],
             commentValue: null,
-            splitCommentValue: [],
-            commentProcessed: null,
 
             listUser: [],
             filteredUser: [],
             filterShow: false,
 
             taggedUser: [],
-            processText: null,
         }
     }
 
@@ -67,8 +64,7 @@ export default class HomeScreenComment extends Component {
         if (commentData !== null) {
             this.setState({
                 commentData: commentData,
-                commentValue: null,
-                commentProcessed: null,
+                commentValue: null
             }, () => {
                 Keyboard.dismiss()
             })
@@ -80,7 +76,7 @@ export default class HomeScreenComment extends Component {
         let dateTime = moment().format('YYYYMMDDHHmmss');
         let saveTaggedUser = [];
         this.state.taggedUser.map((taggedUser) => {
-            if (this.state.commentValue.includes(taggedUser.FULLNAME)) {
+            if (this.state.commentValue.length > 0 && this.state.commentValue.includes(taggedUser.FULLNAME)) {
                 saveTaggedUser.push(taggedUser);
             }
         });
@@ -91,7 +87,7 @@ export default class HomeScreenComment extends Component {
             USER_AUTH_CODE: dataLogin.USER_AUTH_CODE,
             MESSAGE: this.state.commentValue,
             INSERT_TIME: dateTime,
-            TAG_USER: saveTaggedUser,
+            TAGS: saveTaggedUser,
             //LOCAL PARAM
             STATUS_SYNC: 'N',
             USERNAME: dataLogin.USERNAME
@@ -183,54 +179,34 @@ export default class HomeScreenComment extends Component {
                 tempComment.map((comment, index) => {
                     if (comment.includes("@" + userTagged.FULLNAME)) {
                         let tempSplit = comment.split("@" + userTagged.FULLNAME);
-                        if (tempComment.length <= 1) {
-                            let tempCommentArray = [];
-                            tempCommentArray.push(tempSplit[0]);
-                            tempCommentArray.push("@" + userTagged.FULLNAME);
-                            tempCommentArray.push(tempSplit[1]);
-                            tempComment = tempCommentArray;
-                            console.log(tempComment);
+                        tempSplit.splice(1,0, "@"+userTagged.FULLNAME);
+                        if(tempComment.length === 1){
+                            tempComment = tempSplit;
                         }
                         else {
-                            tempComment.push(index + 1, 0, tempSplit[0]);
-                            tempComment.push(index + 2, 0, "@" + userTagged.FULLNAME);
-                            tempComment.push(index + 3, 0, tempSplit[1]);
-                            tempComment.splice(index + 4);
+                            tempComment.splice(index,1,...tempSplit);
                         }
                     }
                 });
-                console.log(JSON.stringify(tempComment));
             });
-            // processedText = <Text>{
-            //     tempComment.map((data)=>{
-            //         if(data.charAt(0) === "@"){
-            //             return <Text style={{color:Colors.taggedUser}}>{data}</Text>
-            //         }
-            //         else {
-            //             return <Text>{data}</Text>
-            //         }
-            //     })
-            //     }</Text>
+            let finalText = <Text>{
+                tempComment.map((data)=>{
+                    if(data.charAt(0) === "@"){
+                        return <Text style={{color:Colors.taggedUser}}>{data}</Text>
+                    }
+                    else {
+                        return <Text>{data}</Text>
+                    }
+                })
+                }</Text>
+
+            return finalText
         }
-        // else {
-        //     return commentValue[0];
-        // }
+        else {
+            return commentValue;
+        }
         return null;
     }
-
-    // splitText(keyword, commentText){
-    //     if(commentText.includes(keyword)){
-    //         let tempArray = [];
-    //         let splittedArr = commentText.split(keyword);
-    //         tempArray.map((data)=>{
-    //             if(data !== ""){
-    //                 tempArray.push(splittedArr);
-    //             }
-    //         });
-    //         return tempArray
-    //     }
-    //     return [commentText]
-    // }
 
     render() {
         return (
@@ -344,7 +320,7 @@ export default class HomeScreenComment extends Component {
                     removeClippedSubviews={true}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({ item, index }) => {
-                        // let finalMessage = this.processText(item.MESSAGE, item.TAG_USER);
+                        let finalMessage = this.processText(item.MESSAGE, Object.values(item.TAGS));
                         return (
                             <View
                                 style={{
@@ -376,8 +352,8 @@ export default class HomeScreenComment extends Component {
                                             {item.USERNAME}{" "}
                                         </Text>
                                         <Text>
-                                            {/*{finalMessage}*/}
-                                            {item.MESSAGE}
+                                            {finalMessage}
+                                            {/*{item.MESSAGE}*/}
                                         </Text>
                                     </Text>
                                     <Text style={{ fontSize: 12 }}>

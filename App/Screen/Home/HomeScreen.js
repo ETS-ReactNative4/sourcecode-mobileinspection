@@ -593,8 +593,10 @@ class HomeScreen extends React.Component {
     let getComment = TaskServices.findBy("TR_FINDING_COMMENT", "FINDING_CODE", item.FINDING_CODE).sorted('INSERT_TIME', true);
     let commentCount = getComment.length;
     let latestComment = null;
+    let commentMessage = "" ;
     if (commentCount > 0) {
       latestComment = getComment[0];
+      commentMessage = this.processText(this.state.statusFindingComment[index] ? getComment[0].MESSAGE : clipString(getComment[0].MESSAGE, 150), Object.values(getComment[0].TAGS));
     }
 
     let show = false;
@@ -736,9 +738,7 @@ class HomeScreen extends React.Component {
                         this.props.navigation.navigate("HomeScreenComment", { findingCode: item.FINDING_CODE })
                       }}
                     >
-                      {
-                        this.state.statusFindingComment[index] ? latestComment.MESSAGE : clipString(latestComment.MESSAGE, 150)
-                      }
+                      {commentMessage}
                     </Text>
                     {
                       latestComment.MESSAGE.length > 150 && !this.state.statusFindingComment[index] &&
@@ -782,6 +782,41 @@ class HomeScreen extends React.Component {
       </View>
     );
   }
+
+    processText(commentValue, listTaggedUser) {
+        if (listTaggedUser.length > 0 || commentValue !== "") {
+            let tempComment = [commentValue];
+            listTaggedUser.map((userTagged) => {
+                tempComment.map((comment, index) => {
+                    if (comment.includes("@" + userTagged.FULLNAME)) {
+                        let tempSplit = comment.split("@" + userTagged.FULLNAME);
+                        tempSplit.splice(1,0, "@"+userTagged.FULLNAME);
+                        if(tempComment.length === 1){
+                            tempComment = tempSplit;
+                        }
+                        else {
+                            tempComment.splice(index,1,...tempSplit);
+                        }
+                    }
+                });
+            });
+            let finalText = <Text>{
+                tempComment.map((data)=>{
+                    if(data.charAt(0) === "@"){
+                        return <Text style={{color:Colors.taggedUser, fontSize: 12}}>{data}</Text>
+                    }
+                    else {
+                        return <Text style={{fontSize: 12}}>{data}</Text>
+                    }
+                })
+            }</Text>
+
+            return finalText
+        }
+        else {
+            return commentValue;
+        }
+    }
 
   onClickItem(id) {
     var images = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', id);
@@ -905,9 +940,7 @@ class HomeScreen extends React.Component {
   }
 
   render() {
-
     const TM_SERVICE = TaskServices.getAllData('TM_SERVICE')
-    console.log('Masuk TR_SERVICES ', TM_SERVICE)
     let show;
     if (this.state.data.length > 0) {
       show = this._renderData()

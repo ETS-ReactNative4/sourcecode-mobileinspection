@@ -49,5 +49,5 @@ export default {
   spinnerBackground: 'rgba(25, 149, 173,0.7)',
 
   //text
-  taggedUser: 'red'
+  taggedUser: 'blue'
 };

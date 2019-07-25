@@ -755,7 +755,7 @@ class SyncScreen extends React.Component {
         if (filteredComment.length > 0) {
             filteredComment.map((data, index) => {
                 let taggedUser = [];
-                data.TAG_USER.map((data) => {
+                data.TAGS.map((data) => {
                     taggedUser.push({
                         "USER_AUTH_CODE": data.USER_AUTH_CODE
                     })
@@ -766,8 +766,9 @@ class SyncScreen extends React.Component {
                     "USER_AUTH_CODE": data.USER_AUTH_CODE,
                     "MESSAGE": data.MESSAGE,
                     "INSERT_TIME": data.INSERT_TIME,
-                    "TAG_USER": taggedUser
+                    "TAGS": taggedUser
                 };
+                console.log(commentModel);
                 this.postFindingComment(commentModel);
                 this.setState({ valueFindingCommentDataUpload: index + 1, totalFindingCommentDataUpload: filteredComment.length });
             });
@@ -820,13 +821,14 @@ class SyncScreen extends React.Component {
                     }
                     if (callback.data.ubah.length > 0 && getComment.length > 0) {
                         callback.data.ubah.map(data => {
+                            console.log("CIBAY LA mamen:"+JSON.stringify(data));
                             let model = {
                                 FINDING_COMMENT_ID: data.FINDING_COMMENT_ID,
                                 FINDING_CODE: data.FINDING_CODE,
                                 USER_AUTH_CODE: data.USER_AUTH_CODE,
                                 MESSAGE: data.MESSAGE,
                                 INSERT_TIME: data.INSERT_TIME !== undefined ? data.INSERT_TIME.toString() : "0",
-                                TAG_USER: data.TAG_USER !== undefined ? data.TAG_USER : [],
+                                TAGS: data.TAGS !== undefined ? data.TAGS : [],
                                 //LOCAL PARAM
                                 STATUS_SYNC: 'Y',
                                 USERNAME: data.FULLNAME !== undefined ? data.FULLNAME : "NO_NAME"
@@ -839,13 +841,14 @@ class SyncScreen extends React.Component {
                             totalFindingCommentDownload: callback.data.simpan.length.toString()
                         })
                         callback.data.simpan.map((data) => {
+                            console.log("CIBAY LA mamen:"+JSON.stringify(data));
                             let model = {
                                 FINDING_COMMENT_ID: data.FINDING_COMMENT_ID,
                                 FINDING_CODE: data.FINDING_CODE,
                                 USER_AUTH_CODE: data.USER_AUTH_CODE,
                                 MESSAGE: data.MESSAGE,
                                 INSERT_TIME: data.INSERT_TIME !== undefined ? data.INSERT_TIME.toString() : "0",
-                                TAG_USER: data.TAG_USER !== undefined ? data.TAG_USER : [],
+                                TAGS: data.TAGS !== undefined ? data.TAGS : [],
                                 //LOCAL PARAM
                                 STATUS_SYNC: 'Y',
                                 USERNAME: data.FULLNAME !== undefined ? data.FULLNAME : "NO_NAME"
