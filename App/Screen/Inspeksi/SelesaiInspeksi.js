@@ -6,7 +6,8 @@ import {
     TouchableOpacity,
     ScrollView,
     Image,
-    StatusBar
+    StatusBar,
+    BackHandler
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/AntDesign'
@@ -58,6 +59,7 @@ class SelesaiInspeksi extends React.Component {
             arrTemuan: [],
             inspectionType
         };
+        this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     }
 
     static navigationOptions = {
@@ -75,9 +77,25 @@ class SelesaiInspeksi extends React.Component {
         headerTintColor: '#fff',
     };   
 
-    componentDidMount(){
+    componentDidMount() {
         this.loadData()
-    }
+		this.props.navigation.setParams({ handleBack: this.handleBackButtonClick });
+	}
+
+	componentWillMount() {
+		BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+	}
+
+	componentWillUnmount() {
+		BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+	}
+
+    //Fumc Handle Back Press (Aminju)
+	handleBackButtonClick() {
+		this.selesai()
+		return true;
+	}
+
 
     getEstateName(werks){
         try {
