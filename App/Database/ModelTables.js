@@ -246,12 +246,13 @@ const TR_FINDING = {
         LAT_FINDING: 'string',
         LONG_FINDING: 'string',
         REFFERENCE_INS_CODE: 'string',
-        RATING: { type: 'TR_RATING', optional: true },
         INSERT_USER: { type: 'string', optional: true },
         INSERT_TIME: { type: 'string', optional: true },
         UPDATE_USER: { type: 'string', optional: true },
         UPDATE_TIME: { type: 'string', optional: true },
-        STATUS_SYNC: 'string'
+        STATUS_SYNC: 'string',
+        RATING_VALUE: { type: 'int', default: 0 },
+        RATING_MESSAGE: { type: 'string', optional: true }
     }
 }
 

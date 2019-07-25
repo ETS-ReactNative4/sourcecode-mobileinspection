@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Alert, NetInfo, Platform } from 'react-native'
 import { Container, Content } from 'native-base'
-import * as Progress from 'react-native-progress';
 import Colors from '../Constant/Colors';
 import moment from 'moment';
 
@@ -35,14 +34,10 @@ import ServerName from '../Constant/ServerName'
 import { getTodayDate, convertTimestampToDate } from '../Lib/Utils';
 var RNFS = require('react-native-fs');
 
-var baseUploadImageLink;
-var link;
-
 import ModalAlert from '../Component/ModalAlert';
 import { fetchPostAPI } from '../Api/FetchingApi';
-
-const heightProgress = 5;
-const colorProgress = '#D5D5D5'
+import ProgressSync from '../Component/ProgressSync';
+// import FuntionCRUD from '../Database/FunctionCRUD'
 
 class SyncScreen extends React.Component {
 
@@ -185,6 +180,7 @@ class SyncScreen extends React.Component {
         return serv;
     }
     insertLink() {
+        // FuntionCRUD.DELETE_FINDING();
         fetch(ServerName[this.state.user.SERVER_NAME_INDEX].service, {
             method: 'GET',
             headers: {
@@ -336,13 +332,10 @@ class SyncScreen extends React.Component {
         if (data.length > 0) {
             for (var i = 0; i < data.length; i++) {
                 let dueDate = data[i].DUE_DATE;
-
                 if (dueDate.includes(' ')) {
                     dueDate = dueDate.substring(0, dueDate.indexOf(' '))
                 }
-
                 var diff = moment(new Date(dueDate)).diff(now, 'day');
-
                 if (diff < -7) {
                     this.deleteImage(data[i]);
                 }
@@ -377,8 +370,8 @@ class SyncScreen extends React.Component {
             delImgFunc(dataImage, INSPECTION_CODE, ID_INSPECTION, delFunc);
         }
     }
+    
     async deleteImage(FINDING_CODE) {
-        // let dataImage = TaskServices.findBy('TR_IMAGE', 'TR_CODE', FINDING_CODE.FINDING_CODE);
         let dataImage = TaskServices.query('TR_IMAGE', `STATUS_SYNC = "Y" AND TR_CODE = "${FINDING_CODE}"`);
         if (dataImage != undefined) {
             this.deleteImageFile(dataImage, FINDING_CODE);
@@ -428,10 +421,10 @@ class SyncScreen extends React.Component {
                 });
         }
     }
-    async deleteImageFile(image, FINDING_CODE) {
+    async deleteImageFile(IMAGE, FINDING_CODE) {
         const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
-        for (let i = 0; i < image.length; i++) {
-            const PATH = `${FILE_PREFIX}${dirPhotoTemuan}/${image[i].IMAGE_NAME}`;
+        for (let i = 0; i < IMAGE.length; i++) {
+            const PATH = `${FILE_PREFIX}${dirPhotoTemuan}/${IMAGE[i].IMAGE_NAME}`;
             RNFS.exists(PATH)
                 .then((result) => {
                     if (result) {
@@ -466,6 +459,7 @@ class SyncScreen extends React.Component {
 
     //upload
     loadDataFinding() {
+        console.log('Masuk Sini Load Data Finding')
         let countData = TaskServices.getAllData('TR_FINDING');
         var query = countData.filtered('STATUS_SYNC = "N"');
         countData = query;
@@ -1227,6 +1221,7 @@ class SyncScreen extends React.Component {
     }
 
     kirimFinding(param) {
+
         let dueDate = param.DUE_DATE;
         if (dueDate.includes(' ')) {
             dueDate = dueDate.substring(0, dueDate.indexOf(' '))
@@ -1253,11 +1248,13 @@ class SyncScreen extends React.Component {
             INSERT_USER: param.INSERT_USER,
             INSERT_TIME: param.INSERT_TIME == '' ? parseInt(getTodayDate('YYYYMMDDkkmmss')) : parseInt(param.INSERT_TIME.replace(/-/g, '').replace(/ /g, '').replace(/:/g, '')),
             UPDATE_USER: param.UPDATE_USER,
-            UPDATE_TIME: param.UPDATE_TIME == '' ? parseInt(getTodayDate('YYYYMMDDkkmmss')) : parseInt(param.UPDATE_TIME.replace(/-/g, '').replace(/ /g, '').replace(/:/g, ''))
+            UPDATE_TIME: param.UPDATE_TIME == '' ? parseInt(getTodayDate('YYYYMMDDkkmmss')) : parseInt(param.UPDATE_TIME.replace(/-/g, '').replace(/ /g, '').replace(/:/g, '')),
+            RATING_VALUE: param.RATING_VALUE,
+            RATING_MESSAGE: param.RATING_MESSAGE,
         }
-        if (param.RATING) {
-            data.RATING = param.RATING;
-        }
+        // if (param.RATING) {
+        //     data.RATING = param.RATING;
+        // }
         console.log("Upload finding", data);
         this.uploadData(this.getAPIURL("FINDING-INSERT"), data, 'finding', '');
     }
@@ -1934,6 +1931,7 @@ class SyncScreen extends React.Component {
 
     _onSync() {
         this._deleteFinding();
+        // DELETE_FINDING();
         this.deleteEbccHeader();
         this.deleteEbccDetail();
         // this.deleteGenbaSelected();
@@ -2174,7 +2172,7 @@ class SyncScreen extends React.Component {
 
         if (newProps.finding.fetchingFinding !== null && !newProps.finding.fetchingFinding) {
             let dataJSON = newProps.finding.finding;
-            console.log('Data JSON : ', dataJSON)
+            console.log('Data Get Finding : ', dataJSON)
             if (dataJSON !== null) {
                 this._crudTM_Finding(dataJSON);
             }
@@ -2353,523 +2351,171 @@ class SyncScreen extends React.Component {
                         </TouchableOpacity>
                     </View>}
 
+                    {/* Section Upload by Aminju */}
                     <Text style={{ fontSize: 14, color: 'blue', marginTop: 24 }}>UPLOAD</Text>
                     <View style={{ backgroundColor: 'grey', height: 0.5, flex: 1, flexDirection: 'row', marginTop: 3 }} />
 
-                    <View style={{ flex: 1, marginTop: 12 }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.labelProgress}>IMAGE</Text>
-                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text style={styles.labelProgress}>{this.state.valueImageUpload}</Text>
-                                <Text style={styles.labelProgress}>/</Text>
-                                <Text style={styles.labelProgress}>{this.state.totalImagelUpload}</Text>
-                            </View>
-                        </View>
-                        <Progress.Bar
-                            height={heightProgress}
-                            width={null}
-                            style={{ marginTop: 2 }}
-                            progress={this.state.progressUploadImage}
-                            backgroundColor={colorProgress}
-                            borderColor={'white'}
-                            indeterminate={this.state.indeterminate} />
-                    </View>
+                    <ProgressSync
+                        title={'IMAGE'}
+                        value={this.state.valueImageUpload}
+                        total={this.state.totalImagelUpload}
+                        progress={this.state.progressUploadImage} />
 
-                    <View style={{ flex: 1, marginTop: 12 }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.labelProgress}>IMAGE USER</Text>
-                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text style={styles.labelProgress}>{this.state.valueImageUserUpload}</Text>
-                                <Text style={styles.labelProgress}>/</Text>
-                                <Text style={styles.labelProgress}>{this.state.totalImageUserUpload}</Text>
-                            </View>
-                        </View>
-                        <Progress.Bar
-                            height={heightProgress}
-                            width={null}
-                            style={{ marginTop: 2 }}
-                            progress={this.state.progressUploadImageUser}
-                            backgroundColor={colorProgress}
-                            borderColor={'white'}
-                            indeterminate={this.state.indeterminate} />
-                    </View>
+                    <ProgressSync
+                        title={'IMAGE USER'}
+                        value={this.state.valueImageUserUpload}
+                        total={this.state.totalImageUserUpload}
+                        progress={this.state.progressUploadImageUser} />
 
-                    <View style={{ flex: 1, marginTop: 12 }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.labelProgress}>INSPEKSI TRACK</Text>
-                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text style={styles.labelProgress}>{this.state.valueInspectionTrack}</Text>
-                                <Text style={styles.labelProgress}>/</Text>
-                                <Text style={styles.labelProgress}>{this.state.totalInspectionTrack}</Text>
-                            </View>
-                        </View>
-                        <Progress.Bar
-                            height={heightProgress}
-                            width={null}
-                            style={{ marginTop: 2 }}
-                            progress={this.state.progressInspectionTrack}
-                            backgroundColor={colorProgress}
-                            borderColor={'white'}
-                            indeterminate={this.state.indeterminate} />
-                    </View>
+                    <ProgressSync
+                        title={'INSPEKSI TRACK'}
+                        value={this.state.valueInspectionTrack}
+                        total={this.state.totalInspectionTrack}
+                        progress={this.state.progressInspectionTrack} />
 
-                    <View style={{ flex: 1, marginTop: 12 }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.labelProgress}>INSPEKSI HEADER</Text>
-                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text style={styles.labelProgress}>{this.state.valueInspeksiHeaderUpload}</Text>
-                                <Text style={styles.labelProgress}>/</Text>
-                                <Text style={styles.labelProgress}>{this.state.totalInspeksiHeaderUpload}</Text>
-                            </View>
-                        </View>
-                        <Progress.Bar
-                            height={heightProgress}
-                            width={null}
-                            style={{ marginTop: 2 }}
-                            progress={this.state.progressInspeksiHeader}
-                            backgroundColor={colorProgress}
-                            borderColor={'white'}
-                            indeterminate={this.state.indeterminate} />
-                    </View>
+                    <ProgressSync
+                        title={'INSPEKSI HEADER'}
+                        value={this.state.valueInspeksiHeaderUpload}
+                        total={this.state.totalInspeksiHeaderUpload}
+                        progress={this.state.progressInspeksiHeader} />
 
-                    <View style={{ flex: 1, marginTop: 12 }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.labelProgress}>INSPEKSI DETAIL</Text>
-                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text style={styles.labelProgress}>{this.state.valueInspeksiDetailUpload}</Text>
-                                <Text style={styles.labelProgress}>/</Text>
-                                <Text style={styles.labelProgress}>{this.state.totalInspeksiDetailUpload}</Text>
-                            </View>
-                        </View>
-                        <Progress.Bar
-                            height={heightProgress}
-                            width={null}
-                            style={{ marginTop: 2 }}
-                            progress={this.state.progressInspeksiDetail}
-                            backgroundColor={colorProgress}
-                            borderColor={'white'}
-                            indeterminate={this.state.indeterminate} />
+                    <ProgressSync
+                        title={'INSPEKSI DETAIL'}
+                        value={this.state.valueInspeksiDetailUpload}
+                        total={this.state.totalInspeksiDetailUpload}
+                        progress={this.state.progressInspeksiDetail} />
 
-                    </View>
+                    <ProgressSync
+                        title={'FINDING DATA'}
+                        value={this.state.valueFindingDataUpload}
+                        total={this.state.totalFindingDataUpload}
+                        progress={this.state.progressFindingData} />
 
-                    <View style={{ flex: 1, marginTop: 12 }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.labelProgress}>FINDING DATA</Text>
-                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text style={styles.labelProgress}>{this.state.valueFindingDataUpload}</Text>
-                                <Text style={styles.labelProgress}>/</Text>
-                                <Text style={styles.labelProgress}>{this.state.totalFindingDataUpload}</Text>
-                            </View>
-                        </View>
-                        <Progress.Bar
-                            height={heightProgress}
-                            width={null}
-                            style={{ marginTop: 2 }}
-                            progress={this.state.progressFindingData}
-                            backgroundColor={colorProgress}
-                            borderColor={'white'}
-                            indeterminate={this.state.indeterminate} />
-                    </View>
+                    <ProgressSync
+                        title={'FINDING COMMENT'}
+                        value={this.state.valueFindingCommentDataUpload}
+                        total={this.state.totalFindingCommentDataUpload}
+                        progress={this.state.progressFindingCommentData} />
 
-                    <View style={{ flex: 1, marginTop: 12 }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.labelProgress}>FINDING COMMENT</Text>
-                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text style={styles.labelProgress}>{this.state.valueFindingCommentDataUpload}</Text>
-                                <Text style={styles.labelProgress}>/</Text>
-                                <Text style={styles.labelProgress}>{this.state.totalFindingCommentDataUpload}</Text>
-                            </View>
-                        </View>
-                        <Progress.Bar
-                            height={heightProgress}
-                            width={null}
-                            style={{ marginTop: 2 }}
-                            progress={this.state.progressFindingCommentData}
-                            backgroundColor={colorProgress}
-                            borderColor={'white'}
-                            indeterminate={this.state.indeterminate} />
-                    </View>
+                    <ProgressSync
+                        title={'SAMPLING EBCC HEADER'}
+                        value={this.state.valueEbcc}
+                        total={this.state.totalEbcc}
+                        progress={this.state.progressEbcc} />
 
-                    <View style={{ flex: 1, marginTop: 12 }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.labelProgress}>SAMPLING EBCC HEADER</Text>
-                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text style={styles.labelProgress}>{this.state.valueEbcc}</Text>
-                                <Text style={styles.labelProgress}>/</Text>
-                                <Text style={styles.labelProgress}>{this.state.totalEbcc}</Text>
-                            </View>
-                        </View>
-                        <Progress.Bar
-                            height={heightProgress}
-                            width={null}
-                            style={{ marginTop: 2 }}
-                            progress={this.state.progressEbcc}
-                            backgroundColor={colorProgress}
-                            borderColor={'white'}
-                            indeterminate={this.state.indeterminate} />
+                    <ProgressSync
+                        title={'SAMPLING EBCC DETAIL'}
+                        value={this.state.valueEbccDetail}
+                        total={this.state.totalEbccDetail}
+                        progress={this.state.progressEbccDetail} />
 
-                    </View>
+                    <ProgressSync
+                        title={'GENBA INSPECTION'}
+                        value={this.state.valueGenbaInspection}
+                        total={this.state.totalGenbaInspection}
+                        progress={this.state.progressGenbaInspection} />
 
-                    <View style={{ flex: 1, marginTop: 12 }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.labelProgress}>SAMPLING EBCC DETAIL</Text>
-                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text style={styles.labelProgress}>{this.state.valueEbccDetail}</Text>
-                                <Text style={styles.labelProgress}>/</Text>
-                                <Text style={styles.labelProgress}>{this.state.totalEbccDetail}</Text>
-                            </View>
-                        </View>
-                        <Progress.Bar
-                            height={heightProgress}
-                            width={null}
-                            style={{ marginTop: 2 }}
-                            progress={this.state.progressEbccDetail}
-                            backgroundColor={colorProgress}
-                            borderColor={'white'}
-                            indeterminate={this.state.indeterminate} />
-
-                    </View>
-
-                    <View style={{ flex: 1, marginTop: 12 }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.labelProgress}>GENBA INSPECTION</Text>
-                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text style={styles.labelProgress}>{this.state.valueGenbaInspection}</Text>
-                                <Text style={styles.labelProgress}>/</Text>
-                                <Text style={styles.labelProgress}>{this.state.totalGenbaInspection}</Text>
-                            </View>
-                        </View>
-                        <Progress.Bar
-                            height={heightProgress}
-                            width={null}
-                            style={{ marginTop: 2 }}
-                            progress={this.state.progressGenbaInspection}
-                            backgroundColor={colorProgress}
-                            borderColor={'white'}
-                            indeterminate={this.state.indeterminate} />
-
-                    </View>
-
+                    {/* Section Download by Aminju */}
                     <Text style={{ fontSize: 14, color: Colors.tintColor, marginTop: 16 }}>DOWNLOAD</Text>
                     <View style={{ backgroundColor: 'grey', height: 0.5, flex: 1, flexDirection: 'row', marginTop: 3 }} />
 
-                    <View style={{ flex: 1, marginTop: 12 }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.labelProgress}>FINDING</Text>
-                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text style={styles.labelProgress}>{this.state.valueFindingDownload}</Text>
-                                <Text style={styles.labelProgress}>/</Text>
-                                <Text style={styles.labelProgress}>{this.state.totalFindingDownload}</Text>
-                            </View>
-                        </View>
-                        <Progress.Bar
-                            height={heightProgress}
-                            width={null}
-                            color={Colors.brand}
-                            style={{ marginTop: 2 }}
-                            progress={this.state.progressFinding}
-                            backgroundColor={colorProgress}
-                            borderColor={'white'}
-                            indeterminate={this.state.indeterminate} />
-                    </View>
+                    <ProgressSync
+                        title={'FINDING'}
+                        color={Colors.brand}
+                        value={this.state.valueFindingDownload}
+                        total={this.state.totalFindingDownload}
+                        progress={this.state.progressFinding} />
 
-                    <View style={{ flex: 1, marginTop: 12 }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.labelProgress}>FINDING IMAGE</Text>
-                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text style={styles.labelProgress}>{this.state.valueFindingImageDownload}</Text>
-                                <Text style={styles.labelProgress}>/</Text>
-                                <Text style={styles.labelProgress}>{this.state.totalFindingImageDownload}</Text>
-                            </View>
-                        </View>
-                        <Progress.Bar
-                            height={heightProgress}
-                            width={null}
-                            color={Colors.brand}
-                            style={{ marginTop: 2 }}
-                            progress={this.state.progressFindingImage}
-                            backgroundColor={colorProgress}
-                            borderColor={'white'}
-                            indeterminate={this.state.indeterminate} />
-                    </View>
+                    <ProgressSync
+                        title={'FINDING IMAGE'}
+                        color={Colors.brand}
+                        value={this.state.valueFindingImageDownload}
+                        total={this.state.totalFindingImageDownload}
+                        progress={this.state.progressFindingImage} />
 
-                    <View style={{ flex: 1, marginTop: 12 }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.labelProgress}>FINDING COMMENT</Text>
-                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text style={styles.labelProgress}>{this.state.valueFindingCommentDownload}</Text>
-                                <Text style={styles.labelProgress}>/</Text>
-                                <Text style={styles.labelProgress}>{this.state.totalFindingCommentDownload}</Text>
-                            </View>
-                        </View>
-                        <Progress.Bar
-                            height={heightProgress}
-                            width={null}
-                            color={Colors.brand}
-                            style={{ marginTop: 2 }}
-                            progress={this.state.progressFindingCommentDownload}
-                            backgroundColor={colorProgress}
-                            borderColor={'white'}
-                            indeterminate={this.state.indeterminate} />
-                    </View>
+                    <ProgressSync
+                        title={'BLOCK'}
+                        color={Colors.brand}
+                        value={this.state.valueDownload}
+                        total={this.state.totalDownload}
+                        progress={this.state.progress} />
 
-                    <View style={{ flex: 1, marginTop: 12 }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.labelProgress}>BLOCK</Text>
-                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text style={styles.labelProgress}>{this.state.valueDownload}</Text>
-                                <Text style={styles.labelProgress}>/</Text>
-                                <Text style={styles.labelProgress}>{this.state.totalDownload}</Text>
-                            </View>
-                        </View>
-                        <Progress.Bar
-                            height={heightProgress}
-                            width={null}
-                            color={Colors.brand}
-                            style={{ marginTop: 2 }}
-                            progress={this.state.progress}
-                            backgroundColor={colorProgress}
-                            borderColor={'white'}
-                            indeterminate={this.state.indeterminate} />
-                    </View>
+                    <ProgressSync
+                        title={'AFD'}
+                        color={Colors.brand}
+                        value={this.state.valueAfdDownload}
+                        total={this.state.totalAfdDownload}
+                        progress={this.state.progressAfd} />
 
-                    <View style={{ flex: 1, marginTop: 12 }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.labelProgress}>AFD</Text>
-                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text style={styles.labelProgress}>{this.state.valueAfdDownload}</Text>
-                                <Text style={styles.labelProgress}>/</Text>
-                                <Text style={styles.labelProgress}>{this.state.totalAfdDownload}</Text>
-                            </View>
-                        </View>
-                        <Progress.Bar
-                            height={heightProgress}
-                            width={null}
-                            color={Colors.brand}
-                            style={{ marginTop: 2 }}
-                            progress={this.state.progressAfd}
-                            backgroundColor={colorProgress}
-                            borderColor={'white'}
-                            indeterminate={this.state.indeterminate} />
-                    </View>
+                    <ProgressSync
+                        title={'REGION'}
+                        color={Colors.brand}
+                        value={this.state.valueRegionDownload}
+                        total={this.state.totalRegionDownload}
+                        progress={this.state.progressRegion} />
 
-                    <View style={{ flex: 1, marginTop: 12 }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.labelProgress}>REGION</Text>
-                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text style={styles.labelProgress}>{this.state.valueRegionDownload}</Text>
-                                <Text style={styles.labelProgress}>/</Text>
-                                <Text style={styles.labelProgress}>{this.state.totalRegionDownload}</Text>
-                            </View>
-                        </View>
-                        <Progress.Bar
-                            height={heightProgress}
-                            width={null}
-                            color={Colors.brand}
-                            style={{ marginTop: 2 }}
-                            progress={this.state.progressRegion}
-                            backgroundColor={colorProgress}
-                            borderColor={'white'}
-                            indeterminate={this.state.indeterminate} />
-                    </View>
+                    <ProgressSync
+                        title={'ESTATE'}
+                        color={Colors.brand}
+                        value={this.state.valueEstDownload}
+                        total={this.state.totalEstDownload}
+                        progress={this.state.progressEst} />
 
-                    <View style={{ flex: 1, marginTop: 12 }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.labelProgress}>ESTATE</Text>
-                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text style={styles.labelProgress}>{this.state.valueEstDownload}</Text>
-                                <Text style={styles.labelProgress}>/</Text>
-                                <Text style={styles.labelProgress}>{this.state.totalEstDownload}</Text>
-                            </View>
-                        </View>
-                        <Progress.Bar
-                            height={heightProgress}
-                            width={null}
-                            color={Colors.brand}
-                            style={{ marginTop: 2 }}
-                            progress={this.state.progressEst}
-                            backgroundColor={colorProgress}
-                            borderColor={'white'}
-                            indeterminate={this.state.indeterminate} />
-                    </View>
+                    <ProgressSync
+                        title={'LAND USE'}
+                        color={Colors.brand}
+                        value={this.state.valueLandUseDownload}
+                        total={this.state.totalLandUseDownload}
+                        progress={this.state.progressLandUse} />
 
-                    <View style={{ flex: 1, marginTop: 12 }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.labelProgress}>LAND USE</Text>
-                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text style={styles.labelProgress}>{this.state.valueLandUseDownload}</Text>
-                                <Text style={styles.labelProgress}>/</Text>
-                                <Text style={styles.labelProgress}>{this.state.totalLandUseDownload}</Text>
-                            </View>
-                        </View>
-                        <Progress.Bar
-                            height={heightProgress}
-                            width={null}
-                            color={Colors.brand}
-                            style={{ marginTop: 2 }}
-                            progress={this.state.progressLandUse}
-                            backgroundColor={colorProgress}
-                            borderColor={'white'}
-                            indeterminate={this.state.indeterminate} />
-                    </View>
+                    <ProgressSync
+                        title={'COMP'}
+                        color={Colors.brand}
+                        value={this.state.valueCompDownload}
+                        total={this.state.totalCompDownload}
+                        progress={this.state.progressComp} />
 
-                    <View style={{ flex: 1, marginTop: 12 }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.labelProgress}>COMP</Text>
-                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text style={styles.labelProgress}>{this.state.valueCompDownload}</Text>
-                                <Text style={styles.labelProgress}>/</Text>
-                                <Text style={styles.labelProgress}>{this.state.totalCompDownload}</Text>
-                            </View>
-                        </View>
-                        <Progress.Bar
-                            height={heightProgress}
-                            width={null}
-                            color={Colors.brand}
-                            style={{ marginTop: 2 }}
-                            progress={this.state.progressComp}
-                            backgroundColor={colorProgress}
-                            borderColor={'white'}
-                            indeterminate={this.state.indeterminate} />
-                    </View>
+                    <ProgressSync
+                        title={'CONTENT'}
+                        color={Colors.brand}
+                        value={this.state.valueContentDownload}
+                        total={this.state.totalContentDownload}
+                        progress={this.state.progressContent} />
 
-                    <View style={{ flex: 1, marginTop: 12 }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.labelProgress}>CONTENT</Text>
-                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text style={styles.labelProgress}>{this.state.valueContentDownload}</Text>
-                                <Text style={styles.labelProgress}>/</Text>
-                                <Text style={styles.labelProgress}>{this.state.totalContentDownload}</Text>
-                            </View>
-                        </View>
-                        <Progress.Bar
-                            height={heightProgress}
-                            width={null}
-                            color={Colors.brand}
-                            style={{ marginTop: 2 }}
-                            progress={this.state.progressContent}
-                            backgroundColor={colorProgress}
-                            borderColor={'white'}
-                            indeterminate={this.state.indeterminate} />
-                    </View>
+                    <ProgressSync
+                        title={'KRITERIA'}
+                        color={Colors.brand}
+                        value={this.state.valueKriteriaDownload}
+                        total={this.state.totalKriteriaDownload}
+                        progress={this.state.progressKriteria} />
 
-                    {/* <View style={{ flex: 1, marginTop: 12 }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text>CONTENT LABEL</Text>
-                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text>{this.state.valueContentLabelDownload}</Text>
-                                <Text>/</Text>
-                                <Text>{this.state.totalContentLabelDownload}</Text>
-                            </View>
-                        </View>
-                        <Progress.Bar
-                            height={20}
-                            width={null}
-                            color={Colors.brand}
-                            style={{ marginTop: 2 }}
-                            progress={this.state.progressContentLabel}
-                            indeterminate={this.state.indeterminate} />
-                    </View> */}
+                    <ProgressSync
+                        title={'CATEGORY'}
+                        color={Colors.brand}
+                        value={this.state.valueCategoryDownload}
+                        total={this.state.totalCategoryDownload}
+                        progress={this.state.progressCategory} />
 
-                    <View style={{ flex: 1, marginTop: 12 }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.labelProgress}>KRITERIA</Text>
-                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text style={styles.labelProgress}>{this.state.valueKriteriaDownload}</Text>
-                                <Text style={styles.labelProgress}>/</Text>
-                                <Text style={styles.labelProgress}>{this.state.totalKriteriaDownload}</Text>
-                            </View>
-                        </View>
-                        <Progress.Bar
-                            height={heightProgress}
-                            width={null}
-                            color={Colors.brand}
-                            style={{ marginTop: 2 }}
-                            progress={this.state.progressKriteria}
-                            backgroundColor={colorProgress}
-                            borderColor={'white'}
-                            indeterminate={this.state.indeterminate} />
-                    </View>
+                    <ProgressSync
+                        title={'CONTACT'}
+                        color={Colors.brand}
+                        value={this.state.valueContactDownload}
+                        total={this.state.totalContactDownload}
+                        progress={this.state.progressContact} />
 
-                    <View style={{ flex: 1, marginTop: 12 }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.labelProgress}>CATEGORY</Text>
-                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text style={styles.labelProgress}>{this.state.valueCategoryDownload}</Text>
-                                <Text style={styles.labelProgress}>/</Text>
-                                <Text style={styles.labelProgress}>{this.state.totalCategoryDownload}</Text>
-                            </View>
-                        </View>
-                        <Progress.Bar
-                            height={heightProgress}
-                            width={null}
-                            color={Colors.brand}
-                            style={{ marginTop: 2 }}
-                            progress={this.state.progressCategory}
-                            backgroundColor={colorProgress}
-                            borderColor={'white'}
-                            indeterminate={this.state.indeterminate} />
-                    </View>
+                    <ProgressSync
+                        title={'PARAMATER TRACK INSPECTION'}
+                        color={Colors.brand}
+                        value={this.state.valueParamInspection}
+                        total={this.state.totalParamInspection}
+                        progress={this.state.progressParamInspection} />
 
-                    <View style={{ flex: 1, marginTop: 12 }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.labelProgress}>CONTACT</Text>
-                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text style={styles.labelProgress}>{this.state.valueContactDownload}</Text>
-                                <Text style={styles.labelProgress}>/</Text>
-                                <Text style={styles.labelProgress}>{this.state.totalContactDownload}</Text>
-                            </View>
-                        </View>
-                        <Progress.Bar
-                            height={heightProgress}
-                            width={null}
-                            color={Colors.brand}
-                            style={{ marginTop: 2 }}
-                            progress={this.state.progressContact}
-                            backgroundColor={colorProgress}
-                            borderColor={'white'}
-                            indeterminate={this.state.indeterminate} />
-                    </View>
-
-                    <View style={{ flex: 1, marginTop: 12 }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.labelProgress}>PARAMATER TRACK INSPECTION</Text>
-                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text style={styles.labelProgress}>{this.state.valueParamInspection}</Text>
-                                <Text style={styles.labelProgress}>/</Text>
-                                <Text style={styles.labelProgress}>{this.state.totalParamInspection}</Text>
-                            </View>
-                        </View>
-                        <Progress.Bar
-                            height={heightProgress}
-                            width={null}
-                            style={{ marginTop: 2 }}
-                            color={Colors.brand}
-                            progress={this.state.progressParamInspection}
-                            backgroundColor={colorProgress}
-                            borderColor={'white'}
-                            indeterminate={this.state.indeterminate} />
-                    </View>
-
-                    <View style={{ flex: 1, marginTop: 12 }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.labelProgress}>TM KUALITAS</Text>
-                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <Text style={styles.labelProgress}>{this.state.valueKualitas}</Text>
-                                <Text style={styles.labelProgress}>/</Text>
-                                <Text style={styles.labelProgress}>{this.state.totalKualitas}</Text>
-                            </View>
-                        </View>
-                        <Progress.Bar
-                            height={heightProgress}
-                            width={null}
-                            style={{ marginTop: 2 }}
-                            color={Colors.brand}
-                            progress={this.state.progressKualitas}
-                            backgroundColor={colorProgress}
-                            borderColor={'white'}
-                            indeterminate={this.state.indeterminate} />
-                    </View>
+                    <ProgressSync
+                        title={'TM KUALITAS'}
+                        color={Colors.brand}
+                        value={this.state.valueKualitas}
+                        total={this.state.totalKualitas}
+                        progress={this.state.progressKualitas} />
 
                     <ProgressDialog
                         visible={this.state.fetchLocation}
@@ -2987,9 +2633,6 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         color: '#ffffff',
         textAlign: 'center'
-    },
-    labelProgress: {
-        fontSize: 12
     }
 });
 

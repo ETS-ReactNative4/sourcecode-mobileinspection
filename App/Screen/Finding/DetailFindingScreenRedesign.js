@@ -31,7 +31,7 @@ class DetailFindingScreenRedesign extends Component {
 
         var ID = this.props.navigation.state.params.ID
         var data = TaskServices.findBy2('TR_FINDING', 'FINDING_CODE', ID);
-        console.log('data.RATING : ', data.RATING)
+        console.log('data.RATING : ', data.RATING_VALUE)
         this.state = {
             user: TaskServices.getAllData('TR_LOGIN')[0],
             id: ID,
@@ -48,8 +48,8 @@ class DetailFindingScreenRedesign extends Component {
             insertTime: '',
             fullName: '',
             lokasiBlok: '',
-            ratingMsg: (data.RATING == undefined ? '' : data.RATING.MESSAGE),
-            rating: (data.RATING == undefined ? 0 : data.RATING.RATE),//0 default,1 bad,2 ok,3 good,4 great
+            ratingMsg: data.RATING_MESSAGE,
+            rating: data.RATING_VALUE,//0 default,1 bad,2 ok,3 good,4 great
             newRating: 0,
             //Add Modal Alert by Aminju 
             title: 'Title',
@@ -298,12 +298,9 @@ class DetailFindingScreenRedesign extends Component {
             })
             TaskServices.updateByPrimaryKey('TR_FINDING', {
                 "FINDING_CODE": this.state.id,
-                "RATING": {
-                    "FINDING_CODE": this.state.id,
-                    "RATE": this.state.newRating,
-                    "MESSAGE": this.state.ratingMsg
-                },
-                "STATUS_SYNC": "N"
+                "STATUS_SYNC": "N",
+                "RATING_VALUE": this.state.newRating,
+                "RATING_MESSAGE": this.state.ratingMsg
             });
         } catch (error) {
             console.log("masuk input rating", error)
@@ -556,6 +553,7 @@ class DetailFindingScreenRedesign extends Component {
 
                     {(this.state.data.PROGRESS == 100) &&
                         (this.state.data.INSERT_USER == this.state.user.USER_AUTH_CODE) &&
+                        (this.state.data.INSERT_USER !== this.state.user.ASSIGN_TO) &&
                         this.state.rating == 0 &&
                         <View style={{ flex: 1, width: '90%', borderTopWidth: 1, alignSelf: 'center', }}>
                             <View style={{

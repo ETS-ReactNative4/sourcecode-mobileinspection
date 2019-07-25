@@ -49,5 +49,13 @@ export default {
   spinnerBackground: 'rgba(25, 149, 173,0.7)',
 
   //text
-  taggedUser: 'blue'
+  taggedUser: 'blue',
+  taggedUser: 'red',
+
+  //Aminju
+  //Color Component
+  colorProgress: '#D5D5D5',
+
+  //Color Default
+  colorWhite: '#FFF'
 };
