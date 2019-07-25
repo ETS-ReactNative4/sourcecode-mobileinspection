@@ -849,13 +849,15 @@ class SyncScreen extends React.Component {
                     }
                     this.setState({
                         valueFindingCommentDownload: callback.data.simpan.length.toString(),
-                        progressFindingCommentDownload: 1
                     })
                 }
             })
             .catch((e) => {
                 console.log(e)
             })
+        this.setState({
+            progressFindingCommentDownload: 1
+        })
     }
 
     // Aminju => Summary Inspeksi
