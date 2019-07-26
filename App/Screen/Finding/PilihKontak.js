@@ -44,7 +44,7 @@ class PilihKontak extends Component {
     const withAfd = werks + afdCode;
 
     const login = TaskServices.getAllData('TR_LOGIN')
-
+    //diri dia sndiri
     let dataUser = TaskServices.query('TR_CONTACT', `USER_AUTH_CODE = "${login[0].USER_AUTH_CODE}"`);
     
     let data = TaskServices.query('TR_CONTACT', `REF_ROLE = "AFD_CODE" AND LOCATION_CODE CONTAINS[c] "${withAfd}" AND USER_ROLE CONTAINS[c] "ASISTEN" AND USER_AUTH_CODE != "${login[0].USER_AUTH_CODE}"`);    
@@ -54,37 +54,43 @@ class PilihKontak extends Component {
 
     let arr = [];
     for (var i = 0; i < dataUser.length; i++) {
-      arr.push({
-        userAuth: dataUser[i].USER_AUTH_CODE,
-        fullName: dataUser[i].FULLNAME,
-        userRole: dataUser[i].USER_ROLE,
-      });
+        if(dataUser[i].USER_AUTH_CODE !== undefined && dataUser[i].FULLNAME !== undefined && dataUser[i].USER_ROLE !== undefined){
+            arr.push({
+                userAuth: dataUser[i].USER_AUTH_CODE,
+                fullName: dataUser[i].FULLNAME,
+                userRole: dataUser[i].USER_ROLE,
+            });
+        }
     }
 
     for (var j = 0; j < data.length; j++) {
-      arr.push({
-        userAuth: data[j].USER_AUTH_CODE,
-        fullName: data[j].FULLNAME,
-        userRole: data[j].USER_ROLE,
-      });
+        if(data[j].USER_AUTH_CODE !== undefined && data[j].FULLNAME !== undefined && data[j].USER_ROLE !== undefined){
+            arr.push({
+                userAuth: data[j].USER_AUTH_CODE,
+                fullName: data[j].FULLNAME,
+                userRole: data[j].USER_ROLE,
+            });
+        }
     }
 
     for (var k = 0; k < data1.length; k++) {
-      arr.push({
-        userAuth: data[k].USER_AUTH_CODE,
-        fullName: data[k].FULLNAME,
-        userRole: data[k].USER_ROLE
-      })
+        if(data1[k].USER_AUTH_CODE !== undefined && data1[k].FULLNAME !== undefined && data1[k].USER_ROLE !== undefined){
+            arr.push({
+                userAuth: data1[k].USER_AUTH_CODE,
+                fullName: data1[k].FULLNAME,
+                userRole: data1[k].USER_ROLE
+            })
+        }
     }
 
-    let tempId = [];
-    let tempValue = [];
-    arr.map((data)=>{
-        if(!tempId.includes(data.userAuth)){
-            tempValue.push(data);
-            tempId.push(data.userAuth);
-        }
-    });
+    // let tempId = [];
+    // let tempValue = [];
+    // arr.map((data)=>{
+    //     if(!tempId.includes(data.userAuth)){
+    //         tempValue.push(data);
+    //         tempId.push(data.userAuth);
+    //     }
+    // });
 
     this.setState({ adresses: tempValue, dataList: tempValue })
   }
