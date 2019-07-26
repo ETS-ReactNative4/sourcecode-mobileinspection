@@ -92,7 +92,7 @@ class PilihKontak extends Component {
     //     }
     // });
 
-    this.setState({ adresses: tempValue, dataList: tempValue })
+    this.setState({ adresses: arr, dataList: arr })
   }
 
   searchedAdresses = (searchedText) => {
