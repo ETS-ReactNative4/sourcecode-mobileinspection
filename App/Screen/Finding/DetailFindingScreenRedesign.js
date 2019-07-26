@@ -553,7 +553,7 @@ class DetailFindingScreenRedesign extends Component {
 
                     {(this.state.data.PROGRESS == 100) &&
                         (this.state.data.INSERT_USER == this.state.user.USER_AUTH_CODE) &&
-                        (this.state.data.INSERT_USER !== this.state.user.ASSIGN_TO) &&
+                        (this.state.data.USER_AUTH_CODE !== this.state.user.ASSIGN_TO) &&
                         this.state.rating == 0 &&
                         <View style={{ flex: 1, width: '90%', borderTopWidth: 1, alignSelf: 'center', }}>
                             <View style={{
