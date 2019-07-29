@@ -70,7 +70,7 @@ class Scanner extends Component {
         let locationCode = loginData.LOCATION_CODE.split(',');
 
         let auth = false;
-        switch("@"){
+        switch(userRefCode){
             case 'AFD_CODE':
                 locationCode.map((data)=>{
                     if(data === qrCodeValue[2]+qrCodeValue[1]){
