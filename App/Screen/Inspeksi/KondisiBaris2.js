@@ -205,6 +205,14 @@ class KondisiBaris2 extends Component {
             message: 'Message',
             showModal: false,
             showModal2: false,
+            defaultPupukRehab: false,
+            defaultPupukKurang: false,
+            defaultPupukSedang: false,
+            defaultPupukKBaik: false,
+            defaultPenaburRehab: false,
+            defaultPenaburKurang: false,
+            defaultPenaburSedang: false,
+            defaultPenaburKBaik: false,
             icon: '',
             inspectionType: props.navigation.getParam('inspectionType', 'normal')
 
@@ -444,29 +452,87 @@ class KondisiBaris2 extends Component {
         }
 
         else if (param == 'PENABUR' && value == 'REHAB') {
-            this.setState({ btnPENABURRehab: BtnStyles.btnRehab, btnPENABURKurang: BtnStyles.btnBiasa2, btnPENABURSedang: BtnStyles.btnBiasa2, btnPENABURBaik: BtnStyles.btnBiasa2, PENABUR: 'REHAB' });
-            this.setState({ txtPenaburRehab: styles.buttonText, txtPenaburKurang: styles.buttonText2, txtPenaburSedang: styles.buttonText2, txtPenaburBaik: styles.buttonText2 });
+            if (this.state.defaultPenaburRehab == false) {
+                this.setState({ btnPENABURRehab: BtnStyles.btnRehab, btnPENABURKurang: BtnStyles.btnBiasa2, btnPENABURSedang: BtnStyles.btnBiasa2, btnPENABURBaik: BtnStyles.btnBiasa2, PENABUR: 'REHAB' });
+                this.setState({ txtPenaburRehab: styles.buttonText, txtPenaburKurang: styles.buttonText2, txtPenaburSedang: styles.buttonText2, txtPenaburBaik: styles.buttonText2 });
+                this.setState({ defaultPenaburRehab: true, defaultPenaburKurang: false, defaultPenaburSedang: false, defaultPenaburBaik: false });
+            } else {
+                this.setState({ btnPENABURRehab: BtnStyles.btnBiasa2, btnPENABURKurang: BtnStyles.btnBiasa2, btnPENABURSedang: BtnStyles.btnBiasa2, btnPENABURBaik: BtnStyles.btnBiasa2, PENABUR: 'REHAB' });
+                this.setState({ txtPenaburRehab: styles.buttonText2, txtPenaburKurang: styles.buttonText2, txtPenaburSedang: styles.buttonText2, txtPenaburBaik: styles.buttonText2 });
+                this.setState({ defaultPenaburRehab: false, defaultPenaburKurang: false, defaultPenaburSedang: false, defaultPenaburBaik: false });
+            }
         } else if (param == 'PENABUR' && value == 'KURANG') {
-            this.setState({ btnPENABURRehab: BtnStyles.btnBiasa2, btnPENABURKurang: BtnStyles.btnKurang, btnPENABURSedang: BtnStyles.btnBiasa2, btnPENABURBaik: BtnStyles.btnBiasa2, PENABUR: 'KURANG' });
-            this.setState({ txtPenaburRehab: styles.buttonText2, txtPenaburKurang: styles.buttonText, txtPenaburSedang: styles.buttonText2, txtPenaburBaik: styles.buttonText2 });
+            if (this.state.defaultPenaburKurang == false) {
+                this.setState({ btnPENABURRehab: BtnStyles.btnBiasa2, btnPENABURKurang: BtnStyles.btnKurang, btnPENABURSedang: BtnStyles.btnBiasa2, btnPENABURBaik: BtnStyles.btnBiasa2, PENABUR: 'KURANG' });
+                this.setState({ txtPenaburRehab: styles.buttonText2, txtPenaburKurang: styles.buttonText, txtPenaburSedang: styles.buttonText2, txtPenaburBaik: styles.buttonText2 });
+                this.setState({ defaultPenaburRehab: false, defaultPenaburKurang: true, defaultPenaburSedang: false, defaultPenaburBaik: false });
+            } else {
+                this.setState({ btnPENABURRehab: BtnStyles.btnBiasa2, btnPENABURKurang: BtnStyles.btnBiasa2, btnPENABURSedang: BtnStyles.btnBiasa2, btnPENABURBaik: BtnStyles.btnBiasa2, PENABUR: 'REHAB' });
+                this.setState({ txtPenaburRehab: styles.buttonText2, txtPenaburKurang: styles.buttonText2, txtPenaburSedang: styles.buttonText2, txtPenaburBaik: styles.buttonText2 });
+                this.setState({ defaultPenaburRehab: false, defaultPenaburKurang: false, defaultPenaburSedang: false, defaultPenaburBaik: false });
+            }
         } else if (param == 'PENABUR' && value == 'SEDANG') {
-            this.setState({ btnPENABURRehab: BtnStyles.btnBiasa2, btnPENABURKurang: BtnStyles.btnBiasa2, btnPENABURSedang: BtnStyles.btnSedang, btnPENABURBaik: BtnStyles.btnBiasa2, PENABUR: 'SEDANG' });
-            this.setState({ txtPenaburRehab: styles.buttonText2, txtPenaburKurang: styles.buttonText2, txtPenaburSedang: styles.buttonText, txtPenaburBaik: styles.buttonText2 });
+            if (this.state.defaultPenaburSedang == false) {
+                this.setState({ btnPENABURRehab: BtnStyles.btnBiasa2, btnPENABURKurang: BtnStyles.btnBiasa2, btnPENABURSedang: BtnStyles.btnSedang, btnPENABURBaik: BtnStyles.btnBiasa2, PENABUR: 'SEDANG' });
+                this.setState({ txtPenaburRehab: styles.buttonText2, txtPenaburKurang: styles.buttonText2, txtPenaburSedang: styles.buttonText, txtPenaburBaik: styles.buttonText2 });
+                this.setState({ defaultPenaburRehab: false, defaultPenaburKurang: false, defaultPenaburSedang: true, defaultPenaburBaik: false });
+            } else {
+                this.setState({ btnPENABURRehab: BtnStyles.btnBiasa2, btnPENABURKurang: BtnStyles.btnBiasa2, btnPENABURSedang: BtnStyles.btnBiasa2, btnPENABURBaik: BtnStyles.btnBiasa2, PENABUR: 'REHAB' });
+                this.setState({ txtPenaburRehab: styles.buttonText2, txtPenaburKurang: styles.buttonText2, txtPenaburSedang: styles.buttonText2, txtPenaburBaik: styles.buttonText2 });
+                this.setState({ defaultPenaburRehab: false, defaultPenaburKurang: false, defaultPenaburSedang: false, defaultPenaburBaik: false });
+            }
         } else if (param == 'PENABUR' && value == 'BAIK') {
-            this.setState({ btnPENABURRehab: BtnStyles.btnBiasa2, btnPENABURKurang: BtnStyles.btnBiasa2, btnPENABURSedang: BtnStyles.btnBiasa2, btnPENABURBaik: BtnStyles.btnBaik, PENABUR: 'BAIK' });
-            this.setState({ txtPenaburRehab: styles.buttonText2, txtPenaburKurang: styles.buttonText2, txtPenaburSedang: styles.buttonText2, txtPenaburBaik: styles.buttonText });
-        } else if (param == 'PUPUK' && value == 'REHAB') {
-            this.setState({ btnPUPUKRehab: BtnStyles.btnRehab, btnPUPUKKurang: BtnStyles.btnBiasa2, btnPUPUKSedang: BtnStyles.btnBiasa2, btnPUPUKBaik: BtnStyles.btnBiasa2, PUPUK: 'REHAB' });
-            this.setState({ txtPupukRehab: styles.buttonText, txtPupukKurang: styles.buttonText2, txtPupukSedang: styles.buttonText2, txtPupukBaik: styles.buttonText2 });
+            if (this.state.defaultPenaburBaik == false) {
+                this.setState({ btnPENABURRehab: BtnStyles.btnBiasa2, btnPENABURKurang: BtnStyles.btnBiasa2, btnPENABURSedang: BtnStyles.btnBiasa2, btnPENABURBaik: BtnStyles.btnBaik, PENABUR: 'BAIK' });
+                this.setState({ txtPenaburRehab: styles.buttonText2, txtPenaburKurang: styles.buttonText2, txtPenaburSedang: styles.buttonText2, txtPenaburBaik: styles.buttonText });
+                this.setState({ defaultPenaburRehab: false, defaultPenaburKurang: false, defaultPenaburSedang: false, defaultPenaburBaik: true });
+            } else {
+                this.setState({ btnPENABURRehab: BtnStyles.btnBiasa2, btnPENABURKurang: BtnStyles.btnBiasa2, btnPENABURSedang: BtnStyles.btnBiasa2, btnPENABURBaik: BtnStyles.btnBiasa2, PENABUR: 'REHAB' });
+                this.setState({ txtPenaburRehab: styles.buttonText2, txtPenaburKurang: styles.buttonText2, txtPenaburSedang: styles.buttonText2, txtPenaburBaik: styles.buttonText2 });
+                this.setState({ defaultPenaburRehab: false, defaultPenaburKurang: false, defaultPenaburSedang: false, defaultPenaburBaik: false });
+            }
+        }
+
+        else if (param == 'PUPUK' && value == 'REHAB') {
+            if (this.state.defaultPupukRehab == false) {
+                this.setState({ btnPUPUKRehab: BtnStyles.btnRehab, btnPUPUKKurang: BtnStyles.btnBiasa2, btnPUPUKSedang: BtnStyles.btnBiasa2, btnPUPUKBaik: BtnStyles.btnBiasa2, PUPUK: 'REHAB' });
+                this.setState({ txtPupukRehab: styles.buttonText, txtPupukKurang: styles.buttonText2, txtPupukSedang: styles.buttonText2, txtPupukBaik: styles.buttonText2 });
+                this.setState({ defaultPupukRehab: true, defaultPupukKurang: false, defaultPupukSedang: false, defaultPupukBaik: false });
+            } else {
+                this.setState({ btnPUPUKRehab: BtnStyles.btnBiasa2, btnPUPUKKurang: BtnStyles.btnBiasa2, btnPUPUKSedang: BtnStyles.btnBiasa2, btnPUPUKBaik: BtnStyles.btnBiasa2, PUPUK: '' });
+                this.setState({ txtPupukRehab: styles.buttonText2, txtPupukKurang: styles.buttonText2, txtPupukSedang: styles.buttonText2, txtPupukBaik: styles.buttonText2 });
+                this.setState({ defaultPupukRehab: false, defaultPupukKurang: false, defaultPupukSedang: false, defaultPupukBaik: false });
+            }
         } else if (param == 'PUPUK' && value == 'KURANG') {
-            this.setState({ btnPUPUKRehab: BtnStyles.btnBiasa2, btnPUPUKKurang: BtnStyles.btnKurang, btnPUPUKSedang: BtnStyles.btnBiasa2, btnPUPUKBaik: BtnStyles.btnBiasa2, PUPUK: 'KURANG' });
-            this.setState({ txtPupukRehab: styles.buttonText2, txtPupukKurang: styles.buttonText, txtPupukSedang: styles.buttonText2, txtPupukBaik: styles.buttonText2 });
+            if (this.state.defaultPupukKurang == false) {
+                this.setState({ btnPUPUKRehab: BtnStyles.btnBiasa2, btnPUPUKKurang: BtnStyles.btnKurang, btnPUPUKSedang: BtnStyles.btnBiasa2, btnPUPUKBaik: BtnStyles.btnBiasa2, PUPUK: 'KURANG' });
+                this.setState({ txtPupukRehab: styles.buttonText2, txtPupukKurang: styles.buttonText, txtPupukSedang: styles.buttonText2, txtPupukBaik: styles.buttonText2 });
+                this.setState({ defaultPupukRehab: false, defaultPupukKurang: true, defaultPupukSedang: false, defaultPupukBaik: false });
+            } else {
+                this.setState({ btnPUPUKRehab: BtnStyles.btnBiasa2, btnPUPUKKurang: BtnStyles.btnBiasa2, btnPUPUKSedang: BtnStyles.btnBiasa2, btnPUPUKBaik: BtnStyles.btnBiasa2, PUPUK: '' });
+                this.setState({ txtPupukRehab: styles.buttonText2, txtPupukKurang: styles.buttonText2, txtPupukSedang: styles.buttonText2, txtPupukBaik: styles.buttonText2 });
+                this.setState({ defaultPupukRehab: false, defaultPupukKurang: false, defaultPupukSedang: false, defaultPupukBaik: false });
+            }
         } else if (param == 'PUPUK' && value == 'SEDANG') {
-            this.setState({ btnPUPUKRehab: BtnStyles.btnBiasa2, btnPUPUKKurang: BtnStyles.btnBiasa2, btnPUPUKSedang: BtnStyles.btnSedang, btnPUPUKBaik: BtnStyles.btnBiasa2, PUPUK: 'SEDANG' });
-            this.setState({ txtPupukRehab: styles.buttonText2, txtPupukKurang: styles.buttonText2, txtPupukSedang: styles.buttonText, txtPupukBaik: styles.buttonText2 });
+            if (this.state.defaultPupukSedang == false) {
+                this.setState({ btnPUPUKRehab: BtnStyles.btnBiasa2, btnPUPUKKurang: BtnStyles.btnBiasa2, btnPUPUKSedang: BtnStyles.btnSedang, btnPUPUKBaik: BtnStyles.btnBiasa2, PUPUK: 'SEDANG' });
+                this.setState({ txtPupukRehab: styles.buttonText2, txtPupukKurang: styles.buttonText2, txtPupukSedang: styles.buttonText, txtPupukBaik: styles.buttonText2 });
+                this.setState({ defaultPupukRehab: false, defaultPupukKurang: false, defaultPupukSedang: true, defaultPupukBaik: false });
+            } else {
+                this.setState({ btnPUPUKRehab: BtnStyles.btnBiasa2, btnPUPUKKurang: BtnStyles.btnBiasa2, btnPUPUKSedang: BtnStyles.btnBiasa2, btnPUPUKBaik: BtnStyles.btnBiasa2, PUPUK: '' });
+                this.setState({ txtPupukRehab: styles.buttonText2, txtPupukKurang: styles.buttonText2, txtPupukSedang: styles.buttonText2, txtPupukBaik: styles.buttonText2 });
+                this.setState({ defaultPupukRehab: false, defaultPupukKurang: false, defaultPupukSedang: false, defaultPupukBaik: false });
+            }
         } else if (param == 'PUPUK' && value == 'BAIK') {
-            this.setState({ btnPUPUKRehab: BtnStyles.btnBiasa2, btnPUPUKKurang: BtnStyles.btnBiasa2, btnPUPUKSedang: BtnStyles.btnBiasa2, btnPUPUKBaik: BtnStyles.btnBaik, PUPUK: 'BAIK' });
-            this.setState({ txtPupukRehab: styles.buttonText2, txtPupukKurang: styles.buttonText2, txtPupukSedang: styles.buttonText2, txtPupukBaik: styles.buttonText });
+            if (this.state.defaultPupukBaik == false) {
+                this.setState({ btnPUPUKRehab: BtnStyles.btnBiasa2, btnPUPUKKurang: BtnStyles.btnBiasa2, btnPUPUKSedang: BtnStyles.btnBiasa2, btnPUPUKBaik: BtnStyles.btnBaik, PUPUK: 'BAIK' });
+                this.setState({ txtPupukRehab: styles.buttonText2, txtPupukKurang: styles.buttonText2, txtPupukSedang: styles.buttonText2, txtPupukBaik: styles.buttonText });
+                this.setState({ defaultPupukRehab: false, defaultPupukKurang: false, defaultPupukSedang: false, defaultPupukBaik: true });
+            } else {
+                this.setState({ btnPUPUKRehab: BtnStyles.btnBiasa2, btnPUPUKKurang: BtnStyles.btnBiasa2, btnPUPUKSedang: BtnStyles.btnBiasa2, btnPUPUKBaik: BtnStyles.btnBiasa2, PUPUK: '' });
+                this.setState({ txtPupukRehab: styles.buttonText2, txtPupukKurang: styles.buttonText2, txtPupukSedang: styles.buttonText2, txtPupukBaik: styles.buttonText2 });
+                this.setState({ defaultPupukRehab: false, defaultPupukKurang: false, defaultPupukSedang: false, defaultPupukBaik: false });
+            }
         }
 
         else if (param == 'KAS' && value == 'REHAB') {
