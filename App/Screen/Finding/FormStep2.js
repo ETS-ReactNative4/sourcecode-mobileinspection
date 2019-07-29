@@ -16,13 +16,14 @@ import RadioGroup from 'react-native-custom-radio-group'
 import DateTimePicker from 'react-native-modal-datetime-picker'
 import moment from 'moment'
 import TaskServices from '../../Database/TaskServices'
-import { getTodayDate } from '../../Lib/Utils'
+import { getTodayDate, dateDisplayMobile } from '../../Lib/Utils'
 import IIcon from 'react-native-vector-icons/Ionicons'
 import Carousel from 'react-native-looped-carousel'
 import { dirPhotoTemuan } from '../../Lib/dirStorage'
 var RNFS = require('react-native-fs');
 
 import ModalAlert from '../../Component/ModalAlert';
+import ModalAlertBack from '../../Component/ModalAlert';
 import ModalAlertConfirmation from '../../Component/ModalAlertConfirmation'
 
 const radioGroupList = [{
@@ -65,8 +66,8 @@ class FormStep2 extends Component {
         let longitude = R.clone(params.lon);
 
         var user = TaskServices.getAllData('TR_LOGIN')[0];
-		let today = getTodayDate('YYMMDDHHmmss');
-		let TRANS_CODE= `F${user.USER_AUTH_CODE}${today}`;
+        let today = getTodayDate('YYMMDDHHmmss');
+        let TRANS_CODE = `F${user.USER_AUTH_CODE}${today}`;
         this.state = {
             user,
             keterangan: "",
@@ -109,6 +110,7 @@ class FormStep2 extends Component {
             message: 'Message',
             showModal: false,
             showModalConfirmation: false,
+            showModalBack: false,
             icon: ''
         }
     }
@@ -253,8 +255,8 @@ class FormStep2 extends Component {
     }
 
     saveData() {
-		var insertTime = getTodayDate('YYYYMMDDkkmmss');
-		//insertTime = parseInt(insertTime);
+        var insertTime = getTodayDate('YYYYMMDDkkmmss');
+        //insertTime = parseInt(insertTime);
         var data = {
             FINDING_CODE: this.state.TRANS_CODE,
             WERKS: this.state.werks,
@@ -294,7 +296,10 @@ class FormStep2 extends Component {
 
             TaskServices.saveData('TR_IMAGE', imagetr);
         });
-        this.props.navigation.goBack(null);
+
+        setTimeout(() => {
+            this.setState({ showModalBack: true, title: 'Berhasil Disimpan', message: 'Yeaay! Data kamu berhasil disimpan', icon: require('../../Images/ic-save-berhasil.png') });
+        }, 2000);
     }
 
     _showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
@@ -302,7 +307,7 @@ class FormStep2 extends Component {
     _hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
 
     _handleDatePicked = (date) => {
-        this.setState({ batasWaktu: moment(date).format("YYYY-MM-DD") })
+        this.setState({ batasWaktu: dateDisplayMobile(date) })
         this._hideDateTimePicker();
     };
 
@@ -355,9 +360,9 @@ class FormStep2 extends Component {
             })
         } else {
             this.setState({
-                showModal: true, 
-				title: "Blok Salah", 
-				message: 'Ups blok yang kamu pilih salah',
+                showModal: true,
+                title: "Blok Salah",
+                message: 'Ups blok yang kamu pilih salah',
                 icon: require('../../Images/ic-blm-input-lokasi.png')
             });
         }
@@ -382,6 +387,13 @@ class FormStep2 extends Component {
                         icon={this.state.icon}
                         visible={this.state.showModal}
                         onPressCancel={() => this.setState({ showModal: false })}
+                        title={this.state.title}
+                        message={this.state.message} />
+
+                    <ModalAlertBack
+                        visible={this.state.showModalBack}
+                        icon={this.state.icon}
+                        onPressCancel={() => this.props.navigation.goBack(null)}
                         title={this.state.title}
                         message={this.state.message} />
 

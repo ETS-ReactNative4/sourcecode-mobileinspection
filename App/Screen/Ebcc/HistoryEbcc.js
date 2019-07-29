@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Platform, StatusBar } from 'react-native';
-import {Card} from 'native-base';
+import { Card } from 'native-base';
 import Colors from '../../Constant/Colors';
 import Taskservice from '../../Database/TaskServices'
-import { NavigationActions  } from 'react-navigation';
+import { NavigationActions } from 'react-navigation';
 import TaskServices from '../../Database/TaskServices';
 import moment from 'moment';
+import { dateDisplayMobile } from '../../Lib/Utils'
 
 export default class HistoryEbcc extends Component {
 
-  constructor(props){
+  constructor(props) {
     super(props);
-    this.state = {      
+    this.state = {
       dataLogin: TaskServices.getAllData('TR_LOGIN'),
       data: []
     }
@@ -32,15 +33,15 @@ export default class HistoryEbcc extends Component {
     this.renderAll();
   }
 
-  componentDidMount(){   
+  componentDidMount() {
     this.renderAll();
   }
-  
-  renderAll =()=>{    
-    var dataSorted = TaskServices.getAllData('TR_H_EBCC_VALIDATION');    
+
+  renderAll = () => {
+    var dataSorted = TaskServices.getAllData('TR_H_EBCC_VALIDATION');
     dataSorted = dataSorted.sorted('INSERT_TIME', true);
     let data = []
-    if(dataSorted !== undefined){
+    if (dataSorted !== undefined) {
       dataSorted.map(item => {
         data.push(item)
       });
@@ -48,32 +49,32 @@ export default class HistoryEbcc extends Component {
     this.setState({ data })
   }
 
-  getEstateName(werks){
+  getEstateName(werks) {
     try {
-        let data = TaskServices.findBy2('TM_EST', 'WERKS', werks);
-        return data.EST_NAME;
+      let data = TaskServices.findBy2('TM_EST', 'WERKS', werks);
+      return data.EST_NAME;
     } catch (error) {
-        return '';
-    }    
+      return '';
+    }
   }
-  getStatusBlok(werk_afd_blok_code){
+  getStatusBlok(werk_afd_blok_code) {
     try {
-        let data = TaskServices.findBy2('TM_LAND_USE', 'WERKS_AFD_BLOCK_CODE', werk_afd_blok_code);
-        return data.MATURITY_STATUS;            
+      let data = TaskServices.findBy2('TM_LAND_USE', 'WERKS_AFD_BLOCK_CODE', werk_afd_blok_code);
+      return data.MATURITY_STATUS;
     } catch (error) {
-        return ''
+      return ''
     }
   }
 
   renderList = (data, index) => {
     let status = '', colorStatus = '';
-    if (data.STATUS_SYNC == 'N'){
+    if (data.STATUS_SYNC == 'N') {
       status = 'Data Belum Dikirim'
       colorStatus = 'red';
-    }else{
+    } else {
       status = 'Data Sudah Terkirim'
       colorStatus = Colors.brand;//'#999'
-    }  
+    }
     let imgBaris = TaskServices.findByWithList('TR_IMAGE', ['TR_CODE', 'STATUS_IMAGE'], [data.EBCC_VALIDATION_CODE, 'JANJANG']);
     let estName = this.getEstateName(data.WERKS);
     let path = '';
@@ -81,35 +82,35 @@ export default class HistoryEbcc extends Component {
       path = `file://${imgBaris[0].IMAGE_PATH_LOCAL}`;
     } catch (error) {
       path = '';
-    }    
+    }
     let dataBlock = Taskservice.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', `${data.WERKS}${data.AFD_CODE}${data.BLOCK_CODE}`);
-    let statusBlok = this.getStatusBlok(dataBlock.WERKS_AFD_BLOCK_CODE)    
-    let ebccDate = data.INSERT_TIME == '' ? 'Insert Time kosong' : moment(data.INSERT_TIME).format('DD MMM YYYY hh:mm A');
+    let statusBlok = this.getStatusBlok(dataBlock.WERKS_AFD_BLOCK_CODE)
+    let ebccDate = data.INSERT_TIME == '' ? 'Insert Time kosong' : dateDisplayMobile(data.INSERT_TIME);
 
-    return(
-      <TouchableOpacity 
-        style={{ marginTop: 12 }} 
-        onPress={()=> this.actionButtonClick(data)}
+    return (
+      <TouchableOpacity
+        style={{ marginTop: 12 }}
+        onPress={() => this.actionButtonClick(data)}
         key={index}>
-          <Card style={[styles.cardContainer]}>
-            <View style={styles.sectionCardView}>
-              <View style={{ flexDirection: 'row', height: 100 }} >
-                <Image style={{ alignItems: 'stretch', width: 100, borderRadius:10 }} source={{uri: path}}></Image>
-              </View>
-              <View style={styles.sectionDesc} >             
-                <Text style={{ fontSize: 14, fontWeight: 'bold' }}>{`${dataBlock.BLOCK_NAME}/${statusBlok}/${estName}`}</Text>
-                <Text style={{ fontSize: 12, marginTop: 8 }}>{`TPH ${data.NO_TPH}`}</Text>
-                <Text style={{ fontSize: 12, marginTop: 5 }}>{ebccDate}</Text>
-                <Text style={{ fontSize: 12, color: colorStatus, marginTop: 15, fontStyle: 'italic' }}>{status}</Text>
-              </View>
+        <Card style={[styles.cardContainer]}>
+          <View style={styles.sectionCardView}>
+            <View style={{ flexDirection: 'row', height: 100 }} >
+              <Image style={{ alignItems: 'stretch', width: 100, borderRadius: 10 }} source={{ uri: path }}></Image>
             </View>
-          </Card>
-        </TouchableOpacity>
-    );    
-  }  
+            <View style={styles.sectionDesc} >
+              <Text style={{ fontSize: 14, fontWeight: 'bold' }}>{`${dataBlock.BLOCK_NAME}/${statusBlok}/${estName}`}</Text>
+              <Text style={{ fontSize: 12, marginTop: 8 }}>{`TPH ${data.NO_TPH}`}</Text>
+              <Text style={{ fontSize: 12, marginTop: 5 }}>{ebccDate}</Text>
+              <Text style={{ fontSize: 12, color: colorStatus, marginTop: 15, fontStyle: 'italic' }}>{status}</Text>
+            </View>
+          </View>
+        </Card>
+      </TouchableOpacity>
+    );
+  }
 
-  getColor(param){
-    switch(param){
+  getColor(param) {
+    switch (param) {
       case 'A':
         return Colors.brand;
       case 'B':
@@ -125,39 +126,39 @@ export default class HistoryEbcc extends Component {
     }
   }
 
-  actionButtonClick(data) {  
-    this.props.navigation.navigate('DetailEbcc', {data: data})    
+  actionButtonClick(data) {
+    this.props.navigation.navigate('DetailEbcc', { data: data })
   }
 
   _renderNoData() {
     return (
-      <Image style={{justifyContent: 'center', alignSelf:'center', marginTop: 120, width:300, height: 220}}source={require('../../Images/img-no-data.png')} />
+      <Image style={{ justifyContent: 'center', alignSelf: 'center', marginTop: 120, width: 300, height: 220 }} source={require('../../Images/img-no-data.png')} />
     )
   }
 
   _renderData() {
     return (
       <ScrollView style={styles.container}>
-      <View>
+        <View>
           {this.state.data.map((data, idx) => this.renderList(data, idx))}
-      </View>
-    </ScrollView >
+        </View>
+      </ScrollView >
     )
   }
 
   render() {
     let show;
-    if(this.state.data.length > 0){
+    if (this.state.data.length > 0) {
       show = this._renderData()
-    } else{
+    } else {
       show = this._renderNoData()
     }
-    return (  
-      <View style={{flex: 1}}>
+    return (
+      <View style={{ flex: 1 }}>
         <StatusBar
-            hidden={false}
-            barStyle="light-content"
-            backgroundColor={Colors.tintColorPrimary}
+          hidden={false}
+          barStyle="light-content"
+          backgroundColor={Colors.tintColorPrimary}
         />
         {show}
       </View>
@@ -197,7 +198,7 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     flex: 1,
-    padding:7,
+    padding: 7,
     borderRadius: 10,
     borderWidth: 1,
     borderColor: '#fff'

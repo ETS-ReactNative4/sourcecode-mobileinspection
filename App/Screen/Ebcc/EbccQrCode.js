@@ -85,7 +85,7 @@ class Scanner extends Component {
         fixOrientation: true
       };        
       const data = await this.camera.takePictureAsync(takeCameraOptions);
-      alert(JSON.stringify(data.uri))
+      // alert(JSON.stringify(data.uri))
 
     } catch (err) {
       console.log('err: ', err);

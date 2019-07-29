@@ -18,7 +18,7 @@ import R, { isEmpty, isNil } from 'ramda'
 import moment from 'moment'
 import DateTimePicker from 'react-native-modal-datetime-picker'
 import ImageSlider from 'react-native-image-slider';
-import { changeFormatDate, getTodayDate } from '../../Lib/Utils';
+import { changeFormatDate, getTodayDate, dateDisplayMobile } from '../../Lib/Utils';
 
 import ModalAlert from '../../Component/ModalAlert';
 import ModalAlertBack from '../../Component/ModalAlert';
@@ -101,7 +101,7 @@ class DetailFindingScreenRedesign extends Component {
         }
 
         moment.locale();
-        let insertTime = moment(changeFormatDate("" + this.state.data.INSERT_TIME, "YYYY-MM-DD hh-mm-ss")).format('LLL');
+        let insertTime = dateDisplayMobile(changeFormatDate("" + this.state.data.INSERT_TIME, "YYYY-MM-DD hh-mm-ss"));
         let contact = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', this.state.data.INSERT_USER);
         let werkAfdBlokCode = `${this.state.data.WERKS}${this.state.data.AFD_CODE}${this.state.data.BLOCK_CODE}`;
         let lokasiBlok = `${this.getBlokName(werkAfdBlokCode)}/${this.getStatusBlok(werkAfdBlokCode)}/${this.getEstateName(this.state.data.WERKS)}`;
@@ -313,7 +313,7 @@ class DetailFindingScreenRedesign extends Component {
         if (this.state.updatedDueDate == 'Select Calendar') {
             batasWaktu = 'Batas waktu belum ditentukan'
         } else {
-            batasWaktu = moment(this.state.updatedDueDate).format('LL')
+            batasWaktu = moment(this.state.updatedDueDate).format('DD MMM YYYY kk:mm')
         }
         let sources;
         if (this.state.data.STATUS == 'BARU') {
@@ -468,7 +468,7 @@ class DetailFindingScreenRedesign extends Component {
                                 {isEmpty(this.state.data.DUE_DATE) && (
                                     <Text style={styles.item} onPress={() => { this.showDate() }} style={{ fontSize: 13, color: 'red' }}>: {batasWaktu} </Text>)}
                                 {!isEmpty(this.state.data.DUE_DATE) && (
-                                    <Text style={styles.item}>: {moment(this.state.data.DUE_DATE).format('LL')} </Text>)}
+                                    <Text style={styles.item}>: {dateDisplayMobile(this.state.data.DUE_DATE)} </Text>)}
                             </View>
 
                             <DateTimePicker

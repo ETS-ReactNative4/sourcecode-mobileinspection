@@ -16,7 +16,7 @@ import CustomHeader from '../../Component/CustomHeader'
 import ServerName from '../../Constant/ServerName'
 import Moment from 'moment';
 import RNFetchBlob from 'rn-fetch-blob'
-import { changeFormatDate, getThumnail } from '../../Lib/Utils';
+import { changeFormatDate, getThumnail, dateDisplayMobile } from '../../Lib/Utils';
 import FastImage from 'react-native-fast-image'
 import SwiperSlider from 'react-native-swiper'
 import {
@@ -571,8 +571,7 @@ class HomeScreen extends React.Component {
     const INSERT_USER = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', item.INSERT_USER);
     let user = INSERT_USER == undefined ? 'User belum terdaftar. Hubungi Admin.' : INSERT_USER.FULLNAME
     Moment.locale();
-    let dtInsertTime = Moment(changeFormatDate(item.INSERT_TIME.toString(), "YYYY-MM-DD hh-mm-ss")).format('DD MMM YYYY hh:mm A');
-    let batasWaktu = item.DUE_DATE == '' ? 'Batas waktu belum ditentukan' : Moment(item.DUE_DATE).format('DD MMM YYYY');
+    let dtInsertTime = dateDisplayMobile(changeFormatDate(item.INSERT_TIME.toString(), "YYYY-MM-DD hh-mm-ss"))
 
     const dataImage = TaskServices.findBy('TR_IMAGE', 'TR_CODE', item.FINDING_CODE);
     const image = dataImage.sorted('INSERT_TIME', true);

@@ -19,7 +19,7 @@ import moment from 'moment'
 import SlidingUpPanel from 'rn-sliding-up-panel'
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps'
 import TaskServices from '../../Database/TaskServices'
-import { getTodayDate } from '../../Lib/Utils'
+import { getTodayDate, dateDisplayMobile } from '../../Lib/Utils'
 import IIcon from 'react-native-vector-icons/Ionicons'
 import Carousel from 'react-native-looped-carousel'
 import { dirPhotoTemuan } from '../../Lib/dirStorage'
@@ -27,6 +27,7 @@ import Autocomplete from 'react-native-autocomplete-input';
 import Geojson from 'react-native-geojson';
 
 import ModalAlert from '../../Component/ModalAlert';
+import ModalAlertBack from '../../Component/ModalAlert';
 import ModalAlertConfirmation from '../../Component/ModalAlertConfirmation'
 
 const radioGroupList = [{
@@ -70,9 +71,9 @@ class Step2Finding extends Component {
         let inspeksiHeader = R.clone(params.data);
         let dataInspeksi = R.clone(params.dataInspeksi);
 
-		let today = getTodayDate('YYMMDDHHmmss');
+        let today = getTodayDate('YYMMDDHHmmss');
         var user = TaskServices.getAllData('TR_LOGIN')[0];
-		let	TRANS_CODE = `F${user.USER_AUTH_CODE}${today}`;
+        let TRANS_CODE = `F${user.USER_AUTH_CODE}${today}`;
         this.state = {
             user,
             keterangan: "",
@@ -116,6 +117,7 @@ class Step2Finding extends Component {
             title: 'Title',
             message: 'Message',
             showModal: false,
+            showModalBack: false,
             showModalConfirmation: false,
             icon: ''
         }
@@ -134,7 +136,7 @@ class Step2Finding extends Component {
         },
     };
 
-    updateTrBaris(){
+    updateTrBaris() {
         // this.state.tr_finding_codes.push(this.state.TRANS_CODE);
         // let data = TaskServices.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION)
         // if(data !== undefined){
@@ -146,7 +148,7 @@ class Step2Finding extends Component {
         //         });
         //     }
         // }
-        let model =  {
+        let model = {
             ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
             BLOCK_INSPECTION_CODE: this.state.dataInspeksi.BLOCK_INSPECTION_CODE,
             EST_NAME: this.state.dataInspeksi.EST_NAME,
@@ -161,7 +163,7 @@ class Step2Finding extends Component {
             FULFILL_BARIS: this.state.dataInspeksi.FULFILL_BARIS,
             TR_FINDING_CODES: this.state.tr_finding_codes
         };
-        return model;    
+        return model;
     }
 
     componentDidMount() {
@@ -299,8 +301,8 @@ class Step2Finding extends Component {
     }
 
     saveData() {
-		let insertTime = getTodayDate('YYYYMMDDHHmmss');
-		// insertTime = parseInt(insertTime);
+        let insertTime = getTodayDate('YYYYMMDDHHmmss');
+        // insertTime = parseInt(insertTime);
         var data = {
             FINDING_CODE: this.state.TRANS_CODE,
             WERKS: this.state.werks,
@@ -343,8 +345,8 @@ class Step2Finding extends Component {
         //ambil existing tr_finding_code
         let barisInspectionData = TaskServices.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION);
         let tempFindingID = [];
-        if(barisInspectionData !== "" && barisInspectionData !== null && barisInspectionData !== undefined){
-            Object.values(barisInspectionData.TR_FINDING_CODES).map((data)=>{
+        if (barisInspectionData !== "" && barisInspectionData !== null && barisInspectionData !== undefined) {
+            Object.values(barisInspectionData.TR_FINDING_CODES).map((data) => {
                 tempFindingID.push(data)
             })
         }
@@ -354,10 +356,11 @@ class Step2Finding extends Component {
         console.log(JSON.stringify(this.state.TRANS_CODE));
         this.setState({
             tr_finding_codes: tempFindingID
-        },()=>{
-            console.log("STEP2FINDING:"+JSON.stringify(this.state.tr_finding_codes));
-            this.props.navigation.state.params.finish(this.updateTrBaris());
-            this.props.navigation.goBack(null)
+        }, () => {
+            console.log("STEP2FINDING:" + JSON.stringify(this.state.tr_finding_codes));
+            setTimeout(() => {
+                this.setState({ showModalBack: true, title: 'Berhasil Disimpan', message: 'Yeaay! Data kamu berhasil disimpan', icon: require('../../Images/ic-save-berhasil.png') });
+            }, 1000);
         })
         // this.props.navigation.popToTop()
     }
@@ -367,7 +370,7 @@ class Step2Finding extends Component {
     _hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
 
     _handleDatePicked = (date) => {
-        this.setState({ batasWaktu: moment(date).format("YYYY-MM-DD") })
+        this.setState({ batasWaktu: dateDisplayMobile(date) })
         this._hideDateTimePicker();
     };
 
@@ -439,13 +442,24 @@ class Step2Finding extends Component {
                         title={this.state.title}
                         message={this.state.message} />
 
+                    <ModalAlertBack
+                        visible={this.state.showModalBack}
+                        icon={this.state.icon}
+                        onPressCancel={() => {
+                            this.props.navigation.state.params.finish(this.updateTrBaris());
+                            this.props.navigation.goBack(null)
+                        }}
+                        title={this.state.title}
+                        message={this.state.message} />
+
                     <ModalAlertConfirmation
                         icon={this.state.icon}
                         visible={this.state.showModalConfirmation}
                         onPressCancel={() => this.setState({ showModalConfirmation: false })}
-                        onPressSubmit={() => { 
+                        onPressSubmit={() => {
                             this.props.navigation.state.params.finish('data');
-                            this.props.navigation.goBack(null) }}
+                            this.props.navigation.goBack(null)
+                        }}
                         title={this.state.title}
                         message={this.state.message} />
 
