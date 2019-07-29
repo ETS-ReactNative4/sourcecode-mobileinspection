@@ -27,23 +27,25 @@ class KondisiBaris2 extends Component {
                 fontWeight: '400'
             },
             headerRight: (
-                <TouchableOpacity onPress={() => { navigation.navigate('Step1Finding', { 
-                    data: params.getData,
-                    dataInspeksi: params.getDataInspeksi,
-                    updateTRBaris: params.updateTRBaris
-                })}}>
+                <TouchableOpacity onPress={() => {
+                    navigation.navigate('Step1Finding', {
+                        data: params.getData,
+                        dataInspeksi: params.getDataInspeksi,
+                        updateTRBaris: params.updateTRBaris
+                    })
+                }}>
                     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingRight: 16 }}>
                         <Entypo name='flashlight' size={24} color='white' />
                     </View>
                 </TouchableOpacity>
             )
-        }        
+        }
     };
 
     constructor(props) {
         super(props);
 
-        
+
         this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
 
         let params = props.navigation.state.params;
@@ -77,7 +79,7 @@ class KondisiBaris2 extends Component {
             btnSarkulKurang: BtnStyles.btnBiasa2,
             btnSarkulSedang: BtnStyles.btnBiasa2,
             btnSarkulBaik: BtnStyles.btnBiasa2,
-            
+
             txtSarkulRehab: styles.buttonText2,
             txtSarkulKurang: styles.buttonText2,
             txtSarkulSedang: styles.buttonText2,
@@ -89,7 +91,7 @@ class KondisiBaris2 extends Component {
             btnTPHKurang: BtnStyles.btnBiasa2,
             btnTPHSedang: BtnStyles.btnBiasa2,
             btnTPHBaik: BtnStyles.btnBiasa2,
-            
+
             txtTphRehab: styles.buttonText2,
             txtTphKurang: styles.buttonText2,
             txtTphSedang: styles.buttonText2,
@@ -113,7 +115,7 @@ class KondisiBaris2 extends Component {
             btnPRUNKurang: BtnStyles.btnBiasa2,
             btnPRUNSedang: BtnStyles.btnBiasa2,
             btnPRUNBaik: BtnStyles.btnBiasa2,
-            
+
             txtPrunRehab: styles.buttonText2,
             txtPrunKurang: styles.buttonText2,
             txtPrunSedang: styles.buttonText2,
@@ -125,7 +127,7 @@ class KondisiBaris2 extends Component {
             btnTIPAKurang: BtnStyles.btnBiasa2,
             btnTIPASedang: BtnStyles.btnBiasa2,
             btnTIPABaik: BtnStyles.btnBiasa2,
-            
+
             txtTipaRehab: styles.buttonText2,
             txtTipaKurang: styles.buttonText2,
             txtTipaSedang: styles.buttonText2,
@@ -137,7 +139,7 @@ class KondisiBaris2 extends Component {
             btnKastrasiKurang: BtnStyles.btnBiasa2,
             btnKastrasiSedang: BtnStyles.btnBiasa2,
             btnKastrasiBaik: BtnStyles.btnBiasa2,
-            
+
             txtKastrasiRehab: styles.buttonText2,
             txtKastrasiKurang: styles.buttonText2,
             txtKastrasiSedang: styles.buttonText2,
@@ -149,7 +151,7 @@ class KondisiBaris2 extends Component {
             btnSanitasiKurang: BtnStyles.btnBiasa2,
             btnSanitasiSedang: BtnStyles.btnBiasa2,
             btnSanitasiBaik: BtnStyles.btnBiasa2,
-            
+
             txtSanitasiRehab: styles.buttonText2,
             txtSanitasiKurang: styles.buttonText2,
             txtSanitasiSedang: styles.buttonText2,
@@ -161,7 +163,7 @@ class KondisiBaris2 extends Component {
             btnPENABURKurang: BtnStyles.btnBiasa2,
             btnPENABURSedang: BtnStyles.btnBiasa2,
             btnPENABURBaik: BtnStyles.btnBiasa2,
-            
+
             txtPenaburRehab: styles.buttonText2,
             txtPenaburKurang: styles.buttonText2,
             txtPenaburSedang: styles.buttonText2,
@@ -219,7 +221,7 @@ class KondisiBaris2 extends Component {
         this._saveInput();
         BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
     }
-    
+
     handleBackButtonClick() {
         this.props.navigation.goBack(null)
         // this.setState({
@@ -230,7 +232,7 @@ class KondisiBaris2 extends Component {
         return true;
     }
     updateTRBaris = data => {
-        let model =  {
+        let model = {
             ID_INSPECTION: data.ID_INSPECTION,
             BLOCK_INSPECTION_CODE: data.BLOCK_INSPECTION_CODE,
             EST_NAME: data.EST_NAME,
@@ -244,59 +246,59 @@ class KondisiBaris2 extends Component {
             INSPECTION_SCORE: data.INSPECTION_SCORE,
             FULFILL_BARIS: data.FULFILL_BARIS,
             TR_FINDING_CODES: data.TR_FINDING_CODES
-        }    
-        this.setState({dataInspeksi: model},()=>{
-            this.props.navigation.setParams({getDataInspeksi: this.state.dataInspeksi})
+        }
+        this.setState({ dataInspeksi: model }, () => {
+            this.props.navigation.setParams({ getDataInspeksi: this.state.dataInspeksi })
         })
     }
 
-	_loadInput = async () => {
-		try {
-			const value = await AsyncStorage.getItem('savedInput');
-			if (value !== null) {
-				let oldInput = JSON.parse(value);
-				if(this.state.dataUsual.BA==oldInput.header.BA&&this.state.dataUsual.AFD==oldInput.header.AFD
-					&&this.state.dataUsual.BLOK==oldInput.header.BLOK&&this.state.dataUsual.BARIS==oldInput.header.BARIS){
-					for(key in oldInput.detail){
-						this.changeColor(key.toUpperCase(),oldInput.detail[key].toUpperCase());
-					}
-				}
-				else{
-					this._resetInput();
-				}
-			}
-		} catch (error) {
-		}
-	};
-	_resetInput = async () => {
-		try {
-			const value = await AsyncStorage.removeItem('savedInput');
-		} catch (error) {
-		}
-	};
-	_saveInput = async () => {
-		try {
-			let currInput = {
-				header:JSON.parse(JSON.stringify(this.state.dataUsual)),
-				detail:{
-					piringan:this.state.piringan,
-					sarKul:this.state.sarKul,
-					TPH:this.state.TPH,
-					GWG:this.state.GWG,
-					PRUN:this.state.PRUN,
-					TIPA:this.state.TIPA,
-					PENABUR:this.state.PENABUR,
-					PUPUK:this.state.PUPUK,
-					KASTRASI:this.state.KASTRASI,
-					SANITASI:this.state.SANITASI
-				}
-			};
-			let jsonString = JSON.stringify(currInput);
-			await AsyncStorage.setItem('savedInput', jsonString);
-		} catch (error) {
-			// Error saving data
-		}
-	};
+    _loadInput = async () => {
+        try {
+            const value = await AsyncStorage.getItem('savedInput');
+            if (value !== null) {
+                let oldInput = JSON.parse(value);
+                if (this.state.dataUsual.BA == oldInput.header.BA && this.state.dataUsual.AFD == oldInput.header.AFD
+                    && this.state.dataUsual.BLOK == oldInput.header.BLOK && this.state.dataUsual.BARIS == oldInput.header.BARIS) {
+                    for (key in oldInput.detail) {
+                        this.changeColor(key.toUpperCase(), oldInput.detail[key].toUpperCase());
+                    }
+                }
+                else {
+                    this._resetInput();
+                }
+            }
+        } catch (error) {
+        }
+    };
+    _resetInput = async () => {
+        try {
+            const value = await AsyncStorage.removeItem('savedInput');
+        } catch (error) {
+        }
+    };
+    _saveInput = async () => {
+        try {
+            let currInput = {
+                header: JSON.parse(JSON.stringify(this.state.dataUsual)),
+                detail: {
+                    piringan: this.state.piringan,
+                    sarKul: this.state.sarKul,
+                    TPH: this.state.TPH,
+                    GWG: this.state.GWG,
+                    PRUN: this.state.PRUN,
+                    TIPA: this.state.TIPA,
+                    PENABUR: this.state.PENABUR,
+                    PUPUK: this.state.PUPUK,
+                    KASTRASI: this.state.KASTRASI,
+                    SANITASI: this.state.SANITASI
+                }
+            };
+            let jsonString = JSON.stringify(currInput);
+            await AsyncStorage.setItem('savedInput', jsonString);
+        } catch (error) {
+            // Error saving data
+        }
+    };
 
     kodisiPemupukanIsOn() {
         const data = this.state.kondisiBaris1;
@@ -433,7 +435,15 @@ class KondisiBaris2 extends Component {
         } else if (param == 'TIPA' && value == 'BAIK') {
             this.setState({ btnTIPARehab: BtnStyles.btnBiasa2, btnTIPAKurang: BtnStyles.btnBiasa2, btnTIPASedang: BtnStyles.btnBiasa2, btnTIPABaik: BtnStyles.btnBaik, TIPA: 'BAIK' });
             this.setState({ txtTipaRehab: styles.buttonText2, txtTipaKurang: styles.buttonText2, txtTipaSedang: styles.buttonText2, txtTipaBaik: styles.buttonText });
-        } else if (param == 'PENABUR' && value == 'REHAB') {
+        }
+
+        //Add Default TIPA by Aminju 29072019 16:07
+        else if (param == 'TIPA' && value == 'DEFAULT') {
+            this.setState({ btnTIPARehab: BtnStyles.btnBiasa2, btnTIPAKurang: BtnStyles.btnBiasa2, btnTIPASedang: BtnStyles.btnBiasa2, btnTIPABaik: BtnStyles.btnBiasa2, TIPA: '' });
+            this.setState({ txtTipaRehab: styles.buttonText2, txtTipaKurang: styles.buttonText2, txtTipaSedang: styles.buttonText2, txtTipaBaik: styles.buttonText2 });
+        }
+
+        else if (param == 'PENABUR' && value == 'REHAB') {
             this.setState({ btnPENABURRehab: BtnStyles.btnRehab, btnPENABURKurang: BtnStyles.btnBiasa2, btnPENABURSedang: BtnStyles.btnBiasa2, btnPENABURBaik: BtnStyles.btnBiasa2, PENABUR: 'REHAB' });
             this.setState({ txtPenaburRehab: styles.buttonText, txtPenaburKurang: styles.buttonText2, txtPenaburSedang: styles.buttonText2, txtPenaburBaik: styles.buttonText2 });
         } else if (param == 'PENABUR' && value == 'KURANG') {
@@ -493,7 +503,7 @@ class KondisiBaris2 extends Component {
         this.validation()
     };
 
-    validation(){
+    validation() {
         //TM dan TBM3 TPH mandatory
         //TM Prunning mandatory
         //titi panen jika switch on wajib dipilih
@@ -559,9 +569,9 @@ class KondisiBaris2 extends Component {
             this.insertDB();
         }
     }
-	
+
     insertDB() {
-		var today = getTodayDate('YYYYMMDDHHmmss');
+        var today = getTodayDate('YYYYMMDDHHmmss');
         var listBaris2 = [];
         if (this.state.showPiringan) {
             var data = {
@@ -641,7 +651,7 @@ class KondisiBaris2 extends Component {
             listBaris2.push(data);
         }
 
-        if(this.state.PENABUR !== '' ){
+        if (this.state.PENABUR !== '') {
             data = {
                 BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}13`,
                 BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
@@ -652,9 +662,9 @@ class KondisiBaris2 extends Component {
                 STATUS_SYNC: 'N'
             }
             listBaris2.push(data);
-        }        
+        }
 
-        if(this.state.PUPUK !== '' ){
+        if (this.state.PUPUK !== '') {
             data = {
                 BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}14`,
                 BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
@@ -665,7 +675,7 @@ class KondisiBaris2 extends Component {
                 STATUS_SYNC: 'N'
             }
             listBaris2.push(data);
-        }        
+        }
 
         if (this.state.showKastrasi) {
             data = {
@@ -702,7 +712,7 @@ class KondisiBaris2 extends Component {
             statusBlok: this.state.statusBlok,
             intervalId: this.state.intervalId,
             dataInspeksi: this.state.dataInspeksi,
-            inspectionType  : this.state.inspectionType === 'genba' ? 'genba' : 'normal'
+            inspectionType: this.state.inspectionType === 'genba' ? 'genba' : 'normal'
         });
     }
 
@@ -952,7 +962,20 @@ class KondisiBaris2 extends Component {
                                     thumbTintColor={this.state.switchTIPA ? Colors.brand : 'red'}
                                     onTintColor={'#5bc236'}
                                     tintColor={'#ff8080'}
-                                    onValueChange={(value) => this.setState({ switchTIPA: value })}
+                                    onValueChange={(value) => {
+                                        console.log('Value TIPA : ', value)
+                                        if (value) {
+                                            this.setState({
+                                                switchTIPA: value
+                                            })
+                                        } else {
+                                            this.setState({
+                                                switchTIPA: value
+                                            })
+                                            this.changeColor('TIPA', 'DEFAULT')
+                                        }
+                                    }
+                                    }
                                     style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }], marginBottom: 10, position: 'absolute', right: 0 }}
                                     value={this.state.switchTIPA} />
                             </View>
@@ -1102,18 +1125,18 @@ class KondisiBaris2 extends Component {
 
                 {/*CIRCLE*/}
                 <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 20, marginBottom: 20 }}>
-					{/*Gani*/}
-					<TouchableOpacity onPress={() => { this.props.navigation.goBack() }} 
-						style={[styles.buttonSubmit, { backgroundColor: Colors.tintColor }]}>
-						<Image style={styles.imageSubmit} source={require('../../Images/icon/ic_kembali.png')} />
-					</TouchableOpacity>
+                    {/*Gani*/}
+                    <TouchableOpacity onPress={() => { this.props.navigation.goBack() }}
+                        style={[styles.buttonSubmit, { backgroundColor: Colors.tintColor }]}>
+                        <Image style={styles.imageSubmit} source={require('../../Images/icon/ic_kembali.png')} />
+                    </TouchableOpacity>
                     {/*<TouchableOpacity style={styles.cicle2} onPress={() => { this.props.navigation.goBack() }}>*/}
-                        {/* <Icon name={"chevron-left"}  size={10} color="white" /> */}
+                    {/* <Icon name={"chevron-left"}  size={10} color="white" /> */}
                     {/*</TouchableOpacity>*/}
                     {/*<TouchableOpacity style={[styles.cicle, { marginLeft: 10 }]} onPress={() => { }}>*/}
-                        {/* <Icon name={"chevron-right"}  size={10} color="white" /> */}
+                    {/* <Icon name={"chevron-right"}  size={10} color="white" /> */}
                     {/*</TouchableOpacity>*/}
-					{/*End Gani*/}
+                    {/*End Gani*/}
                 </View>
 
             </ScrollView>
@@ -1202,10 +1225,10 @@ const styles = {
         justifyContent: 'center',
     },
     imageSubmit: {
-		flex: 1,
-		width: 100,
+        flex: 1,
+        width: 100,
         alignSelf: 'center',
-		resizeMode: 'contain'
+        resizeMode: 'contain'
     },
     buttonText: {
         fontSize: 13,
