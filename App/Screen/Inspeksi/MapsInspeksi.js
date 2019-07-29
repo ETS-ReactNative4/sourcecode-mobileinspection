@@ -32,7 +32,7 @@ class MapsInspeksi extends React.Component {
 	this.loadMap();
     this.state = {
         latitude: 0.0,
-        longitude: 0.0, 
+        longitude: 0.0,
         region: {
           latitude: LATITUDE,
           longitude: LONGITUDE,
@@ -43,7 +43,7 @@ class MapsInspeksi extends React.Component {
         fetchLocation: true,
         showModal: false,
         title: 'Sabar Ya..',
-        message: 'Sedang mencari lokasi kamu nih.',        
+        message: 'Sedang mencari lokasi kamu nih.',
         icon: '',
         inspectionType  : props.navigation.getParam('inspectionType', 'normal')
     };
@@ -62,7 +62,7 @@ class MapsInspeksi extends React.Component {
         fontSize: 18,
         fontWeight: '400'
       },
-      
+
     headerRight: (
           <TouchableOpacity style= {{marginRight: 20}} onPress={()=>{params.searchLocation()}}>
               <IconLoc style={{marginLeft: 12}} name={'location-arrow'} size={24} color={'white'} />
@@ -82,14 +82,14 @@ class MapsInspeksi extends React.Component {
       this.setState({fetchLocation: false});
     }, 5000);
     this.getLocation();
-  }  
+  }
 
   totalPolygons(){
 	if(!polyMap){
-		this.setState({ 
-			fetchLocation: false, 
-			showModal: true, 
-			title: 'Tidak ada data', 
+		this.setState({
+			fetchLocation: false,
+			showModal: true,
+			title: 'Tidak ada data',
 			message: "Kamu belum download data map",
 			icon: require('../../Images/ic-blm-input-lokasi.png')
 		});
@@ -117,10 +117,10 @@ class MapsInspeksi extends React.Component {
 			}
 			else{
 				//belum download map
-				this.setState({ 
-					fetchLocation: false, 
-					showModal: true, 
-					title: 'Tidak ada data', 
+				this.setState({
+					fetchLocation: false,
+					showModal: true,
+					title: 'Tidak ada data',
 					message: "Kamu belum download data map",
 					icon: require('../../Images/ic-blm-input-lokasi.png')
 				});
@@ -128,16 +128,16 @@ class MapsInspeksi extends React.Component {
 		}
 		else{
 			//belum pilih lokasi
-			this.setState({ 
-				fetchLocation: false, 
-				showModal: true, 
-				title: 'Tidak ada lokasi', 
+			this.setState({
+				fetchLocation: false,
+				showModal: true,
+				title: 'Tidak ada lokasi',
 				message: "Kamu belum pilih lokasi kamu",
 				icon: require('../../Images/ic-blm-input-lokasi.png')
 			});
 		}
 	}
-	
+
 	convertGeoJson(raw){
 		let arrPoli = [];
 		for(let x in raw){
@@ -154,10 +154,10 @@ class MapsInspeksi extends React.Component {
 
   getPolygons(position){
 	if(!polyMap){
-		this.setState({ 
-			fetchLocation: false, 
-			showModal: true, 
-			title: 'Tidak ada data', 
+		this.setState({
+			fetchLocation: false,
+			showModal: true,
+			title: 'Tidak ada data',
 			message: "Kamu belum download data map",
 			icon: require('../../Images/ic-blm-input-lokasi.png')
 		});
@@ -174,16 +174,16 @@ class MapsInspeksi extends React.Component {
             index = i;
             break;
         }
-    } 
+    }
     if(index < 4){
       for(var j=0; j<index; j++){
         let coords = data[j];
         this.state.poligons.push(coords)
         poligons.push(coords)
       }
-    } 
+    }
 
-    
+
     if(index > 0){
       let lebih = this.totalPolygons()-index
       if(lebih > 4){
@@ -204,7 +204,7 @@ class MapsInspeksi extends React.Component {
           poligons.push(coords)
         }
       }
-    }    
+    }
     return poligons;
   }
 
@@ -217,7 +217,7 @@ class MapsInspeksi extends React.Component {
 			longitude: lon,
 			latitudeDelta:0.0075,
 			longitudeDelta:0.00721
-		}   
+		}
 		position = {
 			latitude: lat, longitude: lon
 		}
@@ -225,26 +225,26 @@ class MapsInspeksi extends React.Component {
 		this.setState({latitude:lat, longitude:lon, fetchLocation: false, region, poligons});
 		if(this.map !== undefined){
 			this.map.animateToCoordinate(region, 1);
-		}    
+		}
 	}
-  }  
+  }
 
   centerCoordinate(coordinates) {
     let x = coordinates.map(c => c.latitude)
     let y = coordinates.map(c => c.longitude)
-  
+
     let minX = Math.min.apply(null, x)
     let maxX = Math.max.apply(null, x)
-  
+
     let minY = Math.min.apply(null, y)
     let maxY = Math.max.apply(null, y)
-  
+
     return {
       latitude: (minX + maxX) / 2,
       longitude: (minY + maxY) / 2
     }
   }
-  
+
   checkAutorisasi(werkAfdBlockCode){
     let datLogin = TaskServices.getAllData('TR_LOGIN')[0]
     let refCode = datLogin.REFFERENCE_ROLE;
@@ -260,24 +260,24 @@ class MapsInspeksi extends React.Component {
     }
     return true
   }
-  
+
   navigateScreen(screenName, werkAfdBlockCode) {
     if(this.checkAutorisasi(werkAfdBlockCode)){
       const navigation = this.props.navigation;
       const resetAction = StackActions.reset({
-      index: 0,            
-        actions: [NavigationActions.navigate({ routeName: screenName, params : { 
+      index: 0,
+        actions: [NavigationActions.navigate({ routeName: screenName, params : {
             werkAfdBlockCode : werkAfdBlockCode,
             latitude: this.state.latitude,
             longitude: this.state.longitude,
             inspectionType  : this.state.inspectionType === 'genba' ? 'genba' : 'normal'
-          } 
+          }
         })]
       });
       navigation.dispatch(resetAction);
-    }else{      
-      this.setState({ fetchLocation: false, showModal: true, title: 'Salah Afdeling', 
-      message: "Kamu tidak bisa inspeksi di Afdeling ini", icon: require('../../Images/ic-blm-input-lokasi.png') });
+    }else{
+      this.setState({ fetchLocation: false, showModal: true, title: 'Bukan Wilayah Otorisasimu',
+      message: "Kamu tidak bisa inspeksi di wilayah ini", icon: require('../../Images/ic-blm-input-lokasi.png') });
     }
   }
 
@@ -352,7 +352,7 @@ class MapsInspeksi extends React.Component {
               </Marker>
             </View>
           ))}
-           
+
           <Marker
               coordinate={{
                   latitude: this.state.latitude,
@@ -361,8 +361,8 @@ class MapsInspeksi extends React.Component {
               centerOffset={{ x: -42, y: -60 }}
               anchor={{ x: 0.84, y: 1 }}
           >
-          </Marker>  
-        
+          </Marker>
+
         </MapView>
       </View>
     );

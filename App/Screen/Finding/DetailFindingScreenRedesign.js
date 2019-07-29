@@ -51,7 +51,7 @@ class DetailFindingScreenRedesign extends Component {
             ratingMsg: data.RATING_MESSAGE,
             rating: data.RATING_VALUE,//0 default,1 bad,2 ok,3 good,4 great
             newRating: 0,
-            //Add Modal Alert by Aminju 
+            //Add Modal Alert by Aminju
             title: 'Title',
             message: 'Message',
             showModal: false,
@@ -439,8 +439,38 @@ class DetailFindingScreenRedesign extends Component {
                         </View>
                     </View>
 
+                    <View
+                        style={{
+                            paddingVertical: 5,
+                            marginVertical: 15,
+                            marginHorizontal: 20,
+                            borderBottomWidth: 1,
+                            borderTopWidth: 1,
+                            borderColor: 'rgba(242,242,242,1)'
+                        }}
+                    >
+                        <TouchableOpacity onPress={()=>{
+                            this.props.navigation.navigate("HomeScreenComment", { findingCode: this.state.data.FINDING_CODE })
+                        }}>
+                            <View style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}>
+                                <Image style={{width: 30, height: 30 }}
+                                       source={require('../../Images/icon/ic_comment.png')}>
+                                </Image>
+                                <Text
+                                    style={{
+                                        paddingHorizontal: 5
+                                    }}>
+                                    Komentar
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
 
-                    <View style={{ flex: 1, flexDirection: 'row', marginTop: 16, paddingLeft: 15, paddingRight: 15 }}>
+                    <View style={{ flex: 1, flexDirection: 'row', paddingLeft: 15, paddingRight: 15 }}>
                         <Image style={{ alignItems: 'stretch', width: 16, height: 22 }}
                             source={require('../../Images/icon/ic_map_point_green.png')}>
                         </Image>
