@@ -35,7 +35,7 @@ class MapsEbcc extends React.Component {
 	this.loadMap();
     this.state = {
         latitude: 0.0,
-        longitude: 0.0, 
+        longitude: 0.0,
         region: {
           latitude: LATITUDE,
           longitude: LONGITUDE,
@@ -48,7 +48,7 @@ class MapsEbcc extends React.Component {
         statusScan,
         reason,
         title: 'Sabar Ya..',
-        message: 'Sedang mencari lokasi kamu nih.',        
+        message: 'Sedang mencari lokasi kamu nih.',
         icon: ''
     };
   }
@@ -66,7 +66,7 @@ class MapsEbcc extends React.Component {
         fontSize: 18,
         fontWeight: '400'
       },
-      
+
     headerRight: (
           <TouchableOpacity style= {{marginRight: 20}} onPress={()=>{params.searchLocation()}}>
               <IconLoc style={{marginLeft: 12}} name={'location-arrow'} size={24} color={'white'} />
@@ -86,14 +86,14 @@ class MapsEbcc extends React.Component {
       this.setState({fetchLocation: false});
     }, 5000);
     this.getLocation();
-  }  
+  }
 
   totalPolygons(){
 	if(!polyMap){
-		this.setState({ 
-			fetchLocation: false, 
-			showModal: true, 
-			title: 'Tidak ada data', 
+		this.setState({
+			fetchLocation: false,
+			showModal: true,
+			title: 'Tidak ada data',
 			message: "Kamu belum download data map",
 			icon: require('../../Images/ic-blm-input-lokasi.png')
 		});
@@ -121,10 +121,10 @@ class MapsEbcc extends React.Component {
 			}
 			else{
 				//belum download map
-				this.setState({ 
-					fetchLocation: false, 
-					showModal: true, 
-					title: 'Tidak ada data', 
+				this.setState({
+					fetchLocation: false,
+					showModal: true,
+					title: 'Tidak ada data',
 					message: "Kamu belum download data map",
 					icon: require('../../Images/ic-blm-input-lokasi.png')
 				});
@@ -132,16 +132,16 @@ class MapsEbcc extends React.Component {
 		}
 		else{
 			//belum pilih lokasi
-			this.setState({ 
-				fetchLocation: false, 
-				showModal: true, 
-				title: 'Tidak ada lokasi', 
+			this.setState({
+				fetchLocation: false,
+				showModal: true,
+				title: 'Tidak ada lokasi',
 				message: "Kamu belum pilih lokasi kamu",
 				icon: require('../../Images/ic-blm-input-lokasi.png')
 			});
 		}
 	}
-	
+
 	convertGeoJson(raw){
 		let arrPoli = [];
 		for(let x in raw){
@@ -164,10 +164,10 @@ class MapsEbcc extends React.Component {
 
   getPolygons(position){
 	if(!polyMap){
-		this.setState({ 
-			fetchLocation: false, 
-			showModal: true, 
-			title: 'Tidak ada data', 
+		this.setState({
+			fetchLocation: false,
+			showModal: true,
+			title: 'Tidak ada data',
 			message: "Kamu belum download data map",
 			icon: require('../../Images/ic-blm-input-lokasi.png')
 		});
@@ -184,7 +184,7 @@ class MapsEbcc extends React.Component {
             index = i;
             break;
         }
-    } 
+    }
     //ambil map jika posisi index kurang dari 4
     if(index < 4){
       for(var j=0; j<index; j++){
@@ -192,9 +192,9 @@ class MapsEbcc extends React.Component {
         this.state.poligons.push(coords)
         poligons.push(coords)
       }
-    } 
+    }
 
-    
+
     if(index > 0){
       //ambil map setelah index
       let lebih = this.totalPolygons()-index
@@ -216,7 +216,7 @@ class MapsEbcc extends React.Component {
           poligons.push(coords)
         }
       }
-    }    
+    }
     return poligons;
   }
 
@@ -229,7 +229,7 @@ class MapsEbcc extends React.Component {
 			longitude: lon,
 			latitudeDelta:0.0075,
 			longitudeDelta:0.00721
-		}   
+		}
 		position = {
 			latitude: lat, longitude: lon
 		}
@@ -237,20 +237,20 @@ class MapsEbcc extends React.Component {
 		this.setState({latitude:lat, longitude:lon, fetchLocation: false, region, poligons});
 		if(this.map !== undefined){
 			this.map.animateToCoordinate(region, 1);
-		}    
+		}
 	}
-  }  
+  }
 
   centerCoordinate(coordinates) {
     let x = coordinates.map(c => c.latitude)
     let y = coordinates.map(c => c.longitude)
-  
+
     let minX = Math.min.apply(null, x)
     let maxX = Math.max.apply(null, x)
-  
+
     let minY = Math.min.apply(null, y)
     let maxY = Math.max.apply(null, y)
-  
+
     return {
       latitude: (minX + maxX) / 2,
       longitude: (minY + maxY) / 2
@@ -286,25 +286,79 @@ class MapsEbcc extends React.Component {
               return true
             }
         }
-    } 
+    }
     return false;
   }
-  
+
   navigateScreen(screenName, werkAfdBlockCode) {
-    const navigation = this.props.navigation;
-    const resetAction = StackActions.reset({
-    index: 0,            
-      actions: [NavigationActions.navigate({ routeName: screenName, params : { 
-          werkAfdBlockCode : werkAfdBlockCode,
-          statusScan: this.state.statusScan,
-          reason: this.state.reason,
-          latitude: this.state.latitude,
-          longitude: this.state.longitude
-        } 
-      })]
-    });
-    navigation.dispatch(resetAction);
+      if(this.refRoleAuth(werkAfdBlockCode)){
+          const navigation = this.props.navigation;
+          const resetAction = StackActions.reset({
+              index: 0,
+              actions: [NavigationActions.navigate({ routeName: screenName, params : {
+                      werkAfdBlockCode : werkAfdBlockCode,
+                      statusScan: this.state.statusScan,
+                      reason: this.state.reason,
+                      latitude: this.state.latitude,
+                      longitude: this.state.longitude
+                  }
+              })]
+          });
+          navigation.dispatch(resetAction);
+      }
+      else {
+          this.setState({
+              showModal: true,
+              title: "Bukan Wilayah Otorisasimu",
+              message: "Kamu tidak bisa sampling EBCC di wilayah ini",
+              icon: require('../../Images/ic-blm-input-lokasi.png')
+          });
+      }
   }
+
+    refRoleAuth(BA_CODE){
+        let loginData = TaskServices.getAllData('TR_LOGIN')[0]
+        let userRefCode = loginData.REFFERENCE_ROLE;
+        let locationCode = loginData.LOCATION_CODE.split(',');
+
+        let auth = false;
+        switch(userRefCode){
+            case 'AFD_CODE':
+                locationCode.map((data)=>{
+                    if(data === BA_CODE.slice(0, BA_CODE.length-3)){
+                        auth = true;
+                    }
+                });
+                return auth;
+            case 'BA_CODE':
+                locationCode.map((data)=>{
+                    if(data.includes(BA_CODE.slice(0, BA_CODE.length-3))){
+                        auth = true;
+                    }
+                });
+                return auth;
+            case 'COMP_CODE':
+                locationCode.map((data)=>{
+                    if(data.slice(0,2) === BA_CODE.slice(0, 2)){
+                        auth = true;
+                    }
+                });
+                return auth;
+            case 'REGION_CODE':
+                let trEst = TaskServices.findBy2('TR_EST', 'WERKS', BA_CODE.slice(0, BA_CODE.length-3));
+                if(trEst !== undefined){
+                    locationCode.map((data)=>{
+                        if (data === trEst.REGION_CODE){
+                            auth = true;
+                        }
+                    })
+                }
+                break;
+            default:
+                auth = false
+        }
+        return auth
+    }
 
   onMapReady(){
     //lakukan aoa yg mau dilakukan disini setelah map selesai
@@ -318,7 +372,7 @@ class MapsEbcc extends React.Component {
       longitude: myLocation.longitude,
       latitudeDelta:0.0075,
       longitudeDelta:0.00721
-    } 
+    }
     if (myLocation.latitude && myLocation.longitude) {
       this.setState({latitude: myLocation.latitude,longitude: myLocation.longitude, region})
       this.map.animateToRegion({
@@ -333,6 +387,12 @@ class MapsEbcc extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+          <ModalAlert
+              icon={this.state.icon}
+              visible={this.state.showModal}
+              onPressCancel={() => this.setState({ showModal: false })}
+              title={this.state.title}
+              message={this.state.message} />
         <StatusBar
           hidden={false}
           barStyle="light-content"
@@ -397,7 +457,7 @@ class MapsEbcc extends React.Component {
               </Marker>
             </View>
           ))}
-           
+
         <Marker
             coordinate={{
                 latitude: this.state.latitude,
@@ -406,8 +466,8 @@ class MapsEbcc extends React.Component {
             centerOffset={{ x: -42, y: -60 }}
             anchor={{ x: 0.84, y: 1 }}
         >
-        </Marker>  
-        
+        </Marker>
+
         </MapView>
       </View>
     );
