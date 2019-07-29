@@ -3,7 +3,7 @@ import React from 'react';
 import { StatusBar, Text, TouchableOpacity, StyleSheet, AsyncStorage, ListView } from 'react-native';
 import Colors from '../Constant/Colors';
 import { Container, Content, Icon, Picker, Form, View } from 'native-base';
-import { getTodayDate, changeFormatDate } from '../Lib/Utils';
+import { dateDisplayMobileWithoutHours, changeFormatDate } from '../Lib/Utils';
 import { Calendar } from 'react-native-calendars'
 import TaskServices from '../Database/TaskServices';
 import Moment from 'moment'
@@ -129,15 +129,16 @@ class FilterScreen extends React.Component {
 
         let stDate = Moment(resultParsed.startDate).format('YYYYMMDDHHmmss');
         let endDate = Moment(resultParsed.endDate).format('YYYYMMDDHHmmss');
+        console.log('End Date : ', endDate);
 
         let setData;
         let endDataParam;
-        if (endDate == 'Invalid date') {
-            setData = Moment(changeFormatDate(stDate, "YYYY-MM-DD hh-mm-ss")).format('LL');
+        if (stDate == endDate) {
+            setData = dateDisplayMobileWithoutHours(changeFormatDate(stDate, "YYYY-MM-DD hh-mm-ss"));
             endDataParam = Moment(resultParsed.startDate).format('YYYYMMDDHHmmss');
         } else {
-            setData = Moment(changeFormatDate(stDate, "YYYY-MM-DD hh-mm-ss")).format('LL') + " s/d " +
-                Moment(changeFormatDate(endDate, "YYYY-MM-DD hh-mm-ss")).format('LL');
+            setData = dateDisplayMobileWithoutHours(changeFormatDate(stDate, "YYYY-MM-DD hh-mm-ss")) + " s/d " +
+                dateDisplayMobileWithoutHours(changeFormatDate(endDate, "YYYY-MM-DD hh-mm-ss"));
             endDataParam = Moment(resultParsed.endDate).format('YYYYMMDDHHmmss');
         }
 

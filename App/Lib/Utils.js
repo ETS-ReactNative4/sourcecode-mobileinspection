@@ -1,13 +1,13 @@
 import { isNil, isEmpty } from 'ramda';
 import DeviceInfo from 'react-native-device-info';
 import { Platform, PixelRatio, Dimensions, PermissionsAndroid, Alert } from 'react-native';
-import {dirPhotoUser} from "./dirStorage";
+import { dirPhotoUser } from "./dirStorage";
 const moment = require('moment');
 const momentTimezone = require('moment-timezone');
 import RNFS from 'react-native-fs';
 var uuid = require('react-native-uuid');
 
-export function downloadImage(url, path){
+export function downloadImage(url, path) {
 	const { config, fs } = RNFetchBlob
 	let options = {
 		fileCache: true,
@@ -22,25 +22,25 @@ export function downloadImage(url, path){
 	});
 }
 
-export function fetchPostDataWithToken(URL, data, token){
+export function fetchPostDataWithToken(URL, data, token) {
 	fetch(URL, {
-        method: 'POST',
-        headers: { 
-            // 'Cache-Control': 'no-cache',
-            //  Accept: 'application/json',
-            'Content-Type': 'application/json' ,
-            'Authorization': `Bearer ${token}`
-        },
-       	body: JSON.stringify(data)
-        })
-        .then(function(response){ 
-            return response.json();   
-        })
-        .then(function(data){ 
+		method: 'POST',
+		headers: {
+			// 'Cache-Control': 'no-cache',
+			//  Accept: 'application/json',
+			'Content-Type': 'application/json',
+			'Authorization': `Bearer ${token}`
+		},
+		body: JSON.stringify(data)
+	})
+		.then(function (response) {
+			return response.json();
+		})
+		.then(function (data) {
 			console.log(JSON.str(data))
-            return data
-        })
-        .catch((err) => { return err });
+			return data
+		})
+		.catch((err) => { return err });
 }
 
 export function kirimImage(URL, Formdata) {
@@ -97,13 +97,13 @@ export function getThumnail() {
 	return randomItem = arrA[Math.floor(Math.random() * arrA.length)];
 }
 
-export function getPhoto(imageName){
-	if(imageName !== null){
-		let isImageContain = RNFS.exists("file://"+imageName);
-		if(isImageContain){
-			return "file://"+imageName;
+export function getPhoto(imageName) {
+	if (imageName !== null) {
+		let isImageContain = RNFS.exists("file://" + imageName);
+		if (isImageContain) {
+			return "file://" + imageName;
 		}
-		else{
+		else {
 			let arrA = [
 				require('../Images/icon/ic-orang-1.png'),
 				require('../Images/icon/ic-orang-2.png'),
@@ -217,17 +217,17 @@ export async function getTodayDateFromGPS(format) {
 	}
 
 	await getPosition({ enableHighAccuracy: true, timeout: 5000, maximumAge: 0 })
-	.then((position) => {
-		response = { fetchLocation: true, currTimeStamp: position.timestamp };
-	})
-	.catch((err) => {
-		response = { fetchLocation: false , msg: err.message};
-	});
-	if(response.fetchLocation){
+		.then((position) => {
+			response = { fetchLocation: true, currTimeStamp: position.timestamp };
+		})
+		.catch((err) => {
+			response = { fetchLocation: false, msg: err.message };
+		});
+	if (response.fetchLocation) {
 		let currentTimestamp = convertTimestampToDate(response.currTimeStamp, format);
 		return currentTimestamp;
 	}
-	else{
+	else {
 		return response;
 	}
 }
@@ -235,6 +235,16 @@ export async function getTodayDateFromGPS(format) {
 export function getTodayDate(format) {
 	var tgl = moment().format(format)
 	return tgl;
+}
+
+export function dateDisplayMobile(date) {
+	var format = moment(date).format('DD MMM YYYY kk:mm')
+	return format;
+}
+
+export function dateDisplayMobileWithoutHours(date) {
+	var format = moment(date).format('DD MMM YYYY')
+	return format;
 }
 
 export function changeFormatDate(value, format) {

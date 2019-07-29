@@ -118,7 +118,7 @@ class Step1Finding extends Component {
                     message = "Mohon nyalakan GPS anda terlebih dahulu.";
                 }
                 this.setState({fetchLocation:false})
-                alert('Informasi', message);
+                // alert('Informasi', message);
                 // console.log(message);
             }, // go here if error while fetch location
             { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position

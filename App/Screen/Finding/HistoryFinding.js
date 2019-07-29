@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
 import TaskServices from '../../Database/TaskServices'
 import Colors from '../../Constant/Colors'
-import { changeFormatDate } from '../../Lib/Utils'
 import Moment from 'moment'
 import RNFS from 'react-native-fs'
 import RNFetchBlob from 'rn-fetch-blob'
 import { dirPhotoTemuan } from '../../Lib/dirStorage';
+import { dateDisplayMobile, changeFormatDate } from '../../Lib/Utils';
 import ServerName from '../../Constant/ServerName';
 const moment = require('moment');
 
@@ -37,7 +37,7 @@ export default class HistoryFinding extends Component {
   }
 
   _initData() {
-    let user = TaskServices.getAllData('TR_LOGIN')[0]  
+    let user = TaskServices.getAllData('TR_LOGIN')[0]
     //var data = TaskServices.query('TR_FINDING', `PROGRESS < 100 AND (INSERT_USER = "${user.USER_AUTH_CODE}" OR ASSIGN_TO = '${user.USER_AUTH_CODE}')`);
     var data = TaskServices.query('TR_FINDING', `(INSERT_USER = "${user.USER_AUTH_CODE}" OR ASSIGN_TO = '${user.USER_AUTH_CODE}')`);
     data = data.sorted('INSERT_TIME', true);
@@ -68,22 +68,22 @@ export default class HistoryFinding extends Component {
 
   onClickItem(id) {
     var images = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', id);
-    if(images !== undefined){
+    if (images !== undefined) {
       this.props.navigation.navigate('DetailFinding', { ID: id })
-    }else{
+    } else {
       this.getImageBaseOnFindingCode(id)
       setTimeout(() => {
         this.props.navigation.navigate('DetailFinding', { ID: id })
       }, 3000);
-    }    
+    }
   }
 
   getImageBaseOnFindingCode(findingCode) {
     const user = TaskServices.getAllData('TR_LOGIN')[0];
-	let serv = TaskServices.getAllData("TM_SERVICE")
-				.filtered('API_NAME="IMAGES-GET-BY-ID" AND MOBILE_VERSION="'+ServerName.verAPK+'"')[0];
-    const url = ServerName[user.SERVER_NAME_INDEX].image+"images/" + findingCode;
-    fetch(serv.API_URL+""+findingCode, {
+    let serv = TaskServices.getAllData("TM_SERVICE")
+      .filtered('API_NAME="IMAGES-GET-BY-ID" AND MOBILE_VERSION="' + ServerName.verAPK + '"')[0];
+    const url = ServerName[user.SERVER_NAME_INDEX].image + "images/" + findingCode;
+    fetch(serv.API_URL + "" + findingCode, {
       method: serv.METHOD,
       headers: {
         'Cache-Control': 'no-cache',
@@ -162,9 +162,6 @@ export default class HistoryFinding extends Component {
       return ''
     }
   }
-  formatingInsertTime(date){
-	return moment(date,"YYYYMMDDHHmmss").format("DD MMM YYYY hh:mm A");
-  }
 
   _renderItem = (item, idx) => {
     const image = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', item.FINDING_CODE);
@@ -176,23 +173,22 @@ export default class HistoryFinding extends Component {
     } else {
       showImage = <Image style={{ alignItems: 'stretch', width: 90, height: 100, borderRadius: 10 }} source={{ uri: "file://" + image.IMAGE_PATH_LOCAL }} />
     }
-	let assignTo = item.ASSIGN_TO;
-	let contact = TaskServices.query('TR_CONTACT', `USER_AUTH_CODE = "${assignTo}"`);
-	if(contact.length>0){
-		assignTo = contact[0].FULLNAME;
-	}
-	let createdTime = this.formatingInsertTime(INSERT_TIME);
+    let assignTo = item.ASSIGN_TO;
+    let contact = TaskServices.query('TR_CONTACT', `USER_AUTH_CODE = "${assignTo}"`);
+    if (contact.length > 0) {
+      assignTo = contact[0].FULLNAME;
+    }
+    let createdTime = dateDisplayMobile(changeFormatDate(INSERT_TIME.toString(), "YYYY-MM-DD hh-mm-ss"));
     let werkAfdBlokCode = `${item.WERKS}${item.AFD_CODE}${item.BLOCK_CODE}`;
-    let lokasi = `${this.getBlokName(werkAfdBlokCode)}/${this.getStatusBlok(werkAfdBlokCode)}/${this.getEstateName(item.WERKS)}`    
+    let lokasi = `${this.getBlokName(werkAfdBlokCode)}/${this.getStatusBlok(werkAfdBlokCode)}/${this.getEstateName(item.WERKS)}`
     let status = '', colorStatus = '';
-    if (item.STATUS_SYNC == 'N'){
+    if (item.STATUS_SYNC == 'N') {
       status = 'Data Belum Dikirim'
       colorStatus = 'red';
-    }else{
+    } else {
       status = 'Data Sudah Terkirim'
       colorStatus = Colors.brand;
-    }  
-	/*
+    }
     return (
       <TouchableOpacity
         style={styles.sectionCardView}
@@ -202,57 +198,30 @@ export default class HistoryFinding extends Component {
         {showImage}
         <View style={styles.sectionDesc} >
           <View style={{ flexDirection: 'row' }}>
-            <Text style={{ fontSize: 12, color: 'black', width: 50 }}>Lokasi </Text>
-            <Text style={{ fontSize: 12, color: 'grey' }}>:  {lokasi}</Text>
+            <Text style={{ fontSize: 12, color: 'black', fontWeight: 'bold' }}>{lokasi}</Text>
           </View>
           <View style={{ flexDirection: 'row' }}>
-            <Text style={{ fontSize: 12, color: 'black', width: 50 }}>Dibuat </Text>
-            <Text style={{ fontSize: 12, color: 'grey' }}>:  {changeFormatDate(INSERT_TIME, "YYYY-MM-DD hh-mm-ss")}</Text>
+            <Text style={{ fontSize: 12, color: 'grey', width: 100 }}>Dibuat </Text>
+            <Text style={{ fontSize: 12, color: 'grey' }}>:  {createdTime}</Text>
           </View>
           <View style={{ flexDirection: 'row' }}>
-            <Text style={{ fontSize: 12, color: 'black', width: 50 }}>Kategori </Text>
+            <Text style={{ fontSize: 12, color: 'grey', width: 100 }}>Kategori </Text>
             <Text style={{ fontSize: 12, color: 'grey' }}>:  {this.getCategoryName(item.FINDING_CATEGORY)}</Text>
           </View>
           <View style={{ flexDirection: 'row' }}>
-            <Text style={{ fontSize: 12, color: 'black', width: 50 }}>Status </Text>
-            <Text style={{ fontSize: 12, color: colorStatus }}>:  {status}</Text>
+            <Text style={{ fontSize: 12, color: 'grey', width: 100 }}>Ditugaskan Ke</Text>
+            <Text style={{ fontSize: 12, color: 'grey' }}>:  {assignTo}</Text>
+          </View>
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={{ fontSize: 12, color: 'grey', width: 100 }}>Status </Text>
+            <Text style={{ fontSize: 12, color: 'grey' }}>:  {item.STATUS}</Text>
+          </View>
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={{ fontSize: 12, color: colorStatus, fontWeight: 'bold', fontStyle: 'italic' }}>{status}</Text>
           </View>
         </View>
       </TouchableOpacity>
-    );*/
-	return (
-		<TouchableOpacity
-			style={styles.sectionCardView}
-			onPress={() => { this.onClickItem(item.FINDING_CODE) }}
-			key={idx}
-		>
-			{showImage}
-			<View style={styles.sectionDesc} >
-				<View style={{ flexDirection: 'row' }}>
-					<Text style={{ fontSize: 12, color: 'black', fontWeight: 'bold' }}>{lokasi}</Text>
-				</View>
-				<View style={{ flexDirection: 'row' }}>
-					<Text style={{ fontSize: 12, color: 'grey', width: 100 }}>Dibuat </Text>
-					<Text style={{ fontSize: 12, color: 'grey' }}>:  {createdTime}</Text>
-				</View>
-				<View style={{ flexDirection: 'row' }}>
-					<Text style={{ fontSize: 12, color: 'grey', width: 100 }}>Kategori </Text>
-					<Text style={{ fontSize: 12, color: 'grey' }}>:  {this.getCategoryName(item.FINDING_CATEGORY)}</Text>
-				</View>
-				<View style={{ flexDirection: 'row' }}>
-					<Text style={{ fontSize: 12, color: 'grey', width: 100 }}>Ditugaskan Ke</Text>
-					<Text style={{ fontSize: 12, color: 'grey' }}>:  {assignTo}</Text>
-				</View>
-				<View style={{ flexDirection: 'row' }}>
-					<Text style={{ fontSize: 12, color: 'grey', width: 100 }}>Status </Text>
-					<Text style={{ fontSize: 12, color: 'grey' }}>:  {item.STATUS}</Text>
-				</View>
-				<View style={{ flexDirection: 'row' }}>
-					<Text style={{ fontSize: 12, color: colorStatus, fontWeight: 'bold',fontStyle:'italic' }}>{status}</Text>
-				</View>
-			</View>
-		</TouchableOpacity>
-	);
+    );
   }
 
   _renderNoData() {

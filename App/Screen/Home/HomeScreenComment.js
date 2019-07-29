@@ -103,7 +103,7 @@ export default class HomeScreenComment extends Component {
 
     timeConverter(insertTime) {
         if (typeof insertTime !== undefined && insertTime !== null) {
-            let finalTime = moment(insertTime, 'YYYYMMDDHHmmss').format('DD MMM YYYY, HH:mm:ss');
+            let finalTime = moment(insertTime, 'YYYYMMDDHHmmss').format('DD MMM YYYY kk:mm');
             return finalTime.toString()
         }
         return null;
