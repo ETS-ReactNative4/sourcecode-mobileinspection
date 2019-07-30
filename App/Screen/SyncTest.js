@@ -370,7 +370,7 @@ class SyncScreen extends React.Component {
             delImgFunc(dataImage, INSPECTION_CODE, ID_INSPECTION, delFunc);
         }
     }
-    
+
     async deleteImage(FINDING_CODE) {
         let dataImage = TaskServices.query('TR_IMAGE', `STATUS_SYNC = "Y" AND TR_CODE = "${FINDING_CODE}"`);
         if (dataImage != undefined) {

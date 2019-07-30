@@ -8,8 +8,9 @@ import HomeScreenComment from '../Screen/Home/HomeScreenComment';
 
 //finding
 import FindingFormNavigator from '../Screen/Finding/FindingFormNavigator'
-import FormStep1 from '../Screen/Finding/FormStep1'
-import FormStep2 from '../Screen/Finding/FormStep2'
+import Step1 from '../Screen/Finding/FormStep1'
+import Step2 from '../Screen/Finding/FormStep2'
+import TakeFoto from '../Screen/Finding/TakeFoto'
 import DetailFindingScreen from '../Screen/Finding/DetailFindingScreenRedesign'
 import BuktiKerja from '../Screen/Finding/BuktiKerja'
 import TakeFotoBukti from '../Screen/Finding/TakeFoto'
@@ -86,6 +87,11 @@ const main = createStackNavigator({
     },
 
     //finding
+    Step1: { screen: Step1 },
+    Step2: { screen: Step2 },
+    TakeFoto: { screen: TakeFoto },
+
+    //finding from inspeksi
     Step1Finding: { screen: Step1Finding },
     Step2Finding: { screen: Step2Finding },
     TakeFotoFinding: { screen: TakeFotoFinding },

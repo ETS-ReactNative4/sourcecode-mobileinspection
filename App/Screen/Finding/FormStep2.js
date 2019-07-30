@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { NavigationActions, StackActions } from 'react-navigation';
 import {
-    BackAndroid, Text, FlatList, TextInput, TouchableOpacity, View, Image, Modal,
-    Alert
+    BackAndroid, Text, FlatList, TextInput, TouchableOpacity, View, Image, Modal
 } from 'react-native';
 import {
     Container,
@@ -198,24 +197,6 @@ class FormStep2 extends Component {
         navigation.dispatch(resetAction);
     }
 
-    // exitAlert = () => {
-    //     Alert.alert(
-    //         'Peringatan',
-    //         'Transaksi kamu tidak akan tersimpan, kamu yakin akan melanjutkan?',
-    //         [
-    //             { text: 'NO', style: 'cancel' },
-    //             { text: 'YES', onPress: () => this.props.navigation.goBack(null) }
-    //         ]
-    //     );
-    // };
-
-    // handleAndroidBackButton = callback => {
-    //     BackHandler.addEventListener('hardwareBackPress', () => {
-    //         callback();
-    //         return true;
-    //     });
-    // };
-
     validation() {
         let isSameUser = this.state.assignto == this.state.user.USER_AUTH_CODE ? true : false;
         let title = 'Inputan Tidak Lengkap';
@@ -265,7 +246,7 @@ class FormStep2 extends Component {
             FINDING_CATEGORY: this.state.categoryCode,
             FINDING_DESC: this.state.keterangan,
             FINDING_PRIORITY: this.state.priority,
-            DUE_DATE: this.state.batasWaktu, //parseInt(this.state.batasWaktuSave),
+            DUE_DATE: this.state.batasWaktu == "" ? "" : moment(this.state.batasWaktu).format('YYYY-MM-DD'), //parseInt(this.state.batasWaktuSave),
             STATUS: 'BARU',
             ASSIGN_TO: this.state.assignto,
             PROGRESS: 0,
@@ -377,6 +358,19 @@ class FormStep2 extends Component {
         }
     }
 
+    selesai() {
+        const navigation = this.props.navigation;
+        let routeName = 'MainMenu';
+        Promise.all([
+            navigation.dispatch(
+                StackActions.reset({
+                    index: 0,
+                    actions: [NavigationActions.navigate({ routeName: routeName })]
+                })
+            )]).then(() => navigation.navigate('Temuan')).then(() => navigation.navigate('Riwayat'))
+        this.setState({ showModalBack: false })
+    }
+
     render() {
 
         return (
@@ -393,7 +387,7 @@ class FormStep2 extends Component {
                     <ModalAlertBack
                         visible={this.state.showModalBack}
                         icon={this.state.icon}
-                        onPressCancel={() => this.props.navigation.goBack(null)}
+                        onPressCancel={() => this.selesai()}
                         title={this.state.title}
                         message={this.state.message} />
 
