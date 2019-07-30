@@ -28,6 +28,7 @@ import HomeScreenComment from "./HomeScreenComment";
 import WeeklySummary from "../../Component/WeeklySummary";
 
 import { clipString } from '../../Constant/Function';
+import { Images } from '../../Themes';
 
 var RNFS = require('react-native-fs');
 var { width } = Dimensions.get('window')
@@ -476,15 +477,15 @@ class HomeScreen extends React.Component {
     if (item.IMAGE_PATH_LOCAL != undefined) {
       uri = "file://" + item.IMAGE_PATH_LOCAL;
     } else {
-      uri = require('../../Images/img-no-picture.png')
+      uri = Images.img_no_picture
     }
     let sources;
     if (status == 'BARU') {
-      sources = require('../../Images/icon/ic_new_timeline.png')
+      sources = Images.ic_new_timeline
     } else if (status == 'SELESAI') {
-      sources = require('../../Images/icon/ic_done_timeline.png')
+      sources = Images.ic_done_timeline
     } else {
-      sources = require('../../Images/icon/ic_inprogress_timeline.png')
+      sources = Images.ic_inprogress_timeline
     }
     return (
       <View style={{ flex: 1 }}>

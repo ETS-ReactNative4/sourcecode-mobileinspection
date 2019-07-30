@@ -14,6 +14,7 @@ import { dirPhotoTemuan, dirPhotoInspeksiBaris, dirPhotoInspeksiSelfie, dirPhoto
 import ModalAlert from '../Component/ModalAlert'
 import ServerName from '../Constant/ServerName'
 import IMEI from 'react-native-imei'
+import { AlertContent } from '../Themes';
 
 class Login extends Component {
 
@@ -227,19 +228,9 @@ class Login extends Component {
                 this.insertLink(data.data)
             } else {
                 if (data.message == 'Request Timeout') {
-                    this.setState({
-                        showModal: true,
-                        title: 'Proses Sedang Lambat',
-                        message: 'Silahkan Kamu Coba Lagi',
-                        icon: require('../Images/ic-no-internet.png')
-                    })
+                    this.setState(AlertContent.proses_lambat)
                 } else {
-                    this.setState({
-                        showModal: true,
-                        title: 'Username & Password',
-                        message: 'Username atau Password Kamu salah nih.. coba check ulang ya',
-                        icon: require('../Images/ic-salah-pass.png')
-                    })
+                    this.setState(AlertContent.email_pass_salah)
                 }
             }
         });
