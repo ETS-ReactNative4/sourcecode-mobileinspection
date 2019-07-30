@@ -124,11 +124,18 @@ export default class Genba extends Component {
             })
         }
 
-        if(contactGenba.length > 0)  {
+        let fileteredContactGenba = [];
+        contactGenba.map((data)=>{
+            if(this.rankChecker(data.USER_AUTH_CODE)){
+                fileteredContactGenba.push(data);
+            }
+        })
+
+        if(fileteredContactGenba.length > 0)  {
             this.setState({
                 listSelectedUserCode: listSelectedUserCode,
-                dataSource      : contactGenba,
-                dataSourceOri   : contactGenba,
+                dataSource      : fileteredContactGenba,
+                dataSourceOri   : fileteredContactGenba,
             });
         }
 
@@ -194,6 +201,23 @@ export default class Genba extends Component {
             this.deleteChoosen(data_auth_code)
         }
     };
+
+    rankChecker(selectedAuthCode){
+        let currentUser = TaskServices.getAllData('TR_LOGIN')[0];
+        //low->high
+        let genbaRanking = ['KEPALA_KEBUN', 'EM', 'SEM_GM', 'CEO_REG', 'CEO', 'ADMIN'];
+
+        if(genbaRanking.indexOf(currentUser.USER_ROLE) > 3){
+            return true
+        }
+        else {
+            let selectedUser = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', selectedAuthCode)
+            if(genbaRanking.indexOf(currentUser.USER_ROLE) >= genbaRanking.indexOf(selectedUser.USER_ROLE)){
+                return true
+            }
+        }
+        return false;
+    }
 
     /**
      * GET ALL NAMES FROM REALM DB

@@ -20,14 +20,20 @@ import { connect } from 'react-redux';
 import InspeksiAction from '../../Redux/InspeksiRedux';
 import { ProgressDialog } from 'react-native-simple-dialogs';
 import { Container, Content } from 'native-base';
+import TaskServices from "../../Database/TaskServices";
 
 export default class ListInspection extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      fetching: false
+      fetching: false,
+        genbaGranted: false
     }
+  }
+
+  componentWillMount(){
+      this.roleAvailability();
   }
 
   // REDIRECT TO GENBA PAGE
@@ -52,27 +58,44 @@ export default class ListInspection extends Component {
           buttonColor={Colors.tintColor}
           onPress={() => { }}
           icon={<Icon2 color='white' name='add' size={25} />}>
+
+            {
+                this.state.genbaGranted
+                &&
+                <ActionButton.Item
+                    size={40}
+                    buttonColor={Colors.tintColor}
+                    title="Genba"
+                    textStyle={{flex:1}}
+                    onPress={this.redirectToGenba}>
+                    <Icon2 name="group"
+                           style={{ fontSize: 20, height: 22, color: 'white' }} />
+                </ActionButton.Item>
+            }
+
             <ActionButton.Item
               size={40}
               buttonColor={Colors.tintColor}
-              title="Genba "
-              textStyle={{flex:1}}
-              onPress={this.redirectToGenba}>
-              <Icon2 name="group"
-              style={{ fontSize: 20, height: 22, color: 'white' }} />
-            </ActionButton.Item>
-
-            <ActionButton.Item 
-              size={40}
-              buttonColor={Colors.tintColor}
-              title="Inspeksi " 
+              title="Inspeksi "
               textStyle={{flex:1}}
               onPress={this.redirectToMapsInspeksi}>
-              <Icon2 name="find-replace" 
+              <Icon2 name="find-replace"
               style={{ fontSize: 20, height: 22, color: 'white' }} />
             </ActionButton.Item>
         </ActionButton>
       </View>
     )
+  }
+
+  roleAvailability(){
+      let currentUser = TaskServices.getAllData('TR_LOGIN')[0];
+      //low->high
+      let genbaRanking = ['KEPALA_KEBUN', 'EM', 'SEM_GM', 'CEO_REG', 'CEO', 'ADMIN'];
+
+      if(currentUser !== null && currentUser !== undefined){
+          this.setState({
+              genbaGranted: genbaRanking.includes(currentUser.USER_ROLE)
+          })
+      }
   }
 }
