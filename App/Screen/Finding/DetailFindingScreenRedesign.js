@@ -18,7 +18,7 @@ import R, { isEmpty, isNil } from 'ramda'
 import moment from 'moment'
 import DateTimePicker from 'react-native-modal-datetime-picker'
 import ImageSlider from 'react-native-image-slider';
-import { changeFormatDate, getTodayDate, dateDisplayMobile } from '../../Lib/Utils';
+import { changeFormatDate, getTodayDate, dateDisplayMobile, dateDisplayMobileWithoutHours } from '../../Lib/Utils';
 
 import ModalAlert from '../../Component/ModalAlert';
 import ModalAlertBack from '../../Component/ModalAlert';
@@ -152,7 +152,7 @@ class DetailFindingScreenRedesign extends Component {
     _hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
 
     _handleDatePicked = (date) => {
-        this.setState({ updatedDueDate: moment(date).format("YYYY-MM-DD HH:mm:ss") })
+        this.setState({ updatedDueDate: dateDisplayMobileWithoutHours(date) })
         this._hideDateTimePicker();
     };
 
@@ -498,7 +498,7 @@ class DetailFindingScreenRedesign extends Component {
                                 {isEmpty(this.state.data.DUE_DATE) && (
                                     <Text style={styles.item} onPress={() => { this.showDate() }} style={{ fontSize: 13, color: 'red' }}>: {batasWaktu} </Text>)}
                                 {!isEmpty(this.state.data.DUE_DATE) && (
-                                    <Text style={styles.item}>: {dateDisplayMobile(this.state.data.DUE_DATE)} </Text>)}
+                                    <Text style={styles.item}>: {dateDisplayMobileWithoutHours(this.state.data.DUE_DATE)} </Text>)}
                             </View>
 
                             <DateTimePicker
