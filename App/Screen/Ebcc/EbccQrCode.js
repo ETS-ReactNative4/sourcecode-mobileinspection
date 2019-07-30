@@ -26,7 +26,8 @@ class Scanner extends Component {
         showModal: false,
         title: null,
         message: null,
-        icon: null
+        icon: null,
+        qrDecode: null
     };
   }
 
@@ -49,7 +50,13 @@ class Scanner extends Component {
       if(!this.state.showModal){
           let decode = base64.decode(e.data)
           if(this.refRoleAuth(decode)){
-              this.navigateScreen('FotoJanjang', decode);
+              this.setState({
+                  showModal: true,
+                  title: "Scan QR CODE TPH Berhasil",
+                  message: "Kamu bisa lanjutkan untuk foto janjang",
+                  icon: require('../../Images/icon/ic_scan_qrcode.png'),
+                  qrDecode: decode
+              });
           }
           else {
               this.setState({
@@ -170,7 +177,16 @@ class Scanner extends Component {
           <ModalAlert
               icon={this.state.icon}
               visible={this.state.showModal}
-              onPressCancel={() => this.setState({ showModal: false })}
+              closeText={this.state.qrDecode !== null ? "LANJUT":"TUTUP"}
+              onPressCancel={() => {
+                    if(this.state.qrDecode !== null){
+                        this.navigateScreen('FotoJanjang', this.state.qrDecode);
+                    }
+                  this.setState({
+                      showModal: false,
+                      qrDecode: null
+                  })
+              }}
               title={this.state.title}
               message={this.state.message} />
 

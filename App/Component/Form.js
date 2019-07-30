@@ -155,7 +155,7 @@ class Form extends Component {
                         <TouchableOpacity style={{backgroundColor:'#212121'}} onPress={this.triggerShowHide}><Text></Text></TouchableOpacity>
                 </View>
 
-                {/* <View style={styles.sectionInput}>
+                <View style={styles.sectionInput}>
                   <Picker
                       mode="dropdown"
                       iosHeader="Select your SIM"
@@ -168,14 +168,14 @@ class Form extends Component {
                       <Picker.Item label="QA" value="2" />
                       <Picker.Item label="Development" value="3" />
                   </Picker>
-                </View> */}
+                </View>
 
                 <TouchableOpacity style={[styles.button, { marginTop: 20 }]}
                     onPress={() => this.onBtnClick(props)}>
                     <Text style={styles.buttonText}>Login</Text>
                 </TouchableOpacity>
             </View>
-            // </KeyboardAvoidingView>    
+            // </KeyboardAvoidingView>
 
         );
     }

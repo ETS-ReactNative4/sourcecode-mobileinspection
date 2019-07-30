@@ -11,7 +11,8 @@ export default class ModalConfirmation extends Component {
 		icon: PropTypes.string,
 		title: PropTypes.string,
 		message: PropTypes.string,
-		visible: PropTypes.bool
+		visible: PropTypes.bool,
+        closeText: PropTypes.string
 	};
 
 	// Defaults for props
@@ -20,7 +21,8 @@ export default class ModalConfirmation extends Component {
 		icon: require('../Images/img-no-data.png'),
 		title: 'Title',
 		message: 'Message',
-		visible: false
+		visible: false,
+        closeText: 'TUTUP'
 	};
 
 	render() {
@@ -40,7 +42,7 @@ export default class ModalConfirmation extends Component {
 						</View>
 						<TouchableOpacity style={style.bottomContainer} onPress={props.onPressCancel} >
 							<View onPress={props.onPressCancel}>
-								<Text style={{ fontSize: 16 }}> TUTUP</Text>
+								<Text style={{ fontSize: 16 }}> {props.closeText}</Text>
 							</View>
 						</TouchableOpacity>
 					</View>
