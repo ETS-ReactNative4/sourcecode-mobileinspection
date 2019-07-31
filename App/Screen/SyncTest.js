@@ -825,6 +825,7 @@ class SyncScreen extends React.Component {
                                 STATUS_SYNC: 'Y',
                                 USERNAME: data.FULLNAME !== undefined ? data.FULLNAME : "NO_NAME"
                             };
+                            this._updateTR_Notif_Comment(model)
                             TaskServices.updateByPrimaryKey('TR_FINDING_COMMENT', model)
                         })
                     }
@@ -844,6 +845,7 @@ class SyncScreen extends React.Component {
                                 STATUS_SYNC: 'Y',
                                 USERNAME: data.FULLNAME !== undefined ? data.FULLNAME : "NO_NAME"
                             };
+                            this._updateTR_Notif_Comment(model)
                             TaskServices.saveData("TR_FINDING_COMMENT", model);
                         });
                     }
@@ -1672,6 +1674,8 @@ class SyncScreen extends React.Component {
                 this.deleteRecordByPK('TR_FINDING', 'FINDING_CODE', item.FINDING_CODE);
             });
         }
+
+        this.downloadFindingComment();
     }
 
     _updateTR_Notif(data) {
@@ -1716,7 +1720,36 @@ class SyncScreen extends React.Component {
                 TaskServices.saveData('TR_NOTIFICATION', newNotif);
             }
         }
+        else if (data.ASSIGN_TO == this.state.user.USER_AUTH_CODE) {
+            if (data.PROGRESS >= 100 && data.RATING_VALUE > 0) {
+                //yang ditugaskan mendapat rating
+                newNotif.NOTIFICATION_TYPE = 5;
+                TaskServices.saveData('TR_NOTIFICATION', newNotif);
+            }
+        }
     }
+
+    _updateTR_Notif_Comment(param) {
+        console.log('Finding Code Comment : ', param)
+        let getFinding = TaskServices.findBy("TR_FINDING", "FINDING_CODE", param.FINDING_CODE).sorted('INSERT_TIME', true);
+        console.log('Get Finding Length : ', getFinding.length)
+        if (getFinding != undefined) {
+            console.log('getFinding Comment : ', getFinding)
+            getFinding.map(data => {
+                let newNotif = {
+                    NOTIFICATION_ID: data.FINDING_CODE + "$",
+                    NOTIFICATION_TIME: new Date(),
+                    FINDING_UPDATE_TIME: data.UPDATE_TIME,
+                    FINDING_CODE: data.FINDING_CODE
+                }
+                if (data.ASSIGN_TO == this.state.user.USER_AUTH_CODE || data.INSERT_USER == this.state.user.USER_AUTH_CODE) {
+                    let newData = Object.assign({}, newNotif, { NOTIFICATION_TYPE: 6 })
+                    TaskServices.saveData('TR_NOTIFICATION', newData);
+                }
+            })
+        }
+    }
+
     _crudTM_Finding_Image(data) {
         var dataSimpan = data.simpan;
         if (dataSimpan.length > 0) {
@@ -1938,7 +1971,6 @@ class SyncScreen extends React.Component {
         // Gani
 
         //comment
-        this.downloadFindingComment();
         this.resetSagas();
         NetInfo.isConnected.fetch().then(isConnected => {
             if (isConnected) {

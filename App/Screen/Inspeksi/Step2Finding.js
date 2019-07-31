@@ -11,7 +11,7 @@ import RadioGroup from 'react-native-custom-radio-group'
 import DateTimePicker from 'react-native-modal-datetime-picker'
 import moment from 'moment'
 import TaskServices from '../../Database/TaskServices'
-import { getTodayDate, dateDisplayMobile } from '../../Lib/Utils'
+import { getTodayDate, dateDisplayMobile, dateDisplayMobileWithoutHours } from '../../Lib/Utils'
 import IIcon from 'react-native-vector-icons/Ionicons'
 import Carousel from 'react-native-looped-carousel'
 import { dirPhotoTemuan } from '../../Lib/dirStorage'
@@ -344,7 +344,7 @@ class Step2Finding extends Component {
     _hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
 
     _handleDatePicked = (date) => {
-        this.setState({ batasWaktu: dateDisplayMobile(date) })
+        this.setState({ batasWaktu: dateDisplayMobileWithoutHours(date) })
         this._hideDateTimePicker();
     };
 

@@ -47,7 +47,11 @@ export default class Inbox extends React.Component {
 		notifCount = (notifCount >= 100) ? "99+" : notifCount + "";
 		this.setState({ data: this.getNotif() });
 		this.props.navigation.setParams({ notifCount: notifCount })
-		this.props.navigation.navigate('DetailFinding', { ID: notifData.FINDING_CODE })
+		if (notifData.NOTIFICATION_TYPE == 6) {
+			this.props.navigation.navigate("HomeScreenComment", { findingCode: notifData.FINDING_CODE })
+		} else {
+			this.props.navigation.navigate('DetailFinding', { ID: notifData.FINDING_CODE })
+		}
 	}
 	_renderItem = (item, index) => {
 		let title;
@@ -108,6 +112,14 @@ export default class Inbox extends React.Component {
 			desc = contactAsign.FULLNAME + " telah menyelesaikan temuan yang ditugaskan kepadanya tanggal " +
 				createTime.format("DD MMM YYYY") + " di " + est.EST_NAME + " Blok " + block.BLOCK_NAME +
 				". Berikan rating atas pekerjaan " + contactAsign.FULLNAME + ",yuk!";
+		} else if (item.NOTIFICATION_TYPE == 5) {
+			sources = require('../Images/icon/icon_rating.png');
+			title = "DAPAT RATING";
+			desc = creator.FULLNAME + " telah memberikan rating kepada kamu. Cek rating yang kamu dapatkan..."
+		} else if (item.NOTIFICATION_TYPE == 6) {
+			sources = require('../Images/ic_inbox_getcomment.png');
+			title = "KOMENTAR BARU";
+			desc = creator.FULLNAME + " memberikan komentar baru ditemuan kamu."
 		}
 		return (
 			<TouchableOpacity
