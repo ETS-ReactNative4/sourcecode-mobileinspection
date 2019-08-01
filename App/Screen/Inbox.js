@@ -10,6 +10,7 @@ export default class Inbox extends React.Component {
 	constructor(props) {
 		super(props);
 		let data = this.getNotif();
+		console.log('Data Notification : ', data)
 		this.state = {
 			data,
 
@@ -119,7 +120,7 @@ export default class Inbox extends React.Component {
 		} else if (item.NOTIFICATION_TYPE == 6) {
 			sources = require('../Images/ic_inbox_getcomment.png');
 			title = "KOMENTAR BARU";
-			desc = creator.FULLNAME + " memberikan komentar baru ditemuan kamu."
+			desc = item.NOTIFICATION_ID.substring(26, item.NOTIFICATION_ID.length) + " memberikan komentar baru ditemuan kamu."
 		}
 		return (
 			<TouchableOpacity

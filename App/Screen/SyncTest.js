@@ -1739,13 +1739,13 @@ class SyncScreen extends React.Component {
         console.log('Get Finding Length : ', getFinding.length)
         if (getFinding != undefined) {
             console.log('getFinding Comment : ', getFinding)
+            let newNotif = {
+                NOTIFICATION_ID: param.FINDING_COMMENT_ID + "$" + param.USERNAME,
+                NOTIFICATION_TIME: new Date(),
+                FINDING_UPDATE_TIME: param.INSERT_TIME,
+                FINDING_CODE: param.FINDING_CODE
+            }
             getFinding.map(data => {
-                let newNotif = {
-                    NOTIFICATION_ID: data.FINDING_CODE + "$",
-                    NOTIFICATION_TIME: new Date(),
-                    FINDING_UPDATE_TIME: data.UPDATE_TIME,
-                    FINDING_CODE: data.FINDING_CODE
-                }
                 if (data.ASSIGN_TO == this.state.user.USER_AUTH_CODE || data.INSERT_USER == this.state.user.USER_AUTH_CODE) {
                     let newData = Object.assign({}, newNotif, { NOTIFICATION_TYPE: 6 })
                     TaskServices.saveData('TR_NOTIFICATION', newData);
@@ -1761,7 +1761,7 @@ class SyncScreen extends React.Component {
                 this.setState({ progressFindingImage: i / dataSimpan.length, totalFindingImageDownload: dataSimpan.length });
             }
             dataSimpan.map(item => {
-                console.log('Finding Image : ', item)
+                // console.log('Finding Image : ', item)
                 TaskServices.saveData('TR_IMAGE', item);
                 this._downloadImageFinding(item);
                 let countDataInsert = TaskServices.getTotalData('TR_IMAGE');
@@ -1908,7 +1908,7 @@ class SyncScreen extends React.Component {
         let isExist = await RNFS.exists(`${dirPhotoTemuan}/${data.IMAGE_NAME}`)
         if (!isExist) {
             var url = data.IMAGE_URL;
-            console.log('URL Image : ', url)
+            // console.log('URL Image : ', url)
             const { config, fs } = RNFetchBlob
             let options = {
                 fileCache: true,
