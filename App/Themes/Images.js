@@ -4,13 +4,19 @@
 
 const images = {
     logo_pic: require('../Images/logo.png'),
+
+    //Icons
     ic_user: require('../Images/icon/ic_login.png'),
     ic_password: require('../Images/icon/ic_password.png'),
     ic_new_timeline: require('../Images/icon/ic_new_timeline.png'),
     ic_done_timeline: require('../Images/icon/ic_done_timeline.png'),
     ic_inprogress_timeline: require('../Images/icon/ic_inprogress_timeline.png'),
+    ic_no_pic: require('../Images/ic-no-pic.png'),
+    ic_progress: require('../Images/ic-progress.png'),
+    ic_batas_waktu: require('../Images/ic-batas-waktu.png'),
+    ic_save_berhasil: require('../Images/ic-save-berhasil.png'),
 
-
+    // Images
     img_no_picture: require('../Images/img-no-picture.png'),
 
     //Alert Images

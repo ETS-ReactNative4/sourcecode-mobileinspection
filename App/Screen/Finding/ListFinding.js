@@ -105,8 +105,8 @@ export default class ListFinding extends Component {
   }
 
   actionButtonClick() {
-    this.props.navigation.navigate('FindingFormNavigator')
-    // this.props.navigation.navigate('FormStep1')
+    // this.props.navigation.navigate('FindingFormNavigator')
+    this.props.navigation.navigate('Step1')
     // this.props.navigation.dispatch(NavigationActions.navigate({ routeName: 'BuatInspeksi'}));
   }
 

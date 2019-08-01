@@ -1,13 +1,7 @@
 import React, { Component } from 'react';
 import { NavigationActions, StackActions } from 'react-navigation';
-import {
-    Text, FlatList, TextInput, TouchableOpacity, View, Image, Modal,
-    BackHandler, Alert, BackAndroid, StatusBar
-} from 'react-native';
-import {
-    Container,
-    Content
-} from 'native-base'
+import { Text, FlatList, TextInput, TouchableOpacity, View, Image, Modal, BackAndroid, StatusBar } from 'react-native';
+import { Container, Content } from 'native-base'
 import R, { isEmpty } from 'ramda'
 import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
@@ -16,10 +10,8 @@ import IconLoc from 'react-native-vector-icons/FontAwesome5';
 import RadioGroup from 'react-native-custom-radio-group'
 import DateTimePicker from 'react-native-modal-datetime-picker'
 import moment from 'moment'
-import SlidingUpPanel from 'rn-sliding-up-panel'
-import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps'
 import TaskServices from '../../Database/TaskServices'
-import { getTodayDate, dateDisplayMobile } from '../../Lib/Utils'
+import { getTodayDate, dateDisplayMobile, dateDisplayMobileWithoutHours } from '../../Lib/Utils'
 import IIcon from 'react-native-vector-icons/Ionicons'
 import Carousel from 'react-native-looped-carousel'
 import { dirPhotoTemuan } from '../../Lib/dirStorage'
@@ -244,24 +236,6 @@ class Step2Finding extends Component {
         navigation.dispatch(resetAction);
     }
 
-    // exitAlert = () => {
-    //     Alert.alert(
-    //         'Peringatan',
-    //         'Transaksi kamu tidak akan tersimpan, kamu yakin akan melanjutkan?',
-    //         [
-    //             { text: 'NO', style: 'cancel' },
-    //             { text: 'YES', onPress: () => this.props.navigation.goBack(null) }
-    //         ]
-    //     );
-    // };
-
-    // handleAndroidBackButton = callback => {
-    //     BackHandler.addEventListener('hardwareBackPress', () => {
-    //         callback();
-    //         return true;
-    //     });
-    // };
-
     validation = () => {
         let isSameUser = this.state.assignto === this.state.user.USER_AUTH_CODE ? true : false;
         let title = 'Inputan Tidak Lengkap';
@@ -311,7 +285,7 @@ class Step2Finding extends Component {
             FINDING_CATEGORY: this.state.categoryCode,
             FINDING_DESC: this.state.keterangan,
             FINDING_PRIORITY: this.state.priority,
-            DUE_DATE: this.state.batasWaktu,
+            DUE_DATE: this.state.batasWaktu == "" ? "" : moment(this.state.batasWaktu).format("YYYY-MM-DD"),
             STATUS: 'BARU',
             ASSIGN_TO: this.state.assignto,
             PROGRESS: 0,
@@ -370,7 +344,7 @@ class Step2Finding extends Component {
     _hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
 
     _handleDatePicked = (date) => {
-        this.setState({ batasWaktu: dateDisplayMobile(date) })
+        this.setState({ batasWaktu: dateDisplayMobileWithoutHours(date) })
         this._hideDateTimePicker();
     };
 

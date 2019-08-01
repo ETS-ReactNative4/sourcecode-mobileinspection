@@ -1,20 +1,12 @@
 
 import React, { Component } from 'react'
-import {
-    ImageBackground, View, Image, TouchableOpacity, TouchableHighlight, StyleSheet, Text,
-    Alert, TextInput
-} from 'react-native'
+import { View, Image, TouchableOpacity, StyleSheet, Text, TextInput } from 'react-native'
+import { Container, Content, Card } from 'native-base'
 import Colors from '../../Constant/Colors'
 import FastImage from 'react-native-fast-image'
-import {
-    Container,
-    Content,
-    Card
-} from 'native-base'
 import TaskServices from '../../Database/TaskServices'
 import Slider from 'react-native-slider'
-import RNFS from 'react-native-fs'
-import R, { isEmpty, isNil } from 'ramda'
+import R, { isEmpty } from 'ramda'
 import moment from 'moment'
 import DateTimePicker from 'react-native-modal-datetime-picker'
 import ImageSlider from 'react-native-image-slider';
@@ -22,6 +14,7 @@ import { changeFormatDate, getTodayDate, dateDisplayMobile, dateDisplayMobileWit
 
 import ModalAlert from '../../Component/ModalAlert';
 import ModalAlertBack from '../../Component/ModalAlert';
+import { Images, AlertContent } from '../../Themes';
 
 class DetailFindingScreenRedesign extends Component {
 
@@ -31,7 +24,7 @@ class DetailFindingScreenRedesign extends Component {
 
         var ID = this.props.navigation.state.params.ID
         var data = TaskServices.findBy2('TR_FINDING', 'FINDING_CODE', ID);
-        console.log('data.RATING : ', data.RATING_VALUE)
+        console.log('data.DUE_DATE : ', data.DUE_DATE)
         this.state = {
             user: TaskServices.getAllData('TR_LOGIN')[0],
             id: ID,
@@ -114,8 +107,7 @@ class DetailFindingScreenRedesign extends Component {
         if (isSameUser) {
             this._showDateTimePicker()
         } else {
-            // alert('Kami tidak bisa memproses temuan ini')
-            this.setState({ showModal: true, title: 'Temuan', message: 'Kamu tidak bisa memproses temuan ini', icon: require('../../Images/ic-blm-input-lokasi.png') });
+            this.setState(AlertContent.temuan);
         }
     }
 
@@ -160,8 +152,7 @@ class DetailFindingScreenRedesign extends Component {
         if (this.state.progress == 100) {
             this.props.navigation.navigate('BuktiKerja', { onLoadImage: this.onLoadImage, findingCode: this.state.id });
         } else {
-            // alert('Selesaikan Progress temuan kamu dulu')
-            this.setState({ showModal: true, title: 'Temuan', message: 'Selesaikan Progress temuan kamu dulu yaa', icon: require('../../Images/ic-progress.png') });
+            this.setState(AlertContent.temuan1);
         }
     }
 
@@ -177,14 +168,11 @@ class DetailFindingScreenRedesign extends Component {
 
     validation() {
         if (this.state.imgBukti.length < 1 && this.state.progress == 100) {
-            // alert('Kamu harus foto bukti kerja dulu')
-            this.setState({ showModal: true, title: "Ambil Foto", message: 'Opps kamu harus foto bukti kerja dulu yaaa', icon: require('../../Images/ic-no-pic.png') });
+            this.setState(AlertContent.ambil_photo);
         } else if (this.state.disabledProgress) {
-            // alert('Kamu tidak bisa memproses temuan ini')
-            this.setState({ showModal: true, title: "Temuan", message: 'Kamu tidak bisa memproses temuan ini', icon: require('../../Images/ic-progress.png') });
+            this.setState(AlertContent.temuan);
         } else if (this.state.updatedDueDate == 'Select Calendar') {
-            // alert('Kamu harus tentukan batas waktu temuan dulu')
-            this.setState({ showModal: true, title: "Batas Waktu", message: 'Kamu harus tentukan batas waktu temuan dulu', icon: require('../../Images/ic-batas-waktu.png') });
+            this.setState(AlertContent.batas_waktu);
         } else {
             this._updateFinding()
         }
@@ -222,7 +210,7 @@ class DetailFindingScreenRedesign extends Component {
             "STATUS": status,
             "PROGRESS": this.state.progress,
             "STATUS_SYNC": "N",
-            "DUE_DATE": this.state.updatedDueDate == "Select Calendar" ? this.state.data.DUE_DATE : this.state.updatedDueDate,
+            "DUE_DATE": this.state.updatedDueDate == "Select Calendar" ? this.state.data.DUE_DATE : moment(this.state.updatedDueDate).format('YYYY-MM-DD'),
             "UPDATE_USER": this.state.user.USER_AUTH_CODE,
             "UPDATE_TIME": updateTime
         });
@@ -230,15 +218,7 @@ class DetailFindingScreenRedesign extends Component {
             this._saveImageUpdate();
         }
 
-        this.setState({ showModalBack: true, title: 'Update Temuan', message: 'Data Temuan kamu sudah diupdate yaa..', icon: require('../../Images/ic-save-berhasil.png') });
-
-        // Alert.alert(
-        //     'Peringatan',
-        //     'Data Temuan kamu sudah diupdate',
-        //     [
-        //         { text: 'OK', onPress: () => this.props.navigation.goBack(null) }
-        //     ]
-        // );
+        this.setState(AlertContent.update_temuan);
     }
 
     _saveImageUpdate() {
@@ -310,18 +290,19 @@ class DetailFindingScreenRedesign extends Component {
     render() {
         const category = TaskServices.findBy2('TR_CATEGORY', 'CATEGORY_CODE', this.state.data.FINDING_CATEGORY);
         let batasWaktu = '';
+        console.log('updatedDueDate : ', this.state.updatedDueDate)
         if (this.state.updatedDueDate == 'Select Calendar') {
             batasWaktu = 'Batas waktu belum ditentukan'
         } else {
-            batasWaktu = moment(this.state.updatedDueDate).format('DD MMM YYYY kk:mm')
+            batasWaktu = moment(this.state.updatedDueDate).format('DD MMM YYYY')
         }
         let sources;
         if (this.state.data.STATUS == 'BARU') {
-            sources = require('../../Images/icon/ic_new_timeline.png')
+            sources = Images.ic_new_timeline
         } else if (this.state.data.STATUS == 'SELESAI') {
-            sources = require('../../Images/icon/ic_done_timeline.png')
+            sources = Images.ic_done_timeline
         } else {
-            sources = require('../../Images/icon/ic_inprogress_timeline.png')
+            sources = Images.ic_inprogress_timeline
         }
         if (this.state.images.length == 0) {
             //Edited by Gani
@@ -449,7 +430,7 @@ class DetailFindingScreenRedesign extends Component {
                             borderColor: 'rgba(242,242,242,1)'
                         }}
                     >
-                        <TouchableOpacity onPress={()=>{
+                        <TouchableOpacity onPress={() => {
                             this.props.navigation.navigate("HomeScreenComment", { findingCode: this.state.data.FINDING_CODE })
                         }}>
                             <View style={{
@@ -457,8 +438,8 @@ class DetailFindingScreenRedesign extends Component {
                                 alignItems: 'center',
                                 justifyContent: 'center'
                             }}>
-                                <Image style={{width: 30, height: 30 }}
-                                       source={require('../../Images/icon/ic_comment.png')}>
+                                <Image style={{ width: 30, height: 30 }}
+                                    source={require('../../Images/icon/ic_comment.png')}>
                                 </Image>
                                 <Text
                                     style={{

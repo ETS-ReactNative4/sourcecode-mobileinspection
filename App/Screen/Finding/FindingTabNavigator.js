@@ -1,5 +1,5 @@
 
-import { createMaterialTopTabNavigator, createStackNavigator } from 'react-navigation';
+import { createMaterialTopTabNavigator } from 'react-navigation';
 
 import HistoryFinding from './HistoryFinding';
 import ListFinding from './ListFinding';
