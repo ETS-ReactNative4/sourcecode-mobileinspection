@@ -125,11 +125,12 @@ export default class Genba extends Component {
         }
 
         let fileteredContactGenba = [];
+        let currentUser = TaskServices.getAllData('TR_LOGIN')[0];
         contactGenba.map((data)=>{
-            if(this.rankChecker(data.USER_AUTH_CODE)){
+            if(this.rankChecker(data.USER_AUTH_CODE, currentUser) && this.BAChecker(data.LOCATION_CODE, currentUser)){
                 fileteredContactGenba.push(data);
             }
-        })
+        });
 
         if(fileteredContactGenba.length > 0)  {
             this.setState({
@@ -202,8 +203,7 @@ export default class Genba extends Component {
         }
     };
 
-    rankChecker(selectedAuthCode){
-        let currentUser = TaskServices.getAllData('TR_LOGIN')[0];
+    rankChecker(selectedAuthCode, currentUser){
         //low->high
         let genbaRanking = ['KEPALA_KEBUN', 'EM', 'SEM_GM', 'CEO_REG', 'CEO', 'ADMIN'];
 
@@ -217,6 +217,17 @@ export default class Genba extends Component {
             }
         }
         return false;
+    }
+
+    BAChecker(selectedUserLocation, currentUser){
+        let listBA = selectedUserLocation.split(",");
+        let sameBAStatus = false;
+        listBA.map((data)=>{
+            if(data === "ALL" || data.includes(currentUser.LOCATION_CODE)){
+                sameBAStatus = true;
+            }
+        });
+        return sameBAStatus;
     }
 
     /**
