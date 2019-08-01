@@ -219,15 +219,21 @@ export default class Genba extends Component {
         return false;
     }
 
-    BAChecker(selectedUserLocation, currentUser){
-        let listBA = selectedUserLocation.split(",");
-        let sameBAStatus = false;
-        listBA.map((data)=>{
-            if(data === "ALL" || data.includes(currentUser.LOCATION_CODE)){
-                sameBAStatus = true;
-            }
-        });
-        return sameBAStatus;
+    BAChecker(listContact, currentUser){
+        let listBA = listContact.split(",");
+        let listUser = currentUser.LOCATION_CODE.split(",");
+        let result = listBA.filter(element => listUser.includes(element))
+        console.log(listContact, listBA);
+        if(listBA.includes("ALL") || result.length > 0){
+            return true
+        }
+        // listBA.map((data)=>{
+        //     if(data === "ALL" || data.includes(currentUser.LOCATION_CODE)){
+        //         sameBAStatus = true;
+        //     }
+        // });
+        // return sameBAStatus;
+        return false
     }
 
     /**
