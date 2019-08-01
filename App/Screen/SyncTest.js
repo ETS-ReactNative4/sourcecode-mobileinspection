@@ -62,7 +62,7 @@ class SyncScreen extends React.Component {
         link = ServerName[user.SERVER_NAME_INDEX].data;
         this.state = {
             user,
-            //upload            
+            //upload
             progressInspeksiHeader: 0,
             progressInspeksiDetail: 0,
             progressUploadImage: 0,
@@ -163,7 +163,7 @@ class SyncScreen extends React.Component {
             showButton: true,
             isFirstInstall: false,
 
-            //Add Modal Alert by Aminju 
+            //Add Modal Alert by Aminju
             title: 'Title',
             message: 'Message',
             showModal: false,
@@ -370,7 +370,7 @@ class SyncScreen extends React.Component {
             delImgFunc(dataImage, INSPECTION_CODE, ID_INSPECTION, delFunc);
         }
     }
-    
+
     async deleteImage(FINDING_CODE) {
         let dataImage = TaskServices.query('TR_IMAGE', `STATUS_SYNC = "Y" AND TR_CODE = "${FINDING_CODE}"`);
         if (dataImage != undefined) {
@@ -1705,16 +1705,20 @@ class SyncScreen extends React.Component {
             }
         }
         else if (data.INSERT_USER == this.state.user.USER_AUTH_CODE) {
-            if (data.PROGRESS >= 100) {
-                //Progress sudah selesai
-                newNotif.NOTIFICATION_TYPE = 4;
-                TaskServices.saveData('TR_NOTIFICATION', newNotif);
-            }
-            else {
-                //terjadi update pada finding yang user buat
+            if(data.PROGRESS < 100){
                 newNotif.NOTIFICATION_TYPE = 1;
                 TaskServices.saveData('TR_NOTIFICATION', newNotif);
             }
+            // if (data.PROGRESS >= 100) {
+            //     //Progress sudah selesai
+            //     newNotif.NOTIFICATION_TYPE = 4;
+            //     TaskServices.saveData('TR_NOTIFICATION', newNotif);
+            // }
+            // else {
+            //     //terjadi update pada finding yang user buat
+            //     newNotif.NOTIFICATION_TYPE = 1;
+            //     TaskServices.saveData('TR_NOTIFICATION', newNotif);
+            // }
         }
     }
     _crudTM_Finding_Image(data) {

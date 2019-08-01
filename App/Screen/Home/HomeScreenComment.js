@@ -92,6 +92,7 @@ export default class HomeScreenComment extends Component {
             STATUS_SYNC: 'N',
             USERNAME: dataLogin.USERNAME
         };
+        console.log(tempComment);
         TaskServices.saveData('TR_FINDING_COMMENT', tempComment);
 
         this.setState({
