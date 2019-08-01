@@ -100,7 +100,7 @@ class Scanner extends Component {
                 });
                 return auth;
             case 'REGION_CODE':
-                let trEst = TaskServices.findBy2('TR_EST', 'WERKS', qrCodeValue[2]);
+                let trEst = TaskServices.findBy2('TM_EST', 'WERKS', qrCodeValue[2]);
                 if(trEst !== undefined){
                     locationCode.map((data)=>{
                         if (data === trEst.REGION_CODE){
@@ -108,11 +108,12 @@ class Scanner extends Component {
                         }
                     })
                 }
-                break;
+                return auth;
+            case 'NATIONAL':
+                return true;
             default:
-                auth = false
+                return false;
         }
-        return auth
     }
 
   navigateScreen(screenName, decode) {
