@@ -6,8 +6,8 @@ import {
     TextInput,
     TouchableOpacity,
     NetInfo,
-	Picker,
-	Icon,
+    Picker,
+    Icon,
     Keyboard, Alert, Image
 } from 'react-native';
 import {
@@ -18,7 +18,7 @@ import {
 } from 'react-native-responsive-screen';
 import ModalAlert from '../Component/ModalAlert'
 import PropTypes from 'prop-types';
-import Icon2 from 'react-native-vector-icons/MaterialIcons'
+import { Images, AlertContent } from '../Themes'
 
 class Form extends Component {
 
@@ -42,7 +42,7 @@ class Form extends Component {
             message: 'Message',
             showModal: false,
             icon: '',
-            secure : true
+            secure: true
         }
     }
 
@@ -60,20 +60,10 @@ class Form extends Component {
             if (isConnected) {
                 switch (true) {
                     case this.state.strEmail === '':
-                        this.setState({
-                            showModal: true,
-                            title: 'Email Kosong',
-                            message: 'Kamu harus isi email terlebih dahulu',
-                            icon: require('../Images/ic-inputan-tidak-lengkap.png')
-                        })
+                        this.setState(AlertContent.email_kosong)
                         break;
                     case this.state.strPassword === '':
-                        this.setState({
-                            showModal: true,
-                            title: 'Password Kosong',
-                            message: 'Kamu harus isi password terlebih dahulu',
-                            icon: require('../Images/ic-inputan-tidak-lengkap.png')
-                        })
+                        this.setState(AlertContent.password_kosong)
                         break;
                     default:
                         props.onBtnClick({
@@ -82,21 +72,19 @@ class Form extends Component {
                         break;
                 }
             } else {
-                // alert('Tidak Ada Koneksi Internet');
-                this.setState({ showModal: true, title: 'Tidak Ada Koneksi', message: 'Opps, check koneksi internet mu dulu ya', icon: require('../Images/ic-no-internet.png') })
+                this.setState(AlertContent.no_internet)
             }
         });
-        // function handleFirstConnectivityChange(isConnected) {
-        //     console.log('Then, is ' + (isConnected ? 'online' : 'offline'));
-        //     NetInfo.isConnected.removeEventListener(
-        //         'connectionChange',
-        //         handleFirstConnectivityChange
-        //     );
-        // }
-        // NetInfo.isConnected.addEventListener(
-        //     'connectionChange',
-        //     handleFirstConnectivityChange
-        // );
+        function handleFirstConnectivityChange(isConnected) {
+            NetInfo.isConnected.removeEventListener(
+                'connectionChange',
+                handleFirstConnectivityChange
+            );
+        }
+        NetInfo.isConnected.addEventListener(
+            'connectionChange',
+            handleFirstConnectivityChange
+        );
     }
     onValueChange(value) {
         this.setState({
@@ -104,9 +92,9 @@ class Form extends Component {
         });
     }
 
-    triggerShowHide = ()=> {
+    triggerShowHide = () => {
         this.setState({
-            secure : !this.state.secure
+            secure: !this.state.secure
         });
     }
 
@@ -124,12 +112,10 @@ class Form extends Component {
                     title={this.state.title}
                     message={this.state.message} />
 
-                {/* <Text style={[styles.tapText,{marginLeft:20, marginRight:20}]}>PT TRIPUTRA ARGO PERSADA</Text>
-                    <Text style={[styles.appText, {marginLeft:20, marginRight:20}]}>Mobile Inspection</Text> */}
-                <Image source={require('../Images/logo.png')} style={{ width: 250, height: 80, resizeMode: 'stretch', marginBottom: 30 }} />
+                <Image source={Images.logo_pic} style={{ width: 250, height: 80, resizeMode: 'stretch', marginBottom: 30 }} />
 
                 <View style={styles.sectionInput}>
-                    <Image source={require('../Images/icon/ic_login.png')} style={styles.iconInput} />
+                    <Image source={Images.ic_user} style={styles.iconInput} />
                     <TextInput
                         style={styles.inputBox}
                         underlineColorAndroid='rgba(0,0,0,0)'
@@ -143,7 +129,7 @@ class Form extends Component {
                 </View>
 
                 <View style={styles.sectionInput}>
-                    <Image source={require('../Images/icon/ic_password.png')} style={styles.iconInput} />
+                    <Image source={Images.ic_password} style={styles.iconInput} />
                     <TextInput style={styles.inputBox}
                         underlineColorAndroid='rgba(0,0,0,0)'
                         placeholder="Password"
@@ -152,22 +138,22 @@ class Form extends Component {
                         onChangeText={(strPassword) => { this.setState({ strPassword: strPassword }) }}
                         value={this.state.strPassword}
                         ref={(input) => this.password = input} />
-                        <TouchableOpacity style={{backgroundColor:'#212121'}} onPress={this.triggerShowHide}><Text></Text></TouchableOpacity>
+                    <TouchableOpacity style={{ backgroundColor: '#212121' }} onPress={this.triggerShowHide}><Text></Text></TouchableOpacity>
                 </View>
 
                 <View style={styles.sectionInput}>
-                  <Picker
-                      mode="dropdown"
-                      iosHeader="Select your SIM"
-                      iosIcon={<Icon name="arrow-dropdown-circle" style={{ color: "#007aff", fontSize: 25 }} />}
-                      style={styles.picker}
-                      selectedValue={this.state.selectedServer}
-                      onValueChange={this.onValueChange.bind(this)}>
+                    <Picker
+                        mode="dropdown"
+                        iosHeader="Select your SIM"
+                        iosIcon={<Icon name="arrow-dropdown-circle" style={{ color: "#007aff", fontSize: 25 }} />}
+                        style={styles.picker}
+                        selectedValue={this.state.selectedServer}
+                        onValueChange={this.onValueChange.bind(this)}>
 
-                      <Picker.Item label="Production" value="1" />
-                      <Picker.Item label="QA" value="2" />
-                      <Picker.Item label="Development" value="3" />
-                  </Picker>
+                        <Picker.Item label="Production" value="1" />
+                        <Picker.Item label="QA" value="2" />
+                        <Picker.Item label="Development" value="3" />
+                    </Picker>
                 </View>
 
                 <TouchableOpacity style={[styles.button, { marginTop: 20 }]}

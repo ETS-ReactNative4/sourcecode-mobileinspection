@@ -24,11 +24,12 @@ import {
   dirPhotoTemuan, dirPhotoKategori, dirPhotoEbccJanjang, dirPhotoEbccSelfie, dirMaps
 } from '../../Lib/dirStorage';
 
-import HomeScreenComment from "./HomeScreenComment";
 import WeeklySummary from "../../Component/WeeklySummary";
-
 import { clipString } from '../../Constant/Function';
 import { Images } from '../../Themes';
+import { getIconProgress, getStatusImage, getColor, changeIconFilter, changeBgFilter } from '../../Themes/Resources';
+import IconHeader from '../../Component/IconHeader'
+import { getCategoryName, getEstateName, getStatusBlok, getBlokName } from '../../Database/Resources';
 
 var RNFS = require('react-native-fs');
 var { width } = Dimensions.get('window')
@@ -48,20 +49,8 @@ class HomeScreen extends React.Component {
     },
     title: 'Beranda',
     headerTintColor: '#fff',
-    headerRight: (
-      <TouchableOpacity onPress={() => navigation.navigate('Inbox')}>
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingRight: 12 }}>
-          <Image style={{ width: 28, height: 28 }} source={require('../../Images/icon/ic_inbox.png')} />
-        </View>
-      </TouchableOpacity>
-    ),
-    headerLeft: (
-      <TouchableOpacity onPress={() => navigation.navigate('Sync')}>
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingLeft: 12 }}>
-          <Image style={{ width: 28, height: 28 }} source={require('../../Images/icon/ic_sync.png')} />
-        </View>
-      </TouchableOpacity>
-    ),
+    headerRight: <IconHeader padding={{ paddingRight: 12 }} onPress={() => navigation.navigate('Inbox')} icon={Images.ic_inbox} />,
+    headerLeft: <IconHeader padding={{ paddingLeft: 12 }} onPress={() => navigation.navigate('Sync')} icon={Images.ic_sync} />,
     header: props => <CustomHeader {...props} />
   });
 
@@ -136,9 +125,6 @@ class HomeScreen extends React.Component {
     }
   }
 
-  /*_initData() {
-    this.setState({ data: this._filterHome() });
-  }*/
   //Aminju
   addRecords = (page) => {
     // assuming this.state.dataPosts hold all the records
@@ -374,7 +360,7 @@ class HomeScreen extends React.Component {
         this.extraFilter = `AFD_CODE CONTAINS ""${stBa}${stAfd}${stUserAuth}${stStatus}`;
         data = this._filterHome();//.filtered(`AFD_CODE CONTAINS ""${stBa}${stAfd}${stUserAuth}${stStatus}${stInsertTime}`);
         if (data.length == 0) {
-          this.setState({ data, isFilter: true, showModal: true, title: 'Tidak Ada Data', message: 'Wah ga ada data berdasarkan filter ini.', icon: require('../../Images/ic-no-data.png') });
+          this.setState({ data, isFilter: true, showModal: true, title: 'Tidak Ada Data', message: 'Wah ga ada data berdasarkan filter ini.', icon: Images.ic_no_data });
         } else {
           //this.setState({ data, isFilter: true });
           this.setState({
@@ -391,87 +377,6 @@ class HomeScreen extends React.Component {
     })
   }
 
-  _getStatus() {
-    if (this.state.data.PROGRESS == 100) {
-      return "After"
-    } else if (this.state.data.PROGRESS == 0) {
-      return "Before"
-    }
-  }
-
-
-  getColor(param) {
-    switch (param) {
-      case 'SELESAI':
-        return 'rgba(35, 144, 35, 0.9)';
-      case 'SEDANG DIPROSES':
-        return 'rgba(254, 178, 54, 0.9)';
-      case 'BARU':
-        return 'rgba(255, 77, 77, 0.9)';
-      case 'Batas waktu belum ditentukan':
-        return 'red';
-      default:
-        return '#ff7b25';
-    }
-  }
-
-  alertItemName = (item) => {
-    alert(item.STATUS)
-  }
-
-  getCategoryName = (categoryCode) => {
-    try {
-      let data = TaskServices.findBy2('TR_CATEGORY', 'CATEGORY_CODE', categoryCode);
-      return data.CATEGORY_NAME;
-    } catch (error) {
-      return ''
-    }
-  }
-
-  getContactName = (userAuth) => {
-    try {
-      let data = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', userAuth);
-      return data.FULLNAME;
-    } catch (error) {
-      return ''
-    }
-  }
-
-  getEstateName(werks) {
-    try {
-      let data = TaskServices.findBy2('TM_EST', 'WERKS', werks);
-      return data.EST_NAME;
-    } catch (error) {
-      return '';
-    }
-  }
-
-  getBlokName(werkAfdBlokCode) {
-    try {
-      let data = TaskServices.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', werkAfdBlokCode);
-      return data.BLOCK_NAME;
-    } catch (error) {
-      return ''
-    }
-  }
-
-  getStatusBlok(werk_afd_blok_code) {
-    try {
-      let data = TaskServices.findBy2('TM_LAND_USE', 'WERKS_AFD_BLOCK_CODE', werk_afd_blok_code);
-      return data.MATURITY_STATUS;
-    } catch (error) {
-      return ''
-    }
-  }
-
-  getStatusImage(status) {
-    if (status == 'SEBELUM') {
-      return "Before"
-    } else if ('SESUDAH') {
-      return "After"
-    }
-  }
-
   renderCarousel = (item, status, i) => {
     let uri;
     if (item.IMAGE_PATH_LOCAL != undefined) {
@@ -479,14 +384,7 @@ class HomeScreen extends React.Component {
     } else {
       uri = Images.img_no_picture
     }
-    let sources;
-    if (status == 'BARU') {
-      sources = Images.ic_new_timeline
-    } else if (status == 'SELESAI') {
-      sources = Images.ic_done_timeline
-    } else {
-      sources = Images.ic_inprogress_timeline
-    }
+
     return (
       <View style={{ flex: 1 }}>
         {status == 'SELESAI' &&
@@ -495,7 +393,7 @@ class HomeScreen extends React.Component {
             padding: 3, position: 'absolute', top: 0, right: 10, zIndex: 1, alignItems: 'center',
             margin: 10, borderRadius: 25,
           }}>
-            <Text style={{ fontSize: 10, marginBottom: 5, color: 'white' }}>{this.getStatusImage(item.STATUS_IMAGE)}</Text>
+            <Text style={{ fontSize: 10, marginBottom: 5, color: 'white' }}>{getStatusImage(item.STATUS_IMAGE)}</Text>
           </View>}
 
         <FastImage style={{ height: 300 }}
@@ -507,13 +405,13 @@ class HomeScreen extends React.Component {
         <TouchableNativeFeedback onPress={() => { this.onClickItem(i.FINDING_CODE) }}>
           <View style={{
             flexDirection: 'row',
-            backgroundColor: this.getColor(status),
+            backgroundColor: getColor(status),
             width: '100%', height: 35,
             position: 'absolute', bottom: 0,
             paddingLeft: 18
           }}>
             <View style={{ flex: 1, flexDirection: 'row' }}>
-              <Image style={{ marginTop: 3, height: 28, width: 28 }} source={sources}></Image>
+              <Image style={{ marginTop: 3, height: 28, width: 28 }} source={getIconProgress(status)}></Image>
               <Text style={{ width: 200, marginLeft: 12, color: 'white', fontSize: 14, alignSelf: 'center', marginTop: 1 }}>{status}</Text>
             </View>
             <View style={{ position: 'absolute', right: 0, marginRight: 12, marginTop: 3 }}>
@@ -526,14 +424,6 @@ class HomeScreen extends React.Component {
   }
 
   renderImage = (images, status) => {
-    let sources;
-    if (status == 'BARU') {
-      sources = require('../../Images/icon/ic_new_timeline.png')
-    } else if (status == 'SELESAI') {
-      sources = require('../../Images/icon/ic_done_timeline.png')
-    } else {
-      sources = require('../../Images/icon/ic_inprogress_timeline.png')
-    }
     return (
       <View style={{ height: 300 }}>
         <ImageSlider
@@ -545,7 +435,7 @@ class HomeScreen extends React.Component {
                 padding: 3, position: 'absolute', top: 0, right: 10, zIndex: 1, alignItems: 'center',
                 margin: 10, borderRadius: 25,
               }}>
-                <Text style={{ fontSize: 10, marginBottom: 5, color: 'white' }}>{this.getStatusImage(item.STATUS_IMAGE)}</Text>
+                <Text style={{ fontSize: 10, marginBottom: 5, color: 'white' }}>{getStatusImage(item.STATUS_IMAGE)}</Text>
               </View>
               <FastImage style={{ alignItems: 'center', width: '100%', height: '100%' }}
                 source={{
@@ -554,11 +444,11 @@ class HomeScreen extends React.Component {
                 }} />
               <View style={{
                 flexDirection: 'row',
-                backgroundColor: this.getColor(status),
+                backgroundColor: getColor(status),
                 width: '100%', height: 35,
                 position: 'absolute', bottom: 0
               }}>
-                <Image style={{ marginTop: 2, height: 28, width: 28 }} source={sources}></Image>
+                <Image style={{ marginTop: 2, height: 28, width: 28 }} source={getIconProgress(status)}></Image>
                 <Text style={{ marginLeft: 10, color: 'white', fontSize: 14, marginTop: 8 }}>{status}</Text>
               </View>
             </View>
@@ -578,28 +468,18 @@ class HomeScreen extends React.Component {
     const image = dataImage.sorted('INSERT_TIME', true);
 
     let werkAfdBlockCode = `${item.WERKS}${item.AFD_CODE}${item.BLOCK_CODE}`;
-    let lokasiBlok = `${this.getBlokName(werkAfdBlockCode)}/${this.getStatusBlok(werkAfdBlockCode)}/${this.getEstateName(item.WERKS)}`
+    let lokasiBlok = `${getBlokName(werkAfdBlockCode)}/${getStatusBlok(werkAfdBlockCode)}/${getEstateName(item.WERKS)}`
     let status = item.STATUS;
-    let sources;
-    if (status == 'BARU') {
-      sources = require('../../Images/icon/ic_new_timeline.png')
-    } else if (status == 'SELESAI') {
-      sources = require('../../Images/icon/ic_done_timeline.png')
-    } else {
-      sources = require('../../Images/icon/ic_inprogress_timeline.png')
-    }
 
     //Get Finding Comment
     let getComment = TaskServices.findBy("TR_FINDING_COMMENT", "FINDING_CODE", item.FINDING_CODE).sorted('INSERT_TIME', true);
     let commentCount = getComment.length;
     let latestComment = null;
-    let commentMessage = "" ;
+    let commentMessage = "";
     if (commentCount > 0) {
       latestComment = getComment[0];
       commentMessage = this.processText(this.state.statusFindingComment[index] ? getComment[0].MESSAGE : clipString(getComment[0].MESSAGE, 150), Object.values(getComment[0].TAGS));
     }
-
-    let show = false;
 
     return (
       <View key={index}>
@@ -612,10 +492,10 @@ class HomeScreen extends React.Component {
             </View>
           </View>
           <View style={{ marginTop: 12 }} cardBody>
-            {image.length == 0 && <ImageBackground source={require('../../Images/img-no-picture.png')} style={{ height: 300, width: '100%', flex: 1, flexDirection: 'column-reverse', resizeMode: 'stretch' }} >
+            {image.length == 0 && <ImageBackground source={Images.img_no_picture} style={{ height: 300, width: '100%', flex: 1, flexDirection: 'column-reverse', resizeMode: 'stretch' }} >
               <TouchableOpacity onPress={() => { this.onClickItem(item.FINDING_CODE) }}>
-                <View style={{ alignContent: 'center', paddingTop: 2, paddingLeft: 18, flexDirection: 'row', height: 35, backgroundColor: this.getColor(item.STATUS) }} >
-                  <Image style={{ marginTop: 2, height: 28, width: 28 }} source={sources}></Image>
+                <View style={{ alignContent: 'center', paddingTop: 2, paddingLeft: 18, flexDirection: 'row', height: 35, backgroundColor: getColor(item.STATUS) }} >
+                  <Image style={{ marginTop: 2, height: 28, width: 28 }} source={getIconProgress(status)}></Image>
                   <Text style={{ marginLeft: 12, color: 'white', fontSize: 14, marginTop: 5 }}>{item.STATUS}</Text>
                   <View style={{ position: 'absolute', right: 0, marginRight: 12, marginTop: 3 }}>
                     <Entypo name={'chevron-right'} color={'white'} size={25} />
@@ -655,7 +535,7 @@ class HomeScreen extends React.Component {
                 fontSize: 12,
                 fontWeight: 'bold'
               }}>
-                {lokasiBlok} - {this.getCategoryName(item.FINDING_CATEGORY)}
+                {lokasiBlok} - {getCategoryName(item.FINDING_CATEGORY)}
               </Text>
             </View>
             <View style={{
@@ -783,40 +663,40 @@ class HomeScreen extends React.Component {
     );
   }
 
-    processText(commentValue, listTaggedUser) {
-        if (listTaggedUser.length > 0 || commentValue !== "") {
-            let tempComment = [commentValue];
-            listTaggedUser.map((userTagged) => {
-                tempComment.map((comment, index) => {
-                    if (comment.includes("@" + userTagged.FULLNAME)) {
-                        let tempSplit = comment.split("@" + userTagged.FULLNAME);
-                        tempSplit.splice(1,0, "@"+userTagged.FULLNAME);
-                        if(tempComment.length === 1){
-                            tempComment = tempSplit;
-                        }
-                        else {
-                            tempComment.splice(index,1,...tempSplit);
-                        }
-                    }
-                });
-            });
-            let finalText = <Text>{
-                tempComment.map((data)=>{
-                    if(data.charAt(0) === "@"){
-                        return <Text style={{color:Colors.taggedUser, fontSize: 12}}>{data}</Text>
-                    }
-                    else {
-                        return <Text style={{fontSize: 12}}>{data}</Text>
-                    }
-                })
-            }</Text>
+  processText(commentValue, listTaggedUser) {
+    if (listTaggedUser.length > 0 || commentValue !== "") {
+      let tempComment = [commentValue];
+      listTaggedUser.map((userTagged) => {
+        tempComment.map((comment, index) => {
+          if (comment.includes("@" + userTagged.FULLNAME)) {
+            let tempSplit = comment.split("@" + userTagged.FULLNAME);
+            tempSplit.splice(1, 0, "@" + userTagged.FULLNAME);
+            if (tempComment.length === 1) {
+              tempComment = tempSplit;
+            }
+            else {
+              tempComment.splice(index, 1, ...tempSplit);
+            }
+          }
+        });
+      });
+      let finalText = <Text>{
+        tempComment.map((data) => {
+          if (data.charAt(0) === "@") {
+            return <Text style={{ color: Colors.taggedUser, fontSize: 12 }}>{data}</Text>
+          }
+          else {
+            return <Text style={{ fontSize: 12 }}>{data}</Text>
+          }
+        })
+      }</Text>
 
-            return finalText
-        }
-        else {
-            return commentValue;
-        }
+      return finalText
     }
+    else {
+      return commentValue;
+    }
+  }
 
   onClickItem(id) {
     var images = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', id);
@@ -893,7 +773,7 @@ class HomeScreen extends React.Component {
   _renderNoData() {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', alignContent: 'center' }}>
-        <Image style={{ width: 400, height: 300 }} source={this._changeBgFilter(this.state.isFilter)} />
+        <Image style={{ width: 400, height: 300 }} source={changeBgFilter(this.state.isFilter)} />
       </View>)
   }
 
@@ -952,20 +832,13 @@ class HomeScreen extends React.Component {
 
         <WeeklySummary visible={this.state.isVisibleSummary} onPressClose={() => this.setState({ isVisibleSummary: false })} />
 
-        {/* <ModalAlert
-          icon={this.state.icon}
-          visible={this.state.showModal}
-          onPressCancel={() => this.setState({ showModal: false })}
-          title={this.state.title}
-          message={this.state.message} /> */}
-
         <StatusBar hidden={false} backgroundColor={Colors.tintColor} barStyle="light-content" />
         <View style={styles.sectionTimeline}>
           <Text style={styles.textTimeline}>Temuan di Wilayahmu</Text>
           <View style={styles.rightSection}>
             {/* <Text style={styles.textFilter}>Filter</Text> */}
             <TouchableOpacity onPress={() => this.props.navigation.navigate('Filter', { _changeFilterList: this._changeFilterList })} >
-              <Image style={{ width: 22, height: 22, marginRight: 16, marginTop: 1 }} source={this._changeIconFilter(this.state.isFilter)} />
+              <Image style={{ width: 22, height: 22, marginRight: 16, marginTop: 1 }} source={changeIconFilter(this.state.isFilter)} />
               {/* <Icons name="filter-list" size={24} style={{ marginRight: 15, marginTop: 4 }} /> */}
             </TouchableOpacity>
           </View>
@@ -973,22 +846,6 @@ class HomeScreen extends React.Component {
         {show}
       </View>
     )
-  }
-
-  _changeIconFilter(isFilter) {
-    if (isFilter) {
-      return require('../../Images/ic-filter-on.png')
-    } else {
-      return require('../../Images/ic-filter-off.png')
-    }
-  }
-
-  _changeBgFilter(isFilter) {
-    if (isFilter) {
-      return require('../../Images/img-no-filter.png')
-    } else {
-      return require('../../Images/img-belum-ada-data.png')
-    }
   }
 }
 
