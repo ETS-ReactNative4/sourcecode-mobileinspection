@@ -222,17 +222,30 @@ export default class Genba extends Component {
     BAChecker(listContact, currentUser){
         let listBA = listContact.split(",");
         let listUser = currentUser.LOCATION_CODE.split(",");
-        let result = listBA.filter(element => listUser.includes(element))
-        if(listBA.includes("ALL") || result.length > 0){
-            return true
+        let sameBAStatus = false;
+        // let result = listBA.filter(element => listUser.includes(element))
+        // if(listBA.includes("ALL") || result.length > 0){
+        //     return true
+        // }
+        if(currentUser.LOCATION_CODE === "ALL"){
+            sameBAStatus = true;
         }
-        // listBA.map((data)=>{
-        //     if(data === "ALL" || data.includes(currentUser.LOCATION_CODE)){
-        //         sameBAStatus = true;
-        //     }
-        // });
-        // return sameBAStatus;
-        return false
+        else if(listUser.length === 1){
+            listBA.map((data)=>{
+                if(data.includes(currentUser.LOCATION_CODE)){
+                    sameBAStatus = true;
+                }
+            });
+        }
+        else if(listUser.length > 1){
+            const intersection = listUser.filter(element => listBA.includes(element));
+            console.log(listBA, listUser, intersection);
+            if(intersection.length > 0){
+                sameBAStatus = true;
+            }
+
+        }
+        return sameBAStatus;
     }
 
     /**
