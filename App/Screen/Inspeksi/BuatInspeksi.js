@@ -16,6 +16,7 @@ import Geojson from 'react-native-geojson';
 import R from 'ramda'
 import { NavigationActions, StackActions  } from 'react-navigation';
 import ModalAlert from '../../Component/ModalAlert';
+import ModalAlertConfirmation from "../../Component/ModalAlertConfirmation";
 
 class BuatInspeksiRedesign extends Component {
 
@@ -32,7 +33,7 @@ class BuatInspeksiRedesign extends Component {
     //         fontWeight: '400',
     //         marginHorizontal: 12
     //     }
-    // };  
+    // };
 
     static navigationOptions = ({ navigation }) => {
         const { params = {} } = navigation.state;
@@ -58,16 +59,16 @@ class BuatInspeksiRedesign extends Component {
     }
 
     constructor(props) {
-        super(props);        
+        super(props);
         let dataLogin = TaskService.getAllData('TR_LOGIN');
 
         let params = props.navigation.state.params;
         let werkAfdBlockCode = R.clone(params.werkAfdBlockCode);
         let latitude = R.clone(params.latitude);
         let longitude = R.clone(params.longitude);
-        
+
         this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
-        
+
         this.state = {
             blokInspeksiCode: `I${dataLogin[0].USER_AUTH_CODE}${getTodayDate('YYMMDDHHmmss')}`,
             dataLogin,
@@ -91,11 +92,12 @@ class BuatInspeksiRedesign extends Component {
             intervalId: 0,
             showBtn: true,
             werkAfdBlockCode,
-            //Add Modal Alert by Aminju 
+            //Add Modal Alert by Aminju
             title: 'Title',
             message: 'Message',
             showModal: false,
             showModal2: false,
+            showModalAlert: false,
             icon: '',
             inspectionType: props.navigation.getParam('inspectionType', 'normal')
         };
@@ -131,10 +133,10 @@ class BuatInspeksiRedesign extends Component {
         this.keyboardDidHideListener.remove();
     }
 
-    componentDidMount() {    
+    componentDidMount() {
         BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
         this.props.navigation.setParams({ searchLocation: this.searchLocation })
-        this.loadDataBlock(this.state.werkAfdBlockCode)    
+        this.loadDataBlock(this.state.werkAfdBlockCode)
         this.getLocation();
 
     }
@@ -151,8 +153,12 @@ class BuatInspeksiRedesign extends Component {
             )]).then(() => navigation.navigate('Inspection')).then(() => navigation.navigate('DaftarInspeksi'))
     }
 
-    handleBackButtonClick() { 
-        this.selesai()
+    handleBackButtonClick() {
+        this.setState({
+            showModalAlert: true, title: 'Data Hilang',
+            message: 'Inspeksi mu belum tersimpan loh. Yakin mau dilanjutin?',
+            icon: require('../../Images/ic-not-save.png')
+        });
         return true;
     }
 
@@ -167,11 +173,11 @@ class BuatInspeksiRedesign extends Component {
             let statusBlok= this.getStatusBlok(item.WERKS_AFD_BLOCK_CODE);
             let estateName = this.getEstateName(item.WERKS);
             this.state.person.push({
-                blokCode: item.BLOCK_CODE, 
-                blokName: item.BLOCK_NAME, 
+                blokCode: item.BLOCK_CODE,
+                blokName: item.BLOCK_NAME,
                 afdCode: item.AFD_CODE,
                 werks: item.WERKS,
-                estateName: estateName, 
+                estateName: estateName,
                 werksAfdBlokCode: item.WERKS_AFD_BLOCK_CODE,
                 statusBlok: statusBlok,
                 compCode: item.COMP_CODE,
@@ -182,14 +188,14 @@ class BuatInspeksiRedesign extends Component {
 
     loadDataBlock(werkAfdBlockCode){
         let data = TaskService.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', werkAfdBlockCode);
-        if(data !== undefined){            
+        if(data !== undefined){
             let statusBlok= this.getStatusBlok(data.WERKS_AFD_BLOCK_CODE);
             let estateName = this.getEstateName(data.WERKS);
             this.setState({
                 blok: data.BLOCK_CODE,
-                blockCode: data.BLOCK_CODE, 
-                blockName: data.BLOCK_NAME, 
-                afdCode: data.AFD_CODE, 
+                blockCode: data.BLOCK_CODE,
+                blockName: data.BLOCK_NAME,
+                afdCode: data.AFD_CODE,
                 werks: data.WERKS,
                 werksAfdBlokCode: data.WERKS_AFD_BLOCK_CODE,
                 estateName: data.estateName,
@@ -199,7 +205,7 @@ class BuatInspeksiRedesign extends Component {
             })
         }else{
             // alert('Kamu tidak bisa inspeksi');
-            // this.selesai();            
+            // this.selesai();
             this.setState({ showModal2: true, title: 'Salah Blok', message: 'Kamu ga bisa buat inspeksi di blok ini', icon: require('../../Images/ic-blm-input-lokasi.png') });
         }
     }
@@ -261,7 +267,7 @@ class BuatInspeksiRedesign extends Component {
                 var lat = parseFloat(position.coords.latitude);
                 var lon = parseFloat(position.coords.longitude);
                 // const timestamp = convertTimestampToDate(position.timestamp, 'DD/MM/YYYY HH:mm:ss')//moment(position.timestamp).format('DD/MM/YYYY HH:mm:ss');
-                this.setState({latitude:lat, longitude:lon, fetchLocation: false});              
+                this.setState({latitude:lat, longitude:lon, fetchLocation: false});
             },
             (error) => {
                 // this.setState({ error: error.message, fetchingLocation: false })
@@ -297,14 +303,14 @@ class BuatInspeksiRedesign extends Component {
         }
         // else if(this.state.latitude === 0.0 && this.state.longitude === 0.0){
         //     this.setState({ showModal: true, title: 'Lokasi', message: 'Titik lokasi kamu belum ada, coba refresh lokasi lagi yaa', icon: require('../../Images/ic-no-gps.png') });
-        // } 
+        // }
         // else if(!this.state.clickLOV){
         //     alert('Blok harus dipilih dari LOV');
         //     this.setState({ showModal: true, title: 'Pilih Lokasi', message: message, icon: require('../../Images/ic-blm-input-lokasi.png') });
-        // } 
+        // }
         else {
             await this.insertDB(statusBlok);
-        }    
+        }
     }
 
     checkSameBaris(){
@@ -357,7 +363,7 @@ class BuatInspeksiRedesign extends Component {
     getStatusBlok(werk_afd_blok_code){
         try {
             let data = TaskService.findBy2('TM_LAND_USE', 'WERKS_AFD_BLOCK_CODE', werk_afd_blok_code);
-            return data.MATURITY_STATUS;            
+            return data.MATURITY_STATUS;
         } catch (error) {
             return ''
         }
@@ -370,14 +376,14 @@ class BuatInspeksiRedesign extends Component {
         } catch (error) {
             return '';
         }
-        
+
     }
 
     potong(param){
         let brs = param;
         if(brs.charAt(0) == '0'){
             brs = brs.substring(1);
-            
+
         }
         this.setState({ baris: brs });
     }
@@ -388,7 +394,7 @@ class BuatInspeksiRedesign extends Component {
         // let idInspection = `B${this.state.dataLogin[0].USER_AUTH_CODE}${getTodayDate('YYMMDDHHmmss')}`
 		let today = getTodayDate('YYMMDD');
         let idInspection = `B${this.state.dataLogin[0].USER_AUTH_CODE}${today}${this.state.werkAfdBlockCode}`
-        
+
         let modelInspeksiH = {
             BLOCK_INSPECTION_CODE: this.state.blokInspeksiCode,
             ID_INSPECTION: idInspection,
@@ -435,7 +441,7 @@ class BuatInspeksiRedesign extends Component {
             INSPECTION_SCORE: '',
             FULFILL_BARIS: 'N',
             TR_FINDING_CODES:[]
-        }        
+        }
 
 
         //for track
@@ -482,7 +488,7 @@ class BuatInspeksiRedesign extends Component {
     //     navigation.dispatch(resetAction);
     // }
 
-    render() {  
+    render() {
         // const { query } = this.state;
         // const person = this.findPerson(query);
         // const comp = (a, b) => a.toLowerCase().trim() === b.toLowerCase().trim();
@@ -506,6 +512,15 @@ class BuatInspeksiRedesign extends Component {
                     onPressCancel={() => {this.setState({ showModal2: false }); this.selesai()}}
                     title={this.state.title}
                     message={this.state.message} />
+
+                <ModalAlertConfirmation
+                    icon={this.state.icon}
+                    visible={this.state.showModalAlert}
+                    onPressCancel={() => this.setState({ showModalAlert: false })}
+                    onPressSubmit={() => { this.setState({ showModalAlert: false }); this.selesai() }}
+                    title={this.state.title}
+                    message={this.state.message}
+                />
 
                 <View style={{ flexDirection: 'row', marginLeft: 20, marginRight: 20, marginTop: 10 }}>
                     <View style={styles.containerStepper}>
@@ -556,17 +571,17 @@ class BuatInspeksiRedesign extends Component {
                                 data={person.length === 1 && comp(query, person[0].allShow) ? [] : person}
                                 defaultValue={query}
                                 onChangeText={text => {
-                                    this.setState({ query: text }); 
+                                    this.setState({ query: text });
                                     this.hideAndShowBaris(text)}
                                 }
                                 renderItem={({ blokCode, blokName, estateName, werksAfdBlokCode, statusBlok, allShow, werks, afdCode}) => (
                                     <TouchableOpacity onPress={() => {
-                                        this.setState({ 
-                                            blok : blokCode, 
-                                            query: allShow, 
+                                        this.setState({
+                                            blok : blokCode,
+                                            query: allShow,
                                             afdCode: afdCode,
                                             werks: werks,
-                                            werksAfdBlokCode:werksAfdBlokCode, 
+                                            werksAfdBlokCode:werksAfdBlokCode,
                                             clickLOV: true,
                                             showBaris: true }
                                         )}}>
@@ -583,7 +598,7 @@ class BuatInspeksiRedesign extends Component {
                                 value={this.state.allShow}
                                 />
                         </View>
-                        {this.state.showBaris && 
+                        {this.state.showBaris &&
                         <View style={{ flex: 1, margin:10 }}>
                             <Text style={{ color: '#696969' }}>Baris</Text>
                             <TextInput
@@ -600,7 +615,7 @@ class BuatInspeksiRedesign extends Component {
                 <Text style={styles.textLabel}>
                     Pastikan kamu telah berada dilokasi yang benar
                 </Text>
-                
+
                 <View style={styles.containerMap}>
                     {/* {this.state.latitude !== 0.0 && this.state.longitude !== 0.0&&
                         <MapView
@@ -620,9 +635,9 @@ class BuatInspeksiRedesign extends Component {
                                 centerOffset={{ x: -42, y: -60 }}
                                 anchor={{ x: 0.84, y: 1 }}
                             >
-                            </Marker>                      
+                            </Marker>
                         </MapView>
-                    }                 
+                    }
 
                     {this.state.showBtn && <IconLoc
                         onPress={()=>{this.setState({fetchLocation: true}); this.getLocation()}}
@@ -633,7 +648,7 @@ class BuatInspeksiRedesign extends Component {
                     {this.state.showBtn && <View style={styles.buttonContainer}>
                         <TouchableOpacity style={[styles.bubble, styles.button] } onPress={()=>{this.validation()}}>
                             <Text style={styles.buttonText}>Mulai Inspeksi</Text>
-                        </TouchableOpacity>                        
+                        </TouchableOpacity>
                     </View>}
                 </View>
 
@@ -708,12 +723,12 @@ const styles = {
         top: 0,
         left: 0,
         right: 0,
-        bottom: 0,        
+        bottom: 0,
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').height
     },
     bubble: {
-        // backgroundColor: '#ff8080',        
+        // backgroundColor: '#ff8080',
         backgroundColor: Colors.brand,
         paddingHorizontal: 18,
         paddingVertical: 12,

@@ -29,7 +29,7 @@ class KondisiBaris1 extends Component {
                 fontWeight: '400'
             },
             headerRight: (
-                <TouchableOpacity onPress={() => { navigation.navigate('Step1Finding', { 
+                <TouchableOpacity onPress={() => { navigation.navigate('Step1Finding', {
                         data: params.getData,
                         dataInspeksi: params.getDataInspeksi,
                         updateTRBaris: params.updateTRBaris
@@ -71,7 +71,7 @@ class KondisiBaris1 extends Component {
             statusBlok,
             dataInspeksi,
 
-            //Add Modal Alert by Aminju 
+            //Add Modal Alert by Aminju
             title: 'Title',
             message: 'Message',
             showModal: false,
@@ -91,12 +91,12 @@ class KondisiBaris1 extends Component {
     }
 
     handleBackButtonClick() {
-        this.setState({
-            showModal: true, title: 'Data Hilang',
-            message: 'Inspeksi mu belum tersimpan loh. Yakin mau dilanjutin?',
-            icon: require('../../Images/ic-not-save.png')
-        });
-        return true;
+        // this.setState({
+        //     showModal: true, title: 'Data Hilang',
+        //     message: 'Inspeksi mu belum tersimpan loh. Yakin mau dilanjutin?',
+        //     icon: require('../../Images/ic-not-save.png')
+        // });
+        return false;
     }
 
     updateTRBaris = data => {
@@ -311,7 +311,7 @@ class KondisiBaris1 extends Component {
             }
         }
     }
-	
+
 	_render_variable_input(){
 		console.log(this.state.statusBlok);
 		if(this.state.statusBlok=="TBM 0"||this.state.statusBlok=="TBM 1"||this.state.statusBlok=="TBM 2"){
@@ -399,11 +399,11 @@ class KondisiBaris1 extends Component {
                     </View>]);
 		}
     }
-    
+
     cancelOrder(){
         this.props.navigation.goBack(null)
         // const navigation = this.props.navigation;
-        // let routeName = 'MainMenu'; 
+        // let routeName = 'MainMenu';
         // this.setState({showModal: false})
         // Promise.all([navigation.dispatch(NavigationActions.navigate({ routeName : routeName}))]).
         // then(() => navigation.navigate('Inspection')).then(() => navigation.navigate('DaftarInspeksi'));
@@ -426,14 +426,14 @@ class KondisiBaris1 extends Component {
                     title={this.state.title}
                     message={this.state.message} />
 
-                <ModalAlertConfirmation
-                    icon={this.state.icon}
-                    visible={this.state.showModal}
-                    onPressCancel={() => this.setState({ showModal: false })}
-                    onPressSubmit={() => { this.setState({ showModal: false }); this.cancelOrder() }}
-                    title={this.state.title}
-                    message={this.state.message}
-                />
+                {/*<ModalAlertConfirmation*/}
+                {/*    icon={this.state.icon}*/}
+                {/*    visible={this.state.showModal}*/}
+                {/*    onPressCancel={() => this.setState({ showModal: false })}*/}
+                {/*    onPressSubmit={() => { this.setState({ showModal: false }); this.cancelOrder() }}*/}
+                {/*    title={this.state.title}*/}
+                {/*    message={this.state.message}*/}
+                {/*/>*/}
 
                 {/*STEPPER*/}
                 <View style={{ flexDirection: 'row', marginLeft: 20, marginRight: 20, marginTop: 10, justifyContent: 'center', alignItems: 'center' }}>
@@ -512,7 +512,7 @@ class KondisiBaris1 extends Component {
                         </View>
                     </View>
 				</View>
-				
+
                 {/*INPUT*/}
                 <View style={{ backgroundColor: 'white' }}>
                     {this._render_variable_input()}
