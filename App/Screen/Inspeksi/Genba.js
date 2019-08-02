@@ -223,7 +223,6 @@ export default class Genba extends Component {
         let listBA = listContact.split(",");
         let listUser = currentUser.LOCATION_CODE.split(",");
         let result = listBA.filter(element => listUser.includes(element))
-        console.log(listContact, listBA);
         if(listBA.includes("ALL") || result.length > 0){
             return true
         }

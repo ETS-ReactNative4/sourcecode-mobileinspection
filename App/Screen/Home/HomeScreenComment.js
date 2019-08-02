@@ -34,7 +34,7 @@ export default class HomeScreenComment extends Component {
         this.state = {
             FINDING_CODE: props.navigation.getParam("findingCode", null),
             commentData: [],
-            commentValue: null,
+            commentValue: "",
 
             listUser: [],
             filteredUser: [],
@@ -64,7 +64,7 @@ export default class HomeScreenComment extends Component {
         if (commentData !== null) {
             this.setState({
                 commentData: commentData,
-                commentValue: null
+                commentValue: ""
             }, () => {
                 Keyboard.dismiss()
             })
@@ -298,7 +298,9 @@ export default class HomeScreenComment extends Component {
                             {this.state.commentValue}
                         </TextInput>
                         <TouchableOpacity onPress={() => {
-                            this.insertComment()
+                            if(this.state.commentValue.length > 0){
+                                this.insertComment()
+                            }
                         }}>
                             <Icon1
                                 style={{ marginLeft: 12 }}
