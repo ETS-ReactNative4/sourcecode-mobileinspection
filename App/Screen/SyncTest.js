@@ -1744,7 +1744,7 @@ class SyncScreen extends React.Component {
             let newNotif = {
                 NOTIFICATION_ID: param.FINDING_COMMENT_ID + "$" + param.USERNAME,
                 NOTIFICATION_TIME: new Date(),
-                FINDING_UPDATE_TIME: param.INSERT_TIME,
+                FINDING_UPDATE_TIME: moment(param.INSERT_TIME, 'YYYYMMDDHHmmss').format('YYYY-MM-DD HH:mm:ss'),
                 FINDING_CODE: param.FINDING_CODE
             }
             getFinding.map(data => {
@@ -2096,7 +2096,6 @@ class SyncScreen extends React.Component {
     }
 
     fetchingMobileSync(param) {
-        var moment = require('moment');
         const user = TaskServices.getAllData('TR_LOGIN')[0];
         let api = this.getAPIURL("AUTH-SYNC");
         fetch(api.API_URL, {

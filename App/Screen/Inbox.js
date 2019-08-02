@@ -38,6 +38,7 @@ export default class Inbox extends React.Component {
 
 	getNotif = () => {
 		let notifData = TaskServices.getAllData('TR_NOTIFICATION').sorted('FINDING_UPDATE_TIME', true);
+		// let notifData = TaskServices.getAllData('TR_NOTIFICATION').sorted('FINDING_UPDATE_TIME', true);
 		return notifData;
 	}
 
@@ -59,7 +60,7 @@ export default class Inbox extends React.Component {
 		let sources;
 		let desc;
 		let notifColor;
-		let notifCreateDate = item.NOTIFICATION_TIME;
+		let notifCreateDate = item.FINDING_UPDATE_TIME;
 		// let today = new Date();
 		// if (notifCreateDate.getDate() == today.getDate()
 		// 	&& notifCreateDate.getMonth() == today.getMonth()
