@@ -14,7 +14,7 @@ export default class Inbox extends React.Component {
 		this.state = {
 			data,
 
-			//Add Modal Alert by Aminju 
+			//Add Modal Alert by Aminju
 			title: 'Title',
 			message: 'Message',
 			showModal: false,
@@ -60,7 +60,6 @@ export default class Inbox extends React.Component {
 		let desc;
 		let notifColor;
 		let notifCreateDate = item.NOTIFICATION_TIME;
-		console.log('notifCreateDate : ', notifCreateDate)
 		// let today = new Date();
 		// if (notifCreateDate.getDate() == today.getDate()
 		// 	&& notifCreateDate.getMonth() == today.getMonth()
@@ -118,9 +117,10 @@ export default class Inbox extends React.Component {
 			title = "DAPAT RATING";
 			desc = creator.FULLNAME + " telah memberikan rating kepada kamu. Cek rating yang kamu dapatkan..."
 		} else if (item.NOTIFICATION_TYPE == 6) {
+		    let tempUsername = item.NOTIFICATION_ID.split("$");
 			sources = require('../Images/ic_inbox_getcomment.png');
 			title = "KOMENTAR BARU";
-			desc = item.NOTIFICATION_ID.substring(26, item.NOTIFICATION_ID.length) + " memberikan komentar baru ditemuan kamu."
+			desc = tempUsername[1] + " memberikan komentar baru ditemuan kamu."
 		}
 		return (
 			<TouchableOpacity

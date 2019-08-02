@@ -1683,6 +1683,7 @@ class SyncScreen extends React.Component {
         let newNotif = {
             NOTIFICATION_ID: data.FINDING_CODE + "$",
             NOTIFICATION_TIME: new Date(),
+            NOTIFICATION_STATUS: 0,
             FINDING_UPDATE_TIME: data.UPDATE_TIME,
             FINDING_CODE: data.FINDING_CODE
         }
@@ -1728,6 +1729,7 @@ class SyncScreen extends React.Component {
             if (data.PROGRESS >= 100 && data.RATING_VALUE > 0) {
                 //yang ditugaskan mendapat rating
                 newNotif.NOTIFICATION_TYPE = 5;
+                newNotif.NOTIFICATION_STATUS = 0;
                 TaskServices.saveData('TR_NOTIFICATION', newNotif);
             }
         }
