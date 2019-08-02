@@ -104,7 +104,7 @@ class FormStep2 extends Component {
             person: [],
             disableCalendar: true,
 
-            //Add Modal Alert by Aminju 
+            //Add Modal Alert by Aminju
             title: 'Title',
             message: 'Message',
             showModal: false,
@@ -136,14 +136,13 @@ class FormStep2 extends Component {
     }
 
     handleBackButtonClick() {
-        this.setState({
-            showModalConfirmation: true,
-            title: 'Data Hilang',
-            message: 'Temuan mu belum tersimpan loh. Yakin nih mau dilanjutin?',
-            icon: require('../../Images/ic-not-save.png')
-        });
-
-        return true;
+        // this.setState({
+        //     showModalConfirmation: true,
+        //     title: 'Data Hilang',
+        //     message: 'Temuan mu belum tersimpan loh. Yakin nih mau dilanjutin?',
+        //     icon: require('../../Images/ic-not-save.png')
+        // });
+        return false;
     }
 
     clearFoto() {
@@ -429,7 +428,7 @@ class FormStep2 extends Component {
                                         <Text
                                             style={[
                                                 Fonts.style.caption,
-                                                { paddingLeft: 3, color: rowData.step == Colors.brand }
+                                                { paddingLeft: 3, color: Colors.brand }
                                             ]}
                                         >
                                             {rowData.title}

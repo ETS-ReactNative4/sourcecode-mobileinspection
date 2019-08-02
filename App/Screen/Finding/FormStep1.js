@@ -20,6 +20,7 @@ import random from 'random-string'
 import TaskServices from '../../Database/TaskServices'
 import RNFS from 'react-native-fs';
 import MapView from 'react-native-maps';
+import ModalAlertConfirmation from "../../Component/ModalAlertConfirmation";
 const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
 const LATITUDE = -2.952421;
 const LONGITUDE = 112.354931;
@@ -49,14 +50,14 @@ class FormStep1 extends Component {
 
     constructor(props) {
         super(props);
-        
+
         this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
         this.clearFoto = this.clearFoto.bind(this);
 
         this.state = {
 			track:true,
 			latitude: 0.0,
-			longitude: 0.0, 
+			longitude: 0.0,
 			region: {
 			  latitude: LATITUDE,
 			  longitude: LONGITUDE,
@@ -75,7 +76,7 @@ class FormStep1 extends Component {
             fetchLocation: false,
             isMounted: false,
 
-            //Add Modal Alert by Aminju 
+            //Add Modal Alert by Aminju
             title: 'Title',
             message: 'Message',
             showModal: false,
@@ -85,11 +86,11 @@ class FormStep1 extends Component {
 
     clearFoto(){
         if(this.state.photos.length > 0){
-            this.state.photos.map(item =>{                
+            this.state.photos.map(item =>{
                 RNFS.unlink(item.uri)
             })
         }
-        this.props.navigation.goBack(); 
+        this.props.navigation.goBack();
     }
 
     componentDidMount() {
@@ -102,8 +103,16 @@ class FormStep1 extends Component {
         BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
     }
 
-    handleBackButtonClick() { 
-        this.clearFoto()
+    handleBackButtonClick() {
+        if(this.state.photos.length > 0){
+            this.setState({
+                showModalConfirmation: true,
+                title: 'Data Hilang',
+                message: 'Temuan mu belum tersimpan loh. Yakin nih mau dilanjutin?',
+                icon: require('../../Images/ic-not-save.png')
+            });
+            return true
+        }
         return false;
     }
 
@@ -127,7 +136,7 @@ class FormStep1 extends Component {
             { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
         );
     }
-    
+
     // exitAlert = () => {
     //     if (this.state.photos.length == 0) {
     //         this.props.navigation.goBack(null)
@@ -161,19 +170,21 @@ class FormStep1 extends Component {
         } else if (this.state.selectedPhotos.length == 0) {
             this.setState({ showModal: true, title: 'Foto Temuan', message: 'Kamu harus ambil min. 1 foto yoo.', icon: require('../../Images/ic-no-pic.png') });
         } else {
+            BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
             let images = [];
             this.state.selectedPhotos.map((item) => {
-                let da = item.split('/')
+                let da = item.split('/');
                 let imgName = da[da.length-1];
                 images.push(imgName);
-                const navigation = this.props.navigation;
-                const resetAction = StackActions.reset({
-                    index: 0,
-                    actions: [NavigationActions.navigate({ routeName: 'Step2', params:{image: images, lat: this.state.latitude, lon:this.state.longitude} })],
-                });
-                navigation.dispatch(resetAction);
+                this.props.navigation.navigate('Step2', {image: images, lat: this.state.latitude, lon:this.state.longitude});
+                // const navigation = this.props.navigation;
+                // const resetAction = StackActions.reset({
+                //     index: 0,
+                //     actions: [NavigationActions.navigate({ routeName: 'Step2', params:{image: images, lat: this.state.latitude, lon:this.state.longitude} })],
+                // });
+                // navigation.dispatch(resetAction);
 
-            });            
+            });
         }
     }
 
@@ -198,7 +209,7 @@ class FormStep1 extends Component {
         } else {
             if (selectedPhotos.length > 2) {
                 // alert("Hanya 3 foto yang bisa dipilih")
-                this.setState({ showModal: true, title: 'Pilih Foto', message: 'Kamu cuma bisa pilih 3 foto aja yaa..', icon: require('../../Images/ic-no-pic.png') });    
+                this.setState({ showModal: true, title: 'Pilih Foto', message: 'Kamu cuma bisa pilih 3 foto aja yaa..', icon: require('../../Images/ic-no-pic.png') });
             } else {
                 selectedPhotos.push(foto);
             }
@@ -262,7 +273,7 @@ class FormStep1 extends Component {
 						let lon = event.nativeEvent.coordinate.longitude;
 						this.setState({
 							track:false,
-							latitude:lat, 
+							latitude:lat,
 							longitude:lon,
 							region : {
 								latitude: lat,
@@ -277,6 +288,7 @@ class FormStep1 extends Component {
 				  }}
 				>
 				</MapView >
+
                 <Content style={{ flex: 1 ,marginTop:5}}>
                     {/* STEPPER */}
 
@@ -284,6 +296,14 @@ class FormStep1 extends Component {
                         icon={this.state.icon}
                         visible={this.state.showModal}
                         onPressCancel={() => this.setState({ showModal: false })}
+                        title={this.state.title}
+                        message={this.state.message} />
+
+                    <ModalAlertConfirmation
+                        icon={this.state.icon}
+                        visible={this.state.showModalConfirmation}
+                        onPressCancel={() => this.setState({ showModalConfirmation: false })}
+                        onPressSubmit={() => { this.clearFoto() }}
                         title={this.state.title}
                         message={this.state.message} />
 
@@ -375,7 +395,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        
+
     };
 };
 
