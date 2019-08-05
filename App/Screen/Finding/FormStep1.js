@@ -95,12 +95,18 @@ class FormStep1 extends Component {
 
     componentDidMount() {
        this.getLocation();
-       this.props.navigation.setParams({ clearFoto: this.clearFoto })
-       BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
+       this.props.navigation.setParams({ clearFoto: this.clearFoto });
+        this.focusListener = this.props.navigation.addListener("didFocus", () => {
+            BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
+        });
+        this.blurListener = this.props.navigation.addListener("didBlur", ()=>{
+            BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+        })
     }
 
     componentWillUnmount(){
-        BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+        this.focusListener.remove();
+        this.blurListener.remove();
     }
 
     handleBackButtonClick() {
@@ -170,7 +176,6 @@ class FormStep1 extends Component {
         } else if (this.state.selectedPhotos.length == 0) {
             this.setState({ showModal: true, title: 'Foto Temuan', message: 'Kamu harus ambil min. 1 foto yoo.', icon: require('../../Images/ic-no-pic.png') });
         } else {
-            BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
             let images = [];
             this.state.selectedPhotos.map((item) => {
                 let da = item.split('/');
