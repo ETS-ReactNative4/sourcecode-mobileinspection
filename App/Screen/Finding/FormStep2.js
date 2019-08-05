@@ -142,7 +142,8 @@ class FormStep2 extends Component {
         //     message: 'Temuan mu belum tersimpan loh. Yakin nih mau dilanjutin?',
         //     icon: require('../../Images/ic-not-save.png')
         // });
-        return false;
+        this.props.navigation.pop();
+        return true;
     }
 
     clearFoto() {
