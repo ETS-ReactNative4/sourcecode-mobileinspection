@@ -90,7 +90,7 @@ class FormStep1 extends Component {
                 RNFS.unlink(item.uri)
             })
         }
-        this.props.navigation.goBack();
+        this.props.navigation.pop();
     }
 
     componentDidMount() {
@@ -194,12 +194,14 @@ class FormStep1 extends Component {
     }
 
     onRefresh = image =>{
-        const photos = R.clone(this.state.photos)
-        photos.push({ uri: FILE_PREFIX+image, index: photos.length })
+        const photos = R.clone(this.state.photos);
+        photos.push({ uri: FILE_PREFIX+image, index: photos.length });
         this.setState({
             photos,
+        },()=>{
+            this.props.navigation.setParams({photoLength: this.state.photos.length});
+            BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
         });
-        BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
     }
 
     takePicture() {

@@ -127,7 +127,7 @@ export default class Genba extends Component {
         let fileteredContactGenba = [];
         let currentUser = TaskServices.getAllData('TR_LOGIN')[0];
         contactGenba.map((data)=>{
-            if(this.rankChecker(data.USER_AUTH_CODE, currentUser) && this.BAChecker(data.LOCATION_CODE, currentUser)){
+            if(this.rankChecker(data.USER_AUTH_CODE, currentUser) && this.BAChecker(data, currentUser)){
                 fileteredContactGenba.push(data);
             }
         });
@@ -220,30 +220,46 @@ export default class Genba extends Component {
     }
 
     BAChecker(listContact, currentUser){
-        let listBA = listContact.split(",");
-        let listUser = currentUser.LOCATION_CODE.split(",");
         let sameBAStatus = false;
-        // let result = listBA.filter(element => listUser.includes(element))
-        // if(listBA.includes("ALL") || result.length > 0){
-        //     return true
-        // }
-        if(currentUser.LOCATION_CODE === "ALL"){
+        if(listContact.LOCATION_CODE === "ALL" || currentUser.USER_ROLE === "ADMIN" || currentUser.USER_ROLE === "CEO"){
             sameBAStatus = true;
         }
-        else if(listUser.length === 1){
-            listBA.map((data)=>{
-                if(data.includes(currentUser.LOCATION_CODE)){
-                    sameBAStatus = true;
+        else {
+            let selectedUserBA = listContact.LOCATION_CODE.split(",");
+            let currentUserBA = currentUser.LOCATION_CODE.split(",");
+
+            if(currentUser.USER_ROLE === "CEO_REG"){
+                let tempBA = [];
+                let tmEST = TaskServices.getAllData('TM_EST');
+                if(tmEST.length > 0){
+                    tmEST.map((data)=>{
+                        tempBA.push(data.WERKS);
+                        currentUserBA = tempBA
+                    })
                 }
-            });
-        }
-        else if(listUser.length > 1){
-            const intersection = listUser.filter(element => listBA.includes(element));
-            console.log(listBA, listUser, intersection);
-            if(intersection.length > 0){
-                sameBAStatus = true;
             }
 
+            else{
+                //REF_ROLE COMP_CODE FILTER BEDA
+                if(listContact.REF_ROLE === "COMP_CODE"){
+                    let tmComp = TaskServices.getAllData('TM_COMP');
+                    if(tmComp !== undefined && tmComp.length > 0){
+                        tmComp.map((tmComp)=>{
+                            selectedUserBA.map((selectedUserBA)=>{
+                                if(selectedUserBA === tmComp.COMP_CODE){
+                                    sameBAStatus = true;
+                                }
+                            })
+                        })
+                    }
+                }
+                else {
+                    const intersection = currentUserBA.filter(element => listContact.LOCATION_CODE.includes(element));
+                    if(intersection.length > 0){
+                        sameBAStatus = true;
+                    }
+                }
+            }
         }
         return sameBAStatus;
     }
