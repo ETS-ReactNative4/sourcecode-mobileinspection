@@ -20,6 +20,20 @@ const images = {
     ic_filter_off: require('../Images/ic-filter-off.png'),
     ic_inbox: require('../Images/icon/ic_inbox.png'),
     ic_sync: require('../Images/icon/ic_sync.png'),
+    ic_orang: require('../Images/ic-orang.png'),
+    ic_comment: require('../Images/icon/ic_comment.png'),
+    ic_map: require('../Images/icon/ic_map_point_green.png'),
+    ic_camera_big: require('../Images/icon/ic_camera_big.png'),
+
+    //Rating Icon
+    ic_rating_bad: require('../Images/icon/ic-rating-bad.png'),
+    ic_rating_bad_noactive: require('../Images/icon/ic-rating-bad-notactive.png'),
+    ic_rating_ok: require('../Images/icon/ic-rating-ok.png'),
+    ic_rating_ok_noactive: require('../Images/icon/ic-rating-ok-notactive.png'),
+    ic_rating_good: require('../Images/icon/ic-rating-good.png'),
+    ic_rating_good_noactive: require('../Images/icon/ic-rating-good-notactive.png'),
+    ic_rating_great: require('../Images/icon/ic-rating-great.png'),
+    ic_rating_great_noactive: require('../Images/icon/ic-rating-great-notactive.png'),
 
     // Images
     img_no_picture: require('../Images/img-no-picture.png'),
