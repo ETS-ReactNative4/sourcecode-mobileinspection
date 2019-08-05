@@ -37,11 +37,11 @@ export function getStatusTemuan(value) {
 export function getColor(status) {
   switch (status) {
     case 'SELESAI':
-      return 'rgba(35, 144, 35, 0.9)';
+      return 'rgba(35, 144, 35, 0.8)';
     case 'SEDANG DIPROSES':
-      return 'rgba(254, 178, 54, 0.9)';
+      return 'rgba(254, 178, 54, 0.8)';
     case 'BARU':
-      return 'rgba(255, 77, 77, 0.9)';
+      return 'rgba(255, 77, 77, 0.8)';
     case 'Batas waktu belum ditentukan':
       return 'red';
     default:

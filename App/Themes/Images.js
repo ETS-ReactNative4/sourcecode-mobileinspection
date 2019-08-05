@@ -39,6 +39,7 @@ const images = {
     img_no_picture: require('../Images/img-no-picture.png'),
     img_no_filter: require('../Images/img-no-filter.png'),
     img_no_data: require('../Images/img-belum-ada-data.png'),
+    img_no_data_finding: require('../Images/belum-ada-temuan.png'),
 
     //Alert Images
     img_input_tidak_lengkap: require('../Images/ic-inputan-tidak-lengkap.png'),

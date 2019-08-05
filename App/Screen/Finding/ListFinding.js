@@ -1,52 +1,35 @@
 'use strict';
 import React, { Component } from 'react'
-import { AppState, View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native'
 import R, { isEmpty } from 'ramda'
-import {
-  Container,
-  Content
-} from 'native-base'
 import moment from 'moment'
 import ActionButton from 'react-native-action-button'
 import Colors from '../../Constant/Colors'
-import Dash from 'react-native-dash'
 import TaskServices from '../../Database/TaskServices'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import Icon2 from 'react-native-vector-icons/MaterialIcons'
 import RNFS from 'react-native-fs'
 import RNFetchBlob from 'rn-fetch-blob'
 import { dirPhotoTemuan } from '../../Lib/dirStorage';
-import { NavigationActions, StackActions } from 'react-navigation';
 import ServerName from '../../Constant/ServerName'
-// import layer from '../../Data/skm.json'
-
-import MapView from 'react-native-maps';
-import Geojson from 'react-native-geojson';
-
-const alcatraz = {
-  type: 'FeatureCollection',
-  features: [
-    {
-      type: 'Feature',
-      properties: {},
-      geometry: {
-        type: 'Point',
-        coordinates: [-122.42305755615234, 37.82687023785448],
-      }
-    }
-  ]
-};
+import { getColor } from '../../Themes/Resources';
+import { getEstateName, getBlokName } from '../../Database/Resources';
+import FeatureDaftarTemuan from '../../Component/FeatureDaftarTemuan'
+import TemplateNoData from '../../Component/TemplateNoData';
+import { Images } from '../../Themes';
 
 export default class ListFinding extends Component {
 
   constructor(props) {
+
     super(props);
     this.state = {
+      dataFinding: [],
       dataLewat: [],
       data7Hari: [],
       dataMore7Hari: [],
       dataNoDate: [],
-      dataSelesai:[],
+      dataSelesai: [],
       refreshing: false
     }
 
@@ -70,6 +53,8 @@ export default class ListFinding extends Component {
 
     const login = TaskServices.getAllData('TR_LOGIN');
     const user_auth = login[0].USER_AUTH_CODE;
+
+    const dataFinding = TaskServices.getAllData('TR_FINDING');
 
     var data = TaskServices.query('TR_FINDING', `PROGRESS < 100 AND ASSIGN_TO = "${user_auth}"`);
 
@@ -101,52 +86,19 @@ export default class ListFinding extends Component {
 
     var dataSelesai = TaskServices.query('TR_FINDING', `PROGRESS = 100 AND ASSIGN_TO = "${user_auth}"`);
 
-    this.setState({ dataLewat, data7Hari, dataMore7Hari, dataNoDate, dataSelesai })
+    this.setState({ dataFinding, dataLewat, data7Hari, dataMore7Hari, dataNoDate, dataSelesai })
   }
 
   actionButtonClick() {
-    // this.props.navigation.navigate('FindingFormNavigator')
     this.props.navigation.navigate('Step1')
-    // this.props.navigation.dispatch(NavigationActions.navigate({ routeName: 'BuatInspeksi'}));
-  }
-
-  getColor(param) {
-    switch (param) {
-      case 'SELESAI':
-        return 'rgba(35, 144, 35, 0.7)';
-      case 'SEDANG DIPROSES':
-        return 'rgba(254, 178, 54, 0.7)';
-      case 'BARU':
-        return 'rgba(255, 77, 77, 0.7)';
-      default:
-        return '#ff7b25';
-    }
-  }
-
-  getEstateName(werks) {
-    try {
-      let data = TaskServices.findBy2('TM_EST', 'WERKS', werks);
-      return data.EST_NAME;
-    } catch (error) {
-      return '';
-    }
-  }
-
-  getBlokName(blockCode) {
-    try {
-      let data = TaskServices.findBy2('TM_BLOCK', 'BLOCK_CODE', blockCode);
-      return data.BLOCK_NAME;
-    } catch (error) {
-      return ''
-    }
   }
 
   getImageBaseOnFindingCode(findingCode) {
     const user = TaskServices.getAllData('TR_LOGIN')[0];
     const url = "http://149.129.245.230:3012/images/" + findingCode;
-	let serv = TaskServices.getAllData("TM_SERVICE")
-				.filtered('API_NAME="IMAGES-GET-BY-ID" AND MOBILE_VERSION="'+ServerName.verAPK+'"')[0];
-    fetch(serv.API_URL+""+findingCode, {
+    let serv = TaskServices.getAllData("TM_SERVICE")
+      .filtered('API_NAME="IMAGES-GET-BY-ID" AND MOBILE_VERSION="' + ServerName.verAPK + '"')[0];
+    fetch(serv.API_URL + "" + findingCode, {
       method: serv.METHOD,
       headers: {
         'Cache-Control': 'no-cache',
@@ -198,42 +150,41 @@ export default class ListFinding extends Component {
       config(options).fetch('GET', url).then((res) => {
         // alert("Success Downloaded " + res);
       }).catch((error) => {
-        // alert(error);
         console.log(error);
       });
     }
   }
 
-  onClickItem(id) {
+  onClickItem = (id) => {
     var images = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', id);
     if (images !== undefined) {
       this.props.navigation.navigate('DetailFinding', { ID: id })
-    }else{
+    } else {
       this.getImageBaseOnFindingCode(id)
       setTimeout(() => {
         this.props.navigation.navigate('DetailFinding', { ID: id })
       }, 3000);
-    }    
+    }
   }
 
-  _renderItem = (item, index) => {
+  renderItem = (item, index) => {
     const image = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', item.FINDING_CODE)
-    var label = this.getColor(item.STATUS);
+    var label = getColor(item.STATUS);
     let showImage;
     if (image == undefined) {
       showImage = <Image style={{ alignItems: 'stretch', width: 120, height: 120, borderRadius: 10 }} source={require('../../Images/ic-default-thumbnail.png')} />
     } else {
       showImage = <Image style={{ alignItems: 'stretch', width: 120, height: 120, borderRadius: 10 }} source={{ uri: "file://" + image.IMAGE_PATH_LOCAL }} />
     }
-    let showBlockDetail = `${this.getEstateName(item.WERKS)}-${this.getBlokName(item.BLOCK_CODE)}`
+    let showBlockDetail = `${getEstateName(item.WERKS)}-${getBlokName(item.BLOCK_CODE)}`
     return (
       < TouchableOpacity
-        onPress={() => { this.onClickItem(item.FINDING_CODE) }}
+        onPress={() => this.onClickItem(item.FINDING_CODE)}
         key={index}
       >
         <View style={{ height: 120, width: 120, marginLeft: 16 }}>
           {showImage}
-          <View style={[styles.labelBackground, {backgroundColor: label}]}>
+          <View style={[styles.labelBackground, { backgroundColor: label }]}>
             <Icon name={'map-marker-alt'} color={'white'} size={12}
               style={{ marginRight: 5, marginTop: 1 }} />
             <Text style={{ fontSize: 8, color: 'white', textAlignVertical: 'center' }}>{showBlockDetail}</Text>
@@ -243,125 +194,63 @@ export default class ListFinding extends Component {
     )
   }
 
-  render() {
+  renderData = () => {
     return (
-      <Container style={{ flex: 1 }}>
-        <Content style={styles.container} >
-          <Text style={{ fontSize: 16, fontWeight: 'bold', paddingHorizontal: 16 }}>
-            Belum Ada Batas Waktu
-          </Text>
+      <ScrollView
+        contentContainerStyle={{ paddingBottom: 16, paddingTop: 16 }}
+        showsVerticalScrollIndicator={false}>
+        {/* Add by Aminju 05/08/2019 */}
+        {/* Temuan belum ada batas waktu */}
+        {this.state.dataNoDate.length > 0 &&
+          <FeatureDaftarTemuan title={'Belum Ada Batas Waktu'} >
+            {this.state.dataNoDate.map((item, index) => this.renderItem(item, index))}
+          </FeatureDaftarTemuan>}
 
-          <Dash
-            dashColor={'#ccc'}
-            dashThickness={1}
-            dashGap={5}
-            style={{
-              height: 1, marginLeft: 16, marginRight: 16, marginTop: 10
-            }} />
+        {/* Temuan sudah lewat batas waktu */}
+        {this.state.dataLewat.length > 0 &&
+          <FeatureDaftarTemuan title={'Lewat batas waktu'} >
+            {this.state.dataLewat.map((item, index) => this.renderItem(item, index))}
+          </FeatureDaftarTemuan>}
 
-          <View style={{ marginTop: 16, height: 120 }}>
-            <ScrollView contentContainerStyle={{ paddingRight: 16 }} horizontal={true} showsHorizontalScrollIndicator={false}>
-              {this.state.dataNoDate.map((item, index) => this._renderItem(item, index))}
-            </ScrollView >
-          </View>
+        {/* Temuan dengan batas waktu dalam jangka 7 hari */}
+        {this.state.data7Hari.length > 0 && <FeatureDaftarTemuan title={'Batas waktu dalam 7 hari'} >
+          {this.state.data7Hari.map((item, index) => this.renderItem(item, index))}
+        </FeatureDaftarTemuan>}
 
-          <View style={styles.devider} />
+        {/* Temuan dengan batas waktu lebihh dari 7 hari */}
+        {this.state.dataMore7Hari.length > 0 && <FeatureDaftarTemuan title={' Batas waktu >7 hari'} >
+          {this.state.dataMore7Hari.map((item, index) => this.renderItem(item, index))}
+        </FeatureDaftarTemuan>}
 
-          <Text style={{ fontSize: 16, fontWeight: 'bold', paddingHorizontal: 16 }}>
-            Lewat batas waktu
-          </Text>
-          <Dash
-            dashColor={'#ccc'}
-            dashThickness={1}
-            dashGap={5}
-            style={{
-              height: 1, marginLeft: 16, marginRight: 16, marginTop: 10
-            }} />
+        {/* Temuan selesai */}
+        {this.state.dataSelesai.length > 0 && <FeatureDaftarTemuan title={'Selesai'} divider={true}>
+          {this.state.dataSelesai.map((item, index) => this.renderItem(item, index))}
+        </FeatureDaftarTemuan>}
+      </ScrollView>
+    )
+  }
 
-          <View style={{ marginTop: 16, height: 120 }}>
-            <ScrollView contentContainerStyle={{ paddingRight: 16 }} horizontal={true} showsHorizontalScrollIndicator={false}>
-              {this.state.dataLewat.map(this._renderItem)}
-            </ScrollView >
-          </View>
+  render() {
+    {/* Add by Aminju 05/08/2019 */ }
+    return (
+      <View style={styles.container} >
 
-          <View style={styles.devider} />
-
-          <Text style={{ fontSize: 16, fontWeight: 'bold', paddingHorizontal: 16 }}>
-            Batas waktu dalam 7 hari
-          </Text>
-          <Dash
-            dashColor={'#ccc'}
-            dashThickness={1}
-            dashGap={5}
-            style={{
-              height: 1, marginLeft: 16, marginRight: 16, marginTop: 10
-            }} />
-
-          <View style={{ marginTop: 16, height: 120 }}>
-            <ScrollView contentContainerStyle={{ paddingRight: 16 }} horizontal={true} showsHorizontalScrollIndicator={false}>
-              {this.state.data7Hari.map(this._renderItem)}
-            </ScrollView >
-          </View>
-
-          <View style={styles.devider} />
-
-          <Text style={{ fontSize: 16, fontWeight: 'bold', paddingHorizontal: 16 }}>
-            Batas waktu >7 hari
-          </Text>
-
-          <Dash
-            dashColor={'#ccc'}
-            dashThickness={1}
-            dashGap={5}
-            style={{
-              height: 1, marginLeft: 16, marginRight: 16, marginTop: 10
-            }} />
-
-          <View style={{ marginTop: 16, height: 120, marginBottom: 32 }}>
-            <ScrollView contentContainerStyle={{ paddingRight: 16 }} horizontal={true} showsHorizontalScrollIndicator={false}>
-              {this.state.dataMore7Hari.map(this._renderItem)}
-            </ScrollView >
-          </View>
-
-          {/* list done */}
-          <View style={styles.devider} />
-
-          <Text style={{ fontSize: 16, fontWeight: 'bold', paddingHorizontal: 16 }}>
-            Selesai
-          </Text>
-
-          <Dash
-            dashColor={'#ccc'}
-            dashThickness={1}
-            dashGap={5}
-            style={{
-              height: 1, marginLeft: 16, marginRight: 16, marginTop: 10
-            }} />
-
-          <View style={{ marginTop: 16, height: 120, marginBottom: 32 }}>
-            <ScrollView contentContainerStyle={{ paddingRight: 16 }} horizontal={true} showsHorizontalScrollIndicator={false}>
-              {this.state.dataSelesai.map(this._renderItem)}
-            </ScrollView >
-          </View>
-
-        </Content>
+        {this.state.dataFinding.length > 0 ? this.renderData() : <TemplateNoData img={Images.img_no_data_finding} />}
 
         <ActionButton style={{ marginEnd: -10, marginBottom: -10 }}
           buttonColor={Colors.tintColor}
           onPress={() => { this.actionButtonClick() }}
           icon={<Icon2 color='white' name='add' size={25} />}>
         </ActionButton>
-      </Container >
-
+      </View >
     )
   }
-}
 
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 16,
     backgroundColor: '#fff'
   },
   ActionButtonStyle: {
