@@ -33,7 +33,7 @@ const images = {
     ic_rating_good: require('../Images/icon/ic-rating-good.png'),
     ic_rating_good_noactive: require('../Images/icon/ic-rating-good-notactive.png'),
     ic_rating_great: require('../Images/icon/ic-rating-great.png'),
-    ic_rating_great_noative: require('../Images/icon/ic-rating-great-notactive.png'),
+    ic_rating_great_noactive: require('../Images/icon/ic-rating-great-notactive.png'),
 
     // Images
     img_no_picture: require('../Images/img-no-picture.png'),

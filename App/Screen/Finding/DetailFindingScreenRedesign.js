@@ -15,7 +15,7 @@ import { changeFormatDate, getTodayDate, dateDisplayMobile, dateDisplayMobileWit
 import ModalAlert from '../../Component/ModalAlert';
 import ModalAlertBack from '../../Component/ModalAlert';
 import { Images, AlertContent } from '../../Themes';
-import { getIconProgress, getRating, onPressRating, getStatusImage, getColor, getStatusTemuan } from '../../Themes/Resources';
+import { getIconProgress, getRating, getStatusImage, getColor, getStatusTemuan } from '../../Themes/Resources';
 import { getContactName, getEstateName, getStatusBlok, getBlokName } from '../../Database/Resources';
 
 const IconRating = (props) => {
@@ -470,10 +470,10 @@ class DetailFindingScreenRedesign extends Component {
                             }}>
                                 <Text style={{ fontWeight: 'bold' }}>Berikan rating untuk tugas ini?</Text>
                                 <View style={{ flexDirection: 'row', marginTop: 10 }}>
-                                    <IconRating onPress={() => onPressRating(1)} activeRating={this.state.activeRatingBad} iconActive={Images.ic_rating_bad} iconNonActive={Images.ic_rating_bad_noactive} />
-                                    <IconRating onPress={() => onPressRating(2)} activeRating={this.state.activeRatingOk} iconActive={Images.ic_rating_ok} iconNonActive={Images.ic_rating_ok_noactive} />
-                                    <IconRating onPress={() => onPressRating(3)} activeRating={this.state.activeRatingGood} iconActive={Images.ic_rating_good} iconNonActive={Images.ic_rating_good_noactive} />
-                                    <IconRating onPress={() => onPressRating(4)} activeRating={this.state.activeRatingGreat} iconActive={Images.ic_rating_great} iconNonActive={Images.ic_rating_great_noactive} />
+                                    <IconRating onPress={() => this.onPressRating(1)} activeRating={this.state.activeRatingBad} iconActive={Images.ic_rating_bad} iconNonActive={Images.ic_rating_bad_noactive} />
+                                    <IconRating onPress={() => this.onPressRating(2)} activeRating={this.state.activeRatingOk} iconActive={Images.ic_rating_ok} iconNonActive={Images.ic_rating_ok_noactive} />
+                                    <IconRating onPress={() => this.onPressRating(3)} activeRating={this.state.activeRatingGood} iconActive={Images.ic_rating_good} iconNonActive={Images.ic_rating_good_noactive} />
+                                    <IconRating onPress={() => this.onPressRating(4)} activeRating={this.state.activeRatingGreat} iconActive={Images.ic_rating_great} iconNonActive={Images.ic_rating_great_noactive} />
                                 </View>
                             </View>
                             <Text style={{ fontWeight: 'bold' }}>Ada pesan untuk {contactAsign.FULLNAME}?</Text>
@@ -521,6 +521,27 @@ class DetailFindingScreenRedesign extends Component {
                 </Content>
             </Container>
         )
+    }
+
+
+    //HANDLE PRESS RATING
+    onPressRating(index) {
+        switch (index) {
+            case 1:
+                this.setState({ activeRatingBad: true, activeRatingOk: false, activeRatingGood: false, activeRatingGreat: false, newRating: 1 })
+                return;
+            case 2:
+                this.setState({ activeRatingBad: false, activeRatingOk: true, activeRatingGood: false, activeRatingGreat: false, newRating: 2 })
+                return;
+            case 3:
+                this.setState({ activeRatingBad: false, activeRatingOk: false, activeRatingGood: true, activeRatingGreat: false, newRating: 3 })
+                return;
+            case 4:
+                this.setState({ activeRatingBad: false, activeRatingOk: false, activeRatingGood: false, activeRatingGreat: true, newRating: 4 })
+                return;
+            default:
+                return;
+        }
     }
 
 }
