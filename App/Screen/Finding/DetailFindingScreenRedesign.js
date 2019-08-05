@@ -15,9 +15,28 @@ import { changeFormatDate, getTodayDate, dateDisplayMobile, dateDisplayMobileWit
 import ModalAlert from '../../Component/ModalAlert';
 import ModalAlertBack from '../../Component/ModalAlert';
 import { Images, AlertContent } from '../../Themes';
+import { getIconProgress, getRating, onPressRating, getStatusImage, getColor, getStatusTemuan } from '../../Themes/Resources';
+import { getContactName, getEstateName, getStatusBlok, getBlokName } from '../../Database/Resources';
+
+const IconRating = (props) => {
+    const styImage = {
+        alignItems: 'stretch', width: 50, height: 50
+    }
+    return (
+        <TouchableOpacity
+            onPress={props.onPress}>
+            {props.activeRating ?
+                <Image style={styImage}
+                    source={props.iconActive}>
+                </Image> :
+                <Image style={styImage}
+                    source={props.iconNonActive}>
+                </Image>}
+        </TouchableOpacity>
+    )
+}
 
 class DetailFindingScreenRedesign extends Component {
-
 
     constructor(props) {
         super(props)
@@ -97,7 +116,7 @@ class DetailFindingScreenRedesign extends Component {
         let insertTime = dateDisplayMobile(changeFormatDate("" + this.state.data.INSERT_TIME, "YYYY-MM-DD hh-mm-ss"));
         let contact = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', this.state.data.INSERT_USER);
         let werkAfdBlokCode = `${this.state.data.WERKS}${this.state.data.AFD_CODE}${this.state.data.BLOCK_CODE}`;
-        let lokasiBlok = `${this.getBlokName(werkAfdBlokCode)}/${this.getStatusBlok(werkAfdBlokCode)}/${this.getEstateName(this.state.data.WERKS)}`;
+        let lokasiBlok = `${getBlokName(werkAfdBlokCode)}/${getStatusBlok(werkAfdBlokCode)}/${getEstateName(this.state.data.WERKS)}`;
 
         this.setState({ insertTime, fullName: contact.FULLNAME, lokasiBlok })
     }
@@ -108,27 +127,6 @@ class DetailFindingScreenRedesign extends Component {
             this._showDateTimePicker()
         } else {
             this.setState(AlertContent.temuan);
-        }
-    }
-
-    getStatusImage(status) {
-        if (status == 'SEBELUM') {
-            return "Before"
-        } else if ('SESUDAH') {
-            return "After"
-        }
-    }
-
-    getColor(param) {
-        switch (param) {
-            case 'SELESAI':
-                return 'rgba(35, 144, 35, 0.7)';
-            case 'SEDANG DIPROSES':
-                return 'rgba(254, 178, 54, 0.7)';
-            case 'BARU':
-                return 'rgba(255, 77, 77, 0.7)';
-            default:
-                return '#ff7b25';
         }
     }
 
@@ -156,16 +154,6 @@ class DetailFindingScreenRedesign extends Component {
         }
     }
 
-    getStatusTemuan(param) {
-        if (param == 0) {
-            return 'BARU'
-        } else if (param == 100) {
-            return 'SELESAI'
-        } else {
-            return 'SEDANG DIPROSES'
-        }
-    }
-
     validation() {
         if (this.state.imgBukti.length < 1 && this.state.progress == 100) {
             this.setState(AlertContent.ambil_photo);
@@ -179,32 +167,9 @@ class DetailFindingScreenRedesign extends Component {
     }
 
     _updateFinding() {
-        // let data = TaskServices.getAllData('TR_FINDING')
-        // let indexData = R.findIndex(R.propEq('FINDING_CODE', this.state.data.FINDING_CODE))(data);
-        let status = this.getStatusTemuan(this.state.progress);
+
+        let status = getStatusTemuan(this.state.progress);
         var updateTime = getTodayDate('YYYYMMDDkkmmss');
-
-        // var save = {
-        //     FINDING_CODE: this.state.data.FINDING_CODE,
-        //     WERKS: this.state.data.WERKS,
-        //     AFD_CODE: this.state.data.AFD_CODE,
-        //     BLOCK_CODE: this.state.data.BLOCK_CODE,
-        //     FINDING_CATEGORY: this.state.data.FINDING_CATEGORY,
-        //     FINDING_DESC: this.state.data.FINDING_DESC,
-        //     FINDING_PRIORITY: this.state.data.FINDING_PRIORITY,
-        //     DUE_DATE: this.state.updatedDueDate == "Select Calendar" ? this.state.data.DUE_DATE : this.state.updatedDueDate,
-        //     INSERT_TIME: this.state.data.INSERT_TIME,
-        //     STATUS: status,
-        //     ASSIGN_TO: this.state.data.ASSIGN_TO,
-        //     PROGRESS: this.state.progress,
-        //     LAT_FINDING: this.state.data.LAT_FINDING,
-        //     LONG_FINDING: this.state.data.LONG_FINDING,
-        //     REFFERENCE_INS_CODE: this.state.data.REFFERENCE_INS_CODE,
-        //     UPDATE_USER: this.state.user.USER_AUTH_CODE,
-        //     UPDATE_TIME: updateTime
-        // }
-
-        // TaskServices.updateFinding('TR_FINDING', [status, save.PROGRESS, 'N', save.DUE_DATE, save.UPDATE_USER, save.UPDATE_TIME], indexData);
         TaskServices.updateByPrimaryKey('TR_FINDING', {
             "FINDING_CODE": this.state.data.FINDING_CODE,
             "STATUS": status,
@@ -227,50 +192,6 @@ class DetailFindingScreenRedesign extends Component {
         });
     }
 
-    getContactName = (userAuth) => {
-        try {
-            let data = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', userAuth);
-            return data.FULLNAME;
-        } catch (error) {
-            return ''
-        }
-    }
-
-    getEstateName(werks) {
-        try {
-            let data = TaskServices.findBy2('TM_EST', 'WERKS', werks);
-            return data.EST_NAME;
-        } catch (error) {
-            return '';
-        }
-    }
-
-    getBlokName(werkAfdBlockCode) {
-        try {
-            let data = TaskServices.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', werkAfdBlockCode);
-            return data.BLOCK_NAME;
-        } catch (error) {
-            return ''
-        }
-    }
-
-    getStatusBlok(werk_afd_blok_code) {
-        try {
-            let data = TaskServices.findBy2('TM_LAND_USE', 'WERKS_AFD_BLOCK_CODE', werk_afd_blok_code);
-            return data.MATURITY_STATUS;
-        } catch (error) {
-            return ''
-        }
-    }
-
-    getWerksAfdBlokCode(blockCode) {
-        try {
-            let data = TaskServices.findBy2('TM_BLOCK', 'BLOCK_CODE', blockCode);
-            return data.WERKS_AFD_BLOCK_CODE;
-        } catch (error) {
-            return ''
-        }
-    }
     inputRating() {
         try {
             this.setState({
@@ -290,40 +211,22 @@ class DetailFindingScreenRedesign extends Component {
     render() {
         const category = TaskServices.findBy2('TR_CATEGORY', 'CATEGORY_CODE', this.state.data.FINDING_CATEGORY);
         let batasWaktu = '';
-        console.log('updatedDueDate : ', this.state.updatedDueDate)
+
         if (this.state.updatedDueDate == 'Select Calendar') {
             batasWaktu = 'Batas waktu belum ditentukan'
         } else {
             batasWaktu = moment(this.state.updatedDueDate).format('DD MMM YYYY')
         }
-        let sources;
-        if (this.state.data.STATUS == 'BARU') {
-            sources = Images.ic_new_timeline
-        } else if (this.state.data.STATUS == 'SELESAI') {
-            sources = Images.ic_done_timeline
-        } else {
-            sources = Images.ic_inprogress_timeline
-        }
+        let sources = getIconProgress(this.state.data.STATUS);
+
         if (this.state.images.length == 0) {
             //Edited by Gani
-            //this.state.images.push(require('../../Images/img-no-picture.png'))
             this.state.images.push("NO IMAGES")
         }
         let contactAsign = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', this.state.data.ASSIGN_TO);
         let iconRating = "";
         if (this.state.rating != 0) {
-            if (this.state.rating == 1) {
-                iconRating = require('../../Images/icon/ic-rating-bad.png');
-            }
-            else if (this.state.rating == 2) {
-                iconRating = require('../../Images/icon/ic-rating-ok.png');
-            }
-            else if (this.state.rating == 3) {
-                iconRating = require('../../Images/icon/ic-rating-good.png');
-            }
-            else if (this.state.rating == 4) {
-                iconRating = require('../../Images/icon/ic-rating-great.png');
-            }
+            iconRating = getRating(this.state.rating)
         }
 
         return (
@@ -347,7 +250,7 @@ class DetailFindingScreenRedesign extends Component {
 
                     <View style={{ flex: 1, flexDirection: 'row', marginTop: 15, paddingLeft: 15, paddingRight: 15 }}>
                         <Image style={{ marginRight: 16, width: 40, height: 40, borderRadius: 10 }}
-                            source={require('../../Images/ic-orang.png')}></Image>
+                            source={Images.ic_orang}></Image>
                         <View style={{ flex: 1 }} >
                             <Text style={{ fontSize: 14, fontWeight: 'bold', color: 'black' }}>{this.state.fullName}</Text>
                             <Text style={{ fontSize: 12, color: 'grey', marginTop: 3 }}>
@@ -374,13 +277,13 @@ class DetailFindingScreenRedesign extends Component {
                                                 padding: 5, position: 'absolute', top: 0, right: 10, zIndex: 1, justifyContent: 'center', alignItems: 'center',
                                                 margin: 10, borderRadius: 25,
                                             }}>
-                                                <Text style={{ fontSize: 10, color: 'white' }}>{this.getStatusImage(item.STATUS_IMAGE)}</Text>
+                                                <Text style={{ fontSize: 10, color: 'white' }}>{getStatusImage(item.STATUS_IMAGE)}</Text>
                                             </View>}
 
                                             {/*Gani*/}
                                             {this.state.images[0] == "NO IMAGES" &&
                                                 <Image style={{ width: '100%', height: '100%' }}
-                                                    source={require('../../Images/img-no-picture.png')}>
+                                                    source={Images.img_no_picture}>
                                                 </Image>
                                             }
                                             {this.state.images[0] != "NO IMAGES" &&
@@ -393,7 +296,7 @@ class DetailFindingScreenRedesign extends Component {
                                             {/*End Gani*/}
                                             <View style={{
                                                 flexDirection: 'row',
-                                                backgroundColor: this.getColor(this.state.data.STATUS),
+                                                backgroundColor: getColor(this.state.data.STATUS),
                                                 width: '100%', height: 35,
                                                 position: 'absolute', bottom: 0,
                                                 paddingLeft: 15
@@ -409,12 +312,6 @@ class DetailFindingScreenRedesign extends Component {
                                             })}
                                         </View>
                                     ) : null}
-                                // customButtons={(position, move) => (
-                                //     <View style={{ flex: 1, flexDirection: 'row', }}>
-                                //         {this.state.images.map((image, index) => {
-                                //         })}
-                                //     </View>
-                                // )}
                                 />
                             </View>
                         </View>
@@ -439,7 +336,7 @@ class DetailFindingScreenRedesign extends Component {
                                 justifyContent: 'center'
                             }}>
                                 <Image style={{ width: 30, height: 30 }}
-                                    source={require('../../Images/icon/ic_comment.png')}>
+                                    source={Images.ic_comment}>
                                 </Image>
                                 <Text
                                     style={{
@@ -453,7 +350,7 @@ class DetailFindingScreenRedesign extends Component {
 
                     <View style={{ flex: 1, flexDirection: 'row', paddingLeft: 15, paddingRight: 15 }}>
                         <Image style={{ alignItems: 'stretch', width: 16, height: 22 }}
-                            source={require('../../Images/icon/ic_map_point_green.png')}>
+                            source={Images.ic_map}>
                         </Image>
 
                         <View style={{ flex: 2, marginLeft: 16 }}>
@@ -471,7 +368,7 @@ class DetailFindingScreenRedesign extends Component {
 
                             <View style={styles.column}>
                                 <Text style={styles.label}>Ditugaskan Kepada </Text>
-                                <Text style={styles.item}>: {this.getContactName(this.state.data.ASSIGN_TO)}</Text>
+                                <Text style={styles.item}>: {getContactName(this.state.data.ASSIGN_TO)}</Text>
                             </View>
 
                             <View style={styles.column}>
@@ -518,11 +415,7 @@ class DetailFindingScreenRedesign extends Component {
                                             progress
                                         })
 
-                                        // Alert.alert('Peringatan', 'Progress tidak boleh dimundurkan!', [
-                                        //     { text: 'OK' }
-                                        // ])
-
-                                        this.setState({ showModalBack: true, title: 'Progress Temuan', message: 'Opps.. Progress tidak boleh dimundurin yaaaa..', icon: require('../../Images/ic-batas-waktu.png') });
+                                        this.setState({ showModalBack: true, title: 'Progress Temuan', message: 'Opps.. Progress tidak boleh dimundurin yaaaa..', icon: Images.ic_batas_waktu });
 
                                     } else {
                                         this.setState({
@@ -551,7 +444,7 @@ class DetailFindingScreenRedesign extends Component {
                                     alignSelf: 'center', alignItems: 'stretch',
                                     width: 30, height: 30
                                 }}
-                                    source={require('../../Images/icon/ic_camera_big.png')}></Image>
+                                    source={Images.ic_camera_big}></Image>
                             </TouchableOpacity>
                         </Card>
                     </View>}
@@ -577,46 +470,10 @@ class DetailFindingScreenRedesign extends Component {
                             }}>
                                 <Text style={{ fontWeight: 'bold' }}>Berikan rating untuk tugas ini?</Text>
                                 <View style={{ flexDirection: 'row', marginTop: 10 }}>
-                                    <TouchableOpacity
-                                        onPress={() => this._onPressRating(1)}>
-                                        {this.state.activeRatingBad ?
-                                            <Image style={{ alignItems: 'stretch', width: 50, height: 50 }}
-                                                source={require('../../Images/icon/ic-rating-bad.png')}>
-                                            </Image> :
-                                            <Image style={{ alignItems: 'stretch', width: 50, height: 50 }}
-                                                source={require('../../Images/icon/ic-rating-bad-notactive.png')}>
-                                            </Image>}
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        onPress={() => this._onPressRating(2)}>
-                                        {this.state.activeRatingOk ?
-                                            <Image style={{ alignItems: 'stretch', width: 50, height: 50 }}
-                                                source={require('../../Images/icon/ic-rating-ok.png')}>
-                                            </Image> :
-                                            <Image style={{ alignItems: 'stretch', width: 50, height: 50 }}
-                                                source={require('../../Images/icon/ic-rating-ok-notactive.png')}>
-                                            </Image>}
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        onPress={() => this._onPressRating(3)}>
-                                        {this.state.activeRatingGood ?
-                                            <Image style={{ alignItems: 'stretch', width: 50, height: 50 }}
-                                                source={require('../../Images/icon/ic-rating-good.png')}>
-                                            </Image> :
-                                            <Image style={{ alignItems: 'stretch', width: 50, height: 50 }}
-                                                source={require('../../Images/icon/ic-rating-good-notactive.png')}>
-                                            </Image>}
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        onPress={() => this._onPressRating(4)}>
-                                        {this.state.activeRatingGreat ?
-                                            <Image style={{ alignItems: 'stretch', width: 50, height: 50 }}
-                                                source={require('../../Images/icon/ic-rating-great.png')}>
-                                            </Image> :
-                                            <Image style={{ alignItems: 'stretch', width: 50, height: 50 }}
-                                                source={require('../../Images/icon/ic-rating-great-notactive.png')}>
-                                            </Image>}
-                                    </TouchableOpacity>
+                                    <IconRating onPress={() => onPressRating(1)} activeRating={this.state.activeRatingBad} iconActive={Images.ic_rating_bad} iconNonActive={Images.ic_rating_bad_noactive} />
+                                    <IconRating onPress={() => onPressRating(2)} activeRating={this.state.activeRatingOk} iconActive={Images.ic_rating_ok} iconNonActive={Images.ic_rating_ok_noactive} />
+                                    <IconRating onPress={() => onPressRating(3)} activeRating={this.state.activeRatingGood} iconActive={Images.ic_rating_good} iconNonActive={Images.ic_rating_good_noactive} />
+                                    <IconRating onPress={() => onPressRating(4)} activeRating={this.state.activeRatingGreat} iconActive={Images.ic_rating_great} iconNonActive={Images.ic_rating_great_noactive} />
                                 </View>
                             </View>
                             <Text style={{ fontWeight: 'bold' }}>Ada pesan untuk {contactAsign.FULLNAME}?</Text>
@@ -666,48 +523,6 @@ class DetailFindingScreenRedesign extends Component {
         )
     }
 
-    _onPressRating(index) {
-        switch (index) {
-            case 1:
-                this.setState({
-                    activeRatingBad: true,
-                    activeRatingOk: false,
-                    activeRatingGood: false,
-                    activeRatingGreat: false,
-                    newRating: 1
-                })
-                return;
-            case 2:
-                this.setState({
-                    activeRatingBad: false,
-                    activeRatingOk: true,
-                    activeRatingGood: false,
-                    activeRatingGreat: false,
-                    newRating: 2
-                })
-                return;
-            case 3:
-                this.setState({
-                    activeRatingBad: false,
-                    activeRatingOk: false,
-                    activeRatingGood: true,
-                    activeRatingGreat: false,
-                    newRating: 3
-                })
-                return;
-            case 4:
-                this.setState({
-                    activeRatingBad: false,
-                    activeRatingOk: false,
-                    activeRatingGood: false,
-                    activeRatingGreat: true,
-                    newRating: 4
-                })
-                return;
-            default:
-                return;
-        }
-    }
 }
 
 export default DetailFindingScreenRedesign
