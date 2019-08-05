@@ -221,7 +221,7 @@ export default class Genba extends Component {
 
     BAChecker(listContact, currentUser){
         let sameBAStatus = false;
-        if(listContact.LOCATION_CODE === "ALL" || listContact.USER_ROLE === "ADMIN" || listContact.USER_ROLE === "CEO"){
+        if(listContact.LOCATION_CODE === "ALL" || currentUser.USER_ROLE === "ADMIN" || currentUser.USER_ROLE === "CEO"){
             sameBAStatus = true;
         }
         else {
