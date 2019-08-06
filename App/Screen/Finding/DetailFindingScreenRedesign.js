@@ -43,7 +43,6 @@ class DetailFindingScreenRedesign extends Component {
 
         var ID = this.props.navigation.state.params.ID
         var data = TaskServices.findBy2('TR_FINDING', 'FINDING_CODE', ID);
-        console.log('data.DUE_DATE : ', data.DUE_DATE)
         this.state = {
             user: TaskServices.getAllData('TR_LOGIN')[0],
             id: ID,
@@ -319,6 +318,7 @@ class DetailFindingScreenRedesign extends Component {
 
                     <View
                         style={{
+                            flexDirection: 'row',
                             paddingVertical: 5,
                             marginVertical: 15,
                             marginHorizontal: 20,
@@ -327,7 +327,31 @@ class DetailFindingScreenRedesign extends Component {
                             borderColor: 'rgba(242,242,242,1)'
                         }}
                     >
-                        <TouchableOpacity onPress={() => {
+                        <TouchableOpacity style={{ flex: 1 }} onPress={() => {
+                            this.props.navigation.navigate("LihatLokasi", {
+                                data: {
+                                    latitude: this.state.data.LAT_FINDING,
+                                    longitude: this.state.data.LONG_FINDING
+                                }
+                            })
+                        }}>
+                            <View style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}>
+                                <Image style={{ width: 30, height: 30 }}
+                                    source={Images.ic_location}>
+                                </Image>
+                                <Text
+                                    style={{
+                                        paddingHorizontal: 5
+                                    }}>
+                                    Lihat Lokasi
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{ flex: 1 }} onPress={() => {
                             this.props.navigation.navigate("HomeScreenComment", { findingCode: this.state.data.FINDING_CODE })
                         }}>
                             <View style={{

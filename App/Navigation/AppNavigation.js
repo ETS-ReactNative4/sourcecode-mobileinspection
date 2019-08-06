@@ -18,6 +18,7 @@ import PilihKontak from '../Screen/Finding/PilihKontak'
 import PilihKategori from '../Screen/Finding/PilihKategori'
 import PilihBlok from '../Screen/Finding/PilihBlok'
 import MapsFinding from '../Screen/Finding/MapsFinding'
+import LihatLokasi from '../Screen/Finding/LihatLokasi'
 // import FormInspectionNavigator from '../Screen/Inspeksi/Navigation/FormInspectionNavigator';
 
 //inspeksi
@@ -117,6 +118,7 @@ const main = createStackNavigator({
     Calendar: { screen: CalendarsScreen },
     PemberiTugas: { screen: PemberiTugas },
     MapsFinding: { screen: MapsFinding },
+    LihatLokasi: { screen: LihatLokasi },
 
     //inspeksi
     BuatInspeksi: { screen: BuatInspeksi },

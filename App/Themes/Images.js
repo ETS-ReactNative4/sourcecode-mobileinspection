@@ -24,6 +24,7 @@ const images = {
     ic_comment: require('../Images/icon/ic_comment.png'),
     ic_map: require('../Images/icon/ic_map_point_green.png'),
     ic_camera_big: require('../Images/icon/ic_camera_big.png'),
+    ic_location: require('../Images/icon/ic_location.png'),
 
     //Rating Icon
     ic_rating_bad: require('../Images/icon/ic-rating-bad.png'),
