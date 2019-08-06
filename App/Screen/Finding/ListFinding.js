@@ -90,7 +90,12 @@ export default class ListFinding extends Component {
   }
 
   actionButtonClick() {
-    this.props.navigation.navigate('Step1')
+    const checkBlock = TaskServices.getAllData('TM_BLOCK');
+    if (checkBlock.length > 0) {
+      this.props.navigation.navigate('Step1')
+    } else {
+      this.props.navigation.navigate('Sync')
+    }
   }
 
   getImageBaseOnFindingCode(findingCode) {

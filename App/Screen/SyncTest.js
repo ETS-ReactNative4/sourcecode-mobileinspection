@@ -1710,20 +1710,20 @@ class SyncScreen extends React.Component {
             }
         }
         else if (data.INSERT_USER == this.state.user.USER_AUTH_CODE) {
-        //     if(data.PROGRESS < 100){
-        //         newNotif.NOTIFICATION_TYPE = 1;
-        //         TaskServices.saveData('TR_NOTIFICATION', newNotif);
-        //     }
-        //     if (data.PROGRESS >= 100) {
-        //         //Progress sudah selesai
-        //         newNotif.NOTIFICATION_TYPE = 4;
-        //         TaskServices.saveData('TR_NOTIFICATION', newNotif);
-        //     }
-        //     else {
-        //         //terjadi update pada finding yang user buat
-        //         newNotif.NOTIFICATION_TYPE = 1;
-        //         TaskServices.saveData('TR_NOTIFICATION', newNotif);
-        //     }
+            //     if(data.PROGRESS < 100){
+            //         newNotif.NOTIFICATION_TYPE = 1;
+            //         TaskServices.saveData('TR_NOTIFICATION', newNotif);
+            //     }
+            //     if (data.PROGRESS >= 100) {
+            //         //Progress sudah selesai
+            //         newNotif.NOTIFICATION_TYPE = 4;
+            //         TaskServices.saveData('TR_NOTIFICATION', newNotif);
+            //     }
+            //     else {
+            //         //terjadi update pada finding yang user buat
+            //         newNotif.NOTIFICATION_TYPE = 1;
+            //         TaskServices.saveData('TR_NOTIFICATION', newNotif);
+            //     }
         }
         else if (data.ASSIGN_TO == this.state.user.USER_AUTH_CODE) {
             if (data.PROGRESS >= 100 && data.RATING_VALUE > 0) {
@@ -2364,10 +2364,21 @@ class SyncScreen extends React.Component {
     }
 
     render() {
+        const checkBlock = TaskServices.getAllData('TM_BLOCK');
         return (
-            <Container style={{ flex: 1, padding: 16 }}>
-                <Content>
+            <Container style={{ flex: 1 }}>
 
+                {/* Create by Aminju 0609 10:10 */}
+                {/* Warning belum melakukan sync */}
+                {checkBlock.length == 0 && <View style={{
+                    padding: 10,
+                    backgroundColor: 'red',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}>
+                    <Text style={{ color: Colors.colorWhite, fontSize: 12 }}>Kamu belum pernah melakukan sync data</Text>
+                </View>}
+                <Content>
                     <ModalAlert
                         icon={this.state.icon}
                         visible={this.state.showModal}
@@ -2380,190 +2391,193 @@ class SyncScreen extends React.Component {
                         title={this.state.title}
                         message={this.state.message} />
 
-                    {this.state.showButton && <View style={{ flex: 1, marginTop: 8 }}>
-                        <TouchableOpacity disabled={this.state.isBtnEnable} style={styles.button}
-                            onPress={() => { this.setState({ showButton: false }); this.insertLink() }}>
-                            <Text style={styles.buttonText}>Sync</Text>
-                        </TouchableOpacity>
-                    </View>}
+                    <View style={{ flex: 1, padding: 16 }}>
+                        {this.state.showButton && <View style={{ flex: 1 }}>
+                            <TouchableOpacity disabled={this.state.isBtnEnable} style={styles.button}
+                                onPress={() => { this.setState({ showButton: false }); this.insertLink() }}>
+                                <Text style={styles.buttonText}>Sync</Text>
+                            </TouchableOpacity>
+                        </View>}
 
-                    {/* Section Upload by Aminju */}
-                    <Text style={{ fontSize: 14, color: 'blue', marginTop: 24 }}>UPLOAD</Text>
-                    <View style={{ backgroundColor: 'grey', height: 0.5, flex: 1, flexDirection: 'row', marginTop: 3 }} />
+                        {/* Section Upload by Aminju */}
+                        <Text style={{ fontSize: 14, color: 'blue', marginTop: 24 }}>UPLOAD</Text>
+                        <View style={{ backgroundColor: 'grey', height: 0.5, flex: 1, flexDirection: 'row', marginTop: 3 }} />
 
-                    <ProgressSync
-                        title={'IMAGE'}
-                        value={this.state.valueImageUpload}
-                        total={this.state.totalImagelUpload}
-                        progress={this.state.progressUploadImage} />
+                        <ProgressSync
+                            title={'IMAGE'}
+                            value={this.state.valueImageUpload}
+                            total={this.state.totalImagelUpload}
+                            progress={this.state.progressUploadImage} />
 
-                    <ProgressSync
-                        title={'IMAGE USER'}
-                        value={this.state.valueImageUserUpload}
-                        total={this.state.totalImageUserUpload}
-                        progress={this.state.progressUploadImageUser} />
+                        <ProgressSync
+                            title={'IMAGE USER'}
+                            value={this.state.valueImageUserUpload}
+                            total={this.state.totalImageUserUpload}
+                            progress={this.state.progressUploadImageUser} />
 
-                    <ProgressSync
-                        title={'INSPEKSI TRACK'}
-                        value={this.state.valueInspectionTrack}
-                        total={this.state.totalInspectionTrack}
-                        progress={this.state.progressInspectionTrack} />
+                        <ProgressSync
+                            title={'INSPEKSI TRACK'}
+                            value={this.state.valueInspectionTrack}
+                            total={this.state.totalInspectionTrack}
+                            progress={this.state.progressInspectionTrack} />
 
-                    <ProgressSync
-                        title={'INSPEKSI HEADER'}
-                        value={this.state.valueInspeksiHeaderUpload}
-                        total={this.state.totalInspeksiHeaderUpload}
-                        progress={this.state.progressInspeksiHeader} />
+                        <ProgressSync
+                            title={'INSPEKSI HEADER'}
+                            value={this.state.valueInspeksiHeaderUpload}
+                            total={this.state.totalInspeksiHeaderUpload}
+                            progress={this.state.progressInspeksiHeader} />
 
-                    <ProgressSync
-                        title={'INSPEKSI DETAIL'}
-                        value={this.state.valueInspeksiDetailUpload}
-                        total={this.state.totalInspeksiDetailUpload}
-                        progress={this.state.progressInspeksiDetail} />
+                        <ProgressSync
+                            title={'INSPEKSI DETAIL'}
+                            value={this.state.valueInspeksiDetailUpload}
+                            total={this.state.totalInspeksiDetailUpload}
+                            progress={this.state.progressInspeksiDetail} />
 
-                    <ProgressSync
-                        title={'FINDING DATA'}
-                        value={this.state.valueFindingDataUpload}
-                        total={this.state.totalFindingDataUpload}
-                        progress={this.state.progressFindingData} />
+                        <ProgressSync
+                            title={'FINDING DATA'}
+                            value={this.state.valueFindingDataUpload}
+                            total={this.state.totalFindingDataUpload}
+                            progress={this.state.progressFindingData} />
 
-                    <ProgressSync
-                        title={'FINDING COMMENT'}
-                        value={this.state.valueFindingCommentDataUpload}
-                        total={this.state.totalFindingCommentDataUpload}
-                        progress={this.state.progressFindingCommentData} />
+                        <ProgressSync
+                            title={'FINDING COMMENT'}
+                            value={this.state.valueFindingCommentDataUpload}
+                            total={this.state.totalFindingCommentDataUpload}
+                            progress={this.state.progressFindingCommentData} />
 
-                    <ProgressSync
-                        title={'SAMPLING EBCC HEADER'}
-                        value={this.state.valueEbcc}
-                        total={this.state.totalEbcc}
-                        progress={this.state.progressEbcc} />
+                        <ProgressSync
+                            title={'SAMPLING EBCC HEADER'}
+                            value={this.state.valueEbcc}
+                            total={this.state.totalEbcc}
+                            progress={this.state.progressEbcc} />
 
-                    <ProgressSync
-                        title={'SAMPLING EBCC DETAIL'}
-                        value={this.state.valueEbccDetail}
-                        total={this.state.totalEbccDetail}
-                        progress={this.state.progressEbccDetail} />
+                        <ProgressSync
+                            title={'SAMPLING EBCC DETAIL'}
+                            value={this.state.valueEbccDetail}
+                            total={this.state.totalEbccDetail}
+                            progress={this.state.progressEbccDetail} />
 
-                    <ProgressSync
-                        title={'GENBA INSPECTION'}
-                        value={this.state.valueGenbaInspection}
-                        total={this.state.totalGenbaInspection}
-                        progress={this.state.progressGenbaInspection} />
+                        <ProgressSync
+                            title={'GENBA INSPECTION'}
+                            value={this.state.valueGenbaInspection}
+                            total={this.state.totalGenbaInspection}
+                            progress={this.state.progressGenbaInspection} />
 
-                    {/* Section Download by Aminju */}
-                    <Text style={{ fontSize: 14, color: Colors.tintColor, marginTop: 16 }}>DOWNLOAD</Text>
-                    <View style={{ backgroundColor: 'grey', height: 0.5, flex: 1, flexDirection: 'row', marginTop: 3 }} />
+                        {/* Section Download by Aminju */}
+                        <Text style={{ fontSize: 14, color: Colors.tintColor, marginTop: 16 }}>DOWNLOAD</Text>
+                        <View style={{ backgroundColor: 'grey', height: 0.5, flex: 1, flexDirection: 'row', marginTop: 3 }} />
 
-                    <ProgressSync
-                        title={'FINDING'}
-                        color={Colors.brand}
-                        value={this.state.valueFindingDownload}
-                        total={this.state.totalFindingDownload}
-                        progress={this.state.progressFinding} />
+                        <ProgressSync
+                            title={'FINDING'}
+                            color={Colors.brand}
+                            value={this.state.valueFindingDownload}
+                            total={this.state.totalFindingDownload}
+                            progress={this.state.progressFinding} />
 
-                    <ProgressSync
-                        title={'FINDING IMAGE'}
-                        color={Colors.brand}
-                        value={this.state.valueFindingImageDownload}
-                        total={this.state.totalFindingImageDownload}
-                        progress={this.state.progressFindingImage} />
+                        <ProgressSync
+                            title={'FINDING IMAGE'}
+                            color={Colors.brand}
+                            value={this.state.valueFindingImageDownload}
+                            total={this.state.totalFindingImageDownload}
+                            progress={this.state.progressFindingImage} />
 
-                    <ProgressSync
-                        title={'FINDING COMMENT'}
-                        color={Colors.brand}
-                        value={this.state.valueFindingCommentDownload}
-                        total={this.state.totalFindingCommentDownload}
-                        progress={this.state.progressFindingCommentDownload} />
+                        <ProgressSync
+                            title={'FINDING COMMENT'}
+                            color={Colors.brand}
+                            value={this.state.valueFindingCommentDownload}
+                            total={this.state.totalFindingCommentDownload}
+                            progress={this.state.progressFindingCommentDownload} />
 
-                    <ProgressSync
-                        title={'BLOCK'}
-                        color={Colors.brand}
-                        value={this.state.valueDownload}
-                        total={this.state.totalDownload}
-                        progress={this.state.progress} />
+                        <ProgressSync
+                            title={'BLOCK'}
+                            color={Colors.brand}
+                            value={this.state.valueDownload}
+                            total={this.state.totalDownload}
+                            progress={this.state.progress} />
 
-                    <ProgressSync
-                        title={'AFD'}
-                        color={Colors.brand}
-                        value={this.state.valueAfdDownload}
-                        total={this.state.totalAfdDownload}
-                        progress={this.state.progressAfd} />
+                        <ProgressSync
+                            title={'AFD'}
+                            color={Colors.brand}
+                            value={this.state.valueAfdDownload}
+                            total={this.state.totalAfdDownload}
+                            progress={this.state.progressAfd} />
 
-                    <ProgressSync
-                        title={'REGION'}
-                        color={Colors.brand}
-                        value={this.state.valueRegionDownload}
-                        total={this.state.totalRegionDownload}
-                        progress={this.state.progressRegion} />
+                        <ProgressSync
+                            title={'REGION'}
+                            color={Colors.brand}
+                            value={this.state.valueRegionDownload}
+                            total={this.state.totalRegionDownload}
+                            progress={this.state.progressRegion} />
 
-                    <ProgressSync
-                        title={'ESTATE'}
-                        color={Colors.brand}
-                        value={this.state.valueEstDownload}
-                        total={this.state.totalEstDownload}
-                        progress={this.state.progressEst} />
+                        <ProgressSync
+                            title={'ESTATE'}
+                            color={Colors.brand}
+                            value={this.state.valueEstDownload}
+                            total={this.state.totalEstDownload}
+                            progress={this.state.progressEst} />
 
-                    <ProgressSync
-                        title={'LAND USE'}
-                        color={Colors.brand}
-                        value={this.state.valueLandUseDownload}
-                        total={this.state.totalLandUseDownload}
-                        progress={this.state.progressLandUse} />
+                        <ProgressSync
+                            title={'LAND USE'}
+                            color={Colors.brand}
+                            value={this.state.valueLandUseDownload}
+                            total={this.state.totalLandUseDownload}
+                            progress={this.state.progressLandUse} />
 
-                    <ProgressSync
-                        title={'COMP'}
-                        color={Colors.brand}
-                        value={this.state.valueCompDownload}
-                        total={this.state.totalCompDownload}
-                        progress={this.state.progressComp} />
+                        <ProgressSync
+                            title={'COMP'}
+                            color={Colors.brand}
+                            value={this.state.valueCompDownload}
+                            total={this.state.totalCompDownload}
+                            progress={this.state.progressComp} />
 
-                    <ProgressSync
-                        title={'CONTENT'}
-                        color={Colors.brand}
-                        value={this.state.valueContentDownload}
-                        total={this.state.totalContentDownload}
-                        progress={this.state.progressContent} />
+                        <ProgressSync
+                            title={'CONTENT'}
+                            color={Colors.brand}
+                            value={this.state.valueContentDownload}
+                            total={this.state.totalContentDownload}
+                            progress={this.state.progressContent} />
 
-                    <ProgressSync
-                        title={'KRITERIA'}
-                        color={Colors.brand}
-                        value={this.state.valueKriteriaDownload}
-                        total={this.state.totalKriteriaDownload}
-                        progress={this.state.progressKriteria} />
+                        <ProgressSync
+                            title={'KRITERIA'}
+                            color={Colors.brand}
+                            value={this.state.valueKriteriaDownload}
+                            total={this.state.totalKriteriaDownload}
+                            progress={this.state.progressKriteria} />
 
-                    <ProgressSync
-                        title={'CATEGORY'}
-                        color={Colors.brand}
-                        value={this.state.valueCategoryDownload}
-                        total={this.state.totalCategoryDownload}
-                        progress={this.state.progressCategory} />
+                        <ProgressSync
+                            title={'CATEGORY'}
+                            color={Colors.brand}
+                            value={this.state.valueCategoryDownload}
+                            total={this.state.totalCategoryDownload}
+                            progress={this.state.progressCategory} />
 
-                    <ProgressSync
-                        title={'CONTACT'}
-                        color={Colors.brand}
-                        value={this.state.valueContactDownload}
-                        total={this.state.totalContactDownload}
-                        progress={this.state.progressContact} />
+                        <ProgressSync
+                            title={'CONTACT'}
+                            color={Colors.brand}
+                            value={this.state.valueContactDownload}
+                            total={this.state.totalContactDownload}
+                            progress={this.state.progressContact} />
 
-                    <ProgressSync
-                        title={'PARAMATER TRACK INSPECTION'}
-                        color={Colors.brand}
-                        value={this.state.valueParamInspection}
-                        total={this.state.totalParamInspection}
-                        progress={this.state.progressParamInspection} />
+                        <ProgressSync
+                            title={'PARAMATER TRACK INSPECTION'}
+                            color={Colors.brand}
+                            value={this.state.valueParamInspection}
+                            total={this.state.totalParamInspection}
+                            progress={this.state.progressParamInspection} />
 
-                    <ProgressSync
-                        title={'TM KUALITAS'}
-                        color={Colors.brand}
-                        value={this.state.valueKualitas}
-                        total={this.state.totalKualitas}
-                        progress={this.state.progressKualitas} />
+                        <ProgressSync
+                            title={'TM KUALITAS'}
+                            color={Colors.brand}
+                            value={this.state.valueKualitas}
+                            total={this.state.totalKualitas}
+                            progress={this.state.progressKualitas} />
 
-                    <ProgressDialog
-                        visible={this.state.fetchLocation}
-                        activityIndicatorSize="small"
-                        message={this.state.downloadApa} />
+                        <ProgressDialog
+                            visible={this.state.fetchLocation}
+                            activityIndicatorSize="small"
+                            message={this.state.downloadApa} />
+                    </View>
+
                 </Content>
             </Container>
         );
