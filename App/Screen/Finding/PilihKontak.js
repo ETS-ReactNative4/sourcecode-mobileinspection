@@ -55,9 +55,9 @@ class PilihKontak extends Component {
     const login = TaskServices.getAllData('TR_LOGIN')
     //diri dia sndiri
     let dataUser = TaskServices.query('TR_CONTACT', `USER_AUTH_CODE = "${login[0].USER_AUTH_CODE}"`);
-    let data = TaskServices.query('TR_CONTACT', `REF_ROLE = "AFD_CODE" OR REF_ROLE = "BA_CODE" AND LOCATION_CODE CONTAINS[c] "${withAfd}" OR LOCATION_CODE CONTAINS[c] "${werks}" AND USER_ROLE CONTAINS[c] "ASISTEN" AND USER_AUTH_CODE != "${login[0].USER_AUTH_CODE}"`).sorted('FULLNAME', false);
-    // let data = TaskServices.query('TR_CONTACT', `REF_ROLE = "AFD_CODE" AND LOCATION_CODE = "${withAfd}" AND USER_ROLE CONTAINS[c] "ASISTEN" AND USER_AUTH_CODE != "${login[0].USER_AUTH_CODE}"`);
-    // let data1 = TaskServices.query('TR_CONTACT', `REF_ROLE = "BA_CODE" AND LOCATION_CODE = "${werks}" AND USER_ROLE CONTAINS[c] "ASISTEN" AND USER_AUTH_CODE != "${login[0].USER_AUTH_CODE}"`);
+    // let data = TaskServices.query('TR_CONTACT', `REF_ROLE = "AFD_CODE" OR REF_ROLE = "BA_CODE" AND LOCATION_CODE CONTAINS[c] "${withAfd}" OR LOCATION_CODE CONTAINS[c] "${werks}" AND USER_ROLE CONTAINS[c] "ASISTEN" AND USER_AUTH_CODE != "${login[0].USER_AUTH_CODE}"`).sorted('FULLNAME', false);
+    let data = TaskServices.query('TR_CONTACT', `REF_ROLE = "AFD_CODE" AND LOCATION_CODE = "${withAfd}" AND USER_ROLE CONTAINS[c] "ASISTEN" AND USER_AUTH_CODE != "${login[0].USER_AUTH_CODE}"`);
+    let data1 = TaskServices.query('TR_CONTACT', `REF_ROLE = "BA_CODE" AND LOCATION_CODE = "${werks}" AND USER_ROLE CONTAINS[c] "ASISTEN" AND USER_AUTH_CODE != "${login[0].USER_AUTH_CODE}"`);
 
     let arr = [];
     for (var i = 0; i < dataUser.length; i++) {
@@ -80,25 +80,34 @@ class PilihKontak extends Component {
         }
     }
 
-    // for (var k = 0; k < data1.length; k++) {
-    //     if(data1[k].USER_AUTH_CODE !== undefined && data1[k].FULLNAME !== undefined && data1[k].USER_ROLE !== undefined){
-    //         arr.push({
-    //             userAuth: data1[k].USER_AUTH_CODE,
-    //             fullName: data1[k].FULLNAME,
-    //             userRole: data1[k].USER_ROLE
-    //         })
-    //     }
-    // }
+    for (var k = 0; k < data1.length; k++) {
+        if(data1[k].USER_AUTH_CODE !== undefined && data1[k].FULLNAME !== undefined && data1[k].USER_ROLE !== undefined){
+            arr.push({
+                userAuth: data1[k].USER_AUTH_CODE,
+                fullName: data1[k].FULLNAME,
+                userRole: data1[k].USER_ROLE
+            })
+        }
+    }
 
-    // let tempId = [];
-    // let tempValue = [];
-    // arr.map((data)=>{
-    //     if(!tempId.includes(data.userAuth)){
-    //         tempValue.push(data);
-    //         tempId.push(data.userAuth);
-    //     }
-    // });
+      arr.sort((a, b)=>{
+          let nameA=a.fullName.toLowerCase();
+          let nameB=b.fullName.toLowerCase();
+          if (nameA < nameB) //sort string ascending
+              return -1;
+          if (nameA > nameB)
+              return 1;
+          return 0 //default return value (no sorting)
+      });
 
+    let tempId = [];
+    let tempValue = [];
+    arr.map((data)=>{
+        if(!tempId.includes(data.userAuth)){
+            tempValue.push(data);
+            tempId.push(data.userAuth);
+        }
+    });
     this.setState({ adresses: arr, dataList: arr })
   }
 
