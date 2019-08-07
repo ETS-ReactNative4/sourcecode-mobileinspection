@@ -529,7 +529,7 @@ export default class Genba extends Component {
                                 </View>
                                 <View style={{flex:1, justifyContent:'center'}}>
                                     <Text style={{fontSize:14, fontWeight:'600', color: selectStatus ? '#008BAC' : 'black'}}>{item.FULLNAME}</Text>
-                                    <Text style={{fontSize:11, color: selectStatus ? '#1EA6C6' : '#bdbdbd', marginTop:4}}>{item.USER_ROLE.replace("_"," ")}</Text>
+                                    <Text style={{fontSize:11, color: selectStatus ? '#1EA6C6' : '#bdbdbd', marginTop:4}}>{item.USER_ROLE.replace(/_/g," ")}</Text>
                                 </View>
                                 {
                                     selectStatus &&

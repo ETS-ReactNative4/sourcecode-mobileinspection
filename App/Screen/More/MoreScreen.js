@@ -58,7 +58,7 @@ export default class MoreScreen extends Component {
       name: '',
       jabatan: '',
       estate: '',
-      //Add Modal Alert by Aminju 
+      //Add Modal Alert by Aminju
       title: 'Title',
       message: 'Message',
       user,
@@ -89,9 +89,9 @@ export default class MoreScreen extends Component {
   loadData() {
     let dataUser = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', this.state.user.USER_AUTH_CODE);
     if (dataUser !== undefined) {
-      let name = dataUser.FULLNAME
-      let jabatan = dataUser.JOB
-      let estate = ''//TaskServices.getEstateName()
+      let name = dataUser.FULLNAME;
+        let jabatan = dataUser.USER_ROLE.replace(/_/g," ");
+      let estate = TaskServices.getEstateName();
       this.setState({ name, jabatan, estate })
     }
   }
@@ -179,8 +179,8 @@ export default class MoreScreen extends Component {
               </TouchableOpacity>
             </View>
             <View style={{ flex: 7 }}>
-              <Text style={{ fontSize: 18, fontWeight: '500' }}>{this.state.name}</Text>
-              <Text style={{ fontSize: 12, color: 'grey', marginTop: 10 }}>{this.state.jabatan}</Text>
+              <Text style={{ fontSize: 14, fontWeight: '500' }}>{this.state.name}</Text>
+              <Text style={{ fontSize: 12, color: 'grey', marginTop: 5 }}>{this.state.jabatan}</Text>
               <Text style={{ fontSize: 12, color: 'grey' }}>{this.state.estate}</Text>
             </View>
           </View>
