@@ -18,6 +18,7 @@ import R from 'ramda';
 import { NavigationActions, StackActions } from 'react-navigation';
 import { getSticker } from '../../Lib/Utils'
 import ModalAlertBack from '../../Component/ModalAlert';
+import { removeData } from '../../Database/Resources';
 
 class SelesaiInspeksi extends React.Component {
 
@@ -506,6 +507,7 @@ class SelesaiInspeksi extends React.Component {
                 })
             )]).then(() => navigation.navigate('Inspection')).then(() => navigation.navigate('Riwayat'))
         this.setState({ showModalBack: false })
+        removeData('PoligonsInspeksi')
     }
 
     colorTextScore(param) {

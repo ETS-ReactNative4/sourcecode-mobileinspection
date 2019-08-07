@@ -373,10 +373,10 @@ class DetailFindingScreenRedesign extends Component {
                         </TouchableOpacity>
                     </View>
 
-                    <View style={{ flex: 1, flexDirection: 'row', paddingLeft: 15, paddingRight: 15 }}>
-                        <Image style={{ alignItems: 'stretch', width: 16, height: 22 }}
+                    <View style={{ flex: 1, flexDirection: 'row', paddingRight: 15 }}>
+                        {/* <Image style={{ alignItems: 'stretch', width: 16, height: 22 }}
                             source={Images.ic_map}>
-                        </Image>
+                        </Image> */}
 
                         <View style={{ flex: 2, marginLeft: 16 }}>
                             <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{this.state.lokasiBlok}</Text>

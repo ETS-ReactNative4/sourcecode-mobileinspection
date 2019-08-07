@@ -15,6 +15,7 @@ import IconLoc from 'react-native-vector-icons/FontAwesome5';
 import ModalAlert from '../../Component/ModalLoading'
 import ModalGps from '../../Component/ModalAlert';
 import TaskServices from '../../Database/TaskServices';
+import { retrieveData, storeData } from '../../Database/Resources';
 
 let polyMap = false;// = require('../../Data/MegaKuningan.json');
 const ASPECT_RATIO = width / height;
@@ -211,22 +212,33 @@ class MapsInspeksi extends React.Component {
 
   getLocation() {
     if (this.state.latitude && this.state.longitude) {
-      var lat = this.state.latitude;
-      var lon = this.state.longitude;
-      region = {
-        latitude: lat,
-        longitude: lon,
-        latitudeDelta: 0.0075,
-        longitudeDelta: 0.00721
-      }
-      position = {
-        latitude: lat, longitude: lon
-      }
-      let poligons = this.getPolygons(position);
-      this.setState({ latitude: lat, longitude: lon, fetchLocation: false, region, poligons });
-      if (this.map !== undefined) {
-        this.map.animateToCoordinate(region, 1);
-      }
+      retrieveData('PoligonsInspeksi').then(data => {
+        console.log('Data Poligons Maps Inspeksi : ', data)
+        var lat = this.state.latitude;
+        var lon = this.state.longitude;
+        region = {
+          latitude: lat,
+          longitude: lon,
+          latitudeDelta: 0.0075,
+          longitudeDelta: 0.00721
+        }
+        position = {
+          latitude: lat, longitude: lon
+        }
+        if (data != null) {
+          this.setState({ latitude: lat, longitude: lon, fetchLocation: false, region, poligons: data });
+          if (this.map !== undefined) {
+            this.map.animateToCoordinate(region, 1);
+          }
+        } else {
+          let poligons = this.getPolygons(position);
+          storeData('PoligonsInspeksi', poligons)
+          if (this.map !== undefined) {
+            this.map.animateToCoordinate(region, 1);
+          }
+          this.setState({ latitude: lat, longitude: lon, fetchLocation: false, region, poligons });
+        }
+      })
     }
   }
 

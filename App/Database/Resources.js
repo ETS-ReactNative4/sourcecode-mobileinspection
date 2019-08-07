@@ -1,4 +1,40 @@
 import TaskServices from "./TaskServices";
+import { AsyncStorage } from 'react-native';
+
+export async function storeData(key, value) {
+    try {
+        await AsyncStorage.setItem(key, JSON.stringify(value));
+    } catch (error) {
+        // Error saving data
+        console.log('Error Save : ' + error)
+    }
+};
+
+export async function retrieveData(key) {
+  try {
+      const result = await AsyncStorage.getItem(key);
+      // console.log('Result  : ', JSON.parse(result));
+      if (result !== null) {
+          // We have data!!
+          return JSON.parse(result);
+      } else {
+          return null;
+      }
+  } catch (error) {
+      // Error retrieving data
+      console.log('Error Retriev : ' + error)
+  }
+};
+
+export async function removeData(key) {
+  try {
+      await AsyncStorage.removeItem(key);
+      return true;
+  }
+  catch (exception) {
+      return false;
+  }
+};
 
 export function getContactName(userAuth) {
   try {

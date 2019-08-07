@@ -188,7 +188,7 @@ export default class MoreScreen extends Component {
           <View style={{ height: 10, backgroundColor: '#F5F5F5', marginTop: 10 }} />
 
           <TouchableOpacity style={styles.containerLabel}
-            onPress={() => { this.props.navigation.navigate('PilihPeta', { more: 'MoreScreen' }) }}>
+            onPress={this.onPressPeta}>
             <Image source={require('../../Images/icon/ic_maps.png')} style={[styles.icon, { marginLeft: 10, flex: 2 }]} />
             <Text style={{ fontSize: 14, color: 'grey', flex: 7, marginLeft: 10, marginTop: 5 }}>Peta Lokasi</Text>
             <Icon2 name='right' size={18} style={{ marginRight: 15 }} />
@@ -203,96 +203,6 @@ export default class MoreScreen extends Component {
 
           <View style={{ height: 10, backgroundColor: '#F5F5F5', marginTop: 10 }} />
 
-          {/*Profile*/}
-          {/* <TouchableOpacity style={styles.marginCard}>
-            <CardView cardElevation={2} cardMaxElevation={2} cornerRadius={10}>
-              <View style={styles.sectionCardView}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }} >
-                  <Image style={{ height: 40, width: 40, borderRadius: 50, marginLeft: 24, marginRight: 16 }} source={require('../../Images/icon/menu/ic_profile_menu.png')}></Image>
-                  <Text style={styles.textTitle}>Profile</Text>
-                </View>
-                <View style={{ marginRight: 24 }}>
-                  <Icon size={32} name='ios-arrow-round-forward' color='grey' />
-                </View>
-              </View>
-            </CardView>
-          </TouchableOpacity> */}
-
-          {/*Games*/}
-          {/* <TouchableOpacity style={styles.marginCard}>
-            <CardView cardElevation={2} cardMaxElevation={2} cornerRadius={10}>
-              <View style={styles.sectionCardView}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }} >
-                  <Image style={{ height: 40, width: 40, borderRadius: 50, marginLeft: 24, marginRight: 16 }} source={require('../../Images/icon/menu/ic_games_menu.png')}></Image>
-                  <Text style={styles.textTitle}>Games</Text>
-                </View>
-                <View style={{ marginRight: 24 }}>
-                  <Icon size={32} name='ios-arrow-round-forward' color='grey' />
-                </View>
-              </View>
-            </CardView>
-          </TouchableOpacity> */}
-
-          {/*Rangking*/}
-          {/* <TouchableOpacity style={styles.marginCard}>
-            <CardView cardElevation={2} cardMaxElevation={2} cornerRadius={10}>
-              <View style={styles.sectionCardView}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }} >
-                  <Image style={{ height: 40, width: 40, borderRadius: 50, marginLeft: 24, marginRight: 16 }} source={require('../../Images/icon/menu/ic_ranking_menu.png')}></Image>
-                  <Text style={styles.textTitle}>Ranking</Text>
-                </View>
-                <View style={{ marginRight: 24 }}>
-                  <Icon size={32} name='ios-arrow-round-forward' color='grey' />
-                </View>
-              </View>
-            </CardView>
-          </TouchableOpacity> */}
-
-          {/*Mini Dashboard*/}
-          {/* <TouchableOpacity style={styles.marginCard}>
-            <CardView cardElevation={2} cardMaxElevation={2} cornerRadius={10}>
-              <View style={styles.sectionCardView}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }} >
-                  <Image style={{ height: 40, width: 40, borderRadius: 50, marginLeft: 24, marginRight: 16 }} source={require('../../Images/icon/menu/ic_minidashboard_menu.png')}></Image>
-                  <Text style={styles.textTitle}>Mini Dashboard</Text>
-                </View>
-                <View style={{ marginRight: 24 }}>
-                  <Icon size={32} name='ios-arrow-round-forward' color='grey' />
-                </View>
-              </View>
-            </CardView>
-          </TouchableOpacity> */}
-
-          {/*Help*/}
-          {/* <TouchableOpacity style={styles.marginCard}>
-            <CardView cardElevation={2} cardMaxElevation={2} cornerRadius={10}>
-              <View style={styles.sectionCardView}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }} >
-                  <Image style={{ height: 40, width: 40, borderRadius: 50, marginLeft: 24, marginRight: 16 }} source={require('../../Images/icon/menu/ic_help_menu.png')}></Image>
-                  <Text style={styles.textTitle}>Help</Text>
-                </View>
-                <View style={{ marginRight: 24 }}>
-                  <Icon size={32} name='ios-arrow-round-forward' color='grey' />
-                </View>
-              </View>
-            </CardView>
-          </TouchableOpacity> */}
-
-          {/* Contact Center */}
-          {/* <TouchableOpacity style={styles.marginCard} onPress={() => { this.setState({ showModal: true }) }}>
-            <CardView cardElevation={2} cardMaxElevation={2} cornerRadius={10}>
-              <View style={styles.sectionCardView}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }} >
-                  <Image style={{ height: 40, width: 40, borderRadius: 50, marginLeft: 24, marginRight: 16 }} source={require('../../Images/icon/menu/ic_contactcenter_menu.png')}></Image>
-                  <Text style={styles.textTitle}>Contact Center</Text>
-                </View>
-                <View style={{ marginRight: 24 }}>
-                  <Icon size={32} name='ios-arrow-round-forward' color='grey' />
-                </View>
-              </View>
-            </CardView>
-          </TouchableOpacity> */}
-
           {/*Sign Out*/}
           <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: 10 }}>
             <Text>Versi: {DeviceInfo.getVersion()}</Text>
@@ -301,22 +211,18 @@ export default class MoreScreen extends Component {
             <Text style={{ fontSize: 10 }}>Server Data: {ServerName[this.state.user.SERVER_NAME_INDEX].data}</Text>
             <Text style={{ fontSize: 10 }} >Server Image: {this.state.imageServer}</Text>
           </View>
-          {/* <TouchableOpacity style={styles.marginCard} onPress={() => { this.setState({ showConfirm: true }) }}>
-            <CardView cardElevation={2} cardMaxElevation={2} cornerRadius={10}>
-              <View style={styles.sectionCardView}>
-                <View style={{ backgroundColor: 'white', flexDirection: 'row', alignItems: 'center' }} >
-                  <Image style={{ height: 40, width: 40, borderRadius: 50, marginLeft: 24, marginRight: 16 }} source={require('../../Images/icon/menu/ic_signout_menu.png')}></Image>
-                  <Text style={styles.textTitle}>Sign Out</Text>
-                </View>
-                <View style={{ backgroundColor: 'white', paddingRight: 24 }}>
-                  <Icon size={32} name='ios-arrow-round-forward' color='grey' />
-                </View>
-              </View>
-            </CardView>
-          </TouchableOpacity> */}
         </View>
       </ScrollView>
     )
+  }
+
+  onPressPeta = () => {
+    const checkBlock = TaskServices.getAllData('TM_BLOCK');
+    if (checkBlock.length > 0) {
+      this.props.navigation.navigate('PilihPeta', { more: 'MoreScreen' })
+    } else {
+      this.props.navigation.navigate('Sync')
+    }
   }
 }
 
