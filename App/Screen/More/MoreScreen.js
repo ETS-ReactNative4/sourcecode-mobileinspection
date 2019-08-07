@@ -181,7 +181,7 @@ export default class MoreScreen extends Component {
             <View style={{ flex: 7 }}>
               <Text style={{ fontSize: 14, fontWeight: '500' }}>{this.state.name}</Text>
               <Text style={{ fontSize: 12, color: 'grey', marginTop: 5 }}>{this.state.jabatan}</Text>
-              <Text style={{ fontSize: 12, color: 'grey' }}>{this.state.estate}</Text>
+              {/*<Text style={{ fontSize: 12, color: 'grey' }}>{this.state.estate}</Text>*/}
             </View>
           </View>
 
