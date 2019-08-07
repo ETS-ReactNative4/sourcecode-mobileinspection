@@ -14,11 +14,10 @@ class PilihKategori extends Component {
     super(props);
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     this.state = {
-      searchedAdresses: [],
       adresses: [],
       user: null,
-      categoriesBlock: TaskService.getAllData('TR_CATEGORY'),
-      categoriesInfra: TaskService.getAllData('TR_CATEGORY'),
+      categoriesBlock: TaskService.getAllData('TR_CATEGORY').filtered('CATEGORY_CODE CONTAINS[c] "CA"'),
+      categoriesInfra: TaskService.getAllData('TR_CATEGORY').filtered('CATEGORY_CODE CONTAINS[c] "IF"'),
       active: true,
       activeIndex: 0
     };
@@ -44,13 +43,6 @@ class PilihKategori extends Component {
   onSelect(user) {
     this.props.navigation.state.params.changeCategory(user);
     this.props.navigation.goBack();
-  };
-
-  searchedAdresses = (searchedText) => {
-    var searchedAdresses = this.state.adresses.filter(function (adress) {
-      return adress.fullName.toLowerCase().indexOf(searchedText.toLowerCase()) > -1;
-    });
-    this.setState({ searchedAdresses: searchedAdresses });
   };
 
   render() {
