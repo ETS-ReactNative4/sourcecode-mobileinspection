@@ -113,8 +113,10 @@ export default class Genba extends Component {
      * LOAD DATA FROM BEGINNING
      */
     loadContact = () => {
-        let contactGenba = Object.values(TaskServices.getAllData("TR_CONTACT_GENBA"));
-        let selectedGenba = Object.values(TaskServices.getAllData("TR_GENBA_SELECTED"));
+        let contactGenba = TaskServices.getAllData("TR_CONTACT_GENBA").sorted('FULLNAME', false);
+        let selectedGenba = TaskServices.getAllData("TR_GENBA_SELECTED");
+        // let contactGenba = Object.values(TaskServices.getAllData("TR_CONTACT_GENBA"));
+        // let selectedGenba = Object.values(TaskServices.getAllData("TR_GENBA_SELECTED"));
 
         //ambil smua userauthcode, buat check ui icon check
         let listSelectedUserCode = [];

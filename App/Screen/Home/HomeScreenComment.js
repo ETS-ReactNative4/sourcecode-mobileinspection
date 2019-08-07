@@ -50,7 +50,7 @@ export default class HomeScreenComment extends Component {
     }
 
     getListUser() {
-        let listUser = Object.values(TaskServices.getAllData("TR_CONTACT"));
+        let listUser = Object.values(TaskServices.getAllData("TR_CONTACT").sorted('FULLNAME', false));
 
         if (listUser !== null) {
             this.setState({

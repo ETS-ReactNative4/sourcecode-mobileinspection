@@ -2,11 +2,20 @@
 'use strict';
 
 import React, { Component } from 'react';
-import { View, TextInput, Text, StyleSheet, ListView, TouchableOpacity, BackAndroid } from 'react-native';
+import {
+    View,
+    TextInput,
+    Text,
+    StyleSheet,
+    ListView,
+    TouchableOpacity,
+    BackAndroid,
+    FlatList,
+    Image
+} from 'react-native';
 import TaskServices from '../../Database/TaskServices';
-import R from 'ramda';
 
-var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+// var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
 class PilihKontak extends Component {
   constructor(props) {
@@ -29,7 +38,7 @@ class PilihKontak extends Component {
 
   componentWillUnmount(){
     BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
-  } 
+  }
 
   handleBackButtonClick() {
     this.props.navigation.goBack();
@@ -46,11 +55,9 @@ class PilihKontak extends Component {
     const login = TaskServices.getAllData('TR_LOGIN')
     //diri dia sndiri
     let dataUser = TaskServices.query('TR_CONTACT', `USER_AUTH_CODE = "${login[0].USER_AUTH_CODE}"`);
-    
-    let data = TaskServices.query('TR_CONTACT', `REF_ROLE = "AFD_CODE" AND LOCATION_CODE CONTAINS[c] "${withAfd}" AND USER_ROLE CONTAINS[c] "ASISTEN" AND USER_AUTH_CODE != "${login[0].USER_AUTH_CODE}"`);    
-    let data1 = TaskServices.query('TR_CONTACT', `REF_ROLE = "BA_CODE" AND LOCATION_CODE CONTAINS[c] "${werks}" AND USER_ROLE CONTAINS[c] "ASISTEN" AND USER_AUTH_CODE != "${login[0].USER_AUTH_CODE}"`);  
-    // let data = TaskServices.query('TR_CONTACT', `REF_ROLE = "AFD_CODE" AND LOCATION_CODE = "${withAfd}" AND USER_ROLE CONTAINS[c] "ASISTEN" AND USER_AUTH_CODE != "${login[0].USER_AUTH_CODE}"`);    
-    // let data1 = TaskServices.query('TR_CONTACT', `REF_ROLE = "BA_CODE" AND LOCATION_CODE = "${werks}" AND USER_ROLE CONTAINS[c] "ASISTEN" AND USER_AUTH_CODE != "${login[0].USER_AUTH_CODE}"`);    
+    let data = TaskServices.query('TR_CONTACT', `REF_ROLE = "AFD_CODE" OR REF_ROLE = "BA_CODE" AND LOCATION_CODE CONTAINS[c] "${withAfd}" OR LOCATION_CODE CONTAINS[c] "${werks}" AND USER_ROLE CONTAINS[c] "ASISTEN" AND USER_AUTH_CODE != "${login[0].USER_AUTH_CODE}"`).sorted('FULLNAME', false);
+    // let data = TaskServices.query('TR_CONTACT', `REF_ROLE = "AFD_CODE" AND LOCATION_CODE = "${withAfd}" AND USER_ROLE CONTAINS[c] "ASISTEN" AND USER_AUTH_CODE != "${login[0].USER_AUTH_CODE}"`);
+    // let data1 = TaskServices.query('TR_CONTACT', `REF_ROLE = "BA_CODE" AND LOCATION_CODE = "${werks}" AND USER_ROLE CONTAINS[c] "ASISTEN" AND USER_AUTH_CODE != "${login[0].USER_AUTH_CODE}"`);
 
     let arr = [];
     for (var i = 0; i < dataUser.length; i++) {
@@ -73,15 +80,15 @@ class PilihKontak extends Component {
         }
     }
 
-    for (var k = 0; k < data1.length; k++) {
-        if(data1[k].USER_AUTH_CODE !== undefined && data1[k].FULLNAME !== undefined && data1[k].USER_ROLE !== undefined){
-            arr.push({
-                userAuth: data1[k].USER_AUTH_CODE,
-                fullName: data1[k].FULLNAME,
-                userRole: data1[k].USER_ROLE
-            })
-        }
-    }
+    // for (var k = 0; k < data1.length; k++) {
+    //     if(data1[k].USER_AUTH_CODE !== undefined && data1[k].FULLNAME !== undefined && data1[k].USER_ROLE !== undefined){
+    //         arr.push({
+    //             userAuth: data1[k].USER_AUTH_CODE,
+    //             fullName: data1[k].FULLNAME,
+    //             userRole: data1[k].USER_ROLE
+    //         })
+    //     }
+    // }
 
     // let tempId = [];
     // let tempValue = [];
@@ -102,34 +109,69 @@ class PilihKontak extends Component {
     this.setState({ dataList: result });
   };
 
-  renderAdress = (user) => {
-    return (
-      <View style={{ flex: 1, padding: 5 }}>
-        <TouchableOpacity onPress={() => { this.onSelect(user) }}>
-          <Text style={{ fontSize: 15, color: 'black' }}>{user.fullName}</Text>
-          <Text style={{ fontSize: 13, color: 'grey', marginTop: 3 }}>{user.userRole}</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  };
+  // renderAdress = (user) => {
+  //   return (
+  //     <View style={{ flex: 1, padding: 5 }}>
+  //       <TouchableOpacity onPress={() => { this.onSelect(user) }}>
+  //         <Text style={{ fontSize: 15, color: 'black' }}>{user.fullName}</Text>
+  //         <Text style={{ fontSize: 13, color: 'grey', marginTop: 3 }}>{user.userRole}</Text>
+  //       </TouchableOpacity>
+  //     </View>
+  //   );
+  // };
 
   render() {
     return (
-      <View style={styles.container}>
-        <View style={{ flexDirection: 'row', backgroundColor: '#DDDDDD', padding: 10 }}>
+      <View style={{
+          flex: 1,
+          backgroundColor: '#FFFFFF',
+      }}>
+        <View style={{
+            flexDirection: 'row',
+            backgroundColor: '#DDDDDD',
+            padding: 10
+        }}>
           <TextInput
             style={styles.textinput}
             onChangeText={this.searchedAdresses}
             placeholder="Cari nama" />
         </View>
-        <View style={{ marginTop: 5 }}>
-          <ListView
-            dataSource={ds.cloneWithRows(this.state.dataList)}
-            renderRow={this.renderAdress}
-            renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator} />}
-          />
+        <View style={{
+            flex: 1
+        }}>
+            <FlatList
+                style={{ flex: 1 }}
+                data={this.state.dataList}
+                extraData={this.state}
+                removeClippedSubviews={true}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item }) => {
+                    return (
+                        <TouchableOpacity
+                            onPress={() => {
+                                this.onSelect(item)
+                            }}
+                            style={{
+                                borderBottomWidth: 1,
+                                borderColor: '#8E8E8E'
+                            }}
+                        >
+                            <View
+                                style={{padding: 5}}
+                            >
+                                <Text style={{ fontSize: 15, color: 'black' }}>{item.fullName}</Text>
+                                <Text style={{ fontSize: 13, color: 'grey', marginTop: 3 }}>{item.userRole}</Text>
+                            </View>
+                        </TouchableOpacity>
+                    )
+                }}
+            />
+          {/*<ListView*/}
+          {/*  dataSource={ds.cloneWithRows(this.state.dataList)}*/}
+          {/*  renderRow={this.renderAdress}*/}
+          {/*  renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator} />}*/}
+          {/*/>*/}
         </View>
-
       </View>
     );
   };
