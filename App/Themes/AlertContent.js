@@ -12,6 +12,7 @@ const alert = {
     'temuan1': { showModal: true, title: 'Temuan', message: 'Selesaikan Progress temuan kamu dulu yaa', icon: Images.ic_progress },
     'batas_waktu': { showModal: true, title: "Batas Waktu", message: 'Kamu harus tentukan batas waktu temuan dulu', icon: Images.ic_batas_waktu },
     'update_temuan': { showModalBack: true, title: 'Update Temuan', message: 'Data Temuan kamu sudah diupdate yaa..', icon: Images.ic_save_berhasil },
+    'foto_gagal': { showModal: true, title: 'Pengambilan Foto Gagal', message: 'Lakukan pengambilan foto lagi', icon: Images.ic_ambil_foto_gagal },
 }
 
 export default alert;
