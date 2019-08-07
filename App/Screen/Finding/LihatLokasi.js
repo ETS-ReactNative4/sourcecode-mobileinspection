@@ -15,6 +15,7 @@ import ModalAlert from '../../Component/ModalLoading'
 import ModalGps from '../../Component/ModalAlert';
 import TaskServices from '../../Database/TaskServices';
 import geolib from 'geolib';
+import { storeData, retrieveData } from '../../Database/Resources';
 
 let polyMap = false;
 
@@ -26,8 +27,6 @@ class LihatLokasi extends React.Component {
         const dataLat = this.props.navigation.getParam('data');
         const latitude = parseFloat(dataLat.latitude);
         const longitude = parseFloat(dataLat.longitude);
-        console.log('Latitude MapView : ', latitude);
-        console.log('Longitude MapView : ', longitude);
         this.loadMap();
         this.state = {
             latitude: latitude,
@@ -97,7 +96,6 @@ class LihatLokasi extends React.Component {
                 LONGITUDE = est[0].LONGITUDE;
             }
             let polygons = TaskServices.findBy('TR_POLYGON', 'WERKS', user.CURR_WERKS);
-            console.log('Poligons from DB : ', polygons)
             polygons = this.convertGeoJson(polygons);
             if (polygons && polygons.length > 0) {
                 let mapData = {
@@ -202,25 +200,33 @@ class LihatLokasi extends React.Component {
     }
 
     getLocation() {
-        var lat = this.state.latitude;
-        var lon = this.state.longitude;
-        console.log('Latitude : ', lat);
-        console.log('Longitude : ', lon)
-        region = {
-            latitude: lat,
-            longitude: lon,
-            latitudeDelta: 0.0075,
-            longitudeDelta: 0.00721
-        }
-        position = {
-            latitude: lat, longitude: lon
-        }
-        let poligons = this.getPolygons(position);
-        console.log('Poligons Data : ', poligons)
-        this.setState({ latitude: lat, longitude: lon, fetchLocation: false, region, poligons });
-        if (this.map !== undefined) {
-            this.map.animateToCoordinate(region, 1);
-        }
+        retrieveData('Poligons').then(data => {
+            var lat = this.state.latitude;
+            var lon = this.state.longitude;
+            region = {
+                latitude: lat,
+                longitude: lon,
+                latitudeDelta: 0.0075,
+                longitudeDelta: 0.00721
+            }
+            position = {
+                latitude: lat, longitude: lon
+            }
+            if (data != null) {
+                this.setState({ latitude: lat, longitude: lon, fetchLocation: false, region, poligons: data });
+                if (this.map !== undefined) {
+                    this.map.animateToCoordinate(region, 1);
+                }
+            } else {
+                let poligons = this.getPolygons(position);
+                storeData('Poligons', poligons)
+                if (this.map !== undefined) {
+                    this.map.animateToCoordinate(region, 1);
+                }
+                this.setState({ latitude: lat, longitude: lon, fetchLocation: false, region, poligons });
+            }
+        })
+
     }
 
     centerCoordinate(coordinates) {

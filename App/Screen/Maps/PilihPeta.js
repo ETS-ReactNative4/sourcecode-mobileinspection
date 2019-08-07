@@ -17,6 +17,7 @@ import { dirMaps } from '../../Lib/dirStorage';
 import { NavigationActions, StackActions } from 'react-navigation';
 import ModalLoading from '../../Component/ModalLoading'
 import ModalAlert from '../../Component/ModalAlert';
+import { removeData } from '../../Database/Resources';
 
 const alcatraz = {
 	type: 'FeatureCollection',
@@ -73,7 +74,8 @@ export default class PilihPeta extends Component {
 	}
 
 	componentDidMount() {
-		this.initData()
+		removeData('Poligons');
+		this.initData();
 		this.props.navigation.setParams({ handleBack: this.handleBackButtonClick });
 	}
 
