@@ -63,7 +63,7 @@ export function changeBgFilter(isFilter) {
   if (isFilter) {
     return Images.img_no_filter
   } else {
-    return Images.img_no_data
+    return Images.img_belum_ada_data
   }
 }
 

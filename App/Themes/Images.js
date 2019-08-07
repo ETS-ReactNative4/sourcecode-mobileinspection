@@ -25,6 +25,9 @@ const images = {
     ic_map: require('../Images/icon/ic_map_point_green.png'),
     ic_camera_big: require('../Images/icon/ic_camera_big.png'),
     ic_location: require('../Images/icon/ic_location.png'),
+    ic_take_photo: require('../Images/icon/ic_take_photo.png'),
+    ic_next_photo: require('../Images/icon/ic_next_photo.png'),
+    ic_ambil_foto_gagal: require('../Images/icon/ic_ambil_foto_gagal.png'),
 
     //Rating Icon
     ic_rating_bad: require('../Images/icon/ic-rating-bad.png'),
@@ -39,7 +42,8 @@ const images = {
     // Images
     img_no_picture: require('../Images/img-no-picture.png'),
     img_no_filter: require('../Images/img-no-filter.png'),
-    img_no_data: require('../Images/img-belum-ada-data.png'),
+    img_belum_ada_data: require('../Images/img-belum-ada-data.png'),
+    img_no_data: require('../Images/img-no-data.png'),
     img_no_data_finding: require('../Images/belum-ada-temuan.png'),
 
     //Alert Images

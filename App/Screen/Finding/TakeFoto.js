@@ -10,8 +10,6 @@ import {
 } from 'react-native';
 import Colors from '../../Constant/Colors';
 import Icon from 'react-native-vector-icons/Ionicons';
-import imgTakePhoto from '../../Images/icon/ic_take_photo.png';
-import imgNextPhoto from '../../Images/icon/ic_next_photo.png';
 import { RNCamera as Camera } from 'react-native-camera';
 import TaskServices from '../../Database/TaskServices';
 import ImageResizer from 'react-native-image-resizer';
@@ -20,6 +18,7 @@ var RNFS = require('react-native-fs');
 import R from 'ramda';
 import { getTodayDate } from '../../Lib/Utils';
 import ModalAlert from '../../Component/ModalAlert';
+import { Images, AlertContent } from '../../Themes';
 
 class TakeFoto extends Component {
 
@@ -163,12 +162,7 @@ class TakeFoto extends Component {
   }
 
   validatePhotoExists() {
-    this.setState({
-      showModal: true,
-      title: 'Pengambilan Foto Gagal',
-      message: 'Lakukan pengambilan foto lagi',
-      icon: require('../../Images/icon/ic_ambil_foto_gagal.png')
-    });
+    this.setState(AlertContent.foto_gagal);
   }
 
   renderImage() {
@@ -183,7 +177,7 @@ class TakeFoto extends Component {
   }
 
   renderIcon = () => {
-    var imgSource = this.state.hasPhoto ? imgNextPhoto : imgTakePhoto;
+    var imgSource = this.state.hasPhoto ? Images.ic_next_photo : Images.ic_take_photo;
     return (
       <Image
         style={styles.icon}

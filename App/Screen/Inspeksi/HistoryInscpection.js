@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Platform, StatusBar } from 'react-native';
-import CardView from 'react-native-cardview';
-import { Card, CardItem } from 'native-base';
+import { Card } from 'native-base';
 import Colors from '../../Constant/Colors';
 import Taskservice from '../../Database/TaskServices'
-import { NavigationActions, StackActions } from 'react-navigation';
+import { NavigationActions } from 'react-navigation';
 import TaskServices from '../../Database/TaskServices';
 import moment from 'moment'
 var RNFS = require('react-native-fs');
 const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
 import { dateDisplayMobile } from '../../Lib/Utils'
+import TemplateNoData from '../../Component/TemplateNoData';
+import { Images } from '../../Themes';
 
 export default class HistoryInspection extends Component {
 
@@ -219,13 +220,7 @@ export default class HistoryInspection extends Component {
 
   }
 
-  _renderNoData() {
-    return (
-      <Image style={{ justifyContent: 'center', alignSelf: 'center', marginTop: 120, width: 300, height: 220 }} source={require('../../Images/img-no-data.png')} />
-    )
-  }
-
-  _renderData() {
+  renderData() {
     return (
       <ScrollView style={styles.container}>
         <View>
@@ -236,12 +231,6 @@ export default class HistoryInspection extends Component {
   }
 
   render() {
-    let show;
-    if (this.state.data.length > 0) {
-      show = this._renderData()
-    } else {
-      show = this._renderNoData()
-    }
     return (
       <View style={{ flex: 1 }}>
         <StatusBar
@@ -249,7 +238,7 @@ export default class HistoryInspection extends Component {
           barStyle="light-content"
           backgroundColor={Colors.tintColorPrimary}
         />
-        {show}
+        {this.state.data.length > 0 ? this.renderData() : <TemplateNoData img={Images.img_no_data} />}
       </View>
     )
   }
