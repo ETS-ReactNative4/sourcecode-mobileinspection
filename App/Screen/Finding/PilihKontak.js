@@ -157,10 +157,10 @@ class PilihKontak extends Component {
                             }}
                         >
                             <View
-                                style={{padding: 5}}
+                                style={{paddingVertical: 5, paddingHorizontal: 10}}
                             >
                                 <Text style={{ fontSize: 15, color: 'black' }}>{item.fullName}</Text>
-                                <Text style={{ fontSize: 13, color: 'grey', marginTop: 3 }}>{item.userRole}</Text>
+                                <Text style={{ fontSize: 13, color: 'grey', marginTop: 3 }}>{item.userRole.replace("_"," ")}</Text>
                             </View>
                         </TouchableOpacity>
                     )

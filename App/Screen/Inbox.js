@@ -49,11 +49,12 @@ export default class Inbox extends React.Component {
 		notifCount = (notifCount >= 100) ? "99+" : notifCount + "";
 		this.setState({ data: this.getNotif() });
 		this.props.navigation.setParams({ notifCount: notifCount })
-		if (notifData.NOTIFICATION_TYPE == 6) {
-			this.props.navigation.navigate("HomeScreenComment", { findingCode: notifData.FINDING_CODE })
-		} else {
-			this.props.navigation.navigate('DetailFinding', { ID: notifData.FINDING_CODE })
-		}
+        this.props.navigation.navigate('DetailFinding', { ID: notifData.FINDING_CODE })
+		// if (notifData.NOTIFICATION_TYPE == 6) {
+		// 	this.props.navigation.navigate("HomeScreenComment", { findingCode: notifData.FINDING_CODE })
+		// } else {
+		// 	this.props.navigation.navigate('DetailFinding', { ID: notifData.FINDING_CODE })
+		// }
 	}
 	_renderItem = (item, index) => {
 		let title;

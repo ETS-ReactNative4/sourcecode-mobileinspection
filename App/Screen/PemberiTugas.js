@@ -1,9 +1,20 @@
 
 import React from 'react';
-import { StatusBar, Text, TouchableOpacity, StyleSheet, TextInput, ListView, BackHandler } from 'react-native';
+import {
+    StatusBar,
+    Text,
+    TouchableOpacity,
+    StyleSheet,
+    TextInput,
+    ListView,
+    BackHandler,
+    Image,
+    FlatList
+} from 'react-native';
 import { Container, Content, View } from 'native-base';
 import TaskServices from '../Database/TaskServices';
 import Icons from 'react-native-vector-icons/Ionicons'
+import Icon1 from "../Component/Icon1";
 
 var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
@@ -37,16 +48,21 @@ class FilterScreen extends React.Component {
     }
 
     componentDidMount() {
-        let data = TaskServices.getAllData('TR_CONTACT');
+        let data = TaskServices.getAllData('TR_CONTACT').sorted('FULLNAME', false);
         let arr = [];
-        for (var i = 0; i < data.length; i++) {
-            arr.push({
-                userAuth: data[i].USER_AUTH_CODE,
-                fullName: data[i].FULLNAME,
-                userRole: data[i].USER_ROLE,
-            });
-            this.setState({ kontak: arr, searchedKontak: arr })
-        }
+        data.map((data)=>{
+            if(data !== undefined && data !== null){
+                arr.push({
+                    userAuth: data.USER_AUTH_CODE,
+                    fullName: data.FULLNAME,
+                    userRole: data.USER_ROLE,
+                });
+            }
+        });
+        this.setState({
+            kontak: arr,
+            searchedKontak: arr
+        });
     }
 
     onSelectAssignto(user){
@@ -102,12 +118,37 @@ class FilterScreen extends React.Component {
 
                     <View style={styles.separator} />
 
-                    <View style={{ marginTop: 5, padding: 16 }}>
-                        <ListView
-                            dataSource={ds.cloneWithRows(this.state.searchedKontak)}
-                            renderRow={this.renderkontak}
-                            renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator} />} />
-                    </View>
+                    <FlatList
+                        style={{ flex: 1 }}
+                        data={this.state.searchedKontak}
+                        extraData={this.state}
+                        removeClippedSubviews={true}
+                        keyExtractor={(item, index) => index.toString()}
+                        renderItem={({ item }) => {
+                            return (
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        this.onSelect(item)
+                                    }}
+                                    style={{
+                                        borderBottomWidth: 1,
+                                        borderColor: '#8E8E8E'
+                                    }}
+                                >
+                                    <View
+                                        style={{paddingVertical: 5, paddingHorizontal: 10}}
+                                    >
+                                        <Text style={{ fontSize: 15, color: 'black' }}>{item.fullName}</Text>
+                                        <Text style={{ fontSize: 13, color: 'grey', marginTop: 3 }}>{item.userRole.replace("_"," ")}</Text>
+                                    </View>
+                                </TouchableOpacity>
+                            )
+                        }}
+                    />
+                        {/*<ListView*/}
+                        {/*    dataSource={ds.cloneWithRows(this.state.searchedKontak)}*/}
+                        {/*    renderRow={this.renderkontak}*/}
+                        {/*    renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator} />} />*/}
 
                 </Content>
             </Container>

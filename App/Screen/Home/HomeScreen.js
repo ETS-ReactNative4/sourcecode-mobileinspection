@@ -267,14 +267,14 @@ class HomeScreen extends React.Component {
     this.extraFilter = "";
 
     let statusFindingDesc = [];
-    let statusFindingComment = [];
+    let showTrimComment = [];
     findingFilter.map((data, index) => {
       statusFindingDesc.push(false);
-      statusFindingComment.push(false);
+      showTrimComment.push(false);
     });
     this.setState({
       statusFindingDesc: statusFindingDesc,
-      statusFindingComment: statusFindingComment
+      showTrimComment: showTrimComment
     });
     return findingFilter;
   }
@@ -478,7 +478,7 @@ class HomeScreen extends React.Component {
     let commentMessage = "";
     if (commentCount > 0) {
       latestComment = getComment[0];
-      commentMessage = this.processText(this.state.statusFindingComment[index] ? getComment[0].MESSAGE : clipString(getComment[0].MESSAGE, 150), Object.values(getComment[0].TAGS));
+      commentMessage = this.processText(this.state.showTrimComment[index] ? getComment[0].MESSAGE : clipString(getComment[0].MESSAGE, 150), Object.values(getComment[0].TAGS));
     }
 
     return (
@@ -577,16 +577,6 @@ class HomeScreen extends React.Component {
                     </Text>
                 }
               </Text>
-              {/*<TouchableOpacity*/}
-              {/*  style={{*/}
-              {/*    alignSelf:"flex-end"*/}
-              {/*  }}*/}
-              {/*>*/}
-              {/*  <Text style={{*/}
-              {/*    fontSize: 12,*/}
-              {/*    color:"rgba(202,194,194, 1)"*/}
-              {/*  }}>Read more</Text>*/}
-              {/*</TouchableOpacity>*/}
             </View>
             {
               commentCount > 0 ?
@@ -621,13 +611,13 @@ class HomeScreen extends React.Component {
                       {commentMessage}
                     </Text>
                     {
-                      latestComment.MESSAGE.length > 150 && !this.state.statusFindingComment[index] &&
+                      latestComment.MESSAGE.length > 150 && !this.state.showTrimComment[index] &&
                       <Text
                         onPress={() => {
-                          let tempStatus = this.state.statusFindingComment;
+                          let tempStatus = this.state.showTrimComment;
                           tempStatus[index] = true;
                           this.setState({
-                            statusFindingComment: tempStatus
+                            showTrimComment: tempStatus
                           })
                         }}
                         style={{

@@ -17,6 +17,7 @@ import ModalAlertBack from '../../Component/ModalAlert';
 import { Images, AlertContent } from '../../Themes';
 import { getIconProgress, getRating, getStatusImage, getColor, getStatusTemuan } from '../../Themes/Resources';
 import { getContactName, getEstateName, getStatusBlok, getBlokName } from '../../Database/Resources';
+import {clipString} from "../../Constant/Function";
 
 const IconRating = (props) => {
     const styImage = {
@@ -39,7 +40,7 @@ const IconRating = (props) => {
 class DetailFindingScreenRedesign extends Component {
 
     constructor(props) {
-        super(props)
+        super(props);
 
         var ID = this.props.navigation.state.params.ID
         var data = TaskServices.findBy2('TR_FINDING', 'FINDING_CODE', ID);
@@ -71,7 +72,7 @@ class DetailFindingScreenRedesign extends Component {
             activeRatingBad: false,
             activeRatingGood: false,
             activeRatingOk: false,
-            activeRatingGreat: false
+            activeRatingGreat: false,
         }
     }
 
@@ -464,22 +465,28 @@ class DetailFindingScreenRedesign extends Component {
                             <TouchableOpacity style={{ padding: 40 }}
                                 onPress={() => { this._takePicture() }}
                                 disabled={this.state.disabledView}>
-                                <Image style={{
-                                    alignSelf: 'center', alignItems: 'stretch',
-                                    width: 30, height: 30
-                                }}
-                                    source={Images.ic_camera_big}></Image>
+                                <Image
+                                    style={{
+                                        alignSelf: 'center',
+                                        alignItems: 'stretch',
+                                        width: 30, height: 30
+                                    }}
+                                    source={Images.ic_camera_big}
+                                />
                             </TouchableOpacity>
                         </Card>
                     </View>}
 
-                    {(this.state.data.PROGRESS < 100 && this.state.data.ASSIGN_TO == this.state.user.USER_AUTH_CODE) &&
+                    {
+                        (this.state.data.PROGRESS < 100 && this.state.data.ASSIGN_TO == this.state.user.USER_AUTH_CODE) &&
                         <TouchableOpacity style={[styles.button, { marginTop: 25, marginBottom: 30 }]}
                             onPress={() => { this.validation() }}>
                             <Text style={styles.buttonText}>Simpan</Text>
-                        </TouchableOpacity>}
+                        </TouchableOpacity>
+                    }
 
-                    {this.state.data.PROGRESS == 100 &&
+                    {
+                        this.state.data.PROGRESS == 100 &&
                         this.state.data.INSERT_USER == this.state.user.USER_AUTH_CODE &&
                         this.state.data.ASSIGN_TO !== this.state.user.USER_AUTH_CODE &&
                         this.state.rating == 0 &&
@@ -517,9 +524,11 @@ class DetailFindingScreenRedesign extends Component {
                                 onPress={() => this.inputRating()}>
                                 <Text style={styles.buttonText}>Simpan</Text>
                             </TouchableOpacity>
-                        </View>}
+                        </View>
+                    }
 
-                    {(this.state.data.PROGRESS == 100) &&
+                    {
+                        (this.state.data.PROGRESS == 100) &&
                         this.state.rating != 0 &&
                         <View style={{ flex: 1, width: '90%', borderTopWidth: 1, alignSelf: 'center', marginBottom: 30 }}>
                             <View style={{
@@ -541,7 +550,16 @@ class DetailFindingScreenRedesign extends Component {
                             <Text>{this.state.ratingMsg}</Text>
                         </View>
                     }
-
+                        <View
+                            style={{
+                                height: 10,
+                                marginVertical: 10,
+                                backgroundColor:"rgba(247,247,247,1)"
+                            }}
+                        />
+                    {
+                        this.renderComment()
+                    }
                 </Content>
             </Container>
         )
@@ -565,6 +583,92 @@ class DetailFindingScreenRedesign extends Component {
                 return;
             default:
                 return;
+        }
+    }
+
+    renderComment(){
+        //Get Finding Comment
+        let getComment = TaskServices.findBy("TR_FINDING_COMMENT", "FINDING_CODE", this.state.data.FINDING_CODE).sorted('INSERT_TIME', true);
+        let commentCount = getComment.length;
+        let commentMessage = "";
+        if (commentCount > 0) {
+            commentMessage = this.processText(getComment[0].MESSAGE, getComment[0].TAGS);
+        }
+        if(commentCount > 0){
+            return <View style={{ marginVertical: 5, marginHorizontal: 15}}>
+                <Text style={{
+                    fontWeight: 'bold',
+                    fontSize: 15,
+                }}>
+                    Komentar Terakhir ({commentCount})
+                </Text>
+                <Text style={{
+                    marginTop: 10
+                }}>
+                    <Text style={{
+                        fontSize: 14,
+                        fontWeight: 'bold'
+                    }}>
+                        {getComment[0].USERNAME}{" "}
+                    </Text>
+                    <Text
+                        style={{
+                            fontSize: 14
+                        }}
+                        onPress={() => {
+                            this.props.navigation.navigate("HomeScreenComment", { findingCode: this.state.data.FINDING_CODE })
+                        }}
+                    >
+                        {commentMessage}
+                    </Text>
+                </Text>
+                <TouchableOpacity onPress={() => {
+                    this.props.navigation.navigate("HomeScreenComment", { findingCode: this.state.data.FINDING_CODE })
+                }}>
+                    <Text style={{
+                        fontSize: 12,
+                        paddingVertical: 5,
+                        color: "rgba(202,194,194, 1)"
+                    }}>
+                        Komentar {commentCount} Terakhir
+                    </Text>
+                </TouchableOpacity>
+            </View>
+        }
+    }
+
+    processText(commentValue, listTaggedUser) {
+        if (listTaggedUser.length > 0 || commentValue !== "") {
+            let tempComment = [commentValue];
+            listTaggedUser.map((userTagged) => {
+                tempComment.map((comment, index) => {
+                    if (comment.includes("@" + userTagged.FULLNAME)) {
+                        let tempSplit = comment.split("@" + userTagged.FULLNAME);
+                        tempSplit.splice(1, 0, "@" + userTagged.FULLNAME);
+                        if (tempComment.length === 1) {
+                            tempComment = tempSplit;
+                        }
+                        else {
+                            tempComment.splice(index, 1, ...tempSplit);
+                        }
+                    }
+                });
+            });
+            let finalText = <Text>{
+                tempComment.map((data) => {
+                    if (data.charAt(0) === "@") {
+                        return <Text style={{ color: Colors.taggedUser, fontSize: 12 }}>{data}</Text>
+                    }
+                    else {
+                        return <Text style={{ fontSize: 12 }}>{data}</Text>
+                    }
+                })
+            }</Text>
+
+            return finalText
+        }
+        else {
+            return commentValue;
         }
     }
 
