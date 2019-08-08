@@ -1736,20 +1736,26 @@ class SyncScreen extends React.Component {
     }
 
     _updateTR_Notif_Comment(param) {
-        console.log('Finding Code Comment : ', param)
         let getFinding = TaskServices.findBy("TR_FINDING", "FINDING_CODE", param.FINDING_CODE).sorted('INSERT_TIME', true);
-        console.log('Get Finding Length : ', getFinding.length)
-        if (getFinding != undefined) {
-            console.log('getFinding Comment : ', getFinding)
+        if (getFinding !== undefined) {
             let newNotif = {
                 NOTIFICATION_ID: param.FINDING_COMMENT_ID + "$" + param.USERNAME,
                 NOTIFICATION_TIME: new Date(),
                 FINDING_UPDATE_TIME: moment(param.INSERT_TIME, 'YYYYMMDDHHmmss').format('YYYY-MM-DD HH:mm:ss'),
                 FINDING_CODE: param.FINDING_CODE
-            }
+            };
+            //inbox comment kalo di assign/nge assign
             getFinding.map(data => {
                 if (data.ASSIGN_TO == this.state.user.USER_AUTH_CODE || data.INSERT_USER == this.state.user.USER_AUTH_CODE) {
                     let newData = Object.assign({}, newNotif, { NOTIFICATION_TYPE: 6 })
+                    TaskServices.saveData('TR_NOTIFICATION', newData);
+                }
+            })
+
+            //inbox comment kalo di tagged
+            param.TAGS.map((data)=>{
+                if(data.USER_AUTH_CODE === this.state.user.USER_AUTH_CODE){
+                    let newData = Object.assign({}, newNotif, { NOTIFICATION_TYPE: 7 })
                     TaskServices.saveData('TR_NOTIFICATION', newData);
                 }
             })

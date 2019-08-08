@@ -123,7 +123,12 @@ export default class Inbox extends React.Component {
 			sources = require('../Images/ic_inbox_getcomment.png');
 			title = "KOMENTAR BARU";
 			desc = tempUsername[1] + " memberikan komentar baru ditemuan kamu."
-		}
+		} else if (item.NOTIFICATION_TYPE == 7) {
+            let tempUsername = item.NOTIFICATION_ID.split("$");
+            sources = require('../Images/ic_inbox_getcomment.png');
+            title = "KOMENTAR BARU";
+            desc = tempUsername[1] + " telah mention kamu di komentar finding."
+        }
 		return (
 			<TouchableOpacity
 				style={{

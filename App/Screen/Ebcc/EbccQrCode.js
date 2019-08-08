@@ -72,7 +72,7 @@ class Scanner extends Component {
     refRoleAuth(qrCode){
         let qrCodeValue = qrCode.split("-");
 
-        let loginData = TaskServices.getAllData('TR_LOGIN')[0]
+        let loginData = TaskServices.getAllData('TR_LOGIN')[0];
         let userRefCode = loginData.REFFERENCE_ROLE;
         let locationCode = loginData.LOCATION_CODE.split(',');
 
