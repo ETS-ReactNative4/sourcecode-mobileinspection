@@ -1,7 +1,6 @@
 'use strict';
 import React, { Component } from 'react'
 import { BackHandler, View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native'
-import R, { isEmpty } from 'ramda'
 import {
 	Container,
 	Content,
@@ -11,27 +10,13 @@ import Dash from 'react-native-dash'
 import TaskServices from '../../Database/TaskServices'
 import ServerName from '../../Constant/ServerName'
 import Icon2 from 'react-native-vector-icons/AntDesign'
-import RNFS from 'react-native-fs'
-import RNFetchBlob from 'rn-fetch-blob'
-import { dirMaps } from '../../Lib/dirStorage';
-import { NavigationActions, StackActions } from 'react-navigation';
 import ModalLoading from '../../Component/ModalLoading'
 import ModalAlert from '../../Component/ModalAlert';
 import { removeData } from '../../Database/Resources';
+import MapView, { Polygon, Marker, ProviderPropType } from 'react-native-maps';
 
-const alcatraz = {
-	type: 'FeatureCollection',
-	features: [
-		{
-			type: 'Feature',
-			properties: {},
-			geometry: {
-				type: 'Point',
-				coordinates: [-122.42305755615234, 37.82687023785448],
-			}
-		}
-	]
-};
+const LATITUDE = -2.952421;
+const LONGITUDE = 112.354931;
 
 export default class PilihPeta extends Component {
 
@@ -68,13 +53,23 @@ export default class PilihPeta extends Component {
 			showLoading: false,
 			showAlert: false,
 			icon: '',
-			isDeleteImage: false
+			isDeleteImage: false,
+			latitude: LATITUDE,
+			longitude: LONGITUDE,
+			region: {
+				latitude: LATITUDE,
+				longitude: LONGITUDE,
+				latitudeDelta: 0.0075,
+				longitudeDelta: 0.00721
+			},
+			poligons: []
 		}
 		this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
 	}
 
 	componentDidMount() {
 		removeData('Poligons');
+		removeData('PoligonsInspeksi');
 		this.initData();
 		this.props.navigation.setParams({ handleBack: this.handleBackButtonClick });
 	}
@@ -138,19 +133,6 @@ export default class PilihPeta extends Component {
 			return data.EST_NAME;
 		} catch (error) {
 			return '';
-		}
-	}
-
-	getColor(param) {
-		switch (param) {
-			case 'SELESAI':
-				return 'rgba(35, 144, 35, 0.7)';
-			case 'SEDANG DIPROSES':
-				return 'rgba(254, 178, 54, 0.7)';
-			case 'BARU':
-				return 'rgba(255, 77, 77, 0.7)';
-			default:
-				return '#ff7b25';
 		}
 	}
 
@@ -314,6 +296,20 @@ export default class PilihPeta extends Component {
 		)
 	}
 
+	convertGeoJson(raw) {
+		let arrPoli = [];
+		for (let x in raw) {
+			let tempItem = raw[x];
+			let tempArrCoords = [];
+			for (let y in tempItem.coords) {
+				tempArrCoords.push(tempItem.coords[y]);
+			}
+			tempItem = Object.assign({}, tempItem, { coords: tempArrCoords });
+			arrPoli.push(tempItem);
+		}
+		return arrPoli;
+	}
+
 	render() {
 		let data = this.state.regions
 		return (
@@ -329,6 +325,43 @@ export default class PilihPeta extends Component {
 					title={this.state.title}
 					message={this.state.message} />
 				<Content style={styles.container} >
+
+					<MapView
+						ref={map => this.map = map}
+						provider={this.props.provider}
+						style={styles.map}
+						showsUserLocation={true}
+						showsMyLocationButton={true}
+						showsCompass={true}
+						showScale={true}
+						showsIndoors={true}
+						initialRegion={this.state.region}
+						followsUserLocation={false}
+						zoomEnabled={true}
+						scrollEnabled={false}
+					>
+					</MapView>
+					{this.state.poligons.length > 0 && this.state.poligons.map((poly, index) => (
+						<View key={index}>
+							<Polygon
+								coordinates={poly.coords}
+								fillColor="rgba(0, 200, 0, 0.5)"
+								strokeColor="rgba(0,0,0,0.5)"
+								strokeWidth={2}
+								tappable={false}
+							/>
+							<Marker
+								ref={ref => poly.marker = ref}
+								coordinate={this.centerCoordinate(poly.coords)}>
+								<View style={{ flexDirection: 'column', alignSelf: 'flex-start' }}>
+									<View style={styles.marker}>
+										<Text style={{ color: '#000000', fontSize: 20 }}>{poly.blokname}</Text>
+									</View>
+								</View>
+							</Marker>
+						</View>
+					))}
+
 					<View style={[styles.containerLabel, { marginTop: 15, marginBottom: 15 }]}>
 						<View style={{ flex: 2 }}>
 							<Image source={require('../../Images/icon/ic_my_location.png')} style={[styles.icon, { marginLeft: 10 }]} />
@@ -341,9 +374,7 @@ export default class PilihPeta extends Component {
 
 					<View style={{ height: 1, backgroundColor: '#989898', marginBottom: 5, marginTop: 5 }} />
 
-					<Text style={{ fontSize: 16, fontWeight: 'bold', paddingHorizontal: 16 }}>
-						Peta
-          </Text>
+					<Text style={{ fontSize: 16, fontWeight: 'bold', paddingHorizontal: 16 }}>Peta</Text>
 
 					<Dash
 						dashColor={'#ccc'}
@@ -362,10 +393,38 @@ export default class PilihPeta extends Component {
 
 		)
 	}
+
+	centerCoordinate(coordinates) {
+		let x = coordinates.map(c => c.latitude)
+		let y = coordinates.map(c => c.longitude)
+
+		let minX = Math.min.apply(null, x)
+		let maxX = Math.max.apply(null, x)
+
+		let minY = Math.min.apply(null, y)
+		let maxY = Math.max.apply(null, y)
+
+		return {
+			latitude: (minX + maxX) / 2,
+			longitude: (minY + maxY) / 2
+		}
+	}
 }
 
 
+PilihPeta.propTypes = {
+	provider: ProviderPropType,
+};
+
+
 const styles = StyleSheet.create({
+	map: {
+		...StyleSheet.absoluteFillObject,
+		height: 0.1,
+		bottom: 0,
+		position: "absolute"
+
+	},
 	container: {
 		flex: 1,
 		paddingTop: 16,

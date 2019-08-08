@@ -254,11 +254,6 @@ class LihatLokasi extends React.Component {
         return color;
     }
 
-    onClickBlok(werkAfdBlockCode) {
-        this.props.navigation.state.params.changeBlok(werkAfdBlockCode);
-        this.props.navigation.goBack();
-    }
-
     onMapReady() {
         //lakukan aoa yg mau dilakukan disini setelah map selesai
         this.setState({ fetchLocation: false })
