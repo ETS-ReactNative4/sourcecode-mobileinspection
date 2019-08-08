@@ -630,7 +630,7 @@ class DetailFindingScreenRedesign extends Component {
                         paddingVertical: 5,
                         color: "rgba(202,194,194, 1)"
                     }}>
-                        Komentar {commentCount} Terakhir
+                        Lihat {commentCount} Komentar
                     </Text>
                 </TouchableOpacity>
             </View>
