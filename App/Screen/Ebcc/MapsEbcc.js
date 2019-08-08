@@ -332,8 +332,9 @@ class MapsEbcc extends React.Component {
                 });
                 return auth;
             case 'BA_CODE':
+                console.log(BA_CODE, BA_CODE.slice(0, 4));
                 locationCode.map((data) => {
-                    if (data.includes(BA_CODE.slice(0, BA_CODE.length - 3))) {
+                    if (data.includes(BA_CODE.slice(0, 4))) {
                         auth = true;
                     }
                 });
@@ -346,7 +347,7 @@ class MapsEbcc extends React.Component {
                 });
                 return auth;
             case 'REGION_CODE':
-                let trEst = TaskServices.findBy2('TR_EST', 'WERKS', BA_CODE.slice(0, BA_CODE.length - 3));
+                let trEst = TaskServices.findBy2('TM_EST', 'WERKS', BA_CODE.slice(0, 4));
                 if (trEst !== undefined) {
                     locationCode.map((data) => {
                         if (data === trEst.REGION_CODE) {
@@ -354,7 +355,7 @@ class MapsEbcc extends React.Component {
                         }
                     })
                 }
-                break;
+                return auth;
             case 'NATIONAL':
                 return true;
             default:
