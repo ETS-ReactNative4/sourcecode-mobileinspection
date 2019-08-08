@@ -413,7 +413,7 @@ const styles = StyleSheet.create({
   map: {
 	...StyleSheet.absoluteFillObject,
 	zIndex:100,
-	height:5,
+	height:0.1,
 	top:0
   },
   container: {

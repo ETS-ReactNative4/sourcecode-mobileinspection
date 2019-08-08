@@ -332,7 +332,8 @@ class DetailFindingScreenRedesign extends Component {
                             this.props.navigation.navigate("LihatLokasi", {
                                 data: {
                                     latitude: this.state.data.LAT_FINDING,
-                                    longitude: this.state.data.LONG_FINDING
+                                    longitude: this.state.data.LONG_FINDING,
+                                    finding_code: this.state.data.FINDING_CODE
                                 }
                             })
                         }}>

@@ -1,6 +1,6 @@
 'use strict';
 import React, { Component } from 'react'
-import { BackHandler, View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native'
+import { BackHandler, View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, AsyncStorage } from 'react-native'
 import {
 	Container,
 	Content,
@@ -12,7 +12,6 @@ import ServerName from '../../Constant/ServerName'
 import Icon2 from 'react-native-vector-icons/AntDesign'
 import ModalLoading from '../../Component/ModalLoading'
 import ModalAlert from '../../Component/ModalAlert';
-import { removeData } from '../../Database/Resources';
 import MapView, { Polygon, Marker, ProviderPropType } from 'react-native-maps';
 
 const LATITUDE = -2.952421;
@@ -68,8 +67,7 @@ export default class PilihPeta extends Component {
 	}
 
 	componentDidMount() {
-		removeData('Poligons');
-		removeData('PoligonsInspeksi');
+		AsyncStorage.clear();
 		this.initData();
 		this.props.navigation.setParams({ handleBack: this.handleBackButtonClick });
 	}

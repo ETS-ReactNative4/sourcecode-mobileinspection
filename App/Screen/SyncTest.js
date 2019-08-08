@@ -181,38 +181,60 @@ class SyncScreen extends React.Component {
     }
     insertLink() {
         // FuntionCRUD.DELETE_FINDING();
-        fetch(ServerName[this.state.user.SERVER_NAME_INDEX].service, {
-            method: 'GET',
-            headers: {
-                'Cache-Control': 'no-cache',
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.state.user.ACCESS_TOKEN}`
-            }
-        })
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                if (data.status) {
-                    TaskServices.deleteAllData('TM_SERVICE');
-                    let index = 0;
-                    for (let i in data.data) {
-                        let newService = {
-                            SERVICE_ID: parseInt(i),
-                            MOBILE_VERSION: data.data[i].MOBILE_VERSION,
-                            API_NAME: data.data[i].API_NAME,
-                            KETERANGAN: data.data[i].KETERANGAN,
-                            BODY: data.data[i].BODY ? JSON.stringify(data.data[i].BODY) : '',
-                            METHOD: data.data[i].METHOD,
-                            API_URL: data.data[i].API_URL
-                        }
-                        TaskServices.saveData('TM_SERVICE', newService);
-                        index++;
+        NetInfo.isConnected.fetch().then(isConnected => {
+            if (isConnected) {
+                fetch(ServerName[this.state.user.SERVER_NAME_INDEX].service, {
+                    method: 'GET',
+                    headers: {
+                        'Cache-Control': 'no-cache',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${this.state.user.ACCESS_TOKEN}`
                     }
-                }
-                this._onSync()
-            });
+                })
+                    .then((response) => {
+                        return response.json();
+                    })
+                    .then((data) => {
+                        if (data.status) {
+                            TaskServices.deleteAllData('TM_SERVICE');
+                            let index = 0;
+                            for (let i in data.data) {
+                                let newService = {
+                                    SERVICE_ID: parseInt(i),
+                                    MOBILE_VERSION: data.data[i].MOBILE_VERSION,
+                                    API_NAME: data.data[i].API_NAME,
+                                    KETERANGAN: data.data[i].KETERANGAN,
+                                    BODY: data.data[i].BODY ? JSON.stringify(data.data[i].BODY) : '',
+                                    METHOD: data.data[i].METHOD,
+                                    API_URL: data.data[i].API_URL
+                                }
+                                TaskServices.saveData('TM_SERVICE', newService);
+                                index++;
+                            }
+                        }
+                        this._onSync()
+                    });
+            } else {
+                this.setState({
+                    showButton: true,
+                    showModal: true,
+                    title: 'Tidak Ada Jaringan',
+                    message: 'Untuk bisa sync, kamu harus terhubung ke Internet',
+                    icon: require('../Images/ic-no-internet.png')
+                });
+            }
+        });
+        function handleFirstConnectivityChange(isConnected) {
+            NetInfo.isConnected.removeEventListener(
+                'connectionChange',
+                handleFirstConnectivityChange
+            );
+        }
+        NetInfo.isConnected.addEventListener(
+            'connectionChange',
+            handleFirstConnectivityChange
+        );
     }
 
     /* obsolete data ebcc by akbar */
@@ -1753,8 +1775,8 @@ class SyncScreen extends React.Component {
             })
 
             //inbox comment kalo di tagged
-            param.TAGS.map((data)=>{
-                if(data.USER_AUTH_CODE === this.state.user.USER_AUTH_CODE){
+            param.TAGS.map((data) => {
+                if (data.USER_AUTH_CODE === this.state.user.USER_AUTH_CODE) {
                     let newData = Object.assign({}, newNotif, { NOTIFICATION_TYPE: 7 })
                     TaskServices.saveData('TR_NOTIFICATION', newData);
                 }
@@ -1984,121 +2006,101 @@ class SyncScreen extends React.Component {
 
         //comment
         this.resetSagas();
-        NetInfo.isConnected.fetch().then(isConnected => {
-            if (isConnected) {
-                this.setState({
 
-                    //upload
-                    progressInspeksiHeader: 0,
-                    progressInspeksiDetail: 0,
-                    progressUploadImage: 0,
-                    progressFindingData: 0,
-                    progressFindingUploadData: 0,
-                    progressInspectionTrack: 0,
+        this.setState({
 
-                    //labelUpload
-                    valueInspeksiHeaderUpload: '0',
-                    totalInspeksiHeaderUpload: '0',
-                    valueInspeksiDetailUpload: '0',
-                    totalInspeksiDetailUpload: '0',
-                    valueFindingDataUpload: '0',
-                    totalFindingDataUpload: '0',
-                    valueFindingCommentDataUpload: '0',
-                    totalFindingCommentDataUpload: '0',
-                    valueImageUpload: '0',
-                    totalImagelUpload: '0',
-                    valueInspectionTrack: '0',
-                    totalInspectionTrack: '0',
+            //upload
+            progressInspeksiHeader: 0,
+            progressInspeksiDetail: 0,
+            progressUploadImage: 0,
+            progressFindingData: 0,
+            progressFindingUploadData: 0,
+            progressInspectionTrack: 0,
 
-                    //download
-                    progressFinding: 0,
-                    progressFindingImage: 0,
-                    progress: 0,
-                    progressAfd: 0,
-                    progressRegion: 0,
-                    progressEst: 0,
-                    progressLandUse: 0,
-                    progressComp: 0,
-                    progressContent: 0,
-                    progressContentLabel: 0,
-                    progressKriteria: 0,
-                    progressCategory: 0,
-                    progressContact: 0,
-                    progressParamInspection: 0,
-                    progressKualitas: 0,
+            //labelUpload
+            valueInspeksiHeaderUpload: '0',
+            totalInspeksiHeaderUpload: '0',
+            valueInspeksiDetailUpload: '0',
+            totalInspeksiDetailUpload: '0',
+            valueFindingDataUpload: '0',
+            totalFindingDataUpload: '0',
+            valueFindingCommentDataUpload: '0',
+            totalFindingCommentDataUpload: '0',
+            valueImageUpload: '0',
+            totalImagelUpload: '0',
+            valueInspectionTrack: '0',
+            totalInspectionTrack: '0',
 
-                    //labelDownload
-                    valueDownload: '0',
-                    valueAfdDownload: '0',
-                    valueRegionDownload: '0',
-                    valueEstDownload: '0',
-                    valueCompDownload: '0',
-                    valueLandUseDownload: '0',
-                    valueContentDownload: '0',
-                    valueContentLabelDownload: '0',
-                    valueKriteriaDownload: '0',
-                    valueFindingDownload: '0',
-                    valueCategoryDownload: '0',
-                    valueContactDownload: '0',
-                    valueFindingImageDownload: '0',
-                    valueParamInspection: '0',
-                    valueKualitas: '0',
+            //download
+            progressFinding: 0,
+            progressFindingImage: 0,
+            progress: 0,
+            progressAfd: 0,
+            progressRegion: 0,
+            progressEst: 0,
+            progressLandUse: 0,
+            progressComp: 0,
+            progressContent: 0,
+            progressContentLabel: 0,
+            progressKriteria: 0,
+            progressCategory: 0,
+            progressContact: 0,
+            progressParamInspection: 0,
+            progressKualitas: 0,
 
-                    totalDownload: '0',
-                    totalAfdDownload: '0',
-                    totalRegionDownload: '0',
-                    totalEstDownload: '0',
-                    totalCompDownload: '0',
-                    totalLandUseDownload: '0',
-                    totalContentDownload: '0',
-                    totalContentLabelDownload: '0',
-                    totalKriteriaDownload: '0',
-                    totalFindingDownload: '0',
-                    totalCategoryDownload: '0',
-                    totalContactDownload: '0',
-                    totalFindingImageDownload: '0',
-                    totalParamInspection: '0',
-                    totalKualitas: '0',
+            //labelDownload
+            valueDownload: '0',
+            valueAfdDownload: '0',
+            valueRegionDownload: '0',
+            valueEstDownload: '0',
+            valueCompDownload: '0',
+            valueLandUseDownload: '0',
+            valueContentDownload: '0',
+            valueContentLabelDownload: '0',
+            valueKriteriaDownload: '0',
+            valueFindingDownload: '0',
+            valueCategoryDownload: '0',
+            valueContactDownload: '0',
+            valueFindingImageDownload: '0',
+            valueParamInspection: '0',
+            valueKualitas: '0',
 
-                    fetchLocation: false,
-                    isBtnEnable: false,
+            totalDownload: '0',
+            totalAfdDownload: '0',
+            totalRegionDownload: '0',
+            totalEstDownload: '0',
+            totalCompDownload: '0',
+            totalLandUseDownload: '0',
+            totalContentDownload: '0',
+            totalContentLabelDownload: '0',
+            totalKriteriaDownload: '0',
+            totalFindingDownload: '0',
+            totalCategoryDownload: '0',
+            totalContactDownload: '0',
+            totalFindingImageDownload: '0',
+            totalParamInspection: '0',
+            totalKualitas: '0',
 
-                });
+            fetchLocation: false,
+            isBtnEnable: false,
 
-                this.uploadFindingComment();
-                //genba upload
-                this.uploadGenba();
-
-                //POST TRANSAKSI
-                this.kirimImage();
-                this.kirimUserImage();
-                this.uploadWeeklySummary();
-
-                //cara redux saga
-                setTimeout(() => {
-                    this.props.findingRequest();
-                    this.props.blockRequest();
-                }, 2000);
-            } else {
-                this.setState({
-                    showButton: true,
-                    showModal: true,
-                    title: 'Tidak Ada Jaringan',
-                    message: 'Untuk bisa sync, kamu harus terhubung ke Internet',
-                    icon: require('../Images/ic-no-internet.png')
-                });
-            }
         });
-        // function handleFirstConnectivityChange(isConnected) {
-        //     NetInfo.isConnected.removeEventListener(
-        //         'connectionChange',
-        //         handleFirstConnectivityChange
-        //     );
-        // }
-        // NetInfo.isConnected.addEventListener(
-        //     'connectionChange',
-        //     handleFirstConnectivityChange
-        // );
+
+        this.uploadFindingComment();
+        //genba upload
+        this.uploadGenba();
+
+        //POST TRANSAKSI
+        this.kirimImage();
+        this.kirimUserImage();
+        this.uploadWeeklySummary();
+
+        //cara redux saga
+        setTimeout(() => {
+            this.props.findingRequest();
+            this.props.blockRequest();
+        }, 2000);
+
     }
 
     fetchingMobileSync(param) {

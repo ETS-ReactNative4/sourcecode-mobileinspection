@@ -24,9 +24,13 @@ class LihatLokasi extends React.Component {
     constructor(props) {
         super(props);
 
-        const dataLat = this.props.navigation.getParam('data');
-        const latitude = parseFloat(dataLat.latitude);
-        const longitude = parseFloat(dataLat.longitude);
+        const data = this.props.navigation.getParam('data');
+        const latitude = parseFloat(data.latitude);
+        const longitude = parseFloat(data.longitude);
+        const finding_code = data.finding_code;
+
+        console.log('FINDING CODE : ', finding_code)
+
         this.loadMap();
         this.state = {
             latitude: latitude,
@@ -42,7 +46,8 @@ class LihatLokasi extends React.Component {
             showModal: false,
             title: 'Sabar Ya..',
             message: 'Sedang mencari lokasi kamu nih.',
-            icon: ''
+            icon: '',
+            finding_code: finding_code
         };
     }
 
@@ -200,7 +205,7 @@ class LihatLokasi extends React.Component {
     }
 
     getLocation() {
-        retrieveData('Poligons').then(data => {
+        retrieveData(this.state.finding_code).then(data => {
             var lat = this.state.latitude;
             var lon = this.state.longitude;
             region = {
@@ -219,11 +224,23 @@ class LihatLokasi extends React.Component {
                 }
             } else {
                 let poligons = this.getPolygons(position);
-                storeData('Poligons', poligons)
-                if (this.map !== undefined) {
-                    this.map.animateToCoordinate(region, 1);
+                if (poligons != undefined) {
+                    console.log("Poligons : ", poligons)
+                    storeData(this.state.finding_code, poligons)
+                    if (this.map !== undefined) {
+                        this.map.animateToCoordinate(region, 1);
+                    }
+                    this.setState({ latitude: lat, longitude: lon, fetchLocation: false, region, poligons });
+                } else {
+                    this.setState({
+                        fetchLocation: false,
+                        showModal: true,
+                        title: 'Tidak ada data',
+                        message: "Kamu belum download data map",
+                        icon: require('../../Images/ic-blm-input-lokasi.png')
+                    });
                 }
-                this.setState({ latitude: lat, longitude: lon, fetchLocation: false, region, poligons });
+
             }
         })
 
