@@ -22,6 +22,7 @@ let LATITUDE = -2.1890660;
 let LONGITUDE = 111.3609873;
 const { width, height } = Dimensions.get('window');
 const alfabet = ['A', 'B', 'C', 'D', 'E', 'F'];
+import { AlertContent } from '../../Themes'
 
 class MapsEbcc extends React.Component {
 
@@ -90,13 +91,7 @@ class MapsEbcc extends React.Component {
 
     totalPolygons() {
         if (!polyMap) {
-            this.setState({
-                fetchLocation: false,
-                showModal: true,
-                title: 'Tidak ada data',
-                message: "Kamu belum download data map",
-                icon: require('../../Images/ic-blm-input-lokasi.png')
-            });
+            this.setState(AlertContent.no_data_map);
             return 0;
         }
         return polyMap.data.polygons.length;
@@ -121,24 +116,12 @@ class MapsEbcc extends React.Component {
             }
             else {
                 //belum download map
-                this.setState({
-                    fetchLocation: false,
-                    showModal: true,
-                    title: 'Tidak ada data',
-                    message: "Kamu belum download data map",
-                    icon: require('../../Images/ic-blm-input-lokasi.png')
-                });
+                this.setState(AlertContent.no_data_map);
             }
         }
         else {
             //belum pilih lokasi
-            this.setState({
-                fetchLocation: false,
-                showModal: true,
-                title: 'Tidak ada lokasi',
-                message: "Kamu belum pilih lokasi kamu",
-                icon: require('../../Images/ic-blm-input-lokasi.png')
-            });
+            this.setState(AlertContent.no_location);
         }
     }
 
@@ -164,13 +147,7 @@ class MapsEbcc extends React.Component {
 
     getPolygons(position) {
         if (!polyMap) {
-            this.setState({
-                fetchLocation: false,
-                showModal: true,
-                title: 'Tidak ada data',
-                message: "Kamu belum download data map",
-                icon: require('../../Images/ic-blm-input-lokasi.png')
-            });
+            this.setState(AlertContent.no_data_map);
             return;
         }
         let data = polyMap.data.polygons;
@@ -234,9 +211,13 @@ class MapsEbcc extends React.Component {
                 latitude: lat, longitude: lon
             }
             let poligons = this.getPolygons(position);
-            this.setState({ latitude: lat, longitude: lon, fetchLocation: false, region, poligons });
-            if (this.map !== undefined) {
-                this.map.animateToCoordinate(region, 1);
+            if (poligons != undefined) {
+                this.setState({ latitude: lat, longitude: lon, fetchLocation: false, region, poligons });
+                if (this.map !== undefined) {
+                    this.map.animateToCoordinate(region, 1);
+                }
+            } else {
+                this.setState(AlertContent.no_data_map)
             }
         }
     }
@@ -255,39 +236,6 @@ class MapsEbcc extends React.Component {
             latitude: (minX + maxX) / 2,
             longitude: (minY + maxY) / 2
         }
-    }
-
-    randomHex = () => {
-        let letters = '0123456789ABCDEF';
-        let color = '#';
-        for (let i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-    }
-
-    onClickBlok(werkAfdBlockCode) {
-        if (this.isOnBlok(werkAfdBlockCode)) {
-            this.navigateScreen('ManualInputTPH', poly.werks_afd_block_code)
-        } else {
-            alert('km ga boleh salah pilih blok')
-        }
-    }
-
-    isOnBlok(werkAfdBlockCode) {
-        let data = skm.data.polygons;
-        let position = {
-            latitude: this.state.latitude, longitude: this.state.longitude
-        }
-        for (var i = 0; i < data.length; i++) {
-            let coords = data[i];
-            if (geolib.isPointInside(position, coords.coords)) {
-                if (werkAfdBlockCode == coords.werks_afd_block_code) {
-                    return true
-                }
-            }
-        }
-        return false;
     }
 
     navigateScreen(screenName, werkAfdBlockCode) {
