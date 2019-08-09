@@ -128,7 +128,7 @@ class FilterScreen extends React.Component {
                             return (
                                 <TouchableOpacity
                                     onPress={() => {
-                                        this.onSelect(item)
+                                        this.onSelectAssignto(item)
                                     }}
                                     style={{
                                         borderBottomWidth: 1,
