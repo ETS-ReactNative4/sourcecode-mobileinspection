@@ -21,7 +21,7 @@ import IconLoc from 'react-native-vector-icons/FontAwesome5';
 import ModalAlert from '../../Component/ModalAlert';
 
 import TaskServices from '../../Database/TaskServices';
-import { retrieveData } from '../../Database/Resources';
+import { retrieveData, removeData } from '../../Database/Resources';
 
 const skm = require('../../Data/MegaKuningan.json');
 
@@ -689,6 +689,9 @@ class KondisiBarisAkhir extends Component {
             }
             let id = 0;//setInterval(()=> this.getLocation2(blokInspectionCode), duration);
             this.navigateScreen('TakeFotoBaris', params, modelInspeksi, model, id);
+
+            // REMOVE ASYNSTORAGE MAPS
+            removeData('PoligonsInspeksi');
         }
 
     }

@@ -507,7 +507,6 @@ class SelesaiInspeksi extends React.Component {
                 })
             )]).then(() => navigation.navigate('Inspection')).then(() => navigation.navigate('Riwayat'))
         this.setState({ showModalBack: false })
-        removeData('PoligonsInspeksi')
     }
 
     colorTextScore(param) {

@@ -206,10 +206,13 @@ class MapsInspeksi extends React.Component {
         latitude: lat, longitude: lon
       }
       let poligons = this.getPolygons(position);
-      console.log('Poligons Data : ', poligons)
-      this.setState({ latitude: lat, longitude: lon, fetchLocation: false, region, poligons });
-      if (this.map !== undefined) {
-        this.map.animateToCoordinate(region, 1);
+      if (poligons != undefined) {
+        this.setState({ latitude: lat, longitude: lon, fetchLocation: false, region, poligons });
+        if (this.map !== undefined) {
+          this.map.animateToCoordinate(region, 1);
+        }
+      } else {
+        this.setState(AlertContent.no_data_map)
       }
     }
   }

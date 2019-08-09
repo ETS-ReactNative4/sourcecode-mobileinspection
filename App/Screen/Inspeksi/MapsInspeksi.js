@@ -3,7 +3,6 @@ import {
   StyleSheet,
   View,
   Text,
-  Dimensions,
   StatusBar,
   TouchableOpacity
 } from 'react-native';
@@ -15,15 +14,12 @@ import IconLoc from 'react-native-vector-icons/FontAwesome5';
 import ModalAlert from '../../Component/ModalLoading'
 import ModalGps from '../../Component/ModalAlert';
 import TaskServices from '../../Database/TaskServices';
-import { retrieveData, storeData } from '../../Database/Resources';
+import { retrieveData, storeData, removeData } from '../../Database/Resources';
+import { Images, AlertContent } from '../../Themes';
 
-let polyMap = false;// = require('../../Data/MegaKuningan.json');
-const ASPECT_RATIO = width / height;
+let polyMap = false;
 let LATITUDE = -2.1890660;
 let LONGITUDE = 111.3609873;
-const LATITUDE_DELTA = 0.0922;
-const { width, height } = Dimensions.get('window');
-const alfabet = ['A', 'B', 'C', 'D', 'E', 'F'];
 
 class MapsInspeksi extends React.Component {
 
@@ -73,6 +69,7 @@ class MapsInspeksi extends React.Component {
   }
 
   componentDidMount() {
+    removeData('PoligonsInspeksi');
     this.props.navigation.setParams({ searchLocation: this.searchLocation })
     this.getLocation()
   }
@@ -212,33 +209,27 @@ class MapsInspeksi extends React.Component {
 
   getLocation() {
     if (this.state.latitude && this.state.longitude) {
-      retrieveData('PoligonsInspeksi').then(data => {
-        console.log('Data Poligons Maps Inspeksi : ', data)
-        var lat = this.state.latitude;
-        var lon = this.state.longitude;
-        region = {
-          latitude: lat,
-          longitude: lon,
-          latitudeDelta: 0.0075,
-          longitudeDelta: 0.00721
+      var lat = this.state.latitude;
+      var lon = this.state.longitude;
+      region = {
+        latitude: lat,
+        longitude: lon,
+        latitudeDelta: 0.0075,
+        longitudeDelta: 0.00721
+      }
+      position = {
+        latitude: lat, longitude: lon
+      }
+      let poligons = this.getPolygons(position);
+      if (poligons != undefined) {
+        storeData('PoligonsInspeksi', poligons)
+        if (this.map !== undefined) {
+          this.map.animateToCoordinate(region, 1);
         }
-        position = {
-          latitude: lat, longitude: lon
-        }
-        if (data != null) {
-          this.setState({ latitude: lat, longitude: lon, fetchLocation: false, region, poligons: data });
-          if (this.map !== undefined) {
-            this.map.animateToCoordinate(region, 1);
-          }
-        } else {
-          let poligons = this.getPolygons(position);
-          storeData('PoligonsInspeksi', poligons)
-          if (this.map !== undefined) {
-            this.map.animateToCoordinate(region, 1);
-          }
-          this.setState({ latitude: lat, longitude: lon, fetchLocation: false, region, poligons });
-        }
-      })
+        this.setState({ latitude: lat, longitude: lon, fetchLocation: false, region, poligons });
+      } else {
+        this.setState(AlertContent.no_data_map)
+      }
     }
   }
 
@@ -292,7 +283,7 @@ class MapsInspeksi extends React.Component {
     } else {
       this.setState({
         fetchLocation: false, showModal: true, title: 'Bukan Wilayah Otorisasimu',
-        message: "Kamu tidak bisa inspeksi di wilayah ini", icon: require('../../Images/ic-blm-input-lokasi.png')
+        message: "Kamu tidak bisa inspeksi di wilayah ini", icon: Images.ic_blm_input_lokasi
       });
     }
   }
