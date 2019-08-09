@@ -61,6 +61,7 @@ export default class HomeScreenComment extends Component {
 
     getComment() {
         let commentData = Object.values(TaskServices.findBy("TR_FINDING_COMMENT", "FINDING_CODE", this.state.FINDING_CODE));
+        console.log(commentData);
         if (commentData !== null) {
             this.setState({
                 commentData: commentData,
@@ -73,6 +74,7 @@ export default class HomeScreenComment extends Component {
 
     insertComment() {
         let dataLogin = TaskServices.getAllData('TR_LOGIN')[0];
+        let getUserName = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', dataLogin.USER_AUTH_CODE);
         let dateTime = moment().format('YYYYMMDDHHmmss');
         let saveTaggedUser = [];
         this.state.taggedUser.map((taggedUser) => {
@@ -90,7 +92,7 @@ export default class HomeScreenComment extends Component {
             TAGS: saveTaggedUser,
             //LOCAL PARAM
             STATUS_SYNC: 'N',
-            USERNAME: dataLogin.USERNAME
+            USERNAME: getUserName.FULLNAME
         };
         console.log(tempComment);
         TaskServices.saveData('TR_FINDING_COMMENT', tempComment);

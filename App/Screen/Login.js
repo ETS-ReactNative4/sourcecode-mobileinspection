@@ -60,7 +60,7 @@ class Login extends Component {
         };
         TaskServices.saveData('TR_LOGIN', data);
     }
-	
+
 	insertLink(param){
         fetch(ServerName[this.serverNameIndex].service, {
             method: 'GET',
@@ -325,8 +325,8 @@ const styles = StyleSheet.create({
         color: '#ffffff',
         fontSize: 16,
         fontWeight: '500',
-    }, 
-    
+    },
+
     footerView: {
         flexGrow: 1,
         alignItems: 'flex-end',
