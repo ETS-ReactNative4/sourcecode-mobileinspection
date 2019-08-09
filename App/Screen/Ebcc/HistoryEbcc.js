@@ -3,10 +3,9 @@ import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Platform, 
 import { Card } from 'native-base';
 import Colors from '../../Constant/Colors';
 import Taskservice from '../../Database/TaskServices'
-import { NavigationActions } from 'react-navigation';
 import TaskServices from '../../Database/TaskServices';
-import moment from 'moment';
 import { dateDisplayMobile } from '../../Lib/Utils'
+import { getEstateName, getStatusBlok } from '../../Database/Resources';
 
 export default class HistoryEbcc extends Component {
 
@@ -49,23 +48,6 @@ export default class HistoryEbcc extends Component {
     this.setState({ data })
   }
 
-  getEstateName(werks) {
-    try {
-      let data = TaskServices.findBy2('TM_EST', 'WERKS', werks);
-      return data.EST_NAME;
-    } catch (error) {
-      return '';
-    }
-  }
-  getStatusBlok(werk_afd_blok_code) {
-    try {
-      let data = TaskServices.findBy2('TM_LAND_USE', 'WERKS_AFD_BLOCK_CODE', werk_afd_blok_code);
-      return data.MATURITY_STATUS;
-    } catch (error) {
-      return ''
-    }
-  }
-
   renderList = (data, index) => {
     let status = '', colorStatus = '';
     if (data.STATUS_SYNC == 'N') {
@@ -76,7 +58,7 @@ export default class HistoryEbcc extends Component {
       colorStatus = Colors.brand;//'#999'
     }
     let imgBaris = TaskServices.findByWithList('TR_IMAGE', ['TR_CODE', 'STATUS_IMAGE'], [data.EBCC_VALIDATION_CODE, 'JANJANG']);
-    let estName = this.getEstateName(data.WERKS);
+    let estName = getEstateName(data.WERKS);
     let path = '';
     try {
       path = `file://${imgBaris[0].IMAGE_PATH_LOCAL}`;
@@ -84,7 +66,7 @@ export default class HistoryEbcc extends Component {
       path = '';
     }
     let dataBlock = Taskservice.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', `${data.WERKS}${data.AFD_CODE}${data.BLOCK_CODE}`);
-    let statusBlok = this.getStatusBlok(dataBlock.WERKS_AFD_BLOCK_CODE)
+    let statusBlok = getStatusBlok(dataBlock.WERKS_AFD_BLOCK_CODE)
     let ebccDate = data.INSERT_TIME == '' ? 'Insert Time kosong' : dateDisplayMobile(data.INSERT_TIME);
 
     return (

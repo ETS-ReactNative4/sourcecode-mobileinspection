@@ -13,6 +13,8 @@ const alert = {
     'batas_waktu': { showModal: true, title: "Batas Waktu", message: 'Kamu harus tentukan batas waktu temuan dulu', icon: Images.ic_batas_waktu },
     'update_temuan': { showModalBack: true, title: 'Update Temuan', message: 'Data Temuan kamu sudah diupdate yaa..', icon: Images.ic_save_berhasil },
     'foto_gagal': { showModal: true, title: 'Pengambilan Foto Gagal', message: 'Lakukan pengambilan foto lagi', icon: Images.ic_ambil_foto_gagal },
+    'no_data_map': { fetchLocation: false, showModal: true, title: 'Tidak ada data', message: "Kamu belum download data map", icon: Images.ic_blm_input_lokasi },
+    'no_location': { fetchLocation: false, showModal: true, title: 'Tidak ada lokasi', message: "Kamu belum pilih lokasi kamu", icon: Images.ic_blm_input_lokasi },
 }
 
 export default alert;

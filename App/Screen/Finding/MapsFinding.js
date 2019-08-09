@@ -3,7 +3,6 @@ import {
   StyleSheet,
   View,
   Text,
-  Dimensions,
   StatusBar,
   TouchableOpacity,
   BackAndroid
@@ -16,13 +15,11 @@ import ModalAlert from '../../Component/ModalLoading'
 import ModalGps from '../../Component/ModalAlert';
 import TaskServices from '../../Database/TaskServices';
 import geolib from 'geolib';
+import { AlertContent } from '../../Themes';
 
-const ASPECT_RATIO = width / height;
 let LATITUDE = -2.1890660;
 let LONGITUDE = 111.3609873;
-const LATITUDE_DELTA = 0.0922;
-let polyMap = false;// = require('../../Data/MegaKuningan.json');
-const { width, height } = Dimensions.get('window');
+let polyMap = false;
 
 class MapsInspeksi extends React.Component {
   constructor(props) {
@@ -93,13 +90,7 @@ class MapsInspeksi extends React.Component {
 
   totalPolygons() {
     if (!polyMap) {
-      this.setState({
-        fetchLocation: false,
-        showModal: true,
-        title: 'Tidak ada data',
-        message: "Kamu belum download data map",
-        icon: require('../../Images/ic-blm-input-lokasi.png')
-      });
+      this.setState(AlertContent.no_data_map);
       return 0;
     }
     return polyMap.data.polygons.length;
@@ -125,24 +116,12 @@ class MapsInspeksi extends React.Component {
       }
       else {
         //belum download map
-        this.setState({
-          fetchLocation: false,
-          showModal: true,
-          title: 'Tidak ada data',
-          message: "Kamu belum download data map",
-          icon: require('../../Images/ic-blm-input-lokasi.png')
-        });
+        this.setState(AlertContent.no_data_map);
       }
     }
     else {
       //belum pilih lokasi
-      this.setState({
-        fetchLocation: false,
-        showModal: true,
-        title: 'Tidak ada lokasi',
-        message: "Kamu belum pilih lokasi kamu",
-        icon: require('../../Images/ic-blm-input-lokasi.png')
-      });
+      this.setState(AlertContent.no_location);
     }
   }
 
@@ -162,13 +141,7 @@ class MapsInspeksi extends React.Component {
 
   getPolygons(position) {
     if (!polyMap) {
-      this.setState({
-        fetchLocation: false,
-        showModal: true,
-        title: 'Tidak ada data',
-        message: "Kamu belum download data map",
-        icon: require('../../Images/ic-blm-input-lokasi.png')
-      });
+      this.setState(AlertContent.no_data_map);
       return;
     }
     let data = polyMap.data.polygons;
@@ -257,34 +230,10 @@ class MapsInspeksi extends React.Component {
     }
   }
 
-  randomHex = () => {
-    let letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-  }
-
   onClickBlok(werkAfdBlockCode) {
+    console.log('werkAfdBlockCode : ', werkAfdBlockCode)
     this.props.navigation.state.params.changeBlok(werkAfdBlockCode);
     this.props.navigation.goBack();
-  }
-
-  isOnBlok(werkAfdBlockCode) {
-    let data = skm.data.polygons;
-    let position = {
-      latitude: this.state.latitude, longitude: this.state.longitude
-    }
-    for (var i = 0; i < data.length; i++) {
-      let coords = data[i];
-      if (geolib.isPointInside(position, coords.coords)) {
-        if (werkAfdBlockCode == coords.werks_afd_block_code) {
-          return true
-        }
-      }
-    }
-    return false;
   }
 
   onMapReady() {

@@ -28,6 +28,7 @@ const images = {
     ic_take_photo: require('../Images/icon/ic_take_photo.png'),
     ic_next_photo: require('../Images/icon/ic_next_photo.png'),
     ic_ambil_foto_gagal: require('../Images/icon/ic_ambil_foto_gagal.png'),
+    ic_blm_input_lokasi: require('../Images/ic-blm-input-lokasi.png'),
 
     //Rating Icon
     ic_rating_bad: require('../Images/icon/ic-rating-bad.png'),
