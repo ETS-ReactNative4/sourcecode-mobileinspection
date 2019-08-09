@@ -1708,7 +1708,7 @@ class SyncScreen extends React.Component {
             NOTIFICATION_STATUS: 0,
             FINDING_UPDATE_TIME: data.UPDATE_TIME,
             FINDING_CODE: data.FINDING_CODE
-        }
+        };
         if (data.UPDATE_USER == '') {
             if (data.ASSIGN_TO == this.state.user.USER_AUTH_CODE && data.INSERT_USER !== this.state.user.USER_AUTH_CODE) {
                 //finding baru diasign ke user

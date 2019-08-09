@@ -59,14 +59,20 @@ class PilihKontak extends Component {
     let data = TaskServices.query('TR_CONTACT', `REF_ROLE = "AFD_CODE" AND LOCATION_CODE = "${withAfd}" AND USER_ROLE CONTAINS[c] "ASISTEN" AND USER_AUTH_CODE != "${login[0].USER_AUTH_CODE}"`);
     let data1 = TaskServices.query('TR_CONTACT', `REF_ROLE = "BA_CODE" AND LOCATION_CODE = "${werks}" AND USER_ROLE CONTAINS[c] "ASISTEN" AND USER_AUTH_CODE != "${login[0].USER_AUTH_CODE}"`);
 
+    let currentUser = null;
     let arr = [];
     for (var i = 0; i < dataUser.length; i++) {
         if(dataUser[i].USER_AUTH_CODE !== undefined && dataUser[i].FULLNAME !== undefined && dataUser[i].USER_ROLE !== undefined){
-            arr.push({
+            currentUser = {
                 userAuth: dataUser[i].USER_AUTH_CODE,
                 fullName: dataUser[i].FULLNAME,
                 userRole: dataUser[i].USER_ROLE,
-            });
+            }
+            // arr.push({
+            //     userAuth: dataUser[i].USER_AUTH_CODE,
+            //     fullName: dataUser[i].FULLNAME,
+            //     userRole: dataUser[i].USER_ROLE,
+            // });
         }
     }
 
@@ -99,6 +105,7 @@ class PilihKontak extends Component {
               return 1;
           return 0 //default return value (no sorting)
       });
+    arr = [currentUser, ...arr];
 
     let tempId = [];
     let tempValue = [];
