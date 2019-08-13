@@ -2,13 +2,6 @@ import React, { Component } from 'react';
 import {
     Text, StyleSheet, ListView, TextInput, TouchableOpacity, View, Keyboard, BackHandler
 } from 'react-native';
-import {
-    Container,
-    Content,
-    Card,
-    CardItem,
-    Title,
-} from 'native-base';
 import Colors from '../../Constant/Colors'
 import IconLoc from 'react-native-vector-icons/FontAwesome5';
 import MapView, {Marker } from 'react-native-maps';
@@ -81,7 +74,7 @@ class PilihBlok extends Component {
 
     componentWillUnmount(){
         BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
-    }
+    }   
 
     componentDidMount() {
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)

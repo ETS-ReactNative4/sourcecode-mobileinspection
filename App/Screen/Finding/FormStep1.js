@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import { NavigationActions, StackActions } from 'react-navigation';
+<<<<<<< Updated upstream
 import { StyleSheet,BackHandler, Text, FlatList, ScrollView, TouchableOpacity, View, Image, Alert, Platform
+=======
+import {
+    StyleSheet, Text, FlatList, ScrollView, TouchableOpacity, View, Image, Alert, Platform, BackHandler
+>>>>>>> Stashed changes
 } from 'react-native';
 import {
     Container,
@@ -30,21 +35,21 @@ class FormStep1 extends Component {
     static navigationOptions = ({ navigation }) => {
         const { params = {} } = navigation.state;
         return {
-          headerStyle: {
-            backgroundColor: Colors.tintColor
-          },
-          title: 'Buat Laporan Temuan',
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            flex: 1,
-            fontSize: 18,
-            fontWeight: '400'
-          },
-          headerLeft: (
-              <TouchableOpacity onPress={() => {navigation.goBack(null)}}>
-                  <Icon2 style={{marginLeft: 12}} name={'ios-arrow-round-back'} size={45} color={'white'} />
-              </TouchableOpacity>
-          )
+            headerStyle: {
+                backgroundColor: Colors.tintColor
+            },
+            title: 'Buat Laporan Temuan',
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+                flex: 1,
+                fontSize: 18,
+                fontWeight: '400'
+            },
+            headerLeft: (
+                <TouchableOpacity onPress={() => { navigation.goBack(null) }}>
+                    <Icon2 style={{ marginLeft: 12 }} name={'ios-arrow-round-back'} size={45} color={'white'} />
+                </TouchableOpacity>
+            )
         };
     }
 
@@ -55,15 +60,15 @@ class FormStep1 extends Component {
         this.clearFoto = this.clearFoto.bind(this);
 
         this.state = {
-			track:true,
-			latitude: 0.0,
-			longitude: 0.0,
-			region: {
-			  latitude: LATITUDE,
-			  longitude: LONGITUDE,
-			  latitudeDelta:0.0075,
-			  longitudeDelta:0.00721
-			},
+            track: true,
+            latitude: 0.0,
+            longitude: 0.0,
+            region: {
+                latitude: LATITUDE,
+                longitude: LONGITUDE,
+                latitudeDelta: 0.0075,
+                longitudeDelta: 0.00721
+            },
             user: TaskServices.getAllData('TR_LOGIN')[0],
             photos: [],
             selectedPhotos: [],
@@ -84,9 +89,9 @@ class FormStep1 extends Component {
         }
     }
 
-    clearFoto(){
-        if(this.state.photos.length > 0){
-            this.state.photos.map(item =>{
+    clearFoto() {
+        if (this.state.photos.length > 0) {
+            this.state.photos.map(item => {
                 RNFS.unlink(item.uri)
             })
         }
@@ -94,23 +99,27 @@ class FormStep1 extends Component {
     }
 
     componentDidMount() {
-       this.getLocation();
-       this.props.navigation.setParams({ clearFoto: this.clearFoto });
+        this.getLocation();
+        this.props.navigation.setParams({ clearFoto: this.clearFoto });
         this.focusListener = this.props.navigation.addListener("didFocus", () => {
             BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
         });
+<<<<<<< Updated upstream
         this.blurListener = this.props.navigation.addListener("didBlur", ()=>{
+=======
+        this.blurListener = this.props.navigation.addListener("didBlur", () => {
+>>>>>>> Stashed changes
             BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
         })
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.focusListener.remove();
         this.blurListener.remove();
     }
 
     handleBackButtonClick() {
-        if(this.state.photos.length > 0){
+        if (this.state.photos.length > 0) {
             this.setState({
                 showModalConfirmation: true,
                 title: 'Data Hilang',
@@ -127,7 +136,7 @@ class FormStep1 extends Component {
             (position) => {
                 var lat = parseFloat(position.coords.latitude);
                 var lon = parseFloat(position.coords.longitude);
-                this.setState({latitude:lat, longitude:lon, fetchLocation: false});
+                this.setState({ latitude: lat, longitude: lon, fetchLocation: false });
 
             },
             (error) => {
@@ -135,7 +144,7 @@ class FormStep1 extends Component {
                 if (error && error.message == "No location provider available.") {
                     message = "Mohon nyalakan GPS anda terlebih dahulu.";
                 }
-                this.setState({fetchLocation:false})
+                this.setState({ fetchLocation: false })
                 // alert('Informasi', message);
                 // console.log(message);
             }, // go here if error while fetch location
@@ -167,7 +176,7 @@ class FormStep1 extends Component {
     // };
 
     // componentDidMount() {
-        // this.handleAndroidBackButton(this.exitAlert);
+    // this.handleAndroidBackButton(this.exitAlert);
     // }
 
     onBtnClick() {
@@ -179,9 +188,9 @@ class FormStep1 extends Component {
             let images = [];
             this.state.selectedPhotos.map((item) => {
                 let da = item.split('/');
-                let imgName = da[da.length-1];
+                let imgName = da[da.length - 1];
                 images.push(imgName);
-                this.props.navigation.navigate('Step2', {image: images, lat: this.state.latitude, lon:this.state.longitude});
+                this.props.navigation.navigate('Step2', { image: images, lat: this.state.latitude, lon: this.state.longitude });
                 // const navigation = this.props.navigation;
                 // const resetAction = StackActions.reset({
                 //     index: 0,
@@ -193,19 +202,19 @@ class FormStep1 extends Component {
         }
     }
 
-    onRefresh = image =>{
+    onRefresh = image => {
         const photos = R.clone(this.state.photos);
-        photos.push({ uri: FILE_PREFIX+image, index: photos.length });
+        photos.push({ uri: FILE_PREFIX + image, index: photos.length });
         this.setState({
             photos,
-        },()=>{
-            this.props.navigation.setParams({photoLength: this.state.photos.length});
+        }, () => {
+            this.props.navigation.setParams({ photoLength: this.state.photos.length });
             BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
         });
     }
 
     takePicture() {
-        this.props.navigation.navigate('TakeFoto', {onRefresh: this.onRefresh, authCode: this.state.user.USER_AUTH_CODE})
+        this.props.navigation.navigate('TakeFoto', { onRefresh: this.onRefresh, authCode: this.state.user.USER_AUTH_CODE })
     }
 
     _onSelectedPhoto = foto => {
@@ -252,51 +261,52 @@ class FormStep1 extends Component {
         const initialPage = '1';
         return (
             <Container style={{ flex: 1, backgroundColor: 'white' }}>
-				<MapView
-				  ref={ref => this.map = ref}
-				  style={style.map}
-				  provider="google"
-				  initialRegion={this.state.region}
-				  region={this.state.region}
-				  liteMode={true}
-				  showsUserLocation={true}
-				  showsMyLocationButton={false}
-				  showsPointsOfInterest={false}
-				  showsCompass={false}
-				  showsScale={false}
-				  showsBuildings={false}
-				  showsTraffic={false}
-				  showsIndoors={false}
-				  zoomEnabled={false}
-				  scrollEnabled={false}
-				  pitchEnabled={false}
-				  toolbarEnabled={false}
-				  moveOnMarkerPress={false}
-				  zoomControlEnabled={false}
-				  minZoomLevel={10}
-				  onUserLocationChange={event => {
-					if(this.state.track){
-						let lat = event.nativeEvent.coordinate.latitude;
-						let lon = event.nativeEvent.coordinate.longitude;
-						this.setState({
-							track:false,
-							latitude:lat,
-							longitude:lon,
-							region : {
-								latitude: lat,
-								longitude: lon,
-								latitudeDelta:0.0075,
-								longitudeDelta:0.00721
-							}});
-						setTimeout(()=>{
-							this.setState({track:true})
-						},5000);
-					}
-				  }}
-				>
-				</MapView >
+                <MapView
+                    ref={ref => this.map = ref}
+                    style={style.map}
+                    provider="google"
+                    initialRegion={this.state.region}
+                    region={this.state.region}
+                    liteMode={true}
+                    showsUserLocation={true}
+                    showsMyLocationButton={false}
+                    showsPointsOfInterest={false}
+                    showsCompass={false}
+                    showsScale={false}
+                    showsBuildings={false}
+                    showsTraffic={false}
+                    showsIndoors={false}
+                    zoomEnabled={false}
+                    scrollEnabled={false}
+                    pitchEnabled={false}
+                    toolbarEnabled={false}
+                    moveOnMarkerPress={false}
+                    zoomControlEnabled={false}
+                    minZoomLevel={10}
+                    onUserLocationChange={event => {
+                        if (this.state.track) {
+                            let lat = event.nativeEvent.coordinate.latitude;
+                            let lon = event.nativeEvent.coordinate.longitude;
+                            this.setState({
+                                track: false,
+                                latitude: lat,
+                                longitude: lon,
+                                region: {
+                                    latitude: lat,
+                                    longitude: lon,
+                                    latitudeDelta: 0.0075,
+                                    longitudeDelta: 0.00721
+                                }
+                            });
+                            setTimeout(() => {
+                                this.setState({ track: true })
+                            }, 5000);
+                        }
+                    }}
+                >
+                </MapView >
 
-                <Content style={{ flex: 1 ,marginTop:5}}>
+                <Content style={{ flex: 1, marginTop: 5 }}>
                     {/* STEPPER */}
 
                     <ModalAlert
@@ -409,12 +419,12 @@ const mapDispatchToProps = dispatch => {
 export default connect(mapStateToProps, mapDispatchToProps)(FormStep1);
 
 const style = {
-	map: {
-		...StyleSheet.absoluteFillObject,
-		zIndex:100,
-		height:0.1,
-		top:0
-	},
+    map: {
+        ...StyleSheet.absoluteFillObject,
+        zIndex: 100,
+        height: 0.1,
+        top: 0
+    },
     stepperContainer: {
         flexDirection: 'row',
         height: 48,

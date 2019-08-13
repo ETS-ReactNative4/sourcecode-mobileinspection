@@ -1,19 +1,28 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
+<<<<<<< Updated upstream
     StyleSheet, TouchableOpacity, View, Image, Dimensions, BackHandler,Platform, StatusBar
   } from 'react-native';
+=======
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Image,
+  Dimensions, Platform, StatusBar, BackHandler
+} from 'react-native';
+>>>>>>> Stashed changes
 import Colors from '../../Constant/Colors';
 import { RNCamera as Camera } from 'react-native-camera';
 import imgTakePhoto from '../../Images/icon/ic_take_photo.png';
 import imgNextPhoto from '../../Images/icon/ic_next_photo.png';
 import R from 'ramda';
-import {getTodayDate} from '../../Lib/Utils'
+import { getTodayDate } from '../../Lib/Utils'
 import { dirPhotoInspeksiSelfie } from '../../Lib/dirStorage'
 const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
 var RNFS = require('react-native-fs');
 import ImageResizer from 'react-native-image-resizer';
 
-class TakePhotoSelfie extends Component{
+class TakePhotoSelfie extends Component {
 
   static navigationOptions = {
     headerStyle: {
@@ -28,9 +37,10 @@ class TakePhotoSelfie extends Component{
     },
   };
 
-    constructor(props){
-        super(props);
+  constructor(props) {
+    super(props);
 
+<<<<<<< Updated upstream
         let params = props.navigation.state.params;
         let fotoBaris = R.clone(params.fotoBaris);
         let inspeksiHeader = R.clone(params.inspeksiHeader);
@@ -40,10 +50,22 @@ class TakePhotoSelfie extends Component{
         let statusBlok = R.clone(params.statusBlok);
         let intervalId = R.clone(params.intervalId);
         let dataInspeksi = R.clone(params.dataInspeksi);
+=======
+    let params = props.navigation.state.params;
+    let fotoBaris = R.clone(params.fotoBaris);
+    let inspeksiHeader = R.clone(params.inspeksiHeader);
+    let kondisiBaris1 = R.clone(params.kondisiBaris1);
+    let kondisiBaris2 = R.clone(params.kondisiBaris2);
+    let dataUsual = R.clone(params.dataUsual);
+    let statusBlok = R.clone(params.statusBlok);
+    let intervalId = R.clone(params.intervalId);
+    let dataInspeksi = R.clone(params.dataInspeksi);
+>>>>>>> Stashed changes
 
 
-        this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
+    this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
 
+<<<<<<< Updated upstream
         this.state={
           intervalId,
           hasPhoto: false,
@@ -60,8 +82,27 @@ class TakePhotoSelfie extends Component{
           dataInspeksi,
           inspectionType: props.navigation.getParam('inspectionType', 'normal')
         }
+=======
+    this.state = {
+      intervalId,
+      hasPhoto: false,
+      path: null,
+      pathImg: null,
+      dataModel: null,
+      fotoBaris,
+      inspeksiHeader,
+      kondisiBaris1,
+      kondisiBaris2,
+      dataUsual,
+      pathCache: '',
+      statusBlok,
+      dataInspeksi,
+      inspectionType: props.navigation.getParam('inspectionType', 'normal')
+>>>>>>> Stashed changes
     }
+  }
 
+<<<<<<< Updated upstream
     componentDidMount(){
       this.setParameter();
       // BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
@@ -73,44 +114,67 @@ class TakePhotoSelfie extends Component{
       // BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
       BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
     }
+=======
+  componentDidMount() {
+    this.setParameter();
+    // BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
+    console.log("takePhotoSelfie:" + this.state.inspectionType)
+  }
+>>>>>>> Stashed changes
 
-    setParameter(){
-		var today = getTodayDate('YYMMDDHHmmss');
-      var imgCode = 'P' + this.state.dataUsual.USER_AUTH + today;
-      var imageName = imgCode + '.jpg';
+  componentWillUnmount() {
+    // BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+  }
 
-      var image = {
-        TR_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
-        IMAGE_CODE: imgCode,
-        IMAGE_NAME: imageName,
-        IMAGE_PATH_LOCAL: dirPhotoInspeksiSelfie + '/' + imageName,
-        IMAGE_URL: '',
-        STATUS_IMAGE: 'SELFIE',
-        STATUS_SYNC: 'N',
-        INSERT_USER: this.state.dataUsual.USER_AUTH,
-        INSERT_TIME: ''
-      }
+  setParameter() {
+    var today = getTodayDate('YYMMDDHHmmss');
+    var imgCode = 'P' + this.state.dataUsual.USER_AUTH + today;
+    var imageName = imgCode + '.jpg';
 
-      this.setState({ dataModel: image });
+    var image = {
+      TR_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
+      IMAGE_CODE: imgCode,
+      IMAGE_NAME: imageName,
+      IMAGE_PATH_LOCAL: dirPhotoInspeksiSelfie + '/' + imageName,
+      IMAGE_URL: '',
+      STATUS_IMAGE: 'SELFIE',
+      STATUS_SYNC: 'N',
+      INSERT_USER: this.state.dataUsual.USER_AUTH,
+      INSERT_TIME: ''
     }
 
+<<<<<<< Updated upstream
     handleBackButtonClick =()=> {
       if(this.state.hasPhoto){
         this.deleteFoto()
       }
       this.props.navigation.goBack(null);
       return true;
-    }
+=======
+    this.setState({ dataModel: image });
+  }
 
-    deleteFoto(){
-      RNFS.unlink(`${FILE_PREFIX}${dirPhotoInspeksiSelfie}/${this.state.dataModel.IMAGE_NAME}`)
+  handleBackButtonClick = () => {
+    if (this.state.hasPhoto) {
+      this.deleteFoto()
+>>>>>>> Stashed changes
+    }
+    this.props.navigation.goBack(null);
+    return true;
+  }
+
+  deleteFoto() {
+    RNFS.unlink(`${FILE_PREFIX}${dirPhotoInspeksiSelfie}/${this.state.dataModel.IMAGE_NAME}`)
       .then(() => {
         console.log(`FILE ${this.state.dataModel.IMAGE_NAME} DELETED`);
       });
-      RNFS.unlink(this.state.path)
-      this.setState({ path: null, hasPhoto: false });
-    }
+    RNFS.unlink(this.state.path)
+    this.setState({ path: null, hasPhoto: false });
+  }
 
+<<<<<<< Updated upstream
     takePicture = async () => {
       try {
         if(this.state.hasPhoto){
@@ -129,9 +193,25 @@ class TakePhotoSelfie extends Component{
 
       } catch (err) {
         console.log('err: ', err);
+=======
+  takePicture = async () => {
+    try {
+      if (this.state.hasPhoto) {
+        this.insertDB()
+      } else {
+        const takeCameraOptions = {
+          // quality : 0.5,  //just in case want to reduce the quality too
+          skipProcessing: false,
+          fixOrientation: true
+        };
+        const data = await this.camera.takePictureAsync(takeCameraOptions);
+        this.setState({ path: data.uri, pathImg: dirPhotoInspeksiSelfie, hasPhoto: true });
+        RNFS.copyFile(data.uri, `${dirPhotoInspeksiSelfie}/${this.state.dataModel.IMAGE_NAME}`);
+        this.resize(`${dirPhotoInspeksiSelfie}/${this.state.dataModel.IMAGE_NAME}`)
+>>>>>>> Stashed changes
       }
-    };
 
+<<<<<<< Updated upstream
     resize(data) {
       ImageResizer.createResizedImage(data, 640, 480, 'JPEG', 80, 0, dirPhotoInspeksiSelfie).then((response) => {
         // response.uri is the URI of the new image that can now be displayed, uploaded...
@@ -146,8 +226,14 @@ class TakePhotoSelfie extends Component{
       }).catch((err) => {
         console.log(err)
       });
+=======
+    } catch (err) {
+      console.log('err: ', err);
+>>>>>>> Stashed changes
     }
+  };
 
+<<<<<<< Updated upstream
     async insertDB(){
       RNFS.unlink(this.state.pathCache);
       let isImageContain = await RNFS.exists(`file://${dirPhotoInspeksiSelfie}/${this.state.dataModel.IMAGE_NAME}`);
@@ -167,9 +253,45 @@ class TakePhotoSelfie extends Component{
       }else{
         alert('Ada kesalahan, Ulangi ambil gambar selfie')
       }
+=======
+  resize(data) {
+    ImageResizer.createResizedImage(data, 640, 480, 'JPEG', 80, 0, dirPhotoInspeksiSelfie).then((response) => {
+      // response.uri is the URI of the new image that can now be displayed, uploaded...
+      // response.path is the path of the new image
+      // response.name is the name of the new image with the extension
+      // response.size is the size of the new image  
+      RNFS.copyFile(response.path, `${dirPhotoInspeksiSelfie}/${this.state.dataModel.IMAGE_NAME}`);
+      this.setState({
+        path: response.uri,
+        pathCache: response.path
+      });
+    }).catch((err) => {
+      console.log(err)
+    });
+  }
+>>>>>>> Stashed changes
 
+  async insertDB() {
+    RNFS.unlink(this.state.pathCache);
+    let isImageContain = await RNFS.exists(`file://${dirPhotoInspeksiSelfie}/${this.state.dataModel.IMAGE_NAME}`);
+    if (isImageContain) {
+      this.props.navigation.navigate('KondisiBarisAkhir', {
+        fotoSelfie: this.state.dataModel,
+        inspeksiHeader: this.state.inspeksiHeader,
+        fotoBaris: this.state.fotoBaris,
+        kondisiBaris1: this.state.kondisiBaris1,
+        kondisiBaris2: this.state.kondisiBaris2,
+        dataUsual: this.state.dataUsual,
+        statusBlok: this.state.statusBlok,
+        intervalId: this.state.intervalId,
+        dataInspeksi: this.state.dataInspeksi,
+        inspectionType: this.state.inspectionType === 'genba' ? 'genba' : 'normal'
+      });
+    } else {
+      alert('Ada kesalahan, Ulangi ambil gambar selfie')
     }
 
+<<<<<<< Updated upstream
     renderCamera() {
       return (
         <Camera
@@ -201,10 +323,35 @@ class TakePhotoSelfie extends Component{
     renderIcon=()=>{
       var imgSource = this.state.hasPhoto? imgNextPhoto : imgTakePhoto;
       return (
+=======
+  }
+
+  renderCamera() {
+    return (
+      <Camera
+        ref={(cam) => {
+          this.camera = cam;
+        }}
+        style={styles.preview}
+        flashMode={Camera.Constants.FlashMode.auto}
+        type={'front'}
+        mirrorImage={true}
+        permissionDialogTitle={'Permission to use camera'}
+        permissionDialogMessage={'We need your permission to use your camera phone'}
+      >
+      </Camera>
+    );
+  }
+
+  renderImage() {
+    return (
+      <View>
+>>>>>>> Stashed changes
         <Image
-          style={ styles.icon }
-          source={ imgSource }
+          source={{ uri: this.state.path }}
+          style={styles.preview}
         />
+<<<<<<< Updated upstream
       );
     }
 
@@ -227,6 +374,41 @@ class TakePhotoSelfie extends Component{
           </View>
         );
     }
+=======
+      </View>
+    );
+  }
+
+  renderIcon = () => {
+    var imgSource = this.state.hasPhoto ? imgNextPhoto : imgTakePhoto;
+    return (
+      <Image
+        style={styles.icon}
+        source={imgSource}
+      />
+    );
+  }
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <StatusBar
+          hidden={false}
+          barStyle="light-content"
+          backgroundColor={Colors.tintColorPrimary}
+        />
+        <View style={{ flex: 2 }}>
+          {this.state.path ? this.renderImage() : this.renderCamera()}
+        </View>
+        <View style={{ flex: 0.5, alignItems: 'center', justifyContent: 'center' }}>
+          <TouchableOpacity style={[styles.takePicture, { marginTop: 15 }]} onPress={this.takePicture.bind(this)}>
+            {this.renderIcon()}
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
+>>>>>>> Stashed changes
 }
 
 export default TakePhotoSelfie;
@@ -263,10 +445,10 @@ const styles = StyleSheet.create({
     fontSize: 17,
   },
   icon: {
-      alignContent: 'flex-end',
-      height: 64,
-      width: 64,
-      resizeMode: 'stretch',
-      alignItems: 'center',
+    alignContent: 'flex-end',
+    height: 64,
+    width: 64,
+    resizeMode: 'stretch',
+    alignItems: 'center',
   }
 });

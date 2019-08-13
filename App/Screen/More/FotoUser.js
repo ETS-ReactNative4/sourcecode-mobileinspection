@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
     StyleSheet,
     TouchableOpacity,
@@ -6,7 +6,10 @@ import {
     Image,
     Platform,
     BackHandler,
+<<<<<<< Updated upstream
     Dimensions,
+=======
+>>>>>>> Stashed changes
     StatusBar
 } from 'react-native';
 import Colors from '../../Constant/Colors';
@@ -56,24 +59,28 @@ export default class FotoUser extends Component {
         };
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.setParameter()
-        BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
     }
 
+<<<<<<< Updated upstream
     componentWillUnmount(){
+=======
+    componentWillUnmount() {
+>>>>>>> Stashed changes
         BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
     }
 
     handleBackButtonClick() {
-        if(this.state.hasPhoto){
+        if (this.state.hasPhoto) {
             this.deleteFoto()
         }
         this.props.navigation.goBack(null);
         return true;
     }
 
-    deleteFoto(){
+    deleteFoto() {
         RNFS.unlink(`${FILE_PREFIX}${dirPhotoUser}/${this.state.dataModel.IMAGE_NAME}`)
             .then(() => {
                 console.log(`FILE ${this.state.dataModel.IMAGE_NAME} DELETED`);
@@ -101,9 +108,9 @@ export default class FotoUser extends Component {
 
     takePicture = async () => {
         try {
-            if(this.state.hasPhoto){
+            if (this.state.hasPhoto) {
                 this.insertDB();
-            }else{
+            } else {
                 const takeCameraOptions = {
                     // quality : 0.5,  //just in case want to reduce the quality too
                     skipProcessing: false,
@@ -153,7 +160,7 @@ export default class FotoUser extends Component {
             >
                 <Image
                     ImageResizeMode={"stretch"}
-                    style={{flex: 1, width: null, height: null, opacity: 0.8}}
+                    style={{ flex: 1, width: null, height: null, opacity: 0.8 }}
                     source={require("../../Images/icon/ic_overlay.png")}
                 />
             </Camera>
@@ -163,10 +170,10 @@ export default class FotoUser extends Component {
     async insertDB() {
         RNFS.unlink(this.state.pathCache);
         let isImageContain = await RNFS.exists(`file://${dirPhotoUser}/${this.state.dataModel.IMAGE_NAME}`);
-        if(isImageContain){
+        if (isImageContain) {
             let model = this.state.dataModel;
             let fotoUserChecker = TaskService.findBy2("TR_IMAGE_PROFILE", "USER_AUTH_CODE", this.state.dataModel.USER_AUTH_CODE);
-            if(fotoUserChecker !== undefined && fotoUserChecker.length > 0){
+            if (fotoUserChecker !== undefined && fotoUserChecker.length > 0) {
                 TaskService.updateByPrimaryKey('TR_IMAGE_PROFILE', {
                     USER_AUTH_CODE: this.state.dataModel.USER_AUTH_CODE,
                     IMAGE_NAME: model.IMAGE_NAME,
@@ -177,7 +184,7 @@ export default class FotoUser extends Component {
                     INSERT_TIME: model.INSERT_TIME,
                 });
             }
-            else{
+            else {
                 TaskService.saveData('TR_IMAGE_PROFILE', model);
             }
 
@@ -186,21 +193,21 @@ export default class FotoUser extends Component {
                 title: 'Berhasil Disimpan',
                 message: 'Yeaay! Data kamu berhasil disimpan',
                 icon: require('../../Images/ic-save-berhasil.png'),
-                photoDirectory: "file://"+dirPhotoUser+"/"+this.state.dataModel.IMAGE_NAME
+                photoDirectory: "file://" + dirPhotoUser + "/" + this.state.dataModel.IMAGE_NAME
             });
-        }else{
+        } else {
             alert('Ada kesalahan, Ulangi ambil foto!')
         }
     }
 
     renderImage() {
         return (
-                <Image
-                    source={{ uri: this.state.path }}
-                    style={{
-                        flex: 1
-                    }}
-                />
+            <Image
+                source={{ uri: this.state.path }}
+                style={{
+                    flex: 1
+                }}
+            />
         );
     }
 
@@ -229,7 +236,7 @@ export default class FotoUser extends Component {
                     backgroundColor={Colors.tintColorPrimary}
                 />
                 <ModalAlertBack
-                    onPressCancel={() => this.setState({showModalBack: false}, ()=>{
+                    onPressCancel={() => this.setState({ showModalBack: false }, () => {
                         this.props.navigation.state.params.setPhoto(this.state.photoDirectory);
                         this.props.navigation.pop()
                     })}
@@ -237,14 +244,14 @@ export default class FotoUser extends Component {
                     icon={this.state.icon}
                     title={this.state.title}
                     message={this.state.message} />
-                <View style={{ flex: 1 ,backgroundColor:"red" }}>
+                <View style={{ flex: 1, backgroundColor: "red" }}>
                     {this.state.path ? this.renderImage() : this.renderCamera()}
                 </View>
-                <View style={{backgroundColor: 'white'}}>
+                <View style={{ backgroundColor: 'white' }}>
                     <TouchableOpacity
                         style={{
                             paddingVertical: 15,
-                            alignSelf:'center'
+                            alignSelf: 'center'
                         }}
                         onPress={this.takePicture.bind(this)}>
                         {this.renderIcon()}

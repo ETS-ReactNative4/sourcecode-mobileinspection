@@ -25,21 +25,21 @@ class Step1Finding extends Component {
     static navigationOptions = ({ navigation }) => {
         const { params = {} } = navigation.state;
         return {
-          headerStyle: {
-            backgroundColor: Colors.tintColorPrimary
-          },
-          title: 'Buat Laporan Temuan',
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            flex: 1,
-            fontSize: 18,
-            fontWeight: '400'
-          },
-          headerLeft: (
-              <TouchableOpacity onPress={() => {navigation.goBack(null)}}>
-                  <Icon2 style={{marginLeft: 12}} name={'ios-arrow-round-back'} size={40} color={'white'} />
-              </TouchableOpacity>
-          )
+            headerStyle: {
+                backgroundColor: Colors.tintColorPrimary
+            },
+            title: 'Buat Laporan Temuan',
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+                flex: 1,
+                fontSize: 18,
+                fontWeight: '400'
+            },
+            headerLeft: (
+                <TouchableOpacity onPress={() => { navigation.goBack(null) }}>
+                    <Icon2 style={{ marginLeft: 12 }} name={'ios-arrow-round-back'} size={40} color={'white'} />
+                </TouchableOpacity>
+            )
         };
     }
 
@@ -76,9 +76,15 @@ class Step1Finding extends Component {
         }
     }
 
+<<<<<<< Updated upstream
     clearFoto(){
         if(this.state.photos.length > 0){
             this.state.photos.map(item =>{
+=======
+    clearFoto() {
+        if (this.state.photos.length > 0) {
+            this.state.photos.map(item => {
+>>>>>>> Stashed changes
                 RNFS.unlink(item.uri)
             })
         }
@@ -86,13 +92,20 @@ class Step1Finding extends Component {
     }
 
     componentDidMount() {
+<<<<<<< Updated upstream
        this.getLocation();
        this.props.navigation.setParams({ clearFoto: this.clearFoto })
        BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
         // BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
+=======
+        this.getLocation();
+        this.props.navigation.setParams({ clearFoto: this.clearFoto })
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+        // BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)    
+>>>>>>> Stashed changes
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
         // BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
     }
@@ -109,7 +122,7 @@ class Step1Finding extends Component {
                 var lon = parseFloat(position.coords.longitude);
                 // const timestamp = convertTimestampToDate(position.timestamp, 'DD/MM/YYYY HH:mm:ss')//moment(position.timestamp).format('DD/MM/YYYY HH:mm:ss');
                 // console.log(timestamp);
-                this.setState({latitude:lat, longitude:lon, fetchLocation: false});
+                this.setState({ latitude: lat, longitude: lon, fetchLocation: false });
 
             },
             (error) => {
@@ -117,7 +130,7 @@ class Step1Finding extends Component {
                 if (error && error.message == "No location provider available.") {
                     message = "Mohon nyalakan GPS anda terlebih dahulu.";
                 }
-                this.setState({fetchLocation:false})
+                this.setState({ fetchLocation: false })
                 // alert('Informasi', message);
                 // console.log(message);
             }, // go here if error while fetch location
@@ -135,23 +148,31 @@ class Step1Finding extends Component {
             let images = [];
             this.state.selectedPhotos.map((item) => {
                 let da = item.split('/')
-                let imgName = da[da.length-1];
+                let imgName = da[da.length - 1];
                 images.push(imgName);
                 this.props.navigation.navigate('Step2Finding', {
                     image: images,
                     lat: this.state.latitude,
+<<<<<<< Updated upstream
                     lon:this.state.longitude,
                     data: this.state.inspeksiHeader,
                     dataInspeksi: this.state.dataInspeksi,
                     finish: this.finish});
+=======
+                    lon: this.state.longitude,
+                    data: this.state.inspeksiHeader,
+                    dataInspeksi: this.state.dataInspeksi,
+                    finish: this.finish
+                });
+>>>>>>> Stashed changes
 
             });
         }
     }
 
-    onRefresh = image =>{
+    onRefresh = image => {
         const photos = R.clone(this.state.photos)
-        photos.push({ uri: FILE_PREFIX+image, index: photos.length })
+        photos.push({ uri: FILE_PREFIX + image, index: photos.length })
         this.setState({
             photos,
         });
@@ -159,14 +180,14 @@ class Step1Finding extends Component {
     }
 
     finish = data => {
-        if(data !== 'data'){
+        if (data !== 'data') {
             this.props.navigation.state.params.updateTRBaris(data);
         }
         this.props.navigation.goBack(null);
     }
 
     takePicture() {
-        this.props.navigation.navigate('TakeFotoFinding', {onRefresh: this.onRefresh, authCode: this.state.user.USER_AUTH_CODE})
+        this.props.navigation.navigate('TakeFotoFinding', { onRefresh: this.onRefresh, authCode: this.state.user.USER_AUTH_CODE })
     }
 
     _onSelectedPhoto = foto => {
