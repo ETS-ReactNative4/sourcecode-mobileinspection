@@ -1671,8 +1671,10 @@ class SyncScreen extends React.Component {
             }
             data.simpan.map(item => {
                 let newRating = item.RATING;
-                // console.log('item.RATING : ', newRating);
-                let newItem = Object.assign({}, item, { STATUS_SYNC: 'Y', RATING: newRating });
+                let newItem = {
+                    ...item,
+                    RATING: newRating
+                };
                 this._updateTR_Notif(newItem);
                 TaskServices.saveData('TR_FINDING', newItem);
                 let countDataInsert = TaskServices.getTotalData('TR_FINDING');
@@ -1685,7 +1687,7 @@ class SyncScreen extends React.Component {
         if (data.ubah.length > 0 && allData.length > 0) {
             data.ubah.map(item => {
                 let newRating = item.RATING ? item.RATING[0] : null;
-                let newItem = Object.assign({}, item, { STATUS_SYNC: 'Y', RATING: newRating });
+                let newItem = { ...item, STATUS_SYNC: 'Y', RATING: newRating };
                 // console.log("crudTM:" + JSON.stringify(newItem));
                 this._updateTR_Notif(newItem);
                 TaskServices.updateByPrimaryKey('TR_FINDING', newItem)
@@ -1695,7 +1697,7 @@ class SyncScreen extends React.Component {
         if (data.hapus.length > 0 && allData.length > 0) {
             data.hapus.map(item => {
                 let newRating = item.RATING ? item.RATING[0] : null;
-                let newItem = Object.assign({}, item, { STATUS_SYNC: 'Y', RATING: newRating });
+                let newItem =  { ...item, STATUS_SYNC: 'Y', RATING: newRating };
                 this._updateTR_Notif(newItem);
                 this.deleteRecordByPK('TR_FINDING', 'FINDING_CODE', item.FINDING_CODE);
             });
@@ -1716,7 +1718,7 @@ class SyncScreen extends React.Component {
         if (data.UPDATE_USER == '') {
             if (data.ASSIGN_TO == this.state.user.USER_AUTH_CODE && data.INSERT_USER !== this.state.user.USER_AUTH_CODE) {
                 //finding baru diasign ke user
-                let newData = Object.assign({}, newNotif, { NOTIFICATION_TYPE: 0 })
+                let newData = { ...newNotif, NOTIFICATION_TYPE: 0 }
                 TaskServices.saveData('TR_NOTIFICATION', newData);
             }
             let createDate = moment(data.INSERT_TIME, "YYYYMMDDHHmmss");

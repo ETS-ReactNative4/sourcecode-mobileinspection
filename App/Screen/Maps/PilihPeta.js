@@ -302,7 +302,7 @@ export default class PilihPeta extends Component {
 			for (let y in tempItem.coords) {
 				tempArrCoords.push(tempItem.coords[y]);
 			}
-			tempItem = Object.assign({}, tempItem, { coords: tempArrCoords });
+			tempItem = { ...tempItem, coords: tempArrCoords }
 			arrPoli.push(tempItem);
 		}
 		return arrPoli;
