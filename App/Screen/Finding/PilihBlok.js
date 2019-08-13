@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-    Text, StyleSheet, ListView, TextInput, TouchableOpacity, View, Keyboard, BackAndroid
+    Text, StyleSheet, ListView, TextInput, TouchableOpacity, View, Keyboard, BackHandler
 } from 'react-native';
 import {
     Container,
@@ -36,14 +36,14 @@ const alcatraz = {
 };
 
 class PilihBlok extends Component {
-    
+
     static navigationOptions = {
         header: null
     };
 
     constructor(props) {
         super(props);
-        
+
         this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
 
         this.state = {
@@ -80,32 +80,32 @@ class PilihBlok extends Component {
     }
 
     componentWillUnmount(){
-        BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
-    }   
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+    }
 
     componentDidMount() {
-        BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
         let data = TaskService.getAllData('TM_BLOCK');
         let arr = [];
         for(var i=0; i<data.length; i++){
             let statusBlok= this.getStatusBlok(data[i].WERKS_AFD_BLOCK_CODE);
             let estateName = this.getEstateName(data[i].WERKS);
             arr.push({
-                blokCode: data[i].BLOCK_CODE, 
-                blokName: data[i].BLOCK_NAME, 
+                blokCode: data[i].BLOCK_CODE,
+                blokName: data[i].BLOCK_NAME,
                 afdCode: data[i].AFD_CODE,
                 werks: data[i].WERKS,
-                estateName: estateName, 
+                estateName: estateName,
                 werksAfdBlokCode: data[i].WERKS_AFD_BLOCK_CODE,
                 statusBlok: statusBlok,
                 compCode: data[i].COMP_CODE,
-                allShow: `${data[i].BLOCK_NAME}/${statusBlok}/${estateName}`            
+                allShow: `${data[i].BLOCK_NAME}/${statusBlok}/${estateName}`
             });
             this.setState({arrBlok: arr, arrBlokSearched: arr})
         }
         this.getLocation();
-    } 
-    
+    }
+
     handleBackButtonClick() {
         this.props.navigation.goBack();
         return true;
@@ -114,7 +114,7 @@ class PilihBlok extends Component {
     getStatusBlok(werk_afd_blok_code){
         try {
             let data = TaskService.findBy2('TM_LAND_USE', 'WERKS_AFD_BLOCK_CODE', werk_afd_blok_code);
-            return data.MATURITY_STATUS;            
+            return data.MATURITY_STATUS;
         } catch (error) {
             return ''
         }
@@ -126,7 +126,7 @@ class PilihBlok extends Component {
             return data.EST_NAME;
         } catch (error) {
             return '';
-        }        
+        }
     }
 
     searchedBloks = (searchedText) => {
@@ -142,7 +142,7 @@ class PilihBlok extends Component {
             <View style={{flex:1, padding:5}}>
             <TouchableOpacity onPress = {()=>{this.onSelect(blok)}}>
                 <Text style={{ fontSize: 15, color: 'grey' }}>{blok.allShow}</Text>
-            </TouchableOpacity>        
+            </TouchableOpacity>
             </View>
         );
     };
@@ -178,10 +178,10 @@ class PilihBlok extends Component {
         );
     }
 
-    render() {        
+    render() {
         return (
             <View style={[styles.containerSlidingUpPanel]}>
-                
+
                 <View style={{ width: '100%', height: 20 }} onPress={() => this.setState({ isMapsVisible: false })}>
                     <View style={{
                             backgroundColor: '#CCC', alignSelf: 'center',
@@ -201,9 +201,9 @@ class PilihBlok extends Component {
                             placeholder="Cari nama blok" />
                     </View>
                     {this.state.showList && <View>
-                    <ListView 
+                    <ListView
                         dataSource={ds.cloneWithRows(this.state.arrBlokSearched)}
-                        renderRow={this.renderBloks} 
+                        renderRow={this.renderBloks}
                         renderSeparator={(sectionId, rowId)=><View key={rowId} style={styles.separator} />}
                         />
                     </View>}
@@ -233,7 +233,7 @@ class PilihBlok extends Component {
                         </Marker>
                     </MapView>
 
-                    {!this.state.showList && 
+                    {!this.state.showList &&
                     <IconLoc
                         onPress={() => { this.setState({fetchLocation: true}), this.getLocation() }}
                         name="location-arrow"
@@ -243,15 +243,15 @@ class PilihBlok extends Component {
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity style={[styles.bubble, styles.button] } onPress={()=>{this.setLokasi()}}>
                             <Text style={styles.buttonText}>Set Lokasi</Text>
-                        </TouchableOpacity>                        
+                        </TouchableOpacity>
                     </View>
-                </View> 
+                </View>
 
                 {<ProgressDialog
                         visible={this.state.fetchLocation}
                         activityIndicatorSize="large"
                         message="Mencari Lokasi..."
-                />}                       
+                />}
             </View>
         )
     }

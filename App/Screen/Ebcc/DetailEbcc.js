@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, ScrollView, BackAndroid, StatusBar, Image } from 'react-native';
+import { View, Text, TextInput, ScrollView, BackHandler, StatusBar, Image } from 'react-native';
 import Colors from '../../Constant/Colors'
 import R from 'ramda';
 import TaskServices from '../../Database/TaskServices'
@@ -34,11 +34,11 @@ class DetailEbcc extends Component {
             valuePenaltyTph:[],
             arrJjg:[],
             valueJjg:[],
-            totalJanjang: data.TOTAL_JANJANG,  
+            totalJanjang: data.TOTAL_JANJANG,
             data,
             path: '',
-            blockName: '', 
-            werk_afd_blok_code: '', 
+            blockName: '',
+            werk_afd_blok_code: '',
             werks: ''
         }
     }
@@ -53,12 +53,12 @@ class DetailEbcc extends Component {
             return data.EST_NAME;
         } catch (error) {
             return '';
-        }    
+        }
     }
     getStatusBlok(werk_afd_blok_code){
         try {
             let data = TaskServices.findBy2('TM_LAND_USE', 'WERKS_AFD_BLOCK_CODE', werk_afd_blok_code);
-            return data.MATURITY_STATUS;            
+            return data.MATURITY_STATUS;
         } catch (error) {
             return ''
         }
@@ -67,7 +67,7 @@ class DetailEbcc extends Component {
     // getDataBlock(werk_afd_blok_code){
     //     try {
     //         let data = TaskServices.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', werk_afd_blok_code);
-    //         return data;            
+    //         return data;
     //     } catch (error) {
     //         return ''
     //     }
@@ -87,9 +87,9 @@ class DetailEbcc extends Component {
         } catch (error) {
             path = '';
         }
-        
+
         this.setState({blockName, werk_afd_blok_code, werks, path})
-        
+
         //kondisi panen
         let hasilPanen = TaskServices.findByWithList('TR_D_EBCC_VALIDATION', ['GROUP_KUALITAS', 'UOM', 'EBCC_VALIDATION_CODE'], ['HASIL PANEN', 'JJG', this.state.data.EBCC_VALIDATION_CODE])
         if(hasilPanen !== undefined){
@@ -212,7 +212,7 @@ class DetailEbcc extends Component {
                         underlineColorAndroid={'transparent'}
                         style={[styles.searchInput, {backgroundColor: Colors.brand, borderWidth:0, borderColor:'transparent', color: '#ffffff'}]}
                         value={val}/>
-                </View> 
+                </View>
             </View>
         )
     }
@@ -224,7 +224,7 @@ class DetailEbcc extends Component {
                     hidden={false}
                     barStyle="light-content"
                     backgroundColor={Colors.tintColorPrimary} />
-                
+
 
                 {/*LABEL*/}
                 <View style={styles.containerHeader}>
@@ -266,7 +266,7 @@ class DetailEbcc extends Component {
                     {/* Penalty TPH */}
                     <Text style={{ fontSize: 20, fontWeight: '500', paddingLeft: 20, marginTop: 10 }}>Penalti di TPH</Text>
                     {this.state.arrPenaltyTph.map((data, idx) => this.renderDynamicCompBtn(data, idx))}
-                    
+
                     <View style={{padding:10, alignItems:'center', marginTop:10, marginBottom: 10}}/>
                 </View>
 
@@ -352,11 +352,11 @@ const styles = {
     bubbleRightOff: { backgroundColor: Colors.abuabu, borderTopRightRadius: 20,borderBottomRightRadius: 20,},
     bubbleLeftOn: { backgroundColor: Colors.brand, borderTopLeftRadius: 20,borderBottomLeftRadius: 20,},
     bubbleRightOn: { backgroundColor: Colors.brand, borderTopRightRadius: 20,borderBottomRightRadius: 20,},
-    buttonTextSideOn: { fontSize: 11,color: '#ffffff',textAlign: 'center'},  
-    buttonTextSideOff: {fontSize: 11,color: '#808080',textAlign: 'center'},  
+    buttonTextSideOn: { fontSize: 11,color: '#ffffff',textAlign: 'center'},
+    buttonTextSideOff: {fontSize: 11,color: '#808080',textAlign: 'center'},
     buttonSide: {width: 75,alignItems: 'center',padding: 10,},
     bubble: {
-        // backgroundColor: '#ff8080',        
+        // backgroundColor: '#ff8080',
         backgroundColor: Colors.brand,
         paddingHorizontal: 18,
         paddingVertical: 12,
@@ -385,6 +385,6 @@ const styles = {
         textAlign: 'center',
         color: '#A9A9A9',
         paddingHorizontal: 18,
-        paddingVertical: 12,        
+        paddingVertical: 12,
     }
 }

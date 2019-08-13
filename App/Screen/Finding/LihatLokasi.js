@@ -5,7 +5,7 @@ import {
     Text,
     StatusBar,
     TouchableOpacity,
-    BackAndroid
+    BackHandler
 } from 'react-native';
 
 import MapView, { Polygon, ProviderPropType, Marker } from 'react-native-maps';

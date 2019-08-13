@@ -7,7 +7,7 @@ import {
     Platform,
     Dimensions,
     StatusBar,
-    BackAndroid
+    BackHandler
   } from 'react-native';
 import Colors from '../../Constant/Colors';
 import imgTakePhoto from '../../Images/icon/ic_take_photo.png';
@@ -101,20 +101,20 @@ class FotoJanjang extends Component {
     this.getLocation()
     this.props.navigation.setParams({ handleBackButtonClick: this.handleBackButtonClick })
     // BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
-    BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
   }
 
   componentWillUnmount(){
     // BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
-    BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
   }
 
-  handleBackButtonClick() { 
+  handleBackButtonClick() {
     this.setState({
         showModal: true, title: 'Data Hilang',
         message: 'Datamu belum tersimpan loh. Yakin mau dilanjutin?',
         icon: require('../../Images/ic-not-save.png')
-    });    
+    });
     return true;
   }
 
@@ -123,9 +123,9 @@ class FotoJanjang extends Component {
       this.deleteFoto()
     }
     const navigation = this.props.navigation;
-    let routeName = 'MainMenu'; 
+    let routeName = 'MainMenu';
     this.setState({showModal: false})
-    BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
 
     Promise.all([
         navigation.dispatch(
@@ -144,9 +144,9 @@ class FotoJanjang extends Component {
     /*navigator.geolocation.getCurrentPosition(
         (position) => {
             var lat = parseFloat(position.coords.latitude);
-            var lon = parseFloat(position.coords.longitude);  
+            var lon = parseFloat(position.coords.longitude);
             this.setState({latitude: lat, longitude: lon});
-                     
+
         },
         (error) => {
             // this.setState({ error: error.message, fetchingLocation: false })
@@ -158,7 +158,7 @@ class FotoJanjang extends Component {
               showModal2: true, title: 'Lokasi GPS',
               message: 'Kamu belum bisa lanjut sebelum lokasi GPS kamu belum ditemukan, lanjut cari lokasi?',
               icon: require('../../Images/ic-no-gps.png')
-          }); 
+          });
         }, // go here if error while fetch location
         { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
     );*/
@@ -216,7 +216,7 @@ class FotoJanjang extends Component {
       STATUS_DELIVERY_CODE: '',
       TOTAL_JANJANG: '0',
       STATUS_SYNC: 'N',
-      SYNC_TIME: '',   
+      SYNC_TIME: '',
       INSERT_USER: dataLogin.USER_AUTH_CODE,
       INSERT_TIME: getTodayDate('YYYY-MM-DD kk:mm:ss')
     }
@@ -226,14 +226,14 @@ class FotoJanjang extends Component {
 
   takePicture = async () => {
     try {
-      if(this.state.hasPhoto){  
-        this.insertDB();     
+      if(this.state.hasPhoto){
+        this.insertDB();
       }else{
         const takeCameraOptions = {
           // quality : 0.5,  //just in case want to reduce the quality too
           skipProcessing: false,
           fixOrientation: true
-        };        
+        };
         const data = await this.camera.takePictureAsync(takeCameraOptions);
         this.setState({ path: data.uri, pathImg: dirPhotoEbccJanjang, hasPhoto: true });
         RNFS.copyFile(data.uri, `${dirPhotoEbccJanjang}/${this.state.dataModel.IMAGE_NAME}`);
@@ -282,27 +282,27 @@ class FotoJanjang extends Component {
       let isImageContain = await RNFS.exists(`file://${dirPhotoEbccJanjang}/${this.state.dataModel.IMAGE_NAME}`);
       if(isImageContain){
         this.props.navigation.navigate('KriteriaBuah',
-        { 
-            fotoJanjang: this.state.dataModel, 
+        {
+            fotoJanjang: this.state.dataModel,
             tphAfdWerksBlockCode: this.state.tphAfdWerksBlockCode,
             ebccValCode: this.state.ebccValCode,
             dataHeader: this.state.dataHeader
-        }); 
+        });
       }else{
         this.setState({
           showModal: true, title: 'GAGAL',
           message: 'Kamu gagal untuk menyimpan gambar, coba ulangin lagi',
           icon: require('../../Images/ic-not-save.png')
-        });  
-      } 
+        });
+      }
     }else{
       this.setState({
         showModal2: true, title: 'Lokasi GPS',
         message: 'Kamu belum bisa lanjut sebelum lokasi GPS kamu belum ditemukan, lanjut cari lokasi?',
         icon: require('../../Images/ic-no-gps.png')
-      });  
+      });
     }
-      
+
   }
 
   renderImage() {
@@ -362,7 +362,7 @@ class FotoJanjang extends Component {
 				let lon = event.nativeEvent.coordinate.longitude;
 				this.setState({
 					track:false,
-					latitude:lat, 
+					latitude:lat,
 					longitude:lon,
 					region : {
 						latitude: lat,

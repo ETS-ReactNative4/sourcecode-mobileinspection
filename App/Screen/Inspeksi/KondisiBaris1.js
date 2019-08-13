@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, View, Alert, Text, TextInput, ScrollView, Image, BackAndroid, StatusBar } from 'react-native';
+import { TouchableOpacity, View, Alert, Text, TextInput, ScrollView, Image, BackHandler, StatusBar } from 'react-native';
 import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -83,11 +83,11 @@ class KondisiBaris1 extends Component {
 
     componentDidMount() {
         this.props.navigation.setParams({ getData: this.state.inspeksiHeader, getDataInspeksi: this.state.dataInspeksi, updateTRBaris: this.updateTRBaris })
-        BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
     }
 
     componentWillUnmount() {
-        BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
     }
 
     handleBackButtonClick() {

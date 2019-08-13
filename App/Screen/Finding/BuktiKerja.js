@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-    Text, BackAndroid, ScrollView, TouchableOpacity, View, Image, Alert, Platform
+    Text, BackHandler, ScrollView, TouchableOpacity, View, Image, Alert, Platform
 } from 'react-native';
 import {
     Container,
@@ -44,10 +44,10 @@ class FormStep1 extends Component {
 
     constructor(props) {
         super(props);
-        
+
         this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
         this.clearFoto = this.clearFoto.bind(this);
-        
+
         var ID = this.props.navigation.state.params.findingCode
 
         var user = TaskServices.getAllData('TR_LOGIN')[0];
@@ -61,7 +61,7 @@ class FormStep1 extends Component {
             ],
             fetchLocation: false,
             TRANS_CODE: ID,
-            
+
             //Add by Aminju
             title: 'Title',
             message: 'Message',
@@ -72,23 +72,23 @@ class FormStep1 extends Component {
 
     clearFoto(){
         if(this.state.photos.length > 0){
-            this.state.photos.map(item =>{                
+            this.state.photos.map(item =>{
                 RNFS.unlink(item.uri)
             })
         }
-        this.props.navigation.goBack(); 
+        this.props.navigation.goBack();
     }
 
     componentDidMount() {
-       BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+       BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
        this.props.navigation.setParams({ clearFoto: this.clearFoto })
     }
 
     componentWillUnmount(){
-        BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
     }
 
-    handleBackButtonClick() { 
+    handleBackButtonClick() {
         this.clearFoto();
         return true;
     }
@@ -99,9 +99,9 @@ class FormStep1 extends Component {
             //     'Peringatan',
             //     'Anda belum mengambil foto'
             // );
-            
+
             this.setState({ showModal: true, title: "Ambil Foto", message: 'Opps kamu belum ambil Foto Temuan yaaa', icon: require('../../Images/ic-no-pic.png') });
-        
+
         } else if (this.state.selectedPhotos.length == 0) {
             // Alert.alert(
             //     'Peringatan',
@@ -124,11 +124,11 @@ class FormStep1 extends Component {
                     STATUS_SYNC: 'N',
                     INSERT_USER: this.state.user.USER_AUTH_CODE,
                     INSERT_TIME: getTodayDate('YYYY-MM-DD HH:mm:ss')
-                }               
+                }
                 images.push(img);
             });
             this.props.navigation.state.params.onLoadImage(images);
-            this.props.navigation.goBack(); 
+            this.props.navigation.goBack();
         }
     }
 
@@ -152,7 +152,7 @@ class FormStep1 extends Component {
         } else {
             if (selectedPhotos.length > 2) {
                 // alert("Hanya 3 foto yang bisa dipilih")
-                this.setState({ showModal: true, title: 'Pilih Foto', message: 'Kamu cuma bisa pilih 3 foto aja yaa..', icon: require('../../Images/ic-no-pic.png') });    
+                this.setState({ showModal: true, title: 'Pilih Foto', message: 'Kamu cuma bisa pilih 3 foto aja yaa..', icon: require('../../Images/ic-no-pic.png') });
             } else {
                 selectedPhotos.push(foto);
             }
@@ -230,7 +230,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        
+
     };
 };
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, View, Text, TextInput, ScrollView, Image, BackAndroid, StatusBar } from 'react-native';
+import { TouchableOpacity, View, Text, TextInput, ScrollView, Image, BackHandler, StatusBar } from 'react-native';
 import Colors from '../../Constant/Colors'
 import {RNSlidingButton, SlideDirection} from 'rn-sliding-button';
 import Fonts from '../../Constant/Fonts'
@@ -48,12 +48,12 @@ class KriteriaBuah extends Component {
             valuePenaltyTph:[],
             arrJjg:[],
             valueJjg:[],
-            totalJanjang: '0',  
-            
+            totalJanjang: '0',
+
             btnAda: styles.bubbleLeftOff,
             btnTdkAda: styles.bubbleRightOff,
             txtAda: styles.buttonTextSideOff,
-            txtTdkAda: styles.buttonTextSideOff,       
+            txtTdkAda: styles.buttonTextSideOff,
             tphAfdWerksBlockCode,
             fotoJanjang,
             ebccValCode,
@@ -76,12 +76,12 @@ class KriteriaBuah extends Component {
         this.loadData()
     }
 
-    componentDidMount() {        
-        BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
+    componentDidMount() {
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
     }
 
     componentWillUnmount() {
-        BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
     }
 
     handleBackButtonClick() {
@@ -124,7 +124,7 @@ class KriteriaBuah extends Component {
                     this.state.valueHasilPanen.push(model)
                 })
             }
-            
+
             //kondisi panen janjang
             let hasilPanen2 = TaskServices.findByWithList('TM_KUALITAS', ['GROUP_KUALITAS', 'UOM'], ['HASIL PANEN', 'KG'])
             if(hasilPanen2 !== undefined){
@@ -187,7 +187,7 @@ class KriteriaBuah extends Component {
                         STATUS_SYNC: 'N',
                         SYNC_TIME: ''
                     }
-                    this.state.valuePenaltyTph.push(model)  
+                    this.state.valuePenaltyTph.push(model)
                 })
             }
         }else{
@@ -217,16 +217,16 @@ class KriteriaBuah extends Component {
             });
         }
         else{
-            this.props.navigation.navigate('FotoSelfieEbcc', { 
-                fotoJanjang: this.state.fotoJanjang, 
+            this.props.navigation.navigate('FotoSelfieEbcc', {
+                fotoJanjang: this.state.fotoJanjang,
                 tphAfdWerksBlockCode: this.state.tphAfdWerksBlockCode,
                 ebccValCode: this.state.ebccValCode,
                 totalJanjang: this.state.totalJanjang,
-                kriteriaBuah: kriteriaBuah,                
+                kriteriaBuah: kriteriaBuah,
                 dataHeader: this.state.dataHeader
-            }); 
+            });
         }
-        
+
     }
 
     validationJumlah(arr){
@@ -247,13 +247,13 @@ class KriteriaBuah extends Component {
         return value
     }
 
-    nextFocus (label,index,arr, group) { 
+    nextFocus (label,index,arr, group) {
         let idx = index+1
         let valBefore = '';
 
         if(idx < arr.length){
             this[`${label}${idx}`].focus();
-        }       
+        }
         valBefore = this[`${label}${index}`]._getText()
         if(valBefore == ''){
             this.updateArr(index, '0', arr, group)
@@ -316,14 +316,14 @@ class KriteriaBuah extends Component {
                     <View style={{marginRight:1}}>
                         <TouchableOpacity style={[this.state.btnAda, styles.buttonSide] } onPress={()=>{this.getValueAndChangeColor('ADA', index, arr)}}>
                             <Text style={this.state.txtAda}>Ada</Text>
-                        </TouchableOpacity>  
+                        </TouchableOpacity>
                     </View>
                     <View>
                         <TouchableOpacity style={[this.state.btnTdkAda, styles.buttonSide]} onPress={()=>{this.getValueAndChangeColor('TIDAK ADA', index, arr)}}>
                             <Text style={this.state.txtTdkAda}>Tidak Ada</Text>
-                        </TouchableOpacity>  
-                    </View> 
-                </View> 
+                        </TouchableOpacity>
+                    </View>
+                </View>
             </View>
         )
     }
@@ -347,16 +347,16 @@ class KriteriaBuah extends Component {
             STATUS_SYNC: data.STATUS_SYNC,
             SYNC_TIME: data.SYNC_TIME
         };
-          
+
         newArray[index] = model;
         if(param == 'tph'){
             this.setState({valuePenaltyTph: newArray});
         }
         else if(param == 'buah'){
-            this.setState({valueKondisiBuah: newArray});   
+            this.setState({valueKondisiBuah: newArray});
         }
         else if(param == 'jjg'){
-            this.setState({valueJjg: newArray});     
+            this.setState({valueJjg: newArray});
         }
         else if(param == 'panen'){
             this.setState({valueHasilPanen: newArray});
@@ -382,14 +382,14 @@ class KriteriaBuah extends Component {
                     STATUS_DELIVERY_CODE: dataHeader.STATUS_DELIVERY_CODE,
                     TOTAL_JANJANG: total.toString(),
                     STATUS_SYNC: dataHeader.STATUS_SYNC,
-                    SYNC_TIME: dataHeader.SYNC_TIME,   
+                    SYNC_TIME: dataHeader.SYNC_TIME,
                     INSERT_USER: dataHeader.INSERT_USER,
                     INSERT_TIME: dataHeader.INSERT_TIME
-                }                
+                }
                 this.setState({totalJanjang: total.toString(), dataHeader: header})
-            }    
+            }
         }
-       
+
     }
 
     getValueAndChangeColor(value, index, arr){
@@ -417,12 +417,12 @@ class KriteriaBuah extends Component {
             return data.EST_NAME;
         } catch (error) {
             return '';
-        }    
+        }
     }
     getStatusBlok(werk_afd_blok_code){
         try {
             let data = TaskServices.findBy2('TM_LAND_USE', 'WERKS_AFD_BLOCK_CODE', werk_afd_blok_code);
-            return data.MATURITY_STATUS;            
+            return data.MATURITY_STATUS;
         } catch (error) {
             return ''
         }
@@ -431,7 +431,7 @@ class KriteriaBuah extends Component {
     getDataBlock(blockCode){
         try {
             let data = TaskServices.findBy2('TM_BLOCK', 'BLOCK_CODE', blockCode);
-            return data;            
+            return data;
         } catch (error) {
             return ''
         }
@@ -459,7 +459,7 @@ class KriteriaBuah extends Component {
                     onPressCancel={() => {this.setState({ showModal2: false }); this.props.navigation.goBack(null)}}
                     title={this.state.title}
                     message={this.state.message} />
-                
+
 
                 {/*LABEL*/}
                 <View style={styles.containerHeader}>
@@ -612,23 +612,23 @@ const styles = {
         color: '#808080',
         textAlign: 'center'
     },
-    bubbleLeftOff: {     
-        backgroundColor: Colors.abuabu,   
+    bubbleLeftOff: {
+        backgroundColor: Colors.abuabu,
         borderTopLeftRadius: 20,
         borderBottomLeftRadius: 20,
     },
-    bubbleRightOff: {    
-        backgroundColor: Colors.abuabu, 
+    bubbleRightOff: {
+        backgroundColor: Colors.abuabu,
         borderTopRightRadius: 20,
         borderBottomRightRadius: 20,
     },
-    bubbleLeftOn: {     
-        backgroundColor: Colors.brand,   
+    bubbleLeftOn: {
+        backgroundColor: Colors.brand,
         borderTopLeftRadius: 20,
         borderBottomLeftRadius: 20,
     },
-    bubbleRightOn: {    
-        backgroundColor: Colors.brand, 
+    bubbleRightOn: {
+        backgroundColor: Colors.brand,
         borderTopRightRadius: 20,
         borderBottomRightRadius: 20,
     },
@@ -636,19 +636,19 @@ const styles = {
         fontSize: 11,
         color: '#ffffff',
         textAlign: 'center'
-    },  
+    },
     buttonTextSideOff: {
         fontSize: 11,
         color: '#808080',
         textAlign: 'center'
-    },  
+    },
     buttonSide: {
         width: 75,
         alignItems: 'center',
         padding: 10,
     },
     bubble: {
-        // backgroundColor: '#ff8080',        
+        // backgroundColor: '#ff8080',
         backgroundColor: Colors.brand,
         paddingHorizontal: 18,
         paddingVertical: 12,
@@ -689,6 +689,6 @@ const styles = {
         textAlign: 'center',
         color: '#A9A9A9',
         paddingHorizontal: 18,
-        paddingVertical: 12,        
+        paddingVertical: 12,
     }
 }

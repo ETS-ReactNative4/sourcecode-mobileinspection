@@ -1,6 +1,6 @@
 import React from 'react'
 import Colors from '../../Constant/Colors'
-import { TouchableOpacity, View, Text, BackAndroid } from 'react-native';
+import { TouchableOpacity, View, Text, BackHandler } from 'react-native';
 import R from 'ramda';
 
 class ReasonManualTPH extends React.Component{
@@ -40,20 +40,20 @@ class ReasonManualTPH extends React.Component{
     //     // this.setParameter()
     //     // this.props.navigation.setParams({ handleBackButtonClick: this.handleBackButtonClick })
     //     // BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
-    //     BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
+    //     BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
     // }
 
     // componentWillUnmount(){
     // // BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
-    //     BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+    //     BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
     // }
 
-    // handleBackButtonClick() { 
+    // handleBackButtonClick() {
     //     // if(this.state.hasPhoto){
     //     //     this.deleteFoto()
     //     // }
     //     // const navigation = this.props.navigation;
-    //     // let routeName = 'MainMenu'; 
+    //     // let routeName = 'MainMenu';
     //     // Promise.all([navigation.dispatch(NavigationActions.navigate({ routeName : routeName}))]).
     //     //     then(() => navigation.navigate('EbccValidation')).then(() => navigation.navigate('Riwayat'));
     //     this.props.navigation.goBack(null);
@@ -74,18 +74,18 @@ class ReasonManualTPH extends React.Component{
                     <View style={[styles.buttonContainer, {marginTop:35, paddingLeft: 30, paddingRight: 30}]}>
                         <TouchableOpacity style={[styles.bubble, styles.button] } onPress={()=>{this.nextScreen('HILANG')}}>
                             <Text style={styles.buttonText}>QR Code TPH-nya Hilang</Text>
-                        </TouchableOpacity>                        
+                        </TouchableOpacity>
                     </View>
                     <View style={[styles.buttonContainer,{paddingLeft: 30, paddingRight: 30}]}>
                         <TouchableOpacity style={[styles.bubble, styles.button] } onPress={()=>{this.nextScreen('RUSAK')}} >
                             <Text style={styles.buttonText}>QR Code TPH-nya Rusak</Text>
-                        </TouchableOpacity>                        
-                    </View>  
+                        </TouchableOpacity>
+                    </View>
 
                 </View>
-                
 
-                
+
+
             </View>
         )
     }
@@ -98,7 +98,7 @@ const styles = {
         flex: 1,
         backgroundColor: 'white'
     },
-    bubble: {           
+    bubble: {
         borderWidth: 1,
         borderColor: '#989898',
         borderRadius: 20,

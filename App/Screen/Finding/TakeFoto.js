@@ -6,7 +6,7 @@ import {
   View,
   Image,
   Dimensions,
-  BackAndroid
+  BackHandler
 } from 'react-native';
 import Colors from '../../Constant/Colors';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -77,11 +77,11 @@ class TakeFoto extends Component {
 
   componentDidMount() {
     this.props.navigation.setParams({ clearFoto: this.clearFoto })
-    BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
   }
 
   componentWillUnmount() {
-    BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
   }
 
   handleBackButtonClick() {

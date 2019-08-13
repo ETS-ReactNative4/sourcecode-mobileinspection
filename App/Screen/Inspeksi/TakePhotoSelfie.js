@@ -1,10 +1,6 @@
 import React, {Component} from 'react';
 import {
-    StyleSheet,
-    TouchableOpacity,
-    View,
-    Image,
-    Dimensions, BackHandler,Platform, StatusBar, BackAndroid
+    StyleSheet, TouchableOpacity, View, Image, Dimensions, BackHandler,Platform, StatusBar
   } from 'react-native';
 import Colors from '../../Constant/Colors';
 import { RNCamera as Camera } from 'react-native-camera';
@@ -41,7 +37,7 @@ class TakePhotoSelfie extends Component{
         let kondisiBaris1 = R.clone(params.kondisiBaris1);
         let kondisiBaris2 = R.clone(params.kondisiBaris2);
         let dataUsual = R.clone(params.dataUsual);
-        let statusBlok = R.clone(params.statusBlok); 
+        let statusBlok = R.clone(params.statusBlok);
         let intervalId = R.clone(params.intervalId);
         let dataInspeksi = R.clone(params.dataInspeksi);
 
@@ -51,7 +47,7 @@ class TakePhotoSelfie extends Component{
         this.state={
           intervalId,
           hasPhoto: false,
-          path: null,          
+          path: null,
           pathImg: null,
           dataModel: null,
           fotoBaris,
@@ -69,13 +65,13 @@ class TakePhotoSelfie extends Component{
     componentDidMount(){
       this.setParameter();
       // BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
-      BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
+      BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
       console.log("takePhotoSelfie:"+this.state.inspectionType)
     }
-  
+
     componentWillUnmount(){
       // BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
-      BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+      BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
     }
 
     setParameter(){
@@ -97,7 +93,7 @@ class TakePhotoSelfie extends Component{
 
       this.setState({ dataModel: image });
     }
-  
+
     handleBackButtonClick =()=> {
       if(this.state.hasPhoto){
         this.deleteFoto()
@@ -117,8 +113,8 @@ class TakePhotoSelfie extends Component{
 
     takePicture = async () => {
       try {
-        if(this.state.hasPhoto){    
-          this.insertDB() 
+        if(this.state.hasPhoto){
+          this.insertDB()
         }else{
           const takeCameraOptions = {
             // quality : 0.5,  //just in case want to reduce the quality too
@@ -130,7 +126,7 @@ class TakePhotoSelfie extends Component{
           RNFS.copyFile(data.uri, `${dirPhotoInspeksiSelfie}/${this.state.dataModel.IMAGE_NAME}`);
           this.resize(`${dirPhotoInspeksiSelfie}/${this.state.dataModel.IMAGE_NAME}`)
         }
-        
+
       } catch (err) {
         console.log('err: ', err);
       }
@@ -141,39 +137,39 @@ class TakePhotoSelfie extends Component{
         // response.uri is the URI of the new image that can now be displayed, uploaded...
         // response.path is the path of the new image
         // response.name is the name of the new image with the extension
-        // response.size is the size of the new image  
+        // response.size is the size of the new image
         RNFS.copyFile(response.path, `${dirPhotoInspeksiSelfie}/${this.state.dataModel.IMAGE_NAME}`);
         this.setState({
           path: response.uri,
           pathCache: response.path
-        }); 
+        });
       }).catch((err) => {
         console.log(err)
       });
     }
 
-    async insertDB(){      
+    async insertDB(){
       RNFS.unlink(this.state.pathCache);
       let isImageContain = await RNFS.exists(`file://${dirPhotoInspeksiSelfie}/${this.state.dataModel.IMAGE_NAME}`);
       if(isImageContain){
         this.props.navigation.navigate('KondisiBarisAkhir',{
           fotoSelfie: this.state.dataModel,
-          inspeksiHeader: this.state.inspeksiHeader, 
+          inspeksiHeader: this.state.inspeksiHeader,
           fotoBaris: this.state.fotoBaris,
-          kondisiBaris1: this.state.kondisiBaris1, 
-          kondisiBaris2: this.state.kondisiBaris2, 
+          kondisiBaris1: this.state.kondisiBaris1,
+          kondisiBaris2: this.state.kondisiBaris2,
           dataUsual: this.state.dataUsual,
           statusBlok:this.state.statusBlok,
           intervalId: this.state.intervalId,
           dataInspeksi: this.state.dataInspeksi,
           inspectionType  : this.state.inspectionType === 'genba' ? 'genba' : 'normal'
-        }); 
+        });
       }else{
         alert('Ada kesalahan, Ulangi ambil gambar selfie')
-      }        
+      }
 
     }
-  
+
     renderCamera() {
       return (
         <Camera
@@ -190,7 +186,7 @@ class TakePhotoSelfie extends Component{
         </Camera>
       );
     }
-  
+
     renderImage() {
       return (
         <View>
@@ -201,7 +197,7 @@ class TakePhotoSelfie extends Component{
         </View>
       );
     }
-  
+
     renderIcon=()=>{
       var imgSource = this.state.hasPhoto? imgNextPhoto : imgTakePhoto;
       return (
@@ -211,7 +207,7 @@ class TakePhotoSelfie extends Component{
         />
       );
     }
-    
+
     render(){
         return (
           <View style={styles.container}>

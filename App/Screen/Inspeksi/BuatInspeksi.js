@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-    Text, Keyboard, Dimensions, TextInput, TouchableOpacity, View, BackAndroid, StatusBar
+    Text, Keyboard, Dimensions, TextInput, TouchableOpacity, View, BackHandler, StatusBar
 } from 'react-native';
 import { Card } from 'native-base';
 import Colors from '../../Constant/Colors'
@@ -128,13 +128,13 @@ class BuatInspeksiRedesign extends Component {
     }
 
     componentWillUnmount () {
-        BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
         this.keyboardDidShowListener.remove();
         this.keyboardDidHideListener.remove();
     }
 
     componentDidMount() {
-        BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
         this.props.navigation.setParams({ searchLocation: this.searchLocation })
         this.loadDataBlock(this.state.werkAfdBlockCode)
         this.getLocation();

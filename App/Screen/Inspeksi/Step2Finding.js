@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { NavigationActions, StackActions } from 'react-navigation';
-import { Text, FlatList, TextInput, TouchableOpacity, View, Image, Modal, BackAndroid, StatusBar } from 'react-native';
+import { Text, FlatList, TextInput, TouchableOpacity, View, Image, Modal, BackHandler, StatusBar } from 'react-native';
 import { Container, Content } from 'native-base'
 import R, { isEmpty } from 'ramda'
 import Colors from '../../Constant/Colors'
@@ -105,7 +105,7 @@ class Step2Finding extends Component {
             dataInspeksi,
             tr_finding_codes: dataInspeksi.TR_FINDING_CODES,
 
-            //Add Modal Alert by Aminju 
+            //Add Modal Alert by Aminju
             title: 'Title',
             message: 'Message',
             showModal: false,
@@ -159,7 +159,7 @@ class Step2Finding extends Component {
     }
 
     componentDidMount() {
-        BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
         if (this.state.inspeksiHeader !== undefined) {
             let werkAfdBlock = `${this.state.inspeksiHeader.WERKS}${this.state.inspeksiHeader.AFD_CODE}${this.state.inspeksiHeader.BLOCK_CODE}`
             let detailBlock = `${this.getBlokName(werkAfdBlock)}/${this.getStatusBlok(werkAfdBlock)}/${this.getEstateName(this.state.inspeksiHeader.WERKS)}`
@@ -173,7 +173,7 @@ class Step2Finding extends Component {
     }
 
     componentWillUnmount() {
-        BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
     }
 
     handleBackButtonClick() {

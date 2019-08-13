@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { NavigationActions, StackActions } from 'react-navigation';
-import { StyleSheet,BackHandler, Text, FlatList, ScrollView, TouchableOpacity, View, Image, Alert, Platform, BackAndroid
+import { StyleSheet,BackHandler, Text, FlatList, ScrollView, TouchableOpacity, View, Image, Alert, Platform
 } from 'react-native';
 import {
     Container,
@@ -97,10 +97,10 @@ class FormStep1 extends Component {
        this.getLocation();
        this.props.navigation.setParams({ clearFoto: this.clearFoto });
         this.focusListener = this.props.navigation.addListener("didFocus", () => {
-            BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
+            BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
         });
         this.blurListener = this.props.navigation.addListener("didBlur", ()=>{
-            BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+            BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
         })
     }
 

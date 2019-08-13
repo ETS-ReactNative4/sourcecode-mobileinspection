@@ -9,7 +9,7 @@ import {
     StyleSheet,
     ListView,
     TouchableOpacity,
-    BackAndroid,
+    BackHandler,
     FlatList,
     Image
 } from 'react-native';
@@ -37,7 +37,7 @@ class PilihKontak extends Component {
   };
 
   componentWillUnmount(){
-    BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
   }
 
   handleBackButtonClick() {
@@ -46,7 +46,7 @@ class PilihKontak extends Component {
   }
 
   componentDidMount() {
-    BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
     const { navigation } = this.props;
     const afdCode = navigation.getParam('afdCode');
     const werks = navigation.getParam('werks');

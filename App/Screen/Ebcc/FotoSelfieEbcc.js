@@ -6,7 +6,6 @@ import {
     Image,
     Platform,
     BackHandler,
-    BackAndroid,
     Dimensions,
     StatusBar
   } from 'react-native';
@@ -81,10 +80,10 @@ class FotoSelfieEbcc extends Component {
 
   componentWillUnmount(){
     // BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
-    BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
   }
 
-  handleBackButtonClick() { 
+  handleBackButtonClick() {
     if(this.state.hasPhoto){
         this.deleteFoto()
     }
@@ -96,11 +95,11 @@ class FotoSelfieEbcc extends Component {
     navigator.geolocation.getCurrentPosition(
         (position) => {
             var lat = parseFloat(position.coords.latitude);
-            var lon = parseFloat(position.coords.longitude);   
+            var lon = parseFloat(position.coords.longitude);
             var timestamp = moment(position.timestamp).format('YYMMDDkkmmss');
-            this.setState({currentDate: timestamp});            
+            this.setState({currentDate: timestamp});
             this.setParameter();
-                     
+
         },
         (error) => {
             // this.setState({ error: error.message, fetchingLocation: false })
@@ -144,14 +143,14 @@ class FotoSelfieEbcc extends Component {
 
   takePicture = async () => {
     try {
-      if(this.state.hasPhoto){  
-        this.insertDB();     
+      if(this.state.hasPhoto){
+        this.insertDB();
       }else{
         const takeCameraOptions = {
           // quality : 0.5,  //just in case want to reduce the quality too
           skipProcessing: false,
           fixOrientation: true
-        };        
+        };
         const data = await this.camera.takePictureAsync(takeCameraOptions);
         this.setState({ path: data.uri, pathImg: dirPhotoEbccSelfie, hasPhoto: true });
         RNFS.copyFile(data.uri, `${dirPhotoEbccSelfie}/${this.state.dataModel.IMAGE_NAME}`);
@@ -219,7 +218,7 @@ class FotoSelfieEbcc extends Component {
       this.setState({ showModalBack: true, title: 'Berhasil Disimpan', message: 'Yeaay! Data kamu berhasil disimpan', icon: require('../../Images/ic-save-berhasil.png') });
     }else{
       alert('Ada kesalahan, Ulangi ambil gambar baris')
-    }   
+    }
   }
 
   selesai=()=>{

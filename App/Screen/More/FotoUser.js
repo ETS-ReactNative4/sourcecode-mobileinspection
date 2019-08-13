@@ -6,7 +6,6 @@ import {
     Image,
     Platform,
     BackHandler,
-    BackAndroid,
     Dimensions,
     StatusBar
 } from 'react-native';
@@ -63,7 +62,7 @@ export default class FotoUser extends Component {
     }
 
     componentWillUnmount(){
-        BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
     }
 
     handleBackButtonClick() {

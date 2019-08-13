@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { NavigationActions, StackActions } from 'react-navigation';
 import {
-    BackHandler, Text, FlatList, ScrollView, TouchableOpacity, View, Image, StatusBar, Platform,BackAndroid
+    BackHandler, Text, FlatList, ScrollView, TouchableOpacity, View, Image, StatusBar, Platform
 } from 'react-native';
 import {
     Container,
@@ -45,7 +45,7 @@ class Step1Finding extends Component {
 
     constructor(props) {
         super(props);
-        
+
         let params = props.navigation.state.params;
         let inspeksiHeader = R.clone(params.data);
         let dataInspeksi = R.clone(params.dataInspeksi);
@@ -68,7 +68,7 @@ class Step1Finding extends Component {
             inspeksiHeader,
             dataInspeksi,
 
-            //Add Modal Alert by Aminju 
+            //Add Modal Alert by Aminju
             title: 'Title',
             message: 'Message',
             showModal: false,
@@ -78,26 +78,26 @@ class Step1Finding extends Component {
 
     clearFoto(){
         if(this.state.photos.length > 0){
-            this.state.photos.map(item =>{                
+            this.state.photos.map(item =>{
                 RNFS.unlink(item.uri)
             })
         }
-        this.props.navigation.goBack(null); 
+        this.props.navigation.goBack(null);
     }
 
     componentDidMount() {
        this.getLocation();
        this.props.navigation.setParams({ clearFoto: this.clearFoto })
        BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
-        // BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)    
+        // BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
     }
 
     componentWillUnmount(){
         BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
-        // BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+        // BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
     }
 
-    handleBackButtonClick() { 
+    handleBackButtonClick() {
         this.clearFoto()
         return false;
     }
@@ -138,11 +138,11 @@ class Step1Finding extends Component {
                 let imgName = da[da.length-1];
                 images.push(imgName);
                 this.props.navigation.navigate('Step2Finding', {
-                    image: images, 
-                    lat: this.state.latitude, 
-                    lon:this.state.longitude, 
-                    data: this.state.inspeksiHeader, 
-                    dataInspeksi: this.state.dataInspeksi, 
+                    image: images,
+                    lat: this.state.latitude,
+                    lon:this.state.longitude,
+                    data: this.state.inspeksiHeader,
+                    dataInspeksi: this.state.dataInspeksi,
                     finish: this.finish});
 
             });
@@ -314,7 +314,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        
+
     };
 };
 

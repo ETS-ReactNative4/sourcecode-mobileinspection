@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { NavigationActions, StackActions } from 'react-navigation';
 import {
-    BackAndroid, Text, FlatList, TextInput, TouchableOpacity, View, Image, Modal
+    BackHandler, Text, FlatList, TextInput, TouchableOpacity, View, Image, Modal
 } from 'react-native';
 import {
     Container,
@@ -128,11 +128,11 @@ class FormStep2 extends Component {
 
     componentDidMount() {
         this.getLocation();
-        BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
     }
 
     componentWillUnmount() {
-        BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
     }
 
     handleBackButtonClick() {

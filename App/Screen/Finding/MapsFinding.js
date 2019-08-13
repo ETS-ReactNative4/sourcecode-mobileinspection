@@ -5,7 +5,7 @@ import {
   Text,
   StatusBar,
   TouchableOpacity,
-  BackAndroid
+  BackHandler
 } from 'react-native';
 
 import MapView, { Polygon, ProviderPropType, Marker } from 'react-native-maps';
@@ -66,13 +66,13 @@ class MapsInspeksi extends React.Component {
   }
 
   componentDidMount() {
-    BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
     this.props.navigation.setParams({ searchLocation: this.searchLocation });
     this.getLocation()
   }
 
   componentWillUnmount() {
-    BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
   }
 
   handleBackButtonClick() {

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, ScrollView, Text, View, Switch, StatusBar, Image, AsyncStorage, BackAndroid } from 'react-native';
+import { TouchableOpacity, ScrollView, Text, View, Switch, StatusBar, Image, AsyncStorage, BackHandler } from 'react-native';
 import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
 import BtnStyles from './Component/ButtonStyle'
@@ -61,7 +61,7 @@ class KondisiBaris2 extends Component {
 
             intervalId,
 
-            //piringan  
+            //piringan
             piringan: '',
             btnPiringanRehab: BtnStyles.btnBiasa2,
             btnPiringanKurang: BtnStyles.btnBiasa2,
@@ -200,7 +200,7 @@ class KondisiBaris2 extends Component {
             showKastrasi: false,
             showSanitasi: false,
 
-            //Add Modal Alert by Aminju 
+            //Add Modal Alert by Aminju
             title: 'Title',
             message: 'Message',
             showModal: false,
@@ -222,12 +222,12 @@ class KondisiBaris2 extends Component {
     componentDidMount() {
         this._loadInput();
         this.props.navigation.setParams({ getData: this.state.inspeksiHeader, getDataInspeksi: this.state.dataInspeksi, updateTRBaris: this.updateTRBaris })
-        BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
         this.hideAndShow();
     }
     componentWillUnmount() {
         this._saveInput();
-        BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
     }
 
     handleBackButtonClick() {
