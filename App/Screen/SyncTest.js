@@ -827,7 +827,7 @@ class SyncScreen extends React.Component {
                 return response.json();
             })
             .then((callback) => {
-                if (callback.status) {
+                if (callback.status)
                     let getComment = TaskServices.getAllData("TR_FINDING_COMMENT");
                     if (callback.data.hapus.length > 0 && getComment.length > 0) {
                         callback.data.hapus.map(data => {
@@ -902,19 +902,14 @@ class SyncScreen extends React.Component {
         // }
         // TaskServices.saveData('TR_SUMMARY', data);
 
-        console.log('Masuk Weekly Summary ')
         const today = getTodayDate('YYYY-MM-DD')
         const param = {
             TANGGAL: today
         }
         let urlDetail = this.getAPIURL("INSPECTION-SUMMARY")
-        console.log('urlDetail : ', urlDetail)
-        console.log('urlDetail API_URL : ', urlDetail.API_URL)
         const user = TaskServices.getAllData('TR_LOGIN')[0];
         fetchPostAPI(user.ACCESS_TOKEN, urlDetail.API_URL, param).then(((result) => {
-            console.log('Response : ', result)
             if (result != undefined) {
-                console.log('Result Summary : ', result)
                 if (result.status) {
                     const dummyData = {
                         SUMMARY_CODE: 'SUM01',
@@ -992,7 +987,6 @@ class SyncScreen extends React.Component {
                 return response.json();
             })
             .then((data) => {
-                console.log("GENBA INSERT : " + JSON.stringify(data))
                 if (data.status) {
                     this.updateGenbaInspectionTable(genbaModel.BLOCK_INSPECTION_CODE)
                 }
@@ -1135,7 +1129,6 @@ class SyncScreen extends React.Component {
     }
 
     updateInspeksiTrack = param => {
-        console.log("updateInspeksiTrack", param);
         if (param !== null) {
             /*let allData = TaskServices.getAllData('TM_INSPECTION_TRACK')
             let indexData = R.findIndex(R.propEq('TRACK_INSPECTION_CODE', param.TRACK_INSPECTION_CODE))(allData);
@@ -1775,7 +1768,7 @@ class SyncScreen extends React.Component {
             //inbox comment kalo di assign/nge assign
             getFinding.map(data => {
                 if (data.ASSIGN_TO == this.state.user.USER_AUTH_CODE || data.INSERT_USER == this.state.user.USER_AUTH_CODE) {
-                    let newData = Object.assign({}, newNotif, { NOTIFICATION_TYPE: 6 })
+                    let newData = { ...newNotif, NOTIFICATION_TYPE: 6 }
                     TaskServices.saveData('TR_NOTIFICATION', newData);
                 }
             })
@@ -1783,7 +1776,7 @@ class SyncScreen extends React.Component {
             //inbox comment kalo di tagged
             param.TAGS.map((data) => {
                 if (data.USER_AUTH_CODE === this.state.user.USER_AUTH_CODE) {
-                    let newData = Object.assign({}, newNotif, { NOTIFICATION_TYPE: 7 })
+                    let newData = { ...newNotif, NOTIFICATION_TYPE: 7 }
                     TaskServices.saveData('TR_NOTIFICATION', newData);
                 }
             })
@@ -1826,9 +1819,6 @@ class SyncScreen extends React.Component {
     }
 
     _reset_token(trueSync) {
-
-        console.log('trueSync : ', trueSync)
-
         let allLoginData = TaskServices.findBy('TR_LOGIN', 'STATUS', 'LOGIN');
         if (allLoginData.length > 0) {
             let token = allLoginData[0].ACCESS_TOKEN;
@@ -1844,13 +1834,11 @@ class SyncScreen extends React.Component {
                     return response.json();
                 })
                 .then((data) => {
-                    console.log('Data Reset Token : ', data)
                     if (trueSync) {
                         if (data.status) {
                             let newToken = data.data;
                             let allLoginData = TaskServices.findBy('TR_LOGIN', 'STATUS', 'LOGIN');
                             if (allLoginData.length > 0) {
-                                console.log('Masuk Sini:')
                                 let loginData = {
                                     ...allLoginData[0],
                                     ACCESS_TOKEN: newToken
@@ -2231,7 +2219,6 @@ class SyncScreen extends React.Component {
 
         if (newProps.finding.fetchingFinding !== null && !newProps.finding.fetchingFinding) {
             let dataJSON = newProps.finding.finding;
-            console.log('Data Get Finding : ', dataJSON)
             if (dataJSON !== null) {
                 this._crudTM_Finding(dataJSON);
             }
