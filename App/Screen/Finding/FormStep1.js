@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { NavigationActions, StackActions } from 'react-navigation';
-<<<<<<< Updated upstream
-import { StyleSheet, BackHandler, Text, FlatList, ScrollView, TouchableOpacity, View, Image, Alert, Platform} from 'react-native';
+import {
+    StyleSheet, Text, FlatList, ScrollView, TouchableOpacity, View, Image, Alert, Platform, BackHandler
+} from 'react-native';
 import {
     Container,
     Content,
@@ -14,9 +14,6 @@ import Fonts from '../../Constant/Fonts'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import Icon2 from 'react-native-vector-icons/Ionicons';
 import R from 'ramda'
-import { dirPhotoTemuan } from '../../Lib/dirStorage'
-import ImagePickerCrop from 'react-native-image-crop-picker'
-import random from 'random-string'
 import TaskServices from '../../Database/TaskServices'
 import RNFS from 'react-native-fs';
 import MapView from 'react-native-maps';
@@ -99,11 +96,7 @@ class FormStep1 extends Component {
         this.focusListener = this.props.navigation.addListener("didFocus", () => {
             BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
         });
-<<<<<<< Updated upstream
-        this.blurListener = this.props.navigation.addListener("didBlur", ()=>{
-=======
         this.blurListener = this.props.navigation.addListener("didBlur", () => {
->>>>>>> Stashed changes
             BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
         })
     }

@@ -76,15 +76,9 @@ class Step1Finding extends Component {
         }
     }
 
-<<<<<<< Updated upstream
-    clearFoto(){
-        if(this.state.photos.length > 0){
-            this.state.photos.map(item =>{
-=======
     clearFoto() {
         if (this.state.photos.length > 0) {
             this.state.photos.map(item => {
->>>>>>> Stashed changes
                 RNFS.unlink(item.uri)
             })
         }
@@ -92,17 +86,10 @@ class Step1Finding extends Component {
     }
 
     componentDidMount() {
-<<<<<<< Updated upstream
-       this.getLocation();
-       this.props.navigation.setParams({ clearFoto: this.clearFoto })
-       BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
-        // BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
-=======
         this.getLocation();
         this.props.navigation.setParams({ clearFoto: this.clearFoto })
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
         // BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)    
->>>>>>> Stashed changes
     }
 
     componentWillUnmount() {
@@ -153,18 +140,11 @@ class Step1Finding extends Component {
                 this.props.navigation.navigate('Step2Finding', {
                     image: images,
                     lat: this.state.latitude,
-<<<<<<< Updated upstream
-                    lon:this.state.longitude,
-                    data: this.state.inspeksiHeader,
-                    dataInspeksi: this.state.dataInspeksi,
-                    finish: this.finish});
-=======
                     lon: this.state.longitude,
                     data: this.state.inspeksiHeader,
                     dataInspeksi: this.state.dataInspeksi,
                     finish: this.finish
                 });
->>>>>>> Stashed changes
 
             });
         }

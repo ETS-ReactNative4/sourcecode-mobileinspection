@@ -6,10 +6,6 @@ import {
     Image,
     Platform,
     BackHandler,
-<<<<<<< Updated upstream
-    Dimensions,
-=======
->>>>>>> Stashed changes
     StatusBar
 } from 'react-native';
 import Colors from '../../Constant/Colors';
@@ -64,11 +60,7 @@ export default class FotoUser extends Component {
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
     }
 
-<<<<<<< Updated upstream
-    componentWillUnmount(){
-=======
     componentWillUnmount() {
->>>>>>> Stashed changes
         BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
     }
 
