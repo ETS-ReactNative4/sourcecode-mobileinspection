@@ -691,7 +691,7 @@ class KondisiBarisAkhir extends Component {
             this.navigateScreen('TakeFotoBaris', params, modelInspeksi, model, id);
 
             // REMOVE ASYNSTORAGE MAPS
-            removeData('PoligonsInspeksi');
+            // removeData('PoligonsInspeksi');
         }
 
     }
