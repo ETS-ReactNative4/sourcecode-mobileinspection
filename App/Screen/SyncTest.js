@@ -58,8 +58,6 @@ class SyncScreen extends React.Component {
     constructor() {
         super();
         let user = TaskServices.getAllData('TR_LOGIN')[0];
-        baseUploadImageLink = ServerName[user.SERVER_NAME_INDEX].image;
-        link = ServerName[user.SERVER_NAME_INDEX].data;
         this.state = {
             user,
             //upload
@@ -827,7 +825,7 @@ class SyncScreen extends React.Component {
                 return response.json();
             })
             .then((callback) => {
-                if (callback.status)
+                if (callback.status) {
                     let getComment = TaskServices.getAllData("TR_FINDING_COMMENT");
                     if (callback.data.hapus.length > 0 && getComment.length > 0) {
                         callback.data.hapus.map(data => {
