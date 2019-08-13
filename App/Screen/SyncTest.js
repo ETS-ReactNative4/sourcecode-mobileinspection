@@ -847,7 +847,7 @@ class SyncScreen extends React.Component {
                                 STATUS_SYNC: 'Y',
                                 USERNAME: data.FULLNAME !== undefined ? data.FULLNAME : "NO_NAME"
                             };
-                            if(model.USER_AUTH_CODE !== this.state.user.USER_AUTH_CODE){
+                            if (model.USER_AUTH_CODE !== this.state.user.USER_AUTH_CODE) {
                                 this._updateTR_Notif_Comment(model);
                             }
                             TaskServices.updateByPrimaryKey('TR_FINDING_COMMENT', model)
@@ -869,7 +869,7 @@ class SyncScreen extends React.Component {
                                 STATUS_SYNC: 'Y',
                                 USERNAME: data.FULLNAME !== undefined ? data.FULLNAME : "NO_NAME"
                             };
-                            if(model.USER_AUTH_CODE !== this.state.user.USER_AUTH_CODE){
+                            if (model.USER_AUTH_CODE !== this.state.user.USER_AUTH_CODE) {
                                 this._updateTR_Notif_Comment(model);
                             }
                             TaskServices.saveData("TR_FINDING_COMMENT", model);
@@ -1822,7 +1822,11 @@ class SyncScreen extends React.Component {
         }
         TaskServices.saveData('TR_SYNC_LOG', data);
     }
+
     _reset_token(trueSync) {
+
+        console.log('trueSync : ', trueSync)
+
         let allLoginData = TaskServices.findBy('TR_LOGIN', 'STATUS', 'LOGIN');
         if (allLoginData.length > 0) {
             let token = allLoginData[0].ACCESS_TOKEN;
@@ -1838,13 +1842,18 @@ class SyncScreen extends React.Component {
                     return response.json();
                 })
                 .then((data) => {
+                    console.log('Data Reset Token : ', data)
                     if (trueSync) {
                         if (data.status) {
                             let newToken = data.data;
                             let allLoginData = TaskServices.findBy('TR_LOGIN', 'STATUS', 'LOGIN');
                             if (allLoginData.length > 0) {
-                                let oldUser = Object.assign({}, allLoginData[0], { ACCESS_TOKEN: newToken });
-                                TaskServices.updateByPrimaryKey('TR_LOGIN', oldUser);
+                                console.log('Masuk Sini:')
+                                let loginData = {
+                                    ...allLoginData[0],
+                                    ACCESS_TOKEN: newToken
+                                };
+                                TaskServices.updateByPrimaryKey('TR_LOGIN', loginData);
                                 let newLoginData = TaskServices.findBy('TR_LOGIN', 'STATUS', 'LOGIN');
                                 RNFS.copyFile(TaskServices.getPath(), 'file:///storage/emulated/0/MobileInspection/data.realm');
                                 this.setState({
@@ -1888,7 +1897,7 @@ class SyncScreen extends React.Component {
                     }
                 })
                 .catch((data) => {
-                    console.log("catch", data)
+                    console.log("catch MY OWN", data)
                 });
         }
         else {
@@ -2359,6 +2368,7 @@ class SyncScreen extends React.Component {
         }
         if (newProps.serverTime.fetchingServerTime !== null && !newProps.serverTime.fetchingServerTime) {
             let dataJSON = newProps.serverTime.serverTime;
+            console.log('Data Servertime : ', dataJSON);
             let trueSync = true;
             if (dataJSON !== null) {
                 let serverTime = new Date(dataJSON.time.replace(' ', 'T') + "+07:00");
