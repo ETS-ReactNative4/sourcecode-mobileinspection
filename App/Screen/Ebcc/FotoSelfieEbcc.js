@@ -1,14 +1,14 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
-    StyleSheet,
-    TouchableOpacity,
-    View,
-    Image,
-    Platform,
-    BackHandler,
-    Dimensions,
-    StatusBar
-  } from 'react-native';
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Image,
+  Platform,
+  BackHandler,
+  Dimensions,
+  StatusBar
+} from 'react-native';
 import Colors from '../../Constant/Colors';
 import imgTakePhoto from '../../Images/icon/ic_take_photo.png';
 import imgNextPhoto from '../../Images/icon/ic_next_photo.png';
@@ -20,7 +20,7 @@ import TaskService from '../../Database/TaskServices'
 import R from 'ramda';
 import moment from 'moment'
 import ModalAlertBack from '../../Component/ModalAlert';
-import { NavigationActions, StackActions  } from 'react-navigation';
+import { NavigationActions, StackActions } from 'react-navigation';
 
 var RNFS = require('react-native-fs');
 const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
@@ -72,20 +72,20 @@ class FotoSelfieEbcc extends Component {
     };
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.setParameter()
     // BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
-    BackAndroid.addEventListener('hardwareBackPress', this.handleBackButtonClick)
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     // BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
     BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
   }
 
   handleBackButtonClick() {
-    if(this.state.hasPhoto){
-        this.deleteFoto()
+    if (this.state.hasPhoto) {
+      this.deleteFoto()
     }
     this.props.navigation.goBack(null);
     return true;
@@ -93,31 +93,31 @@ class FotoSelfieEbcc extends Component {
 
   getLocation() {
     navigator.geolocation.getCurrentPosition(
-        (position) => {
-            var lat = parseFloat(position.coords.latitude);
-            var lon = parseFloat(position.coords.longitude);
-            var timestamp = moment(position.timestamp).format('YYMMDDkkmmss');
-            this.setState({currentDate: timestamp});
-            this.setParameter();
+      (position) => {
+        var lat = parseFloat(position.coords.latitude);
+        var lon = parseFloat(position.coords.longitude);
+        var timestamp = moment(position.timestamp).format('YYMMDDkkmmss');
+        this.setState({ currentDate: timestamp });
+        this.setParameter();
 
-        },
-        (error) => {
-            // this.setState({ error: error.message, fetchingLocation: false })
-            let message = error && error.message ? error.message : 'Terjadi kesalahan ketika mencari lokasi anda !';
-            if (error && error.message == "No location provider available.") {
-                message = "Mohon nyalakan GPS anda terlebih dahulu.";
-            }
-            this.setParameter();
-        }, // go here if error while fetch location
-        { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
+      },
+      (error) => {
+        // this.setState({ error: error.message, fetchingLocation: false })
+        let message = error && error.message ? error.message : 'Terjadi kesalahan ketika mencari lokasi anda !';
+        if (error && error.message == "No location provider available.") {
+          message = "Mohon nyalakan GPS anda terlebih dahulu.";
+        }
+        this.setParameter();
+      }, // go here if error while fetch location
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
     );
   }
 
-  deleteFoto(){
+  deleteFoto() {
     RNFS.unlink(`${FILE_PREFIX}${dirPhotoEbccSelfie}/${this.state.dataModel.IMAGE_NAME}`)
-    .then(() => {
-      console.log(`FILE ${this.state.dataModel.IMAGE_NAME} DELETED`);
-    });
+      .then(() => {
+        console.log(`FILE ${this.state.dataModel.IMAGE_NAME} DELETED`);
+      });
     RNFS.unlink(this.state.path)
     this.setState({ path: null, hasPhoto: false });
   }
@@ -143,9 +143,9 @@ class FotoSelfieEbcc extends Component {
 
   takePicture = async () => {
     try {
-      if(this.state.hasPhoto){
+      if (this.state.hasPhoto) {
         this.insertDB();
-      }else{
+      } else {
         const takeCameraOptions = {
           // quality : 0.5,  //just in case want to reduce the quality too
           skipProcessing: false,
@@ -198,16 +198,16 @@ class FotoSelfieEbcc extends Component {
   async insertDB() {
     RNFS.unlink(this.state.pathCache);
     let isImageContain = await RNFS.exists(`file://${dirPhotoEbccSelfie}/${this.state.dataModel.IMAGE_NAME}`);
-    if(isImageContain){
+    if (isImageContain) {
 
       //insert TR_H_EBCC_VALIDATION
       TaskService.saveData('TR_H_EBCC_VALIDATION', this.state.dataHeader);
 
       // insert TR_D_EBCC_VALIDATION
-      if(this.state.kriteriaBuah !== null){
+      if (this.state.kriteriaBuah !== null) {
         this.state.kriteriaBuah.map(item => {
-			let newItem=Object.assign({},item,{JUMLAH:parseInt(item.JUMLAH)});
-			TaskService.saveData('TR_D_EBCC_VALIDATION', newItem);
+          let newItem = Object.assign({}, item, { JUMLAH: parseInt(item.JUMLAH) });
+          TaskService.saveData('TR_D_EBCC_VALIDATION', newItem);
         })
       }
 
@@ -216,17 +216,17 @@ class FotoSelfieEbcc extends Component {
       TaskService.saveData('TR_IMAGE', this.state.dataModel);
 
       this.setState({ showModalBack: true, title: 'Berhasil Disimpan', message: 'Yeaay! Data kamu berhasil disimpan', icon: require('../../Images/ic-save-berhasil.png') });
-    }else{
+    } else {
       alert('Ada kesalahan, Ulangi ambil gambar baris')
     }
   }
 
-  selesai=()=>{
+  selesai = () => {
     const navigation = this.props.navigation;
     let routeName = 'MainMenu';
-    Promise.all([navigation.dispatch(NavigationActions.navigate({ routeName : routeName}))]).
-    then(() => navigation.navigate('EbccValidation')).then(() => navigation.navigate('Riwayat'));
-    this.setState({showModalBack: false})
+    Promise.all([navigation.dispatch(NavigationActions.navigate({ routeName: routeName }))]).
+      then(() => navigation.navigate('EbccValidation')).then(() => navigation.navigate('Riwayat'));
+    this.setState({ showModalBack: false })
     // this.props.screenProps.rootNavigation.navigate('MainMenu')
   }
 
@@ -255,9 +255,9 @@ class FotoSelfieEbcc extends Component {
     return (
       <View style={styles.container}>
         <StatusBar
-            hidden={false}
-            barStyle="light-content"
-            backgroundColor={Colors.tintColorPrimary}
+          hidden={false}
+          barStyle="light-content"
+          backgroundColor={Colors.tintColorPrimary}
         />
         <ModalAlertBack
           visible={this.state.showModalBack}

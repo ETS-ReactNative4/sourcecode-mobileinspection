@@ -80,7 +80,7 @@ class TakePhotoBaris extends Component {
 
   componentDidMount() {
     this.setParameter();
-    // BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+    // BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);    
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
   }
 
