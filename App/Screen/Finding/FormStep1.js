@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
 import { NavigationActions, StackActions } from 'react-navigation';
 <<<<<<< Updated upstream
-import { StyleSheet,BackHandler, Text, FlatList, ScrollView, TouchableOpacity, View, Image, Alert, Platform
-=======
-import {
-    StyleSheet, Text, FlatList, ScrollView, TouchableOpacity, View, Image, Alert, Platform, BackHandler
->>>>>>> Stashed changes
-} from 'react-native';
+import { StyleSheet, BackHandler, Text, FlatList, ScrollView, TouchableOpacity, View, Image, Alert, Platform} from 'react-native';
 import {
     Container,
     Content,
