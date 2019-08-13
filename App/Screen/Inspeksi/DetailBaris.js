@@ -80,8 +80,8 @@ class DetailBaris extends React.Component {
         this.loadGenbaUser();
     }
 
-    loadData(){        
-        var data = Taskservices.findByWithList('TR_BLOCK_INSPECTION_D', ['ID_INSPECTION', 'AREAL'], [this.state.idInspection, this.state.baris]); 
+    loadData(){
+        var data = Taskservices.findByWithList('TR_BLOCK_INSPECTION_D', ['ID_INSPECTION', 'AREAL'], [this.state.idInspection, this.state.baris]);
         for(var i=0; i < data.length; i++){
             this.getValuComponent({compCode: data[i].CONTENT_INSPECTION_CODE, value: data[i].VALUE})
             this.loadImage(data[i].BLOCK_INSPECTION_CODE)
@@ -102,10 +102,10 @@ class DetailBaris extends React.Component {
     getValuComponent(data){
         let compCode = data.compCode;
         switch(compCode){
-            case 'CC0001':       
-                this.setState({nilaiJmlPokok: data.value})         
+            case 'CC0001':
+                this.setState({nilaiJmlPokok: data.value})
                 break;
-            case 'CC0002':            
+            case 'CC0002':
                 this.setState({nilaiPokokPanen: data.value})
                 break;
             case 'CC0003':
@@ -135,10 +135,10 @@ class DetailBaris extends React.Component {
             case 'CC0011':
                 this.setState({nilaiPrun: data.value})
                 break;
-            case 'CC0012':    
+            case 'CC0012':
                 this.setState({nilaiTipa: data.value})
                 break;
-            case 'CC0013':              
+            case 'CC0013':
                 this.setState({nilaiPenabur: data.value})
                 break;
             case 'CC0014':
@@ -158,7 +158,7 @@ class DetailBaris extends React.Component {
     loadGenbaUser(){
         if(this.state.detailType === "genba" && this.state.BLOCK_INSPECTION_CODE !== null){
             let getData = Taskservices.findBy2('TR_GENBA_INSPECTION', 'BLOCK_INSPECTION_CODE', this.state.BLOCK_INSPECTION_CODE);
-            let genbaUser = Object.values(getData.GENBA_USER);
+            let genbaUser = getData.GENBA_USER;
             let tempData = [];
             genbaUser.map((data)=>{
                 tempData.push(data)
@@ -259,7 +259,7 @@ class DetailBaris extends React.Component {
                         <View style={styles.sectionRow}>
                             <Text style={styles.textLabel}>Brondolan di TPH</Text>
                             <Text style={styles.textContent}>{this.state.nilaiBrondolTph}</Text>
-                        </View> }                       
+                        </View> }
                     </View>
 
                     <View style={styles.section}>
@@ -279,7 +279,7 @@ class DetailBaris extends React.Component {
                         <View style={styles.sectionRow}>
                             <Text style={styles.textLabel}>Kondisi Pupuk</Text>
                             <Text style={styles.textContent}>{this.state.nilaiPupuk}</Text>
-                        </View>}                 
+                        </View>}
                     </View>
 
                     {
@@ -297,7 +297,7 @@ class DetailBaris extends React.Component {
 
 }
 
-export default DetailBaris; 
+export default DetailBaris;
 
 const styles = StyleSheet.create({
     container: {
@@ -359,7 +359,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginHorizontal: 10,
         padding: 10,
-    },    
+    },
     buttonContainer: {
         flexDirection: 'row',
         marginVertical: 20,

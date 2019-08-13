@@ -767,7 +767,7 @@ class SyncScreen extends React.Component {
     // == COMMENT KEVIN ==
     uploadFindingComment() {
         let getTRComment = TaskServices.getAllData('TR_FINDING_COMMENT');
-        let filteredComment = Object.values(getTRComment.filtered('STATUS_SYNC = "N"'));
+        let filteredComment = getTRComment.filtered('STATUS_SYNC = "N"');
         if (filteredComment.length > 0) {
             filteredComment.map((data, index) => {
                 let taggedUser = [];
@@ -951,11 +951,11 @@ class SyncScreen extends React.Component {
 
     uploadGenba() {
         let countData = TaskServices.getAllData('TR_GENBA_INSPECTION');
-        let filteredData = Object.values(countData.filtered('STATUS_SYNC = "N"'));
+        let filteredData = countData.filtered('STATUS_SYNC = "N"');
         if (filteredData.length > 0) {
             filteredData.map((data, index) => {
                 let GENBA_USER = [];
-                let genbaUserArray = Object.values(data.GENBA_USER);
+                let genbaUserArray = data.GENBA_USER;
                 genbaUserArray.map((data) => {
                     GENBA_USER.push(data.USER_AUTH_CODE)
                 });

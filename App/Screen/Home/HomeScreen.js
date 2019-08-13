@@ -478,7 +478,7 @@ class HomeScreen extends React.Component {
     let commentMessage = "";
     if (commentCount > 0) {
       latestComment = getComment[0];
-      commentMessage = this.processText(this.state.showTrimComment[index] ? getComment[0].MESSAGE : clipString(getComment[0].MESSAGE, 150), Object.values(getComment[0].TAGS));
+      commentMessage = this.processText(this.state.showTrimComment[index] ? getComment[0].MESSAGE : clipString(getComment[0].MESSAGE, 150), getComment[0].TAGS);
     }
 
     return (

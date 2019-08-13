@@ -67,7 +67,7 @@ class HistoryInspeksiDetail extends React.Component {
     getStatusBlok(werk_afd_blok_code){
         try {
             let data = Taskservices.findBy2('TM_LAND_USE', 'WERKS_AFD_BLOCK_CODE', werk_afd_blok_code);
-            return data.MATURITY_STATUS;            
+            return data.MATURITY_STATUS;
         } catch (error) {
             return ''
         }
@@ -76,7 +76,7 @@ class HistoryInspeksiDetail extends React.Component {
     getBlokName(werk_afd_blok_code){
         try {
             let data = Taskservices.findBy2('TM_LAND_USE', 'WERKS_AFD_BLOCK_CODE', werk_afd_blok_code);
-            return data.BLOCK_NAME;            
+            return data.BLOCK_NAME;
         } catch (error) {
             return ''
         }
@@ -85,14 +85,14 @@ class HistoryInspeksiDetail extends React.Component {
     loadData() {
         let data = Taskservices.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', this.state.data.ID_INSPECTION)
         if(data != undefined){
-            let trCodes = Object.values(data.TR_FINDING_CODES);
+            let trCodes = data.TR_FINDING_CODES;
             if(trCodes.length > 0){
                 trCodes.map((item,index) => {
                     this.state.arrTemuan.push(this.renderTemuan(item, index))
                 });
             }
         }
-        
+
         let dataBaris = Taskservices.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', this.state.data.ID_INSPECTION);
         let barisPembagi = dataBaris.length;
         let time = 0;
@@ -252,10 +252,10 @@ class HistoryInspeksiDetail extends React.Component {
             idx: 10,
             name : 'Losses Brondolan',
             value: ((jmlNilaiBrondolPiring+jmlNilaiBrondolTph)/jmlNilaiPokokPanen).toFixed(2)
-        }      
+        }
         if(data.value !== 'NaN'){
             listData.push(this.renderComponent(data));
-        }        
+        }
 
         data = {
             idx: 11,
@@ -264,7 +264,7 @@ class HistoryInspeksiDetail extends React.Component {
         }
         if(data.value !== 'NaN'){
             listData.push(this.renderComponent(data));
-        } 
+        }
 
         if (tipa.length > 0) {
             var jmlNilaiTipa = this.getTotalNilaiComponent(tipa);
@@ -511,7 +511,7 @@ class HistoryInspeksiDetail extends React.Component {
             }
             return (
                 <TouchableOpacity
-                    key={idx} 
+                    key={idx}
                     onPress={() => this.props.navigation.navigate('DetailFinding', { ID: dataTemuan.FINDING_CODE })}
                     style={styles.sectionCardView}>
                     {showImage}
@@ -530,7 +530,7 @@ class HistoryInspeksiDetail extends React.Component {
                         </View>
                     </View>
                 </TouchableOpacity>
-    
+
             )
         }
     }
@@ -579,11 +579,11 @@ class HistoryInspeksiDetail extends React.Component {
                             <Text style={styles.textContent}>{this.state.nilaiSarkul}</Text>
                         </View>
 
-                        {this.state.nilaiTph !== '-' && 
+                        {this.state.nilaiTph !== '-' &&
                         <View style={styles.sectionRow}>
                             <Text style={styles.textLabel}>TPH</Text>
                             <Text style={styles.textContent}>{this.state.nilaiTph}</Text>
-                        </View>}                        
+                        </View>}
 
                         <View style={styles.sectionRow}>
                             <Text style={styles.textLabel}>Gawangan</Text>

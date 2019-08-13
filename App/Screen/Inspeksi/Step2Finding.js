@@ -320,7 +320,7 @@ class Step2Finding extends Component {
         let barisInspectionData = TaskServices.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION);
         let tempFindingID = [];
         if (barisInspectionData !== "" && barisInspectionData !== null && barisInspectionData !== undefined) {
-            Object.values(barisInspectionData.TR_FINDING_CODES).map((data) => {
+            barisInspectionData.TR_FINDING_CODES.map((data) => {
                 tempFindingID.push(data)
             })
         }
