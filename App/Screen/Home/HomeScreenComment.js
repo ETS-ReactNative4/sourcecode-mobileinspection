@@ -50,7 +50,7 @@ export default class HomeScreenComment extends Component {
     }
 
     getListUser() {
-        let listUser = Object.values(TaskServices.getAllData("TR_CONTACT").sorted('FULLNAME', false));
+        let listUser = TaskServices.getAllData("TR_CONTACT").sorted('FULLNAME', false);
 
         if (listUser !== null) {
             this.setState({
@@ -60,7 +60,7 @@ export default class HomeScreenComment extends Component {
     }
 
     getComment() {
-        let commentData = Object.values(TaskServices.findBy("TR_FINDING_COMMENT", "FINDING_CODE", this.state.FINDING_CODE));
+        let commentData = TaskServices.findBy("TR_FINDING_COMMENT", "FINDING_CODE", this.state.FINDING_CODE);
         console.log(commentData);
         if (commentData !== null) {
             this.setState({
@@ -94,7 +94,6 @@ export default class HomeScreenComment extends Component {
             STATUS_SYNC: 'N',
             USERNAME: getUserName.FULLNAME
         };
-        console.log(tempComment);
         TaskServices.saveData('TR_FINDING_COMMENT', tempComment);
 
         this.setState({
@@ -326,7 +325,7 @@ export default class HomeScreenComment extends Component {
                     removeClippedSubviews={true}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({ item, index }) => {
-                        let finalMessage = this.processText(item.MESSAGE, Object.values(item.TAGS));
+                        let finalMessage = this.processText(item.MESSAGE, item.TAGS);
                         return (
                             <View
                                 style={{

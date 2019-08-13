@@ -44,17 +44,21 @@ export default class Inbox extends React.Component {
 
 	onClickItem(id) {
 		let notifData = TaskServices.findBy2('TR_NOTIFICATION', 'NOTIFICATION_ID', id);
-		TaskServices.updateByPrimaryKey('TR_NOTIFICATION', Object.assign({}, notifData, { NOTIFICATION_STATUS: 1 }));
+		notifData = {
+		    ...notifData,
+            NOTIFICATION_STATUS: 1
+        };
+		TaskServices.updateByPrimaryKey('TR_NOTIFICATION', notifData);
 		let notifCount = TaskServices.getAllData('TR_NOTIFICATION').filtered('NOTIFICATION_STATUS=0').length;
 		notifCount = (notifCount >= 100) ? "99+" : notifCount + "";
 		this.setState({ data: this.getNotif() });
 		this.props.navigation.setParams({ notifCount: notifCount })
         this.props.navigation.navigate('DetailFinding', { ID: notifData.FINDING_CODE })
-		// if (notifData.NOTIFICATION_TYPE == 6) {
-		// 	this.props.navigation.navigate("HomeScreenComment", { findingCode: notifData.FINDING_CODE })
-		// } else {
-		// 	this.props.navigation.navigate('DetailFinding', { ID: notifData.FINDING_CODE })
-		// }
+		if (notifData.NOTIFICATION_TYPE == 6) {
+			this.props.navigation.navigate("HomeScreenComment", { findingCode: notifData.FINDING_CODE })
+		} else {
+			this.props.navigation.navigate('DetailFinding', { ID: notifData.FINDING_CODE })
+		}
 	}
 	_renderItem = (item, index) => {
 		let title;
@@ -135,7 +139,9 @@ export default class Inbox extends React.Component {
 					width: '100%', flex: 1, flexDirection: 'row', backgroundColor: notifColor,
 					borderBottomColor: 'grey', borderBottomWidth: 2, paddingBottom: 10, paddingTop: 10
 				}}
-				onPress={() => { this.onClickItem(item.NOTIFICATION_ID) }}
+				onPress={() => {
+				    this.onClickItem(item.NOTIFICATION_ID)
+				}}
 				key={index}
 			>
 				<Image style={{ alignItems: 'stretch', alignSelf: 'center', resizeMode: 'contain', width: '15%', height: 40 }}
