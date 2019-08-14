@@ -1688,7 +1688,7 @@ class SyncScreen extends React.Component {
         if (data.hapus.length > 0 && allData.length > 0) {
             data.hapus.map(item => {
                 let newRating = item.RATING ? item.RATING[0] : null;
-                let newItem =  { ...item, STATUS_SYNC: 'Y', RATING: newRating };
+                let newItem = { ...item, STATUS_SYNC: 'Y', RATING: newRating };
                 this._updateTR_Notif(newItem);
                 this.deleteRecordByPK('TR_FINDING', 'FINDING_CODE', item.FINDING_CODE);
             });
@@ -1728,16 +1728,17 @@ class SyncScreen extends React.Component {
                 // }
             }
         }
-        else if (data.INSERT_USER == this.state.user.USER_AUTH_CODE) {
+        else if (data.INSERT_USER == this.state.user.USER_AUTH_CODE
+            && data.INSERT_USER != data.ASSIGN_TO) {
             //     if(data.PROGRESS < 100){
             //         newNotif.NOTIFICATION_TYPE = 1;
             //         TaskServices.saveData('TR_NOTIFICATION', newNotif);
             //     }
-            //     if (data.PROGRESS >= 100) {
-            //         //Progress sudah selesai
-            //         newNotif.NOTIFICATION_TYPE = 4;
-            //         TaskServices.saveData('TR_NOTIFICATION', newNotif);
-            //     }
+            if (data.PROGRESS >= 100) {
+                //Progress sudah selesai
+                newNotif.NOTIFICATION_TYPE = 4;
+                TaskServices.saveData('TR_NOTIFICATION', newNotif);
+            }
             //     else {
             //         //terjadi update pada finding yang user buat
             //         newNotif.NOTIFICATION_TYPE = 1;
