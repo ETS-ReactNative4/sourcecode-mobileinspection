@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, View, Text, TextInput, ScrollView, Image, BackHandler, StatusBar } from 'react-native';
+import { TouchableOpacity, View, Text, TextInput, ScrollView, BackHandler, StatusBar } from 'react-native';
 import Colors from '../../Constant/Colors'
 import {RNSlidingButton, SlideDirection} from 'rn-sliding-button';
-import Fonts from '../../Constant/Fonts'
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import Icon2 from 'react-native-vector-icons/FontAwesome';
-import Entypo from 'react-native-vector-icons/Entypo';
 import R from 'ramda';
 import TaskServices from '../../Database/TaskServices'
 import { getTodayDate } from '../../Lib/Utils'
-import { NavigationActions, StackActions  } from 'react-navigation';
 
 import ModalAlertConfirmation from '../../Component/ModalAlert';
 

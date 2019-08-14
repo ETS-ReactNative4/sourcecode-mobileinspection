@@ -197,7 +197,16 @@ class FotoJanjang extends Component {
   setParameter() {
     let dataLogin = TaskService.getAllData('TR_LOGIN')[0];
     var arrTph = this.state.tphAfdWerksBlockCode.split('-') //tph-afd-werks-blockcode
-    var ebccValCode = `V${dataLogin.USER_AUTH_CODE}${this.state.timestamp}${arrTph[0]}${arrTph[3]}`
+
+    //USER ROLE
+    let user_role = ""
+    if (dataLogin.USER_ROLE == 'FFB_GRADING_MILL') {
+      user_role = 'M'
+    } else {
+      user_role = 'V'
+    }
+
+    var ebccValCode = `${user_role}${dataLogin.USER_AUTH_CODE}${this.state.timestamp}${arrTph[0]}${arrTph[3]}`
     var alasan = '';
     if (this.state.reason !== '') {
       alasan = this.state.reason == 'RUSAK' ? '1' : '2'
