@@ -31,8 +31,8 @@ import { getIconProgress, getStatusImage, getColor, changeIconFilter, changeBgFi
 import IconHeader from '../../Component/IconHeader'
 import { getCategoryName, getEstateName, getStatusBlok, getBlokName } from '../../Database/Resources';
 
-var RNFS = require('react-native-fs');
-var { width } = Dimensions.get('window')
+import RNFS from 'react-native-fs'
+let { width } = Dimensions.get('window')
 
 class HomeScreen extends React.Component {
 
@@ -128,9 +128,8 @@ class HomeScreen extends React.Component {
   //Aminju
   addRecords = (page) => {
     // assuming this.state.dataPosts hold all the records
-    console.log('Page : ', page)
     const newRecords = []
-    for (var i = page * 5, il = i + 5; i < il && i <
+    for (let i = page * 5, il = i + 5; i < il && i <
       this.state.dataSet.length; i++) {
       newRecords.push(this.state.dataSet[i]);
     }
@@ -145,33 +144,46 @@ class HomeScreen extends React.Component {
     const ref_role = login[0].REFFERENCE_ROLE;
     let loc_code = login[0].LOCATION_CODE;
 
-    var finding = TaskServices.getAllData('TR_FINDING');
-    var findingSorted = finding.sorted('INSERT_TIME', true);
-    var findingFilter;
+    let finding = TaskServices.getAllData('TR_FINDING');
+    let findingSorted = finding.sorted('INSERT_TIME', true);
+    let findingFilter;
     if (this.extraFilter !== "") {
       this.extraFilter = " AND " + this.extraFilter;
     }
 
     if (ref_role == 'REGION_CODE') {
-      var estate = TaskServices.getAllData('TM_EST');
-      var estateFilter = estate.filtered(`REGION_CODE = "${loc_code}"`);
+      let estate = TaskServices.getAllData('TM_EST');
+      let estateFilter = estate.filtered(`REGION_CODE = "${loc_code}"`);
 
       if (estateFilter.length > 0) {
-        let wersArr = [];
+        let werksArr = [];
         estateFilter.map(item => {
-          const werksEst = item.WERKS
-          wersArr.push(werksEst);
+          const werksEst = item.WERKS;
+          werksArr.push(werksEst);
         });
 
-        var query = 'WERKS == ';
-        for (var i = 0; i < wersArr.length; i++) {
-          query += `"${wersArr[i]}"`;
-          if (i + 1 < wersArr.length) {
+        let query = 'WERKS == ';
+        for (let i = 0; i < werksArr.length; i++) {
+          query += `"${werksArr[i]}"`;
+          if (i + 1 < werksArr.length) {
             query += ` OR WERKS == `
           }
         }
-        findingFilter = findingSorted.filtered(`${query} ${this.extraFilter}`);
+
+        let finalData = [];
+        let tempFindingFilter = findingSorted.filtered(`${query} ${this.extraFilter}`);
+        tempFindingFilter.map((data)=>{
+            let stDate = Moment(data.INSERT_TIME).format('YYYYMMDDHHmmss');
+            if (!this.extraFilterTime.filter) {
+                finalData.push(data)
+            }
+            else if (stDate >= this.extraFilterTime.startTime && stDate <= this.extraFilterTime.endTime && this.extraFilterTime.filter) {
+                finalData.push(data)
+            }
+        });
+          findingFilter = finalData;
       } else {
+          console.log("##############################BAY");
         if (this.extraFilter !== "") {
           this.extraFilter = this.extraFilter.replace(" AND ", "");
           findingFilter = finding.sorted('INSERT_TIME', true).filtered(this.extraFilter);
@@ -181,9 +193,8 @@ class HomeScreen extends React.Component {
         }
       }
     } else if (ref_role == 'COMP_CODE') {
-      if (loc_code.includes(',')) {
-        let arr = []
-        let extraFilter = this.extraFilter
+        let arr = [];
+        let extraFilter = this.extraFilter;
         loc_code = loc_code.split(',')
         loc_code.map(item => {
           let das = findingSorted.filtered(`WERKS CONTAINS[c] "${item}" ${extraFilter}`);
@@ -194,20 +205,17 @@ class HomeScreen extends React.Component {
                 arr.push(item2)
               }
               else if (stDate >= this.extraFilterTime.startTime && stDate <= this.extraFilterTime.endTime && this.extraFilterTime.filter) {
+                  console.log("COMP_CODE:"+stDate, this.extraFilterTime.startTime, this.extraFilterTime.endTime);
                 arr.push(item2)
               }
             })
           }
-        })
+        });
         findingFilter = arr
-      } else {
-        findingFilter = findingSorted.filtered(`WERKS CONTAINS[c] "${loc_code}" ${this.extraFilter}`);
-      }
     } else if (ref_role == 'BA_CODE') {
-      if (loc_code.includes(',')) {
-        let arr = []
-        let extraFilter = this.extraFilter
-        loc_code = loc_code.split(',')
+        let arr = [];
+        let extraFilter = this.extraFilter;
+        loc_code = loc_code.split(',');
         loc_code.map(item => {
           let das = findingSorted.filtered(`WERKS = "${item}" ${extraFilter}`);
           if (das.length > 0) {
@@ -221,16 +229,12 @@ class HomeScreen extends React.Component {
               }
             })
           }
-        })
+        });
         findingFilter = arr
-      } else {
-        findingFilter = findingSorted.filtered(`WERKS = "${loc_code}" ${this.extraFilter}`);
-      }
     } else if (ref_role == 'AFD_CODE') {
-      if (loc_code.includes(',')) {
-        let arr = []
-        let extraFilter = this.extraFilter
-        loc_code = loc_code.split(',')
+        let arr = [];
+        let extraFilter = this.extraFilter;
+        loc_code = loc_code.split(',');
         loc_code.map(item => {
           const werks = item.substring(0, 4);
           const afd_code = item.substring(4, 5);
@@ -242,19 +246,13 @@ class HomeScreen extends React.Component {
                 arr.push(item2)
               }
               else if (stDate >= this.extraFilterTime.startTime && stDate <= this.extraFilterTime.endTime && this.extraFilterTime.filter) {
-                // console.log("curDate:"+stDate+"||start:"+this.extraFilterTime.startTime+"||end:"+this.extraFilterTime.endTime);
+                console.log("AFD_CODE:"+stDate, this.extraFilterTime.startTime, this.extraFilterTime.endTime);
                 arr.push(item2)
               }
             })
           }
-        })
+        });
         findingFilter = arr
-      } else {
-        const werks = loc_code.substring(0, 4);
-        const afd_code = loc_code.substring(4, 5);
-        findingFilter = findingSorted.filtered(`WERKS = "${werks}" AND AFD_CODE = "${afd_code}" ${this.extraFilter}`);
-      }
-
     } else {
       if (this.extraFilter !== "") {
         this.extraFilter = this.extraFilter.replace(" AND ", "");
@@ -324,23 +322,19 @@ class HomeScreen extends React.Component {
         stStatus = varStatus
       }
 
-      let stInsertTime;
       if (valBatasWaktu == 'Pilih Batas Waktu') {
-        stInsertTime = ' AND STATUS CONTAINS ' + `"${""}"`
         this.extraFilterTime = {
           startTime: null,
           endTime: null,
           filter: false
         }
       } else {
-        stInsertTime = varInsertTime
         this.extraFilterTime = {
           startTime: stBatasWaktu,
           endTime: endBatasWaktu,
           filter: true
         }
       }
-
       let data;
       if (ba == 'Pilih Lokasi' && afd == 'Pilih Afdeling' &&
         valAssignto == 'Pilih Pemberi Tugas' && status == 'Pilih Status' && valBatasWaktu == 'Pilih Batas Waktu') {
@@ -356,7 +350,6 @@ class HomeScreen extends React.Component {
           this.addRecords(0);
         });
       } else {
-        //bingung
         this.extraFilter = `AFD_CODE CONTAINS ""${stBa}${stAfd}${stUserAuth}${stStatus}`;
         data = this._filterHome();//.filtered(`AFD_CODE CONTAINS ""${stBa}${stAfd}${stUserAuth}${stStatus}${stInsertTime}`);
         if (data.length == 0) {
@@ -689,7 +682,7 @@ class HomeScreen extends React.Component {
   }
 
   onClickItem(id) {
-    var images = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', id);
+    let images = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', id);
     if (images !== undefined) {
       this.props.navigation.navigate('DetailFinding', { ID: id })
     } else {
@@ -722,7 +715,7 @@ class HomeScreen extends React.Component {
         .then((responseJson) => {
           if (responseJson.status) {
             if (responseJson.data.length > 0) {
-              for (var i = 0; i < responseJson.data.length; i++) {
+              for (let i = 0; i < responseJson.data.length; i++) {
                 let dataImage = responseJson.data[i];
                 TaskServices.saveData('TR_IMAGE', dataImage);
                 this._downloadImageFinding(dataImage)
@@ -741,7 +734,7 @@ class HomeScreen extends React.Component {
   async _downloadImageFinding(data) {
     let isExist = await RNFS.exists(`${dirPhotoTemuan}/${data.IMAGE_NAME}`)
     if (!isExist) {
-      var url = data.IMAGE_URL;
+      let url = data.IMAGE_URL;
       const { config, fs } = RNFetchBlob
       let options = {
         fileCache: true,

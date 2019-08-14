@@ -12,11 +12,6 @@ export default class NewPicker extends React.Component {
         header: null
     }
 
-    customButtonOnPress = () => {
-        console.log('customButton');
-        this.picker.onConfirm();
-    }
-
     constructor(props) {
         super(props);
 
@@ -28,11 +23,6 @@ export default class NewPicker extends React.Component {
     _onChooseDate() {
         AsyncStorage.getItem('range', (error, result) => {
             if (result) {
-                console.log(result);
-                let resultParsed = JSON.parse(result)
-                console.log(resultParsed.startDate);
-                console.log(resultParsed.endDate)
-
                 this.props.navigation.state.params.changeBatasWaktu(result);
                 this.props.navigation.goBack();
             }
