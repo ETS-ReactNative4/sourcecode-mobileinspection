@@ -49,8 +49,8 @@ class HomeScreen extends React.Component {
     },
     title: 'Beranda',
     headerTintColor: '#fff',
-    headerRight: <IconHeader padding={{ paddingRight: 12 }} onPress={() => navigation.navigate('Inbox')} icon={Images.ic_inbox} />,
-    headerLeft: <IconHeader padding={{ paddingLeft: 12 }} onPress={() => navigation.navigate('Sync')} icon={Images.ic_sync} />,
+    headerRight: <IconHeader padding={{ paddingRight: 12 }} onPress={() => navigation.navigate('Inbox')} icon={Images.ic_inbox} show={true} />,
+    headerLeft: <IconHeader padding={{ paddingLeft: 12 }} onPress={() => navigation.navigate('Sync')} icon={Images.ic_sync} show={true} />,
     header: props => <CustomHeader {...props} />
   });
 
@@ -172,18 +172,18 @@ class HomeScreen extends React.Component {
 
         let finalData = [];
         let tempFindingFilter = findingSorted.filtered(`${query} ${this.extraFilter}`);
-        tempFindingFilter.map((data)=>{
-            let stDate = Moment(data.INSERT_TIME).format('YYYYMMDDHHmmss');
-            if (!this.extraFilterTime.filter) {
-                finalData.push(data)
-            }
-            else if (stDate >= this.extraFilterTime.startTime && stDate <= this.extraFilterTime.endTime && this.extraFilterTime.filter) {
-                finalData.push(data)
-            }
+        tempFindingFilter.map((data) => {
+          let stDate = Moment(data.INSERT_TIME).format('YYYYMMDDHHmmss');
+          if (!this.extraFilterTime.filter) {
+            finalData.push(data)
+          }
+          else if (stDate >= this.extraFilterTime.startTime && stDate <= this.extraFilterTime.endTime && this.extraFilterTime.filter) {
+            finalData.push(data)
+          }
         });
-          findingFilter = finalData;
+        findingFilter = finalData;
       } else {
-          console.log("##############################BAY");
+        console.log("##############################BAY");
         if (this.extraFilter !== "") {
           this.extraFilter = this.extraFilter.replace(" AND ", "");
           findingFilter = finding.sorted('INSERT_TIME', true).filtered(this.extraFilter);
@@ -193,66 +193,66 @@ class HomeScreen extends React.Component {
         }
       }
     } else if (ref_role == 'COMP_CODE') {
-        let arr = [];
-        let extraFilter = this.extraFilter;
-        loc_code = loc_code.split(',')
-        loc_code.map(item => {
-          let das = findingSorted.filtered(`WERKS CONTAINS[c] "${item}" ${extraFilter}`);
-          if (das.length > 0) {
-            das.map(item2 => {
-              let stDate = Moment(item2.INSERT_TIME).format('YYYYMMDDHHmmss');
-              if (!this.extraFilterTime.filter) {
-                arr.push(item2)
-              }
-              else if (stDate >= this.extraFilterTime.startTime && stDate <= this.extraFilterTime.endTime && this.extraFilterTime.filter) {
-                  console.log("COMP_CODE:"+stDate, this.extraFilterTime.startTime, this.extraFilterTime.endTime);
-                arr.push(item2)
-              }
-            })
-          }
-        });
-        findingFilter = arr
+      let arr = [];
+      let extraFilter = this.extraFilter;
+      loc_code = loc_code.split(',')
+      loc_code.map(item => {
+        let das = findingSorted.filtered(`WERKS CONTAINS[c] "${item}" ${extraFilter}`);
+        if (das.length > 0) {
+          das.map(item2 => {
+            let stDate = Moment(item2.INSERT_TIME).format('YYYYMMDDHHmmss');
+            if (!this.extraFilterTime.filter) {
+              arr.push(item2)
+            }
+            else if (stDate >= this.extraFilterTime.startTime && stDate <= this.extraFilterTime.endTime && this.extraFilterTime.filter) {
+              console.log("COMP_CODE:" + stDate, this.extraFilterTime.startTime, this.extraFilterTime.endTime);
+              arr.push(item2)
+            }
+          })
+        }
+      });
+      findingFilter = arr
     } else if (ref_role == 'BA_CODE') {
-        let arr = [];
-        let extraFilter = this.extraFilter;
-        loc_code = loc_code.split(',');
-        loc_code.map(item => {
-          let das = findingSorted.filtered(`WERKS = "${item}" ${extraFilter}`);
-          if (das.length > 0) {
-            das.map(item2 => {
-              let stDate = Moment(item2.INSERT_TIME).format('YYYYMMDDHHmmss');
-              if (!this.extraFilterTime.filter) {
-                arr.push(item2)
-              }
-              else if (stDate >= this.extraFilterTime.startTime && stDate <= this.extraFilterTime.endTime && this.extraFilterTime.filter) {
-                arr.push(item2)
-              }
-            })
-          }
-        });
-        findingFilter = arr
+      let arr = [];
+      let extraFilter = this.extraFilter;
+      loc_code = loc_code.split(',');
+      loc_code.map(item => {
+        let das = findingSorted.filtered(`WERKS = "${item}" ${extraFilter}`);
+        if (das.length > 0) {
+          das.map(item2 => {
+            let stDate = Moment(item2.INSERT_TIME).format('YYYYMMDDHHmmss');
+            if (!this.extraFilterTime.filter) {
+              arr.push(item2)
+            }
+            else if (stDate >= this.extraFilterTime.startTime && stDate <= this.extraFilterTime.endTime && this.extraFilterTime.filter) {
+              arr.push(item2)
+            }
+          })
+        }
+      });
+      findingFilter = arr
     } else if (ref_role == 'AFD_CODE') {
-        let arr = [];
-        let extraFilter = this.extraFilter;
-        loc_code = loc_code.split(',');
-        loc_code.map(item => {
-          const werks = item.substring(0, 4);
-          const afd_code = item.substring(4, 5);
-          let das = findingSorted.filtered(`WERKS = "${werks}" AND AFD_CODE = "${afd_code}" ${extraFilter}`);
-          if (das.length > 0) {
-            das.map(item2 => {
-              let stDate = Moment(item2.INSERT_TIME).format('YYYYMMDDHHmmss');
-              if (!this.extraFilterTime.filter) {
-                arr.push(item2)
-              }
-              else if (stDate >= this.extraFilterTime.startTime && stDate <= this.extraFilterTime.endTime && this.extraFilterTime.filter) {
-                console.log("AFD_CODE:"+stDate, this.extraFilterTime.startTime, this.extraFilterTime.endTime);
-                arr.push(item2)
-              }
-            })
-          }
-        });
-        findingFilter = arr
+      let arr = [];
+      let extraFilter = this.extraFilter;
+      loc_code = loc_code.split(',');
+      loc_code.map(item => {
+        const werks = item.substring(0, 4);
+        const afd_code = item.substring(4, 5);
+        let das = findingSorted.filtered(`WERKS = "${werks}" AND AFD_CODE = "${afd_code}" ${extraFilter}`);
+        if (das.length > 0) {
+          das.map(item2 => {
+            let stDate = Moment(item2.INSERT_TIME).format('YYYYMMDDHHmmss');
+            if (!this.extraFilterTime.filter) {
+              arr.push(item2)
+            }
+            else if (stDate >= this.extraFilterTime.startTime && stDate <= this.extraFilterTime.endTime && this.extraFilterTime.filter) {
+              console.log("AFD_CODE:" + stDate, this.extraFilterTime.startTime, this.extraFilterTime.endTime);
+              arr.push(item2)
+            }
+          })
+        }
+      });
+      findingFilter = arr
     } else {
       if (this.extraFilter !== "") {
         this.extraFilter = this.extraFilter.replace(" AND ", "");

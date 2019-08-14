@@ -16,11 +16,11 @@ import { RNCamera as Camera } from 'react-native-camera';
 import { getTodayDate } from '../../Lib/Utils'
 import ImageResizer from 'react-native-image-resizer';
 import { dirPhotoEbccSelfie } from '../../Lib/dirStorage'
-import TaskService from '../../Database/TaskServices'
 import R from 'ramda';
 import moment from 'moment'
 import ModalAlertBack from '../../Component/ModalAlert';
 import { NavigationActions, StackActions } from 'react-navigation';
+import TaskServices from '../../Database/TaskServices';
 
 var RNFS = require('react-native-fs');
 const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
@@ -123,7 +123,7 @@ class FotoSelfieEbcc extends Component {
   }
 
   setParameter() {
-    let dataLogin = TaskService.getAllData('TR_LOGIN')[0];
+    let dataLogin = TaskServices.getAllData('TR_LOGIN')[0];
     var imgCode = `VP${dataLogin.USER_AUTH_CODE}${this.state.timestamp}`;
     var imageName = imgCode + '.jpg';
     var image = {
@@ -201,19 +201,19 @@ class FotoSelfieEbcc extends Component {
     if (isImageContain) {
 
       //insert TR_H_EBCC_VALIDATION
-      TaskService.saveData('TR_H_EBCC_VALIDATION', this.state.dataHeader);
+      TaskServices.saveData('TR_H_EBCC_VALIDATION', this.state.dataHeader);
 
       // insert TR_D_EBCC_VALIDATION
       if (this.state.kriteriaBuah !== null) {
         this.state.kriteriaBuah.map(item => {
           let newItem = { ...item, JUMLAH: parseInt(item.JUMLAH) }
-          TaskService.saveData('TR_D_EBCC_VALIDATION', newItem);
+          TaskServices.saveData('TR_D_EBCC_VALIDATION', newItem);
         })
       }
 
       //insert TR_IMAGE
-      TaskService.saveData('TR_IMAGE', this.state.fotoJanjang);
-      TaskService.saveData('TR_IMAGE', this.state.dataModel);
+      TaskServices.saveData('TR_IMAGE', this.state.fotoJanjang);
+      TaskServices.saveData('TR_IMAGE', this.state.dataModel);
 
       this.setState({ showModalBack: true, title: 'Berhasil Disimpan', message: 'Yeaay! Data kamu berhasil disimpan', icon: require('../../Images/ic-save-berhasil.png') });
     } else {
@@ -223,11 +223,19 @@ class FotoSelfieEbcc extends Component {
 
   selesai = () => {
     const navigation = this.props.navigation;
-    let routeName = 'MainMenu';
-    Promise.all([navigation.dispatch(NavigationActions.navigate({ routeName: routeName }))]).
-      then(() => navigation.navigate('EbccValidation')).then(() => navigation.navigate('Riwayat'));
-    this.setState({ showModalBack: false })
-    // this.props.screenProps.rootNavigation.navigate('MainMenu')
+    let data = TaskServices.getAllData('TR_LOGIN')
+    if (data != undefined) {
+      let routeName = ''
+      if (data[0].USER_ROLE == 'FFB_GRADING_MILL') {
+        routeName = 'MainMenuMil'
+      } else {
+        routeName = 'MainMenu';
+      }
+      console.log('Route Name : ', routeName)
+      Promise.all([navigation.dispatch(NavigationActions.navigate({ routeName: routeName }))]).
+        then(() => navigation.navigate('EbccValidation')).then(() => navigation.navigate('Riwayat'));
+      this.setState({ showModalBack: false })
+    }
   }
 
   renderImage() {

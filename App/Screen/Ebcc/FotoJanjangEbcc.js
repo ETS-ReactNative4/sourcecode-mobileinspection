@@ -1,14 +1,14 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
-    StyleSheet,
-    TouchableOpacity,
-    View,
-    Image,
-    Platform,
-    Dimensions,
-    StatusBar,
-    BackHandler
-  } from 'react-native';
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Image,
+  Platform,
+  Dimensions,
+  StatusBar,
+  BackHandler
+} from 'react-native';
 import Colors from '../../Constant/Colors';
 import imgTakePhoto from '../../Images/icon/ic_take_photo.png';
 import imgNextPhoto from '../../Images/icon/ic_next_photo.png';
@@ -57,8 +57,8 @@ class FotoJanjang extends Component {
         fontWeight: '400'
       },
       headerLeft: (
-        <TouchableOpacity onPress={() => {params.handleBackButtonClick()}}>
-            <Icon2 style={{marginLeft: 12}} name={'ios-arrow-round-back'} size={45} color={'white'} />
+        <TouchableOpacity onPress={() => { params.handleBackButtonClick() }}>
+          <Icon2 style={{ marginLeft: 12 }} name={'ios-arrow-round-back'} size={45} color={'white'} />
         </TouchableOpacity>
       )
     };
@@ -87,7 +87,7 @@ class FotoJanjang extends Component {
       statusScan,
       latitude: 0.0,
       longitude: 0.0,
-	  track:true,
+      track: true,
       title: 'Title',
       message: 'Message',
       showModal: false,
@@ -96,7 +96,7 @@ class FotoJanjang extends Component {
     };
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.setParamImage()
     this.getLocation()
     this.props.navigation.setParams({ handleBackButtonClick: this.handleBackButtonClick })
@@ -104,76 +104,76 @@ class FotoJanjang extends Component {
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     // BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
     BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
   }
 
   handleBackButtonClick() {
     this.setState({
-        showModal: true, title: 'Data Hilang',
-        message: 'Datamu belum tersimpan loh. Yakin mau dilanjutin?',
-        icon: require('../../Images/ic-not-save.png')
+      showModal: true, title: 'Data Hilang',
+      message: 'Datamu belum tersimpan loh. Yakin mau dilanjutin?',
+      icon: require('../../Images/ic-not-save.png')
     });
     return true;
   }
 
-  backAndDeletePhoto(){
-    if(this.state.hasPhoto){
+  backAndDeletePhoto() {
+    if (this.state.hasPhoto) {
       this.deleteFoto()
     }
     const navigation = this.props.navigation;
     let routeName = 'MainMenu';
-    this.setState({showModal: false})
+    this.setState({ showModal: false })
     BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
 
     Promise.all([
-        navigation.dispatch(
-            StackActions.reset({
-                index:0,
-                actions:[NavigationActions.navigate({ routeName : routeName})]
-            })
-        )]).then(() => navigation.navigate('EbccValidation')).then(() => navigation.navigate('DaftarEbcc'))
+      navigation.dispatch(
+        StackActions.reset({
+          index: 0,
+          actions: [NavigationActions.navigate({ routeName: routeName })]
+        })
+      )]).then(() => navigation.navigate('EbccValidation')).then(() => navigation.navigate('DaftarEbcc'))
 
     // Promise.all([navigation.dispatch(NavigationActions.navigate({ routeName : routeName}))]).
     //   then(() => navigation.navigate('EbccValidation')).then(() => navigation.navigate('DaftarEbcc'));
   }
 
   getLocation() {
-	this.setParameter();
-    /*navigator.geolocation.getCurrentPosition(
-        (position) => {
-            var lat = parseFloat(position.coords.latitude);
-            var lon = parseFloat(position.coords.longitude);
-            this.setState({latitude: lat, longitude: lon});
+    this.setParameter();
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        var lat = parseFloat(position.coords.latitude);
+        var lon = parseFloat(position.coords.longitude);
+        this.setState({ latitude: lat, longitude: lon });
 
-        },
-        (error) => {
-            // this.setState({ error: error.message, fetchingLocation: false })
-            let message = error && error.message ? error.message : 'Terjadi kesalahan ketika mencari lokasi anda !';
-            if (error && error.message == "No location provider available.") {
-                message = "Mohon nyalakan GPS anda terlebih dahulu.";
-            }
-            this.setState({
-              showModal2: true, title: 'Lokasi GPS',
-              message: 'Kamu belum bisa lanjut sebelum lokasi GPS kamu belum ditemukan, lanjut cari lokasi?',
-              icon: require('../../Images/ic-no-gps.png')
-          });
-        }, // go here if error while fetch location
-        { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
-    );*/
+      },
+      (error) => {
+        // this.setState({ error: error.message, fetchingLocation: false })
+        let message = error && error.message ? error.message : 'Terjadi kesalahan ketika mencari lokasi anda !';
+        if (error && error.message == "No location provider available.") {
+          message = "Mohon nyalakan GPS anda terlebih dahulu.";
+        }
+        this.setState({
+          showModal2: true, title: 'Lokasi GPS',
+          message: 'Kamu belum bisa lanjut sebelum lokasi GPS kamu belum ditemukan, lanjut cari lokasi?',
+          icon: require('../../Images/ic-no-gps.png')
+        });
+      }, // go here if error while fetch location
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
+    );
   }
 
-  deleteFoto(){
+  deleteFoto() {
     RNFS.unlink(`${FILE_PREFIX}${dirPhotoEbccJanjang}/${this.state.dataModel.IMAGE_NAME}`)
-    .then(() => {
-      console.log(`FILE ${this.state.dataModel.IMAGE_NAME} DELETED`);
-    });
+      .then(() => {
+        console.log(`FILE ${this.state.dataModel.IMAGE_NAME} DELETED`);
+      });
     RNFS.unlink(this.state.path)
     this.setState({ path: null, hasPhoto: false });
   }
 
-  setParamImage(){
+  setParamImage() {
     let dataLogin = TaskService.getAllData('TR_LOGIN')[0];
     var imgCode = `VP${dataLogin.USER_AUTH_CODE}${this.state.timestamp}`;
     var imageName = imgCode + '.jpg';
@@ -199,8 +199,8 @@ class FotoJanjang extends Component {
     var arrTph = this.state.tphAfdWerksBlockCode.split('-') //tph-afd-werks-blockcode
     var ebccValCode = `V${dataLogin.USER_AUTH_CODE}${this.state.timestamp}${arrTph[0]}${arrTph[3]}`
     var alasan = '';
-    if(this.state.reason !== ''){
-      alasan = this.state.reason == 'RUSAK' ? '1':'2'
+    if (this.state.reason !== '') {
+      alasan = this.state.reason == 'RUSAK' ? '1' : '2'
     }
     var header = {
       EBCC_VALIDATION_CODE: ebccValCode,
@@ -211,7 +211,7 @@ class FotoJanjang extends Component {
       STATUS_TPH_SCAN: this.state.statusScan, //manual dan automatics
       ALASAN_MANUAL: alasan,//1 rusak, 2 hilang
       LAT_TPH: this.state.latitude.toString(),
-      LON_TPH: this.state.longitude.toString()  ,
+      LON_TPH: this.state.longitude.toString(),
       DELIVERY_CODE: '',
       STATUS_DELIVERY_CODE: '',
       TOTAL_JANJANG: '0',
@@ -226,9 +226,9 @@ class FotoJanjang extends Component {
 
   takePicture = async () => {
     try {
-      if(this.state.hasPhoto){
+      if (this.state.hasPhoto) {
         this.insertDB();
-      }else{
+      } else {
         const takeCameraOptions = {
           // quality : 0.5,  //just in case want to reduce the quality too
           skipProcessing: false,
@@ -277,25 +277,25 @@ class FotoJanjang extends Component {
   }
 
   async insertDB() {
-    if(this.state.dataHeader !== null && this.state.dataHeader.LAT_TPH != 0 && this.state.dataHeader.LON_TPH !=0 ){
+    if (this.state.dataHeader !== null && this.state.dataHeader.LAT_TPH != 0 && this.state.dataHeader.LON_TPH != 0) {
       RNFS.unlink(this.state.pathCache);
       let isImageContain = await RNFS.exists(`file://${dirPhotoEbccJanjang}/${this.state.dataModel.IMAGE_NAME}`);
-      if(isImageContain){
+      if (isImageContain) {
         this.props.navigation.navigate('KriteriaBuah',
-        {
+          {
             fotoJanjang: this.state.dataModel,
             tphAfdWerksBlockCode: this.state.tphAfdWerksBlockCode,
             ebccValCode: this.state.ebccValCode,
             dataHeader: this.state.dataHeader
-        });
-      }else{
+          });
+      } else {
         this.setState({
           showModal: true, title: 'GAGAL',
           message: 'Kamu gagal untuk menyimpan gambar, coba ulangin lagi',
           icon: require('../../Images/ic-not-save.png')
         });
       }
-    }else{
+    } else {
       this.setState({
         showModal2: true, title: 'Lokasi GPS',
         message: 'Kamu belum bisa lanjut sebelum lokasi GPS kamu belum ditemukan, lanjut cari lokasi?',
@@ -330,77 +330,78 @@ class FotoJanjang extends Component {
     return (
       <View style={styles.container}>
         <StatusBar
-            hidden={false}
-            barStyle="light-content"
-            backgroundColor={Colors.tintColorPrimary}
+          hidden={false}
+          barStyle="light-content"
+          backgroundColor={Colors.tintColorPrimary}
         />
-		<MapView
-		  ref={ref => this.map = ref}
-		  style={styles.map}
-		  provider="google"
+        <MapView
+          ref={ref => this.map = ref}
+          style={styles.map}
+          provider="google"
           initialRegion={this.state.region}
-		  region={this.state.region}
-		  liteMode={true}
-		  showsUserLocation={true}
-		  showsMyLocationButton={false}
-		  showsPointsOfInterest={false}
-		  showsCompass={false}
-		  showsScale={false}
-		  showsBuildings={false}
-		  showsTraffic={false}
-		  showsIndoors={false}
-		  zoomEnabled={false}
-		  scrollEnabled={false}
-		  pitchEnabled={false}
-		  toolbarEnabled={false}
-		  moveOnMarkerPress={false}
-		  zoomControlEnabled={false}
-		  minZoomLevel={10}
-		  onUserLocationChange={event => {
-			if(this.state.track){
-				let lat = event.nativeEvent.coordinate.latitude;
-				let lon = event.nativeEvent.coordinate.longitude;
-				this.setState({
-					track:false,
-					latitude:lat,
-					longitude:lon,
-					region : {
-						latitude: lat,
-						longitude: lon,
-						latitudeDelta:0.0075,
-						longitudeDelta:0.00721
-					}});
-				this.setParameter();
-				setTimeout(()=>{
-					this.setState({track:true})
-				},5000);
-			}
-		  }}
-		>
-		</MapView >
+          region={this.state.region}
+          liteMode={true}
+          showsUserLocation={true}
+          showsMyLocationButton={false}
+          showsPointsOfInterest={false}
+          showsCompass={false}
+          showsScale={false}
+          showsBuildings={false}
+          showsTraffic={false}
+          showsIndoors={false}
+          zoomEnabled={false}
+          scrollEnabled={false}
+          pitchEnabled={false}
+          toolbarEnabled={false}
+          moveOnMarkerPress={false}
+          zoomControlEnabled={false}
+          minZoomLevel={10}
+          onUserLocationChange={event => {
+            if (this.state.track) {
+              let lat = event.nativeEvent.coordinate.latitude;
+              let lon = event.nativeEvent.coordinate.longitude;
+              this.setState({
+                track: false,
+                latitude: lat,
+                longitude: lon,
+                region: {
+                  latitude: lat,
+                  longitude: lon,
+                  latitudeDelta: 0.0075,
+                  longitudeDelta: 0.00721
+                }
+              });
+              this.setParameter();
+              setTimeout(() => {
+                this.setState({ track: true })
+              }, 5000);
+            }
+          }}
+        >
+        </MapView >
         <ModalAlert
-            icon={this.state.icon}
-            visible={this.state.showModal2}
-            onPressCancel={() => {this.getLocation(); this.setState({ showModal2: false })}}
-            title={this.state.title}
-            message={this.state.message}
+          icon={this.state.icon}
+          visible={this.state.showModal2}
+          onPressCancel={() => { this.getLocation(); this.setState({ showModal2: false }) }}
+          title={this.state.title}
+          message={this.state.message}
         />
         <ModalAlertConfirmation
-            icon={this.state.icon}
-            visible={this.state.showModal}
-            onPressCancel={() => this.setState({ showModal: false })}
-            onPressSubmit={() => {this.backAndDeletePhoto(); this.setState({ showModal: false })}}
-            title={this.state.title}
-            message={this.state.message}
+          icon={this.state.icon}
+          visible={this.state.showModal}
+          onPressCancel={() => this.setState({ showModal: false })}
+          onPressSubmit={() => { this.backAndDeletePhoto(); this.setState({ showModal: false }) }}
+          title={this.state.title}
+          message={this.state.message}
         />
         <View style={{ flex: 2 }}>
           {this.state.path ? this.renderImage() : this.renderCamera()}
         </View>
         <View style={{ flex: 0.5, alignItems: 'center', justifyContent: 'center' }}>
           {this.state.dataModel !== null &&
-          <TouchableOpacity style={[styles.takePicture, { marginTop: 15 }]} onPress={this.takePicture.bind(this)}>
-            {this.renderIcon()}
-          </TouchableOpacity>}
+            <TouchableOpacity style={[styles.takePicture, { marginTop: 15 }]} onPress={this.takePicture.bind(this)}>
+              {this.renderIcon()}
+            </TouchableOpacity>}
         </View>
       </View>
     );
@@ -411,10 +412,10 @@ export default FotoJanjang;
 
 const styles = StyleSheet.create({
   map: {
-	...StyleSheet.absoluteFillObject,
-	zIndex:100,
-	height:0.1,
-	top:0
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 100,
+    height: 0.1,
+    top: 0
   },
   container: {
     flex: 1,

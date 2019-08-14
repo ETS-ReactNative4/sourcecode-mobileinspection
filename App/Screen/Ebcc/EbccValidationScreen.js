@@ -3,6 +3,9 @@ import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import EbccTabNavigator from './EbccTabNavigator'
 import Colors from '../../Constant/Colors'
 import CustomHeader from '../../Component/CustomHeader'
+import IconHeader from '../../Component/IconHeader'
+import TaskServices from '../../Database/TaskServices'
+import { Images } from '../../Themes'
 
 export default class EbccValidationScreen extends Component {
   static router = EbccTabNavigator.router;
@@ -20,22 +23,26 @@ export default class EbccValidationScreen extends Component {
     },
     title: 'Sampling EBCC',
     headerTintColor: '#fff',
-    headerRight: (
-      <TouchableOpacity onPress={() => navigation.navigate('Inbox')}>
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingRight: 12 }}>
-          <Image style={{ width: 28, height: 28 }} source={require('../../Images/icon/ic_inbox.png')} />
-        </View>
-      </TouchableOpacity>
-    ),
-    headerLeft: (
-      <TouchableOpacity onPress={() => navigation.navigate('Sync')}>
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingLeft: 12 }}>
-          <Image style={{ width: 28, height: 28 }} source={require('../../Images/icon/ic_sync.png')} />
-        </View>
-      </TouchableOpacity>
-    ),
-	header: props => <CustomHeader {...props} />
+    headerRight: <IconHeader padding={{ paddingRight: 12 }} onPress={() => navigation.navigate('Inbox')} icon={Images.ic_inbox} show={navigation.getParam('inboxParam', true)} />,
+    headerLeft: <IconHeader padding={{ paddingLeft: 12 }} onPress={() => navigation.navigate('Sync')} icon={Images.ic_sync} show={true} />,
+    header: props => <CustomHeader {...props} />
   });
+
+  componentDidMount() {
+    this.props.navigation.setParams({ inboxParam: this.setInboxValue() });
+    console.log(this.setInboxValue())
+  }
+
+  setInboxValue() {
+    const data = TaskServices.getAllData('TR_LOGIN')
+    if (data != undefined) {
+      if (data[0].USER_ROLE == 'FFB_GRADING_MILL') {
+        return false
+      } else {
+        return true
+      }
+    }
+  }
 
   render() {
     return (

@@ -20,7 +20,7 @@ class Login extends Component {
 
     constructor(props) {
         super(props);
-		this.serverNameIndex = 1;
+        this.serverNameIndex = 1;
         this.state = {
             fetching: false,
             user_id: '',
@@ -61,7 +61,7 @@ class Login extends Component {
         TaskServices.saveData('TR_LOGIN', data);
     }
 
-	insertLink(param){
+    insertLink(param) {
         fetch(ServerName[this.serverNameIndex].service, {
             method: 'GET',
             headers: {
@@ -71,29 +71,29 @@ class Login extends Component {
                 'Authorization': `Bearer ${param.ACCESS_TOKEN}`
             }
         })
-		.then((response) => {
-			return response.json();
-		})
-		.then((data) => {
-			if(data.status){
-				TaskServices.deleteAllData('TM_SERVICE');
-				let index = 0;
-				for(let i in data.data){
-					let newService = {
-						SERVICE_ID: parseInt(i),
-						MOBILE_VERSION:data.data[i].MOBILE_VERSION,
-						API_NAME: data.data[i].API_NAME,
-						KETERANGAN: data.data[i].KETERANGAN,
-						METHOD: data.data[i].METHOD,
-						API_URL: data.data[i].API_URL
-					}
-					TaskServices.saveData('TM_SERVICE', newService);
-					index++;
-				}
-				this.checkUser(param);
-			}
-		});
-	}
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                if (data.status) {
+                    TaskServices.deleteAllData('TM_SERVICE');
+                    let index = 0;
+                    for (let i in data.data) {
+                        let newService = {
+                            SERVICE_ID: parseInt(i),
+                            MOBILE_VERSION: data.data[i].MOBILE_VERSION,
+                            API_NAME: data.data[i].API_NAME,
+                            KETERANGAN: data.data[i].KETERANGAN,
+                            METHOD: data.data[i].METHOD,
+                            API_URL: data.data[i].API_URL
+                        }
+                        TaskServices.saveData('TM_SERVICE', newService);
+                        index++;
+                    }
+                    this.checkUser(param);
+                }
+            });
+    }
 
     componentDidMount() {
         const { navigation } = this.props;
@@ -109,7 +109,12 @@ class Login extends Component {
             } else {
                 TaskServices.deleteAllData('TR_LOGIN');
                 this.insertUser(param);
-                this.navigateScreen('MainMenu');
+
+                if (data.USER_ROLE != "FFB_GRADING_MILL") {
+                    this.navigateScreen('MainMenu')
+                } else {
+                    this.navigateScreen('MainMenuMil')
+                }
             }
         } else {
             this.resetMobileSync(param, param.ACCESS_TOKEN)
@@ -117,30 +122,30 @@ class Login extends Component {
     }
 
     resetMobileSync(param, token) {
-		let serviceReset = TaskServices.getAllData('TM_SERVICE')
-							.filtered('API_NAME="AUTH-SYNC-RESET" AND MOBILE_VERSION="'+ServerName.verAPK+'"');
-		if(serviceReset.length>0){
-			serviceReset = serviceReset[0];
-			fetch(serviceReset.API_URL, {
-				method: serviceReset.METHOD,
-				headers: {
-					'Cache-Control': 'no-cache',
-					'Accept': 'application/json',
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${token}`
-				},
-				body: JSON.stringify({ "RESET_SYNC": 1 })
-			})
-            .then((response) => {
-                return response.json();
+        let serviceReset = TaskServices.getAllData('TM_SERVICE')
+            .filtered('API_NAME="AUTH-SYNC-RESET" AND MOBILE_VERSION="' + ServerName.verAPK + '"');
+        if (serviceReset.length > 0) {
+            serviceReset = serviceReset[0];
+            fetch(serviceReset.API_URL, {
+                method: serviceReset.METHOD,
+                headers: {
+                    'Cache-Control': 'no-cache',
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ "RESET_SYNC": 1 })
             })
-            .then((data) => {
-                this.deleteAllTableAndFolder(param)
-            })
-			.catch((err) => {
-                                console.log("error AUTH-SYNC-RESET",err.message);
-                            });
-		}
+                .then((response) => {
+                    return response.json();
+                })
+                .then((data) => {
+                    this.deleteAllTableAndFolder(param)
+                })
+                .catch((err) => {
+                    console.log("error AUTH-SYNC-RESET", err.message);
+                });
+        }
     }
 
     deleteAllTableAndFolder(param) {
@@ -180,7 +185,11 @@ class Login extends Component {
 
 
         this.insertUser(param);
-        this.navigateScreen('MainMenu');
+        if (param.USER_ROLE != "FFB_GRADING_MILL") {
+            this.navigateScreen('MainMenu')
+        } else {
+            this.navigateScreen('MainMenuMil')
+        }
     }
 
     navigateScreen(screenName) {
@@ -192,7 +201,7 @@ class Login extends Component {
         navigation.dispatch(resetAction);
     }
 
-    onLogin(username, password, choosenServer){
+    onLogin(username, password, choosenServer) {
         Keyboard.dismiss();
         var imei = this.get_IMEI_Number();
         this.setState({ fetching: true });
@@ -209,8 +218,8 @@ class Login extends Component {
     }
 
     postLogin(username, password, choosenServer, imei) {
-		this.serverNameIndex = choosenServer;
-        fetch(ServerName[this.serverNameIndex].data+'auth/login', {
+        this.serverNameIndex = choosenServer;
+        fetch(ServerName[this.serverNameIndex].data + 'auth/login', {
             method: 'POST',
             headers: {
                 'Cache-Control': 'no-cache',
@@ -219,21 +228,21 @@ class Login extends Component {
             },
             body: JSON.stringify({ username, password, imei })
         })
-        .then((response) => {
-            return response.json();
-        })
-        .then((data) => {
-            this.setState({ fetching: false });
-            if (data.status == true) {
-                this.insertLink(data.data)
-            } else {
-                if (data.message == 'Request Timeout') {
-                    this.setState(AlertContent.proses_lambat)
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                this.setState({ fetching: false });
+                if (data.status == true) {
+                    this.insertLink(data.data)
                 } else {
-                    this.setState(AlertContent.email_pass_salah)
+                    if (data.message == 'Request Timeout') {
+                        this.setState(AlertContent.proses_lambat)
+                    } else {
+                        this.setState(AlertContent.email_pass_salah)
+                    }
                 }
-            }
-        });
+            });
     }
 
     //Add By Aminju 20/01/2019 15:45
@@ -272,7 +281,7 @@ class Login extends Component {
                         {/* <Logo/> */}
 
                         <Form
-                            onBtnClick={data => {this.onLogin(data.strEmail, data.strPassword, data.selectedServer) }} />
+                            onBtnClick={data => { this.onLogin(data.strEmail, data.strPassword, data.selectedServer) }} />
 
                         <View style={styles.footerView}>
                             <Text style={styles.footerText}>{'\u00A9'} 2018 Copyrights PT Triputra Agro Persada</Text>
@@ -339,7 +348,7 @@ const styles = StyleSheet.create({
     footerText: {
         color: '#51a977',
         fontSize: 12,
-        textAlign : 'center'
+        textAlign: 'center'
     },
 });
 

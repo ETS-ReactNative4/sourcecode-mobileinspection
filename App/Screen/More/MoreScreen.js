@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import { View, StyleSheet, Image, TouchableOpacity, Text, ScrollView, Alert, NetInfo } from 'react-native';
 import { Thumbnail } from 'native-base';
 import Colors from '../../Constant/Colors';
-import Icon from 'react-native-vector-icons/Ionicons';
 import Icon2 from 'react-native-vector-icons/AntDesign'
-import CardView from 'react-native-cardview';
 import TaskServices from '../../Database/TaskServices'
 import { NavigationActions, StackActions } from 'react-navigation';
 import ModalConfirmation from '../../Component/ModalAlertConfirmation'
@@ -12,8 +10,9 @@ import ModalAlert from '../../Component/ModalAlert'
 import ServerName from '../../Constant/ServerName';
 import DeviceInfo from 'react-native-device-info';
 import CustomHeader from '../../Component/CustomHeader'
+import IconHeader from '../../Component/IconHeader'
 import { getPhoto, getThumnail } from '../../Lib/Utils';
-import RNFS from 'react-native-fs';
+import { Images } from '../../Themes'
 
 export default class MoreScreen extends Component {
 
@@ -30,20 +29,8 @@ export default class MoreScreen extends Component {
     },
     title: 'Lainnya',
     headerTintColor: '#fff',
-    headerRight: (
-      <TouchableOpacity onPress={() => navigation.navigate('Inbox')}>
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingRight: 12 }}>
-          <Image style={{ width: 28, height: 28 }} source={require('../../Images/icon/ic_inbox.png')} />
-        </View>
-      </TouchableOpacity>
-    ),
-    headerLeft: (
-      <TouchableOpacity onPress={() => navigation.navigate('Sync')}>
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingLeft: 12 }}>
-          <Image style={{ width: 28, height: 28 }} source={require('../../Images/icon/ic_sync.png')} />
-        </View>
-      </TouchableOpacity>
-    ),
+    headerRight: <IconHeader padding={{ paddingRight: 12 }} onPress={() => navigation.navigate('Inbox')} icon={Images.ic_inbox} show={navigation.getParam('inboxParam', true)} />,
+    headerLeft: <IconHeader padding={{ paddingLeft: 12 }} onPress={() => navigation.navigate('Sync')} icon={Images.ic_sync} show={true} />,
     header: props => <CustomHeader {...props} />
   });
 
@@ -78,7 +65,19 @@ export default class MoreScreen extends Component {
     this.willFocus.remove()
   }
 
+  setInboxValue() {
+    const data = TaskServices.getAllData('TR_LOGIN')
+    if (data != undefined) {
+      if (data[0].USER_ROLE == 'FFB_GRADING_MILL') {
+        return false
+      } else {
+        return true
+      }
+    }
+  }
+
   componentDidMount() {
+    this.props.navigation.setParams({ inboxParam: this.setInboxValue() });
     let getPath = TaskServices.findBy2("TR_IMAGE_PROFILE", "USER_AUTH_CODE", this.state.user.USER_AUTH_CODE);
     let pathPhoto = getPhoto(typeof getPath === 'undefined' ? null : getPath.IMAGE_PATH_LOCAL);
     this.setState({
@@ -90,7 +89,7 @@ export default class MoreScreen extends Component {
     let dataUser = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', this.state.user.USER_AUTH_CODE);
     if (dataUser !== undefined) {
       let name = dataUser.FULLNAME;
-        let jabatan = dataUser.USER_ROLE.replace(/_/g," ");
+      let jabatan = dataUser.USER_ROLE.replace(/_/g, " ");
       let estate = TaskServices.getEstateName();
       this.setState({ name, jabatan, estate })
     }

@@ -6,12 +6,13 @@ import Colors from '../../Constant/Colors'
 import InspectionTabNavigator from './InspectionTabNavigator'
 import { connect } from 'react-redux';
 import InspeksiAction from '../../Redux/InspeksiRedux';
-import TaskServices from '../../Database/TaskServices';
+import IconHeader from '../../Component/IconHeader'
+import { Images } from '../../Themes'
 
 
 class InspectionScreen extends Component {
-  
-  constructor(props){
+
+  constructor(props) {
     super(props);
     // this.loadData = this.loadData.bind(this);
     this.state = {
@@ -23,8 +24,8 @@ class InspectionScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
     return {
-      title: 'Inspeksi',  
-      headerTintColor: '#fff',    
+      title: 'Inspeksi',
+      headerTintColor: '#fff',
       headerStyle: {
         backgroundColor: Colors.tintColorPrimary
       },
@@ -35,29 +36,13 @@ class InspectionScreen extends Component {
         fontWeight: '400',
         marginHorizontal: 12
       },
-
-      headerLeft: (
-        <TouchableOpacity onPress={()=>{
-          navigation.navigate('Sync')
-        }}>
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingLeft: 12 }}>
-            <Image style={{ width: 28, height: 28 }} source={require('../../Images/icon/ic_sync.png')} />
-          </View>
-        </TouchableOpacity>
-      ),
-
-      headerRight: (
-        <TouchableOpacity onPress={() => navigation.navigate('Inbox')}>
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingRight: 12 }}>
-            <Image style={{ width: 28, height: 28 }} source={require('../../Images/icon/ic_inbox.png')} />
-          </View>
-        </TouchableOpacity>
-      ),
-		header: props => <CustomHeader {...props} />
+      headerRight: <IconHeader padding={{ paddingRight: 12 }} onPress={() => navigation.navigate('Inbox')} icon={Images.ic_inbox} show={true} />,
+      headerLeft: <IconHeader padding={{ paddingLeft: 12 }} onPress={() => navigation.navigate('Sync')} icon={Images.ic_sync} show={true} />,
+      header: props => <CustomHeader {...props} />
     };
   }
 
-  inbox(){
+  inbox() {
 
   }
 
@@ -131,16 +116,16 @@ class InspectionScreen extends Component {
 }
 
 const mapStateToProps = state => {
-	return {
-		inspeksi: state.inspeksi
-	};
+  return {
+    inspeksi: state.inspeksi
+  };
 };
 
 const mapDispatchToProps = dispatch => {
-	return {
-		postInspeksi: obj => dispatch(InspeksiAction.postInspeksi(obj)),
-		postInspeksiDtl: obj => dispatch(InspeksiAction.postInspeksiDtl(obj))
-	};
+  return {
+    postInspeksi: obj => dispatch(InspeksiAction.postInspeksi(obj)),
+    postInspeksiDtl: obj => dispatch(InspeksiAction.postInspeksiDtl(obj))
+  };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(InspectionScreen);
