@@ -257,7 +257,7 @@ class Login extends Component {
                         this.setState(AlertContent.email_pass_salah)
                     }
                 }
-            });
+            }});
     }
 
     deleteConfig(){
