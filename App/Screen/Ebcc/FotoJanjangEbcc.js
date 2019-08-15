@@ -16,7 +16,7 @@ import MapView, { Polygon, ProviderPropType, Marker } from 'react-native-maps';
 import { RNCamera as Camera } from 'react-native-camera';
 import { getTodayDate } from '../../Lib/Utils'
 import ImageResizer from 'react-native-image-resizer';
-import { dirPhotoEbccJanjang } from '../../Lib/dirStorage'
+import { dirPhotoEbccJanjang , dirPhotoEbccSelfie, dirMaps } from '../../Lib/dirStorage'
 import TaskService from '../../Database/TaskServices'
 import R from 'ramda';
 import Icon2 from 'react-native-vector-icons/Ionicons';
@@ -29,20 +29,8 @@ var RNFS = require('react-native-fs');
 const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
 
 
-class FotoJanjang extends Component {
 
-  // static navigationOptions = {
-  //   headerStyle: {
-  //     backgroundColor: Colors.tintColorPrimary
-  //   },
-  //   title: 'Ambil Foto Janjang',
-  //   headerTintColor: '#fff',
-  //   headerTitleStyle: {
-  //     flex: 1,
-  //     fontSize: 18,
-  //     fontWeight: '400'
-  //   },
-  // };
+class FotoJanjang extends Component {
 
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
@@ -103,6 +91,11 @@ class FotoJanjang extends Component {
     this.props.navigation.setParams({ handleBackButtonClick: this.handleBackButtonClick })
     // BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
+
+    RNFS.copyFile(TaskService.getPath(), 'file:///storage/emulated/0/MobileInspection/data.realm');
+    RNFS.mkdir(dirPhotoEbccJanjang);
+    RNFS.mkdir(dirPhotoEbccSelfie);
+    RNFS.mkdir(dirMaps);
   }
 
   componentWillUnmount() {
@@ -302,9 +295,13 @@ class FotoJanjang extends Component {
   }
 
   async insertDB() {
+    console.log(this.state.dataHeader.LAT_TPH)
+    console.log(this.state.dataHeader.LON_TPH)
+
     if (this.state.dataHeader !== null && this.state.dataHeader.LAT_TPH != 0 && this.state.dataHeader.LON_TPH != 0) {
       RNFS.unlink(this.state.pathCache);
       let isImageContain = await RNFS.exists(`file://${dirPhotoEbccJanjang}/${this.state.dataModel.IMAGE_NAME}`);
+      console.log('isImageContain : ', isImageContain)
       if (isImageContain) {
         this.props.navigation.navigate('KriteriaBuah',
           {
