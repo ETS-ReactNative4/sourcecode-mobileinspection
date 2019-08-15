@@ -1,6 +1,16 @@
 'use strict';
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, KeyboardAvoidingView, Keyboard, StatusBar, ImageBackground, BackHandler } from 'react-native';
+import {
+    StyleSheet,
+    Text,
+    View,
+    KeyboardAvoidingView,
+    Keyboard,
+    StatusBar,
+    ImageBackground,
+    BackHandler,
+    Linking
+} from 'react-native';
 
 import HandleBack from '../Component/Back'
 import Form from '../Component/Form';
@@ -14,6 +24,7 @@ import { dirPhotoTemuan, dirPhotoInspeksiBaris, dirPhotoInspeksiSelfie, dirPhoto
 import ModalAlert from '../Component/ModalAlert'
 import ServerName from '../Constant/ServerName'
 import IMEI from 'react-native-imei'
+import DeviceInfo from 'react-native-device-info';
 import { AlertContent } from '../Themes';
 
 class Login extends Component {
@@ -98,7 +109,7 @@ class Login extends Component {
     componentDidMount() {
         const { navigation } = this.props;
         const itemId = navigation.getParam('exit');
-        this.state.logOut = itemId
+        this.state.logOut = itemId;
     }
 
     checkUser(param) {
@@ -228,13 +239,17 @@ class Login extends Component {
             },
             body: JSON.stringify({ username, password, imei })
         })
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                this.setState({ fetching: false });
-                if (data.status == true) {
-                    this.insertLink(data.data)
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            this.setState({ fetching: false });
+            if (data.status == true) {
+                this.insertLink(data.data);
+                this.deleteConfig();
+            } else {
+                if (data.message == 'Request Timeout') {
+                    this.setState(AlertContent.proses_lambat)
                 } else {
                     if (data.message == 'Request Timeout') {
                         this.setState(AlertContent.proses_lambat)
@@ -242,7 +257,11 @@ class Login extends Component {
                         this.setState(AlertContent.email_pass_salah)
                     }
                 }
-            });
+            }});
+    }
+
+    deleteConfig(){
+        TaskServices.deleteAllData('TR_CONFIG');
     }
 
     //Add By Aminju 20/01/2019 15:45

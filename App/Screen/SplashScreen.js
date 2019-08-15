@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { ImageBackground, StatusBar, Text, AppRegistry } from 'react-native';
+import {ImageBackground, StatusBar, Text, AppRegistry, Linking} from 'react-native';
 import { Container } from 'native-base'
 import { NavigationActions, StackActions } from 'react-navigation';
 import { getPermission } from '../Lib/Utils'
@@ -10,12 +10,12 @@ import CategoryAction from '../Redux/CategoryRedux'
 import ContactAction from '../Redux/ContactRedux'
 import RegionAction from '../Redux/RegionRedux'
 import R from 'ramda'
-import {
-    dirPhotoInspeksiBaris, dirPhotoInspeksiSelfie,
-    dirPhotoTemuan, dirPhotoKategori, dirPhotoEbccJanjang, dirPhotoEbccSelfie, dirMaps, dirPhotoUser
-} from '../Lib/dirStorage';
+import { dirPhotoInspeksiBaris, dirPhotoInspeksiSelfie,
+    dirPhotoTemuan, dirPhotoKategori, dirPhotoEbccJanjang, dirPhotoEbccSelfie, dirMaps, dirPhotoUser } from '../Lib/dirStorage';
 import moment from 'moment'
 import geolib from 'geolib';
+import DeviceInfo from "react-native-device-info";
+import ModalAlert from "../Component/ModalAlert";
 
 var RNFS = require('react-native-fs');
 const skm = require('../Data/MegaKuningan.json');
@@ -28,7 +28,14 @@ class SplashScreen extends Component {
             json: '',
             value: true,
             showModal: true,
-            position: null
+            position: null,
+
+            modalUpdate:{
+                title: 'Title',
+                message: 'Message',
+                showModal: false,
+                icon: '',
+            }
         }
     }
 
@@ -65,7 +72,7 @@ class SplashScreen extends Component {
     makeFolder() {
         //buat Folder DiExtrnal
         RNFS.mkdir('file:///storage/emulated/0/MobileInspection');
-        //buat folder internal    
+        //buat folder internal
         RNFS.mkdir(dirPhotoInspeksiBaris);
         RNFS.mkdir(dirPhotoInspeksiSelfie);
         RNFS.mkdir(dirPhotoTemuan);
@@ -108,6 +115,7 @@ class SplashScreen extends Component {
 
     componentWillMount() {
         // this.getLocation()
+        this.checkUpdate();
     }
 
     async componentDidMount() {
@@ -115,16 +123,45 @@ class SplashScreen extends Component {
         if (isAllGrandted === true) {
             this.makeFolder()
             setTimeout(() => {
-                this.checkUser();
+                if(!this.state.modalUpdate.showModal){
+                    this.checkUser();
+                }
             }, 2000);
         } else {
             Alert.alert('Seluruh Permission harus di hidupkan')
         }
     }
 
+    checkUpdate(){
+        let TRCONFIG = TaskServices.getAllData("TR_CONFIG")[0];
+        if(TRCONFIG !== undefined){
+            if(TRCONFIG.FORCE_UPDATE){
+                this.setState({
+                    modalUpdate:{
+                        title: 'Versi Aplikasi',
+                        message: 'Kamu harus lakukan update aplikasi',
+                        showModal: true,
+                        icon: require('../Images/icon/icon_update_apps.png'),
+                    }
+                })
+            }
+        }
+    }
+
+
     render() {
         return (
             <Container>
+                <ModalAlert
+                    icon={this.state.modalUpdate.icon}
+                    visible={this.state.modalUpdate.showModal}
+                    onPressCancel={() => {
+                        Linking.openURL("market://details?id=com.bluezoneinspection.app")
+                    }}
+                    title={this.state.modalUpdate.title}
+                    message={this.state.modalUpdate.message}
+                    closeText={"UPDATE"}
+                />
                 <StatusBar
                     hidden={true}
                     barStyle="light-content"

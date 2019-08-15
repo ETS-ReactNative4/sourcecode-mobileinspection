@@ -8,6 +8,7 @@ let realmSchema = new Realm({
     // path: newPath,
     schema: [
         ModelTables.TR_LOGIN,
+        ModelTables.TR_CONFIG,
         ModelTables.TR_BLOCK_INSPECTION_H,
         ModelTables.TR_BLOCK_INSPECTION_D,
         ModelTables.TR_BARIS_INSPECTION,
@@ -41,7 +42,7 @@ let realmSchema = new Realm({
         ModelTables.TR_GENBA_INSPECTION,
         ModelTables.TR_RATING,
         ModelTables.TR_SUMMARY
-    ], 
+    ],
 	schemaVersion: ModelTables.SCHEMA_VERSION
 });
 
