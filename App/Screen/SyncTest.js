@@ -1,8 +1,10 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Alert, NetInfo, Platform } from 'react-native'
+import { StyleSheet, View, Text, TouchableOpacity, NetInfo, Platform, Linking } from 'react-native'
 import { Container, Content } from 'native-base'
 import Colors from '../Constant/Colors';
 import moment from 'moment';
+import DeviceInfo from 'react-native-device-info';
+import IMEI from 'react-native-imei'
 
 import ServerTimeAction from '../Redux/ServerTimeRedux';
 import RegionAction from '../Redux/RegionRedux';
@@ -166,7 +168,14 @@ class SyncScreen extends React.Component {
             message: 'Message',
             showModal: false,
             icon: '',
-            isDeleteImage: false
+            isDeleteImage: false,
+
+            modalUpdate:{
+                title: 'Title',
+                message: 'Message',
+                showModal: false,
+                icon: '',
+            }
         }
     }
 
@@ -479,7 +488,6 @@ class SyncScreen extends React.Component {
 
     //upload
     loadDataFinding() {
-        console.log('Masuk Sini Load Data Finding')
         let countData = TaskServices.getAllData('TR_FINDING');
         var query = countData.filtered('STATUS_SYNC = "N"');
         countData = query;
@@ -501,7 +509,6 @@ class SyncScreen extends React.Component {
         let dataHeader = TaskServices.getAllData('TR_BLOCK_INSPECTION_H');
         var query = dataHeader.filtered('STATUS_SYNC = "N"');
         let countData = query;
-        console.log(JSON.stringify(query));
         if (countData.length > 0) {
             for (var i = 0; i < countData.length; i++) {
                 let fulfill = this.isFulfillBaris(countData[i].ID_INSPECTION)
@@ -1273,7 +1280,6 @@ class SyncScreen extends React.Component {
         // if (param.RATING) {
         //     data.RATING = param.RATING;
         // }
-        console.log("Upload finding", data);
         this.uploadData(this.getAPIURL("FINDING-INSERT"), data, 'finding', '');
     }
 
@@ -2096,12 +2102,67 @@ class SyncScreen extends React.Component {
         this.kirimUserImage();
         this.uploadWeeklySummary();
 
-        //cara redux saga
-        setTimeout(() => {
-            this.props.findingRequest();
-            this.props.blockRequest();
-        }, 2000);
+        this.checkUpdate()
+            .then((callback)=>{
+                if(callback){
+                    this.setState({
+                        modalUpdate:{
+                            title: 'Versi Aplikasi',
+                            message: 'Kamu harus lakukan update aplikasi',
+                            showModal: true,
+                            icon: require('../Images/icon/icon_update_apps.png'),
+                        }
+                    })
+                }
+                else{
+                    //cara redux saga
+                    setTimeout(() => {
+                        this.props.findingRequest();
+                        this.props.blockRequest();
+                    }, 2000);
+                }
+            });
+    }
 
+    async checkUpdate(){
+        let deviceVersion = DeviceInfo.getVersion();
+        let model = {
+            INSERT_USER: this.state.user.USER_AUTH_CODE.toString(),
+            APK_VERSION: deviceVersion,
+            IMEI: IMEI.getImei().toString(),
+            INSERT_TIME: moment().format('YYYYMMDDHHmmss').toString()
+        };
+        console.log(deviceVersion);
+        let TM_SERVICE = await TaskServices.findBy2("TM_SERVICE", 'API_NAME', 'AUTH-SERVER-APK-VERSION');
+        try{
+            return await fetch(TM_SERVICE.API_URL, {
+                method: TM_SERVICE.METHOD,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.state.user.ACCESS_TOKEN}`
+                },
+                body: JSON.stringify(model)
+            })
+                .then((response) => {
+                    return response.json();
+                })
+                .then(async (callback) => {
+                    if (callback.status) {
+                        await TaskServices.deleteAllData('TR_CONFIG');
+
+                        await TaskServices.saveData('TR_CONFIG', {
+                            VERSION: model.APK_VERSION.toString(),
+                            FORCE_UPDATE: callback.force_update
+                        });
+
+                        return callback.force_update;
+                    }
+                })
+        }
+        catch(e){
+            console.log(e);
+            return false;
+        }
     }
 
     fetchingMobileSync(param) {
@@ -2399,6 +2460,17 @@ class SyncScreen extends React.Component {
                         }}
                         title={this.state.title}
                         message={this.state.message} />
+
+                    <ModalAlert
+                        icon={this.state.modalUpdate.icon}
+                        visible={this.state.modalUpdate.showModal}
+                        onPressCancel={() => {
+                            Linking.openURL("market://details?id=com.bluezoneinspection.app")
+                        }}
+                        title={this.state.modalUpdate.title}
+                        message={this.state.modalUpdate.message}
+                        closeText={"UPDATE"}
+                    />
 
                     <View style={{ flex: 1, padding: 16 }}>
                         {this.state.showButton && <View style={{ flex: 1 }}>

@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import { View, StyleSheet, Image, TouchableOpacity, Text, ScrollView, Alert, NetInfo } from 'react-native';
 import { Thumbnail } from 'native-base';
 import Colors from '../../Constant/Colors';
-import Icon from 'react-native-vector-icons/Ionicons';
 import Icon2 from 'react-native-vector-icons/AntDesign'
-import CardView from 'react-native-cardview';
 import TaskServices from '../../Database/TaskServices'
 import { NavigationActions, StackActions } from 'react-navigation';
 import ModalConfirmation from '../../Component/ModalAlertConfirmation'
@@ -13,7 +11,6 @@ import ServerName from '../../Constant/ServerName';
 import DeviceInfo from 'react-native-device-info';
 import CustomHeader from '../../Component/CustomHeader'
 import { getPhoto, getThumnail } from '../../Lib/Utils';
-import RNFS from 'react-native-fs';
 
 export default class MoreScreen extends Component {
 

@@ -183,7 +183,6 @@ class HomeScreen extends React.Component {
         });
           findingFilter = finalData;
       } else {
-          console.log("##############################BAY");
         if (this.extraFilter !== "") {
           this.extraFilter = this.extraFilter.replace(" AND ", "");
           findingFilter = finding.sorted('INSERT_TIME', true).filtered(this.extraFilter);

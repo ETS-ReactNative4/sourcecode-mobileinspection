@@ -1,4 +1,14 @@
-const SCHEMA_VERSION = 1
+const SCHEMA_VERSION = 1;
+
+const TR_CONFIG = {
+    name: 'TR_CONFIG',
+    primaryKey: 'VERSION',
+    properties: {
+        VERSION: 'string',
+        FORCE_UPDATE: {type:'bool', default: false}
+    }
+};
+
 const TR_LOGIN = {
     name: 'TR_LOGIN',
     primaryKey: 'USER_AUTH_CODE',
@@ -569,6 +579,7 @@ const TR_SUMMARY = {
 
 export default {
     TR_LOGIN,
+    TR_CONFIG,
     TR_BLOCK_INSPECTION_H,
     TR_BLOCK_INSPECTION_D,
     TR_IMAGE,
