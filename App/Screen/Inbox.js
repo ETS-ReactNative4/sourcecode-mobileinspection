@@ -53,9 +53,9 @@ export default class Inbox extends React.Component {
 		notifCount = (notifCount >= 100) ? "99+" : notifCount + "";
 		this.setState({ data: this.getNotif() });
 		this.props.navigation.setParams({ notifCount: notifCount })
-        this.props.navigation.navigate('DetailFinding', { ID: notifData.FINDING_CODE })
+		this.props.navigation.navigate('DetailFinding', { ID: notifData.FINDING_CODE })
 		if (notifData.NOTIFICATION_TYPE == 6) {
-			this.props.navigation.navigate("HomeScreenComment", { findingCode: notifData.FINDING_CODE })
+			this.props.navigation.navigate("DetailFinding", { findingCode: notifData.FINDING_CODE })
 		} else {
 			this.props.navigation.navigate('DetailFinding', { ID: notifData.FINDING_CODE })
 		}
@@ -126,12 +126,12 @@ export default class Inbox extends React.Component {
 		    let tempUsername = item.NOTIFICATION_ID.split("$");
 			sources = require('../Images/ic_inbox_getcomment.png');
 			title = "KOMENTAR BARU";
-			desc = tempUsername[1] + " memberikan komentar baru ditemuan kamu."
+			desc = tempUsername[1] + " memberikan komentar baru di temuan kamu."
 		} else if (item.NOTIFICATION_TYPE == 7) {
             let tempUsername = item.NOTIFICATION_ID.split("$");
             sources = require('../Images/ic_inbox_getcomment.png');
             title = "KOMENTAR BARU";
-            desc = tempUsername[1] + " telah mention kamu di komentar finding."
+            desc = tempUsername[1] + " telah mention kamu di komentar temuan."
         }
 		return (
 			<TouchableOpacity

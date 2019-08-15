@@ -3,6 +3,7 @@ import { createStackNavigator } from 'react-navigation'
 import SplashScreen from '../Screen/SplashScreen'
 import Login from '../Screen/Login'
 import MainMenu from '../Screen/Home/MainTabNavigator'
+import MainMenuMil from '../Screen/Home/MainTabNavigatorMil'
 import Genba from '../Screen/Inspeksi/Genba';
 import HomeScreenComment from '../Screen/Home/HomeScreenComment';
 
@@ -64,6 +65,7 @@ import Colors from '../Constant/Colors'
 
 const main = createStackNavigator({
     MainMenu: { screen: MainMenu, navigationOptions: { header: null } },
+    MainMenuMil: { screen: MainMenuMil, navigationOptions: { header: null } },
     SplashScreen: { screen: SplashScreen },
     Login: { screen: Login },
 

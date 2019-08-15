@@ -52,20 +52,24 @@ class SplashScreen extends Component {
         navigation.dispatch(resetAction);
     }
 
-    checkUser(){
+    checkUser() {
         let data = TaskServices.getAllData('TR_LOGIN')
-        if(data !== undefined && data.length > 0){
-            if(data[0].STATUS == 'LOGIN'){
-                this.navigateScreen('MainMenu');
-            }else{
+        if (data !== undefined && data.length > 0) {
+            if (data[0].STATUS == 'LOGIN') {
+                if (data[0].USER_ROLE == 'FFB_GRADING_MILL') {
+                    this.navigateScreen('MainMenu');
+                } else {
+                    this.navigateScreen('MainMenuMil');
+                }
+            } else {
                 this.navigateScreen('Login');
             }
-        }else{
+        } else {
             this.navigateScreen('Login');
         }
     }
 
-    makeFolder(){
+    makeFolder() {
         //buat Folder DiExtrnal
         RNFS.mkdir('file:///storage/emulated/0/MobileInspection');
         //buat folder internal
@@ -87,11 +91,11 @@ class SplashScreen extends Component {
                 position = {
                     latitude: lat, longitude: lon
                 }
-                this.setState({position})
+                this.setState({ position })
                 let data = skm.data.polygons
-                for(var i=0; i<data.length; i++){
+                for (var i = 0; i < data.length; i++) {
                     let coords = data[i];
-                    if(geolib.isPointInside(position, coords.coords)){
+                    if (geolib.isPointInside(position, coords.coords)) {
                         alert(coords.blokname)
                         break;
                     }
@@ -107,9 +111,9 @@ class SplashScreen extends Component {
             }, // go here if error while fetch location
             { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
         );
-      }
+    }
 
-    componentWillMount(){
+    componentWillMount() {
         // this.getLocation()
         this.checkUpdate();
     }
@@ -143,6 +147,7 @@ class SplashScreen extends Component {
             }
         }
     }
+
 
     render() {
         return (

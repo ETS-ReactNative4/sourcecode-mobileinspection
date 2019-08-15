@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
-import { View, Image, TouchableOpacity, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import CustomHeader from '../../Component/CustomHeader'
 import Colors from '../../Constant/Colors'
 import FindingTabNavigator from './FindingTabNavigator'
+import IconHeader from '../../Component/IconHeader'
+import { Images } from '../../Themes'
 
 export default class FindingScreen extends Component {
   static router = FindingTabNavigator.router;
-  
+
   static navigationOptions = ({ navigation }) => ({
     headerStyle: {
       backgroundColor: Colors.tintColorPrimary
@@ -20,21 +22,9 @@ export default class FindingScreen extends Component {
     },
     title: 'Temuan',
     headerTintColor: '#fff',
-    headerRight: (
-      <TouchableOpacity onPress={() => navigation.navigate('Inbox')}>
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingRight: 12 }}>
-          <Image style={{ width: 28, height: 28 }} source={require('../../Images/icon/ic_inbox.png')} />
-        </View>
-      </TouchableOpacity>
-    ),
-    headerLeft: (
-      <TouchableOpacity onPress={() => navigation.navigate('Sync')}>
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingLeft: 12 }}>
-          <Image style={{ width: 28, height: 28 }} source={require('../../Images/icon/ic_sync.png')} />
-        </View>
-      </TouchableOpacity>
-    ),
-	header: props => <CustomHeader {...props} />
+    headerRight: <IconHeader padding={{ paddingRight: 12 }} onPress={() => navigation.navigate('Inbox')} icon={Images.ic_inbox} show={true} />,
+    headerLeft: <IconHeader padding={{ paddingLeft: 12 }} onPress={() => navigation.navigate('Sync')} icon={Images.ic_sync} show={true} />,
+    header: props => <CustomHeader {...props} />
   });
 
   render() {

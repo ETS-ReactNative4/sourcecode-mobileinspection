@@ -84,9 +84,16 @@ export default class PilihPeta extends Component {
 	handleBackButtonClick() {
 		const { navigation } = this.props;
 		const param = navigation.getParam('more')
-		console.log(param)
 		if (param == 'Sync') {
-			navigation.navigate('MainMenu')
+			const data = TaskServices.getAllData('TR_LOGIN')
+			console.log('Data User Role : ', data[0].USER_ROLE)
+			if (data != undefined) {
+				if (data[0].USER_ROLE == 'FFB_GRADING_MILL') {
+					navigation.navigate('MainMenuMil')
+				} else {
+					navigation.navigate('MainMenu')
+				}
+			}
 		} else {
 			this.props.navigation.goBack(null);
 		}
