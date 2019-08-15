@@ -171,8 +171,6 @@ class HomeScreen extends React.Component {
         }
 
         let finalData = [];
-        console.log(query);
-        console.log(this.extraFilter);
 
         // let tempFindingFilter = findingSorted.filtered(`${query} ${this.extraFilter}`);
         let tempFindingFilter = "";
@@ -180,8 +178,7 @@ class HomeScreen extends React.Component {
             tempFindingFilter = findingSorted.filtered(query);
         }
         else {
-            console.log(this.extraFilter.slice(4,this.extraFilter.length));
-            tempFindingFilter = findingSorted.filtered(this.extraFilter.slice(4,this.extraFilter.length));
+            tempFindingFilter = findingSorted.filtered(this.extraFilter.replace(" AND ", ""));
         }
         tempFindingFilter.map((data) => {
           let stDate = Moment(data.INSERT_TIME).format('YYYYMMDDHHmmss');
@@ -267,6 +264,18 @@ class HomeScreen extends React.Component {
       if (this.extraFilter !== "") {
         this.extraFilter = this.extraFilter.replace(" AND ", "");
         findingFilter = finding.sorted('INSERT_TIME', true).filtered(this.extraFilter);
+        let finalData = [];
+
+          findingFilter.map((data) => {
+              let stDate = Moment(data.INSERT_TIME).format('YYYYMMDDHHmmss');
+              if (!this.extraFilterTime.filter) {
+                  finalData.push(data)
+              }
+              else if (stDate >= this.extraFilterTime.startTime && stDate <= this.extraFilterTime.endTime && this.extraFilterTime.filter) {
+                  finalData.push(data)
+              }
+          });
+          findingFilter = finalData;
       }
       else {
         findingFilter = finding.sorted('INSERT_TIME', true);
