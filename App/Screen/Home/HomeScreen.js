@@ -171,7 +171,18 @@ class HomeScreen extends React.Component {
         }
 
         let finalData = [];
-        let tempFindingFilter = findingSorted.filtered(`${query} ${this.extraFilter}`);
+        console.log(query);
+        console.log(this.extraFilter);
+
+        // let tempFindingFilter = findingSorted.filtered(`${query} ${this.extraFilter}`);
+        let tempFindingFilter = "";
+        if(this.extraFilter === undefined || this.extraFilter === null || this.extraFilter === ""){
+            tempFindingFilter = findingSorted.filtered(query);
+        }
+        else {
+            console.log(this.extraFilter.slice(4,this.extraFilter.length));
+            tempFindingFilter = findingSorted.filtered(this.extraFilter.slice(4,this.extraFilter.length));
+        }
         tempFindingFilter.map((data) => {
           let stDate = Moment(data.INSERT_TIME).format('YYYYMMDDHHmmss');
           if (!this.extraFilterTime.filter) {
