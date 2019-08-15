@@ -28,6 +28,7 @@ import ModalAlert from '../../Component/ModalAlert';
 var RNFS = require('react-native-fs');
 const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
 
+
 class FotoJanjang extends Component {
 
   // static navigationOptions = {
@@ -119,11 +120,17 @@ class FotoJanjang extends Component {
   }
 
   backAndDeletePhoto() {
+    let dataLogin = TaskService.getAllData('TR_LOGIN')[0]
     if (this.state.hasPhoto) {
       this.deleteFoto()
     }
     const navigation = this.props.navigation;
-    let routeName = 'MainMenu';
+    let routeName = ''
+    if (dataLogin.USER_ROLE == 'FFB_GRADING_MILL') {
+      routeName = 'MainMenuMil'
+    } else {
+      routeName = 'MainMenu';
+    }
     this.setState({ showModal: false })
     BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
 
@@ -175,10 +182,14 @@ class FotoJanjang extends Component {
 
   setParamImage() {
     let dataLogin = TaskService.getAllData('TR_LOGIN')[0];
-    var imgCode = `VP${dataLogin.USER_AUTH_CODE}${this.state.timestamp}`;
+
+    //USER ROLE
+    let user_role = this.userRole(dataLogin.USER_ROLE)
+
+    var imgCode = `${user_role}P${dataLogin.USER_AUTH_CODE}${this.state.timestamp}`;
     var imageName = imgCode + '.jpg';
     var arrTph = this.state.tphAfdWerksBlockCode.split('-') //tph-afd-werks-blockcode
-    var ebccValCode = `V${dataLogin.USER_AUTH_CODE}${this.state.timestamp}${arrTph[0]}${arrTph[3]}`
+    var ebccValCode = `${user_role}${dataLogin.USER_AUTH_CODE}${this.state.timestamp}${arrTph[0]}${arrTph[3]}`
 
     var image = {
       TR_CODE: ebccValCode,
@@ -194,19 +205,24 @@ class FotoJanjang extends Component {
     this.setState({ dataModel: image });
   }
 
+  userRole(user) {
+    if (user == 'FFB_GRADING_MILL') {
+      return 'M'
+    } else {
+      return 'V'
+    }
+  }
+
   setParameter() {
     let dataLogin = TaskService.getAllData('TR_LOGIN')[0];
     var arrTph = this.state.tphAfdWerksBlockCode.split('-') //tph-afd-werks-blockcode
 
     //USER ROLE
-    let user_role = ""
-    if (dataLogin.USER_ROLE == 'FFB_GRADING_MILL') {
-      user_role = 'M'
-    } else {
-      user_role = 'V'
-    }
+    let user_role = this.userRole(dataLogin.USER_ROLE)
 
     var ebccValCode = `${user_role}${dataLogin.USER_AUTH_CODE}${this.state.timestamp}${arrTph[0]}${arrTph[3]}`
+
+    console.log('EBCC VAL CODE : ', ebccValCode);
     var alasan = '';
     if (this.state.reason !== '') {
       alasan = this.state.reason == 'RUSAK' ? '1' : '2'

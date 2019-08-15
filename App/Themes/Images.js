@@ -46,6 +46,8 @@ const images = {
     img_belum_ada_data: require('../Images/img-belum-ada-data.png'),
     img_no_data: require('../Images/img-no-data.png'),
     img_no_data_finding: require('../Images/belum-ada-temuan.png'),
+    img_dummy: require('../Images/dummy_image.png'),
+    img_forest: require('../Images/forest.jpg'),
 
     //Alert Images
     img_input_tidak_lengkap: require('../Images/ic-inputan-tidak-lengkap.png'),
