@@ -50,9 +50,9 @@ class SplashScreen extends Component {
         if (data !== undefined && data.length > 0) {
             if (data[0].STATUS == 'LOGIN') {
                 if (data[0].USER_ROLE == 'FFB_GRADING_MILL') {
-                    this.navigateScreen('MainMenu');
-                } else {
                     this.navigateScreen('MainMenuMil');
+                } else {
+                    this.navigateScreen('MainMenu');
                 }
             } else {
                 this.navigateScreen('Login');

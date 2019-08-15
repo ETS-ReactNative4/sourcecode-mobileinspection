@@ -27,6 +27,7 @@ const skm = require('../../Data/MegaKuningan.json');
 
 const LATITUDE = -2.1890660;
 const LONGITUDE = 111.3609873;
+const DATA_LOGIN = TaskServices.getAllData('TR_LOGIN')
 
 
 class KondisiBarisAkhir extends Component {
@@ -58,6 +59,9 @@ class KondisiBarisAkhir extends Component {
         let from = R.clone(params.from);
         let intervalId = R.clone(params.intervalId);
         let dataInspeksi = R.clone(params.dataInspeksi);
+
+
+        console.log('DATA LOGIN : ', DATA_LOGIN[0].USER_ROLE);
 
         this.state = {
             intervalId,
@@ -144,7 +148,6 @@ class KondisiBarisAkhir extends Component {
 
     getLocation() {
         retrieveData('PoligonsInspeksi').then(data => {
-            console.log('Data PoligonsInspeksi : ', data)
             if (data != null) {
                 let lastTrack = TaskService.getLastTracking(this.state.dataUsual.BLOCK_INSPECTION_CODE);
                 var lat = parseFloat(lastTrack.LAT_TRACK);
@@ -231,7 +234,7 @@ class KondisiBarisAkhir extends Component {
         }
     }
     changeColorSlide() {
-        if (this.state.inspectionType === 'genba') {
+        if (this.state.inspectionType === 'genba' || DATA_LOGIN[0].USER_ROLE != 'ASISTEN_LAPANGAN') {
             if (!this.state.switchLanjut) {
                 this.setState({ fulFillMandatory: false, txtBaris: '' })
                 btn = {
@@ -256,7 +259,10 @@ class KondisiBarisAkhir extends Component {
             this.setState({ tumbButtonSlide: btn })
         }
         else {
-            if (this.has2Row() >= 1) {
+
+            console.log('DATA USER LOGIN ASU : ', );
+
+            if (this.has2Row() >= 1 ) {
                 if (!this.state.switchLanjut) {
                     this.setState({ fulFillMandatory: false, txtBaris: '' })
                     btn = {
