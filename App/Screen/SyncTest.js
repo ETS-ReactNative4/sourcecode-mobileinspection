@@ -626,7 +626,6 @@ class SyncScreen extends React.Component {
             let all = TaskServices.getAllData('TR_IMAGE')
             var dataImage = TaskServices.query('TR_IMAGE', `STATUS_SYNC = 'N'`);
             if (all !== undefined && dataImage !== undefined) {
-                this.setState({ totalImagelUpload: dataImage.length })
                 for (let i = 0; i < dataImage.length; i++) {
                     let model = dataImage[i];
                     RNFS.exists(`file://${model.IMAGE_PATH_LOCAL}`).
@@ -700,7 +699,7 @@ class SyncScreen extends React.Component {
                         })
                 }
             }
-            this.setState({ progressUploadImage: 1 });
+            this.setState({ progressUploadImage: 1, valueImageUpload: dataImage.length, totalImagelUpload: dataImage.length });
         } catch (error) {
             this.setState({ progressUploadImage: 1, valueImageUpload: 0, totalImagelUpload: 0 });
         }
