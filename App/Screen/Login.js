@@ -12,6 +12,7 @@ import {
     Linking
 } from 'react-native';
 
+
 import HandleBack from '../Component/Back'
 import Form from '../Component/Form';
 import { connect } from 'react-redux';
@@ -26,6 +27,8 @@ import ServerName from '../Constant/ServerName'
 import IMEI from 'react-native-imei'
 import DeviceInfo from 'react-native-device-info';
 import { AlertContent } from '../Themes';
+import { storeData } from '../Database/Resources';
+import moment from 'moment'
 
 class Login extends Component {
 
@@ -69,6 +72,9 @@ class Login extends Component {
             SERVER_NAME_INDEX: this.serverNameIndex,
             STATUS: 'LOGIN'
         };
+        var new_date = moment().add(7, 'days');
+        const date = { tanggal: new_date }
+        storeData('expiredToken', date);
         TaskServices.saveData('TR_LOGIN', data);
     }
 
@@ -239,28 +245,29 @@ class Login extends Component {
             },
             body: JSON.stringify({ username, password, imei })
         })
-        .then((response) => {
-            return response.json();
-        })
-        .then((data) => {
-            this.setState({ fetching: false });
-            if (data.status == true) {
-                this.insertLink(data.data);
-                this.deleteConfig();
-            } else {
-                if (data.message == 'Request Timeout') {
-                    this.setState(AlertContent.proses_lambat)
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                this.setState({ fetching: false });
+                if (data.status == true) {
+                    this.insertLink(data.data);
+                    this.deleteConfig();
                 } else {
                     if (data.message == 'Request Timeout') {
                         this.setState(AlertContent.proses_lambat)
                     } else {
-                        this.setState(AlertContent.email_pass_salah)
+                        if (data.message == 'Request Timeout') {
+                            this.setState(AlertContent.proses_lambat)
+                        } else {
+                            this.setState(AlertContent.email_pass_salah)
+                        }
                     }
                 }
-            }});
+            });
     }
 
-    deleteConfig(){
+    deleteConfig() {
         TaskServices.deleteAllData('TR_CONFIG');
     }
 

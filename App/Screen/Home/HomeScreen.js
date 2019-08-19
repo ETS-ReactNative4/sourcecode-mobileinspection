@@ -174,11 +174,11 @@ class HomeScreen extends React.Component {
 
         // let tempFindingFilter = findingSorted.filtered(`${query} ${this.extraFilter}`);
         let tempFindingFilter = "";
-        if(this.extraFilter === undefined || this.extraFilter === null || this.extraFilter === ""){
-            tempFindingFilter = findingSorted.filtered(query);
+        if (this.extraFilter === undefined || this.extraFilter === null || this.extraFilter === "") {
+          tempFindingFilter = findingSorted.filtered(query);
         }
         else {
-            tempFindingFilter = findingSorted.filtered(this.extraFilter.replace(" AND ", ""));
+          tempFindingFilter = findingSorted.filtered(this.extraFilter.replace(" AND ", ""));
         }
         tempFindingFilter.map((data) => {
           let stDate = Moment(data.INSERT_TIME).format('YYYYMMDDHHmmss');
@@ -266,16 +266,16 @@ class HomeScreen extends React.Component {
         findingFilter = finding.sorted('INSERT_TIME', true).filtered(this.extraFilter);
         let finalData = [];
 
-          findingFilter.map((data) => {
-              let stDate = Moment(data.INSERT_TIME).format('YYYYMMDDHHmmss');
-              if (!this.extraFilterTime.filter) {
-                  finalData.push(data)
-              }
-              else if (stDate >= this.extraFilterTime.startTime && stDate <= this.extraFilterTime.endTime && this.extraFilterTime.filter) {
-                  finalData.push(data)
-              }
-          });
-          findingFilter = finalData;
+        findingFilter.map((data) => {
+          let stDate = Moment(data.INSERT_TIME).format('YYYYMMDDHHmmss');
+          if (!this.extraFilterTime.filter) {
+            finalData.push(data)
+          }
+          else if (stDate >= this.extraFilterTime.startTime && stDate <= this.extraFilterTime.endTime && this.extraFilterTime.filter) {
+            finalData.push(data)
+          }
+        });
+        findingFilter = finalData;
       }
       else {
         findingFilter = finding.sorted('INSERT_TIME', true);
@@ -302,6 +302,10 @@ class HomeScreen extends React.Component {
       let afd = item.afd;
       let userAuth = item.userAuth;
       let status = item.status;
+      let jenis = item.jenis;
+
+      console.log('Jenis Temuan : ', item.jenis)
+
       let stBatasWaktu = item.stBatasWaktu;
       let endBatasWaktu = item.endBatasWaktu.substring(0, 8) + '235959';
       let valBatasWaktu = item.valBatasWaktu;
@@ -311,7 +315,7 @@ class HomeScreen extends React.Component {
       let varAfd = ' AND AFD_CODE = ' + `"${afd}"`
       let varUserAuth = ' AND INSERT_USER = ' + `"${userAuth}"`
       let varStatus = ' AND STATUS = ' + `"${status}"`
-      let varInsertTime = ' AND INSERT_TIME >= ' + `"${stBatasWaktu}"` + ' AND INSERT_TIME <= ' + `"${endBatasWaktu}"`
+      let varJenis = ' AND FINDING_CATEGORY CONTAINS[c] ' + `"${jenis}"`
 
       let stBa;
       if (ba == 'Pilih Lokasi') {
@@ -341,6 +345,13 @@ class HomeScreen extends React.Component {
         stStatus = varStatus
       }
 
+      let stJenis;
+      if (jenis == 'Pilih Jenis Temuan') {
+        stJenis = ' AND FINDING_CATEGORY CONTAINS ' + `"${""}"`
+      } else {
+        stJenis = varJenis
+      }
+
       if (valBatasWaktu == 'Pilih Batas Waktu') {
         this.extraFilterTime = {
           startTime: null,
@@ -354,9 +365,14 @@ class HomeScreen extends React.Component {
           filter: true
         }
       }
+
       let data;
-      if (ba == 'Pilih Lokasi' && afd == 'Pilih Afdeling' &&
-        valAssignto == 'Pilih Pemberi Tugas' && status == 'Pilih Status' && valBatasWaktu == 'Pilih Batas Waktu') {
+      if (ba == 'Pilih Lokasi' &&
+        afd == 'Pilih Afdeling' &&
+        valAssignto == 'Pilih Pemberi Tugas' &&
+        status == 'Pilih Status' &&
+        valBatasWaktu == 'Pilih Batas Waktu' &&
+        jenis == 'Pilih Jenis Temuan') {
         data = this._filterHome();
         //this.setState({ data, isFilter: false });
         this.setState({
@@ -369,7 +385,7 @@ class HomeScreen extends React.Component {
           this.addRecords(0);
         });
       } else {
-        this.extraFilter = `AFD_CODE CONTAINS ""${stBa}${stAfd}${stUserAuth}${stStatus}`;
+        this.extraFilter = `AFD_CODE CONTAINS ""${stBa}${stAfd}${stUserAuth}${stStatus}${stJenis}`;
         data = this._filterHome();//.filtered(`AFD_CODE CONTAINS ""${stBa}${stAfd}${stUserAuth}${stStatus}${stInsertTime}`);
         if (data.length == 0) {
           this.setState({ data, isFilter: true, showModal: true, title: 'Tidak Ada Data', message: 'Wah ga ada data berdasarkan filter ini.', icon: Images.ic_no_data });

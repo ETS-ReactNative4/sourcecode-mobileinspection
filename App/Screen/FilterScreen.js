@@ -24,14 +24,7 @@ class FilterScreen extends React.Component {
                 fontWeight: '400'
             },
             title: 'Filter',
-            headerTintColor: '#fff',
-            // headerRight: (
-            //     <TouchableOpacity onPress={navigation.getParam('resetFilter')}>
-            //         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingRight: 12, marginTop: 1 }}>
-            //             <Text style={{ fontSize: 18, color: 'white', marginRight: 16, alignSelf: 'center' }} >Reset</Text>
-            //         </View>
-            //     </TouchableOpacity>
-            // ),
+            headerTintColor: '#fff'
         };
     };
 
@@ -49,6 +42,7 @@ class FilterScreen extends React.Component {
             valEndBatasWaktu: '',
             selected: "key0",
             selectedTanggal: "key0",
+            selectedJenis: "key0",
             arrDataFilter: []
         }
     }
@@ -63,13 +57,14 @@ class FilterScreen extends React.Component {
         parseData.map(item => {
             this.setState({
                 valBisnisArea: item.ba,
-                valAfdeling: item.afd?item.afd:'Pilih Afdeling',
+                valAfdeling: item.afd ? item.afd : 'Pilih Afdeling',
                 selected: this.getSetStatus(item.status),
                 valStBatasWaktu: item.stBatasWaktu,
                 valEndBatasWaktu: item.endBatasWaktu,
                 valBatasWaktu: item.valBatasWaktu,
                 valUserAuthCode: item.userAuth,
-                valAssignto: item.valAssignto
+                valAssignto: item.valAssignto,
+                selectedJenis: this.getJenisTemuan(item.jenis),
             });
         })
     }
@@ -106,13 +101,14 @@ class FilterScreen extends React.Component {
             valEndBatasWaktu: '',
             selected: "key0",
             selectedTanggal: "key0",
+            selectedJenis: "key0",
         })
     }
 
     changeBa = data => {
         this.setState({ valBisnisArea: data.fullName })
     }
-	
+
     changeAfd = data => {
         this.setState({ valAfdeling: data.afdCode })
     }
@@ -159,7 +155,8 @@ class FilterScreen extends React.Component {
             endBatasWaktu: this.state.valEndBatasWaktu,
             valBatasWaktu: this.state.valBatasWaktu,
             userAuth: this.state.valUserAuthCode,
-            valAssignto: this.state.valAssignto
+            valAssignto: this.state.valAssignto,
+            jenis: this.getJenisTemuan(this.state.selectedJenis),
         });
 
         this._storeData(JSON.stringify(arrData));
@@ -174,9 +171,9 @@ class FilterScreen extends React.Component {
         });
     }
 
-    onValueChangeTanggal(value) {
+    onValueChangeJenis(value) {
         this.setState({
-            selectedTanggal: value
+            selectedJenis: value
         });
     }
 
@@ -206,6 +203,21 @@ class FilterScreen extends React.Component {
         }
     }
 
+    getJenisTemuan(param) {
+        switch (param) {
+            case 'key1':
+                return 'CA';
+            case 'key2':
+                return 'IF';
+            case 'CA':
+                return 'key1';
+            case 'IF':
+                return 'key2';
+            default:
+                return 'Pilih Jenis Temuan';
+        }
+    }
+
     render() {
         return (
             <Container>
@@ -219,17 +231,18 @@ class FilterScreen extends React.Component {
                             <Text style={{ color: 'black', marginLeft: 8, fontSize: 16, marginTop: 8 }}>{this.state.valBisnisArea}</Text>
                             <View style={{ height: 0.5, flex: 1, flexDirection: 'row', backgroundColor: 'grey', marginTop: 8 }}></View>
                         </TouchableOpacity>
-						{this.state.valBisnisArea!='Pilih Lokasi' &&
-							<Text style={{ fontWeight: '400', marginLeft: 8, fontSize: 14, color: 'grey' }}>Afdeling</Text>
-						}
-						{this.state.valBisnisArea!='Pilih Lokasi' &&
-							<TouchableOpacity onPress={() => this.props.navigation.navigate('Afdeling', {
-								changeAfd: this.changeAfd,
-								ba : this.state.valBisnisArea})} >
-								<Text style={{ color: 'black', marginLeft: 8, fontSize: 16, marginTop: 8 }}>{this.state.valAfdeling}</Text>
-								<View style={{ height: 0.5, flex: 1, flexDirection: 'row', backgroundColor: 'grey', marginTop: 8 }}></View>
-							</TouchableOpacity>
-						}
+                        {this.state.valBisnisArea != 'Pilih Lokasi' &&
+                            <Text style={{ fontWeight: '400', marginLeft: 8, fontSize: 14, color: 'grey', marginTop: 16 }}>Afdeling</Text>
+                        }
+                        {this.state.valBisnisArea != 'Pilih Lokasi' &&
+                            <TouchableOpacity onPress={() => this.props.navigation.navigate('Afdeling', {
+                                changeAfd: this.changeAfd,
+                                ba: this.state.valBisnisArea
+                            })} >
+                                <Text style={{ color: 'black', marginLeft: 8, fontSize: 16, marginTop: 8 }}>{this.state.valAfdeling}</Text>
+                                <View style={{ height: 0.5, flex: 1, flexDirection: 'row', backgroundColor: 'grey', marginTop: 8 }}></View>
+                            </TouchableOpacity>
+                        }
 
                         <Text style={{ fontWeight: '400', marginLeft: 8, fontSize: 14, marginTop: 16, color: 'grey' }}>Pemberi Tugas</Text>
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('PemberiTugas', { assignTo: this.assignTo })} >
@@ -242,6 +255,20 @@ class FilterScreen extends React.Component {
                             <Text style={{ color: 'black', marginLeft: 8, fontSize: 16, marginTop: 8 }}>{this.state.valBatasWaktu}</Text>
                             <View style={{ height: 0.5, flex: 1, flexDirection: 'row', backgroundColor: 'grey', marginTop: 8 }}></View>
                         </TouchableOpacity>
+
+                        <Text style={{ fontWeight: '400', marginLeft: 8, fontSize: 14, marginTop: 16, color: 'grey' }}>Jenis Temuan</Text>
+                        <Picker
+                            mode="dropdown"
+                            iosHeader="Select your SIM"
+                            iosIcon={<Icon name="arrow-dropdown-circle" style={{ color: "#007aff", fontSize: 25 }} />}
+                            style={{ width: undefined }}
+                            selectedValue={this.state.selectedJenis}
+                            onValueChange={this.onValueChangeJenis.bind(this)}>
+                            <Picker.Item label="Pilih Jenis Temuan" value="key0" />
+                            <Picker.Item label="BLOK" value="key1" />
+                            <Picker.Item label="INFRA" value="key2" />
+                        </Picker>
+                        <View style={{ height: 0.5, flex: 1, flexDirection: 'row', backgroundColor: 'grey' }}></View>
 
                         <Text style={{ fontWeight: '400', marginLeft: 8, fontSize: 14, marginTop: 16, color: 'grey' }}>Status Temuan</Text>
                         <Picker

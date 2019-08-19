@@ -1,6 +1,6 @@
 const colors = {
     white: '#FFFFFF',
-    colorPrimary: '#FF9300',
+    colorPrimary: '#3CB301',
     colorPrimaryDark: '#FF9300',
     background: '#fff',
     transparent: 'rgba(0,0,0,0.54)',
@@ -14,7 +14,8 @@ const colors = {
     border: '#E8E8E8',
     greyBackground: '#E0E0E0',
     lightGrey: '#D5D5D5',
-    backgroundModal: 'rgba(0, 0, 0, 0.35)'
+    backgroundModal: 'rgba(0, 0, 0, 0.35)',
+    orange : '#FFB300'
 }
 
 export default colors;

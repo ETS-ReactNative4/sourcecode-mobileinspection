@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import {ImageBackground, StatusBar, Text, AppRegistry, Linking} from 'react-native';
+import { ImageBackground, StatusBar, Text, AppRegistry, Linking } from 'react-native';
 import { Container } from 'native-base'
 import { NavigationActions, StackActions } from 'react-navigation';
 import { getPermission } from '../Lib/Utils'
@@ -10,12 +10,13 @@ import CategoryAction from '../Redux/CategoryRedux'
 import ContactAction from '../Redux/ContactRedux'
 import RegionAction from '../Redux/RegionRedux'
 import R from 'ramda'
-import { dirPhotoInspeksiBaris, dirPhotoInspeksiSelfie,
-    dirPhotoTemuan, dirPhotoKategori, dirPhotoEbccJanjang, dirPhotoEbccSelfie, dirMaps, dirPhotoUser } from '../Lib/dirStorage';
-import moment from 'moment'
+import {
+    dirPhotoInspeksiBaris, dirPhotoInspeksiSelfie,
+    dirPhotoTemuan, dirPhotoKategori, dirPhotoEbccJanjang, dirPhotoEbccSelfie, dirMaps, dirPhotoUser
+} from '../Lib/dirStorage';
 import geolib from 'geolib';
-import DeviceInfo from "react-native-device-info";
 import ModalAlert from "../Component/ModalAlert";
+import { retrieveData } from '../Database/Resources';
 
 var RNFS = require('react-native-fs');
 const skm = require('../Data/MegaKuningan.json');
@@ -30,7 +31,7 @@ class SplashScreen extends Component {
             showModal: true,
             position: null,
 
-            modalUpdate:{
+            modalUpdate: {
                 title: 'Title',
                 message: 'Message',
                 showModal: false,
@@ -53,20 +54,36 @@ class SplashScreen extends Component {
     }
 
     checkUser() {
-        let data = TaskServices.getAllData('TR_LOGIN')
-        if (data !== undefined && data.length > 0) {
-            if (data[0].STATUS == 'LOGIN') {
-                if (data[0].USER_ROLE == 'FFB_GRADING_MILL') {
-                    this.navigateScreen('MainMenuMil');
+        retrieveData('expiredToken').then((token) => {
+            if (token != null) {
+                const dateToday = new Date();
+                console.log('dateToday : ', dateToday)
+                const dateExpired = new Date(token.tanggal)
+                console.log('dateExpired : ', dateExpired)
+                let data = TaskServices.getAllData('TR_LOGIN')
+
+                if (dateToday > dateExpired) {
+                    this.navigateScreen('Login');
                 } else {
-                    this.navigateScreen('MainMenu');
+                    if (data !== undefined && data.length > 0) {
+                        if (data[0].STATUS == 'LOGIN') {
+                            if (data[0].USER_ROLE == 'FFB_GRADING_MILL') {
+                                this.navigateScreen('MainMenuMil');
+                            } else {
+                                this.navigateScreen('MainMenu');
+                            }
+                        } else {
+                            this.navigateScreen('Login');
+                        }
+                    } else {
+                        this.navigateScreen('Login');
+                    }
                 }
             } else {
                 this.navigateScreen('Login');
             }
-        } else {
-            this.navigateScreen('Login');
-        }
+        })
+
     }
 
     makeFolder() {
@@ -123,7 +140,7 @@ class SplashScreen extends Component {
         if (isAllGrandted === true) {
             this.makeFolder()
             setTimeout(() => {
-                if(!this.state.modalUpdate.showModal){
+                if (!this.state.modalUpdate.showModal) {
                     this.checkUser();
                 }
             }, 2000);
@@ -132,12 +149,12 @@ class SplashScreen extends Component {
         }
     }
 
-    checkUpdate(){
+    checkUpdate() {
         let TRCONFIG = TaskServices.getAllData("TR_CONFIG")[0];
-        if(TRCONFIG !== undefined){
-            if(TRCONFIG.FORCE_UPDATE){
+        if (TRCONFIG !== undefined) {
+            if (TRCONFIG.FORCE_UPDATE) {
                 this.setState({
-                    modalUpdate:{
+                    modalUpdate: {
                         title: 'Versi Aplikasi',
                         message: 'Kamu harus lakukan update aplikasi',
                         showModal: true,

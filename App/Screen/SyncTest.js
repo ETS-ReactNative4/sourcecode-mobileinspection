@@ -39,6 +39,7 @@ var RNFS = require('react-native-fs');
 import ModalAlert from '../Component/ModalAlert';
 import { fetchPostAPI } from '../Api/FetchingApi';
 import ProgressSync from '../Component/ProgressSync';
+import { storeData } from '../Database/Resources';
 // import FuntionCRUD from '../Database/FunctionCRUD'
 
 class SyncScreen extends React.Component {
@@ -1847,6 +1848,9 @@ class SyncScreen extends React.Component {
                                     ...allLoginData[0],
                                     ACCESS_TOKEN: newToken
                                 };
+                                var new_date = moment().add(7, 'days');
+                                const date = { tanggal: new_date }
+                                storeData('expiredToken', date);
                                 TaskServices.updateByPrimaryKey('TR_LOGIN', loginData);
                                 let newLoginData = TaskServices.findBy('TR_LOGIN', 'STATUS', 'LOGIN');
                                 RNFS.copyFile(TaskServices.getPath(), 'file:///storage/emulated/0/MobileInspection/data.realm');
