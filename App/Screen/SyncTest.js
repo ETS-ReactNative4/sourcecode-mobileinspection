@@ -64,6 +64,7 @@ class SyncScreen extends React.Component {
         this.state = {
             user,
             //upload
+            uploadErrorFlag: false,
             progressInspeksiHeader: 0,
             progressInspeksiDetail: 0,
             progressUploadImage: 0,
@@ -623,8 +624,9 @@ class SyncScreen extends React.Component {
 
     async kirimImage() {
         try {
+            let uploadImageCount = 0;
             const user = TaskServices.getAllData('TR_LOGIN')[0];
-            let all = TaskServices.getAllData('TR_IMAGE')
+            let all = TaskServices.getAllData('TR_IMAGE');
             var dataImage = TaskServices.query('TR_IMAGE', `STATUS_SYNC = 'N'`);
             if (all !== undefined && dataImage !== undefined) {
                 for (let i = 0; i < dataImage.length; i++) {
@@ -640,31 +642,23 @@ class SyncScreen extends React.Component {
                                 data.append('STATUS_SYNC', 'Y')
                                 data.append('SYNC_TIME', getTodayDate('YYYYMMDDkkmmss'))
                                 data.append('INSERT_TIME', convertTimestampToDate(model.INSERT_TIME, 'YYYYMMDDkkmmss'))
-                                data.append('INSERT_USER', model.INSERT_USER)
+                                data.append('INSERT_USER', model.INSERT_USER);
                                 data.append('FILENAME', {
                                     uri: `file://${model.IMAGE_PATH_LOCAL}`,
                                     type: 'image/jpeg',
                                     name: model.IMAGE_NAME,
                                 });
+
                                 const url = this.getAPIURL("IMAGES-UPLOAD");
-                                fetch(url.API_URL, {
-                                    method: url.METHOD,
-                                    headers: {
-                                        'Cache-Control': 'no-cache',
-                                        Accept: 'application/json',
-                                        'Content-Type': 'multipart/form-data',
-                                        Authorization: `Bearer ${user.ACCESS_TOKEN}`,
-                                    },
-                                    body: data
-                                })
-                                    .then((response) => response.json())
-                                    .then((responseJson) => {
-                                        if (responseJson.status) {
-                                            this.setState({ valueImageUserUpload: i });
+                                fetchPostAPI(user.ACCESS_TOKEN, url.API_URL, data).then(((result) => {
+                                    if (result != undefined) {
+                                        this.setState({ valueImageUpload: dataImage.length });
+                                        if (result.status) {
                                             TaskServices.updateByPrimaryKey('TR_IMAGE', {
                                                 "IMAGE_CODE": model.IMAGE_CODE,
                                                 "STATUS_SYNC": "Y"
                                             });
+                                            uploadImageCount++;
                                             // TaskServices.updateStatusImage('TR_IMAGE', 'Y', idxOrder);
                                         }
                                         else {
@@ -688,9 +682,12 @@ class SyncScreen extends React.Component {
                                                 });
                                             }
                                         }
-                                    }).catch((error) => {
-                                        console.error(error);
-                                    });
+                                    } else {
+                                        this.setState({
+                                            uploadErrorFlag: true
+                                        },()=>{console.log("kirimImage Server Timeout")})
+                                    }
+                                }));
                             } else {
                                 let data = TaskServices.getAllData('TR_IMAGE');
                                 let indexData = R.findIndex(R.propEq('IMAGE_CODE', model.IMAGE_CODE))(data);
@@ -700,7 +697,7 @@ class SyncScreen extends React.Component {
                         })
                 }
             }
-            this.setState({ progressUploadImage: 1, valueImageUpload: dataImage.length, totalImagelUpload: dataImage.length });
+            this.setState({ progressUploadImage: 1, valueImageUpload: uploadImageCount ,totalImagelUpload: dataImage.length });
         } catch (error) {
             this.setState({ progressUploadImage: 1, valueImageUpload: 0, totalImagelUpload: 0 });
         }
@@ -814,7 +811,9 @@ class SyncScreen extends React.Component {
                     console.log("findingcomment upload failed, check your parameter / api!");
                 }
             } else {
-                console.log("Server Timeout");
+                this.setState({
+                    uploadErrorFlag: true
+                },()=>{console.log("finding comment Server Timeout")})
             }
         }));
     }
@@ -941,7 +940,9 @@ class SyncScreen extends React.Component {
                     console.log("weeklysummary upload failed, check your parameter / api!");
                 }
             } else {
-                console.log("Server Timeout");
+                this.setState({
+                    uploadErrorFlag: true
+                },()=>{console.log("weekly summary Server Timeout");})
             }
         }));
     }
@@ -977,31 +978,25 @@ class SyncScreen extends React.Component {
         }
     }
 
+
+
     postGenba(genbaModel) {
         let urlDetail = this.getAPIURL("INSPECTION-GENBA-INSERT")
         const user = TaskServices.getAllData('TR_LOGIN')[0];
-        fetch(urlDetail.API_URL, {
-            method: urlDetail.METHOD,
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${user.ACCESS_TOKEN}`
-            },
-            body: JSON.stringify(genbaModel)
-        })
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
+        fetchPostAPI(user.ACCESS_TOKEN, urlDetail.API_URL, param).then(((result) => {
+            if (result != undefined) {
                 if (data.status) {
                     this.updateGenbaInspectionTable(genbaModel.BLOCK_INSPECTION_CODE)
                 }
                 else {
                     console.log("genbaUpload failed, check your parameter / api!");
                 }
-            })
-            .catch((e) => {
-                console.log("genbaUpload failed E:" + e);
-            })
+            } else {
+                this.setState({
+                    uploadErrorFlag: true
+                },()=>{console.log("postgenba Server Timeout")})
+            }
+        }));
     }
 
     updateGenbaInspectionTable = (genbaInspectionCode) => {
@@ -1016,18 +1011,8 @@ class SyncScreen extends React.Component {
 
     uploadData(URL, dataPost, table, idInspection) {
         const user = TaskServices.getAllData('TR_LOGIN')[0];
-        fetch(URL.API_URL, {
-            method: URL.METHOD,
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${user.ACCESS_TOKEN}`
-            },
-            body: JSON.stringify(dataPost)
-        })
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
+        fetchPostAPI(user.ACCESS_TOKEN, URL.API_URL, dataPost).then(((result) => {
+            if (result != undefined) {
                 if (data.status) {
                     if (table == 'header') {
                         this.updateInspeksi(dataPost);
@@ -1051,10 +1036,12 @@ class SyncScreen extends React.Component {
                         this.updateEbccDetail(dataPost, idInspection)
                     }
                 }
-            })
-            .catch((e) => {
-                console.log("error upload", URL, dataPost, table, user.ACCESS_TOKEN, e);
-            })
+            } else {
+                this.setState({
+                    uploadErrorFlag: true
+                },()=>{console.log("upload data Server Timeout")})
+            }
+        }));
     }
 
     checkImageHasSent(trCode) {
@@ -2104,26 +2091,35 @@ class SyncScreen extends React.Component {
         //POST TRANSAKSI
         this.kirimImage();
         this.kirimUserImage();
-        this.uploadWeeklySummary();
+        // this.uploadWeeklySummary();
 
         this.checkUpdate()
             .then((callback)=>{
-                if(callback){
-                    this.setState({
-                        modalUpdate:{
-                            title: 'Versi Aplikasi',
-                            message: 'Kamu harus lakukan update aplikasi',
-                            showModal: true,
-                            icon: require('../Images/icon/icon_update_apps.png'),
-                        }
-                    })
-                }
-                else{
-                    //cara redux saga
-                    setTimeout(() => {
+                if(this.state.uploadErrorFlag === false){
+                    if(callback){
+                        this.setState({
+                            modalUpdate:{
+                                title: 'Versi Aplikasi',
+                                message: 'Kamu harus lakukan update aplikasi',
+                                showModal: true,
+                                icon: require('../Images/icon/icon_update_apps.png'),
+                            }
+                        })
+                    }
+                    else{
+                        //cara redux saga
                         this.props.findingRequest();
                         this.props.blockRequest();
-                    }, 2000);
+                    }
+                }
+                else{
+                    this.setState({
+                        showButton: true,
+                        showModal: true,
+                        title: 'Sync Putus (Upload)',
+                        message: 'Yaaah jaringannya mati, coba Sync lagi yaa.',
+                        icon: require('../Images/ic-sync-gagal.png')
+                    })
                 }
             });
     }
