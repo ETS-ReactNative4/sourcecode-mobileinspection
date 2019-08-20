@@ -67,7 +67,7 @@ export default class PilihPeta extends Component {
 	}
 
 	componentDidMount() {
-		AsyncStorage.clear();
+		// AsyncStorage.clear();
 		this.initData();
 		this.props.navigation.setParams({ handleBack: this.handleBackButtonClick });
 	}
