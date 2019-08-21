@@ -222,22 +222,6 @@ const TR_CONTACT = {
     }
 }
 
-
-const TR_CONTACT_GENBA = {
-    name: 'TR_CONTACT_GENBA',
-    primaryKey: 'USER_AUTH_CODE',
-    properties: {
-        USER_AUTH_CODE: 'string',
-        EMPLOYEE_NIK: 'string',
-        USER_ROLE: 'string',
-        LOCATION_CODE: { type: 'string', optional: true },
-        REF_ROLE: 'string',
-        JOB: 'string',
-        FULLNAME: 'string',
-        REGION_CODE: { type: 'string', optional: true }
-    }
-}
-
 const TR_FINDING = {
     name: 'TR_FINDING',
     primaryKey: 'FINDING_CODE',
@@ -590,7 +574,6 @@ export default {
     TR_FINDING_COMMENT,
     TR_CATEGORY,
     TR_CONTACT,
-    TR_CONTACT_GENBA,
 
     //Add by Aminju
     TM_REGION,

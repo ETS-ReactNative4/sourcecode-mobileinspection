@@ -120,10 +120,8 @@ export default class Genba extends Component {
      * LOAD DATA FROM BEGINNING
      */
     loadContact = () => {
-        let contactGenba = TaskServices.getAllData("TR_CONTACT_GENBA").sorted('FULLNAME', false);
+        let contactGenba = TaskServices.getAllData("TR_CONTACT").sorted('FULLNAME', false);
         let selectedGenba = TaskServices.getAllData("TR_GENBA_SELECTED");
-        // let contactGenba = Object.values(TaskServices.getAllData("TR_CONTACT_GENBA"));
-        // let selectedGenba = Object.values(TaskServices.getAllData("TR_GENBA_SELECTED"));
 
         //ambil smua userauthcode, buat check ui icon check
         let listSelectedUserCode = [];
@@ -196,7 +194,7 @@ export default class Genba extends Component {
     selectedName(data_auth_code) {
         let isUserExist = TaskServices.findBy2("TR_GENBA_SELECTED", "USER_AUTH_CODE", data_auth_code);
         if(typeof isUserExist === 'undefined'){
-            let selectedUser = TaskServices.findBy2('TR_CONTACT_GENBA', 'USER_AUTH_CODE', data_auth_code);
+            let selectedUser = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', data_auth_code);
             if(typeof selectedUser !== 'undefined'){
                 TaskServices.saveData('TR_GENBA_SELECTED', selectedUser);
                 this.getSelectedNameFromDB();

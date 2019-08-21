@@ -247,36 +247,6 @@ const TaskServices = {
     });
   },
 
-  updateContent: function (param, index) {
-    // let data = RealmSchemas.objects('TM_CONTENT')[index];
-    let result = RealmSchemas.objects('TM_CONTENT').find(row => {
-      return row.CONTENT_CODE == param.CONTENT_CODE
-    })
-    RealmSchemas.write(() => {
-      data.GROUP_CATEGORY = result.GROUP_CATEGORY;
-      data.CATEGORY = result.CATEGORY;
-      data.CONTENT_NAME = result.CONTENT_NAME;
-      data.UOM = result.UOM;
-      data.FLAG_TYPE = result.FLAG_TYPE;
-      data.URUTAN = result.URUTAN;
-    });
-  },
-
-  updateContact: function (param, index) {
-    // let data = RealmSchemas.objects('TR_CONTACT')[index];
-    let result = RealmSchemas.objects('TR_CONTACT').find(row => {
-      return row.USER_AUTH_CODE == param.USER_AUTH_CODE
-    })
-    RealmSchemas.write(() => {
-      data.EMPLOYEE_NIK = result.EMPLOYEE_NIK;
-      data.USER_ROLE = result.USER_ROLE;
-      data.LOCATION_CODE = result.LOCATION_CODE;
-      data.REF_ROLE = result.REF_ROLE;
-      data.JOB = result.JOB;
-      data.FULLNAME = result.FULLNAME;
-    });
-  },
-
   updateFindingDownload: function (param, index) {
     // let data = RealmSchemas.objects('TR_FINDING')[index];
     let result = RealmSchemas.objects('TR_FINDING').find(row => {
@@ -299,40 +269,6 @@ const TaskServices = {
       data.INSERT_USER = result.INSERT_USER;
       data.INSERT_TIME = result.INSERT_TIME;
       data.STATUS_SYNC = result.STATUS_SYNC;
-    });
-  },
-
-  updateParamTrack: function (param, index) {
-    let data = RealmSchemas.objects('TM_TIME_TRACK')[index];
-    // let result = RealmSchemas.objects('TM_TIME_TRACK').find(row => {
-    //   return row.FINDING_CODE == param.FINDING_CODE
-    // })
-    RealmSchemas.write(() => {
-      data.PARAMETER_GROUP = param.PARAMETER_GROUP;
-      data.PARAMETER_NAME = param.PARAMETER_NAME;
-      data.DESC = param.DESC;
-      data.NO_URUT = param.NO_URUT;
-    });
-  },
-
-  updateFinding: function (table, param, index) {
-    let data = RealmSchemas.objects(table)[index];
-    RealmSchemas.write(() => {
-      data.STATUS = param[0];
-      data.PROGRESS = param[1];
-      data.STATUS_SYNC = param[2];
-      data.DUE_DATE = param[3];
-      data.UPDATE_USER = param[4];
-      data.UPDATE_TIME = param[5];
-    });
-  },
-
-  updateFindingSync: function (table, param, index) {
-    let data = RealmSchemas.objects(table)[index];
-    RealmSchemas.write(() => {
-      data.PROGRESS = param[0];
-      data.STATUS_SYNC = param[1];
-      data.DUE_DATE = param[2];
     });
   },
 
@@ -376,15 +312,6 @@ const TaskServices = {
         });
       }
     }
-  },
-
-  updateTmRegionByRegionCode: function (regionCode, param) {
-    let data = RealmSchemas.objects('TM_REGION').filtered('REGION_CODE == \"' + regionCode + '\" ')[0];
-    RealmSchemas.write(() => {
-      data.NATIONAL = param[0];
-      data.REGION_CODE = param[1];
-      data.REGION_NAME = param[2];
-    });
   },
 
   findByWithList: function (table, listWhereClause, listValueClause) {
@@ -653,50 +580,6 @@ const TaskServices = {
     } catch (error) {
       return arrBlock
     }
-  },
-
-
-  getWerks: function () {
-    let auth = this.getAllData('TR_LOGIN')[0];
-    let refCode = auth.REFFERENCE_ROLE;
-    let valueRefCode = auth.LOCATION_CODE
-    let est;
-    if (refCode === 'REGION_CODE') {
-      let reg = this.findBy2('TM_REGION', 'REGION_CODE', valueRefCode);
-      let comp = this.findBy2('TM_COMP', 'REGION_CODE', reg.REGION_CODE);
-      est = this.findBy2('TM_EST', 'COMP_CODE', comp.COMP_CODE);
-      return est.WERKS;
-    } else if (refCode === 'COMP_CODE') {
-      est = this.findBy2('TM_EST', 'COMP_CODE', valueRefCode);
-      return est.WERKS
-    } else if (refCode === 'BA_CODE') {
-      est = this.findBy2('TM_EST', 'WERKS', valueRefCode);
-      return est.WERKS
-    } else if (refCode === 'AFD_CODE') {
-      let afd = this.findBy2('TM_AFD', 'WERKS_AFD_CODE', valueRefCode);
-      // est = this.findBy2('TM_EST', 'WERKS', afd.WERKS);
-      return afd.WERKS
-    }
-  },
-
-
-  getAllContact: function () {
-    let data = this.getAllData('TR_CONTACT')[0];
-    return data;
-  },
-
-  getAllContactGenba: function () {
-    let data = this.getAllData('TR_CONTACT_GENBA');
-    return data;
-  },
-
-  getLoginData: function () {
-    let data = this.getAllData('TR_LOGIN')[0];
-    return data;
-  },
-
-  getAllDataContact: function (table, column = '', value = '') {
-    return RealmSchemas.objects(table).filtered(column + "==" + "\'" + value + "\'")[0];
   },
 };
 
