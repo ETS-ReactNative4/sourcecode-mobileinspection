@@ -37,7 +37,7 @@ import { getTodayDate, convertTimestampToDate } from '../Lib/Utils';
 var RNFS = require('react-native-fs');
 
 import ModalAlert from '../Component/ModalAlert';
-import { fetchPostAPI } from '../Api/FetchingApi';
+import { fetchPostAPI, fetchFormPostAPI } from '../Api/FetchingApi';
 import ProgressSync from '../Component/ProgressSync';
 import { storeData } from '../Database/Resources';
 // import FuntionCRUD from '../Database/FunctionCRUD'
@@ -625,7 +625,6 @@ class SyncScreen extends React.Component {
     async kirimImage() {
         try {
             let uploadImageCount = 0;
-            const user = TaskServices.getAllData('TR_LOGIN')[0];
             let all = TaskServices.getAllData('TR_IMAGE');
             var dataImage = TaskServices.query('TR_IMAGE', `STATUS_SYNC = 'N'`);
             if (all !== undefined && dataImage !== undefined) {
@@ -650,8 +649,8 @@ class SyncScreen extends React.Component {
                                 });
 
                                 const url = this.getAPIURL("IMAGES-UPLOAD");
-                                fetchPostAPI(user.ACCESS_TOKEN, url.API_URL, data).then(((result) => {
-                                    if (result != undefined) {
+                                fetchFormPostAPI(this.state.user.ACCESS_TOKEN, url.API_URL, data).then(((result) => {
+                                    if (result !== undefined) {
                                         this.setState({ valueImageUpload: dataImage.length });
                                         if (result.status) {
                                             TaskServices.updateByPrimaryKey('TR_IMAGE', {
@@ -728,29 +727,24 @@ class SyncScreen extends React.Component {
                                     name: model.IMAGE_NAME,
                                 });
                                 const url = this.getAPIURL("IMAGES-PROFILE");
-                                fetch(url.API_URL, {
-                                    method: url.METHOD,
-                                    headers: {
-                                        'Cache-Control': 'no-cache',
-                                        Accept: 'application/json',
-                                        'Content-Type': 'multipart/form-data',
-                                        Authorization: `Bearer ${user.ACCESS_TOKEN}`,
-                                    },
-                                    body: data
-                                })
-                                    .then((response) => response.json())
-                                    .then((responseJson) => {
-                                        if (responseJson.status) {
+                                fetchFormPostAPI(this.state.user.ACCESS_TOKEN, url.API_URL, data).then(((result) => {
+                                    console.log("TOKENNNNNNNNN", url);
+                                    console.log("USERRRRRRRRRRRRR", this.state.user);
+                                    console.log("RESULTTTTTTTTTTTTTTTTT", result);
+                                    if (result != undefined) {
+                                        if (result.status) {
                                             this.setState({ valueImageUserUpload: i + 1 });
                                             TaskServices.updateByPrimaryKey('TR_IMAGE_PROFILE', {
                                                 "USER_AUTH_CODE": model.USER_AUTH_CODE,
                                                 "STATUS_SYNC": "Y"
                                             });
-                                            // TaskServices.updateStatusImage('TR_IMAGE', 'Y', idxOrder);
                                         }
-                                    }).catch((error) => {
-                                        console.error(error);
-                                    });
+                                    } else {
+                                        this.setState({
+                                            uploadErrorFlag: true
+                                        },()=>{console.log("kirimUserImage Server Timeout")})
+                                    }
+                                }));
                             } else {
                                 let data = TaskServices.getAllData('TR_IMAGE');
                                 let indexData = R.findIndex(R.propEq('IMAGE_CODE', model.IMAGE_CODE))(data);
@@ -973,7 +967,6 @@ class SyncScreen extends React.Component {
                 progressGenbaInspection: 1
             });
         } else {
-            console.log("No data on genba inspection")
             this.setState({ progressGenbaInspection: 1, valueGenbaInspection: 0, totalGenbaInspection: 0 });
         }
     }
@@ -983,7 +976,7 @@ class SyncScreen extends React.Component {
     postGenba(genbaModel) {
         let urlDetail = this.getAPIURL("INSPECTION-GENBA-INSERT")
         const user = TaskServices.getAllData('TR_LOGIN')[0];
-        fetchPostAPI(user.ACCESS_TOKEN, urlDetail.API_URL, param).then(((result) => {
+        fetchPostAPI(user.ACCESS_TOKEN, urlDetail.API_URL, genbaModel).then(((result) => {
             if (result != undefined) {
                 if (data.status) {
                     this.updateGenbaInspectionTable(genbaModel.BLOCK_INSPECTION_CODE)
@@ -2090,37 +2083,35 @@ class SyncScreen extends React.Component {
         this.kirimUserImage();
         // this.uploadWeeklySummary();
 
-        this.props.findingRequest();
-        this.props.blockRequest();
-        // this.checkUpdate()
-        //     .then((callback)=>{
-        //         if(this.state.uploadErrorFlag === false){
-        //             if(callback){
-        //                 this.setState({
-        //                     modalUpdate:{
-        //                         title: 'Versi Aplikasi',
-        //                         message: 'Kamu harus lakukan update aplikasi',
-        //                         showModal: true,
-        //                         icon: require('../Images/icon/icon_update_apps.png'),
-        //                     }
-        //                 })
-        //             }
-        //             else{
-        //                 //cara redux saga
-        //                 this.props.findingRequest();
-        //                 this.props.blockRequest();
-        //             }
-        //         }
-        //         else{
-        //             this.setState({
-        //                 showButton: true,
-        //                 showModal: true,
-        //                 title: 'Sync Putus (Upload)',
-        //                 message: 'Yaaah jaringannya mati, coba Sync lagi yaa.',
-        //                 icon: require('../Images/ic-sync-gagal.png')
-        //             })
-        //         }
-        //     });
+        this.checkUpdate()
+            .then((callback)=>{
+                if(this.state.uploadErrorFlag === false){
+                    if(callback){
+                        this.setState({
+                            modalUpdate:{
+                                title: 'Versi Aplikasi',
+                                message: 'Kamu harus lakukan update aplikasi',
+                                showModal: true,
+                                icon: require('../Images/icon/icon_update_apps.png'),
+                            }
+                        })
+                    }
+                    else{
+                        //cara redux saga
+                        this.props.findingRequest();
+                        this.props.blockRequest();
+                    }
+                }
+                else{
+                    this.setState({
+                        showButton: true,
+                        showModal: true,
+                        title: 'Sync Putus (Upload)',
+                        message: 'Yaaah jaringannya mati, coba Sync lagi yaa.',
+                        icon: require('../Images/ic-sync-gagal.png')
+                    })
+                }
+            });
     }
 
     async checkUpdate(){
@@ -2131,7 +2122,6 @@ class SyncScreen extends React.Component {
             IMEI: IMEI.getImei().toString(),
             INSERT_TIME: moment().format('YYYYMMDDHHmmss').toString()
         };
-        console.log(deviceVersion);
         let TM_SERVICE = await TaskServices.findBy2("TM_SERVICE", 'API_NAME', 'AUTH-SERVER-APK-VERSION');
         try{
             return await fetch(TM_SERVICE.API_URL, {
