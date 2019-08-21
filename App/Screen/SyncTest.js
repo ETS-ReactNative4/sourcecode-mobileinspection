@@ -2093,35 +2093,37 @@ class SyncScreen extends React.Component {
         this.kirimUserImage();
         // this.uploadWeeklySummary();
 
-        this.checkUpdate()
-            .then((callback)=>{
-                if(this.state.uploadErrorFlag === false){
-                    if(callback){
-                        this.setState({
-                            modalUpdate:{
-                                title: 'Versi Aplikasi',
-                                message: 'Kamu harus lakukan update aplikasi',
-                                showModal: true,
-                                icon: require('../Images/icon/icon_update_apps.png'),
-                            }
-                        })
-                    }
-                    else{
-                        //cara redux saga
-                        this.props.findingRequest();
-                        this.props.blockRequest();
-                    }
-                }
-                else{
-                    this.setState({
-                        showButton: true,
-                        showModal: true,
-                        title: 'Sync Putus (Upload)',
-                        message: 'Yaaah jaringannya mati, coba Sync lagi yaa.',
-                        icon: require('../Images/ic-sync-gagal.png')
-                    })
-                }
-            });
+        this.props.findingRequest();
+        this.props.blockRequest();
+        // this.checkUpdate()
+        //     .then((callback)=>{
+        //         if(this.state.uploadErrorFlag === false){
+        //             if(callback){
+        //                 this.setState({
+        //                     modalUpdate:{
+        //                         title: 'Versi Aplikasi',
+        //                         message: 'Kamu harus lakukan update aplikasi',
+        //                         showModal: true,
+        //                         icon: require('../Images/icon/icon_update_apps.png'),
+        //                     }
+        //                 })
+        //             }
+        //             else{
+        //                 //cara redux saga
+        //                 this.props.findingRequest();
+        //                 this.props.blockRequest();
+        //             }
+        //         }
+        //         else{
+        //             this.setState({
+        //                 showButton: true,
+        //                 showModal: true,
+        //                 title: 'Sync Putus (Upload)',
+        //                 message: 'Yaaah jaringannya mati, coba Sync lagi yaa.',
+        //                 icon: require('../Images/ic-sync-gagal.png')
+        //             })
+        //         }
+        //     });
     }
 
     async checkUpdate(){

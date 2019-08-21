@@ -7,9 +7,6 @@ import { Form, Item, Input, Button } from 'native-base';
 import { NavigationActions } from 'react-navigation';
 import Icon1 from '../../Component/Icon1';
 
-
-// FUNCTION GENBA
-import funct from 'list-inspection-function/GenbaFunction';
 import TaskServices from "../../Database/TaskServices";
 import ModalAlert from "../../Component/ModalAlert";
 import moment from 'moment';
@@ -99,7 +96,7 @@ export default class Genba extends Component {
             let getvalue    = value;
             let dataSource  = this.state.dataSourceOri;
 
-            let dataFiltered = funct.filterData(dataSource,getvalue);
+            let dataFiltered = this.filterData(dataSource,getvalue);
             let total_suggestion_name = String(dataFiltered.length);
 
             this.setState({
@@ -107,6 +104,16 @@ export default class Genba extends Component {
                 totalSuggestion : "( " +  total_suggestion_name + " )"
             });
         }
+    }
+
+    filterData = (data, name) => {
+        let search_name     = name.toLowerCase() ;
+        let data_filtered   = data.filter(function(key){
+            let name = key.FULLNAME;
+            return !(name.toLowerCase().indexOf(search_name) == -1)
+        });
+
+        return data_filtered;
     }
 
     /**
@@ -171,14 +178,10 @@ export default class Genba extends Component {
      *  DELETE CHOOSEN DATA
      */
     deleteChoosen = (data_auth_code) => {
-        let SCHEMA_STORE_DATA   = 'TR_GENBA_SELECTED';
-        let VALUES              = data_auth_code;
-        let PRIMARY_KEY         = 'USER_AUTH_CODE';
-        funct.deleteDataChoosen( SCHEMA_STORE_DATA, PRIMARY_KEY, VALUES );
-
+        TaskServices.deleteRecordByPK('TR_GENBA_SELECTED', 'USER_AUTH_CODE', data_auth_code);
         this.getSelectedNameFromDB();
         this.loadContact();
-    }
+    };
 
     deleteSelectedAll(){
         TaskServices.deleteAllData("TR_GENBA_SELECTED")
@@ -272,8 +275,7 @@ export default class Genba extends Component {
     getSelectedNameFromDB = () => {
         let total_selected          = 0;
 
-        let getSelectedUser  = TaskServices.getAllData('TR_GENBA_SELECTED');
-        let selectedUser       = funct.convertDataFromRealmIntoJSONArray(getSelectedUser);
+        let selectedUser  = TaskServices.getAllData('TR_GENBA_SELECTED');
 
         if(selectedUser.length === 0){
             this.setState({
