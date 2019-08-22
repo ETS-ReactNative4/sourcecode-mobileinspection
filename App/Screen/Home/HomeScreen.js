@@ -1,19 +1,19 @@
 "use strict";
 import React from 'react';
 import {
-    ActivityIndicator,
-    Dimensions,
-    Image,
-    ImageBackground,
-    ScrollView,
-    StatusBar,
-    StyleSheet,
-    TouchableNativeFeedback,
-    TouchableOpacity,
-    View
+  ActivityIndicator,
+  Dimensions,
+  Image,
+  ImageBackground,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  TouchableNativeFeedback,
+  TouchableOpacity,
+  View
 } from 'react-native';
-import {Text, Thumbnail} from 'native-base';
-import {connect} from 'react-redux'
+import { Text, Thumbnail } from 'native-base';
+import { connect } from 'react-redux'
 import Entypo from 'react-native-vector-icons/Entypo'
 import Colors from '../../Constant/Colors'
 import TaskServices from '../../Database/TaskServices'
@@ -24,25 +24,25 @@ import CustomHeader from '../../Component/CustomHeader'
 import ServerName from '../../Constant/ServerName'
 import Moment from 'moment';
 import RNFetchBlob from 'rn-fetch-blob'
-import {changeFormatDate, dateDisplayMobile} from '../../Lib/Utils';
+import { changeFormatDate, dateDisplayMobile } from '../../Lib/Utils';
 import FastImage from 'react-native-fast-image'
 import SwiperSlider from 'react-native-swiper'
 import {
-    dirMaps,
-    dirPhotoEbccJanjang,
-    dirPhotoEbccSelfie,
-    dirPhotoInspeksiBaris,
-    dirPhotoInspeksiSelfie,
-    dirPhotoKategori,
-    dirPhotoTemuan
+  dirMaps,
+  dirPhotoEbccJanjang,
+  dirPhotoEbccSelfie,
+  dirPhotoInspeksiBaris,
+  dirPhotoInspeksiSelfie,
+  dirPhotoKategori,
+  dirPhotoTemuan
 } from '../../Lib/dirStorage';
 
 import WeeklySummary from "../../Component/WeeklySummary";
-import {clipString} from '../../Constant/Function';
-import {Images} from '../../Themes';
-import {changeBgFilter, changeIconFilter, getColor, getIconProgress, getStatusImage} from '../../Themes/Resources';
+import { clipString } from '../../Constant/Function';
+import { Images } from '../../Themes';
+import { changeBgFilter, changeIconFilter, getColor, getIconProgress, getStatusImage } from '../../Themes/Resources';
 import IconHeader from '../../Component/IconHeader'
-import {getBlokName, getCategoryName, getEstateName, getStatusBlok} from '../../Database/Resources';
+import { getBlokName, getCategoryName, getEstateName, getStatusBlok, retrieveData } from '../../Database/Resources';
 
 import RNFS from 'react-native-fs'
 
@@ -97,12 +97,6 @@ class HomeScreen extends React.Component {
   willFocus = this.props.navigation.addListener(
     'willFocus',
     () => {
-      // const SUMMARY = TaskServices.getAllData('TR_SUMMARY')[0];
-      // if (SUMMARY != undefined) {
-      //   if (SUMMARY.WEEKLY_STATUS == 'true') {
-      //     this.setState({ isVisibleSummary: true })
-      //   }
-      // }
       if (this.state.loadAll) {
         //this._initData()
         this.setState({
@@ -130,6 +124,17 @@ class HomeScreen extends React.Component {
     RNFS.mkdir(dirPhotoEbccJanjang);
     RNFS.mkdir(dirPhotoEbccSelfie);
     RNFS.mkdir(dirMaps);
+
+
+    retrieveData('WeeklySummary').then((result) => {
+      if (result != null) {
+        this.setState({ dataWeeklySummary: result.data })
+        console.log('RESULT STATUS : ', result.status)
+        if (result.status) {
+          this.setState({ isVisibleSummary: true })
+        }
+      }
+    })
   }
 
   _changeFilterList = data => {
@@ -864,7 +869,7 @@ class HomeScreen extends React.Component {
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>
 
-        <WeeklySummary visible={this.state.isVisibleSummary} onPressClose={() => this.setState({ isVisibleSummary: false })} />
+        <WeeklySummary data={this.state.dataWeeklySummary} visible={this.state.isVisibleSummary} onPressClose={() => this.setState({ isVisibleSummary: false })} />
 
         <StatusBar hidden={false} backgroundColor={Colors.tintColor} barStyle="light-content" />
         <View style={styles.sectionTimeline}>

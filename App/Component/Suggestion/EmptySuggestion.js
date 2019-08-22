@@ -41,7 +41,7 @@ const EmptySuggestion = (props) => {
                     width: '100%',
                     justifyContent: 'flex-end'
                 }}>
-                    {!props.isGenba && <ButtonSuggestion title={'Mulai Genba'} noData={true} onPress={props.onPressGenba} />}
+                    {props.isGenba && <ButtonSuggestion title={'Mulai Genba'} noData={true} onPress={props.onPressGenba} />}
                     <ButtonSuggestion title={'Mulai Inspeksi'}  noData={false} onPress={props.onPressInspeksi} />
                 </View>
             </View>

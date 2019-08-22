@@ -1,6 +1,6 @@
 import React from 'react';
-import {Linking, NetInfo, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import {Container, Content} from 'native-base'
+import { Linking, NetInfo, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Container, Content } from 'native-base'
 import Colors from '../Constant/Colors';
 import moment from 'moment';
 import DeviceInfo from 'react-native-device-info';
@@ -23,18 +23,18 @@ import FindingAction from '../Redux/FindingRedux';
 import FindingImageAction from '../Redux/FindingImageRedux';
 import ParamTrackAction from '../Redux/ParamTrackRedux'
 import KualitasAction from '../Redux/KualitasRedux'
-import {ProgressDialog} from 'react-native-simple-dialogs';
-import {dirPhotoKategori, dirPhotoTemuan} from '../Lib/dirStorage';
-import {connect} from 'react-redux';
+import { ProgressDialog } from 'react-native-simple-dialogs';
+import { dirPhotoKategori, dirPhotoTemuan } from '../Lib/dirStorage';
+import { connect } from 'react-redux';
 import R from 'ramda'
 import RNFetchBlob from 'rn-fetch-blob'
 import TaskServices from '../Database/TaskServices'
 import ServerName from '../Constant/ServerName'
-import {convertTimestampToDate, getTodayDate} from '../Lib/Utils';
+import { convertTimestampToDate, getTodayDate } from '../Lib/Utils';
 import ModalAlert from '../Component/ModalAlert';
-import {fetchFormPostAPI, fetchPostAPI} from '../Api/FetchingApi';
+import { fetchFormPostAPI, fetchPostAPI } from '../Api/FetchingApi';
 import ProgressSync from '../Component/ProgressSync';
-import {storeData} from '../Database/Resources';
+import { storeData } from '../Database/Resources';
 
 var RNFS = require('react-native-fs');
 
@@ -170,7 +170,7 @@ class SyncScreen extends React.Component {
             icon: '',
             isDeleteImage: false,
 
-            modalUpdate:{
+            modalUpdate: {
                 title: 'Title',
                 message: 'Message',
                 showModal: false,
@@ -682,7 +682,7 @@ class SyncScreen extends React.Component {
                                     } else {
                                         this.setState({
                                             uploadErrorFlag: true
-                                        },()=>{console.log("kirimImage Server Timeout")})
+                                        }, () => { console.log("kirimImage Server Timeout") })
                                     }
                                 }));
                             } else {
@@ -694,7 +694,7 @@ class SyncScreen extends React.Component {
                         })
                 }
             }
-            this.setState({ progressUploadImage: 1, valueImageUpload: uploadImageCount ,totalImagelUpload: dataImage.length });
+            this.setState({ progressUploadImage: 1, valueImageUpload: uploadImageCount, totalImagelUpload: dataImage.length });
         } catch (error) {
             this.setState({ progressUploadImage: 1, valueImageUpload: 0, totalImagelUpload: 0 });
         }
@@ -740,7 +740,7 @@ class SyncScreen extends React.Component {
                                     } else {
                                         this.setState({
                                             uploadErrorFlag: true
-                                        },()=>{console.log("kirimUserImage Server Timeout")})
+                                        }, () => { console.log("kirimUserImage Server Timeout") })
                                     }
                                 }));
                             } else {
@@ -805,7 +805,7 @@ class SyncScreen extends React.Component {
             } else {
                 this.setState({
                     uploadErrorFlag: true
-                },()=>{console.log("finding comment Server Timeout")})
+                }, () => { console.log("finding comment Server Timeout") })
             }
         }));
     }
@@ -886,55 +886,21 @@ class SyncScreen extends React.Component {
 
     // Aminju => Summary Inspeksi
     uploadWeeklySummary() {
-        // console.log('Masuk Weekly Summary ')
-        // const data = {
-        //     SUMMARY_CODE: 'F01',
-        //     TOTAL_INSPEKSI: 1,
-        //     TOTAL_BARIS: 10,
-        //     TARGET: 10,
-        //     DISTANCE_METER: 120,
-        //     DISTANCE_KM: 1,
-        //     DURATION: 11
-        // }
-        // TaskServices.saveData('TR_SUMMARY', data);
 
-        const today = getTodayDate('YYYY-MM-DD')
         const param = {
-            TANGGAL: today
+            IS_VIEW: 1
         }
         let urlDetail = this.getAPIURL("INSPECTION-SUMMARY")
+        console.log('urlDetail : ', urlDetail)
         const user = TaskServices.getAllData('TR_LOGIN')[0];
         fetchPostAPI(user.ACCESS_TOKEN, urlDetail.API_URL, param).then(((result) => {
+            console.log('Result : ', result)
             if (result != undefined) {
-                if (result.status) {
-                    const dummyData = {
-                        SUMMARY_CODE: 'SUM01',
-                        WEEKLY_STATUS: 'true',
-
-                        SUMMARY_INSPEKSI: 'inspeksi',
-                        VALUE_INSPEKSI: '10 (25 Baris)',
-                        TARGET_INSPEKSI: '10',
-
-                        SUMMARY_TEMUAN: 'temuan',
-                        VALUE_TEMUAN: '10',
-                        TARGET_TEMUAN: '100',
-
-                        SUMMARY_EBCC: 'ebcc validation',
-                        VALUE_EBCC: '25',
-                        TARGET_EBCC: '100',
-
-                        SUMMARY_WALK: 'berjalan kaki',
-                        VALUE_WALK: '1,040 KM',
-                        TARGET_WALK: '10 jam 50 menit',
-                    }
-                    TaskServices.saveData('TR_SUMMARY', dummyData);
-                } else {
-                    console.log("weeklysummary upload failed, check your parameter / api!");
-                }
+                storeData('WeeklySummary', result)
             } else {
                 this.setState({
                     uploadErrorFlag: true
-                },()=>{console.log("weekly summary Server Timeout");})
+                }, () => { console.log("weekly summary Server Timeout"); })
             }
         }));
     }
@@ -972,11 +938,13 @@ class SyncScreen extends React.Component {
 
 
     postGenba(genbaModel) {
+        console.log('Genba model : ', genbaModel)
         let urlDetail = this.getAPIURL("INSPECTION-GENBA-INSERT")
         const user = TaskServices.getAllData('TR_LOGIN')[0];
         fetchPostAPI(user.ACCESS_TOKEN, urlDetail.API_URL, genbaModel).then(((result) => {
+            console.log('Result Kampret : ', result)
             if (result != undefined) {
-                if (data.status) {
+                if (result.status) {
                     this.updateGenbaInspectionTable(genbaModel.BLOCK_INSPECTION_CODE)
                 }
                 else {
@@ -985,12 +953,13 @@ class SyncScreen extends React.Component {
             } else {
                 this.setState({
                     uploadErrorFlag: true
-                },()=>{console.log("postgenba Server Timeout")})
+                }, () => { console.log("postgenba Server Timeout") })
             }
         }));
     }
 
     updateGenbaInspectionTable = (genbaInspectionCode) => {
+        console.log('Updata Genba : ', genbaInspectionCode)
         if (genbaInspectionCode !== undefined) {
             TaskServices.updateByPrimaryKey('TR_GENBA_INSPECTION', {
                 "BLOCK_INSPECTION_CODE": genbaInspectionCode,
@@ -1004,7 +973,7 @@ class SyncScreen extends React.Component {
         const user = TaskServices.getAllData('TR_LOGIN')[0];
         fetchPostAPI(user.ACCESS_TOKEN, URL.API_URL, dataPost).then(((result) => {
             if (result != undefined) {
-                if (data.status) {
+                if (result.status) {
                     if (table == 'header') {
                         this.updateInspeksi(dataPost);
                         // this.updateInspeksiBaris(idInspection);
@@ -1030,7 +999,7 @@ class SyncScreen extends React.Component {
             } else {
                 this.setState({
                     uploadErrorFlag: true
-                },()=>{console.log("upload data Server Timeout")})
+                }, () => { console.log("upload data Server Timeout") })
             }
         }));
     }
@@ -2079,14 +2048,14 @@ class SyncScreen extends React.Component {
         //POST TRANSAKSI
         this.kirimImage();
         this.kirimUserImage();
-        // this.uploadWeeklySummary();
+        this.uploadWeeklySummary();
 
         this.checkUpdate()
-            .then((callback)=>{
-                if(this.state.uploadErrorFlag === false){
-                    if(callback){
+            .then((callback) => {
+                if (this.state.uploadErrorFlag === false) {
+                    if (callback) {
                         this.setState({
-                            modalUpdate:{
+                            modalUpdate: {
                                 title: 'Versi Aplikasi',
                                 message: 'Kamu harus lakukan update aplikasi',
                                 showModal: true,
@@ -2094,13 +2063,13 @@ class SyncScreen extends React.Component {
                             }
                         })
                     }
-                    else{
+                    else {
                         //cara redux saga
                         this.props.findingRequest();
                         this.props.blockRequest();
                     }
                 }
-                else{
+                else {
                     this.setState({
                         showButton: true,
                         showModal: true,
@@ -2112,7 +2081,7 @@ class SyncScreen extends React.Component {
             });
     }
 
-    async checkUpdate(){
+    async checkUpdate() {
         let deviceVersion = DeviceInfo.getVersion();
         let model = {
             INSERT_USER: this.state.user.USER_AUTH_CODE.toString(),
@@ -2121,7 +2090,7 @@ class SyncScreen extends React.Component {
             INSERT_TIME: moment().format('YYYYMMDDHHmmss').toString()
         };
         let TM_SERVICE = await TaskServices.findBy2("TM_SERVICE", 'API_NAME', 'AUTH-SERVER-APK-VERSION');
-        try{
+        try {
             return await fetch(TM_SERVICE.API_URL, {
                 method: TM_SERVICE.METHOD,
                 headers: {
@@ -2146,7 +2115,7 @@ class SyncScreen extends React.Component {
                     }
                 })
         }
-        catch(e){
+        catch (e) {
             console.log(e);
             return false;
         }
