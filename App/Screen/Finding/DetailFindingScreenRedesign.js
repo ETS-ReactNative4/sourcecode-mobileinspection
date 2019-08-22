@@ -44,9 +44,12 @@ class DetailFindingScreenRedesign extends Component {
 
         var ID = this.props.navigation.state.params.ID
         var data = TaskServices.findBy2('TR_FINDING', 'FINDING_CODE', ID);
+        let imageFilePath = TaskServices.getImagePath(data.INSERT_USER);
+
         this.state = {
             user: TaskServices.getAllData('TR_LOGIN')[0],
             id: ID,
+            imageFilePath: imageFilePath,
             images: [],
             totalImages: TaskServices.query('TR_IMAGE', `TR_CODE='${ID}' AND STATUS_IMAGE='SEBELUM'`),
             totalImagesSesudah: TaskServices.query('TR_IMAGE', `TR_CODE='${ID}' AND STATUS_IMAGE='SESUDAH'`),
@@ -249,8 +252,10 @@ class DetailFindingScreenRedesign extends Component {
 
 
                     <View style={{ flex: 1, flexDirection: 'row', marginTop: 15, paddingLeft: 15, paddingRight: 15 }}>
-                        <Image style={{ marginRight: 16, width: 40, height: 40, borderRadius: 10 }}
-                            source={Images.ic_orang}></Image>
+                        <Image
+                            style={{ marginRight: 16, width: 40, height: 40, borderRadius: 20 }}
+                            source={this.state.imageFilePath}
+                        />
                         <View style={{ flex: 1 }} >
                             <Text style={{ fontSize: 14, fontWeight: 'bold', color: 'black' }}>{this.state.fullName}</Text>
                             <Text style={{ fontSize: 12, color: 'grey', marginTop: 3 }}>

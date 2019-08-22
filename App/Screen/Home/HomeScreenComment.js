@@ -31,7 +31,10 @@ export default class HomeScreenComment extends Component {
     constructor(props) {
         super();
 
+        let dataLogin = TaskServices.getAllData('TR_LOGIN')[0];
         this.state = {
+            dataLogin: dataLogin,
+
             FINDING_CODE: props.navigation.getParam("findingCode", null),
             commentData: [],
             commentValue: "",
@@ -73,8 +76,7 @@ export default class HomeScreenComment extends Component {
     }
 
     insertComment() {
-        let dataLogin = TaskServices.getAllData('TR_LOGIN')[0];
-        let getUserName = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', dataLogin.USER_AUTH_CODE);
+        let getUserName = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', this.state.dataLogin.USER_AUTH_CODE);
         let dateTime = moment().format('YYYYMMDDHHmmss');
         let saveTaggedUser = [];
         this.state.taggedUser.map((taggedUser) => {
@@ -84,9 +86,9 @@ export default class HomeScreenComment extends Component {
         });
 
         let tempComment = {
-            FINDING_COMMENT_ID: "FC" + dataLogin.USER_AUTH_CODE + dateTime,
+            FINDING_COMMENT_ID: "FC" + this.state.dataLogin.USER_AUTH_CODE + dateTime,
             FINDING_CODE: this.state.FINDING_CODE,
-            USER_AUTH_CODE: dataLogin.USER_AUTH_CODE,
+            USER_AUTH_CODE: this.state.dataLogin.USER_AUTH_CODE,
             MESSAGE: this.state.commentValue,
             INSERT_TIME: dateTime,
             TAGS: saveTaggedUser,
@@ -159,7 +161,10 @@ export default class HomeScreenComment extends Component {
                                     flexDirection: 'row'
                                 }}>
                                     <View>
-                                        <Image source={require('../../Images/ic-orang.png')} style={{ width: 30, height: 30, marginRight: 15 }} />
+                                        <Image
+                                            style={{ width: 30, height: 30, borderRadius: 15, marginRight: 15 }}
+                                            source={TaskServices.getImagePath(item.USER_AUTH_CODE)}
+                                        />
                                     </View>
                                     <View style={{ flex: 1, justifyContent: 'center' }}>
                                         <Text style={{ fontSize: 14, fontWeight: '600', color: 'black' }}>{item.FULLNAME}</Text>
@@ -239,10 +244,10 @@ export default class HomeScreenComment extends Component {
                         style={{
                             width: 40,
                             height: 40,
-                            borderRadius: 25
+                            borderRadius: 20
                         }}
                         resizeMode={"stretch"}
-                        source={ic_org_placeholder}
+                        source={TaskServices.getImagePath(this.state.dataLogin.USER_AUTH_CODE)}
                     />
                     <View
                         style={{
@@ -342,7 +347,7 @@ export default class HomeScreenComment extends Component {
                                         borderRadius: 25
                                     }}
                                     resizeMode={"stretch"}
-                                    source={ic_org_placeholder}
+                                    source={TaskServices.getImagePath(item.USER_AUTH_CODE)}
                                 />
                                 <View
                                     style={{

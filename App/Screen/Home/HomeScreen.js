@@ -509,13 +509,13 @@ class HomeScreen extends React.Component {
       commentMessage = this.processText(this.state.showTrimComment[index] ? getComment[0].MESSAGE : clipString(getComment[0].MESSAGE, 150), getComment[0].TAGS);
     }
 
-    let filePath = TaskServices.findBy2('TR_IMAGE_PROFILE', 'USER_AUTH_CODE', INSERT_USER.USER_AUTH_CODE);
+    let filePath = TaskServices.getImagePath(INSERT_USER.USER_AUTH_CODE);
 
     return (
       <View key={index}>
         <View >
           <View style={{ flexDirection: 'row', marginTop: 10 }}>
-            <Thumbnail style={{ borderColor: 'grey', borderWidth: 0.5, height: 36, width: 36, marginRight: 10, marginLeft: 10 }} source={filePath !== undefined ? {uri: "file://"+filePath.IMAGE_PATH_LOCAL} : getThumnail()} />
+            <Thumbnail style={{ borderColor: 'grey', borderWidth: 0.5, height: 36, width: 36, marginRight: 10, marginLeft: 10 }} source={filePath} />
             <View>
               <Text style={{ fontSize: 14 }}>{user}</Text>
               <Text style={{ fontSize: 12, color: 'grey' }}>{dtInsertTime}</Text>

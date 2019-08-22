@@ -85,7 +85,7 @@ export function getSticker(score) {
 }
 
 export function getThumnail() {
-	var arrA = [
+	let arrA = [
 		require('../Images/icon/ic-orang-1.png'),
 		require('../Images/icon/ic-orang-2.png'),
 		require('../Images/icon/ic-orang-3.png'),
