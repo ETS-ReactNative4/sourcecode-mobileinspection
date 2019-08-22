@@ -42,7 +42,7 @@ import { clipString } from '../../Constant/Function';
 import { Images } from '../../Themes';
 import { changeBgFilter, changeIconFilter, getColor, getIconProgress, getStatusImage } from '../../Themes/Resources';
 import IconHeader from '../../Component/IconHeader'
-import { getBlokName, getCategoryName, getEstateName, getStatusBlok, retrieveData } from '../../Database/Resources';
+import { getBlokName, getCategoryName, getEstateName, getStatusBlok, retrieveData, removeData } from '../../Database/Resources';
 
 import RNFS from 'react-native-fs'
 
@@ -97,6 +97,19 @@ class HomeScreen extends React.Component {
   willFocus = this.props.navigation.addListener(
     'willFocus',
     () => {
+
+      retrieveData('WeeklySummary').then((result) => {
+        if (result != null) {
+          this.setState({ dataWeeklySummary: result.data })
+          console.log('RESULT STATUS : ', result.status)
+          if (result.status) {
+            this.setState({ isVisibleSummary: true })
+          }
+        } else {
+          this.setState({ isVisibleSummary: false })
+        }
+      })
+
       if (this.state.loadAll) {
         //this._initData()
         this.setState({
@@ -124,17 +137,6 @@ class HomeScreen extends React.Component {
     RNFS.mkdir(dirPhotoEbccJanjang);
     RNFS.mkdir(dirPhotoEbccSelfie);
     RNFS.mkdir(dirMaps);
-
-
-    retrieveData('WeeklySummary').then((result) => {
-      if (result != null) {
-        this.setState({ dataWeeklySummary: result.data })
-        console.log('RESULT STATUS : ', result.status)
-        if (result.status) {
-          this.setState({ isVisibleSummary: true })
-        }
-      }
-    })
   }
 
   _changeFilterList = data => {
@@ -869,7 +871,11 @@ class HomeScreen extends React.Component {
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>
 
-        <WeeklySummary data={this.state.dataWeeklySummary} visible={this.state.isVisibleSummary} onPressClose={() => this.setState({ isVisibleSummary: false })} />
+        <WeeklySummary data={this.state.dataWeeklySummary} visible={this.state.isVisibleSummary}
+          onPressClose={() => {
+            this.setState({ isVisibleSummary: false })
+            removeData('WeeklySummary')
+          }} />
 
         <StatusBar hidden={false} backgroundColor={Colors.tintColor} barStyle="light-content" />
         <View style={styles.sectionTimeline}>

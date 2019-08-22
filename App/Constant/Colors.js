@@ -44,6 +44,7 @@ export default {
   border: '#EEEEEE',
   icons: '#1995AD',
   shade: 'rgba(0,0,0,0.54)',
+  shadeSummary: 'rgba(0,0,0,0.70)',
   stepper: 'rgba(0,0,0,0.12)',
   spinner: 'white',
   spinnerBackground: 'rgba(25, 149, 173,0.7)',
