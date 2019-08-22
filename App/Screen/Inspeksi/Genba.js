@@ -124,11 +124,18 @@ export default class Genba extends Component {
     }
 
     selectUser(data_auth_code) {
-        let selectedUser = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', data_auth_code);
-        if(selectedUser !== undefined){
-            TaskServices.saveData('TR_GENBA_SELECTED', selectedUser);
-            this.getSelectedCount();
-            this.loadContact();
+        //check if user already exist in genba selected
+        let isUserSelected = TaskServices.findBy2("TR_GENBA_SELECTED", "USER_AUTH_CODE", data_auth_code);
+        if(isUserSelected === undefined){
+            let selectedUser = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', data_auth_code);
+            if(selectedUser !== undefined){
+                TaskServices.saveData('TR_GENBA_SELECTED', selectedUser);
+                this.getSelectedCount();
+                this.loadContact();
+            }
+        }
+        else {
+            this.deleteSelected(data_auth_code)
         }
     };
 
@@ -395,7 +402,7 @@ export default class Genba extends Component {
                             backgroundColor:'#64DD17',
                             borderColor:'transparent',
                         }}
-                        onPress={this.startInspection}
+                        onPress={()=>this.startInspection()}
                     >
                         <Text style={{
                             color:'#fff',

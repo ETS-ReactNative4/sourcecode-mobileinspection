@@ -105,6 +105,7 @@ class PilihKontak extends Component {
             tempId.push(data.userAuth);
         }
     });
+
     this.setState({ adresses: arr, dataList: arr })
   }
 
