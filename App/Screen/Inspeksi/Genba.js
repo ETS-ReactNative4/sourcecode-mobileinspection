@@ -67,7 +67,7 @@ export default class Genba extends Component {
         }
         else{
             let listGenbaUser = this.state.listGenbaUser;
-            let dataFiltered = this.filterData(listGenbaUser,getvalue);
+            let dataFiltered = this.filterData(listGenbaUser, value);
             this.setState({
                 listGenbaUser: dataFiltered
             });
