@@ -1,11 +1,19 @@
 "use strict";
 import React from 'react';
 import {
-  ImageBackground, StatusBar, TouchableOpacity, TouchableNativeFeedback, View, ScrollView, Image, StyleSheet, Dimensions,
-  ActivityIndicator
+    ActivityIndicator,
+    Dimensions,
+    Image,
+    ImageBackground,
+    ScrollView,
+    StatusBar,
+    StyleSheet,
+    TouchableNativeFeedback,
+    TouchableOpacity,
+    View
 } from 'react-native';
-import { Thumbnail, Text } from 'native-base';
-import { connect } from 'react-redux'
+import {Text, Thumbnail} from 'native-base';
+import {connect} from 'react-redux'
 import Entypo from 'react-native-vector-icons/Entypo'
 import Colors from '../../Constant/Colors'
 import TaskServices from '../../Database/TaskServices'
@@ -16,22 +24,28 @@ import CustomHeader from '../../Component/CustomHeader'
 import ServerName from '../../Constant/ServerName'
 import Moment from 'moment';
 import RNFetchBlob from 'rn-fetch-blob'
-import { changeFormatDate, getThumnail, dateDisplayMobile } from '../../Lib/Utils';
+import {changeFormatDate, dateDisplayMobile} from '../../Lib/Utils';
 import FastImage from 'react-native-fast-image'
 import SwiperSlider from 'react-native-swiper'
 import {
-  dirPhotoInspeksiBaris, dirPhotoInspeksiSelfie,
-  dirPhotoTemuan, dirPhotoKategori, dirPhotoEbccJanjang, dirPhotoEbccSelfie, dirMaps
+    dirMaps,
+    dirPhotoEbccJanjang,
+    dirPhotoEbccSelfie,
+    dirPhotoInspeksiBaris,
+    dirPhotoInspeksiSelfie,
+    dirPhotoKategori,
+    dirPhotoTemuan
 } from '../../Lib/dirStorage';
 
 import WeeklySummary from "../../Component/WeeklySummary";
-import { clipString } from '../../Constant/Function';
-import { Images } from '../../Themes';
-import { getIconProgress, getStatusImage, getColor, changeIconFilter, changeBgFilter } from '../../Themes/Resources';
+import {clipString} from '../../Constant/Function';
+import {Images} from '../../Themes';
+import {changeBgFilter, changeIconFilter, getColor, getIconProgress, getStatusImage} from '../../Themes/Resources';
 import IconHeader from '../../Component/IconHeader'
-import { getCategoryName, getEstateName, getStatusBlok, getBlokName } from '../../Database/Resources';
+import {getBlokName, getCategoryName, getEstateName, getStatusBlok} from '../../Database/Resources';
 
 import RNFS from 'react-native-fs'
+
 let { width } = Dimensions.get('window')
 
 class HomeScreen extends React.Component {

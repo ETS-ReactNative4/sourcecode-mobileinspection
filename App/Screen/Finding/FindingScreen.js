@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, {Component} from 'react';
+import {StyleSheet, View} from 'react-native';
 import CustomHeader from '../../Component/CustomHeader'
 import Colors from '../../Constant/Colors'
 import FindingTabNavigator from './FindingTabNavigator'
 import IconHeader from '../../Component/IconHeader'
-import { Images } from '../../Themes'
+import {Images} from '../../Themes'
 
 export default class FindingScreen extends Component {
   static router = FindingTabNavigator.router;

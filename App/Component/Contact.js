@@ -1,13 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-	TouchableOpacity, View, Image, Text
-} from 'react-native';
-import FastImage from 'react-native-fast-image'
-import R from 'ramda'
+import {Text, TouchableOpacity, View} from 'react-native';
 
 class Contact extends React.PureComponent {
-	
+
 	static propTypes = {
 		onSelect: PropTypes.func.isRequired,
 		user: PropTypes.object.isRequired

@@ -1,10 +1,11 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Image, ScrollView } from 'react-native'
-import { Container, Content } from 'native-base'
+import {Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Container, Content} from 'native-base'
 import Colors from '../Constant/Colors';
 import TaskServices from '../Database/TaskServices';
 import moment from 'moment';
-import { dateDisplayMobile } from '../Lib/Utils'
+import {dateDisplayMobile} from '../Lib/Utils'
+
 export default class Inbox extends React.Component {
 
 	constructor(props) {

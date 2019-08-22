@@ -1,28 +1,21 @@
 import React from 'react';
-import {
-    StyleSheet,
-    View,
-    Text,
-    Dimensions,
-    StatusBar,
-    TouchableOpacity
-} from 'react-native';
+import {Dimensions, StatusBar, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
-import MapView, { Polygon, ProviderPropType, Marker } from 'react-native-maps';
+import MapView, {Marker, Polygon, ProviderPropType} from 'react-native-maps';
 import Colors from '../../Constant/Colors'
-import { NavigationActions, StackActions } from 'react-navigation';
+import {NavigationActions, StackActions} from 'react-navigation';
 import IconLoc from 'react-native-vector-icons/FontAwesome5';
 import ModalAlert from '../../Component/ModalLoading';
 import ModalGps from '../../Component/ModalAlert';
 import TaskServices from '../../Database/TaskServices';
 import R from 'ramda';
+import {AlertContent} from '../../Themes'
 
 let polyMap = false;// = require('../../Data/MegaKuningan.json');
 let LATITUDE = -2.1890660;
 let LONGITUDE = 111.3609873;
 const { width, height } = Dimensions.get('window');
 const alfabet = ['A', 'B', 'C', 'D', 'E', 'F'];
-import { AlertContent } from '../../Themes'
 
 class MapsEbcc extends React.Component {
 

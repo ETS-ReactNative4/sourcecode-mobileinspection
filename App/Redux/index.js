@@ -1,9 +1,9 @@
-import { combineReducers } from 'redux';
+import {combineReducers} from 'redux';
 import configureStore from './CreateStore';
 import rootSaga from '../Sagas';
-import { reducer as network } from 'react-native-offline';
+import {reducer as network} from 'react-native-offline';
 import ReduxPersist from '../Config/ReduxPersist'
-import { persistReducer } from 'redux-persist';
+import {persistReducer} from 'redux-persist';
 
 /* ------------- Assemble The Reducers ------------- */
 export const reducers = combineReducers({

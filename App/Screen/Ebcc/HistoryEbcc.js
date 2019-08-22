@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Platform, StatusBar } from 'react-native';
-import { Card } from 'native-base';
+import React, {Component} from 'react';
+import {Image, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Card} from 'native-base';
 import Colors from '../../Constant/Colors';
 import Taskservice from '../../Database/TaskServices'
-import TaskServices from '../../Database/TaskServices';
-import { dateDisplayMobile } from '../../Lib/Utils'
-import { getEstateName, getStatusBlok } from '../../Database/Resources';
+import TaskServices from '../../Database/TaskServices'
+import {dateDisplayMobile} from '../../Lib/Utils'
+import {getEstateName, getStatusBlok} from '../../Database/Resources';
 
 export default class HistoryEbcc extends Component {
 

@@ -1,13 +1,8 @@
-import React, { Component } from 'react';
-import { NavigationActions, StackActions } from 'react-navigation';
-import {
-    BackHandler, Text, FlatList, TextInput, TouchableOpacity, View, Image, Modal
-} from 'react-native';
-import {
-    Container,
-    Content
-} from 'native-base'
-import R, { isEmpty } from 'ramda'
+import React, {Component} from 'react';
+import {NavigationActions, StackActions} from 'react-navigation';
+import {BackHandler, FlatList, Image, Modal, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {Container, Content} from 'native-base'
+import R, {isEmpty} from 'ramda'
 import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
 import Icon from 'react-native-vector-icons/MaterialIcons'
@@ -15,15 +10,15 @@ import RadioGroup from 'react-native-custom-radio-group'
 import DateTimePicker from 'react-native-modal-datetime-picker'
 import moment from 'moment'
 import TaskServices from '../../Database/TaskServices'
-import { getTodayDate, dateDisplayMobile, dateDisplayMobileWithoutHours } from '../../Lib/Utils'
+import {dateDisplayMobileWithoutHours, getTodayDate} from '../../Lib/Utils'
 import IIcon from 'react-native-vector-icons/Ionicons'
 import Carousel from 'react-native-looped-carousel'
-import { dirPhotoTemuan } from '../../Lib/dirStorage'
-var RNFS = require('react-native-fs');
-
+import {dirPhotoTemuan} from '../../Lib/dirStorage'
 import ModalAlert from '../../Component/ModalAlert';
 import ModalAlertBack from '../../Component/ModalAlert';
 import ModalAlertConfirmation from '../../Component/ModalAlertConfirmation'
+
+var RNFS = require('react-native-fs');
 
 const radioGroupList = [{
     label: 'HIGH',

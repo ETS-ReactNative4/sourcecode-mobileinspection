@@ -1,16 +1,16 @@
-import { call, put } from 'redux-saga/effects';
+import {call, put} from 'redux-saga/effects';
 import InspeksiActions from '../Redux/InspeksiRedux';
 
 export function* postInspeksiHeader(api, action) {
     try {
         const { data } = action;
         const response = yield call(api.postInspeksiHeader, data);
-    
+
         if (typeof atob !== 'undefined') {
             console.log(response);
             console.log('^^^ POST INSPEKSI ^^^');
         }
-    
+
         if (response.ok) {
             yield put(InspeksiActions.inspeksiSuccess({ payload: response.data, change: true }));
         } else {
@@ -23,19 +23,19 @@ export function* postInspeksiHeader(api, action) {
     } catch (error) {
         alert(error)
     }
-    
+
 }
 
 export function* postInspeksiDetail(api, action) {
     try {
         const { data } = action;
         const response = yield call(api.postInspeksiDetail, data);
-    
+
         if (typeof atob !== 'undefined') {
             console.log(response);
             console.log('^^^ POST INSPEKSI DETAIL^^^');
         }
-    
+
         if (response.ok) {
             switch (response.data.status) {
                 case false:
@@ -59,7 +59,7 @@ export function* postInspeksiDetail(api, action) {
     } catch (error) {
         alert(error)
     }
-    
+
 }
 
 export function* postInspeksiTrackingPath(api, action) {
@@ -95,19 +95,19 @@ export function* postInspeksiTrackingPath(api, action) {
     } catch (error) {
         alert(error)
     }
-    
+
 }
 
 export function* postFindingData(api, action) {
     try {
         const { data } = action;
         const response = yield call(api.postFindingData, data);
-    
+
         if (typeof atob !== 'undefined') {
             console.log(response);
             console.log('^^^ POST FINDING DATA');
         }
-    
+
         if (response.ok) {
             yield put(InspeksiActions.inspeksiSuccess({ payload: response.data, change: true }));
         } else {
@@ -120,5 +120,5 @@ export function* postFindingData(api, action) {
     } catch (error) {
         alert(error)
     }
-    
+
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { TouchableOpacity, View, Image } from 'react-native'
+import {Image, TouchableOpacity, View} from 'react-native'
 
 const IconHeader = (props) => {
     if (props.show) {

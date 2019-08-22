@@ -1,4 +1,4 @@
-import { call, put } from 'redux-saga/effects';
+import {call, put} from 'redux-saga/effects';
 import KriteriaActions from '../Redux/KriteriaRedux';
 
 export function* getKriteria(api, action) {
@@ -28,7 +28,7 @@ export function* getKriteria(api, action) {
         }
     } catch (error) {
         alert(error)
-    }   
+    }
 
 }
 
@@ -36,12 +36,12 @@ export function* postKriteria(api, action) {
     try {
         const { data } = action;
         const response = yield call(api.postKriteria, data);
-    
+
         if (typeof atob !== 'undefined') {
             console.log(response);
             console.log('^^^ POST KRITERIA ^^^');
         }
-    
+
         if (response.ok) {
             yield put(KriteriaActions.kriteriaSuccess({ payload: response.data, change: true }));
         } else {
@@ -54,6 +54,6 @@ export function* postKriteria(api, action) {
     } catch (error) {
         alert(error)
     }
-    
+
 }
 

@@ -1,23 +1,21 @@
-
-import React, { Component } from 'react'
-import { View, Image, TouchableOpacity, StyleSheet, Text, TextInput } from 'react-native'
-import { Container, Content, Card } from 'native-base'
+import React, {Component} from 'react'
+import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
+import {Card, Container, Content} from 'native-base'
 import Colors from '../../Constant/Colors'
 import FastImage from 'react-native-fast-image'
 import TaskServices from '../../Database/TaskServices'
 import Slider from 'react-native-slider'
-import R, { isEmpty } from 'ramda'
+import R, {isEmpty} from 'ramda'
 import moment from 'moment'
 import DateTimePicker from 'react-native-modal-datetime-picker'
 import ImageSlider from 'react-native-image-slider';
-import { changeFormatDate, getTodayDate, dateDisplayMobile, dateDisplayMobileWithoutHours } from '../../Lib/Utils';
+import {changeFormatDate, dateDisplayMobile, dateDisplayMobileWithoutHours, getTodayDate} from '../../Lib/Utils';
 
 import ModalAlert from '../../Component/ModalAlert';
 import ModalAlertBack from '../../Component/ModalAlert';
-import { Images, AlertContent } from '../../Themes';
-import { getIconProgress, getRating, getStatusImage, getColor, getStatusTemuan } from '../../Themes/Resources';
-import { getContactName, getEstateName, getStatusBlok, getBlokName } from '../../Database/Resources';
-import {clipString} from "../../Constant/Function";
+import {AlertContent, Images} from '../../Themes';
+import {getColor, getIconProgress, getRating, getStatusImage, getStatusTemuan} from '../../Themes/Resources';
+import {getBlokName, getContactName, getEstateName, getStatusBlok} from '../../Database/Resources';
 
 const IconRating = (props) => {
     const styImage = {

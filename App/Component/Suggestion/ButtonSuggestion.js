@@ -1,6 +1,6 @@
 import React from 'react'
-import { TouchableOpacity, StyleSheet, Text } from 'react-native'
-import { Colors } from '../../Themes'
+import {StyleSheet, Text, TouchableOpacity} from 'react-native'
+import {Colors} from '../../Themes'
 
 const ButtonSuggestion = (props) => {
     return (

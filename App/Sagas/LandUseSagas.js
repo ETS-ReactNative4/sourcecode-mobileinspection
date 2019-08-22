@@ -1,4 +1,4 @@
-import { call, put } from 'redux-saga/effects';
+import {call, put} from 'redux-saga/effects';
 import LandUseActions from '../Redux/LandUseRedux';
 
 export function* getLandUse(api, action) {
@@ -30,7 +30,7 @@ export function* getLandUse(api, action) {
     } catch (error) {
         alert(error)
     }
-    
+
 
 }
 
@@ -38,12 +38,12 @@ export function* postLandUse(api, action) {
     try {
         const { data } = action;
         const response = yield call(api.postLandUse, data);
-    
+
         if (typeof atob !== 'undefined') {
             console.log(response);
             console.log('^^^ POST LAND USE ^^^');
         }
-    
+
         if (response.ok) {
             yield put(LandUseActions.landUseSuccess({ payload: response.data, change: true }));
         } else {
@@ -56,6 +56,6 @@ export function* postLandUse(api, action) {
     } catch (error) {
         alert(error)
     }
-    
+
 }
 

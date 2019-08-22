@@ -1,4 +1,4 @@
-import { createStackNavigator } from 'react-navigation';
+import {createStackNavigator} from 'react-navigation';
 import EbccQrCode from './EbccQrCode'
 import FotoJanjangEbcc from './FotoJanjangEbcc'
 import KriteriaBuah from './KriteriaBuah'
@@ -12,9 +12,9 @@ export default createStackNavigator({
     FotoJanjang: {screen: FotoJanjangEbcc},
     KriteriaBuah: {screen: KriteriaBuah},
     FotoSelfieEbcc: {screen: FotoSelfieEbcc},
-    ReasonManualTPH: { screen: ReasonManualTPH }, 
-    ManualInputTPH: { screen: ManualInputTPH }, 
-    DetailEbcc: { screen: DetailEbcc }, 
+    ReasonManualTPH: { screen: ReasonManualTPH },
+    ManualInputTPH: { screen: ManualInputTPH },
+    DetailEbcc: { screen: DetailEbcc },
   }, {
       headerMode: 'screen',
       initialRouteName: 'EbccQrCode',

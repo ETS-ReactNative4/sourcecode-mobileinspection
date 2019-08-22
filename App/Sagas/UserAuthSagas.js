@@ -1,4 +1,4 @@
-import { call, put } from 'redux-saga/effects';
+import {call, put} from 'redux-saga/effects';
 import UserAuthAction from '../Redux/UserAuthRedux';
 
 export function* getUserAuth(api, action) {
@@ -29,7 +29,7 @@ export function* getUserAuth(api, action) {
     } catch (error) {
         alert(error)
     }
-    
+
 }
 
 export function* postUserAuth(api, action) {
@@ -54,6 +54,6 @@ export function* postUserAuth(api, action) {
     } catch (error) {
         alert(error)
     }
-    
+
 }
 

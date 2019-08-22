@@ -1,6 +1,5 @@
-
-import { Alert, Clipboard } from 'react-native';
-import { parsingPathToMessage } from '../Lib/Utils';
+import {Alert} from 'react-native';
+import {parsingPathToMessage} from '../Lib/Utils';
 // import { sendMail } from 'react-native-send-intent';
 import Config from 'react-native-config';
 

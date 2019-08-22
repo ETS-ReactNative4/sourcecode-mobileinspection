@@ -1,10 +1,10 @@
-import { call, put } from 'redux-saga/effects';
+import {call, put} from 'redux-saga/effects';
 import TrackActions from '../Redux/ParamTrackRedux';
 
 export function* getInspeksiParamTrackingPath(api, action) {
     try {
         const { data } = action;
-        const response = yield call(api.getInspeksiParamTrackingPath, data);    
+        const response = yield call(api.getInspeksiParamTrackingPath, data);
 
         if (typeof atob !== 'undefined') {
             console.log(response);
@@ -34,5 +34,5 @@ export function* getInspeksiParamTrackingPath(api, action) {
     } catch (error) {
         alert(error)
     }
-    
+
 }

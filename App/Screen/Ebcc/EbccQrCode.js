@@ -1,17 +1,12 @@
-import React, { Component } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image
-} from "react-native"
-import { RNCamera } from "react-native-camera"
+import React, {Component} from "react";
+import {Image, StyleSheet, View} from "react-native"
+import {RNCamera} from "react-native-camera"
 import Colors from '../../Constant/Colors'
 import base64 from 'react-native-base64'
 import ActionButton from 'react-native-action-button'
 import moment from 'moment'
-import { getTodayDate } from '../../Lib/Utils'
-import { NavigationActions, StackActions } from 'react-navigation';
+import {getTodayDate} from '../../Lib/Utils'
+import {NavigationActions, StackActions} from 'react-navigation';
 import TaskServices from "../../Database/TaskServices";
 import ModalAlert from "../../Component/ModalAlert";
 

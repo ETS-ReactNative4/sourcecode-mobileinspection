@@ -1,5 +1,5 @@
 import TaskServices from "./TaskServices";
-import { AsyncStorage } from 'react-native';
+import {AsyncStorage} from 'react-native';
 
 export async function storeData(key, value) {
     try {

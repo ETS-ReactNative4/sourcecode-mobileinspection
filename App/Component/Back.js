@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet, BackHandler } from 'react-native'
+import {BackHandler} from 'react-native'
 
-import { withNavigation } from 'react-navigation';
+import {withNavigation} from 'react-navigation';
 
 class HandleBack extends React.Component {
     constructor(props) {

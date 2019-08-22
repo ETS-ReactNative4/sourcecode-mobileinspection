@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, Dimensions, AsyncStorage } from 'react-native'
-import Calendar from 'react-native-calendario';
+import {AsyncStorage, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import Colors from '../Constant/Colors';
 import DateRangePicker from '../Lib/DateRangePicker';
 

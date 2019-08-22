@@ -1,4 +1,4 @@
-import { call, put } from 'redux-saga/effects';
+import {call, put} from 'redux-saga/effects';
 import TMobileActions from '../Redux/TMobileRedux';
 
 export function* postTMobileSync(api, action) {
@@ -23,5 +23,5 @@ export function* postTMobileSync(api, action) {
     } catch (error) {
         alert(error)
     }
-    
+
 }

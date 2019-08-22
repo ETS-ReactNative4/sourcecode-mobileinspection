@@ -1,5 +1,4 @@
-
-import { createMaterialTopTabNavigator, createStackNavigator } from 'react-navigation';
+import {createMaterialTopTabNavigator} from 'react-navigation';
 
 import HistoryInspection from './HistoryInscpection';
 import ListInspection from './ListInspection';

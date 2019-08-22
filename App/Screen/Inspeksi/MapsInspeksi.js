@@ -1,21 +1,15 @@
 import React from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  StatusBar,
-  TouchableOpacity
-} from 'react-native';
+import {StatusBar, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
-import MapView, { Polygon, ProviderPropType, Marker } from 'react-native-maps';
+import MapView, {Marker, Polygon, ProviderPropType} from 'react-native-maps';
 import Colors from '../../Constant/Colors'
-import { NavigationActions, StackActions } from 'react-navigation';
+import {NavigationActions, StackActions} from 'react-navigation';
 import IconLoc from 'react-native-vector-icons/FontAwesome5';
 import ModalAlert from '../../Component/ModalLoading'
 import ModalGps from '../../Component/ModalAlert';
 import TaskServices from '../../Database/TaskServices';
-import { retrieveData, storeData, removeData } from '../../Database/Resources';
-import { Images, AlertContent } from '../../Themes';
+import {removeData, storeData} from '../../Database/Resources';
+import {AlertContent, Images} from '../../Themes';
 
 let polyMap = false;
 let LATITUDE = -2.1890660;

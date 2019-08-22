@@ -1,7 +1,7 @@
 import Config from './DebugConfig'
 import Immutable from 'seamless-immutable'
 import Reactotron from 'reactotron-react-native'
-import { reactotronRedux as reduxPlugin } from 'reactotron-redux'
+import {reactotronRedux as reduxPlugin} from 'reactotron-redux'
 import sagaPlugin from 'reactotron-redux-saga'
 
 if (Config.useReactotron) {

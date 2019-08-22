@@ -1,4 +1,4 @@
-import { call, put } from 'redux-saga/effects';
+import {call, put} from 'redux-saga/effects';
 import UploadActions from '../Redux/FindingUploadRedux';
 
 export function* postFindingData(api, action) {
@@ -23,5 +23,5 @@ export function* postFindingData(api, action) {
     } catch (error) {
         alert(error)
     }
-    
+
 }

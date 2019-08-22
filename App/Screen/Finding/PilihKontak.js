@@ -1,18 +1,8 @@
 
 'use strict';
 
-import React, { Component } from 'react';
-import {
-    View,
-    TextInput,
-    Text,
-    StyleSheet,
-    ListView,
-    TouchableOpacity,
-    BackHandler,
-    FlatList,
-    Image
-} from 'react-native';
+import React, {Component} from 'react';
+import {BackHandler, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import TaskServices from '../../Database/TaskServices';
 
 // var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });

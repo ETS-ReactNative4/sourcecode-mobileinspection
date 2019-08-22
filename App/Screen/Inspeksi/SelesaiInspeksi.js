@@ -1,24 +1,14 @@
 import React from 'react';
-import {
-    StyleSheet,
-    Text,
-    View,
-    TouchableOpacity,
-    ScrollView,
-    Image,
-    StatusBar,
-    BackHandler
-} from 'react-native';
+import {BackHandler, Image, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 import Icon from 'react-native-vector-icons/AntDesign'
 import Size from '../../Constant/sizes'
 import Colors from '../../Constant/Colors'
 import Taskservices from '../../Database/TaskServices'
 import R from 'ramda';
-import { NavigationActions, StackActions } from 'react-navigation';
-import { getSticker } from '../../Lib/Utils'
+import {NavigationActions, StackActions} from 'react-navigation';
+import {getSticker} from '../../Lib/Utils'
 import ModalAlertBack from '../../Component/ModalAlert';
-import { removeData } from '../../Database/Resources';
 
 class SelesaiInspeksi extends React.Component {
 

@@ -1,12 +1,10 @@
-import React, { Component } from 'react';
-import {
-    Text, StyleSheet, ListView, TextInput, TouchableOpacity, View, Keyboard, BackHandler
-} from 'react-native';
+import React, {Component} from 'react';
+import {BackHandler, Keyboard, ListView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import Colors from '../../Constant/Colors'
 import IconLoc from 'react-native-vector-icons/FontAwesome5';
-import MapView, {Marker } from 'react-native-maps';
+import MapView, {Marker} from 'react-native-maps';
 import TaskService from '../../Database/TaskServices';
-import { ProgressDialog } from 'react-native-simple-dialogs';
+import {ProgressDialog} from 'react-native-simple-dialogs';
 import Geojson from 'react-native-geojson';
 
 
@@ -74,7 +72,7 @@ class PilihBlok extends Component {
 
     componentWillUnmount(){
         BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
-    }   
+    }
 
     componentDidMount() {
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)

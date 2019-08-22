@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, NetInfo, Platform, Linking } from 'react-native'
-import { Container, Content } from 'native-base'
+import {Linking, NetInfo, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Container, Content} from 'native-base'
 import Colors from '../Constant/Colors';
 import moment from 'moment';
 import DeviceInfo from 'react-native-device-info';
@@ -21,25 +21,23 @@ import ContactAction from '../Redux/ContactRedux';
 import CategoryAction from '../Redux/CategoryRedux';
 import FindingAction from '../Redux/FindingRedux';
 import FindingImageAction from '../Redux/FindingImageRedux';
-import InspeksiAction from '../Redux/InspeksiRedux'
-import FindingUploadAction from '../Redux/FindingUploadRedux'
-import TMobileAction from '../Redux/TMobileRedux'
 import ParamTrackAction from '../Redux/ParamTrackRedux'
 import KualitasAction from '../Redux/KualitasRedux'
-import { ProgressDialog } from 'react-native-simple-dialogs';
-import { dirPhotoKategori, dirPhotoTemuan } from '../Lib/dirStorage';
-import { connect } from 'react-redux';
+import {ProgressDialog} from 'react-native-simple-dialogs';
+import {dirPhotoKategori, dirPhotoTemuan} from '../Lib/dirStorage';
+import {connect} from 'react-redux';
 import R from 'ramda'
 import RNFetchBlob from 'rn-fetch-blob'
 import TaskServices from '../Database/TaskServices'
 import ServerName from '../Constant/ServerName'
-import { getTodayDate, convertTimestampToDate } from '../Lib/Utils';
+import {convertTimestampToDate, getTodayDate} from '../Lib/Utils';
+import ModalAlert from '../Component/ModalAlert';
+import {fetchFormPostAPI, fetchPostAPI} from '../Api/FetchingApi';
+import ProgressSync from '../Component/ProgressSync';
+import {storeData} from '../Database/Resources';
+
 var RNFS = require('react-native-fs');
 
-import ModalAlert from '../Component/ModalAlert';
-import { fetchPostAPI, fetchFormPostAPI } from '../Api/FetchingApi';
-import ProgressSync from '../Component/ProgressSync';
-import { storeData } from '../Database/Resources';
 // import FuntionCRUD from '../Database/FunctionCRUD'
 
 class SyncScreen extends React.Component {

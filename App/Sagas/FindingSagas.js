@@ -1,4 +1,4 @@
-import { call, put } from 'redux-saga/effects';
+import {call, put} from 'redux-saga/effects';
 import FindingActions from '../Redux/FindingRedux';
 
 export function* getFinding(api, action) {
@@ -30,7 +30,7 @@ export function* getFinding(api, action) {
     } catch (error) {
         alert(error)
     }
-    
+
 
 }
 
@@ -39,12 +39,12 @@ export function* postFinding(api, action) {
         const { data } = action;
         console.log('data Param : ', data)
         const response = yield call(api.postFindingData, data);
-    
+
         if (typeof atob !== 'undefined') {
             console.log(response);
             console.log('^^^ POST FINDING ^^^');
         }
-    
+
         if (response.ok) {
             console.log('response');
             console.log(response)
@@ -59,6 +59,6 @@ export function* postFinding(api, action) {
     } catch (error) {
         alert(error)
     }
-    
+
 }
 

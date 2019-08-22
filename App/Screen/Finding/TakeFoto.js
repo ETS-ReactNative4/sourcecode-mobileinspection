@@ -1,24 +1,17 @@
-
-import React, { Component } from 'react';
-import {
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  Image,
-  Dimensions,
-  BackHandler
-} from 'react-native';
+import React, {Component} from 'react';
+import {BackHandler, Dimensions, Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import Colors from '../../Constant/Colors';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { RNCamera as Camera } from 'react-native-camera';
+import {RNCamera as Camera} from 'react-native-camera';
 import TaskServices from '../../Database/TaskServices';
 import ImageResizer from 'react-native-image-resizer';
-import { dirPhotoTemuan } from '../../Lib/dirStorage';
-var RNFS = require('react-native-fs');
+import {dirPhotoTemuan} from '../../Lib/dirStorage';
 import R from 'ramda';
-import { getTodayDate } from '../../Lib/Utils';
+import {getTodayDate} from '../../Lib/Utils';
 import ModalAlert from '../../Component/ModalAlert';
-import { Images, AlertContent } from '../../Themes';
+import {AlertContent, Images} from '../../Themes';
+
+var RNFS = require('react-native-fs');
 
 class TakeFoto extends Component {
 

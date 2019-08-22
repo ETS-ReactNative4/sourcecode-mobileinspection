@@ -1,20 +1,12 @@
 import React from 'react';
-import {
-    StyleSheet,
-    Text,
-    View,
-    TouchableOpacity,
-    ScrollView,
-    Image,
-    StatusBar
-} from 'react-native';
+import {Image, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 import Icon from 'react-native-vector-icons/AntDesign'
 import Size from '../../Constant/sizes'
 import Colors from '../../Constant/Colors'
 import Taskservices from '../../Database/TaskServices'
 import R from 'ramda';
-import { getSticker } from '../../Lib/Utils'
+import {getSticker} from '../../Lib/Utils'
 
 class HistoryInspeksiDetail extends React.Component {
 

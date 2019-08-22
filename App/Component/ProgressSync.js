@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, Text } from 'react-native'
+import {StyleSheet, Text, View} from 'react-native'
 import Colors from '../Constant/Colors';
 import * as Progress from 'react-native-progress';
 

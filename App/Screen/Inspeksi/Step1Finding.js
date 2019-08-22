@@ -1,14 +1,17 @@
-import React, { Component } from 'react';
-import { NavigationActions, StackActions } from 'react-navigation';
+import React, {Component} from 'react';
 import {
-    BackHandler, Text, FlatList, ScrollView, TouchableOpacity, View, Image, StatusBar, Platform
+    BackHandler,
+    FlatList,
+    Image,
+    Platform,
+    ScrollView,
+    StatusBar,
+    Text,
+    TouchableOpacity,
+    View
 } from 'react-native';
-import {
-    Container,
-    Content,
-    Card,
-} from 'native-base';
-import { connect } from 'react-redux'
+import {Card, Container, Content,} from 'native-base';
+import {connect} from 'react-redux'
 import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
 import Icon from 'react-native-vector-icons/MaterialIcons'
@@ -16,9 +19,9 @@ import Icon2 from 'react-native-vector-icons/Ionicons';
 import R from 'ramda'
 import TaskServices from '../../Database/TaskServices'
 import RNFS from 'react-native-fs';
-const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
-
 import ModalAlert from '../../Component/ModalAlert';
+
+const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
 
 class Step1Finding extends Component {
 
@@ -89,7 +92,7 @@ class Step1Finding extends Component {
         this.getLocation();
         this.props.navigation.setParams({ clearFoto: this.clearFoto })
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
-        // BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)    
+        // BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
     }
 
     componentWillUnmount() {

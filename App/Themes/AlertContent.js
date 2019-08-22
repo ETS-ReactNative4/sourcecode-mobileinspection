@@ -1,5 +1,4 @@
-
-import { Images } from '../Themes'
+import {Images} from '../Themes'
 
 const alert = {
     'email_kosong': { showModal: true, title: 'Email Kosong', message: 'Kamu harus isi email terlebih dahulu', icon: Images.img_input_tidak_lengkap },

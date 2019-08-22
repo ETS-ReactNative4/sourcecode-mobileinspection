@@ -1,15 +1,6 @@
-
-import React, { Component } from 'react';
-import {
-    StyleSheet,
-    Text,
-    View,
-    Image,
-    Modal,
-    ImageBackground,
-    TouchableOpacity
-} from 'react-native';
-import { Card } from 'native-base';
+import React, {Component} from 'react';
+import {Image, ImageBackground, Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Card} from 'native-base';
 import PropTypes from 'prop-types';
 import TaskServices from '../Database/TaskServices'
 

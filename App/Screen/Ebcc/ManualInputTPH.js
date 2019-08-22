@@ -1,11 +1,11 @@
 import React from 'react'
 import Colors from '../../Constant/Colors'
-import { TouchableOpacity, View, Text, TextInput, KeyboardAvoidingView, BackHandler } from 'react-native';
+import {BackHandler, KeyboardAvoidingView, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import TaskService from '../../Database/TaskServices';
 import ModalAlert from '../../Component/ModalAlert';
 import Icon2 from 'react-native-vector-icons/Ionicons';
 import ModalAlertConfirmation from '../../Component/ModalAlertConfirmation';
-import { NavigationActions, StackActions } from 'react-navigation';
+import {NavigationActions, StackActions} from 'react-navigation';
 import R from 'ramda';
 
 class ManualInputTPH extends React.Component{

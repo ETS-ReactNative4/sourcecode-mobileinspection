@@ -1,5 +1,5 @@
-
 import color from 'color';
+
 const tintColor = '#36A100';
 
 export default {

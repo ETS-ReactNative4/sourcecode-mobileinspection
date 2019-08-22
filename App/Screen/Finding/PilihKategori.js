@@ -1,11 +1,11 @@
 
 'use strict';
 
-import React, { Component } from 'react';
-import { View, FlatList, Text, StyleSheet, ListView, TouchableOpacity, BackHandler } from 'react-native';
+import React, {Component} from 'react';
+import {BackHandler, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import TaskService from '../../Database/TaskServices';
 import FastImage from 'react-native-fast-image'
-import { dirPhotoKategori } from '../../Lib/dirStorage';
+import {dirPhotoKategori} from '../../Lib/dirStorage';
 import Colors from '../../Constant/Colors';
 
 class PilihKategori extends Component {

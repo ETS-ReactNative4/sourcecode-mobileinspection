@@ -1,60 +1,57 @@
-import { takeLatest, takeEvery, all, take, fork } from 'redux-saga/effects';
+import {all, fork, takeLatest} from 'redux-saga/effects';
 import API from '../Api/api';
 import FixtureAPI from '../Api/FixtureAPI';
 import DebugConfig from '../Config/DebugConfig';
-import { networkEventsListenerSaga } from 'react-native-offline';
-
+import {networkEventsListenerSaga} from 'react-native-offline';
 /* ------------- Types ------------- */
-import { StartupTypes } from '../Redux/StartupRedux';
-import { AuthTypes } from '../Redux/AuthRedux';
-import { CategoryTypes } from '../Redux/CategoryRedux';
-import { ContactTypes } from '../Redux/ContactRedux';
-import { RegionTypes } from '../Redux/RegionRedux';
-import { InspeksiTypes } from '../Redux/InspeksiRedux';
-import { BlockTypes } from '../Redux/BlockRedux';
-import { AfdTypes } from '../Redux/AfdRedux';
-import { EstTypes } from '../Redux/EstRedux';
-import { KriteriaTypes } from '../Redux/KriteriaRedux';
-import { UserAuthTypes } from '../Redux/UserAuthRedux';
-import { LandUseTypes } from '../Redux/LandUseRedux';
-import { CompTypes } from '../Redux/CompRedux';
-import { ContentTypes } from '../Redux/ContentRedux';
-import { ContentLabelTypes } from '../Redux/ContentLabelRedux';
-import { FindingTypes } from '../Redux/FindingRedux';
-import { FindingImageTypes } from '../Redux/FindingImageRedux';
-import { FindingUploadTypes } from '../Redux/FindingUploadRedux';
-import { TMobileTypes } from '../Redux/TMobileRedux';
-import { ParamTrackTypes } from '../Redux/ParamTrackRedux';
-import { ResetTypes } from '../Redux/ResetRedux';
-import { KualitasTypes } from '../Redux/KualitasRedux';
-import { ServerTimeTypes } from '../Redux/ServerTimeRedux';
-
+import {StartupTypes} from '../Redux/StartupRedux';
+import {AuthTypes} from '../Redux/AuthRedux';
+import {CategoryTypes} from '../Redux/CategoryRedux';
+import {ContactTypes} from '../Redux/ContactRedux';
+import {RegionTypes} from '../Redux/RegionRedux';
+import {InspeksiTypes} from '../Redux/InspeksiRedux';
+import {BlockTypes} from '../Redux/BlockRedux';
+import {AfdTypes} from '../Redux/AfdRedux';
+import {EstTypes} from '../Redux/EstRedux';
+import {KriteriaTypes} from '../Redux/KriteriaRedux';
+import {UserAuthTypes} from '../Redux/UserAuthRedux';
+import {LandUseTypes} from '../Redux/LandUseRedux';
+import {CompTypes} from '../Redux/CompRedux';
+import {ContentTypes} from '../Redux/ContentRedux';
+import {ContentLabelTypes} from '../Redux/ContentLabelRedux';
+import {FindingTypes} from '../Redux/FindingRedux';
+import {FindingImageTypes} from '../Redux/FindingImageRedux';
+import {FindingUploadTypes} from '../Redux/FindingUploadRedux';
+import {TMobileTypes} from '../Redux/TMobileRedux';
+import {ParamTrackTypes} from '../Redux/ParamTrackRedux';
+import {ResetTypes} from '../Redux/ResetRedux';
+import {KualitasTypes} from '../Redux/KualitasRedux';
+import {ServerTimeTypes} from '../Redux/ServerTimeRedux';
 /* ------------- Sagas ------------- */
-import { startup } from './StartupSagas';
-import { getAuth, userUpdate } from './AuthSagas';
-import { getCategory } from './CategorySagas';
-import { getContact } from './ContactSagas';
-import { getRegion } from './RegionSagas';
-import { postInspeksiHeader, postInspeksiDetail, postInspeksiTrackingPath } from './InspeksiSagas';
-import { getAfd, postAfd } from './AfdSagas';
-import { getEst, postEst } from './EstSagas';
-import { getKriteria, postKriteria } from './KriteriaSagas';
-import { getUserAuth, postUserAuth } from './UserAuthSagas';
-import { getLandUse, postLandUse } from './LandUseSagas';
-import { getComp, postComp } from './CompSagas';
-import { getContent, postContent } from './ContentSagas';
-import { getContentLabel, postContentLabel } from './ContentLabelSagas';
-import { getFinding } from './FindingSagas';
-import { getFindingImage } from './FindingImageSagas';
-import { postFindingData } from './FindingUploadSagas';
-import {postTMobileSync } from './TMobileSagas';
-import {getInspeksiParamTrackingPath } from './ParamTrackSagas';
-import {postReset } from './ResetSagas';
-import {getKualitas } from './KualitasSagas';
-import {getServerTime } from './ServerTimeSagas';
-
+import {startup} from './StartupSagas';
+import {getAuth, userUpdate} from './AuthSagas';
+import {getCategory} from './CategorySagas';
+import {getContact} from './ContactSagas';
+import {getRegion} from './RegionSagas';
+import {postInspeksiDetail, postInspeksiHeader, postInspeksiTrackingPath} from './InspeksiSagas';
+import {getAfd, postAfd} from './AfdSagas';
+import {getEst, postEst} from './EstSagas';
+import {getKriteria, postKriteria} from './KriteriaSagas';
+import {getUserAuth, postUserAuth} from './UserAuthSagas';
+import {getLandUse, postLandUse} from './LandUseSagas';
+import {getComp, postComp} from './CompSagas';
+import {getContent, postContent} from './ContentSagas';
+import {getContentLabel, postContentLabel} from './ContentLabelSagas';
+import {getFinding} from './FindingSagas';
+import {getFindingImage} from './FindingImageSagas';
+import {postFindingData} from './FindingUploadSagas';
+import {postTMobileSync} from './TMobileSagas';
+import {getInspeksiParamTrackingPath} from './ParamTrackSagas';
+import {postReset} from './ResetSagas';
+import {getKualitas} from './KualitasSagas';
+import {getServerTime} from './ServerTimeSagas';
 //Add by Aminju
-import { getBlock, postBlock } from './BlockSagas'
+import {getBlock, postBlock} from './BlockSagas'
 
 /* ------------- API ------------- */
 
@@ -98,7 +95,7 @@ export default function* root() {
 		takeLatest(ContentLabelTypes.CONTENT_LABEL_POST, postContentLabel, miApi),
 		takeLatest(FindingTypes.FINDING_REQUEST, getFinding, miApi),
 		takeLatest(FindingImageTypes.FINDING_IMAGE_REQUEST, getFindingImage, miApi),
-		takeLatest(FindingUploadTypes.FINDING_POST_DATA, postFindingData, miApi),		
+		takeLatest(FindingUploadTypes.FINDING_POST_DATA, postFindingData, miApi),
 		takeLatest(TMobileTypes.TM_POST, postTMobileSync, miApi),
 		takeLatest(ParamTrackTypes.PARAM_TRACK_REQUEST, getInspeksiParamTrackingPath, miApi),
 		takeLatest(ResetTypes.RESET_POST, postReset, miApi),

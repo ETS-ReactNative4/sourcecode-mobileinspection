@@ -1,11 +1,11 @@
-import { call, put } from 'redux-saga/effects';
+import {call, put} from 'redux-saga/effects';
 import ContentActions from '../Redux/ContentRedux';
 
 export function* getContent(api, action) {
     try {
         const { data } = action;
         const response = yield call(api.getContent, data);
-    
+
         if (typeof atob !== 'undefined') {
             console.log(response);
             console.log('^^^ GET ALL CONTENT ^^^');
@@ -29,7 +29,7 @@ export function* getContent(api, action) {
     } catch (error) {
         alert(error)
     }
-    
+
 
 }
 
@@ -55,6 +55,6 @@ export function* postContent(api, action) {
     } catch (error) {
         alert(error)
     }
-    
+
 }
 

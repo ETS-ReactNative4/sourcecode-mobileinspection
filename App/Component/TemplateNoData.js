@@ -1,12 +1,12 @@
-import React, { Component } from 'react'
-import { View, Image } from 'react-native'
+import React, {Component} from 'react'
+import {Image, View} from 'react-native'
 
 class TemplateNoData extends Component {
     render() {
         const container = {
-            flex: 1, 
-            justifyContent: 'center', 
-            alignItems: 'center', 
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
         }
         return (
             <View style={container}>

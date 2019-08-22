@@ -1,4 +1,4 @@
-import { call, put } from 'redux-saga/effects';
+import {call, put} from 'redux-saga/effects';
 import ServerTimeActions from '../Redux/ServerTimeRedux';
 
 export function* getServerTime(api, action) {
@@ -29,6 +29,6 @@ export function* getServerTime(api, action) {
     } catch (error) {
         alert(error)
     }
-    
+
 
 }

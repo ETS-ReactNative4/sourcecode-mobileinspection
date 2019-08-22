@@ -1,6 +1,5 @@
-import React, { Component } from 'react'
-import { StyleSheet, View } from 'react-native'
-import { Calendar, defaultStyle } from 'react-native-calendars'
+import React, {Component} from 'react'
+import {Calendar} from 'react-native-calendars'
 
 const XDate = require('xdate');
 

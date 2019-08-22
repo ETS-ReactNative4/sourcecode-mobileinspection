@@ -1,11 +1,11 @@
-import { call, put } from 'redux-saga/effects';
+import {call, put} from 'redux-saga/effects';
 import CompActions from '../Redux/CompRedux';
 
 export function* getComp(api, action) {
     try {
         const { data } = action;
         const response = yield call(api.getComp, data);
-    
+
         if (typeof atob !== 'undefined') {
             console.log(response);
             console.log('^^^ GET ALL COMP ^^^');
@@ -16,7 +16,7 @@ export function* getComp(api, action) {
                     yield put(CompActions.compFailure('Paramater Salah'));
                     break;
                 case true:
-    
+
                     console.log('^^^ SUCCESS Comp ^^^');
                     yield put(CompActions.compSuccess(response.data.data));
                     break;
@@ -30,7 +30,7 @@ export function* getComp(api, action) {
     } catch (error) {
         alert(error)
     }
-    
+
 
 }
 
@@ -38,12 +38,12 @@ export function* postComp(api, action) {
     try {
         const { data } = action;
         const response = yield call(api.postComp, data);
-    
+
         if (typeof atob !== 'undefined') {
             console.log(response);
             console.log('^^^ POST COMP ^^^');
         }
-    
+
         if (response.ok) {
             yield put(CompActions.compSuccess({ payload: response.data, change: true }));
         } else {
@@ -56,6 +56,6 @@ export function* postComp(api, action) {
     } catch (error) {
         alert(error)
     }
-    
+
 }
 

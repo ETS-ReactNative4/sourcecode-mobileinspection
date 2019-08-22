@@ -1,6 +1,5 @@
 import React from 'react';
-import { Alert } from 'react-native';
-import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
+import {createBottomTabNavigator, createStackNavigator} from 'react-navigation';
 import HomeScreen from './HomeScreen';
 import FindingScreen from '../Finding/FindingScreen';
 import InspectionScreen from '../Inspeksi/InspectionScreen';

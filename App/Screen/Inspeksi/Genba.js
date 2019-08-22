@@ -1,7 +1,18 @@
-import React, { Component } from 'react';
-import { View, Image, Text, TouchableOpacity, FlatList, KeyboardAvoidingView, ScrollView, TextInput, AsyncStorage, Platform } from 'react-native';
+import React, {Component} from 'react';
+import {
+    AsyncStorage,
+    FlatList,
+    Image,
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View
+} from 'react-native';
 
-import { NavigationActions } from 'react-navigation';
+import {NavigationActions} from 'react-navigation';
 import Icon1 from '../../Component/Icon1';
 
 import TaskServices from "../../Database/TaskServices";

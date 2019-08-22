@@ -1,17 +1,13 @@
 // CORE REACT NATIVE
-import React, { Component } from 'react';
-import { View, Image } from 'react-native';
-
+import React, {Component} from 'react';
+import {Image, View} from 'react-native';
 // CONTANT
 import Colors from 'constant/Colors'
-
 // NAVIGATION
-import { NavigationActions } from 'react-navigation';
-
+import {NavigationActions} from 'react-navigation';
 // PLUGIN
 import ActionButton from 'react-native-action-button';
 import Icon2 from 'react-native-vector-icons/MaterialIcons'
-
 // STYLE
 import styles from 'list-inspection-style/ListInspectionStyle';
 

@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import { View, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import React, {Component} from 'react';
+import {StyleSheet, View} from 'react-native';
 
 import CustomHeader from '../../Component/CustomHeader'
 import Colors from '../../Constant/Colors'
 import InspectionTabNavigator from './InspectionTabNavigator'
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import InspeksiAction from '../../Redux/InspeksiRedux';
 import IconHeader from '../../Component/IconHeader'
-import { Images } from '../../Themes'
+import {Images} from '../../Themes'
 
 
 class InspectionScreen extends Component {
@@ -48,10 +48,10 @@ class InspectionScreen extends Component {
 
   componentDidMount() {
 
-    // this.props.navigation.setParams({ 
-    //   loadData: this.loadData, 
+    // this.props.navigation.setParams({
+    //   loadData: this.loadData,
     //   loadDataDetail: this.loadDataDetail,
-    //   kirimInspeksi: this.kirimInspeksi, 
+    //   kirimInspeksi: this.kirimInspeksi,
     //   kirimInspeksiDetail: this.kirimInspeksiDetail,
     //   inbox: this.inbox
     // });
@@ -66,7 +66,7 @@ class InspectionScreen extends Component {
   //   }
   // }
 
-  // kirimInspeksi(param) {   
+  // kirimInspeksi(param) {
   //   this.props.postInspeksi({
   //     BLOCK_INSPECTION_CODE: param.BLOCK_INSPECTION_CODE,
   //     WERKS: param.WERKS,
@@ -103,7 +103,7 @@ class InspectionScreen extends Component {
   //     VALUE: param.VALUE,
   //     STATUS_SYNC: 'YES',
   //     SYNC_TIME: getTodayDate('YYYY-MM-DD HH:mm:ss')
-  //   }); 
+  //   });
   // }
 
   render() {

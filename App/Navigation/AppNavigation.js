@@ -1,27 +1,24 @@
-import React, { Component } from 'react';
-import { createStackNavigator } from 'react-navigation'
+import React from 'react';
+import {createStackNavigator} from 'react-navigation'
 import SplashScreen from '../Screen/SplashScreen'
 import Login from '../Screen/Login'
 import MainMenu from '../Screen/Home/MainTabNavigator'
 import MainMenuMil from '../Screen/Home/MainTabNavigatorMil'
 import Genba from '../Screen/Inspeksi/Genba';
 import HomeScreenComment from '../Screen/Home/HomeScreenComment';
-
 //finding
 import FindingFormNavigator from '../Screen/Finding/FindingFormNavigator'
 import Step1 from '../Screen/Finding/FormStep1'
 import Step2 from '../Screen/Finding/FormStep2'
 import TakeFoto from '../Screen/Finding/TakeFoto'
+import TakeFotoBukti from '../Screen/Finding/TakeFoto'
 import DetailFindingScreen from '../Screen/Finding/DetailFindingScreenRedesign'
 import BuktiKerja from '../Screen/Finding/BuktiKerja'
-import TakeFotoBukti from '../Screen/Finding/TakeFoto'
 import PilihKontak from '../Screen/Finding/PilihKontak'
 import PilihKategori from '../Screen/Finding/PilihKategori'
 import PilihBlok from '../Screen/Finding/PilihBlok'
 import MapsFinding from '../Screen/Finding/MapsFinding'
 import LihatLokasi from '../Screen/Finding/LihatLokasi'
-// import FormInspectionNavigator from '../Screen/Inspeksi/Navigation/FormInspectionNavigator';
-
 //inspeksi
 import DetailHistoryInspeksi from '../Screen/Inspeksi/HistoryInspeksiDetail'
 import BuatInspeksi from '../Screen/Inspeksi/BuatInspeksi'
@@ -36,7 +33,6 @@ import Step1Finding from '../Screen/Inspeksi/Step1Finding'
 import Step2Finding from '../Screen/Inspeksi/Step2Finding'
 import TakeFotoFinding from '../Screen/Inspeksi/TakeFotoFinding'
 import MapsInspeksi from '../Screen/Inspeksi/MapsInspeksi'
-
 //ebcc
 import EbccQrCode from '../Screen/Ebcc/EbccQrCode'
 import FotoJanjang from '../Screen/Ebcc/FotoJanjangEbcc'
@@ -46,7 +42,6 @@ import ReasonManualTPH from '../Screen/Ebcc/ReasonManualTPH'
 import ManualInputTPH from '../Screen/Ebcc/ManualInputTPH'
 import DetailEbcc from '../Screen/Ebcc/DetailEbcc'
 import MapsEbcc from '../Screen/Ebcc/MapsEbcc'
-import EbccNavigator from '../Screen/Ebcc/EbccNavigator'
 
 import SyncScreen from '../Screen/SyncTest';
 import InboxScreen from '../Screen/Inbox';
@@ -61,6 +56,7 @@ import FotoUser from '../Screen/More/FotoUser';
 import PilihPeta from '../Screen/Maps/PilihPeta'
 
 import Colors from '../Constant/Colors'
+// import FormInspectionNavigator from '../Screen/Inspeksi/Navigation/FormInspectionNavigator';
 
 
 const main = createStackNavigator({
@@ -135,24 +131,24 @@ const main = createStackNavigator({
     MapsInspeksi: { screen: MapsInspeksi },
 
     //ebccValidation
-    EbccQrCode: { screen: EbccQrCode }, 
-    FotoJanjang: { screen: FotoJanjang }, 
-    FotoSelfieEbcc: { screen: FotoSelfieEbcc }, 
-    KriteriaBuah: { screen: KriteriaBuah }, 
-    ReasonManualTPH: { screen: ReasonManualTPH }, 
-    ManualInputTPH: { screen: ManualInputTPH }, 
-    DetailEbcc: { screen: DetailEbcc }, 
-    MapsEbcc: { screen: MapsEbcc }, 
+    EbccQrCode: { screen: EbccQrCode },
+    FotoJanjang: { screen: FotoJanjang },
+    FotoSelfieEbcc: { screen: FotoSelfieEbcc },
+    KriteriaBuah: { screen: KriteriaBuah },
+    ReasonManualTPH: { screen: ReasonManualTPH },
+    ManualInputTPH: { screen: ManualInputTPH },
+    DetailEbcc: { screen: DetailEbcc },
+    MapsEbcc: { screen: MapsEbcc },
     // EbccNavigator: { screen: ({ navigation }) => <EbccNavigator screenProps={{ rootNavigation: navigation }} />, navigationOptions: {
     //     header: null
     // }},
 
     // test: { screen: test },
     // TestUpload: {screen:TestUpload}
-    // OpenGl: { screen: OpenGl }, 
-    
-    PilihPeta: { screen: PilihPeta }, 
-    Genba: { screen: Genba, 
+    // OpenGl: { screen: OpenGl },
+
+    PilihPeta: { screen: PilihPeta },
+    Genba: { screen: Genba,
         navigationOptions : {
             title : "Peserta Genba",
             headerTintColor: '#fff',

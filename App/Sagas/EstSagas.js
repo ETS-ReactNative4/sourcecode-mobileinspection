@@ -1,11 +1,11 @@
-import { call, put } from 'redux-saga/effects';
+import {call, put} from 'redux-saga/effects';
 import EstActions from '../Redux/EstRedux';
 
 export function* getEst(api, action) {
     try {
         const { data } = action;
         const response = yield call(api.getEst, data);
-    
+
         if (typeof atob !== 'undefined') {
             console.log(response);
             console.log('^^^ GET ALL EST ^^^');
@@ -28,7 +28,7 @@ export function* getEst(api, action) {
         }
     } catch (error) {
         alert(error)
-    }    
+    }
 
 }
 
@@ -36,12 +36,12 @@ export function* postEst(api, action) {
     try {
         const { data } = action;
         const response = yield call(api.postEst, data);
-    
+
         if (typeof atob !== 'undefined') {
             console.log(response);
             console.log('^^^ POST EST ^^^');
         }
-    
+
         if (response.ok) {
             yield put(EstActions.estSuccess({ payload: response.data, change: true }));
         } else {
@@ -54,6 +54,6 @@ export function* postEst(api, action) {
     } catch (error) {
         alert(error)
     }
-    
+
 }
 

@@ -1,5 +1,4 @@
-
-import { createMaterialTopTabNavigator, createStackNavigator } from 'react-navigation';
+import {createMaterialTopTabNavigator} from 'react-navigation';
 
 import HistoryEbcc from './HistoryEbcc';
 import ListEbcc from './ListEbcc';

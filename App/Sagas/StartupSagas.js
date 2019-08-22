@@ -1,5 +1,3 @@
-import { put, select } from 'redux-saga/effects';
-import { is } from 'ramda';
 import Config from 'react-native-config';
 
 // process STARTUP actions

@@ -1,26 +1,17 @@
-import React, { Component } from 'react';
-import {
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  Image,
-  Platform,
-  Dimensions,
-  StatusBar,
-  BackHandler
-} from 'react-native';
+import React, {Component} from 'react';
+import {BackHandler, Dimensions, Image, Platform, StatusBar, StyleSheet, TouchableOpacity, View} from 'react-native';
 import Colors from '../../Constant/Colors';
 import imgTakePhoto from '../../Images/icon/ic_take_photo.png';
 import imgNextPhoto from '../../Images/icon/ic_next_photo.png';
-import MapView, { Polygon, ProviderPropType, Marker } from 'react-native-maps';
-import { RNCamera as Camera } from 'react-native-camera';
-import { getTodayDate } from '../../Lib/Utils'
+import MapView from 'react-native-maps';
+import {RNCamera as Camera} from 'react-native-camera';
+import {getTodayDate} from '../../Lib/Utils'
 import ImageResizer from 'react-native-image-resizer';
-import { dirPhotoEbccJanjang , dirPhotoEbccSelfie, dirMaps } from '../../Lib/dirStorage'
+import {dirMaps, dirPhotoEbccJanjang, dirPhotoEbccSelfie} from '../../Lib/dirStorage'
 import TaskService from '../../Database/TaskServices'
 import R from 'ramda';
 import Icon2 from 'react-native-vector-icons/Ionicons';
-import { NavigationActions, StackActions } from 'react-navigation';
+import {NavigationActions, StackActions} from 'react-navigation';
 
 import ModalAlertConfirmation from '../../Component/ModalAlertConfirmation';
 import ModalAlert from '../../Component/ModalAlert';

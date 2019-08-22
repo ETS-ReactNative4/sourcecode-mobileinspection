@@ -1,18 +1,18 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, Image, TouchableOpacity, Text, ScrollView, Alert, NetInfo } from 'react-native';
-import { Thumbnail } from 'native-base';
+import React, {Component} from 'react';
+import {Image, NetInfo, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Thumbnail} from 'native-base';
 import Colors from '../../Constant/Colors';
 import Icon2 from 'react-native-vector-icons/AntDesign'
 import TaskServices from '../../Database/TaskServices'
-import { NavigationActions, StackActions } from 'react-navigation';
+import {NavigationActions, StackActions} from 'react-navigation';
 import ModalConfirmation from '../../Component/ModalAlertConfirmation'
 import ModalAlert from '../../Component/ModalAlert'
 import ServerName from '../../Constant/ServerName';
 import DeviceInfo from 'react-native-device-info';
 import CustomHeader from '../../Component/CustomHeader'
 import IconHeader from '../../Component/IconHeader'
-import { getPhoto, getThumnail } from '../../Lib/Utils';
-import { Images } from '../../Themes'
+import {getPhoto, getThumnail} from '../../Lib/Utils';
+import {Images} from '../../Themes'
 
 export default class MoreScreen extends Component {
 

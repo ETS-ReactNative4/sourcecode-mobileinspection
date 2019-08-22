@@ -1,5 +1,4 @@
-
-import { createMaterialTopTabNavigator, createStackNavigator } from 'react-navigation';
+import {createStackNavigator} from 'react-navigation';
 
 import BuatInspeksi from '../BuatInspeksi';
 import KondisiBaris1 from '../KondisiBaris1';

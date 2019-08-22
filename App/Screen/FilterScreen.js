@@ -1,11 +1,9 @@
-
 import React from 'react';
-import { StatusBar, Text, TouchableOpacity, StyleSheet, AsyncStorage, ListView } from 'react-native';
+import {AsyncStorage, ListView, StatusBar, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import Colors from '../Constant/Colors';
-import { Container, Content, Icon, Picker, Form, View } from 'native-base';
-import { dateDisplayMobileWithoutHours, changeFormatDate } from '../Lib/Utils';
-import { Calendar } from 'react-native-calendars'
-import TaskServices from '../Database/TaskServices';
+import {Container, Content, Form, Icon, Picker, View} from 'native-base';
+import {changeFormatDate, dateDisplayMobileWithoutHours} from '../Lib/Utils';
+import {Calendar} from 'react-native-calendars'
 import Moment from 'moment'
 
 var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });

@@ -1,16 +1,16 @@
-import { call, put } from 'redux-saga/effects';
+import {call, put} from 'redux-saga/effects';
 import BlockAction from '../Redux/BlockRedux';
 
 export function* getBlock(api, action) {
     try {
         const { data } = action;
         const response = yield call(api.getBlock, data);
-    
+
         if (typeof atob !== 'undefined') {
             console.log(response);
             console.log('^^^ GET ALL BLOCK ^^^');
         }
-    
+
         if (response.ok) {
             switch (response.data.status) {
                 case false:
@@ -54,6 +54,6 @@ export function* postBlock(api, action) {
     } catch (error) {
         alert(error)
     }
-    
+
 }
 

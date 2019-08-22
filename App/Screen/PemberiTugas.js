@@ -1,20 +1,8 @@
-
 import React from 'react';
-import {
-    StatusBar,
-    Text,
-    TouchableOpacity,
-    StyleSheet,
-    TextInput,
-    ListView,
-    BackHandler,
-    Image,
-    FlatList
-} from 'react-native';
-import { Container, Content, View } from 'native-base';
+import {BackHandler, FlatList, ListView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity} from 'react-native';
+import {Container, Content, View} from 'native-base';
 import TaskServices from '../Database/TaskServices';
 import Icons from 'react-native-vector-icons/Ionicons'
-import Icon1 from "../Component/Icon1";
 
 var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 

@@ -1,13 +1,22 @@
-import React, { Component } from 'react';
-import { TouchableOpacity, ScrollView, Text, View, Switch, StatusBar, Image, AsyncStorage, BackHandler } from 'react-native';
+import React, {Component} from 'react';
+import {
+    AsyncStorage,
+    BackHandler,
+    Image,
+    ScrollView,
+    StatusBar,
+    Switch,
+    Text,
+    TouchableOpacity,
+    View
+} from 'react-native';
 import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
 import BtnStyles from './Component/ButtonStyle'
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { RNSlidingButton, SlideDirection } from 'rn-sliding-button';
+import {RNSlidingButton, SlideDirection} from 'rn-sliding-button';
 import Entypo from 'react-native-vector-icons/Entypo'
-import { NavigationActions, StackActions } from 'react-navigation';
-import { getTodayDate } from '../../Lib/Utils';
+import {getTodayDate} from '../../Lib/Utils';
 import R from 'ramda';
 import ModalAlert from '../../Component/ModalAlert'
 

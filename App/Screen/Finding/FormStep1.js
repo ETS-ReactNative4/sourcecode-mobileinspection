@@ -1,13 +1,17 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
-    StyleSheet, Text, FlatList, ScrollView, TouchableOpacity, View, Image, Alert, Platform, BackHandler
+    BackHandler,
+    FlatList,
+    Image,
+    Platform,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
 } from 'react-native';
-import {
-    Container,
-    Content,
-    Card,
-} from 'native-base';
-import { connect } from 'react-redux'
+import {Card, Container, Content,} from 'native-base';
+import {connect} from 'react-redux'
 import ModalAlert from '../../Component/ModalAlert';
 import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
@@ -18,6 +22,7 @@ import TaskServices from '../../Database/TaskServices'
 import RNFS from 'react-native-fs';
 import MapView from 'react-native-maps';
 import ModalAlertConfirmation from "../../Component/ModalAlertConfirmation";
+
 const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
 const LATITUDE = -2.952421;
 const LONGITUDE = 112.354931;

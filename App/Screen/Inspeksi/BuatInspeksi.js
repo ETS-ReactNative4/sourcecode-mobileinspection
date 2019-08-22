@@ -1,20 +1,14 @@
-import React, { Component } from 'react';
-import {
-    Text, Keyboard, Dimensions, TextInput, TouchableOpacity, View, BackHandler, StatusBar
-} from 'react-native';
-import { Card } from 'native-base';
+import React, {Component} from 'react';
+import {BackHandler, Dimensions, Keyboard, StatusBar, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {Card} from 'native-base';
 import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import IconLoc from 'react-native-vector-icons/FontAwesome5';
-import MapView, { PROVIDER_GOOGLE, ProviderPropType, Marker, AnimatedRegion } from 'react-native-maps';
-import { getTodayDate } from '../../Lib/Utils'
+import {getTodayDate} from '../../Lib/Utils'
 import TaskService from '../../Database/TaskServices';
-import { ProgressDialog } from 'react-native-simple-dialogs';
-import Autocomplete from 'react-native-autocomplete-input';
-import Geojson from 'react-native-geojson';
+import {ProgressDialog} from 'react-native-simple-dialogs';
 import R from 'ramda'
-import { NavigationActions, StackActions  } from 'react-navigation';
+import {NavigationActions, StackActions} from 'react-navigation';
 import ModalAlert from '../../Component/ModalAlert';
 import ModalAlertConfirmation from "../../Component/ModalAlertConfirmation";
 

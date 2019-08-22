@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Alert, NetInfo, Platform } from 'react-native'
-import { Container, Content } from 'native-base'
+import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Container, Content} from 'native-base'
 import * as Progress from 'react-native-progress';
 import Colors from '../Constant/Colors';
 import moment from 'moment';
@@ -23,21 +23,21 @@ import InspeksiAction from '../Redux/InspeksiRedux'
 import FindingUploadAction from '../Redux/FindingUploadRedux'
 import TMobileAction from '../Redux/TMobileRedux'
 import ParamTrackAction from '../Redux/ParamTrackRedux'
-import { ProgressDialog } from 'react-native-simple-dialogs';
-import { dirPhotoKategori, dirPhotoTemuan } from '../Lib/dirStorage';
-import { connect } from 'react-redux';
-import R, { isEmpty, isNil } from 'ramda'
+import {ProgressDialog} from 'react-native-simple-dialogs';
+import {dirPhotoKategori, dirPhotoTemuan} from '../Lib/dirStorage';
+import {connect} from 'react-redux';
+import R from 'ramda'
 import RNFetchBlob from 'rn-fetch-blob'
 import TaskServices from '../Database/TaskServices'
-import { getTodayDate, convertTimestampToDate } from '../Lib/Utils';
+import {convertTimestampToDate, getTodayDate} from '../Lib/Utils';
+import ModalAlert from '../Component/ModalAlert';
+
 var RNFS = require('react-native-fs');
 
 // import moment from 'moment';
 
 const link = 'http://149.129.245.230:3008/api/';
 const user = TaskServices.getAllData('TR_LOGIN')[0];
-
-import ModalAlert from '../Component/ModalAlert';
 
 const heightProgress = 5;
 const colorProgress = '#D5D5D5'
@@ -136,7 +136,7 @@ class SyncScreen extends React.Component {
             blockInspectionCodes: [],
             isFirstInstall: false,
 
-            //Add Modal Alert by Aminju 
+            //Add Modal Alert by Aminju
             title: 'Title',
             message: 'Message',
             showModal: false,
@@ -170,7 +170,7 @@ class SyncScreen extends React.Component {
 
                 // arrFindingCode.push(data[i].FINDING_CODE);
                 // this.setState({ findingCode: arrFindingCode })
-                // TaskServices.deleteRecordPrimaryKey('TR_FINDING', data[i]); 
+                // TaskServices.deleteRecordPrimaryKey('TR_FINDING', data[i]);
 
 
                 // this.deleteDataFinding('TR_FINDING', data[i].FINDING_CODE);
@@ -178,7 +178,7 @@ class SyncScreen extends React.Component {
 
                 this.deleteImage(data[i]);
                 // if (diff > 1) {
-                //     // console.log('Data Finding Code [i] : ', data[i].FINDING_CODE) 
+                //     // console.log('Data Finding Code [i] : ', data[i].FINDING_CODE)
                 //     // this.deleteImage(item.FINDING_CODE);
                 //     this.deleteDataFinding('TR_FINDING', data[i].FINDING_CODE);
                 // }
@@ -922,7 +922,7 @@ class SyncScreen extends React.Component {
             let countDataInsert = TaskServices.getTotalData('TR_CONTACT');
             this.setState({ progressContact: 1, valueContactDownload: countDataInsert, totalContactDownload: 0 });
         }
-        // if (data.ubah.length > 0 && allData.length > 0) {   
+        // if (data.ubah.length > 0 && allData.length > 0) {
         //     data.ubah.map(item => {
         //         let indexData = R.findIndex(R.propEq('USER_AUTH_CODE', item.USER_AUTH_CODE))(allData);
         //         TaskServices.updateContact(item, indexData)
@@ -931,8 +931,8 @@ class SyncScreen extends React.Component {
         // if(data.hapus.length > 0 && allData.length > 0){
         //     data.hapus.map(item =>{
         //         this.deleteData('TR_CONTACT', 'USER_AUTH_CODE', item.USER_AUTH_CODE);
-        //     });  
-        // }  
+        //     });
+        // }
 
         let countDataInsert = TaskServices.getTotalData('TR_CONTACT');
         this.hasDownload('auth/contact', countDataInsert);
@@ -998,7 +998,7 @@ class SyncScreen extends React.Component {
             icon: require('../Images/ic-sync-berhasil.png')
         });
 
-        // let arr = ['hectare-statement/block', 'hectare-statement/afdeling', 'hectare-statement/region', 'hectare-statement/est', 
+        // let arr = ['hectare-statement/block', 'hectare-statement/afdeling', 'hectare-statement/region', 'hectare-statement/est',
         // 'hectare-statement/land-use', 'hectare-statement/comp', 'auth/content', 'auth/content-label', 'auth/kriteria',
         // 'auth/category', 'auth/contact', 'finding'];
 
@@ -1006,7 +1006,7 @@ class SyncScreen extends React.Component {
         //     if(isFirstInstall){
         //     }
         //     this.fetchingMobileSync(item);
-        // });        
+        // });
     }
 
     //download image
@@ -1162,7 +1162,7 @@ class SyncScreen extends React.Component {
         //                 this.loadDataInspectionTrack();
 
         //                 //cara biasa
-        //                 // setTimeout(() => {            
+        //                 // setTimeout(() => {
         //                 // this.DownloadData(`${link}mobile-sync/finding`, 'finding');
         //                 // }, 2000);
 

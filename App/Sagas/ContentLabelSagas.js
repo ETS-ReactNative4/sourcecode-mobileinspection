@@ -1,4 +1,4 @@
-import { call, put } from 'redux-saga/effects';
+import {call, put} from 'redux-saga/effects';
 import ContentLabelActions from '../Redux/ContentLabelRedux';
 
 export function* getContentLabel(api, action) {
@@ -53,6 +53,6 @@ export function* postContentLabel(api, action) {
     } catch (error) {
         alert(error)
     }
-    
+
 }
 

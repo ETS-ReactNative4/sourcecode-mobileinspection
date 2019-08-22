@@ -1,25 +1,16 @@
-import React, { Component } from 'react';
-import {
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  Image,
-  Platform,
-  BackHandler,
-  Dimensions,
-  StatusBar
-} from 'react-native';
+import React, {Component} from 'react';
+import {BackHandler, Dimensions, Image, Platform, StatusBar, StyleSheet, TouchableOpacity, View} from 'react-native';
 import Colors from '../../Constant/Colors';
 import imgTakePhoto from '../../Images/icon/ic_take_photo.png';
 import imgNextPhoto from '../../Images/icon/ic_next_photo.png';
-import { RNCamera as Camera } from 'react-native-camera';
-import { getTodayDate } from '../../Lib/Utils'
+import {RNCamera as Camera} from 'react-native-camera';
+import {getTodayDate} from '../../Lib/Utils'
 import ImageResizer from 'react-native-image-resizer';
-import { dirPhotoEbccSelfie } from '../../Lib/dirStorage'
+import {dirPhotoEbccSelfie} from '../../Lib/dirStorage'
 import R from 'ramda';
 import moment from 'moment'
 import ModalAlertBack from '../../Component/ModalAlert';
-import { NavigationActions, StackActions } from 'react-navigation';
+import {NavigationActions} from 'react-navigation';
 import TaskServices from '../../Database/TaskServices';
 
 var RNFS = require('react-native-fs');

@@ -1,7 +1,6 @@
-
 import React from 'react';
-import { StatusBar, Text, TouchableOpacity, StyleSheet, TextInput, ListView, BackHandler } from 'react-native';
-import { Container, Content, View } from 'native-base';
+import {BackHandler, ListView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity} from 'react-native';
+import {Container, Content, View} from 'native-base';
 import TaskServices from '../Database/TaskServices';
 import Icons from 'react-native-vector-icons/Ionicons'
 

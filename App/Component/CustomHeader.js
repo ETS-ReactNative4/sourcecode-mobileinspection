@@ -1,7 +1,7 @@
 import React from "react";
-import { Header } from "react-navigation";
-import { View, Platform, TouchableOpacity } from "react-native";
-import { Thumbnail, Text } from 'native-base';
+import {Header} from "react-navigation";
+import {TouchableOpacity, View} from "react-native";
+import {Text} from 'native-base';
 import Color from '../Constant/Colors';
 import TaskServices from '../Database/TaskServices';
 

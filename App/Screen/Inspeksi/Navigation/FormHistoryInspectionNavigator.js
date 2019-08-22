@@ -1,5 +1,4 @@
-
-import { createMaterialTopTabNavigator, createStackNavigator } from 'react-navigation';
+import {createStackNavigator} from 'react-navigation';
 
 import DetailHistory from '../InpectionDetail';
 

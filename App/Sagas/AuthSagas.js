@@ -1,6 +1,6 @@
-import { call, put } from 'redux-saga/effects';
+import {call, put} from 'redux-saga/effects';
 import AuthActions from '../Redux/AuthRedux';
-import { isEmpty, isNil } from 'ramda';
+import {isNil} from 'ramda';
 
 export function* getAuth(api, action) {
 	try {
@@ -43,7 +43,7 @@ export function* getAuth(api, action) {
 	} catch (error) {
 		alert(error)
 	}
-	
+
 }
 
 // export function* getAuthLogOut(api, action) {
@@ -109,5 +109,5 @@ export function* userUpdate(api, action) {
 	} catch (error) {
 		alert(error)
 	}
-	
+
 }

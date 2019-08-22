@@ -1,8 +1,8 @@
 import React from 'react'
-import { View, Image, Text, StyleSheet } from 'react-native'
-import { Card } from 'native-base'
+import {Image, StyleSheet, Text, View} from 'react-native'
+import {Card} from 'native-base'
 import ButtonSuggestion from './ButtonSuggestion'
-import { Images } from '../../Themes'
+import {Images} from '../../Themes'
 
 const desc = 'Kamu menolak semua rekomendasi.\nTekan tombol di bawah untuk \nmulai aktivitas di lokasimu saat ini'
 

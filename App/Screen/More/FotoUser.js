@@ -1,20 +1,12 @@
-import React, { Component } from 'react';
-import {
-    StyleSheet,
-    TouchableOpacity,
-    View,
-    Image,
-    Platform,
-    BackHandler,
-    StatusBar
-} from 'react-native';
+import React, {Component} from 'react';
+import {BackHandler, Image, Platform, StatusBar, StyleSheet, TouchableOpacity, View} from 'react-native';
 import Colors from '../../Constant/Colors';
 import imgTakePhoto from '../../Images/icon/ic_take_photo.png';
 import imgNextPhoto from '../../Images/icon/ic_next_photo.png';
-import { RNCamera as Camera } from 'react-native-camera';
-import { getTodayDate } from '../../Lib/Utils'
+import {RNCamera as Camera} from 'react-native-camera';
+import {getTodayDate} from '../../Lib/Utils'
 import ImageResizer from 'react-native-image-resizer';
-import { dirPhotoUser } from '../../Lib/dirStorage'
+import {dirPhotoUser} from '../../Lib/dirStorage'
 import TaskService from '../../Database/TaskServices'
 import ModalAlertBack from '../../Component/ModalAlert';
 import moment from 'moment';

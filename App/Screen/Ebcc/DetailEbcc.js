@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { View, Text, TextInput, ScrollView, BackHandler, StatusBar, Image } from 'react-native';
+import React, {Component} from 'react';
+import {Image, ScrollView, StatusBar, Text, TextInput, View} from 'react-native';
 import Colors from '../../Constant/Colors'
 import R from 'ramda';
 import TaskServices from '../../Database/TaskServices'

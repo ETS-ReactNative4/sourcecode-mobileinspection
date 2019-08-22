@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, Image } from 'react-native';
+import React, {Component} from 'react';
+import {Image, StyleSheet, View} from 'react-native';
 import ActionButton from 'react-native-action-button'
 import Icon2 from 'react-native-vector-icons/MaterialIcons'
 import Colors from '../../Constant/Colors'
-import { NavigationActions } from 'react-navigation';
+import {NavigationActions} from 'react-navigation';
 import TaskServices from '../../Database/TaskServices'
-import { Images } from '../../Themes';
+import {Images} from '../../Themes';
 
 export default class FindingScreen extends Component {
 

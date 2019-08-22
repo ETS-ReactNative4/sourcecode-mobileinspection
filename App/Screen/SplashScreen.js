@@ -1,22 +1,26 @@
-
-import React, { Component } from 'react';
-import { ImageBackground, StatusBar, Text, AppRegistry, Linking } from 'react-native';
-import { Container } from 'native-base'
-import { NavigationActions, StackActions } from 'react-navigation';
-import { getPermission } from '../Lib/Utils'
-import { connect } from 'react-redux';
+import React, {Component} from 'react';
+import {ImageBackground, Linking, StatusBar} from 'react-native';
+import {Container} from 'native-base'
+import {NavigationActions, StackActions} from 'react-navigation';
+import {getPermission} from '../Lib/Utils'
+import {connect} from 'react-redux';
 import TaskServices from '../Database/TaskServices'
 import CategoryAction from '../Redux/CategoryRedux'
 import ContactAction from '../Redux/ContactRedux'
 import RegionAction from '../Redux/RegionRedux'
-import R from 'ramda'
 import {
-    dirPhotoInspeksiBaris, dirPhotoInspeksiSelfie,
-    dirPhotoTemuan, dirPhotoKategori, dirPhotoEbccJanjang, dirPhotoEbccSelfie, dirMaps, dirPhotoUser
+    dirMaps,
+    dirPhotoEbccJanjang,
+    dirPhotoEbccSelfie,
+    dirPhotoInspeksiBaris,
+    dirPhotoInspeksiSelfie,
+    dirPhotoKategori,
+    dirPhotoTemuan,
+    dirPhotoUser
 } from '../Lib/dirStorage';
 import geolib from 'geolib';
 import ModalAlert from "../Component/ModalAlert";
-import { retrieveData } from '../Database/Resources';
+import {retrieveData} from '../Database/Resources';
 
 var RNFS = require('react-native-fs');
 const skm = require('../Data/MegaKuningan.json');

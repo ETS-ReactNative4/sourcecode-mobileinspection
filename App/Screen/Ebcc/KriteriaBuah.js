@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import { TouchableOpacity, View, Text, TextInput, ScrollView, BackHandler, StatusBar } from 'react-native';
+import React, {Component} from 'react';
+import {BackHandler, ScrollView, StatusBar, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import Colors from '../../Constant/Colors'
 import {RNSlidingButton, SlideDirection} from 'rn-sliding-button';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import R from 'ramda';
 import TaskServices from '../../Database/TaskServices'
-import { getTodayDate } from '../../Lib/Utils'
+import {getTodayDate} from '../../Lib/Utils'
 
 import ModalAlertConfirmation from '../../Component/ModalAlert';
 
@@ -72,7 +72,7 @@ class KriteriaBuah extends Component {
         this.loadData()
     }
 
-    componentDidMount() {        
+    componentDidMount() {
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
     }
 

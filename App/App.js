@@ -4,9 +4,6 @@ import React, {Component} from 'react';
 import {Provider} from 'react-redux';
 import createSore from './Redux';
 import RootNavigation from './Navigation/RootNavigation'
-import {
-    AppRegistry
-  } from 'react-native';
 
 const store = createSore();
 const LogLocation = async (data) => {

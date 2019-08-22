@@ -1,21 +1,16 @@
-import React, { Component } from 'react';
-import {
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  Image,
-  Dimensions, Platform, StatusBar, BackHandler
-} from 'react-native';
+import React, {Component} from 'react';
+import {BackHandler, Dimensions, Image, Platform, StatusBar, StyleSheet, TouchableOpacity, View} from 'react-native';
 import Colors from '../../Constant/Colors';
-import { RNCamera as Camera } from 'react-native-camera';
+import {RNCamera as Camera} from 'react-native-camera';
 import imgTakePhoto from '../../Images/icon/ic_take_photo.png';
 import imgNextPhoto from '../../Images/icon/ic_next_photo.png';
 import R from 'ramda';
-import { getTodayDate } from '../../Lib/Utils'
-import { dirPhotoInspeksiSelfie } from '../../Lib/dirStorage'
+import {getTodayDate} from '../../Lib/Utils'
+import {dirPhotoInspeksiSelfie} from '../../Lib/dirStorage'
+import ImageResizer from 'react-native-image-resizer';
+
 const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
 var RNFS = require('react-native-fs');
-import ImageResizer from 'react-native-image-resizer';
 
 class TakePhotoSelfie extends Component {
 
@@ -141,7 +136,7 @@ class TakePhotoSelfie extends Component {
       // response.uri is the URI of the new image that can now be displayed, uploaded...
       // response.path is the path of the new image
       // response.name is the name of the new image with the extension
-      // response.size is the size of the new image  
+      // response.size is the size of the new image
       RNFS.copyFile(response.path, `${dirPhotoInspeksiSelfie}/${this.state.dataModel.IMAGE_NAME}`);
       this.setState({
         path: response.uri,

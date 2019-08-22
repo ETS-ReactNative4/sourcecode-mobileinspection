@@ -1,33 +1,38 @@
 'use strict';
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
+    BackHandler,
+    ImageBackground,
+    Keyboard,
+    KeyboardAvoidingView,
+    StatusBar,
     StyleSheet,
     Text,
-    View,
-    KeyboardAvoidingView,
-    Keyboard,
-    StatusBar,
-    ImageBackground,
-    BackHandler,
-    Linking
+    View
 } from 'react-native';
 
 
 import HandleBack from '../Component/Back'
 import Form from '../Component/Form';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import AuthAction from '../Redux/AuthRedux';
-import { ProgressDialog } from 'react-native-simple-dialogs';
-import { NavigationActions, StackActions } from 'react-navigation';
+import {ProgressDialog} from 'react-native-simple-dialogs';
+import {NavigationActions, StackActions} from 'react-navigation';
 import TaskServices from '../Database/TaskServices';
 import RNFetchBlob from 'rn-fetch-blob'
-import { dirPhotoTemuan, dirPhotoInspeksiBaris, dirPhotoInspeksiSelfie, dirPhotoKategori, dirPhotoEbccJanjang, dirPhotoEbccSelfie } from '../Lib/dirStorage';
+import {
+    dirPhotoEbccJanjang,
+    dirPhotoEbccSelfie,
+    dirPhotoInspeksiBaris,
+    dirPhotoInspeksiSelfie,
+    dirPhotoKategori,
+    dirPhotoTemuan
+} from '../Lib/dirStorage';
 import ModalAlert from '../Component/ModalAlert'
 import ServerName from '../Constant/ServerName'
 import IMEI from 'react-native-imei'
-import DeviceInfo from 'react-native-device-info';
-import { AlertContent } from '../Themes';
-import { storeData } from '../Database/Resources';
+import {AlertContent} from '../Themes';
+import {storeData} from '../Database/Resources';
 import moment from 'moment'
 
 class Login extends Component {

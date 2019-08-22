@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import React, {Component} from 'react';
+import {StyleSheet, View} from 'react-native';
 import EbccTabNavigator from './EbccTabNavigator'
 import Colors from '../../Constant/Colors'
 import CustomHeader from '../../Component/CustomHeader'
 import IconHeader from '../../Component/IconHeader'
 import TaskServices from '../../Database/TaskServices'
-import { Images } from '../../Themes'
+import {Images} from '../../Themes'
 
 export default class EbccValidationScreen extends Component {
   static router = EbccTabNavigator.router;

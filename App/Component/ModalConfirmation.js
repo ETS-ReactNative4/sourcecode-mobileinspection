@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
-import { Modal, TouchableOpacity } from 'react-native';
+import React, {Component} from 'react';
+import {Modal, TouchableOpacity} from 'react-native';
 import PropTypes from 'prop-types';
-import { View, Text, Item, Label, Input, Button } from 'native-base';
-
+import {Text, View} from 'native-base';
 // import { Colors, Fonts } from '../Themes';
 import Colors from '../Constant/Colors';
 import Fonts from '../Constant/Fonts';

@@ -1,21 +1,14 @@
 import React from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  StatusBar,
-  TouchableOpacity,
-  BackHandler
-} from 'react-native';
+import {BackHandler, StatusBar, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
-import MapView, { Polygon, ProviderPropType, Marker } from 'react-native-maps';
+import MapView, {Marker, Polygon, ProviderPropType} from 'react-native-maps';
 import Colors from '../../Constant/Colors'
 import IconLoc from 'react-native-vector-icons/FontAwesome5';
 import ModalAlert from '../../Component/ModalLoading'
 import ModalGps from '../../Component/ModalAlert';
 import TaskServices from '../../Database/TaskServices';
 import geolib from 'geolib';
-import { AlertContent } from '../../Themes';
+import {AlertContent} from '../../Themes';
 
 let LATITUDE = -2.1890660;
 let LONGITUDE = 111.3609873;

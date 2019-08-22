@@ -1,6 +1,5 @@
-import { call, put } from 'redux-saga/effects';
+import {call, put} from 'redux-saga/effects';
 import RegionActions from '../Redux/RegionRedux';
-import TaskServices from '../Database/TaskServices'
 
 export function* getRegion(api, action) {
     try {

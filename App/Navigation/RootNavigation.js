@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import ReduxNavigation from './ReduxNavigation';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import StartupActions from '../Redux/StartupRedux';
 // import ReduxPersist from '../Config/ReduxPersist';
-import { Root, StyleProvider, Toast, ActionSheet } from 'native-base';
+import {ActionSheet, Toast} from 'native-base';
 
 class RootContainer extends Component {
 	componentDidMount() {

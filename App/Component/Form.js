@@ -1,24 +1,21 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
-    StyleSheet,
-    Text,
-    View,
-    TextInput,
-    TouchableOpacity,
+    Alert,
+    Icon,
+    Image,
+    Keyboard,
     NetInfo,
     Picker,
-    Icon,
-    Keyboard, Alert, Image
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View
 } from 'react-native';
-import {
-    widthPercentageToDP as wp,
-    heightPercentageToDP as hp,
-    listenOrientationChange as loc,
-    removeOrientationListener as rol
-} from 'react-native-responsive-screen';
+import {heightPercentageToDP as hp, widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import ModalAlert from '../Component/ModalAlert'
 import PropTypes from 'prop-types';
-import { Images, AlertContent } from '../Themes'
+import {AlertContent, Images} from '../Themes'
 
 class Form extends Component {
 

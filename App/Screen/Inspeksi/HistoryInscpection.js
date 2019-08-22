@@ -1,16 +1,17 @@
-import React, { Component } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Platform, StatusBar } from 'react-native';
-import { Card } from 'native-base';
+import React, {Component} from 'react';
+import {Image, Platform, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Card} from 'native-base';
 import Colors from '../../Constant/Colors';
 import Taskservice from '../../Database/TaskServices'
-import { NavigationActions } from 'react-navigation';
-import TaskServices from '../../Database/TaskServices';
+import TaskServices from '../../Database/TaskServices'
+import {NavigationActions} from 'react-navigation';
 import moment from 'moment'
+import {dateDisplayMobile} from '../../Lib/Utils'
+import TemplateNoData from '../../Component/TemplateNoData';
+import {Images} from '../../Themes';
+
 var RNFS = require('react-native-fs');
 const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
-import { dateDisplayMobile } from '../../Lib/Utils'
-import TemplateNoData from '../../Component/TemplateNoData';
-import { Images } from '../../Themes';
 
 export default class HistoryInspection extends Component {
 

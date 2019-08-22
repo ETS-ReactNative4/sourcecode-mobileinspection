@@ -1,27 +1,20 @@
-import React, { Component } from 'react';
-import {
-    Text, Dimensions, StatusBar, TextInput, TouchableOpacity, View, Switch
-} from 'react-native';
-import {
-    Card,
-    CardItem,
-} from 'native-base';
+import React, {Component} from 'react';
+import {Dimensions, StatusBar, Switch, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {Card, CardItem,} from 'native-base';
 import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import MapView, { Polygon, ProviderPropType, Marker, Polyline } from 'react-native-maps';
-import { RNSlidingButton, SlideDirection } from 'rn-sliding-button';
+import MapView, {Marker, Polygon, Polyline, ProviderPropType} from 'react-native-maps';
+import {RNSlidingButton, SlideDirection} from 'rn-sliding-button';
 import TaskService from '../../Database/TaskServices';
-import { getTodayDate, getCalculateTime } from '../../Lib/Utils'
-import { NavigationActions, StackActions } from 'react-navigation';
+import TaskServices from '../../Database/TaskServices';
+import {getCalculateTime, getTodayDate} from '../../Lib/Utils'
+import {NavigationActions, StackActions} from 'react-navigation';
 import R from 'ramda';
 import geolib from 'geolib';
-import { ProgressDialog } from 'react-native-simple-dialogs';
-import IconLoc from 'react-native-vector-icons/FontAwesome5';
+import {ProgressDialog} from 'react-native-simple-dialogs';
 import ModalAlert from '../../Component/ModalAlert';
-
-import TaskServices from '../../Database/TaskServices';
-import { retrieveData, removeData } from '../../Database/Resources';
+import {retrieveData} from '../../Database/Resources';
 
 const skm = require('../../Data/MegaKuningan.json');
 
@@ -102,7 +95,7 @@ class KondisiBarisAkhir extends Component {
             polyTrack: [],
             poligons: [],
 
-            //Add Modal Alert by Aminju 
+            //Add Modal Alert by Aminju
             title: 'Title',
             message: 'Message',
             showModal: false,

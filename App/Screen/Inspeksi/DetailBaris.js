@@ -1,19 +1,8 @@
 import React from 'react';
-import {
-    StyleSheet,
-    Text,
-    View,
-    StatusBar,
-    ScrollView,
-    Image, TouchableOpacity
-} from 'react-native';
-
-import Icon from 'react-native-vector-icons/AntDesign'
-import Size from '../../Constant/sizes'
+import {Image, ScrollView, StatusBar, StyleSheet, Text, View} from 'react-native';
 import Colors from '../../Constant/Colors'
 import Taskservices from '../../Database/TaskServices'
 import R from 'ramda';
-import Entypo from "react-native-vector-icons/Entypo";
 
 class DetailBaris extends React.Component {
 

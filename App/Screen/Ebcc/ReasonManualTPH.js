@@ -1,6 +1,6 @@
 import React from 'react'
 import Colors from '../../Constant/Colors'
-import { TouchableOpacity, View, Text, BackHandler } from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
 import R from 'ramda';
 
 class ReasonManualTPH extends React.Component{

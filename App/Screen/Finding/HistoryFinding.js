@@ -1,13 +1,14 @@
-import React, { Component } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
+import React, {Component} from 'react';
+import {Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import TaskServices from '../../Database/TaskServices'
 import Colors from '../../Constant/Colors'
 import Moment from 'moment'
 import RNFS from 'react-native-fs'
 import RNFetchBlob from 'rn-fetch-blob'
-import { dirPhotoTemuan } from '../../Lib/dirStorage';
-import { dateDisplayMobile, changeFormatDate } from '../../Lib/Utils';
+import {dirPhotoTemuan} from '../../Lib/dirStorage';
+import {changeFormatDate, dateDisplayMobile} from '../../Lib/Utils';
 import ServerName from '../../Constant/ServerName';
+
 const moment = require('moment');
 
 export default class HistoryFinding extends Component {

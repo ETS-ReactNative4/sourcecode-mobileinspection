@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { Modal, Image, TouchableOpacity } from 'react-native';
+import React, {Component} from 'react';
+import {Image, Modal, TouchableOpacity} from 'react-native';
 import PropTypes from 'prop-types';
-import { View, Text} from 'native-base';
+import {Text, View} from 'native-base';
 import Colors from '../Constant/Colors';
 
 export default class ModalConfirmation extends Component {

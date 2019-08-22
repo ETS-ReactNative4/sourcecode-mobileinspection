@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
+import {createBottomTabNavigator, createStackNavigator} from 'react-navigation';
 import EbccValidationScreen from '../Ebcc/EbccValidationScreen';
 import MoreScreen from '../More/MoreScreen';
 

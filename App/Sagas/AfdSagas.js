@@ -1,11 +1,11 @@
-import { call, put } from 'redux-saga/effects';
+import {call, put} from 'redux-saga/effects';
 import AfdActions from '../Redux/AfdRedux';
 
 export function* getAfd(api, action) {
     try {
         const { data } = action;
         const response = yield call(api.getAfd, data);
-    
+
         if (typeof atob !== 'undefined') {
             console.log(response);
             console.log('^^^ GET ALL AFD ^^^');
@@ -16,7 +16,7 @@ export function* getAfd(api, action) {
                     yield put(AfdActions.afdFailure('Paramater Salah'));
                     break;
                 case true:
-    
+
                     console.log('^^^ SUCCESS AFD ^^^');
                     yield put(AfdActions.afdSuccess(response.data.data));
                     break;
@@ -30,7 +30,7 @@ export function* getAfd(api, action) {
     } catch (error) {
         alert(error)
     }
-    
+
 
 }
 
@@ -38,12 +38,12 @@ export function* postAfd(api, action) {
     try {
         const { data } = action;
         const response = yield call(api.postAfd, data);
-    
+
         if (typeof atob !== 'undefined') {
             console.log(response);
             console.log('^^^ POST AFD ^^^');
         }
-    
+
         if (response.ok) {
             yield put(AfdActions.afdSuccess({ payload: response.data, change: true }));
         } else {
@@ -56,6 +56,6 @@ export function* postAfd(api, action) {
     } catch (error) {
         alert(error)
     }
-    
+
 }
 

@@ -1,4 +1,4 @@
-import { Images } from ".";
+import {Images} from ".";
 
 // SHOW ICON PROGRESS BASE ON STATUS FINDING
 export function getIconProgress(status) {

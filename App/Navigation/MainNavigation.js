@@ -1,8 +1,7 @@
-import { createSwitchNavigator, createStackNavigator } from 'react-navigation';
+import {createStackNavigator, createSwitchNavigator} from 'react-navigation';
 
 import SplashScreen from '../Screen/SplashScreen';
 import Login from '../Screen/Login'
-import AppNav from '../Navigation/AppNavigation'
 import MainMenu from '../Screen/Home/MainTabNavigator'
 
 const LoginStack = createStackNavigator({ Login: Login });

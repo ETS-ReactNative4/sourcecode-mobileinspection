@@ -1,15 +1,12 @@
-import React, { Component } from 'react';
-import { TouchableOpacity, View, Alert, Text, TextInput, ScrollView, Image, BackHandler, StatusBar } from 'react-native';
+import React, {Component} from 'react';
+import {BackHandler, Image, ScrollView, StatusBar, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
 import R from 'ramda';
-import { NavigationActions } from 'react-navigation';
-import { getTodayDate } from '../../Lib/Utils'
-
-import ModalAlertConfirmation from '../../Component/ModalAlertConfirmation';
+import {getTodayDate} from '../../Lib/Utils'
 import TaskService from "../../Database/TaskServices";
 import ModalAlert from "../../Component/ModalAlert";
 

@@ -1,26 +1,18 @@
-import React, { Component } from 'react';
-import {
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  Image,
-  Platform,
-  Dimensions,
-  StatusBar,
-  BackHandler
-} from 'react-native';
+import React, {Component} from 'react';
+import {BackHandler, Dimensions, Image, Platform, StatusBar, StyleSheet, TouchableOpacity, View} from 'react-native';
 import Colors from '../../Constant/Colors';
-const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
 import imgTakePhoto from '../../Images/icon/ic_take_photo.png';
 import imgNextPhoto from '../../Images/icon/ic_next_photo.png';
-import { RNCamera as Camera } from 'react-native-camera';
-import { getTodayDate } from '../../Lib/Utils'
+import {RNCamera as Camera} from 'react-native-camera';
+import {getTodayDate} from '../../Lib/Utils'
 import ImageResizer from 'react-native-image-resizer';
-import { dirPhotoInspeksiBaris } from '../../Lib/dirStorage'
-var RNFS = require('react-native-fs');
+import {dirPhotoInspeksiBaris} from '../../Lib/dirStorage'
 import R from 'ramda';
 import MapView from 'react-native-maps';
 import TaskService from '../../Database/TaskServices';
+
+const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
+var RNFS = require('react-native-fs');
 const LATITUDE = -2.952421;
 const LONGITUDE = 112.354931;
 
@@ -80,7 +72,7 @@ class TakePhotoBaris extends Component {
 
   componentDidMount() {
     this.setParameter();
-    // BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);    
+    // BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
   }
 

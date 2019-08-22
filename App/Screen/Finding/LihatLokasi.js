@@ -1,21 +1,13 @@
 import React from 'react';
-import {
-    StyleSheet,
-    View,
-    Text,
-    StatusBar,
-    TouchableOpacity,
-    BackHandler
-} from 'react-native';
+import {StatusBar, StyleSheet, Text, View} from 'react-native';
 
-import MapView, { Polygon, ProviderPropType, Marker } from 'react-native-maps';
+import MapView, {Marker, Polygon, ProviderPropType} from 'react-native-maps';
 import Colors from '../../Constant/Colors'
-import IconLoc from 'react-native-vector-icons/FontAwesome5';
 import ModalAlert from '../../Component/ModalLoading'
 import ModalGps from '../../Component/ModalAlert';
 import TaskServices from '../../Database/TaskServices';
 import geolib from 'geolib';
-import { storeData, retrieveData } from '../../Database/Resources';
+import {retrieveData, storeData} from '../../Database/Resources';
 
 let polyMap = false;
 

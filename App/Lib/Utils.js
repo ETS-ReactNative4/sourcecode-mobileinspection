@@ -1,10 +1,10 @@
-import { isNil, isEmpty } from 'ramda';
+import {isEmpty, isNil} from 'ramda';
 import DeviceInfo from 'react-native-device-info';
-import { Platform, PixelRatio, Dimensions, PermissionsAndroid, Alert } from 'react-native';
-import { dirPhotoUser } from "./dirStorage";
+import {Alert, Dimensions, PermissionsAndroid, PixelRatio, Platform} from 'react-native';
+import RNFS from 'react-native-fs';
+
 const moment = require('moment');
 const momentTimezone = require('moment-timezone');
-import RNFS from 'react-native-fs';
 var uuid = require('react-native-uuid');
 
 export function downloadImage(url, path) {

@@ -1,4 +1,4 @@
-import { call, put } from 'redux-saga/effects';
+import {call, put} from 'redux-saga/effects';
 import ResetActions from '../Redux/ResetRedux';
 
 export function* postReset(api, action) {
@@ -23,5 +23,5 @@ export function* postReset(api, action) {
     } catch (error) {
         alert(error)
     }
-    
+
 }

@@ -1,8 +1,7 @@
 import React from 'react'
-import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import { Card } from 'native-base'
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Card} from 'native-base'
 import ButtonSuggestion from '../Suggestion/ButtonSuggestion'
-import { Images } from '../../Themes'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
 //FEATURE SUGGETION

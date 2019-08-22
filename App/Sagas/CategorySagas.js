@@ -1,12 +1,11 @@
-import { call, put } from 'redux-saga/effects';
+import {call, put} from 'redux-saga/effects';
 import CategoryActions from '../Redux/CategoryRedux';
-import TaskServices from '../Database/TaskServices'
 
 export function* getCategory(api, action) {
     try {
         const { data } = action;
         const response = yield call(api.getCategory, data);
-    
+
         if (typeof atob !== 'undefined') {
             console.log(response);
             console.log('^^^ GET ALL CATEGORY ^^^');
@@ -28,5 +27,5 @@ export function* getCategory(api, action) {
     } catch (error) {
         alert(error)
     }
-    
+
 }

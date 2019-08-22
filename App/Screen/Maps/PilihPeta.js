@@ -1,10 +1,7 @@
 'use strict';
-import React, { Component } from 'react'
-import { BackHandler, View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, AsyncStorage } from 'react-native'
-import {
-	Container,
-	Content,
-} from 'native-base'
+import React, {Component} from 'react'
+import {BackHandler, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Container, Content,} from 'native-base'
 import Colors from '../../Constant/Colors'
 import Dash from 'react-native-dash'
 import TaskServices from '../../Database/TaskServices'
@@ -12,7 +9,7 @@ import ServerName from '../../Constant/ServerName'
 import Icon2 from 'react-native-vector-icons/AntDesign'
 import ModalLoading from '../../Component/ModalLoading'
 import ModalAlert from '../../Component/ModalAlert';
-import MapView, { Polygon, Marker, ProviderPropType } from 'react-native-maps';
+import MapView, {Marker, Polygon, ProviderPropType} from 'react-native-maps';
 
 const LATITUDE = -2.952421;
 const LONGITUDE = 112.354931;

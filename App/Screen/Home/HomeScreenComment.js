@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
-import { ScrollView, View, Text, TouchableOpacity, Image, FlatList, TextInput, Keyboard, KeyboardAvoidingView } from 'react-native';
+import React, {Component} from 'react';
+import {FlatList, Image, Keyboard, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import Colors from "../../Constant/Colors";
 import Icon from "react-native-vector-icons/Ionicons";
 import Icon1 from '../../Component/Icon1'
 import TaskServices from "../../Database/TaskServices";
 import moment from 'moment'
+
 let ic_org_placeholder = require('../../Images/ic-orang.png');
 
 export default class HomeScreenComment extends Component {
