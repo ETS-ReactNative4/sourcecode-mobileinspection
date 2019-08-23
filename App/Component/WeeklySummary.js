@@ -59,32 +59,36 @@ class WeeklySummary extends Component {
                             </TouchableOpacity>
                             <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 16 }}>
                                 <Image style={{ height: 70, width: 130, resizeMode: 'stretch' }} source={require('../Images/summaryInspeksi/morning.png')} />
-                                <Text style={[styles.text, { color: 'black', marginTop: 16 }]}>Semangat Pagi, {user.USERNAME}</Text>
+                                <Text style={[styles.text, { color: 'black', marginTop: 16, fontWeight: 'bold' }]}>Semangat Pagi, {user.USERNAME}</Text>
                                 <Text style={[styles.text, { color: '#4f5154', marginTop: 3 }]}>Seminggu kemarin, kamu telah :</Text>
                             </View>
 
                             {/* Feature */}
                             <View style={{ flexDirection: 'row', flexWrap: 'wrap', paddingHorizontal: 20, marginTop: 10 }}>
                                 <WeeklyFeature
-                                    value={this.props.data.total_inspeksi + '(' + this.props.data.total_baris + ' Baris)'}
+                                    value={this.props.data.total_inspeksi + ' (' + this.props.data.total_baris + ' Baris)'}
                                     title={'inspeksi'}
                                     img={require('../Images/summaryInspeksi/inspeksi.png')}
-                                    target={'Target : ' + 10} />
+                                // target={'Target : ' + 10} 
+                                />
                                 <WeeklyFeature
                                     value={5}
                                     title={'temuan'}
                                     img={require('../Images/summaryInspeksi/temuan.png')}
-                                    target={'Target : ' + 10} />
+                                // target={'Target : ' + 10} 
+                                />
                                 <WeeklyFeature
                                     value={50}
                                     title={'sampling ebcc'}
                                     img={require('../Images/summaryInspeksi/ebcc.png')}
-                                    target={'Target : ' + 50} />
+                                // target={'Target : ' + 50} 
+                                />
                                 <WeeklyFeature
                                     value={this.props.data.jarak_meter / 1000 + ' KM'}
                                     title={'berjalan kaki'}
                                     img={require('../Images/summaryInspeksi/walk.png')}
-                                    target={this.props.data.durasi_jam + ' jam ' + this.props.data.durasi_menit + ' menit'} />
+                                    target={this.props.data.durasi_jam + ' jam ' + this.props.data.durasi_menit + ' menit'}
+                                />
                             </View>
 
                             <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 12 }}>
