@@ -34,7 +34,8 @@ import {
   dirPhotoInspeksiBaris,
   dirPhotoInspeksiSelfie,
   dirPhotoKategori,
-  dirPhotoTemuan
+  dirPhotoTemuan,
+  dirDatabase
 } from '../../Lib/dirStorage';
 
 import WeeklySummary from "../../Component/WeeklySummary";
@@ -129,7 +130,8 @@ class HomeScreen extends React.Component {
   }
 
   componentDidMount() {
-    RNFS.copyFile(TaskServices.getPath(), 'file:///storage/emulated/0/MobileInspection/data.realm');
+    RNFS.mkdir(dirDatabase);
+    RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
     RNFS.mkdir(dirPhotoInspeksiBaris);
     RNFS.mkdir(dirPhotoInspeksiSelfie);
     RNFS.mkdir(dirPhotoTemuan);

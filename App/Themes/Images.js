@@ -31,6 +31,10 @@ const images = {
     ic_blm_input_lokasi: require('../Images/ic-blm-input-lokasi.png'),
     ic_data_not_match: require('../Images/ic_datanotmatch.png'),
 
+    //Icon Lainnya
+    ic_lainnya_peta: require('../Images/icon/icon_lainnya_maps.png'),
+    ic_lainnya_database: require('../Images/icon/icon_lainnya_database.png'),
+
     //Rating Icon
     ic_rating_bad: require('../Images/icon/ic-rating-bad.png'),
     ic_rating_bad_noactive: require('../Images/icon/ic-rating-bad-notactive.png'),

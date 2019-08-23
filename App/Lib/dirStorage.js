@@ -9,6 +9,7 @@ export const dirHome = Platform.select({
 
 // export const dirPicutures = `${dirHome}/Pictures`;
 // export const dirAudio = `${dirHome}/Audio`;
+export const dirDatabase = `${dirHome}/Database`;
 export const dirPhotoTemuan = `${dirHome}/Photo/Temuan`;
 export const dirPhotoKategori = `${dirHome}/Photo/Temuan/Kategori`;
 export const dirPhotoInspeksiBaris = `${dirHome}/Photo/Inspeksi/Baris`;

@@ -1,18 +1,20 @@
-import React, {Component} from 'react';
-import {Image, NetInfo, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {Thumbnail} from 'native-base';
+import React, { Component } from 'react';
+import { Image, NetInfo, ScrollView, StyleSheet, Text, TouchableOpacity, View, ToastAndroid } from 'react-native';
+import { Thumbnail } from 'native-base';
 import Colors from '../../Constant/Colors';
 import Icon2 from 'react-native-vector-icons/AntDesign'
 import TaskServices from '../../Database/TaskServices'
-import {NavigationActions, StackActions} from 'react-navigation';
+import { NavigationActions, StackActions } from 'react-navigation';
 import ModalConfirmation from '../../Component/ModalAlertConfirmation'
 import ModalAlert from '../../Component/ModalAlert'
 import ServerName from '../../Constant/ServerName';
 import DeviceInfo from 'react-native-device-info';
 import CustomHeader from '../../Component/CustomHeader'
 import IconHeader from '../../Component/IconHeader'
-import {getPhoto, getThumnail} from '../../Lib/Utils';
-import {Images} from '../../Themes'
+import { getPhoto, getThumnail } from '../../Lib/Utils';
+import { Images } from '../../Themes'
+import { dirDatabase } from '../../Lib/dirStorage';
+import RNFS from 'react-native-fs'
 
 export default class MoreScreen extends Component {
 
@@ -136,28 +138,28 @@ export default class MoreScreen extends Component {
   render() {
     return (
       <ScrollView style={styles.container}>
+        <ModalConfirmation
+          icon={require('../../Images/ic-logout.png')}
+          visible={this.state.showConfirm}
+          onPressCancel={() =>
+            this.setState({ showConfirm: false })}
+          onPressSubmit={() => {
+            this.logout();
+          }}
+          title={'Konfirmasi Logout'}
+          message={`Yakin nih mau keluar dari aplikasi ini? Untuk login lagi, kamu harus terhubung ke WIFI dulu ya`}
+        />
+
+        <ModalAlert
+          visible={this.state.showModal}
+          icon={this.state.icon}
+          onPressCancel={() => this.setState({ showModal: false })}
+          title={this.state.title}
+          message={this.state.message} />
+
         <View>
 
-          <ModalConfirmation
-            icon={require('../../Images/ic-logout.png')}
-            visible={this.state.showConfirm}
-            onPressCancel={() =>
-              this.setState({ showConfirm: false })}
-            onPressSubmit={() => {
-              this.logout();
-            }}
-            title={'Konfirmasi Logout'}
-            message={`Yakin nih mau keluar dari aplikasi ini? Untuk login lagi, kamu harus terhubung ke WIFI dulu ya`}
-          />
-
-          <ModalAlert
-            visible={this.state.showModal}
-            icon={this.state.icon}
-            onPressCancel={() => this.setState({ showModal: false })}
-            title={this.state.title}
-            message={this.state.message} />
-
-          <View style={[styles.containerLabel, { marginTop: 10 }]}>
+          <View style={[styles.containerProfile, { marginTop: 10 }]}>
             <View style={{ flex: 2 }}>
               {/* <Image source={require('../../Images/icon/ic_walking.png')} style={styles.icon} /> */}
               <TouchableOpacity onPress={() => {
@@ -184,38 +186,55 @@ export default class MoreScreen extends Component {
             </View>
           </View>
 
-          <View style={{ height: 10, backgroundColor: '#F5F5F5', marginTop: 10 }} />
-
-          <TouchableOpacity style={styles.containerLabel}
-            onPress={this.onPressPeta}>
-            <Image source={require('../../Images/icon/ic_maps.png')} style={[styles.icon, { marginLeft: 10, flex: 2 }]} />
-            <Text style={{ fontSize: 14, color: 'grey', flex: 7, marginLeft: 10, marginTop: 5 }}>Peta Lokasi</Text>
-            <Icon2 name='right' size={18} style={{ marginRight: 15 }} />
-          </TouchableOpacity>
-
-          <View style={{ height: 10, backgroundColor: '#F5F5F5', marginTop: 10 }} />
-
-          <TouchableOpacity style={styles.containerLabel}
-            onPress={() => { this.setState({ showConfirm: true }) }}>
-            <Text style={{ fontSize: 14, color: 'red', flex: 1, padding: 5, textAlign: 'center' }}>Keluar</Text>
-          </TouchableOpacity>
-
-          <View style={{ height: 10, backgroundColor: '#F5F5F5', marginTop: 10 }} />
-
           {/*Sign Out*/}
-          <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: 10 }}>
+          {/* <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: 10 }}>
             <Text>Versi: {DeviceInfo.getVersion()}</Text>
           </View>
           <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: 10 }}>
             <Text style={{ fontSize: 10 }}>Server Data: {ServerName[this.state.user.SERVER_NAME_INDEX].data}</Text>
             <Text style={{ fontSize: 10 }} >Server Image: {this.state.imageServer}</Text>
-          </View>
+          </View> */}
+
+          {/* Menu Peta Lokasi  */}
+          <FeatureLainnya
+            sizeIcon={20}
+            title={'Peta Lokasi'}
+            icon={Images.ic_lainnya_peta}
+            onPressDefault={() => this.onPressMenu('Maps')} />
+
+          {/* Menu Export Database */}
+          <FeatureLainnya
+            sizeIcon={20}
+            title={'Export Database'}
+            icon={Images.ic_lainnya_database}
+            onPressDefault={() => this.onPressMenu('Database')} />
+
+          {/* Menu Sign Out */}
+          <FeatureLainnya
+            title={'Keluar'}
+            signout={true}
+            onPressSignOut={() => this.setState({ showConfirm: true })} />
         </View>
+
+
       </ScrollView>
     )
   }
 
-  onPressPeta = () => {
+  //Function onPressMenu
+  onPressMenu(menu) {
+    switch (menu) {
+      case 'Maps':
+        return this.menuMaps()
+      case 'Database':
+        return this.menuDatabase()
+      default:
+        break;
+    }
+  }
+
+  //Function Peta Lokasi
+  menuMaps() {
     const checkBlock = TaskServices.getAllData('TM_BLOCK');
     if (checkBlock.length > 0) {
       this.props.navigation.navigate('PilihPeta', { more: 'MoreScreen' })
@@ -223,38 +242,73 @@ export default class MoreScreen extends Component {
       this.props.navigation.navigate('Sync')
     }
   }
+
+  // Function Export Database
+  menuDatabase() {
+    RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
+
+    setTimeout(() => {
+      ToastAndroid.showWithGravity(
+        'Database berhasil di export',
+        ToastAndroid.LONG,
+        ToastAndroid.CENTER
+      );
+    }, 2000)
+  }
+}
+
+
+const FeatureLainnya = (props) => {
+  return (
+    <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, height: props.signout ? 10 : 1, backgroundColor: '#F5F5F5' }} />
+
+      {/*SignOut Menu*/}
+      {props.signout ? <TouchableOpacity style={[styles.containerLabel, { justifyContent: 'center' }]} onPress={props.onPressSignOut}>
+        <Text style={{ fontSize: 14, color: 'red', textAlign: 'center', fontWeight: 'bold' }}>{props.title}</Text>
+
+        {/* Default Menu */}
+      </TouchableOpacity> :
+        <TouchableOpacity style={styles.containerLabel} onPress={props.onPressDefault}>
+          <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+            <Image source={props.icon} style={[styles.icon, { height: props.sizeIcon, width: props.sizeIcon }]} />
+            <Text style={{ fontSize: 14, color: 'black', textAlign: 'center' }}>{props.title}</Text>
+          </View>
+          <Icon2 name='right' color={'black'} size={14} style={{ marginRight: 15 }} />
+        </TouchableOpacity>
+      }
+
+      <View style={{ flex: 1, height: props.signout ? 10 : 1, backgroundColor: '#F5F5F5' }} />
+    </View>
+  )
 }
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    paddingTop: 4,
-    paddingBottom: 10,
     flex: 1
-  },
-  sectionCardView: {
-    alignItems: 'stretch',
-    height: 64,
-    backgroundColor: 'white',
-    flexDirection: 'row',
-    justifyContent: 'space-between'
   },
   textTitle: {
     fontSize: 18
   },
-  marginCard: {
-    marginTop: 12
-  },
   icon: {
-    alignContent: 'flex-end',
-    height: 64,
-    width: 64,
-    resizeMode: 'stretch',
-    alignItems: 'center'
+    marginLeft: 12,
+    marginRight: 12
   },
   containerLabel: {
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignContent: 'center',
+    alignItems: 'center',
+    padding: 12
+  },
+  containerProfile: {
+    flex: 1,
+    flexDirection: 'row',
+    padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10
   },
 });
