@@ -99,10 +99,29 @@ class HomeScreen extends React.Component {
     'willFocus',
     () => {
 
-      retrieveData('WeeklySummary').then((result) => {
+      retrieveData('FindingSummary').then((result) => {
         if (result != null) {
-          this.setState({ dataWeeklySummary: result.data })
-          console.log('RESULT STATUS : ', result.status)
+          console.log('Data Finding Summary : ', result.data)
+          this.setState({ dataFindingSummary: result.data })
+        } else {
+          this.setState({ isVisibleSummary: false })
+        }
+      })
+
+      retrieveData('EbccSummary').then((result) => {
+        if (result != null) {
+          console.log('Data Ebcc Summary : ', result.data)
+          this.setState({ dataEbccSummary: result.data })
+        } else {
+          this.setState({ isVisibleSummary: false })
+        }
+      })
+
+      retrieveData('InspectionSummary').then((result) => {
+        if (result != null) {
+          console.log('Data Inspeksi Summary : ', result.data)
+          this.setState({ dataInspectionSummary: result.data })
+
           if (result.status) {
             this.setState({ isVisibleSummary: true })
           }
@@ -110,6 +129,9 @@ class HomeScreen extends React.Component {
           this.setState({ isVisibleSummary: false })
         }
       })
+
+      // this.retrieveDataSummary('InspectionSummary')
+      // this.retrieveDataSummary('FindingSummary')
 
       if (this.state.loadAll) {
         //this._initData()
@@ -873,10 +895,16 @@ class HomeScreen extends React.Component {
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>
 
-        <WeeklySummary data={this.state.dataWeeklySummary} visible={this.state.isVisibleSummary}
+        <WeeklySummary
+          dataInspeksi={this.state.dataInspectionSummary}
+          dataEbcc={this.state.dataEbccSummary}
+          dataTemuan={this.state.dataFindingSummary}
+          visible={this.state.isVisibleSummary}
           onPressClose={() => {
             this.setState({ isVisibleSummary: false })
-            removeData('WeeklySummary')
+            removeData('InspectionSummary')
+            removeData('FindingSummary')
+            removeData('EbccSummary')
           }} />
 
         <StatusBar hidden={false} backgroundColor={Colors.tintColor} barStyle="light-content" />

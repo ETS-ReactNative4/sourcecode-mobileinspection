@@ -831,17 +831,37 @@ class SyncScreen extends React.Component {
         })
     }
 
-    // Aminju => Summary Inspeksi
-    uploadWeeklySummary() {
+    // Aminju => Weekly Summary
+    downloadWeeklySummary() {
+
         const param = {
             IS_VIEW: 1
         }
-        let urlDetail = this.getAPIURL("INSPECTION-SUMMARY")
+        let urlInspeksi = this.getAPIURL("INSPECTION-SUMMARY")
+        let urlFinding = this.getAPIURL("FINDING-SUMMARY")
+        let urlEbcc = this.getAPIURL("EBCC-SUMMARY")
+
         const user = TaskServices.getAllData('TR_LOGIN')[0];
-        fetchPostAPI(user.ACCESS_TOKEN, urlDetail.API_URL, param).then(((result) => {
-            console.log('Result : ', result)
+
+        this.fetchWeeklySummary(user.ACCESS_TOKEN, urlInspeksi.API_URL, param, 'inspeksi');
+        this.fetchWeeklySummary(user.ACCESS_TOKEN, urlFinding.API_URL, param, 'finding');
+        this.fetchWeeklySummary(user.ACCESS_TOKEN, urlEbcc.API_URL, param, 'ebcc');
+    }
+
+    //Fetch Weekly Summary 
+    fetchWeeklySummary(token, url, param, type) {
+        fetchPostAPI(token, url, param).then(((result) => {
             if (result != undefined) {
-                storeData('WeeklySummary', result)
+                if (type == 'inspeksi') {
+                    console.log('Result Weekly InspectionSummary : ', result)
+                    storeData('InspectionSummary', result)
+                } else if (type == 'finding') {
+                    console.log('Result Weekly FindingSummary : ', result)
+                    storeData('FindingSummary', result)
+                } else if (type == 'ebcc') {
+                    console.log('Result Weekly EbccSummary : ', result)
+                    storeData('EbccSummary', result)
+                }
             } else {
                 this.setState({
                     uploadErrorFlag: true
@@ -2012,7 +2032,7 @@ class SyncScreen extends React.Component {
         //POST TRANSAKSI
         this.kirimImage();
         this.kirimUserImage();
-        // this.uploadWeeklySummary();
+        this.downloadWeeklySummary();
 
         this.checkUpdate()
             .then((callback) => {

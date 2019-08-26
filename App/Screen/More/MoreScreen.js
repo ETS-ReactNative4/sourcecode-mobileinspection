@@ -214,6 +214,11 @@ export default class MoreScreen extends Component {
             title={'Keluar'}
             signout={true}
             onPressSignOut={() => this.setState({ showConfirm: true })} />
+
+
+          <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: 10 }}>
+            <Text>Versi: {DeviceInfo.getVersion()}</Text>
+          </View>
         </View>
 
 
