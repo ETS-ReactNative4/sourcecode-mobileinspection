@@ -32,14 +32,18 @@ class WeeklySummary extends Component {
     static propTypes = {
         onPressClose: PropTypes.func,
         visible: PropTypes.bool,
-        data: PropTypes.string
+        dataInspeksi: PropTypes.string,
+        dataTemuan: PropTypes.string,
+        dataEbcc: PropTypes.string
     };
 
     // Defaults for props
     static defaultProps = {
         onPressClose: () => { },
         visible: false,
-        data: ''
+        dataInspeksi: '',
+        dataTemuan: '',
+        dataEbcc: '',
     };
 
     render() {
@@ -66,28 +70,28 @@ class WeeklySummary extends Component {
                             {/* Feature */}
                             <View style={{ flexDirection: 'row', flexWrap: 'wrap', paddingHorizontal: 20, marginTop: 10 }}>
                                 <WeeklyFeature
-                                    value={this.props.data.total_inspeksi + ' (' + this.props.data.total_baris + ' Baris)'}
+                                    value={this.props.dataInspeksi.total_inspeksi + ' (' + this.props.dataInspeksi.total_baris + ' Baris)'}
                                     title={'inspeksi'}
                                     img={require('../Images/summaryInspeksi/inspeksi.png')}
                                 // target={'Target : ' + 10} 
                                 />
                                 <WeeklyFeature
-                                    value={5}
+                                    value={this.props.dataTemuan.complete}
                                     title={'temuan'}
                                     img={require('../Images/summaryInspeksi/temuan.png')}
-                                // target={'Target : ' + 10} 
+                                    // target={'Target : ' + this.props.dataTemuan.target}
                                 />
                                 <WeeklyFeature
-                                    value={50}
+                                    value={this.props.dataEbcc.jumlah}
                                     title={'sampling ebcc'}
                                     img={require('../Images/summaryInspeksi/ebcc.png')}
                                 // target={'Target : ' + 50} 
                                 />
                                 <WeeklyFeature
-                                    value={this.props.data.jarak_meter / 1000 + ' KM'}
+                                    value={this.props.dataInspeksi.jarak_meter / 1000 + ' KM'}
                                     title={'berjalan kaki'}
                                     img={require('../Images/summaryInspeksi/walk.png')}
-                                    target={this.props.data.durasi_jam + ' jam ' + this.props.data.durasi_menit + ' menit'}
+                                    target={this.props.dataInspeksi.durasi_jam + ' jam ' + this.props.dataInspeksi.durasi_menit + ' menit'}
                                 />
                             </View>
 
