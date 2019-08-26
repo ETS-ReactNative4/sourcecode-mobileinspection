@@ -1,5 +1,6 @@
 import RealmSchemas from './RealmSchema'
 import {getThumnail} from "../Lib/Utils";
+import ServerName from "../Constant/ServerName";
 
 const TaskServices = {
 
@@ -70,6 +71,11 @@ const TaskServices = {
     getAllData: function (table) {
         return RealmSchemas.objects(table);
     },
+    getService: function (serviceName) {
+        let service = RealmSchemas.objects("TM_SERVICE");
+        return service.filtered('API_NAME == "' + serviceName + '\" ')[0];
+    },
+
     getLastTracking: function (blokInsCode) {
         return RealmSchemas.objects('TM_INSPECTION_TRACK').filtered('BLOCK_INSPECTION_CODE = \"' + blokInsCode + '\" ').sorted('INSERT_TIME', true)[0];
     },
@@ -106,10 +112,11 @@ const TaskServices = {
             RealmSchemas.delete(RealmSchemas.objects(table)[index]);
         });
     },
+
     deleteRecordByPK: function (table, PK_NAME, primary_key) {
-        console.log('Primary Key Finding Code PK: ' + JSON.stringify(primary_key))
+        // console.log('Primary Key Finding Code PK: ' + JSON.stringify(primary_key))
         let result = RealmSchemas.objects(table).find(row => {
-            console.log('Row : ', row)
+            // console.log('Row : ', row)
             return row[PK_NAME] == primary_key
         })
         if (result) {

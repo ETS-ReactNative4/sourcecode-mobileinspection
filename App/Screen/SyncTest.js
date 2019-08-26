@@ -40,6 +40,9 @@ var RNFS = require('react-native-fs');
 
 // import FuntionCRUD from '../Database/FunctionCRUD'
 
+//Sync
+import {uploadFindingComment} from './Sync/Finding/Comment/Comment';
+
 class SyncScreen extends React.Component {
 
     static navigationOptions = ({ navigation }) => ({
@@ -726,9 +729,6 @@ class SyncScreen extends React.Component {
                                 });
                                 const url = this.getAPIURL("IMAGES-PROFILE");
                                 fetchFormPostAPI(this.state.user.ACCESS_TOKEN, url.API_URL, data).then(((result) => {
-                                    console.log("TOKENNNNNNNNN", url);
-                                    console.log("USERRRRRRRRRRRRR", this.state.user);
-                                    console.log("RESULTTTTTTTTTTTTTTTTT", result);
                                     if (result != undefined) {
                                         if (result.status) {
                                             this.setState({ valueImageUserUpload: i + 1 });
@@ -755,59 +755,6 @@ class SyncScreen extends React.Component {
         } catch (error) {
             this.setState({ progressUploadImageUser: 1, valueImageUserUpload: 0, totalImageUserUpload: 0 });
         }
-    }
-
-
-    // == COMMENT KEVIN ==
-    uploadFindingComment() {
-        let getTRComment = TaskServices.getAllData('TR_FINDING_COMMENT');
-        let filteredComment = getTRComment.filtered('STATUS_SYNC = "N"');
-        if (filteredComment.length > 0) {
-            filteredComment.map((data, index) => {
-                let taggedUser = [];
-                data.TAGS.map((data) => {
-                    taggedUser.push({
-                        "USER_AUTH_CODE": data.USER_AUTH_CODE
-                    })
-                });
-                let commentModel = {
-                    "FINDING_COMMENT_ID": data.FINDING_COMMENT_ID,
-                    "FINDING_CODE": data.FINDING_CODE,
-                    "USER_AUTH_CODE": data.USER_AUTH_CODE,
-                    "MESSAGE": data.MESSAGE,
-                    "INSERT_TIME": data.INSERT_TIME,
-                    "TAGS": taggedUser
-                };
-                this.postFindingComment(commentModel);
-                this.setState({ valueFindingCommentDataUpload: index + 1, totalFindingCommentDataUpload: filteredComment.length });
-            });
-            this.setState({
-                progressFindingCommentData: 1
-            });
-        } else {
-            this.setState({ progressFindingCommentData: 1, valueFindingCommentDataUpload: 0, totalFindingCommentDataUpload: 0 });
-        }
-    }
-
-    postFindingComment(param) {
-        let urlDetail = this.getAPIURL("FINDING-COMMENT-INSERT")
-        const user = TaskServices.getAllData('TR_LOGIN')[0];
-        fetchPostAPI(user.ACCESS_TOKEN, urlDetail.API_URL, param).then(((result) => {
-            if (result != undefined) {
-                if (result.status) {
-                    TaskServices.updateByPrimaryKey('TR_FINDING_COMMENT', {
-                        "FINDING_COMMENT_ID": param.FINDING_COMMENT_ID,
-                        "STATUS_SYNC": "Y"
-                    });
-                } else {
-                    console.log("findingcomment upload failed, check your parameter / api!");
-                }
-            } else {
-                this.setState({
-                    uploadErrorFlag: true
-                }, () => { console.log("finding comment Server Timeout") })
-            }
-        }));
     }
 
     downloadFindingComment() {
@@ -886,12 +833,10 @@ class SyncScreen extends React.Component {
 
     // Aminju => Summary Inspeksi
     uploadWeeklySummary() {
-
         const param = {
             IS_VIEW: 1
         }
         let urlDetail = this.getAPIURL("INSPECTION-SUMMARY")
-        console.log('urlDetail : ', urlDetail)
         const user = TaskServices.getAllData('TR_LOGIN')[0];
         fetchPostAPI(user.ACCESS_TOKEN, urlDetail.API_URL, param).then(((result) => {
             console.log('Result : ', result)
@@ -981,6 +926,7 @@ class SyncScreen extends React.Component {
                         this.updateInspeksiDetail(dataPost)
                         this.updateSyncInpesctionBaris()
                     } else if (table == 'tracking') {
+                        console.log("track",result);
                         this.updateInspeksiTrack(dataPost)
                     } else if (table == 'finding') {
                         //let imgHasSent = this.checkImageHasSent(dataPost.FINDING_CODE)
@@ -1950,7 +1896,7 @@ class SyncScreen extends React.Component {
         this.props.resetKualitas();
     }
 
-    _onSync() {
+    async _onSync() {
         this._deleteFinding();
         // DELETE_FINDING();
         this.deleteEbccHeader();
@@ -2038,17 +1984,35 @@ class SyncScreen extends React.Component {
 
             fetchLocation: false,
             isBtnEnable: false,
-
         });
 
-        this.uploadFindingComment();
+        //UploadFindingComment --- Kevin
+        uploadFindingComment()
+            .then((statusComment)=>{
+                if(statusComment.syncStatus){
+                    this.setState({
+                        progressFindingCommentData: 1,
+                        valueFindingCommentDataUpload: statusComment.uploadCount,
+                        totalFindingCommentDataUpload: statusComment.totalCount
+                    });
+                }
+                else {
+                    //error
+                    this.setState({
+                        progressFindingCommentData: 1,
+                        valueFindingCommentDataUpload: 0,
+                        totalFindingCommentDataUpload: 0
+                    });
+                }
+            });
+
         //genba upload
         this.uploadGenba();
 
         //POST TRANSAKSI
         this.kirimImage();
         this.kirimUserImage();
-        this.uploadWeeklySummary();
+        // this.uploadWeeklySummary();
 
         this.checkUpdate()
             .then((callback) => {

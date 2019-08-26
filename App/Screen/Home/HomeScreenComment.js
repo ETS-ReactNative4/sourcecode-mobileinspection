@@ -65,7 +65,6 @@ export default class HomeScreenComment extends Component {
 
     getComment() {
         let commentData = TaskServices.findBy("TR_FINDING_COMMENT", "FINDING_CODE", this.state.FINDING_CODE);
-        console.log(commentData);
         if (commentData !== null) {
             this.setState({
                 commentData: commentData,
