@@ -1,5 +1,5 @@
-import TaskServices from "../../../../Database/TaskServices";
-import {fetchPost} from "../../../../Api/FetchingApi";
+import TaskServices from "../../../Database/TaskServices";
+import {fetchPost} from "../../../Api/FetchingApi";
 
 //Global Var
 const user = TaskServices.getAllData('TR_LOGIN')[0];
@@ -33,8 +33,8 @@ export async function uploadFindingComment() {
                     "TAGS": taggedUser
                 };
                 await postFindingComment(commentModel)
-                    .then((fetchStatus)=>{
-                        if(fetchStatus){
+                    .then((response)=>{
+                        if(response){
                             uploadLabels = {
                                 ...uploadLabels,
                                 uploadCount: uploadLabels.uploadCount + 1
@@ -49,20 +49,20 @@ export async function uploadFindingComment() {
                     })
             })
         );
-        return {
-            uploadCount: uploadLabels.uploadCount,
-            totalCount: uploadLabels.totalCount,
-            syncStatus: uploadLabels.syncStatus
-        };
     }
+    return {
+        uploadCount: uploadLabels.uploadCount,
+        totalCount: uploadLabels.totalCount,
+        syncStatus: uploadLabels.syncStatus
+    };
 }
 
 async function postFindingComment(model) {
     let fetchStatus = true;
 
     await fetchPost("FINDING-COMMENT-INSERT", model, null)
-        .then(((result) => {
-            if (result !== undefined) {
+        .then(((response) => {
+            if (response !== undefined) {
                 if (result.status) {
                     TaskServices.updateByPrimaryKey('TR_FINDING_COMMENT', {
                         "FINDING_COMMENT_ID": model.FINDING_COMMENT_ID,
@@ -71,7 +71,7 @@ async function postFindingComment(model) {
                 }
                 else {
                     fetchStatus = false;
-                    console.log("postFindingComment upload failed, check your parameter / api!");
+                    console.log("postFindingComment upload failed");
                 }
             }
             else {

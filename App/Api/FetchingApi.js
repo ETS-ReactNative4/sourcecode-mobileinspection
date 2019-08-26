@@ -68,7 +68,11 @@ export function fetchPost(serviceName, fetchBody, fetchHeaders) {
     let headers = null;
 
     if (fetchHeaders !== undefined && fetchHeaders !== null){
-        headers = fetchHeaders
+        let tempHeaders = {
+            ...fetchHeaders,
+            'Authorization': 'Bearer ' + user.ACCESS_TOKEN
+        };
+        headers = tempHeaders
     }
     else {
         headers = {
@@ -82,6 +86,43 @@ export function fetchPost(serviceName, fetchBody, fetchHeaders) {
         method: 'POST',
         headers: headers,
         body: JSON.stringify(fetchBody)
+    }).then((response) => {
+        if (response.status === 200) {
+            return response.json()
+        }
+    }).then((data) => {
+        return data;
+    }).catch((err) => {
+        console.log(err)
+    });
+}
+
+export function fetchPostForm(serviceName, fetchBody, fetchHeaders) {
+    let serviceDetail = TaskServices.getService(serviceName);
+    let user = TaskServices.getAllData('TR_LOGIN')[0];
+
+    let headers = null;
+
+    if (fetchHeaders !== undefined && fetchHeaders !== null){
+        let tempHeaders = {
+            ...fetchHeaders,
+            'Authorization': 'Bearer ' + user.ACCESS_TOKEN
+        };
+        headers = tempHeaders
+    }
+    else {
+        headers = {
+            'Cache-Control': 'no-cache',
+            'Accept': 'application/json',
+            'Content-Type': 'multipart/form-data',
+            'Authorization': 'Bearer ' + user.ACCESS_TOKEN,
+        }
+    }
+
+    return fetch(serviceDetail.API_URL, {
+        method: 'POST',
+        headers: headers,
+        body: fetchBody
     }).then((response) => {
         if (response.status === 200) {
             return response.json()

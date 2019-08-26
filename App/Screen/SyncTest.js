@@ -41,7 +41,10 @@ var RNFS = require('react-native-fs');
 // import FuntionCRUD from '../Database/FunctionCRUD'
 
 //Sync
-import {uploadFindingComment} from './Sync/Finding/Comment/Comment';
+//comment
+import {uploadFindingComment} from './Sync/Finding/Comment';
+//image
+import {uploadImage} from './Sync/Image/Image';
 
 class SyncScreen extends React.Component {
 
@@ -1988,12 +1991,12 @@ class SyncScreen extends React.Component {
 
         //UploadFindingComment --- Kevin
         uploadFindingComment()
-            .then((statusComment)=>{
-                if(statusComment.syncStatus){
+            .then((response)=>{
+                if(response.syncStatus){
                     this.setState({
                         progressFindingCommentData: 1,
-                        valueFindingCommentDataUpload: statusComment.uploadCount,
-                        totalFindingCommentDataUpload: statusComment.totalCount
+                        valueFindingCommentDataUpload: response.uploadCount,
+                        totalFindingCommentDataUpload: response.totalCount
                     });
                 }
                 else {
@@ -2010,7 +2013,31 @@ class SyncScreen extends React.Component {
         this.uploadGenba();
 
         //POST TRANSAKSI
-        this.kirimImage();
+        // this.kirimImage();
+        uploadImage()
+            .then((response)=>{
+                console.log("responseeeee", response);
+                if(response.syncStatus){
+                    this.loadDataFinding();
+                    this.loadData();
+                    this.kirimEbccHeader();
+                    this.kirimEbccDetail();
+
+                    this.setState({
+                        progressUploadImage: 1,
+                        valueImageUpload: response.uploadCount,
+                        totalImagelUpload: response.totalCount
+                    });
+                }
+                else {
+                    //error
+                    this.setState({
+                        progressUploadImage: 1,
+                        valueImageUpload: 0,
+                        totalImagelUpload: 0
+                    });
+                }
+            });
         this.kirimUserImage();
         // this.uploadWeeklySummary();
 
