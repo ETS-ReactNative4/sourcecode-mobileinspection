@@ -8,7 +8,6 @@ const user = TaskServices.getAllData('TR_LOGIN')[0];
 
 export async function uploadImage() {
     let getImages = TaskServices.getAllData('TR_IMAGE').filtered(`STATUS_SYNC = 'N'`);
-    console.log("ALL IMAGESSSSSSSSSSSSSSSSSSSS",getImages);
 
     //Upload labels
     let uploadLabels = {
@@ -40,7 +39,6 @@ export async function uploadImage() {
                             });
                             await postImage(imageForm, imageModel.IMAGE_CODE)
                                 .then((response)=>{
-                                    console.log("responseeeee1", response);
                                     if(response){
                                         uploadLabels = {
                                             ...uploadLabels,
@@ -89,7 +87,5 @@ async function postImage(imageModel, imageID){
                 console.log("postImage Server Timeout")
             }
         });
-
-    console.log("responseeeee2", fetchStatus);
     return fetchStatus
 }

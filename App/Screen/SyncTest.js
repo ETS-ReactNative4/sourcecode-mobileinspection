@@ -626,92 +626,6 @@ class SyncScreen extends React.Component {
         }
     }
 
-    async kirimImage() {
-        try {
-            let uploadImageCount = 0;
-            let all = TaskServices.getAllData('TR_IMAGE');
-            var dataImage = TaskServices.query('TR_IMAGE', `STATUS_SYNC = 'N'`);
-            if (all !== undefined && dataImage !== undefined) {
-                for (let i = 0; i < dataImage.length; i++) {
-                    let model = dataImage[i];
-                    RNFS.exists(`file://${model.IMAGE_PATH_LOCAL}`).
-                        then((exists) => {
-                            if (exists) {
-                                var data = new FormData();
-                                data.append('IMAGE_CODE', model.IMAGE_CODE)
-                                data.append('IMAGE_PATH_LOCAL', model.IMAGE_PATH_LOCAL)
-                                data.append('TR_CODE', model.TR_CODE)
-                                data.append('STATUS_IMAGE', model.STATUS_IMAGE)
-                                data.append('STATUS_SYNC', 'Y')
-                                data.append('SYNC_TIME', getTodayDate('YYYYMMDDkkmmss'))
-                                data.append('INSERT_TIME', convertTimestampToDate(model.INSERT_TIME, 'YYYYMMDDkkmmss'))
-                                data.append('INSERT_USER', model.INSERT_USER);
-                                data.append('FILENAME', {
-                                    uri: `file://${model.IMAGE_PATH_LOCAL}`,
-                                    type: 'image/jpeg',
-                                    name: model.IMAGE_NAME,
-                                });
-
-                                const url = this.getAPIURL("IMAGES-UPLOAD");
-                                fetchFormPostAPI(this.state.user.ACCESS_TOKEN, url.API_URL, data).then(((result) => {
-                                    if (result !== undefined) {
-                                        this.setState({ valueImageUpload: dataImage.length });
-                                        if (result.status) {
-                                            TaskServices.updateByPrimaryKey('TR_IMAGE', {
-                                                "IMAGE_CODE": model.IMAGE_CODE,
-                                                "STATUS_SYNC": "Y"
-                                            });
-                                            uploadImageCount++;
-                                            // TaskServices.updateStatusImage('TR_IMAGE', 'Y', idxOrder);
-                                        }
-                                        else {
-                                            let tr_code = model.TR_CODE;
-                                            if (tr_code[0] == "I") {
-                                                TaskServices.updateByPrimaryKey('TR_BLOCK_INSPECTION_H', {
-                                                    "BLOCK_INSPECTION_CODE": tr_code,
-                                                    "STATUS_SYNC": "N"
-                                                });
-                                            }
-                                            else if (tr_code[0] == "F") {
-                                                TaskServices.updateByPrimaryKey('TR_FINDING', {
-                                                    "FINDING_CODE": tr_code,
-                                                    "STATUS_SYNC": "N"
-                                                });
-                                            }
-                                            else if (tr_code[0] == "V") {
-                                                TaskServices.updateByPrimaryKey('TR_H_EBCC_VALIDATION', {
-                                                    "EBCC_VALIDATION_CODE": tr_code,
-                                                    "STATUS_SYNC": "N"
-                                                });
-                                            }
-                                        }
-                                    } else {
-                                        this.setState({
-                                            uploadErrorFlag: true
-                                        }, () => { console.log("kirimImage Server Timeout") })
-                                    }
-                                }));
-                            } else {
-                                let data = TaskServices.getAllData('TR_IMAGE');
-                                let indexData = R.findIndex(R.propEq('IMAGE_CODE', model.IMAGE_CODE))(data);
-                                TaskServices.deleteRecord('TR_IMAGE', indexData)
-                            }
-
-                        })
-                }
-            }
-            this.setState({ progressUploadImage: 1, valueImageUpload: uploadImageCount, totalImagelUpload: dataImage.length });
-        } catch (error) {
-            this.setState({ progressUploadImage: 1, valueImageUpload: 0, totalImagelUpload: 0 });
-        }
-
-
-        this.loadDataFinding();
-        this.loadData();
-        this.kirimEbccHeader();
-        this.kirimEbccDetail();
-    }
-
     kirimUserImage() {
         try {
             const user = TaskServices.getAllData('TR_LOGIN')[0];
@@ -851,7 +765,7 @@ class SyncScreen extends React.Component {
         this.fetchWeeklySummary(user.ACCESS_TOKEN, urlEbcc.API_URL, param, 'ebcc');
     }
 
-    //Fetch Weekly Summary 
+    //Fetch Weekly Summary
     fetchWeeklySummary(token, url, param, type) {
         fetchPostAPI(token, url, param).then(((result) => {
             if (result != undefined) {
@@ -2032,11 +1946,8 @@ class SyncScreen extends React.Component {
         //genba upload
         this.uploadGenba();
 
-        //POST TRANSAKSI
-        // this.kirimImage();
         uploadImage()
             .then((response)=>{
-                console.log("responseeeee", response);
                 if(response.syncStatus){
                     this.loadDataFinding();
                     this.loadData();
