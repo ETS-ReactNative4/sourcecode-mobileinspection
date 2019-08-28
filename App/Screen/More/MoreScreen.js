@@ -164,7 +164,9 @@ export default class MoreScreen extends Component {
               {/* <Image source={require('../../Images/icon/ic_walking.png')} style={styles.icon} /> */}
               <TouchableOpacity onPress={() => {
                 if (this.state.name !== "") {
-                  this.props.navigation.navigate('FotoUser', { setPhoto: (photoPath) => { this.setState({ userPhoto: photoPath }) } });
+                  this.props.navigation.navigate('FotoUser', { setPhoto: (photoPath) => {
+                      this.setState({ userPhoto: photoPath })
+                  } });
                 }
                 else {
                   this.setState({

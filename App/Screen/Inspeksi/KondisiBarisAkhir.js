@@ -606,6 +606,12 @@ class KondisiBarisAkhir extends Component {
 
             let dataInspeksiRemoveDuplicate = this.state.dataInspeksi;
             dataInspeksiRemoveDuplicate.TR_FINDING_CODES = [...new Set(dataInspeksiRemoveDuplicate.TR_FINDING_CODES)];
+            dataInspeksiRemoveDuplicate = {
+                ...dataInspeksiRemoveDuplicate,
+                syncHeader: 'N',
+                syncDetail: 'N',
+                syncTracking: 'N',
+            };
             TaskService.saveData('TR_BARIS_INSPECTION', dataInspeksiRemoveDuplicate);
 
             //TAMBAHAN GEMBA
@@ -720,6 +726,7 @@ class KondisiBarisAkhir extends Component {
             data = {
                 TRACK_INSPECTION_CODE: trInsCode,
                 BLOCK_INSPECTION_CODE: blokInsCode,
+                ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
                 DATE_TRACK: curr,
                 LAT_TRACK: lat.toString(),
                 LONG_TRACK: lon.toString(),

@@ -161,6 +161,7 @@ class TakePhotoBaris extends Component {
       data = {
         TRACK_INSPECTION_CODE: trInsCode,
         BLOCK_INSPECTION_CODE: blokInsCode,
+        ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
         DATE_TRACK: today,
         LAT_TRACK: lat.toString(),
         LONG_TRACK: lon.toString(),

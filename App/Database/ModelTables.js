@@ -76,6 +76,32 @@ const TR_BLOCK_INSPECTION_D = {
     }
 }
 
+const TM_INSPECTION_TRACK = {
+    name: 'TM_INSPECTION_TRACK',
+    primaryKey: 'TRACK_INSPECTION_CODE',
+    properties: {
+        TRACK_INSPECTION_CODE: 'string',
+        BLOCK_INSPECTION_CODE: 'string',
+        ID_INSPECTION: 'string',
+        DATE_TRACK: 'string',
+        LAT_TRACK: 'string',
+        LONG_TRACK: 'string',
+        INSERT_USER: 'string',
+        INSERT_TIME: 'string',
+        STATUS_SYNC: 'string'
+    }
+}
+
+const TR_GENBA_INSPECTION = {
+    name: 'TR_GENBA_INSPECTION',
+    primaryKey: 'BLOCK_INSPECTION_CODE',
+    properties: {
+        BLOCK_INSPECTION_CODE: 'string',
+        GENBA_USER: { type: 'list', objectType: 'TR_GENBA_SELECTED' },
+        STATUS_SYNC: 'string'
+    }
+}
+
 //local table
 const TR_BARIS_INSPECTION = {
     name: 'TR_BARIS_INSPECTION',
@@ -93,7 +119,28 @@ const TR_BARIS_INSPECTION = {
         INSPECTION_RESULT: 'string',
         INSPECTION_SCORE: 'string',
         FULFILL_BARIS: 'string',
-        TR_FINDING_CODES: { type: 'list', objectType: 'string' }
+        TR_FINDING_CODES: { type: 'list', objectType: 'string' },
+
+        //LOCAL
+        syncHeader: 'string',
+        syncDetail: 'string',
+        syncTracking: 'string'
+    }
+}
+
+//local
+const TR_GENBA_SELECTED = {
+    name: 'TR_GENBA_SELECTED',
+    primaryKey: 'USER_AUTH_CODE',
+    properties: {
+        USER_AUTH_CODE: 'string',
+        EMPLOYEE_NIK: 'string',
+        USER_ROLE: 'string',
+        LOCATION_CODE: { type: 'string', optional: true },
+        REF_ROLE: 'string',
+        JOB: 'string',
+        FULLNAME: 'string',
+        REGION_CODE: { type: 'string', optional: true }
     }
 }
 
@@ -374,21 +421,6 @@ const TM_CONTENT_LABEL = {
     }
 }
 
-const TM_INSPECTION_TRACK = {
-    name: 'TM_INSPECTION_TRACK',
-    primaryKey: 'TRACK_INSPECTION_CODE',
-    properties: {
-        TRACK_INSPECTION_CODE: 'string',
-        BLOCK_INSPECTION_CODE: 'string',
-        DATE_TRACK: 'string',
-        LAT_TRACK: 'string',
-        LONG_TRACK: 'string',
-        INSERT_USER: 'string',
-        INSERT_TIME: 'string',
-        STATUS_SYNC: 'string'
-    }
-}
-
 const TM_TIME_TRACK = {
     name: 'TM_TIME_TRACK',
     properties: {
@@ -488,21 +520,6 @@ const TM_SERVICE = {
     }
 }
 
-const TR_GENBA_SELECTED = {
-    name: 'TR_GENBA_SELECTED',
-    primaryKey: 'USER_AUTH_CODE',
-    properties: {
-        USER_AUTH_CODE: 'string',
-        EMPLOYEE_NIK: 'string',
-        USER_ROLE: 'string',
-        LOCATION_CODE: { type: 'string', optional: true },
-        REF_ROLE: 'string',
-        JOB: 'string',
-        FULLNAME: 'string',
-        REGION_CODE: { type: 'string', optional: true }
-    }
-}
-
 const TR_COORD = {
     name: 'TR_COORD',
     primaryKey: 'LATLONG',
@@ -522,16 +539,6 @@ const TR_POLYGON = {
         werks_afd_block_code: 'string',
         blokname: 'string',
         coords: { type: 'list', objectType: 'TR_COORD' }
-    }
-}
-
-const TR_GENBA_INSPECTION = {
-    name: 'TR_GENBA_INSPECTION',
-    primaryKey: 'BLOCK_INSPECTION_CODE',
-    properties: {
-        BLOCK_INSPECTION_CODE: 'string',
-        GENBA_USER: { type: 'list', objectType: 'TR_GENBA_SELECTED' },
-        STATUS_SYNC: 'string'
     }
 }
 

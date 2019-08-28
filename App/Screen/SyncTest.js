@@ -45,6 +45,8 @@ var RNFS = require('react-native-fs');
 import {uploadFindingComment} from './Sync/Finding/Comment';
 //image
 import {uploadImage} from './Sync/Image/Image';
+//inspection
+import {uploadInspectionHeader, uploadInspectionDetail, uploadInspectionTrack} from './Sync/Inspection/Inspection'
 
 class SyncScreen extends React.Component {
 
@@ -536,16 +538,6 @@ class SyncScreen extends React.Component {
                 totalInspeksiDetailUpload: 0
             });
         }
-        /*this.setState({
-            progressInspeksiHeader: 1
-        });
-    } else {
-        this.setState({
-            progressInspeksiHeader: 1,
-            valueInspeksiHeaderUpload: 0,
-            totalInspeksiHeaderUpload: 0,
-        });
-    }*/
         this.loadDataDetailInspeksi();
         this.loadDataInspectionTrack();
     }
@@ -1923,7 +1915,7 @@ class SyncScreen extends React.Component {
             isBtnEnable: false,
         });
 
-        //UploadFindingComment --- Kevin
+        //Upload Finding Comment
         uploadFindingComment()
             .then((response)=>{
                 if(response.syncStatus){
@@ -1946,11 +1938,11 @@ class SyncScreen extends React.Component {
         //genba upload
         this.uploadGenba();
 
+        //Upload Image
         uploadImage()
             .then((response)=>{
                 if(response.syncStatus){
                     this.loadDataFinding();
-                    this.loadData();
                     this.kirimEbccHeader();
                     this.kirimEbccDetail();
 
@@ -1970,7 +1962,64 @@ class SyncScreen extends React.Component {
                 }
             });
         this.kirimUserImage();
-        this.downloadWeeklySummary();
+
+        uploadInspectionHeader()
+            .then((response)=>{
+                if(response.syncStatus){
+                    this.setState({
+                        progressInspeksiHeader: 1,
+                        valueInspeksiHeaderUpload: response.uploadCount,
+                        totalInspeksiHeaderUpload: response.totalCount
+                    });
+                }
+                else {
+                    //error
+                    this.setState({
+                        progressInspeksiHeader: 1,
+                        valueInspeksiHeaderUpload: 0,
+                        totalInspeksiHeaderUpload: 0,
+                    });
+                }
+            });
+
+        uploadInspectionDetail()
+            .then((response)=>{
+                if(response.syncStatus){
+                    this.setState({
+                        progressInspeksiDetail: 1,
+                        valueInspeksiDetailUpload: response.uploadCount,
+                        totalInspeksiDetailUpload: response.totalCount
+                    });
+                }
+                else {
+                    //error
+                    this.setState({
+                        progressInspeksiDetail: 1,
+                        valueInspeksiDetailUpload: 0,
+                        totalInspeksiDetailUpload: 0
+                    });
+                }
+            });
+
+        uploadInspectionTrack()
+            .then((response)=>{
+                if(response.syncStatus){
+                    this.setState({
+                        progressInspectionTrack: 1,
+                        valueInspectionTrack: response.uploadCount,
+                        totalInspectionTrack: response.totalCount
+                    });
+                }
+                else {
+                    //error
+                    this.setState({
+                        progressInspectionTrack: 1,
+                        valueInspectionTrack: 0,
+                        totalInspectionTrack: 0
+                    });
+                }
+            });
+        // this.downloadWeeklySummary();
 
         this.checkUpdate()
             .then((callback) => {

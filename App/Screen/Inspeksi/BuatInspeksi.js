@@ -234,27 +234,6 @@ class BuatInspeksiRedesign extends Component {
     //     );
     // }
 
-    insertTrackLokasi(blokInsCode, lat, lon){
-        try {
-			var today = getTodayDate('YYMMDDkkmmss');
-            var trInsCode = `T${this.state.dataLogin[0].USER_AUTH_CODE}${today}`;
-            // var today = getTodayDate('YYYY-MM-DD HH:mm:ss');
-            data = {
-                TRACK_INSPECTION_CODE: trInsCode,
-                BLOCK_INSPECTION_CODE: blokInsCode,
-                DATE_TRACK: today,
-                LAT_TRACK: lat.toString(),
-                LONG_TRACK: lon.toString(),
-                INSERT_USER: this.state.dataLogin[0].USER_AUTH_CODE,
-                INSERT_TIME: today,
-                STATUS_SYNC: 'N'
-            }
-            TaskService.saveData('TM_INSPECTION_TRACK', data)
-        } catch (error) {
-            alert('insert track lokasi buat inspeksi '+ error)
-        }
-    }
-
     getLocation() {
         navigator.geolocation.getCurrentPosition(
             (position) => {
