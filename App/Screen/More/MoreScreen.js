@@ -78,13 +78,20 @@ export default class MoreScreen extends Component {
     }
   }
 
-  componentDidMount() {
-    this.props.navigation.setParams({ inboxParam: this.setInboxValue() });
-    let getPath = TaskServices.findBy2("TR_IMAGE_PROFILE", "USER_AUTH_CODE", this.state.user.USER_AUTH_CODE);
-    let pathPhoto = getPhoto(typeof getPath === 'undefined' ? null : getPath.IMAGE_PATH_LOCAL);
-    this.setState({
-      userPhoto: pathPhoto
-    })
+  willFocus = this.props.navigation.addListener(
+    'willFocus',
+    () => {
+      this.props.navigation.setParams({ inboxParam: this.setInboxValue() });
+      let getPath = TaskServices.findBy2("TR_IMAGE_PROFILE", "USER_AUTH_CODE", this.state.user.USER_AUTH_CODE);
+      let pathPhoto = getPhoto(typeof getPath === 'undefined' ? null : getPath.IMAGE_PATH_LOCAL);
+      this.setState({
+        userPhoto: pathPhoto
+      })
+    }
+  )
+
+  componentWillUnmount() {
+    this.willFocus.remove()
   }
 
   loadData() {
@@ -159,29 +166,36 @@ export default class MoreScreen extends Component {
 
         <View>
 
-          <View style={[styles.containerProfile, { marginTop: 10 }]}>
-            <View style={{ flex: 2 }}>
-              {/* <Image source={require('../../Images/icon/ic_walking.png')} style={styles.icon} /> */}
-              <TouchableOpacity onPress={() => {
-                if (this.state.name !== "") {
-                  this.props.navigation.navigate('FotoUser', { setPhoto: (photoPath) => {
-                      this.setState({ userPhoto: photoPath })
-                  } });
-                }
-                else {
-                  this.setState({
-                    showConfirm: false,
-                    showModal: true,
-                    title: 'Data kosong!',
-                    message: 'Data tidak di temukan, Tolong sync terlebih dahulu sebulum merubah foto!',
-                    icon: require('../../Images/ic-no-internet.png')
-                  })
-                }
-              }}>
-                <Thumbnail style={{ borderColor: 'grey', height: 60, width: 60, marginRight: 5, marginLeft: 10 }} source={this.state.userPhoto === null ? getThumnail() : { uri: this.state.userPhoto }} />
-              </TouchableOpacity>
-            </View>
-            <View style={{ flex: 7 }}>
+          <View style={[styles.containerProfile, { marginTop: 5 }]}>
+            {/* <Image source={require('../../Images/icon/ic_walking.png')} style={styles.icon} /> */}
+            <TouchableOpacity onPress={() => {
+              if (this.state.name !== "") {
+                this.props.navigation.navigate('FotoUser', {
+                  setPhoto: (photoPath) => {
+                    this.setState({ userPhoto: photoPath })
+                    this.forceUpdate();
+                  }
+                });
+
+              }
+              else {
+                this.setState({
+                  showConfirm: false,
+                  showModal: true,
+                  title: 'Data kosong!',
+                  message: 'Data tidak di temukan, Tolong sync terlebih dahulu sebulum merubah foto!',
+                  icon: require('../../Images/ic-no-internet.png')
+                })
+              }
+            }}>
+              <Thumbnail
+                style={{ borderColor: '#AAAAAA', height: 72, width: 72, marginLeft: 5, borderWidth: 2, borderRadius: 100 }}
+                source={this.state.userPhoto === null ? getThumnail() : { uri: this.state.userPhoto + '?' + new Date() }} />
+              <View style={{ position: 'absolute', right: 0, bottom: 0 }}>
+                <Image source={Images.ic_add_image} style={{ height: 24, width: 24 }} />
+              </View>
+            </TouchableOpacity>
+            <View style={{ flex: 1, marginLeft: 12 }}>
               <Text style={{ fontSize: 14, fontWeight: '500' }}>{this.state.name}</Text>
               <Text style={{ fontSize: 12, color: 'grey', marginTop: 5 }}>{this.state.jabatan}</Text>
               {/*<Text style={{ fontSize: 12, color: 'grey' }}>{this.state.estate}</Text>*/}

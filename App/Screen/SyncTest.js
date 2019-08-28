@@ -1098,6 +1098,7 @@ class SyncScreen extends React.Component {
             UPDATE_TIME: param.UPDATE_TIME == '' ? parseInt(getTodayDate('YYYYMMDDkkmmss')) : parseInt(param.UPDATE_TIME.replace(/-/g, '').replace(/ /g, '').replace(/:/g, '')),
             RATING_VALUE: param.RATING_VALUE,
             RATING_MESSAGE: param.RATING_MESSAGE,
+            END_TIME: param.END_TIME,
         }
         // if (param.RATING) {
         //     data.RATING = param.RATING;

@@ -5,7 +5,7 @@ const TR_CONFIG = {
     primaryKey: 'VERSION',
     properties: {
         VERSION: 'string',
-        FORCE_UPDATE: {type:'bool', default: false}
+        FORCE_UPDATE: { type: 'bool', default: false }
     }
 };
 
@@ -293,7 +293,8 @@ const TR_FINDING = {
         UPDATE_TIME: { type: 'string', optional: true },
         STATUS_SYNC: 'string',
         RATING_VALUE: { type: 'int', default: 0 },
-        RATING_MESSAGE: { type: 'string', optional: true }
+        RATING_MESSAGE: { type: 'string', optional: true },
+        END_TIME: { type: 'int', default: 0 }
     }
 }
 

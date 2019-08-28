@@ -1,10 +1,11 @@
 import React from 'react';
-import {Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import {Container, Content} from 'native-base'
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Container, Content } from 'native-base'
 import Colors from '../Constant/Colors';
 import TaskServices from '../Database/TaskServices';
 import moment from 'moment';
-import {dateDisplayMobile} from '../Lib/Utils'
+import { dateDisplayMobile } from '../Lib/Utils'
+import { Images } from '../Themes';
 
 export default class Inbox extends React.Component {
 
@@ -46,9 +47,9 @@ export default class Inbox extends React.Component {
 	onClickItem(id) {
 		let notifData = TaskServices.findBy2('TR_NOTIFICATION', 'NOTIFICATION_ID', id);
 		notifData = {
-		    ...notifData,
-            NOTIFICATION_STATUS: 1
-        };
+			...notifData,
+			NOTIFICATION_STATUS: 1
+		};
 		TaskServices.updateByPrimaryKey('TR_NOTIFICATION', notifData);
 		let notifCount = TaskServices.getAllData('TR_NOTIFICATION').filtered('NOTIFICATION_STATUS=0').length;
 		notifCount = (notifCount >= 100) ? "99+" : notifCount + "";
@@ -97,15 +98,15 @@ export default class Inbox extends React.Component {
 			notifColor = "white";
 		}
 		if (item.NOTIFICATION_TYPE == 0) {
-			sources = require('../Images/icon/ic_task_new.png');
+			sources = Images.ic_task_new;
 			title = "TUGAS BARU";
 			desc = "Kamu dapat tugas baru di " + est.EST_NAME + " Blok " + block.BLOCK_NAME + " dari " + creator.FULLNAME;
 		} else if (item.NOTIFICATION_TYPE == 1) {
-			sources = require('../Images/icon/ic_task_wip.png');
+			sources = Images.ic_task_wip;
 			title = "UPDATE PROGRESS";
 			desc = contactAsign.FULLNAME + " baru melakukan update terhadap temuan yang ditugaskan tanggal " + createTime.format("DD MMM YYYY") + " di " + est.EST_NAME + " Blok " + block.BLOCK_NAME;
 		} else if (item.NOTIFICATION_TYPE == 2 || item.NOTIFICATION_TYPE == 3) {
-			sources = require('../Images/icon/ic_task_no_response.png');
+			sources = Images.ic_task_no_response;
 			title = "BELUM ADA RESPON";
 			if (item.NOTIFICATION_TYPE == 3) {
 				desc = "Kamu menugaskan " + contactAsign.FULLNAME + " untuk mengerjakan temuan di " + est.EST_NAME + " Blok " + block.BLOCK_NAME + " tanggal " + createTime.format("DD MMM YYYY") + " tapi ybs belum memberikan respon sampai hari ini";
@@ -114,26 +115,26 @@ export default class Inbox extends React.Component {
 				desc = "Kamu ditugaskan " + creator.FULLNAME + " untuk mengerjakan temuan di " + est.EST_NAME + " Blok " + block.BLOCK_NAME + " tanggal " + createTime.format("DD MMM YYYY") + " tapi belum memberikan respon sampai hari ini";
 			}
 		} else if (item.NOTIFICATION_TYPE == 4) {
-			sources = require('../Images/icon/icon_rating.png');
+			sources = Images.ic_wait_rating;
 			title = "TUGAS SELESAI";
 			desc = contactAsign.FULLNAME + " telah menyelesaikan temuan yang ditugaskan kepadanya tanggal " +
 				createTime.format("DD MMM YYYY") + " di " + est.EST_NAME + " Blok " + block.BLOCK_NAME +
 				". Berikan rating atas pekerjaan " + contactAsign.FULLNAME + ",yuk!";
 		} else if (item.NOTIFICATION_TYPE == 5) {
-			sources = require('../Images/icon/icon_rating.png');
+			sources = Images.ic_get_rating;
 			title = "DAPAT RATING";
 			desc = creator.FULLNAME + " telah memberikan rating kepada kamu. Cek rating yang kamu dapatkan..."
 		} else if (item.NOTIFICATION_TYPE == 6) {
-		    let tempUsername = item.NOTIFICATION_ID.split("$");
-			sources = require('../Images/ic_inbox_getcomment.png');
+			let tempUsername = item.NOTIFICATION_ID.split("$");
+			sources = Images.ic_get_comment;
 			title = "KOMENTAR BARU";
 			desc = tempUsername[1] + " memberikan komentar baru di temuan kamu."
 		} else if (item.NOTIFICATION_TYPE == 7) {
-            let tempUsername = item.NOTIFICATION_ID.split("$");
-            sources = require('../Images/ic_inbox_getcomment.png');
-            title = "KOMENTAR BARU";
-            desc = tempUsername[1] + " telah mention kamu di komentar temuan."
-        }
+			let tempUsername = item.NOTIFICATION_ID.split("$");
+			sources = Images.ic_get_comment;
+			title = "KOMENTAR BARU";
+			desc = tempUsername[1] + " telah mention kamu di komentar temuan."
+		}
 		return (
 			<TouchableOpacity
 				style={{
@@ -141,7 +142,7 @@ export default class Inbox extends React.Component {
 					borderBottomColor: 'grey', borderBottomWidth: 2, paddingBottom: 10, paddingTop: 10
 				}}
 				onPress={() => {
-				    this.onClickItem(item.NOTIFICATION_ID)
+					this.onClickItem(item.NOTIFICATION_ID)
 				}}
 				key={index}
 			>

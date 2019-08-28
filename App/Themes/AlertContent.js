@@ -14,6 +14,7 @@ const alert = {
     'foto_gagal': { showModal: true, title: 'Pengambilan Foto Gagal', message: 'Lakukan pengambilan foto lagi', icon: Images.ic_ambil_foto_gagal },
     'no_data_map': { fetchLocation: false, showModal: true, title: 'Tidak ada data', message: "Kamu belum download data map", icon: Images.ic_blm_input_lokasi },
     'no_location': { fetchLocation: false, showModal: true, title: 'Tidak ada lokasi', message: "Kamu belum pilih lokasi kamu", icon: Images.ic_blm_input_lokasi },
+    'mock_location': { fetchLocation: false, showModal: true, title: 'Mock Lokasi Terdeteksi', message: "Silahkan hapus aplikasi mock untuk melanjutkan login aplikasi", icon: Images.ic_blm_input_lokasi },
 }
 
 export default alert;

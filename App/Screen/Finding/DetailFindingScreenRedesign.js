@@ -1,21 +1,21 @@
-import React, {Component} from 'react'
-import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
-import {Card, Container, Content} from 'native-base'
+import React, { Component } from 'react'
+import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Card, Container, Content } from 'native-base'
 import Colors from '../../Constant/Colors'
 import FastImage from 'react-native-fast-image'
 import TaskServices from '../../Database/TaskServices'
 import Slider from 'react-native-slider'
-import R, {isEmpty} from 'ramda'
+import R, { isEmpty } from 'ramda'
 import moment from 'moment'
 import DateTimePicker from 'react-native-modal-datetime-picker'
 import ImageSlider from 'react-native-image-slider';
-import {changeFormatDate, dateDisplayMobile, dateDisplayMobileWithoutHours, getTodayDate} from '../../Lib/Utils';
+import { changeFormatDate, dateDisplayMobile, dateDisplayMobileWithoutHours, getTodayDate } from '../../Lib/Utils';
 
 import ModalAlert from '../../Component/ModalAlert';
 import ModalAlertBack from '../../Component/ModalAlert';
-import {AlertContent, Images} from '../../Themes';
-import {getColor, getIconProgress, getRating, getStatusImage, getStatusTemuan} from '../../Themes/Resources';
-import {getBlokName, getContactName, getEstateName, getStatusBlok} from '../../Database/Resources';
+import { AlertContent, Images } from '../../Themes';
+import { getColor, getIconProgress, getRating, getStatusImage, getStatusTemuan } from '../../Themes/Resources';
+import { getBlokName, getContactName, getEstateName, getStatusBlok } from '../../Database/Resources';
 
 const IconRating = (props) => {
     const styImage = {
@@ -178,7 +178,8 @@ class DetailFindingScreenRedesign extends Component {
             "STATUS_SYNC": "N",
             "DUE_DATE": this.state.updatedDueDate == "Select Calendar" ? this.state.data.DUE_DATE : moment(this.state.updatedDueDate).format('YYYY-MM-DD'),
             "UPDATE_USER": this.state.user.USER_AUTH_CODE,
-            "UPDATE_TIME": updateTime
+            "UPDATE_TIME": updateTime,
+            "END_TIME": this.state.progress == 100 ? getTodayDate('YYYYMMDDHHmmss') : 0,
         });
         if (this.state.progress == 100) {
             this._saveImageUpdate();
@@ -554,13 +555,13 @@ class DetailFindingScreenRedesign extends Component {
                             <Text>{this.state.ratingMsg}</Text>
                         </View>
                     }
-                        <View
-                            style={{
-                                height: 10,
-                                marginVertical: 10,
-                                backgroundColor:"rgba(247,247,247,1)"
-                            }}
-                        />
+                    <View
+                        style={{
+                            height: 10,
+                            marginVertical: 10,
+                            backgroundColor: "rgba(247,247,247,1)"
+                        }}
+                    />
                     {
                         this.renderComment()
                     }
@@ -590,7 +591,7 @@ class DetailFindingScreenRedesign extends Component {
         }
     }
 
-    renderComment(){
+    renderComment() {
         //Get Finding Comment
         let getComment = TaskServices.findBy("TR_FINDING_COMMENT", "FINDING_CODE", this.state.data.FINDING_CODE).sorted('INSERT_TIME', true);
         let commentCount = getComment.length;
@@ -598,8 +599,8 @@ class DetailFindingScreenRedesign extends Component {
         if (commentCount > 0) {
             commentMessage = this.processText(getComment[0].MESSAGE, getComment[0].TAGS);
         }
-        if(commentCount > 0){
-            return <View style={{ marginVertical: 5, marginHorizontal: 15}}>
+        if (commentCount > 0) {
+            return <View style={{ marginVertical: 5, marginHorizontal: 15 }}>
                 <Text style={{
                     fontWeight: 'bold',
                     fontSize: 15,
