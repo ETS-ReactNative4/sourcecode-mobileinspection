@@ -1,15 +1,16 @@
-import React, {Component} from 'react';
-import {BackHandler, Image, Platform, StatusBar, StyleSheet, TouchableOpacity, View} from 'react-native';
+import React, { Component } from 'react';
+import { BackHandler, Image, Platform, StatusBar, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Colors from '../../Constant/Colors';
 import imgTakePhoto from '../../Images/icon/ic_take_photo.png';
 import imgNextPhoto from '../../Images/icon/ic_next_photo.png';
-import {RNCamera as Camera} from 'react-native-camera';
-import {getTodayDate} from '../../Lib/Utils'
+import { RNCamera as Camera } from 'react-native-camera';
+import { getTodayDate } from '../../Lib/Utils'
 import ImageResizer from 'react-native-image-resizer';
-import {dirPhotoUser} from '../../Lib/dirStorage'
+import { dirPhotoUser } from '../../Lib/dirStorage'
 import TaskService from '../../Database/TaskServices'
 import ModalAlertBack from '../../Component/ModalAlert';
 import moment from 'moment';
+import ImagePicker from 'react-native-image-crop-picker'
 
 let RNFS = require('react-native-fs');
 const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
@@ -75,7 +76,7 @@ export default class FotoUser extends Component {
 
     setParameter() {
         let dataLogin = TaskService.getAllData('TR_LOGIN')[0];
-        let imgCode = `FP${dataLogin.USER_AUTH_CODE}${this.state.timestamp}`;
+        let imgCode = `FP${dataLogin.USER_AUTH_CODE}`;
         let imageName = imgCode + '.jpg';
         let image = {
             USER_AUTH_CODE: dataLogin.USER_AUTH_CODE,
@@ -101,9 +102,16 @@ export default class FotoUser extends Component {
                     fixOrientation: true
                 };
                 const data = await this.camera.takePictureAsync(takeCameraOptions);
-                this.setState({ path: data.uri, pathImg: dirPhotoUser, hasPhoto: true });
-                RNFS.copyFile(data.uri, `${dirPhotoUser}/${this.state.dataModel.IMAGE_NAME}`);
-                this.resize(`${dirPhotoUser}/${this.state.dataModel.IMAGE_NAME}`)
+                ImagePicker.openCropper({
+                    path: data.uri,
+                    width: 480,
+                    height: 480
+                }).then(image => {
+                    console.log('Image Cropped : ', image);
+                    this.setState({ path: image.path, pathImg: dirPhotoUser, hasPhoto: true });
+                    RNFS.copyFile(image.path, `${dirPhotoUser}/${this.state.dataModel.IMAGE_NAME}`);
+                    this.resize(`${dirPhotoUser}/${this.state.dataModel.IMAGE_NAME}`)
+                });
             }
 
         } catch (err) {
@@ -112,7 +120,7 @@ export default class FotoUser extends Component {
     };
 
     resize(data) {
-        ImageResizer.createResizedImage(data, 640, 480, 'JPEG', 80, 0, dirPhotoUser).then((response) => {
+        ImageResizer.createResizedImage(data, 480, 480, 'JPEG', 80, 0, dirPhotoUser).then((response) => {
             // response.uri is the URI of the new image that can now be displayed, uploaded...
             // response.path is the path of the new image
             // response.name is the name of the new image with the extension
@@ -153,45 +161,42 @@ export default class FotoUser extends Component {
 
     async insertDB() {
         RNFS.unlink(this.state.pathCache);
-        let isImageContain = await RNFS.exists(`file://${dirPhotoUser}/${this.state.dataModel.IMAGE_NAME}`);
-        if (isImageContain) {
-            let model = this.state.dataModel;
-            let fotoUserChecker = TaskService.findBy2("TR_IMAGE_PROFILE", "USER_AUTH_CODE", this.state.dataModel.USER_AUTH_CODE);
-            if (fotoUserChecker !== undefined && fotoUserChecker.length > 0) {
-                TaskService.updateByPrimaryKey('TR_IMAGE_PROFILE', {
-                    USER_AUTH_CODE: this.state.dataModel.USER_AUTH_CODE,
-                    IMAGE_NAME: model.IMAGE_NAME,
-                    IMAGE_PATH_LOCAL: model.IMAGE_PATH_LOCAL,
-                    IMAGE_URL: model.IMAGE_URL,
-                    STATUS_IMAGE: model.STATUS_IMAGE,
-                    STATUS_SYNC: "N",
-                    INSERT_TIME: model.INSERT_TIME,
-                });
-            }
-            else {
-                TaskService.saveData('TR_IMAGE_PROFILE', model);
-            }
-
-            this.setState({
-                showModalBack: true,
-                title: 'Berhasil Disimpan',
-                message: 'Yeaay! Data kamu berhasil disimpan',
-                icon: require('../../Images/ic-save-berhasil.png'),
-                photoDirectory: "file://" + dirPhotoUser + "/" + this.state.dataModel.IMAGE_NAME
+        // let isImageContain = await RNFS.exists(`file://${dirPhotoUser}/${this.state.dataModel.IMAGE_NAME}`);
+        // if (isImageContain) {
+        let model = this.state.dataModel;
+        let fotoUserChecker = TaskService.findBy2("TR_IMAGE_PROFILE", "USER_AUTH_CODE", this.state.dataModel.USER_AUTH_CODE);
+        if (fotoUserChecker !== undefined && fotoUserChecker.length > 0) {
+            TaskService.updateByPrimaryKey('TR_IMAGE_PROFILE', {
+                USER_AUTH_CODE: this.state.dataModel.USER_AUTH_CODE,
+                IMAGE_NAME: model.IMAGE_NAME,
+                IMAGE_PATH_LOCAL: model.IMAGE_PATH_LOCAL,
+                IMAGE_URL: model.IMAGE_URL,
+                STATUS_IMAGE: model.STATUS_IMAGE,
+                STATUS_SYNC: "N",
+                INSERT_TIME: model.INSERT_TIME,
             });
-        } else {
-            alert('Ada kesalahan, Ulangi ambil foto!')
         }
+        else {
+            TaskService.saveData('TR_IMAGE_PROFILE', model);
+        }
+
+        this.setState({
+            showModalBack: true,
+            title: 'Berhasil Disimpan',
+            message: 'Yeaay! Data kamu berhasil disimpan',
+            icon: require('../../Images/ic-save-berhasil.png'),
+            photoDirectory: "file://" + dirPhotoUser + "/" + this.state.dataModel.IMAGE_NAME
+        });
+        // } else {
+        //     alert('Ada kesalahan, Ulangi ambil foto!')
+        // }
     }
 
     renderImage() {
         return (
             <Image
                 source={{ uri: this.state.path }}
-                style={{
-                    flex: 1
-                }}
-            />
+                style={{ height: 370, width: 375 }} />
         );
     }
 
@@ -228,7 +233,7 @@ export default class FotoUser extends Component {
                     icon={this.state.icon}
                     title={this.state.title}
                     message={this.state.message} />
-                <View style={{ flex: 1, backgroundColor: "red" }}>
+                <View style={{ flex: 1, justifyContent: 'center' }}>
                     {this.state.path ? this.renderImage() : this.renderCamera()}
                 </View>
                 <View style={{ backgroundColor: 'white' }}>

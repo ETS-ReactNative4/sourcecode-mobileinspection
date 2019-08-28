@@ -1,5 +1,5 @@
 import RealmSchemas from './RealmSchema'
-import {getThumnail} from "../Lib/Utils";
+import { getThumnail } from "../Lib/Utils";
 import ServerName from "../Constant/ServerName";
 
 const TaskServices = {
@@ -10,8 +10,8 @@ const TaskServices = {
 
     getImagePath(userAuthCode) {
         let trImageProfile = RealmSchemas.objects('TR_IMAGE_PROFILE').filtered('USER_AUTH_CODE == \"' + userAuthCode + '\" ')[0];
-        if(trImageProfile !== undefined){
-            return {uri: "file://"+trImageProfile.IMAGE_PATH_LOCAL}
+        if (trImageProfile !== undefined) {
+            return { uri: "file://" + trImageProfile.IMAGE_PATH_LOCAL + '?' + new Date() }
         }
         else {
             //return default image
