@@ -1963,6 +1963,7 @@ class SyncScreen extends React.Component {
             });
         this.kirimUserImage();
 
+        //Upload Inspection Header
         uploadInspectionHeader()
             .then((response)=>{
                 if(response.syncStatus){
@@ -1982,6 +1983,7 @@ class SyncScreen extends React.Component {
                 }
             });
 
+        //Upload Inspection Detail
         uploadInspectionDetail()
             .then((response)=>{
                 if(response.syncStatus){
@@ -2001,6 +2003,7 @@ class SyncScreen extends React.Component {
                 }
             });
 
+        //Upload Inspection Track
         uploadInspectionTrack()
             .then((response)=>{
                 if(response.syncStatus){
@@ -2019,7 +2022,8 @@ class SyncScreen extends React.Component {
                     });
                 }
             });
-        // this.downloadWeeklySummary();
+
+        this.downloadWeeklySummary();
 
         this.checkUpdate()
             .then((callback) => {
