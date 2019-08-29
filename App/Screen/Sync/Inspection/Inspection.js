@@ -270,3 +270,52 @@ function isFulfillBaris(idInspection) {
     }
     return false
 }
+
+//Inspection Image Checker
+//cek semua TR_IMAGE berdasarkan BLOCK_INSPECTION_CODE (TR_BARIS_INSPECTION) sudah terkirim atau belum
+export async function inspectionImageSyncStatus(){
+    let isSync = true;
+    let trBarisInspection = TaskServices.findBy("TR_BARIS_INSPECTION", "syncImage", "N");
+
+    await Promise.all(
+        trBarisInspection.map(async (barisInspection)=>{
+            let getInspectionHeader = TaskServices.findBy("TR_BLOCK_INSPECTION_H", "ID_INSPECTION", barisInspection.ID_INSPECTION);
+            let getImage = TaskServices.findBy("TR_IMAGE", "TR_CODE", getInspectionHeader.BLOCK_INSPECTION_CODE).filtered('STATUS_SYNC = "N"');
+
+            if(getImage.length <= 0){
+                TaskServices.updateByPrimaryKey('TR_BARIS_INSPECTION',{
+                    "ID_INSPECTION": barisInspection.ID_INSPECTION,
+                    "syncImage": "Y"
+                });
+            }
+            else {
+                isSync = false
+            }
+        })
+    );
+
+    return isSync
+}
+
+export async function updateInspectionStatus(){
+    let trBarisInspection = TaskServices.findBy("TR_BARIS_INSPECTION", "STATUS_SYNC", "N");
+    let isSync = true;
+
+    console.log("TOTAL BARIS INSPECTIONNNNNNNNN",trBarisInspection);
+    await Promise.all(
+        trBarisInspection.map((barisInspection)=>{
+            if(barisInspection.syncHeader === "Y" && barisInspection.syncDetail === "Y" && barisInspection.syncTracking === "Y" && barisInspection.syncImage === "Y"){
+                TaskServices.updateByPrimaryKey('TR_BARIS_INSPECTION',{
+                    "ID_INSPECTION": barisInspection.ID_INSPECTION,
+                    "STATUS_SYNC": "Y"
+                });
+            }
+            else {
+                isSync = false;
+                console.log("Inspection Image belum terkirim!", barisInspection)
+            }
+        })
+    );
+
+    return isSync
+}

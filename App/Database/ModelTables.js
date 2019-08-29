@@ -124,7 +124,8 @@ const TR_BARIS_INSPECTION = {
         //LOCAL
         syncHeader: 'string',
         syncDetail: 'string',
-        syncTracking: 'string'
+        syncTracking: 'string',
+        syncImage: 'string'
     }
 }
 

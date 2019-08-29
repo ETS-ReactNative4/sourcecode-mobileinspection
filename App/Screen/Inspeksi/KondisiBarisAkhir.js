@@ -611,6 +611,7 @@ class KondisiBarisAkhir extends Component {
                 syncHeader: 'N',
                 syncDetail: 'N',
                 syncTracking: 'N',
+                syncImage: 'N'
             };
             TaskService.saveData('TR_BARIS_INSPECTION', dataInspeksiRemoveDuplicate);
 

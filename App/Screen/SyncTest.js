@@ -46,7 +46,7 @@ import {uploadFindingComment} from './Sync/Finding/Comment';
 //image
 import {uploadImage} from './Sync/Image/Image';
 //inspection
-import {uploadInspectionHeader, uploadInspectionDetail, uploadInspectionTrack} from './Sync/Inspection/Inspection'
+import {uploadInspectionHeader, uploadInspectionDetail, uploadInspectionTrack, inspectionImageSyncStatus, updateInspectionStatus} from './Sync/Inspection/Inspection'
 
 class SyncScreen extends React.Component {
 
@@ -762,13 +762,13 @@ class SyncScreen extends React.Component {
         fetchPostAPI(token, url, param).then(((result) => {
             if (result != undefined) {
                 if (type == 'inspeksi') {
-                    console.log('Result Weekly InspectionSummary : ', result)
+                    // console.log('Result Weekly InspectionSummary : ', result)
                     storeData('InspectionSummary', result)
                 } else if (type == 'finding') {
-                    console.log('Result Weekly FindingSummary : ', result)
+                    // console.log('Result Weekly FindingSummary : ', result)
                     storeData('FindingSummary', result)
                 } else if (type == 'ebcc') {
-                    console.log('Result Weekly EbccSummary : ', result)
+                    // console.log('Result Weekly EbccSummary : ', result)
                     storeData('EbccSummary', result)
                 }
             } else {
@@ -1964,65 +1964,8 @@ class SyncScreen extends React.Component {
             });
         this.kirimUserImage();
 
-        //Upload Inspection Header
-        uploadInspectionHeader()
-            .then((response)=>{
-                if(response.syncStatus){
-                    this.setState({
-                        progressInspeksiHeader: 1,
-                        valueInspeksiHeaderUpload: response.uploadCount,
-                        totalInspeksiHeaderUpload: response.totalCount
-                    });
-                }
-                else {
-                    //error
-                    this.setState({
-                        progressInspeksiHeader: 1,
-                        valueInspeksiHeaderUpload: 0,
-                        totalInspeksiHeaderUpload: 0,
-                    });
-                }
-            });
-
-        //Upload Inspection Detail
-        uploadInspectionDetail()
-            .then((response)=>{
-                if(response.syncStatus){
-                    this.setState({
-                        progressInspeksiDetail: 1,
-                        valueInspeksiDetailUpload: response.uploadCount,
-                        totalInspeksiDetailUpload: response.totalCount
-                    });
-                }
-                else {
-                    //error
-                    this.setState({
-                        progressInspeksiDetail: 1,
-                        valueInspeksiDetailUpload: 0,
-                        totalInspeksiDetailUpload: 0
-                    });
-                }
-            });
-
-        //Upload Inspection Track
-        uploadInspectionTrack()
-            .then((response)=>{
-                if(response.syncStatus){
-                    this.setState({
-                        progressInspectionTrack: 1,
-                        valueInspectionTrack: response.uploadCount,
-                        totalInspectionTrack: response.totalCount
-                    });
-                }
-                else {
-                    //error
-                    this.setState({
-                        progressInspectionTrack: 1,
-                        valueInspectionTrack: 0,
-                        totalInspectionTrack: 0
-                    });
-                }
-            });
+        this.SyncInspection()
+            .then((response)=>{});
 
         this.downloadWeeklySummary();
 
@@ -2055,6 +1998,81 @@ class SyncScreen extends React.Component {
                     })
                 }
             });
+    }
+
+    async SyncInspection(){
+        //Upload Inspection Header
+        await uploadInspectionHeader()
+            .then(async (response)=>{
+                if(response.syncStatus){
+                    await this.setState({
+                        progressInspeksiHeader: 1,
+                        valueInspeksiHeaderUpload: response.uploadCount,
+                        totalInspeksiHeaderUpload: response.totalCount
+                    });
+                }
+                else {
+                    //error
+                    await this.setState({
+                        progressInspeksiHeader: 1,
+                        valueInspeksiHeaderUpload: 0,
+                        totalInspeksiHeaderUpload: 0,
+                    });
+                }
+            });
+
+        //Upload Inspection Detail
+        await uploadInspectionDetail()
+            .then(async (response)=>{
+                if(response.syncStatus){
+                    await this.setState({
+                        progressInspeksiDetail: 1,
+                        valueInspeksiDetailUpload: response.uploadCount,
+                        totalInspeksiDetailUpload: response.totalCount
+                    });
+                }
+                else {
+                    //error
+                    await this.setState({
+                        progressInspeksiDetail: 1,
+                        valueInspeksiDetailUpload: 0,
+                        totalInspeksiDetailUpload: 0
+                    });
+                }
+            });
+
+        //Upload Inspection Track
+        await uploadInspectionTrack()
+            .then(async (response)=>{
+                if(response.syncStatus){
+                    await this.setState({
+                        progressInspectionTrack: 1,
+                        valueInspectionTrack: response.uploadCount,
+                        totalInspectionTrack: response.totalCount
+                    });
+                }
+                else {
+                    //error
+                    await this.setState({
+                        progressInspectionTrack: 1,
+                        valueInspectionTrack: 0,
+                        totalInspectionTrack: 0
+                    });
+                }
+            });
+
+        // check inspection image klo sudah terkirim, imageSync = "Y"
+        // response = true, semua image sudah terkirim.
+        await inspectionImageSyncStatus()
+            .then((response)=>{
+                console.log("IMG", response)
+            });
+
+        await updateInspectionStatus()
+            .then((response)=>{
+                console.log("INS", response)
+            });
+
     }
 
     async checkUpdate() {
