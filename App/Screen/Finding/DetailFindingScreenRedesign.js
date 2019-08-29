@@ -179,7 +179,7 @@ class DetailFindingScreenRedesign extends Component {
             "DUE_DATE": this.state.updatedDueDate == "Select Calendar" ? this.state.data.DUE_DATE : moment(this.state.updatedDueDate).format('YYYY-MM-DD'),
             "UPDATE_USER": this.state.user.USER_AUTH_CODE,
             "UPDATE_TIME": updateTime,
-            "END_TIME": this.state.progress == 100 ? getTodayDate('YYYYMMDDHHmmss') : 0,
+            "END_TIME": this.state.progress == 100 ? parseInt(getTodayDate('YYYYMMDDHHmmss')) : 0,
         });
         if (this.state.progress == 100) {
             this._saveImageUpdate();

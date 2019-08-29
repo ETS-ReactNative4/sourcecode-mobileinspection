@@ -803,9 +803,13 @@ class HomeScreen extends React.Component {
                 this._downloadImageFinding(dataImage)
               }
             } else {
-              alert(`Image ${findingCode} kosong`);
+              console.log('Image ' + findingCode + ' kosong')
+              // alert(`Image ${findingCode} kosong`);
             }
-          } else { alert(`gagal download image untuk ${findingCode}`) }
+          } else {
+            console.log(`gagal download image untuk ${findingCode}`)
+            // alert()
+          }
         }).catch((error) => {
           console.error(error);
           // alert(error);
