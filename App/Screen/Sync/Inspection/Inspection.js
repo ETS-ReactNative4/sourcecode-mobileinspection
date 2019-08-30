@@ -2,9 +2,6 @@ import TaskServices from "../../../Database/TaskServices";
 import {fetchPost} from "../../../Api/FetchingApi";
 import {convertTimestampToDate, getTodayDate} from "../../../Lib/Utils";
 
-//Global Var
-const user = TaskServices.getAllData('TR_LOGIN')[0];
-
 //Header
 export async function uploadInspectionHeader(){
     let getInspectionHeader = TaskServices.getAllData('TR_BLOCK_INSPECTION_H').filtered('STATUS_SYNC = "N"');
@@ -49,6 +46,7 @@ export async function uploadInspectionHeader(){
 
 async function postInspectionHeader(headerModel){
     let fetchStatus = false;
+    let user = TaskServices.getAllData('TR_LOGIN')[0];
     let inspectionHeaderModel = {
         BLOCK_INSPECTION_CODE: headerModel.BLOCK_INSPECTION_CODE,
         WERKS: headerModel.WERKS,
@@ -142,6 +140,7 @@ export async function uploadInspectionDetail(){
 
 async function postInspectionDetail(detailModel){
     let fetchStatus = false;
+    let user = TaskServices.getAllData('TR_LOGIN')[0];
     let inspectionDetailModel = {
         BLOCK_INSPECTION_CODE_D: detailModel.BLOCK_INSPECTION_CODE_D,
         BLOCK_INSPECTION_CODE: detailModel.BLOCK_INSPECTION_CODE,
