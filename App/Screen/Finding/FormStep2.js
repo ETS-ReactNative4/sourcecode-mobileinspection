@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
-import {NavigationActions, StackActions} from 'react-navigation';
-import {BackHandler, FlatList, Image, Modal, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import {Container, Content} from 'native-base'
-import R, {isEmpty} from 'ramda'
+import React, { Component } from 'react';
+import { NavigationActions, StackActions } from 'react-navigation';
+import { BackHandler, FlatList, Image, Modal, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Container, Content } from 'native-base'
+import R, { isEmpty } from 'ramda'
 import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
 import Icon from 'react-native-vector-icons/MaterialIcons'
@@ -10,13 +10,14 @@ import RadioGroup from 'react-native-custom-radio-group'
 import DateTimePicker from 'react-native-modal-datetime-picker'
 import moment from 'moment'
 import TaskServices from '../../Database/TaskServices'
-import {dateDisplayMobileWithoutHours, getTodayDate} from '../../Lib/Utils'
+import { dateDisplayMobileWithoutHours, getTodayDate } from '../../Lib/Utils'
 import IIcon from 'react-native-vector-icons/Ionicons'
 import Carousel from 'react-native-looped-carousel'
-import {dirPhotoTemuan} from '../../Lib/dirStorage'
+import { dirPhotoTemuan } from '../../Lib/dirStorage'
 import ModalAlert from '../../Component/ModalAlert';
 import ModalAlertBack from '../../Component/ModalAlert';
 import ModalAlertConfirmation from '../../Component/ModalAlertConfirmation'
+import { AlertContent } from '../../Themes';
 
 var RNFS = require('react-native-fs');
 
@@ -253,25 +254,34 @@ class FormStep2 extends Component {
             UPDATE_USER: '',
             UPDATE_TIME: '',
             STATUS_SYNC: "N",
+            END_TIME: "",
         }
 
-        TaskServices.saveData('TR_FINDING', data);
+        console.log('Save Data Finding : ', data)
 
-        this.state.foto.map((image, i) => {
-            var imagetr = {
-                TR_CODE: this.state.TRANS_CODE,
-                IMAGE_CODE: image.replace(".jpg", ""),
-                IMAGE_NAME: image,
-                IMAGE_PATH_LOCAL: dirPhotoTemuan + "/" + image,
-                IMAGE_URL: '',
-                STATUS_IMAGE: 'SEBELUM',
-                STATUS_SYNC: 'N',
-                INSERT_USER: this.state.user.USER_AUTH_CODE,
-                INSERT_TIME: moment(new Date()).format("YYYY-MM-DD kk:mm:ss")
-            }
+        if (data.LAT_FINDING != '0' && data.LONG_FINDING != '0') {
+            TaskServices.saveData('TR_FINDING', data);
+        } else {
+            this.setState(AlertContent.no_location);
+        }
 
-            TaskServices.saveData('TR_IMAGE', imagetr);
-        });
+        if (this.state.foto.length > 0) {
+            this.state.foto.map((image, i) => {
+                var imagetr = {
+                    TR_CODE: this.state.TRANS_CODE,
+                    IMAGE_CODE: image.replace(".jpg", ""),
+                    IMAGE_NAME: image,
+                    IMAGE_PATH_LOCAL: dirPhotoTemuan + "/" + image,
+                    IMAGE_URL: '',
+                    STATUS_IMAGE: 'SEBELUM',
+                    STATUS_SYNC: 'N',
+                    INSERT_USER: this.state.user.USER_AUTH_CODE,
+                    INSERT_TIME: moment(new Date()).format("YYYY-MM-DD kk:mm:ss")
+                }
+
+                TaskServices.saveData('TR_IMAGE', imagetr);
+            });
+        }
 
         setTimeout(() => {
             this.setState({ showModalBack: true, title: 'Berhasil Disimpan', message: 'Yeaay! Data kamu berhasil disimpan', icon: require('../../Images/ic-save-berhasil.png') });

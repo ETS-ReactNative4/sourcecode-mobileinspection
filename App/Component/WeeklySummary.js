@@ -73,13 +73,13 @@ class WeeklySummary extends Component {
                                     value={this.props.dataInspeksi.total_inspeksi + ' (' + this.props.dataInspeksi.total_baris + ' Baris)'}
                                     title={'inspeksi'}
                                     img={require('../Images/summaryInspeksi/inspeksi.png')}
-                                // target={'Target : ' + 10} 
+                                // target={'Target : ' + this.props.dataInspeksi.target_inspeksi}  
                                 />
                                 <WeeklyFeature
                                     value={this.props.dataTemuan.complete}
                                     title={'temuan'}
                                     img={require('../Images/summaryInspeksi/temuan.png')}
-                                    // target={'Target : ' + this.props.dataTemuan.target}
+                                    // target={'Target : ' + this.props.dataTemuan.incomplete}
                                 />
                                 <WeeklyFeature
                                     value={this.props.dataEbcc.jumlah}
