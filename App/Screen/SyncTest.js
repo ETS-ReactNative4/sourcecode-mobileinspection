@@ -1927,7 +1927,7 @@ class SyncScreen extends React.Component {
         //Upload Finding Comment
         uploadFindingComment()
             .then((response) => {
-                if (response != undefined) {
+                if (response !== undefined) {
                     if (response.syncStatus) {
                         this.setState({
                             progressFindingCommentData: 1,
