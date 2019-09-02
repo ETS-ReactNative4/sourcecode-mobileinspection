@@ -294,6 +294,7 @@ class Step2Finding extends Component {
             UPDATE_USER: this.state.user.USER_AUTH_CODE,
             UPDATE_TIME: insertTime,
             STATUS_SYNC: "N",
+            END_TIME: "",
         }
         TaskServices.saveData('TR_FINDING', data);
 
