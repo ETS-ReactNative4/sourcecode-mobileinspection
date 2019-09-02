@@ -19,6 +19,7 @@ export async function uploadImage() {
     if (getImages.length > 0) {
         await Promise.all(
             getImages.map(async (imageModel)=>{
+                let syncModel = true;
                 let imagePath = 'file://'+imageModel.IMAGE_PATH_LOCAL;
                 await RNFS.exists(imagePath)
                     .then(async (isExist)=>{
@@ -28,7 +29,7 @@ export async function uploadImage() {
                             imageForm.append('IMAGE_PATH_LOCAL', imageModel.IMAGE_PATH_LOCAL);
                             imageForm.append('TR_CODE', imageModel.TR_CODE);
                             imageForm.append('STATUS_IMAGE', imageModel.STATUS_IMAGE);
-                            imageForm.append('STATUS_SYNC', 'Y');
+                            imageForm.append('STATUS_SYNC', imageModel.STATUS_SYNC);
                             imageForm.append('SYNC_TIME', getTodayDate('YYYYMMDDkkmmss'));
                             imageForm.append('INSERT_TIME', convertTimestampToDate(imageModel.INSERT_TIME, 'YYYYMMDDkkmmss'));
                             imageForm.append('INSERT_USER', imageModel.INSERT_USER);
@@ -43,15 +44,20 @@ export async function uploadImage() {
                                         uploadLabels = {
                                             ...uploadLabels,
                                             uploadCount: uploadLabels.uploadCount + 1
-                                        }
+                                        };
+                                        TaskServices.updateByPrimaryKey('TR_IMAGE', {
+                                            "IMAGE_CODE": imageModel.IMAGE_CODE,
+                                            "STATUS_SYNC": "Y"
+                                        });
                                     }
                                     else {
+                                        syncModel = false;
                                         uploadLabels = {
                                             ...uploadLabels,
                                             syncStatus: false
                                         }
                                     }
-                                })
+                                });
                         }
                     })
             })
@@ -64,17 +70,15 @@ export async function uploadImage() {
     };
 }
 
-async function postImage(imageModel, imageID){
+async function postImage(imageModel){
     let fetchStatus = true;
 
     await fetchPostForm("IMAGES-UPLOAD", imageModel, null)
         .then((response)=>{
+            console.log("imagemodel",imageModel);
+            console.log("imageresponse",response);
             if (response !== undefined) {
                 if (response.status) {
-                    TaskServices.updateByPrimaryKey('TR_IMAGE', {
-                        "IMAGE_CODE": imageID,
-                        "STATUS_SYNC": "Y"
-                    });
                     fetchStatus = true;
                 }
                 else {

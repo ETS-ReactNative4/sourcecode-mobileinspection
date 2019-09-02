@@ -547,6 +547,7 @@ class KondisiBarisAkhir extends Component {
                 INSERT_USER: this.state.dataUsual.USER_AUTH,
                 INSERT_TIME: insertTime
             }
+            console.log("SAVE IMAGE BARIS",image);
             TaskService.saveData('TR_IMAGE', image);
 
             var selfie = {

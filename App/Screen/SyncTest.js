@@ -1914,6 +1914,7 @@ class SyncScreen extends React.Component {
 
             fetchLocation: false,
             isBtnEnable: false,
+            uploadErrorFlag: false,
         });
 
         //Upload Finding Comment
@@ -1929,6 +1930,7 @@ class SyncScreen extends React.Component {
                 else {
                     //error
                     this.setState({
+                        uploadErrorFlag: true,
                         progressFindingCommentData: 1,
                         valueFindingCommentDataUpload: 0,
                         totalFindingCommentDataUpload: 0
@@ -1956,6 +1958,7 @@ class SyncScreen extends React.Component {
                 else {
                     //error
                     this.setState({
+                        uploadErrorFlag: true,
                         progressUploadImage: 1,
                         valueImageUpload: 0,
                         totalImagelUpload: 0
@@ -2014,6 +2017,7 @@ class SyncScreen extends React.Component {
                 else {
                     //error
                     await this.setState({
+                        uploadErrorFlag: false,
                         progressInspeksiHeader: 1,
                         valueInspeksiHeaderUpload: 0,
                         totalInspeksiHeaderUpload: 0,
@@ -2034,6 +2038,7 @@ class SyncScreen extends React.Component {
                 else {
                     //error
                     await this.setState({
+                        uploadErrorFlag: false,
                         progressInspeksiDetail: 1,
                         valueInspeksiDetailUpload: 0,
                         totalInspeksiDetailUpload: 0
@@ -2054,6 +2059,7 @@ class SyncScreen extends React.Component {
                 else {
                     //error
                     await this.setState({
+                        uploadErrorFlag: false,
                         progressInspectionTrack: 1,
                         valueInspectionTrack: 0,
                         totalInspectionTrack: 0

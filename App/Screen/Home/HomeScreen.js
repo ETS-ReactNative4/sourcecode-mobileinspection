@@ -101,7 +101,6 @@ class HomeScreen extends React.Component {
 
       retrieveData('FindingSummary').then((result) => {
         if (result != null) {
-          console.log('Data Finding Summary : ', result.data)
           this.setState({ dataFindingSummary: result.data })
         } else {
           this.setState({ isVisibleSummary: false })
@@ -110,7 +109,6 @@ class HomeScreen extends React.Component {
 
       retrieveData('EbccSummary').then((result) => {
         if (result != null) {
-          console.log('Data Ebcc Summary : ', result.data)
           this.setState({ dataEbccSummary: result.data })
         } else {
           this.setState({ isVisibleSummary: false })
@@ -119,7 +117,6 @@ class HomeScreen extends React.Component {
 
       retrieveData('InspectionSummary').then((result) => {
         if (result != null) {
-          console.log('Data Inspeksi Summary : ', result.data)
           this.setState({ dataInspectionSummary: result.data })
 
           if (result.status) {
@@ -257,7 +254,6 @@ class HomeScreen extends React.Component {
               arr.push(item2)
             }
             else if (stDate >= this.extraFilterTime.startTime && stDate <= this.extraFilterTime.endTime && this.extraFilterTime.filter) {
-              console.log("COMP_CODE:" + stDate, this.extraFilterTime.startTime, this.extraFilterTime.endTime);
               arr.push(item2)
             }
           })
@@ -298,7 +294,6 @@ class HomeScreen extends React.Component {
               arr.push(item2)
             }
             else if (stDate >= this.extraFilterTime.startTime && stDate <= this.extraFilterTime.endTime && this.extraFilterTime.filter) {
-              console.log("AFD_CODE:" + stDate, this.extraFilterTime.startTime, this.extraFilterTime.endTime);
               arr.push(item2)
             }
           })
@@ -348,8 +343,6 @@ class HomeScreen extends React.Component {
       let userAuth = item.userAuth;
       let status = item.status;
       let jenis = item.jenis;
-
-      console.log('Jenis Temuan : ', item.jenis)
 
       let stBatasWaktu = item.stBatasWaktu;
       let endBatasWaktu = item.endBatasWaktu.substring(0, 8) + '235959';

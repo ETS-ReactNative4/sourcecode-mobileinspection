@@ -264,45 +264,6 @@ const TaskServices = {
         });
     },
 
-    updateFindingDownload: function (param, index) {
-        // let data = RealmSchemas.objects('TR_FINDING')[index];
-        let result = RealmSchemas.objects('TR_FINDING').find(row => {
-            return row.FINDING_CODE == param.FINDING_CODE
-        })
-        RealmSchemas.write(() => {
-            data.WERKS = result.WERKS;
-            data.AFD_CODE = result.AFD_CODE;
-            data.BLOCK_CODE = result.BLOCK_CODE;
-            data.FINDING_CATEGORY = result.FINDING_CATEGORY;
-            data.FINDING_DESC = result.FINDING_DESC;
-            data.FINDING_PRIORITY = result.FINDING_PRIORITY;
-            data.DUE_DATE = result.DUE_DATE;
-            data.STATUS = result.STATUS;
-            data.ASSIGN_TO = result.ASSIGN_TO;
-            data.PROGRESS = result.PROGRESS;
-            data.LAT_FINDING = result.LAT_FINDING;
-            data.LONG_FINDING = result.LONG_FINDING;
-            data.REFFERENCE_INS_CODE = result.REFFERENCE_INS_CODE;
-            data.INSERT_USER = result.INSERT_USER;
-            data.INSERT_TIME = result.INSERT_TIME;
-            data.STATUS_SYNC = result.STATUS_SYNC;
-        });
-    },
-
-    updateInspeksiSync: function (table, param, index) {
-        let data = RealmSchemas.objects(table)[index];
-        RealmSchemas.write(() => {
-            data.STATUS_SYNC = param;
-        });
-    },
-
-    updateStatusImage: function (table, param, index) {
-        let data = RealmSchemas.objects(table)[index];
-        RealmSchemas.write(() => {
-            data.STATUS_SYNC = param;
-        });
-    },
-
     updateInspectionHScore: function (blockCode, param) {
         let data = RealmSchemas.objects('TR_BLOCK_INSPECTION_H').filtered('BLOCK_INSPECTION_CODE == \"' + blockCode + '\" ')[0];
         RealmSchemas.write(() => {
