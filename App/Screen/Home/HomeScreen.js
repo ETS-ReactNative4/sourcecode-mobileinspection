@@ -827,7 +827,8 @@ class HomeScreen extends React.Component {
       config(options).fetch('GET', url).then((res) => {
         // alert("Success Downloaded " + res);
       }).catch((error) => {
-        alert(error);
+        console.log("error Downloaded " + error);
+        // alert(error);
       });
     }
   }
