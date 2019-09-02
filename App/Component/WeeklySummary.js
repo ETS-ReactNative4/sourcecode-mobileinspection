@@ -79,7 +79,7 @@ class WeeklySummary extends Component {
                                     value={this.props.dataTemuan.complete}
                                     title={'temuan'}
                                     img={require('../Images/summaryInspeksi/temuan.png')}
-                                    // target={'Target : ' + this.props.dataTemuan.incomplete}
+                                // target={'Target : ' + this.props.dataTemuan.incomplete}
                                 />
                                 <WeeklyFeature
                                     value={this.props.dataEbcc.jumlah}
