@@ -295,7 +295,7 @@ const TR_FINDING = {
         STATUS_SYNC: 'string',
         RATING_VALUE: { type: 'int', default: 0 },
         RATING_MESSAGE: { type: 'string', optional: true },
-        END_TIME: { type: 'int', default: 0 }
+        END_TIME: { type: 'string', optional: true }
     }
 }
 

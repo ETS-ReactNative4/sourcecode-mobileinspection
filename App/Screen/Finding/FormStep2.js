@@ -254,6 +254,7 @@ class FormStep2 extends Component {
             UPDATE_USER: '',
             UPDATE_TIME: '',
             STATUS_SYNC: "N",
+            END_TIME: "",
         }
 
         console.log('Save Data Finding : ', data)

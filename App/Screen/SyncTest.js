@@ -42,11 +42,11 @@ var RNFS = require('react-native-fs');
 
 //Sync
 //comment
-import {uploadFindingComment} from './Sync/Finding/Comment';
+import { uploadFindingComment } from './Sync/Finding/Comment';
 //image
-import {uploadImage} from './Sync/Image/Image';
+import { uploadImage } from './Sync/Image/Image';
 //inspection
-import {uploadInspectionHeader, uploadInspectionDetail, uploadInspectionTrack, inspectionImageSyncStatus, updateInspectionStatus} from './Sync/Inspection/Inspection'
+import { uploadInspectionHeader, uploadInspectionDetail, uploadInspectionTrack, inspectionImageSyncStatus, updateInspectionStatus } from './Sync/Inspection/Inspection'
 
 class SyncScreen extends React.Component {
 
@@ -846,6 +846,7 @@ class SyncScreen extends React.Component {
     uploadData(URL, dataPost, table, idInspection) {
         const user = TaskServices.getAllData('TR_LOGIN')[0];
         fetchPostAPI(user.ACCESS_TOKEN, URL.API_URL, dataPost).then(((result) => {
+            console.log('Result Upload Data : ' + table, result)
             if (result != undefined) {
                 if (result.status) {
                     if (table == 'header') {
@@ -855,7 +856,7 @@ class SyncScreen extends React.Component {
                         this.updateInspeksiDetail(dataPost)
                         this.updateSyncInpesctionBaris()
                     } else if (table == 'tracking') {
-                        console.log("track",result);
+                        console.log("track", result);
                         this.updateInspeksiTrack(dataPost)
                     } else if (table == 'finding') {
                         //let imgHasSent = this.checkImageHasSent(dataPost.FINDING_CODE)
@@ -1098,8 +1099,10 @@ class SyncScreen extends React.Component {
             UPDATE_TIME: param.UPDATE_TIME == '' ? parseInt(getTodayDate('YYYYMMDDkkmmss')) : parseInt(param.UPDATE_TIME.replace(/-/g, '').replace(/ /g, '').replace(/:/g, '')),
             RATING_VALUE: param.RATING_VALUE,
             RATING_MESSAGE: param.RATING_MESSAGE,
-            END_TIME: param.END_TIME,
+            END_TIME: param.END_TIME != "" ? parseInt(param.END_TIME) : "",
         }
+
+        console.log('Param Finding : ', data)
         // if (param.RATING) {
         //     data.RATING = param.RATING;
         // }
@@ -1483,6 +1486,8 @@ class SyncScreen extends React.Component {
     _crudTM_Finding(data) {
         let allData = TaskServices.getAllData('TR_FINDING');
         if (data.simpan.length > 0) {
+
+            console.log('Data Download Finding : ', data)
             for (var i = 1; i <= data.simpan.length; i++) {
                 this.setState({ progressFinding: i / data.simpan.length, totalFindingDownload: data.simpan.length });
             }
@@ -1649,6 +1654,7 @@ class SyncScreen extends React.Component {
             let token = allLoginData[0].ACCESS_TOKEN;
             let serv = TaskServices.getAllData("TM_SERVICE")
                 .filtered('API_NAME="AUTH-GENERATE-TOKEN" AND MOBILE_VERSION="' + ServerName.verAPK + '"')[0];
+
             fetch(serv.API_URL, {
                 method: serv.METHOD,
                 headers: {
@@ -1656,6 +1662,7 @@ class SyncScreen extends React.Component {
                 }
             })
                 .then((response) => {
+                    console.log('Response Reset Token : ', response)
                     return response.json();
                 })
                 .then((data) => {
@@ -1918,21 +1925,23 @@ class SyncScreen extends React.Component {
 
         //Upload Finding Comment
         uploadFindingComment()
-            .then((response)=>{
-                if(response.syncStatus){
-                    this.setState({
-                        progressFindingCommentData: 1,
-                        valueFindingCommentDataUpload: response.uploadCount,
-                        totalFindingCommentDataUpload: response.totalCount
-                    });
-                }
-                else {
-                    //error
-                    this.setState({
-                        progressFindingCommentData: 1,
-                        valueFindingCommentDataUpload: 0,
-                        totalFindingCommentDataUpload: 0
-                    });
+            .then((response) => {
+                if (response != undefined) {
+                    if (response.syncStatus) {
+                        this.setState({
+                            progressFindingCommentData: 1,
+                            valueFindingCommentDataUpload: response.uploadCount,
+                            totalFindingCommentDataUpload: response.totalCount
+                        });
+                    }
+                    else {
+                        //error
+                        this.setState({
+                            progressFindingCommentData: 1,
+                            valueFindingCommentDataUpload: 0,
+                            totalFindingCommentDataUpload: 0
+                        });
+                    }
                 }
             });
 
@@ -1941,8 +1950,8 @@ class SyncScreen extends React.Component {
 
         //Upload Image
         uploadImage()
-            .then((response)=>{
-                if(response.syncStatus){
+            .then((response) => {
+                if (response.syncStatus) {
                     this.loadDataFinding();
                     this.kirimEbccHeader();
                     this.kirimEbccDetail();
@@ -1965,7 +1974,7 @@ class SyncScreen extends React.Component {
         this.kirimUserImage();
 
         this.SyncInspection()
-            .then((response)=>{});
+            .then((response) => { });
 
         this.downloadWeeklySummary();
 
@@ -2000,11 +2009,11 @@ class SyncScreen extends React.Component {
             });
     }
 
-    async SyncInspection(){
+    async SyncInspection() {
         //Upload Inspection Header
         await uploadInspectionHeader()
-            .then(async (response)=>{
-                if(response.syncStatus){
+            .then(async (response) => {
+                if (response.syncStatus) {
                     await this.setState({
                         progressInspeksiHeader: 1,
                         valueInspeksiHeaderUpload: response.uploadCount,
@@ -2023,8 +2032,8 @@ class SyncScreen extends React.Component {
 
         //Upload Inspection Detail
         await uploadInspectionDetail()
-            .then(async (response)=>{
-                if(response.syncStatus){
+            .then(async (response) => {
+                if (response.syncStatus) {
                     await this.setState({
                         progressInspeksiDetail: 1,
                         valueInspeksiDetailUpload: response.uploadCount,
@@ -2043,8 +2052,8 @@ class SyncScreen extends React.Component {
 
         //Upload Inspection Track
         await uploadInspectionTrack()
-            .then(async (response)=>{
-                if(response.syncStatus){
+            .then(async (response) => {
+                if (response.syncStatus) {
                     await this.setState({
                         progressInspectionTrack: 1,
                         valueInspectionTrack: response.uploadCount,
@@ -2064,12 +2073,12 @@ class SyncScreen extends React.Component {
         // check inspection image klo sudah terkirim, imageSync = "Y"
         // response = true, semua image sudah terkirim.
         await inspectionImageSyncStatus()
-            .then((response)=>{
+            .then((response) => {
                 console.log("IMG", response)
             });
 
         await updateInspectionStatus()
-            .then((response)=>{
+            .then((response) => {
                 console.log("INS", response)
             });
 
