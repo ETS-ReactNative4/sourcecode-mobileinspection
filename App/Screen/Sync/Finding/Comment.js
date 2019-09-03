@@ -58,9 +58,6 @@ export async function uploadFindingComment() {
 }
 
 async function postFindingComment(model) {
-
-    console.log('Param Finding Comment : ', model)
-
     let fetchStatus = true;
 
     await fetchPost("FINDING-COMMENT-INSERT", model, null)

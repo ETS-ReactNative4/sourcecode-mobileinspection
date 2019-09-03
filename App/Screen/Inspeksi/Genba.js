@@ -97,9 +97,9 @@ export default class Genba extends Component {
 
         let filteredContactGenba = [];
         let currentUser = TaskServices.getAllData('TR_LOGIN')[0];
-        contactGenba.map((data)=>{
-            if(this.rankChecker(data.USER_AUTH_CODE, currentUser) && this.BAChecker(data, currentUser)){
-                filteredContactGenba.push(data);
+        contactGenba.map((contactModel)=>{
+            if(this.rankChecker(contactModel, currentUser) && this.BAChecker(contactModel, currentUser)){
+                filteredContactGenba.push(contactModel);
             }
         });
 
@@ -139,45 +139,57 @@ export default class Genba extends Component {
         }
     };
 
-    rankChecker(selectedAuthCode, currentUser){
+    rankChecker(contactModel, currentUser){
         //low->high
         let genbaRanking = ['KEPALA_KEBUN', 'EM', 'SEM_GM', 'CEO_REG', 'CEO', 'ADMIN'];
 
-        if(genbaRanking.indexOf(currentUser.USER_ROLE) > 3){
+        if(contactModel.USER_ROLE === 'CEO' || contactModel.USER_ROLE === 'ADMIN'){
             return true
         }
         else {
-            let selectedUser = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', selectedAuthCode)
-            if(genbaRanking.indexOf(currentUser.USER_ROLE) >= genbaRanking.indexOf(selectedUser.USER_ROLE)){
+            if(genbaRanking.indexOf(currentUser.USER_ROLE) >= genbaRanking.indexOf(contactModel.USER_ROLE)){
                 return true
             }
         }
         return false;
     }
 
-    BAChecker(listContact, currentUser){
+    BAChecker(contactModel, currentUser){
         let sameBAStatus = false;
-        if(listContact.LOCATION_CODE === "ALL" || currentUser.USER_ROLE === "ADMIN" || currentUser.USER_ROLE === "CEO"){
+        if(contactModel.LOCATION_CODE === "ALL" || contactModel.USER_ROLE === "ADMIN" || contactModel.USER_ROLE === "CEO"){
             sameBAStatus = true;
         }
         else {
-            let selectedUserBA = listContact.LOCATION_CODE.split(",");
+            let selectedUserBA = contactModel.LOCATION_CODE.split(",");
             let currentUserBA = currentUser.LOCATION_CODE.split(",");
-
-            if(currentUser.USER_ROLE === "CEO_REG"){
-                let tempBA = [];
-                let tmEST = TaskServices.getAllData('TM_EST');
-                if(tmEST.length > 0){
-                    tmEST.map((data)=>{
-                        tempBA.push(data.WERKS);
-                        currentUserBA = tempBA
+            if(currentUser.REFFERENCE_ROLE === "REGION_CODE"){
+                selectedUserBA = contactModel.LOCATION_CODE;
+                //if selectedUser region_code && region_code sama kyk current user return true
+                if(contactModel.REF_ROLE === "REGION_CODE"){
+                    sameBAStatus = currentUserBA.some((userBA)=>{
+                        return selectedUserBA.includes(userBA)
                     })
                 }
+
+                // selectedUser refrole != region_code (bawahan)
+                else {
+                    let listCompCode = [];
+                    let tmCOMP = TaskServices.getAllData('TM_COMP');
+
+                    tmCOMP.map((tmComp)=>{
+                        if(currentUser.LOCATION_CODE.includes(tmComp.REGION_CODE)){
+                            listCompCode.push(tmComp.COMP_CODE);
+                        }
+                    });
+
+                    sameBAStatus = listCompCode.some((compCode)=>{return selectedUserBA.includes(compCode)})
+                }
+
             }
 
             else{
                 //REF_ROLE COMP_CODE FILTER BEDA
-                if(listContact.REF_ROLE === "COMP_CODE"){
+                if(contactModel.REF_ROLE === "COMP_CODE"){
                     let tmComp = TaskServices.getAllData('TM_COMP');
                     if(tmComp !== undefined && tmComp.length > 0){
                         tmComp.map((tmComp)=>{
@@ -190,12 +202,16 @@ export default class Genba extends Component {
                     }
                 }
                 else {
-                    const intersection = currentUserBA.filter(element => listContact.LOCATION_CODE.includes(element));
+                    const intersection = currentUserBA.filter(element => contactModel.LOCATION_CODE.includes(element));
                     if(intersection.length > 0){
                         sameBAStatus = true;
                     }
                 }
             }
+        }
+
+        if(!sameBAStatus){
+            console.log("BA FALSE",contactModel)
         }
         return sameBAStatus;
     }

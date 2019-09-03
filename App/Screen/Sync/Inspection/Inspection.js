@@ -1,5 +1,5 @@
 import TaskServices from "../../../Database/TaskServices";
-import {fetchPost} from "../../../Api/FetchingApi";
+import {fetchPost, fetchPostAPI} from "../../../Api/FetchingApi";
 import {convertTimestampToDate, getTodayDate} from "../../../Lib/Utils";
 
 //Header
@@ -306,7 +306,6 @@ export async function updateInspectionStatus(){
     let trBarisInspection = TaskServices.findBy("TR_BARIS_INSPECTION", "STATUS_SYNC", "N");
     let isSync = true;
 
-    console.log("TOTAL BARIS INSPECTIONNNNNNNNN",trBarisInspection);
     await Promise.all(
         trBarisInspection.map((barisInspection)=>{
             if(barisInspection.syncHeader === "Y" && barisInspection.syncDetail === "Y" && barisInspection.syncTracking === "Y" && barisInspection.syncImage === "Y"){
@@ -323,4 +322,80 @@ export async function updateInspectionStatus(){
     );
 
     return isSync
+}
+
+
+//GENBA
+export async function uploadGenba(){
+    let getGenbaInspection = TaskServices.getAllData('TR_GENBA_INSPECTION').filtered('STATUS_SYNC = "N"');
+
+    //Upload labels
+    let uploadLabels = {
+        uploadCount: 0,
+        totalCount: getGenbaInspection.length,
+        syncStatus: true
+    };
+
+    if (getGenbaInspection.length > 0) {
+        await Promise.all(
+            getGenbaInspection.map(async (genbaModel)=>{
+                await postGenba(genbaModel)
+                    .then((response)=>{
+                        if(response){
+                            uploadLabels = {
+                                ...uploadLabels,
+                                uploadCount: uploadLabels.uploadCount + 1
+                            }
+                        }
+                        else {
+                            uploadLabels = {
+                                ...uploadLabels,
+                                syncStatus: false
+                            }
+                        }
+                    })
+            })
+        );
+    }
+    return {
+        uploadCount: uploadLabels.uploadCount,
+        totalCount: uploadLabels.totalCount,
+        syncStatus: uploadLabels.syncStatus
+    };
+
+}
+
+async function postGenba(genbaModel) {
+    let fetchStatus = true;
+
+    let genbaUser = [];
+    genbaModel.GENBA_USER.map((contactModel) => {
+        genbaUser.push(contactModel.USER_AUTH_CODE)
+    });
+
+    let inspectionGenbaModel = {
+        BLOCK_INSPECTION_CODE: genbaModel.BLOCK_INSPECTION_CODE,
+        GENBA_USER: genbaUser
+    };
+
+    await fetchPost("INSPECTION-GENBA-INSERT", inspectionGenbaModel, null)
+        .then(((response) => {
+            if (response !== undefined) {
+                if (response.status) {
+                    TaskServices.updateByPrimaryKey('TR_GENBA_INSPECTION', {
+                        "BLOCK_INSPECTION_CODE": inspectionGenbaModel.BLOCK_INSPECTION_CODE,
+                        "STATUS_SYNC": "Y"
+                    });
+                }
+                else {
+                    fetchStatus = false;
+                    console.log("postGenba upload failed");
+                }
+            }
+            else {
+                fetchStatus = false;
+                console.log("postGenba Server Timeout")
+            }
+        }));
+    return fetchStatus;
 }

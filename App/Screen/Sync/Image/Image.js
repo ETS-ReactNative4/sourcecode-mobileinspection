@@ -75,8 +75,6 @@ async function postImage(imageModel){
 
     await fetchPostForm("IMAGES-UPLOAD", imageModel, null)
         .then((response)=>{
-            console.log("imagemodel",imageModel);
-            console.log("imageresponse",response);
             if (response !== undefined) {
                 if (response.status) {
                     fetchStatus = true;

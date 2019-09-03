@@ -46,7 +46,7 @@ import { uploadFindingComment } from './Sync/Finding/Comment';
 //image
 import { uploadImage } from './Sync/Image/Image';
 //inspection
-import { uploadInspectionHeader, uploadInspectionDetail, uploadInspectionTrack, inspectionImageSyncStatus, updateInspectionStatus } from './Sync/Inspection/Inspection'
+import { uploadInspectionHeader, uploadInspectionDetail, uploadInspectionTrack, inspectionImageSyncStatus, updateInspectionStatus, uploadGenba } from './Sync/Inspection/Inspection'
 
 class SyncScreen extends React.Component {
 
@@ -679,6 +679,7 @@ class SyncScreen extends React.Component {
                 return response.json();
             })
             .then((callback) => {
+                console.log("RESPONSE COMMENT", callback);
                 if (callback.status) {
                     let getComment = TaskServices.getAllData("TR_FINDING_COMMENT");
                     if (callback.data.hapus.length > 0 && getComment.length > 0) {
@@ -782,58 +783,57 @@ class SyncScreen extends React.Component {
 
     // == GENBA ==
 
-    uploadGenba() {
-        let countData = TaskServices.getAllData('TR_GENBA_INSPECTION');
-        let filteredData = countData.filtered('STATUS_SYNC = "N"');
-        if (filteredData.length > 0) {
-            filteredData.map((data, index) => {
-                let GENBA_USER = [];
-                let genbaUserArray = data.GENBA_USER;
-                genbaUserArray.map((data) => {
-                    GENBA_USER.push(data.USER_AUTH_CODE)
-                });
-
-                let genbaModel = {
-                    BLOCK_INSPECTION_CODE: data.BLOCK_INSPECTION_CODE,
-                    GENBA_USER: GENBA_USER
-                };
-
-                this.postGenba(genbaModel);
-                this.setState({ valueGenbaInspection: index + 1, totalGenbaInspection: filteredData.length });
-            });
-            this.setState({
-                progressGenbaInspection: 1
-            });
-        } else {
-            this.setState({ progressGenbaInspection: 1, valueGenbaInspection: 0, totalGenbaInspection: 0 });
-        }
-    }
-
-
-
-    postGenba(genbaModel) {
-        console.log('Genba model : ', genbaModel)
-        let urlDetail = this.getAPIURL("INSPECTION-GENBA-INSERT")
-        const user = TaskServices.getAllData('TR_LOGIN')[0];
-        fetchPostAPI(user.ACCESS_TOKEN, urlDetail.API_URL, genbaModel).then(((result) => {
-            console.log('Result Kampret : ', result)
-            if (result != undefined) {
-                if (result.status) {
-                    this.updateGenbaInspectionTable(genbaModel.BLOCK_INSPECTION_CODE)
-                }
-                else {
-                    console.log("genbaUpload failed, check your parameter / api!");
-                }
-            } else {
-                this.setState({
-                    uploadErrorFlag: true
-                }, () => { console.log("postgenba Server Timeout") })
-            }
-        }));
-    }
+    // uploadGenba() {
+    //     let countData = TaskServices.getAllData('TR_GENBA_INSPECTION');
+    //     let filteredData = countData.filtered('STATUS_SYNC = "N"');
+    //     if (filteredData.length > 0) {
+    //         filteredData.map((data, index) => {
+    //             let GENBA_USER = [];
+    //             let genbaUserArray = data.GENBA_USER;
+    //             genbaUserArray.map((data) => {
+    //                 GENBA_USER.push(data.USER_AUTH_CODE)
+    //             });
+    //
+    //             let genbaModel = {
+    //                 BLOCK_INSPECTION_CODE: data.BLOCK_INSPECTION_CODE,
+    //                 GENBA_USER: GENBA_USER
+    //             };
+    //
+    //             this.postGenba(genbaModel);
+    //             this.setState({ valueGenbaInspection: index + 1, totalGenbaInspection: filteredData.length });
+    //         });
+    //         this.setState({
+    //             progressGenbaInspection: 1
+    //         });
+    //     } else {
+    //         this.setState({ progressGenbaInspection: 1, valueGenbaInspection: 0, totalGenbaInspection: 0 });
+    //     }
+    // }
+    //
+    //
+    //
+    // postGenba(genbaModel) {
+    //     console.log('Genba model : ', genbaModel)
+    //     let urlDetail = this.getAPIURL("INSPECTION-GENBA-INSERT")
+    //     const user = TaskServices.getAllData('TR_LOGIN')[0];
+    //     fetchPostAPI(user.ACCESS_TOKEN, urlDetail.API_URL, genbaModel).then(((result) => {
+    //         console.log('Result Kampret : ', result)
+    //         if (result != undefined) {
+    //             if (result.status) {
+    //                 this.updateGenbaInspectionTable(genbaModel.BLOCK_INSPECTION_CODE)
+    //             }
+    //             else {
+    //                 console.log("genbaUpload failed, check your parameter / api!");
+    //             }
+    //         } else {
+    //             this.setState({
+    //                 uploadErrorFlag: true
+    //             }, () => { console.log("postgenba Server Timeout") })
+    //         }
+    //     }));
+    // }
 
     updateGenbaInspectionTable = (genbaInspectionCode) => {
-        console.log('Updata Genba : ', genbaInspectionCode)
         if (genbaInspectionCode !== undefined) {
             TaskServices.updateByPrimaryKey('TR_GENBA_INSPECTION', {
                 "BLOCK_INSPECTION_CODE": genbaInspectionCode,
@@ -1486,8 +1486,6 @@ class SyncScreen extends React.Component {
     _crudTM_Finding(data) {
         let allData = TaskServices.getAllData('TR_FINDING');
         if (data.simpan.length > 0) {
-
-            console.log('Data Download Finding : ', data)
             for (var i = 1; i <= data.simpan.length; i++) {
                 this.setState({ progressFinding: i / data.simpan.length, totalFindingDownload: data.simpan.length });
             }
@@ -1927,28 +1925,22 @@ class SyncScreen extends React.Component {
         //Upload Finding Comment
         uploadFindingComment()
             .then((response) => {
-                if (response !== undefined) {
-                    if (response.syncStatus) {
-                        this.setState({
-                            progressFindingCommentData: 1,
-                            valueFindingCommentDataUpload: response.uploadCount,
-                            totalFindingCommentDataUpload: response.totalCount
-                        });
-                    }
-                    else {
-                        //error
-                        this.setState({
-                            uploadErrorFlag: true,
-                            progressFindingCommentData: 1,
-                            valueFindingCommentDataUpload: 0,
-                            totalFindingCommentDataUpload: 0
-                        });
-                    }
+                if (response.syncStatus) {
+                    this.setState({
+                        progressFindingCommentData: 1,
+                        valueFindingCommentDataUpload: response.uploadCount,
+                        totalFindingCommentDataUpload: response.totalCount
+                    });
+                }
+                else {
+                    //error
+                    this.setState({
+                        progressFindingCommentData: 1,
+                        valueFindingCommentDataUpload: 0,
+                        totalFindingCommentDataUpload: 0
+                    });
                 }
             });
-
-        //genba upload
-        this.uploadGenba();
 
         //Upload Image
         uploadImage()
@@ -1967,7 +1959,6 @@ class SyncScreen extends React.Component {
                 else {
                     //error
                     this.setState({
-                        uploadErrorFlag: true,
                         progressUploadImage: 1,
                         valueImageUpload: 0,
                         totalImagelUpload: 0
@@ -1978,6 +1969,25 @@ class SyncScreen extends React.Component {
 
         this.SyncInspection()
             .then((response) => { });
+
+        uploadGenba()
+            .then((response)=>{
+                if (response.syncStatus) {
+                    this.setState({
+                        progressGenbaInspection: 1,
+                        valueGenbaInspection: response.uploadCount,
+                        totalGenbaInspection: response.totalCount
+                    });
+                }
+                else {
+                    //error
+                    this.setState({
+                        progressGenbaInspection: 1,
+                        valueGenbaInspection: 0,
+                        totalGenbaInspection: 0
+                    });
+                }
+            });
 
         this.downloadWeeklySummary();
 
@@ -2026,7 +2036,6 @@ class SyncScreen extends React.Component {
                 else {
                     //error
                     await this.setState({
-                        uploadErrorFlag: false,
                         progressInspeksiHeader: 1,
                         valueInspeksiHeaderUpload: 0,
                         totalInspeksiHeaderUpload: 0,
@@ -2047,7 +2056,6 @@ class SyncScreen extends React.Component {
                 else {
                     //error
                     await this.setState({
-                        uploadErrorFlag: false,
                         progressInspeksiDetail: 1,
                         valueInspeksiDetailUpload: 0,
                         totalInspeksiDetailUpload: 0
@@ -2068,7 +2076,6 @@ class SyncScreen extends React.Component {
                 else {
                     //error
                     await this.setState({
-                        uploadErrorFlag: false,
                         progressInspectionTrack: 1,
                         valueInspectionTrack: 0,
                         totalInspectionTrack: 0
@@ -2080,12 +2087,10 @@ class SyncScreen extends React.Component {
         // response = true, semua image sudah terkirim.
         await inspectionImageSyncStatus()
             .then((response) => {
-                console.log("IMG", response)
             });
 
         await updateInspectionStatus()
             .then((response) => {
-                console.log("INS", response)
             });
 
     }

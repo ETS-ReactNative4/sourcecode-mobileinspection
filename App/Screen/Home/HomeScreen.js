@@ -547,7 +547,7 @@ class HomeScreen extends React.Component {
       commentMessage = this.processText(this.state.showTrimComment[index] ? getComment[0].MESSAGE : clipString(getComment[0].MESSAGE, 150), getComment[0].TAGS);
     }
 
-    let filePath = TaskServices.getImagePath(INSERT_USER.USER_AUTH_CODE);
+    let filePath = TaskServices.getImagePath(INSERT_USER === undefined ? null : INSERT_USER.USER_AUTH_CODE);
 
     return (
       <View key={index}>
