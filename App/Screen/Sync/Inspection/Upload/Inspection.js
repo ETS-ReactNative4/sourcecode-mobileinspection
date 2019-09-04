@@ -1,6 +1,6 @@
-import TaskServices from "../../../Database/TaskServices";
-import {fetchPost, fetchPostAPI} from "../../../Api/FetchingApi";
-import {convertTimestampToDate, getTodayDate} from "../../../Lib/Utils";
+import TaskServices from "../../../../Database/TaskServices";
+import {fetchPost, fetchPostAPI} from "../../../../Api/FetchingApi";
+import {convertTimestampToDate, getTodayDate} from "../../../../Lib/Utils";
 
 //Header
 export async function uploadInspectionHeader(){

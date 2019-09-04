@@ -295,6 +295,7 @@ class Step2Finding extends Component {
             UPDATE_TIME: insertTime,
             STATUS_SYNC: "N",
             END_TIME: "",
+            syncImage: "N"
         }
         TaskServices.saveData('TR_FINDING', data);
 

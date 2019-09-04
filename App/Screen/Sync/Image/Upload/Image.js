@@ -1,7 +1,7 @@
 import RNFS from 'react-native-fs';
-import TaskServices from "../../../Database/TaskServices";
-import {convertTimestampToDate, getTodayDate} from "../../../Lib/Utils";
-import {fetchPostForm} from "../../../Api/FetchingApi";
+import TaskServices from "../../../../Database/TaskServices";
+import {convertTimestampToDate, getTodayDate} from "../../../../Lib/Utils";
+import {fetchPostForm} from "../../../../Api/FetchingApi";
 
 //Global Var
 const user = TaskServices.getAllData('TR_LOGIN')[0];

@@ -36,17 +36,15 @@ import { fetchFormPostAPI, fetchPostAPI } from '../Api/FetchingApi';
 import ProgressSync from '../Component/ProgressSync';
 import { storeData } from '../Database/Resources';
 
-var RNFS = require('react-native-fs');
-
-// import FuntionCRUD from '../Database/FunctionCRUD'
+import RNFS from 'react-native-fs';
 
 //Sync
 //comment
-import { uploadFindingComment } from './Sync/Finding/Comment';
+import { uploadFindingComment } from './Sync/Finding/Upload/Comment';
 //image
-import { uploadImage } from './Sync/Image/Image';
+import { uploadImage } from './Sync/Image/Upload/Image';
 //inspection
-import { uploadInspectionHeader, uploadInspectionDetail, uploadInspectionTrack, inspectionImageSyncStatus, updateInspectionStatus, uploadGenba } from './Sync/Inspection/Inspection'
+import { uploadInspectionHeader, uploadInspectionDetail, uploadInspectionTrack, inspectionImageSyncStatus, updateInspectionStatus, uploadGenba } from './Sync/Inspection/Upload/Inspection'
 
 class SyncScreen extends React.Component {
 
@@ -419,16 +417,6 @@ class SyncScreen extends React.Component {
         return TaskServices.deleteRecordByPK(table, whereClause, value);
     }
 
-    deleteData(table, whereClause, value) {
-        let allData = TaskServices.getAllData(table);
-        if (allData !== undefined && allData.length > 0) {
-            let indexData = R.findIndex(R.propEq(whereClause, value))(allData);
-            if (indexData >= 0) {
-                TaskServices.deleteRecord(table, indexData);
-            }
-        }
-    }
-
     async deleteImageFileInspeksi(image, INSPECTION_CODE, ID_INSPECTION, callback) {
         const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
         for (let i = 0; i < image.length; i++) {
@@ -510,83 +498,6 @@ class SyncScreen extends React.Component {
             });
         } else {
             this.setState({ progressFindingData: 1, valueFindingDataUpload: 0, totalFindingDataUpload: 0 });
-        }
-    }
-
-    loadData() {
-        let dataHeader = TaskServices.getAllData('TR_BLOCK_INSPECTION_H');
-        var query = dataHeader.filtered('STATUS_SYNC = "N"');
-        let countData = query;
-        if (countData.length > 0) {
-            for (var i = 0; i < countData.length; i++) {
-                let fulfill = this.isFulfillBaris(countData[i].ID_INSPECTION)
-                if (fulfill) {
-                    this.kirimInspeksiHeader(countData[i]);
-                    this.setState({ valueInspeksiHeaderUpload: i + 1, totalInspeksiHeaderUpload: countData.length });
-                }
-            }
-            this.setState({
-                progressInspeksiHeader: 1
-            });
-        } else {
-            this.setState({
-                progressInspeksiHeader: 1,
-                valueInspeksiHeaderUpload: 0,
-                totalInspeksiHeaderUpload: 0,
-                progressInspeksiDetail: 1,
-                valueInspeksiDetailUpload: 0,
-                totalInspeksiDetailUpload: 0
-            });
-        }
-        this.loadDataDetailInspeksi();
-        this.loadDataInspectionTrack();
-    }
-
-    loadDataDetailInspeksi() {
-        let data = TaskServices.getAllData('TR_BLOCK_INSPECTION_D');
-        data = data.filtered('STATUS_SYNC = "N"');
-        // this.setState({
-        //     progressInspeksiDetail: 1, valueInspeksiDetailUpload: data.length, totalInspeksiDetailUpload: data.length,
-        // });
-        if (data.length > 1) {
-            for (var i = 0; i < data.length; i++) {
-                /*let fulfill = this.isFulfillBaris(data[i].ID_INSPECTION)
-                if(fulfill){
-                }*/
-                this.kirimInspeksiDetail(data[i]);
-                this.setState({ valueInspeksiDetailUpload: i + 1, totalInspeksiDetailUpload: i + 1 });
-            }
-            this.setState({
-                progressInspeksiDetail: 1,
-            });
-        } else {
-            this.setState({ progressInspeksiDetail: 1, valueInspeksiDetailUpload: 0, totalInspeksiDetailUpload: 0 });
-        }
-    }
-
-    isFulfillBaris(idInspection) {
-        let data = TaskServices.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', idInspection)
-        if (data !== undefined) {
-            if (data.FULFILL_BARIS == 'Y') {
-                return true
-            } else {
-                return false
-            }
-        }
-        return false
-    }
-
-    loadDataInspectionTrack() {
-        let dataHeader = TaskServices.getAllData('TM_INSPECTION_TRACK');
-        var query = dataHeader.filtered('STATUS_SYNC = "N"');
-        let countData = query;
-        this.setState({ progressInspectionTrack: 1, valueInspectionTrack: countData.length, totalInspectionTrack: countData.length });
-        if (countData.length > 0) {
-            for (var i = 0; i < countData.length; i++) {
-                this.kirimInspectionTrack(countData[i]);
-            }
-        } else {
-            this.setState({ progressInspectionTrack: 1, valueInspectionTrack: 0, totalInspectionTrack: 0 });
         }
     }
 
@@ -725,7 +636,7 @@ class SyncScreen extends React.Component {
                             if (model.USER_AUTH_CODE !== this.state.user.USER_AUTH_CODE) {
                                 this._updateTR_Notif_Comment(model);
                             }
-                            TaskServices.saveData("TR_FINDING_COMMENT", model);
+                            TaskServices.saveData('TR_FINDING_COMMENT', model);
                         });
                     }
                     this.setState({
@@ -779,69 +690,6 @@ class SyncScreen extends React.Component {
             }
         }));
     }
-
-
-    // == GENBA ==
-
-    // uploadGenba() {
-    //     let countData = TaskServices.getAllData('TR_GENBA_INSPECTION');
-    //     let filteredData = countData.filtered('STATUS_SYNC = "N"');
-    //     if (filteredData.length > 0) {
-    //         filteredData.map((data, index) => {
-    //             let GENBA_USER = [];
-    //             let genbaUserArray = data.GENBA_USER;
-    //             genbaUserArray.map((data) => {
-    //                 GENBA_USER.push(data.USER_AUTH_CODE)
-    //             });
-    //
-    //             let genbaModel = {
-    //                 BLOCK_INSPECTION_CODE: data.BLOCK_INSPECTION_CODE,
-    //                 GENBA_USER: GENBA_USER
-    //             };
-    //
-    //             this.postGenba(genbaModel);
-    //             this.setState({ valueGenbaInspection: index + 1, totalGenbaInspection: filteredData.length });
-    //         });
-    //         this.setState({
-    //             progressGenbaInspection: 1
-    //         });
-    //     } else {
-    //         this.setState({ progressGenbaInspection: 1, valueGenbaInspection: 0, totalGenbaInspection: 0 });
-    //     }
-    // }
-    //
-    //
-    //
-    // postGenba(genbaModel) {
-    //     console.log('Genba model : ', genbaModel)
-    //     let urlDetail = this.getAPIURL("INSPECTION-GENBA-INSERT")
-    //     const user = TaskServices.getAllData('TR_LOGIN')[0];
-    //     fetchPostAPI(user.ACCESS_TOKEN, urlDetail.API_URL, genbaModel).then(((result) => {
-    //         console.log('Result Kampret : ', result)
-    //         if (result != undefined) {
-    //             if (result.status) {
-    //                 this.updateGenbaInspectionTable(genbaModel.BLOCK_INSPECTION_CODE)
-    //             }
-    //             else {
-    //                 console.log("genbaUpload failed, check your parameter / api!");
-    //             }
-    //         } else {
-    //             this.setState({
-    //                 uploadErrorFlag: true
-    //             }, () => { console.log("postgenba Server Timeout") })
-    //         }
-    //     }));
-    // }
-
-    updateGenbaInspectionTable = (genbaInspectionCode) => {
-        if (genbaInspectionCode !== undefined) {
-            TaskServices.updateByPrimaryKey('TR_GENBA_INSPECTION', {
-                "BLOCK_INSPECTION_CODE": genbaInspectionCode,
-                "STATUS_SYNC": "Y"
-            });
-        }
-    };
-    // ====
 
     uploadData(URL, dataPost, table, idInspection) {
         const user = TaskServices.getAllData('TR_LOGIN')[0];
@@ -1011,63 +859,6 @@ class SyncScreen extends React.Component {
         }
     }
 
-    //upload to service
-    kirimInspeksiHeader(param) {
-        const user = TaskServices.getAllData('TR_LOGIN')[0];
-        let data = {
-            BLOCK_INSPECTION_CODE: param.BLOCK_INSPECTION_CODE,
-            WERKS: param.WERKS,
-            AFD_CODE: param.AFD_CODE,
-            BLOCK_CODE: param.BLOCK_CODE,
-            AREAL: param.AREAL,
-            INSPECTION_TYPE: "PANEN",
-            INSPECTION_DATE: parseInt(convertTimestampToDate(param.INSPECTION_DATE, 'YYYYMMDDkkmmss')),
-            INSPECTION_RESULT: param.INSPECTION_RESULT,
-            INSPECTION_SCORE: param.INSPECTION_SCORE !== '' ? parseInt(param.INSPECTION_SCORE) : 0,
-            STATUS_SYNC: 'Y',
-            SYNC_TIME: parseInt(getTodayDate('YYYYMMDDkkmmss')),
-            START_INSPECTION: parseInt(convertTimestampToDate(param.START_INSPECTION, 'YYYYMMDDkkmmss')),
-            END_INSPECTION: parseInt(convertTimestampToDate(param.END_INSPECTION, 'YYYYMMDDkkmmss')),
-            LAT_START_INSPECTION: param.LAT_START_INSPECTION,
-            LONG_START_INSPECTION: param.LONG_START_INSPECTION,
-            LAT_END_INSPECTION: param.LAT_END_INSPECTION,
-            LONG_END_INSPECTION: param.LONG_END_INSPECTION,
-            INSERT_TIME: parseInt(convertTimestampToDate(param.INSERT_TIME, 'YYYYMMDDkkmmss')),
-            INSERT_USER: user.USER_AUTH_CODE
-        }
-        this.uploadData(this.getAPIURL("INSPECTION-HEADER-INSERT"), data, 'header', param.ID_INSPECTION);
-    }
-
-    kirimInspeksiDetail(result) {
-        const user = TaskServices.getAllData('TR_LOGIN')[0];
-        let data = {
-            BLOCK_INSPECTION_CODE_D: result.BLOCK_INSPECTION_CODE_D,
-            BLOCK_INSPECTION_CODE: result.BLOCK_INSPECTION_CODE,
-            CONTENT_INSPECTION_CODE: result.CONTENT_INSPECTION_CODE,
-            VALUE: result.VALUE,
-            STATUS_SYNC: 'Y',
-            SYNC_TIME: parseInt(getTodayDate('YYYYMMDDkkmmss')),
-            INSERT_USER: user.USER_AUTH_CODE,
-            INSERT_TIME: parseInt(convertTimestampToDate(result.INSERT_TIME, 'YYYYMMDDkkmmss'))
-        }
-        this.uploadData(this.getAPIURL("INSPECTION-DETAIL-INSERT"), data, 'detailHeader', '');
-    }
-
-    kirimInspectionTrack(param) {
-        let data = {
-            TRACK_INSPECTION_CODE: param.TRACK_INSPECTION_CODE,
-            BLOCK_INSPECTION_CODE: param.BLOCK_INSPECTION_CODE,
-            DATE_TRACK: parseInt(param.DATE_TRACK.replace(/-/g, '').replace(/ /g, '').replace(/:/g, '')),
-            LAT_TRACK: param.LAT_TRACK,
-            LONG_TRACK: param.LONG_TRACK,
-            INSERT_USER: param.INSERT_USER,
-            STATUS_SYNC: 'Y',
-            STATUS_TRACK: 1,
-            INSERT_TIME: parseInt(param.INSERT_TIME.replace(/-/g, '').replace(/ /g, '').replace(/:/g, ''))
-        }
-        this.uploadData(this.getAPIURL("INSPECTION-TRACKING-INSERT"), data, 'tracking', '');
-    }
-
     kirimFinding(param) {
 
         let dueDate = param.DUE_DATE;
@@ -1146,27 +937,6 @@ class SyncScreen extends React.Component {
         }
         this.uploadData(this.getAPIURL("EBCC-VALIDATION-DETAIL-INSERT"), data, 'ebccD', param.EBCC_VALIDATION_CODE_D);
     }
-
-
-    // POST MOBILE SYNC
-    // _postMobileSync(param) {
-    //     var moment = require('moment');
-    //     this.props.tmPost({
-    //         TGL_MOBILE_SYNC: moment().format('YYYY-MM-DD kk:mm:ss'),
-    //         TABEL_UPDATE: param
-    //     });
-    // }
-    //
-    // deleteData(table, whereClause, value) {
-    //     let allData = TaskServices.getAllData(table);
-    //     if (allData !== undefined && allData.length > 0) {
-    //         let indexData = R.findIndex(R.propEq(whereClause, value))(allData);
-    //         if (indexData >= 0) {
-    //             TaskServices.deleteRecord(table, indexData);
-    //         }
-    //
-    //     }
-    // }
 
     hasDownload(item, total) {
         if (this.state.isFirstInstall) {
@@ -1403,25 +1173,6 @@ class SyncScreen extends React.Component {
         this.hasDownload('auth/content', countDataInsert);
     }
 
-    _crudTM_ContentLabel(data) {
-        if (data.length > 0) {
-            for (var i = 1; i <= data.length; i++) {
-                this.setState({ progressContentLabel: i / data.length, totalContentLabelDownload: data.length });
-            }
-            data.map(item => {
-                TaskServices.saveData('TM_CONTENT_LABEL', item);
-                let countDataInsert = TaskServices.getTotalData('TM_CONTENT_LABEL');
-                this.setState({ valueContentLabelDownload: countDataInsert });
-            });
-        } else {
-            let countDataInsert = TaskServices.getTotalData('TM_CONTENT_LABEL');
-            this.setState({ progressContentLabel: 1, valueContentLabelDownload: countDataInsert, totalContentLabelDownload: 0 })
-        }
-
-        let countDataInsert = TaskServices.getTotalData('TM_CONTENT_LABEL');
-        this.hasDownload('auth/content-label', countDataInsert);
-    }
-
     _crudTM_Kriteria(data) {
         if (data.length > 0) {
             for (var i = 1; i <= data.length; i++) {
@@ -1493,7 +1244,8 @@ class SyncScreen extends React.Component {
                 let newRating = item.RATING;
                 let newItem = {
                     ...item,
-                    RATING: newRating
+                    RATING: newRating,
+                    syncImage: "Y"
                 };
                 this._updateTR_Notif(newItem);
                 TaskServices.saveData('TR_FINDING', newItem);
@@ -2329,15 +2081,6 @@ class SyncScreen extends React.Component {
             this.props.kriteriaRequest();
 
         }
-
-        // if (newProps.contentLabel.fetchingContentLabel !== null && !newProps.contentLabel.fetchingContentLabel) {
-        //     let dataJSON = newProps.contentLabel.contentLabel;
-        //     if (dataJSON !== null) {
-        //         this._crudTM_ContentLabel(dataJSON);
-        //     }
-        //     this.props.resetContentLabel();
-        //     this.props.kriteriaRequest();
-        // }
 
         if (newProps.kriteria.fetchingKriteria !== null && !newProps.kriteria.fetchingKriteria) {
             let dataJSON = newProps.kriteria.kriteria;

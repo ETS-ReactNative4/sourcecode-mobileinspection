@@ -625,7 +625,7 @@ class KondisiBarisAkhir extends Component {
                     GENBA_USER: selectedGenbaUser,
                     STATUS_SYNC: "N"
                 }
-                TaskService.saveData("TR_GENBA_INSPECTION", model_TR_GENBA_INSPECTION);
+                TaskService.saveData('TR_GENBA_INSPECTION', model_TR_GENBA_INSPECTION);
             }
         }
 

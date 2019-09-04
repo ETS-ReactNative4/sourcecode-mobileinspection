@@ -255,6 +255,7 @@ class FormStep2 extends Component {
             UPDATE_TIME: '',
             STATUS_SYNC: "N",
             END_TIME: "",
+            syncImage: "N"
         }
 
         console.log('Save Data Finding : ', data)
