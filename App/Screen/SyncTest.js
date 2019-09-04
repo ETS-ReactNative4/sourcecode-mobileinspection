@@ -39,10 +39,11 @@ import { storeData } from '../Database/Resources';
 import RNFS from 'react-native-fs';
 
 //Sync
-//comment
+//finding
 import { uploadFindingComment } from './Sync/Finding/Upload/Comment';
+import { uploadFinding } from './Sync/Finding/Upload/Finding'
 //image
-import { uploadImage } from './Sync/Image/Upload/Image';
+import { uploadImage, uploadImageProfile } from './Sync/Image/Upload/Image';
 //inspection
 import { uploadInspectionHeader, uploadInspectionDetail, uploadInspectionTrack, inspectionImageSyncStatus, updateInspectionStatus, uploadGenba } from './Sync/Inspection/Upload/Inspection'
 
@@ -479,25 +480,6 @@ class SyncScreen extends React.Component {
             this.setState({ isFirstInstall: false });
         } else {
             this.setState({ isFirstInstall: true });
-        }
-    }
-
-    //upload
-    loadDataFinding() {
-        let countData = TaskServices.getAllData('TR_FINDING');
-        var query = countData.filtered('STATUS_SYNC = "N"');
-        countData = query;
-        // this.setState({ progressFindingData: 1, valueFindingDataUpload: countData.length, totalFindingDataUpload: countData.length });
-        if (countData.length > 0) {
-            for (var i = 0; i < countData.length; i++) {
-                this.kirimFinding(countData[i]);
-                this.setState({ valueFindingDataUpload: i + 1, totalFindingDataUpload: countData.length });
-            }
-            this.setState({
-                progressFindingData: 1
-            });
-        } else {
-            this.setState({ progressFindingData: 1, valueFindingDataUpload: 0, totalFindingDataUpload: 0 });
         }
     }
 
@@ -1674,6 +1656,55 @@ class SyncScreen extends React.Component {
             uploadErrorFlag: false,
         });
 
+        //Upload Image
+        uploadImage()
+            .then((response) => {
+                if (response.syncStatus) {
+                    this.SyncUploadFinding()
+                        .then(()=>{});
+                    this.SyncUploadInspection()
+                        .then(()=>{});
+
+                    this.kirimEbccHeader();
+                    this.kirimEbccDetail();
+
+                    this.setState({
+                        progressUploadImage: 1,
+                        valueImageUpload: response.uploadCount,
+                        totalImagelUpload: response.totalCount
+                    });
+                }
+                else {
+                    //error
+                    this.setState({
+                        uploadErrorFlag: true,
+                        progressUploadImage: 1,
+                        valueImageUpload: 0,
+                        totalImagelUpload: 0
+                    });
+                }
+            });
+        // this.kirimUserImage();
+        uploadImageProfile()
+            .then((response)=>{
+                if (response.syncStatus) {
+                    this.setState({
+                        progressUploadImageUser: 1,
+                        valueImageUserUpload: response.uploadCount,
+                        totalImageUserUpload: response.totalCount
+                    });
+                }
+                else {
+                    //error
+                    this.setState({
+                        uploadErrorFlag: true,
+                        progressUploadImageUser: 1,
+                        valueImageUserUpload: 0,
+                        totalImageUserUpload: 0
+                    });
+                }
+            });
+
         //Upload Finding Comment
         uploadFindingComment()
             .then((response) => {
@@ -1687,56 +1718,10 @@ class SyncScreen extends React.Component {
                 else {
                     //error
                     this.setState({
+                        uploadErrorFlag: true,
                         progressFindingCommentData: 1,
                         valueFindingCommentDataUpload: 0,
                         totalFindingCommentDataUpload: 0
-                    });
-                }
-            });
-
-        //Upload Image
-        uploadImage()
-            .then((response) => {
-                if (response.syncStatus) {
-                    this.loadDataFinding();
-                    this.kirimEbccHeader();
-                    this.kirimEbccDetail();
-
-                    this.setState({
-                        progressUploadImage: 1,
-                        valueImageUpload: response.uploadCount,
-                        totalImagelUpload: response.totalCount
-                    });
-                }
-                else {
-                    //error
-                    this.setState({
-                        progressUploadImage: 1,
-                        valueImageUpload: 0,
-                        totalImagelUpload: 0
-                    });
-                }
-            });
-        this.kirimUserImage();
-
-        this.SyncInspection()
-            .then((response) => { });
-
-        uploadGenba()
-            .then((response)=>{
-                if (response.syncStatus) {
-                    this.setState({
-                        progressGenbaInspection: 1,
-                        valueGenbaInspection: response.uploadCount,
-                        totalGenbaInspection: response.totalCount
-                    });
-                }
-                else {
-                    //error
-                    this.setState({
-                        progressGenbaInspection: 1,
-                        valueGenbaInspection: 0,
-                        totalGenbaInspection: 0
                     });
                 }
             });
@@ -1774,7 +1759,29 @@ class SyncScreen extends React.Component {
             });
     }
 
-    async SyncInspection() {
+    async SyncUploadFinding(){
+        await uploadFinding()
+            .then(async (response)=>{
+                if (response.syncStatus) {
+                    await this.setState({
+                        progressFindingData: 1,
+                        valueFindingDataUpload: response.uploadCount,
+                        totalFindingDataUpload: response.totalCount
+                    });
+                }
+                else {
+                    //error
+                    await this.setState({
+                        uploadErrorFlag: true,
+                        progressFindingData: 1,
+                        valueFindingDataUpload: 0,
+                        totalFindingDataUpload: 0,
+                    });
+                }
+            });
+    }
+
+    async SyncUploadInspection() {
         //Upload Inspection Header
         await uploadInspectionHeader()
             .then(async (response) => {
@@ -1788,6 +1795,7 @@ class SyncScreen extends React.Component {
                 else {
                     //error
                     await this.setState({
+                        uploadErrorFlag: true,
                         progressInspeksiHeader: 1,
                         valueInspeksiHeaderUpload: 0,
                         totalInspeksiHeaderUpload: 0,
@@ -1808,6 +1816,7 @@ class SyncScreen extends React.Component {
                 else {
                     //error
                     await this.setState({
+                        uploadErrorFlag: true,
                         progressInspeksiDetail: 1,
                         valueInspeksiDetailUpload: 0,
                         totalInspeksiDetailUpload: 0
@@ -1828,9 +1837,30 @@ class SyncScreen extends React.Component {
                 else {
                     //error
                     await this.setState({
+                        uploadErrorFlag: true,
                         progressInspectionTrack: 1,
                         valueInspectionTrack: 0,
                         totalInspectionTrack: 0
+                    });
+                }
+            });
+
+        uploadGenba()
+            .then((response)=>{
+                if (response.syncStatus) {
+                    this.setState({
+                        progressGenbaInspection: 1,
+                        valueGenbaInspection: response.uploadCount,
+                        totalGenbaInspection: response.totalCount
+                    });
+                }
+                else {
+                    //error
+                    this.setState({
+                        uploadErrorFlag: true,
+                        progressGenbaInspection: 1,
+                        valueGenbaInspection: 0,
+                        totalGenbaInspection: 0
                     });
                 }
             });

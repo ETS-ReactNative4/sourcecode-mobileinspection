@@ -271,8 +271,8 @@ function isFulfillBaris(idInspection) {
 }
 
 //Inspection Image Checker
-//cek semua TR_IMAGE berdasarkan BLOCK_INSPECTION_CODE (TR_BARIS_INSPECTION) sudah terkirim atau belum
-export async function inspectionImageSyncStatus(){
+//check if syncImage in TR_BARIS_INSPECTION is sync
+export async function inspectionImageSyncStatus():boolean {
     let isAllSync = true;
     let trBarisInspection = TaskServices.findBy("TR_BARIS_INSPECTION", "syncImage", "N");
 

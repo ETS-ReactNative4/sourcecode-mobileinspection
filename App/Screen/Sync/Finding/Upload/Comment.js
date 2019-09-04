@@ -1,23 +1,20 @@
 import TaskServices from "../../../../Database/TaskServices";
 import { fetchPost } from "../../../../Api/FetchingApi";
 
-//Global Var
-const user = TaskServices.getAllData('TR_LOGIN')[0];
-
 //Upload-Finding-Comment
 export async function uploadFindingComment() {
-    let filteredComment = TaskServices.getAllData('TR_FINDING_COMMENT').filtered('STATUS_SYNC = "N"');
+    let getFindingComment = TaskServices.getAllData('TR_FINDING_COMMENT').filtered('STATUS_SYNC = "N"');
 
     //Upload labels
     let uploadLabels = {
         uploadCount: 0,
-        totalCount: filteredComment.length,
+        totalCount: getFindingComment.length,
         syncStatus: true
     };
 
-    if (filteredComment.length > 0) {
+    if (getFindingComment.length > 0) {
         await Promise.all(
-            filteredComment.map(async (data, index) => {
+            getFindingComment.map(async (data, index) => {
                 let taggedUser = [];
                 data.TAGS.map((data) => {
                     taggedUser.push({
@@ -63,7 +60,6 @@ async function postFindingComment(model) {
     await fetchPost("FINDING-COMMENT-INSERT", model, null)
         .then(((response) => {
             if (response !== undefined) {
-                console.log('Response Finding Comment : ', response)
                 if (response.status) {
                     TaskServices.updateByPrimaryKey('TR_FINDING_COMMENT', {
                         "FINDING_COMMENT_ID": model.FINDING_COMMENT_ID,
