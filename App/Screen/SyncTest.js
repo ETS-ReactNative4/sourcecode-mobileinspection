@@ -1357,7 +1357,12 @@ class SyncScreen extends React.Component {
             }
             dataSimpan.map(item => {
                 // console.log('Finding Image : ', item);
-                TaskServices.saveData('TR_IMAGE', item);
+                let tempItem = item;
+                tempItem = {
+                    ...tempItem,
+                    STATUS_SYNC: "Y"
+                }
+                TaskServices.saveData('TR_IMAGE', tempItem);
                 this._downloadImageFinding(item);
                 let countDataInsert = TaskServices.getTotalData('TR_IMAGE');
                 this.setState({ valueFindingImageDownload: countDataInsert });
