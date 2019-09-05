@@ -470,6 +470,10 @@ const TR_H_EBCC_VALIDATION = {
         SYNC_TIME: 'string',
         INSERT_USER: 'string',
         INSERT_TIME: 'string',
+
+        //LOCAL
+        syncImage: 'string',
+        syncDetail: 'string'
     }
 }
 

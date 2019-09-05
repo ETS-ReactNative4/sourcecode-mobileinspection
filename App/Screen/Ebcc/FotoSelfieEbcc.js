@@ -190,9 +190,14 @@ class FotoSelfieEbcc extends Component {
     RNFS.unlink(this.state.pathCache);
     let isImageContain = await RNFS.exists(`file://${dirPhotoEbccSelfie}/${this.state.dataModel.IMAGE_NAME}`);
     if (isImageContain) {
-
+        let tempHeader = this.state.dataHeader;
+        tempHeader = {
+            ...tempHeader,
+            syncImage: 'N',
+            syncDetail: 'N'
+        }
       //insert TR_H_EBCC_VALIDATION
-      TaskServices.saveData('TR_H_EBCC_VALIDATION', this.state.dataHeader);
+      TaskServices.saveData('TR_H_EBCC_VALIDATION', tempHeader);
 
       // insert TR_D_EBCC_VALIDATION
       if (this.state.kriteriaBuah !== null) {

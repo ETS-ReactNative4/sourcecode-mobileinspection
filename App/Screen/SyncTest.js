@@ -47,6 +47,9 @@ import { uploadImage } from './Sync/Upload/Image/Image';
 import { uploadImageProfile } from './Sync/Upload/Image/Profile';
 //inspection
 import { uploadInspectionHeader, uploadInspectionDetail, uploadInspectionTrack, inspectionImageSyncStatus, updateInspectionStatus, uploadGenba } from './Sync/Upload/Inspection/Inspection'
+//EBCC
+import { uploadEbccHeader, uploadEbccDetail, EBCCImageSyncStatus } from './Sync/Upload/EBCC/Ebcc';
+
 
 class SyncScreen extends React.Component {
 
@@ -1353,7 +1356,7 @@ class SyncScreen extends React.Component {
                 this.setState({ progressFindingImage: i / dataSimpan.length, totalFindingImageDownload: dataSimpan.length });
             }
             dataSimpan.map(item => {
-                console.log('Finding Image : ', item);
+                // console.log('Finding Image : ', item);
                 TaskServices.saveData('TR_IMAGE', item);
                 this._downloadImageFinding(item);
                 let countDataInsert = TaskServices.getTotalData('TR_IMAGE');
@@ -1665,9 +1668,11 @@ class SyncScreen extends React.Component {
                         .then(()=>{});
                     this.SyncUploadInspection()
                         .then(()=>{});
+                    this.SyncUploadEBCC()
+                        .then(()=>{})
 
-                    this.kirimEbccHeader();
-                    this.kirimEbccDetail();
+                    // this.kirimEbccHeader();
+                    // this.kirimEbccDetail();
 
                     this.setState({
                         progressUploadImage: 1,
@@ -1876,6 +1881,51 @@ class SyncScreen extends React.Component {
             .then((response) => {
             });
 
+    }
+
+    async SyncUploadEBCC(){
+        await uploadEbccHeader()
+            .then((response)=>{
+                if (response.syncStatus) {
+                    this.setState({
+                        progressEbcc: 1,
+                        valueEbcc: response.uploadCount,
+                        totalEbcc: response.totalCount
+                    });
+                }
+                else {
+                    //error
+                    this.setState({
+                        uploadErrorFlag: true,
+                        progressEbcc: 1,
+                        valueEbcc: 0,
+                        totalEbcc: 0
+                    });
+                }
+            });
+
+        await uploadEbccDetail()
+            .then((response)=>{
+                if (response.syncStatus) {
+                    this.setState({
+                        progressEbccDetail: 1,
+                        valueEbccDetail: response.uploadCount,
+                        totalEbccDetail: response.totalCount
+                    });
+                }
+                else {
+                    //error
+                    this.setState({
+                        uploadErrorFlag: true,
+                        progressEbccDetail: 1,
+                        valueEbccDetail: 0,
+                        totalEbccDetail: 0
+                    });
+                }
+            });
+
+        await EBCCImageSyncStatus()
+            .then((reponse)=>{})
     }
 
     async checkUpdate() {
