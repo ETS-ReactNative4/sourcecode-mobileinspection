@@ -40,12 +40,13 @@ import RNFS from 'react-native-fs';
 
 //Sync
 //finding
-import { uploadFindingComment } from './Sync/Finding/Upload/Comment';
-import { uploadFinding } from './Sync/Finding/Upload/Finding'
+import { uploadFindingComment } from './Sync/Upload/Finding/Comment';
+import { uploadFinding } from './Sync/Upload/Finding/Finding'
 //image
-import { uploadImage, uploadImageProfile } from './Sync/Image/Upload/Image';
+import { uploadImage } from './Sync/Upload/Image/Image';
+import { uploadImageProfile } from './Sync/Upload/Image/Profile';
 //inspection
-import { uploadInspectionHeader, uploadInspectionDetail, uploadInspectionTrack, inspectionImageSyncStatus, updateInspectionStatus, uploadGenba } from './Sync/Inspection/Upload/Inspection'
+import { uploadInspectionHeader, uploadInspectionDetail, uploadInspectionTrack, inspectionImageSyncStatus, updateInspectionStatus, uploadGenba } from './Sync/Upload/Inspection/Inspection'
 
 class SyncScreen extends React.Component {
 
@@ -1352,7 +1353,7 @@ class SyncScreen extends React.Component {
                 this.setState({ progressFindingImage: i / dataSimpan.length, totalFindingImageDownload: dataSimpan.length });
             }
             dataSimpan.map(item => {
-                // console.log('Finding Image : ', item)
+                console.log('Finding Image : ', item);
                 TaskServices.saveData('TR_IMAGE', item);
                 this._downloadImageFinding(item);
                 let countDataInsert = TaskServices.getTotalData('TR_IMAGE');
@@ -1657,7 +1658,7 @@ class SyncScreen extends React.Component {
         });
 
         //Upload Image
-        uploadImage()
+        await uploadImage()
             .then((response) => {
                 if (response.syncStatus) {
                     this.SyncUploadFinding()
@@ -1685,7 +1686,7 @@ class SyncScreen extends React.Component {
                 }
             });
         // this.kirimUserImage();
-        uploadImageProfile()
+        await uploadImageProfile()
             .then((response)=>{
                 if (response.syncStatus) {
                     this.setState({
@@ -1706,7 +1707,7 @@ class SyncScreen extends React.Component {
             });
 
         //Upload Finding Comment
-        uploadFindingComment()
+        await uploadFindingComment()
             .then((response) => {
                 if (response.syncStatus) {
                     this.setState({

@@ -42,7 +42,7 @@ export async function uploadFinding() {
 }
 
 async function postFinding(paramFindingModel){
-    let fetchStatus = false;
+    let fetchStatus = true;
 
     let findingModel = {
         FINDING_CODE: paramFindingModel.FINDING_CODE,
@@ -58,7 +58,7 @@ async function postFinding(paramFindingModel){
         LAT_FINDING: paramFindingModel.LAT_FINDING,
         LONG_FINDING: paramFindingModel.LONG_FINDING,
         REFFERENCE_INS_CODE: paramFindingModel.REFFERENCE_INS_CODE,
-        STATUS_SYNC: 'N',
+        STATUS_SYNC: 'Y',
         INSERT_USER: paramFindingModel.INSERT_USER,
         INSERT_TIME: paramFindingModel.INSERT_TIME === '' ? parseInt(getTodayDate('YYYYMMDDkkmmss')) : parseInt(paramFindingModel.INSERT_TIME.replace(/-/g, '').replace(/ /g, '').replace(/:/g, '')),
         UPDATE_USER: paramFindingModel.UPDATE_USER,
@@ -72,6 +72,7 @@ async function postFinding(paramFindingModel){
         .then(((response) => {
             if (response !== undefined) {
                 if (response.status) {
+                    console.log("RESPONSE",response);
                     //check if image finding is sync
                     let getImage = TaskServices.findBy("TR_IMAGE", "TR_CODE", findingModel.FINDING_CODE).filtered('STATUS_SYNC = "N"');
                     if(getImage === undefined){
@@ -81,7 +82,7 @@ async function postFinding(paramFindingModel){
                         });
                     }
                     else {
-                        console.log("postFinding Image not yet sync!")
+                        console.log("postFinding Image not yet sync!", getImage)
                     }
                 }
                 else {

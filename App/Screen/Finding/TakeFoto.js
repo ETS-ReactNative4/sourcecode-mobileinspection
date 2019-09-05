@@ -94,7 +94,7 @@ class TakeFoto extends Component {
         };
         const data = await this.camera.takePictureAsync(takeCameraOptions);
         var today = getTodayDate('YYMMDDHHmmss');
-        var pname = `P${this.state.user.USER_AUTH_CODE}${today}.jpg`//'F' + this.state.user.USER_AUTH_CODE + random({ length: 3 }).toUpperCase() + ".jpg";
+        var pname = `P${this.state.user.USER_AUTH_CODE}${today}.jpg`;//'F' + this.state.user.USER_AUTH_CODE + random({ length: 3 }).toUpperCase() + ".jpg";
         var imgPath = dirPhotoTemuan + '/' + pname;
 
         RNFS.copyFile(data.uri, imgPath);
