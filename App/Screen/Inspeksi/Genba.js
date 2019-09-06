@@ -162,10 +162,11 @@ export default class Genba extends Component {
         else {
             let selectedUserBA = contactModel.LOCATION_CODE.split(",");
             let currentUserBA = currentUser.LOCATION_CODE.split(",");
+
             if(currentUser.REFFERENCE_ROLE === "REGION_CODE"){
-                selectedUserBA = contactModel.LOCATION_CODE;
                 //if selectedUser region_code && region_code sama kyk current user return true
                 if(contactModel.REF_ROLE === "REGION_CODE"){
+                    selectedUserBA = contactModel.LOCATION_CODE;
                     sameBAStatus = currentUserBA.some((userBA)=>{
                         return selectedUserBA.includes(userBA)
                     })
@@ -181,8 +182,17 @@ export default class Genba extends Component {
                             listCompCode.push(tmComp.COMP_CODE);
                         }
                     });
+                    // sameBAStatus = listCompCode.some((compCode)=>{return selectedUserBA.includes(compCode)})
 
-                    sameBAStatus = listCompCode.some((compCode)=>{return selectedUserBA.includes(compCode)})
+                    let listEST = listCompCode.join(",");
+                    selectedUserBA.map((userBA)=>{
+                        let tempUserBA = userBA.slice(0, 2);
+                        console.log("SELECTED USER", tempUserBA)
+                        console.log("current USER", listEST);
+                        if(listEST.includes(tempUserBA)){
+                            sameBAStatus = true
+                        }
+                    })
                 }
 
             }
