@@ -98,7 +98,13 @@ export default class Genba extends Component {
         let filteredContactGenba = [];
         let currentUser = TaskServices.getAllData('TR_LOGIN')[0];
         contactGenba.map((contactModel)=>{
-            if(this.rankChecker(contactModel, currentUser) && this.BAChecker(contactModel, currentUser)){
+            if(
+                currentUser.REFFERENCE_ROLE === "NATIONAL" || currentUser.USER_ROLE === "CEO" || currentUser.USER_ROLE === "ADMIN" ||
+                contactModel.REF_ROLE === "NATIONAL" || contactModel.USER_ROLE === "CEO" || contactModel.USER_ROLE === "ADMIN"
+            ){
+                filteredContactGenba.push(contactModel);
+            }
+            else if(this.rankChecker(contactModel, currentUser) && this.BAChecker(contactModel, currentUser)){
                 filteredContactGenba.push(contactModel);
             }
         });
@@ -141,81 +147,68 @@ export default class Genba extends Component {
 
     rankChecker(contactModel, currentUser){
         //low->high
-        let genbaRanking = ['KEPALA_KEBUN', 'EM', 'SEM_GM', 'CEO_REG', 'CEO', 'ADMIN'];
-
-        if(contactModel.USER_ROLE === 'CEO' || contactModel.USER_ROLE === 'ADMIN'){
-            return true
-        }
-        else {
-            if(genbaRanking.indexOf(currentUser.USER_ROLE) >= genbaRanking.indexOf(contactModel.USER_ROLE)){
-                return true
-            }
-        }
-        return false;
+        let genbaRanking = ['KEPALA_KEBUN', 'EM', 'SEM_GM', 'CEO_REG'];
+        return genbaRanking.indexOf(currentUser.USER_ROLE) >= genbaRanking.indexOf(contactModel.USER_ROLE)
     }
 
     BAChecker(contactModel, currentUser){
         let sameBAStatus = false;
-        if(contactModel.LOCATION_CODE === "ALL" || contactModel.USER_ROLE === "ADMIN" || contactModel.USER_ROLE === "CEO"){
-            sameBAStatus = true;
-        }
-        else {
-            let selectedUserBA = contactModel.LOCATION_CODE.split(",");
-            let currentUserBA = currentUser.LOCATION_CODE.split(",");
 
-            if(currentUser.REFFERENCE_ROLE === "REGION_CODE"){
-                //if selectedUser region_code && region_code sama kyk current user return true
-                if(contactModel.REF_ROLE === "REGION_CODE"){
-                    selectedUserBA = contactModel.LOCATION_CODE;
-                    sameBAStatus = currentUserBA.some((userBA)=>{
-                        return selectedUserBA.includes(userBA)
-                    })
-                }
+        let selectedUserBA = contactModel.LOCATION_CODE.split(",");
+        let currentUserBA = currentUser.LOCATION_CODE.split(",");
 
-                // selectedUser refrole != region_code (bawahan)
-                else {
-                    let listCompCode = [];
-                    let tmCOMP = TaskServices.getAllData('TM_COMP');
-
-                    tmCOMP.map((tmComp)=>{
-                        if(currentUser.LOCATION_CODE.includes(tmComp.REGION_CODE)){
-                            listCompCode.push(tmComp.COMP_CODE);
-                        }
-                    });
-                    // sameBAStatus = listCompCode.some((compCode)=>{return selectedUserBA.includes(compCode)})
-
-                    let listEST = listCompCode.join(",");
-                    selectedUserBA.map((userBA)=>{
-                        let tempUserBA = userBA.slice(0, 2);
-                        console.log("SELECTED USER", tempUserBA)
-                        console.log("current USER", listEST);
-                        if(listEST.includes(tempUserBA)){
-                            sameBAStatus = true
-                        }
-                    })
-                }
-
+        if(currentUser.REFFERENCE_ROLE === "REGION_CODE"){
+            //if selectedUser region_code && region_code sama kyk current user return true
+            if(contactModel.REF_ROLE === "REGION_CODE"){
+                selectedUserBA = contactModel.LOCATION_CODE;
+                sameBAStatus = currentUserBA.some((userBA)=>{
+                    return selectedUserBA.includes(userBA)
+                })
             }
 
-            else{
-                //REF_ROLE COMP_CODE FILTER BEDA
-                if(contactModel.REF_ROLE === "COMP_CODE"){
-                    let tmComp = TaskServices.getAllData('TM_COMP');
-                    if(tmComp !== undefined && tmComp.length > 0){
-                        tmComp.map((tmComp)=>{
-                            selectedUserBA.map((selectedUserBA)=>{
-                                if(selectedUserBA === tmComp.COMP_CODE){
-                                    sameBAStatus = true;
-                                }
-                            })
+            // selectedUser refrole != region_code (bawahan)
+            else {
+                let listCompCode = [];
+                let tmCOMP = TaskServices.getAllData('TM_COMP');
+
+                tmCOMP.map((tmComp)=>{
+                    if(currentUser.LOCATION_CODE.includes(tmComp.REGION_CODE)){
+                        listCompCode.push(tmComp.COMP_CODE);
+                    }
+                });
+                // sameBAStatus = listCompCode.some((compCode)=>{return selectedUserBA.includes(compCode)})
+
+                let listEST = listCompCode.join(",");
+                selectedUserBA.map((userBA)=>{
+                    let tempUserBA = userBA.slice(0, 2);
+                    console.log("SELECTED USER", tempUserBA)
+                    console.log("current USER", listEST);
+                    if(listEST.includes(tempUserBA)){
+                        sameBAStatus = true
+                    }
+                })
+            }
+
+        }
+
+        else{
+            //REF_ROLE COMP_CODE FILTER BEDA
+            if(contactModel.REF_ROLE === "COMP_CODE"){
+                let tmComp = TaskServices.getAllData('TM_COMP');
+                if(tmComp !== undefined && tmComp.length > 0){
+                    tmComp.map((tmComp)=>{
+                        selectedUserBA.map((selectedUserBA)=>{
+                            if(selectedUserBA === tmComp.COMP_CODE){
+                                sameBAStatus = true;
+                            }
                         })
-                    }
+                    })
                 }
-                else {
-                    const intersection = currentUserBA.filter(element => contactModel.LOCATION_CODE.includes(element));
-                    if(intersection.length > 0){
-                        sameBAStatus = true;
-                    }
+            }
+            else {
+                const intersection = currentUserBA.filter(element => contactModel.LOCATION_CODE.includes(element));
+                if(intersection.length > 0){
+                    sameBAStatus = true;
                 }
             }
         }
