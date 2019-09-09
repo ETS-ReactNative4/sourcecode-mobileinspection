@@ -11,66 +11,73 @@ export async function getFindingComment() {
         totalCount: dbLocal.length
     };
 
+    /* DEFAULT MIDLEWARE */
     await getAPIFunction('AUTH-SYNC-FINDING-COMMENT').then((data) => {
-        
+
         let user = TaskServices.getAllData('TR_LOGIN')[0];
 
-        if (data != null) {
-            if (data.simpan.length > 0) {
-                Promise.all(
-                    data.simpan.map(item => {
+        try {
+            if (data != null) {
+                if (data.simpan.length > 0) {
+                    Promise.all(
+                        data.simpan.map(item => {
+                            let model = {
+                                FINDING_COMMENT_ID: item.FINDING_COMMENT_ID,
+                                FINDING_CODE: item.FINDING_CODE,
+                                USER_AUTH_CODE: item.USER_AUTH_CODE,
+                                MESSAGE: item.MESSAGE,
+                                INSERT_TIME: data.INSERT_TIME !== undefined ? item.INSERT_TIME.toString() : "0",
+                                TAGS: data.TAGS !== undefined ? item.TAGS : [],
+                                /* LOCAL PARAM */
+                                STATUS_SYNC: 'Y',
+                                USERNAME: data.FULLNAME !== undefined ? item.FULLNAME : "NO_NAME"
+                            };
+
+
+                            if (model.USER_AUTH_CODE !== user.USER_AUTH_CODE) {
+                                /* INSERT NOTIFICATION COMMENT */
+                                NotificationComment(model, user)
+                            }
+
+                            /* INSERT DATA FINDING COMMENT */
+                            TaskServices.saveData("TR_FINDING_COMMENT", model);
+
+                            /* CALLBACK DATA */
+                            downloadLabels = {
+                                ...downloadLabels,
+                                downloadCount: downloadLabels.downloadCount + 1
+                            }
+                        })
+                    )
+                }
+
+                if (data.ubah.length > 0 && dbLocal.length > 0) {
+                    data.ubah.map(item => {
                         let model = {
                             FINDING_COMMENT_ID: item.FINDING_COMMENT_ID,
                             FINDING_CODE: item.FINDING_CODE,
                             USER_AUTH_CODE: item.USER_AUTH_CODE,
                             MESSAGE: item.MESSAGE,
-                            INSERT_TIME: data.INSERT_TIME !== undefined ? item.INSERT_TIME.toString() : "0",
-                            TAGS: data.TAGS !== undefined ? item.TAGS : [],
-                            //LOCAL PARAM
+                            INSERT_TIME: item.INSERT_TIME !== undefined ? item.INSERT_TIME.toString() : "0",
+                            TAGS: item.TAGS !== undefined ? item.TAGS : [],
+                            /* LOCAL PARAM */
                             STATUS_SYNC: 'Y',
-                            USERNAME: data.FULLNAME !== undefined ? item.FULLNAME : "NO_NAME"
+                            USERNAME: item.FULLNAME !== undefined ? item.FULLNAME : "NO_NAME"
                         };
-                        if (model.USER_AUTH_CODE !== user.USER_AUTH_CODE) {
-                            NotificationComment(model, user)
-                        }
-                        TaskServices.saveData("TR_FINDING_COMMENT", model);
 
-                        downloadLabels = {
-                            ...downloadLabels,
-                            downloadCount: downloadLabels.downloadCount + 1
-                        }
+                        /* UPDATE DATA FINDING COMMENT */
+                        TaskServices.updateByPrimaryKey('TR_FINDING_COMMENT', model)
                     })
-                )
+                }
+            } else {
+                /* CALLBACK DATA */
+                downloadLabels = {
+                    ...downloadLabels
+                }
             }
-
-            if (data.ubah.length > 0 && dbLocal.length > 0) {
-                data.ubah.map(item => {
-                    let model = {
-                        FINDING_COMMENT_ID: item.FINDING_COMMENT_ID,
-                        FINDING_CODE: item.FINDING_CODE,
-                        USER_AUTH_CODE: item.USER_AUTH_CODE,
-                        MESSAGE: item.MESSAGE,
-                        INSERT_TIME: item.INSERT_TIME !== undefined ? item.INSERT_TIME.toString() : "0",
-                        TAGS: item.TAGS !== undefined ? item.TAGS : [],
-                        //LOCAL PARAM
-                        STATUS_SYNC: 'Y',
-                        USERNAME: item.FULLNAME !== undefined ? item.FULLNAME : "NO_NAME"
-                    };
-                    TaskServices.updateByPrimaryKey('TR_FINDING_COMMENT', model)
-                })
-            }
-
-            // if (data.hapus.length > 0 && dbLocal.length > 0) {
-            //     data.hapus.map(item => {
-            //         TaskServices.deleteRecordByPK('TR_FINDING_COMMENT', 'FINDING_COMMENT_ID', item.FINDING_COMMENT_ID);
-            //     });
-            // }
-        } else {
-            downloadLabels = {
-                ...downloadLabels
-            }
+        } catch (error) {
+            console.log('CATCH FINDING COMMENT : ', error)
         }
-
     })
 
     return downloadLabels;
