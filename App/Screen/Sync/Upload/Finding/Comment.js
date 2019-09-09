@@ -1,5 +1,6 @@
 import TaskServices from "../../../../Database/TaskServices";
 import { fetchPost } from "../../../../Api/FetchingApi";
+import { syncFetchPost } from "../../../../Api";
 
 //Upload-Finding-Comment
 export async function uploadFindingComment() {
@@ -55,27 +56,16 @@ export async function uploadFindingComment() {
 }
 
 async function postFindingComment(model) {
-    let fetchStatus = true;
+    let fetchStatus = false;
 
-    await fetchPost("FINDING-COMMENT-INSERT", model, null)
-        .then(((response) => {
-            if (response !== undefined) {
-                if (response.status) {
-                    TaskServices.updateByPrimaryKey('TR_FINDING_COMMENT', {
-                        "FINDING_COMMENT_ID": model.FINDING_COMMENT_ID,
-                        "STATUS_SYNC": "Y"
-                    });
-                }
-                else {
-                    fetchStatus = false;
-                    console.log("upload postFindingComment failed");
-                    console.log("upload postFindingComment request", model);
-                    console.log("upload postFindingComment response", response);
-                }
-            }
-            else {
-                fetchStatus = false;
-                console.log("upload postFindingComment Server Timeout")
+    await syncFetchPost("FINDING-COMMENT-INSERT", model, null)
+        .then(((data) => {
+            if (data !== null) {
+                TaskServices.updateByPrimaryKey('TR_FINDING_COMMENT', {
+                    "FINDING_COMMENT_ID": model.FINDING_COMMENT_ID,
+                    "STATUS_SYNC": "Y"
+                });
+                fetchStatus = true
             }
         }));
     return fetchStatus;

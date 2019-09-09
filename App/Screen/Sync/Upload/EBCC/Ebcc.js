@@ -1,5 +1,6 @@
 import TaskServices from "../../../../Database/TaskServices";
 import { fetchPost } from "../../../../Api/FetchingApi";
+import { syncFetchPost } from "../../../../Api";
 import {convertTimestampToDate, getTodayDate} from "../../../../Lib/Utils";
 
 //Upload-Ebcc-Header
@@ -42,7 +43,7 @@ export async function uploadEbccHeader() {
 }
 
 async function postEbccHeader(paramEbccModel){
-    let fetchStatus = true;
+    let fetchStatus = false;
 
     let ebccModel = {
         EBCC_VALIDATION_CODE: paramEbccModel.EBCC_VALIDATION_CODE,
@@ -64,23 +65,14 @@ async function postEbccHeader(paramEbccModel){
         UPDATE_TIME: parseInt(getTodayDate('YYYYMMDDkkmmss'))
     }
 
-    await fetchPost("EBCC-VALIDATION-HEADER-INSERT", ebccModel, null)
-        .then(((response) => {
-            if (response !== undefined) {
-                if (response.status) {
-                    TaskServices.updateByPrimaryKey('TR_H_EBCC_VALIDATION', {
-                        "EBCC_VALIDATION_CODE": ebccModel.EBCC_VALIDATION_CODE,
-                        "STATUS_SYNC": "Y"
-                    });
-                }
-                else {
-                    fetchStatus = false;
-                    console.log("upload postEbccHeader failed");
-                }
-            }
-            else {
-                fetchStatus = false;
-                console.log("upload postEbccHeader Server Timeout")
+    await syncFetchPost("EBCC-VALIDATION-HEADER-INSERT", ebccModel, null)
+        .then(((data) => {
+            if (data !== null) {
+                TaskServices.updateByPrimaryKey('TR_H_EBCC_VALIDATION', {
+                    "EBCC_VALIDATION_CODE": ebccModel.EBCC_VALIDATION_CODE,
+                    "STATUS_SYNC": "Y"
+                });
+                fetchStatus = true
             }
         }));
     return fetchStatus;
@@ -126,7 +118,7 @@ export async function uploadEbccDetail() {
 }
 
 async function postEbccDetail(paramEbccModel){
-    let fetchStatus = true;
+    let fetchStatus = false;
 
     let ebccModel = {
         EBCC_VALIDATION_CODE: paramEbccModel.EBCC_VALIDATION_CODE,
@@ -138,12 +130,11 @@ async function postEbccDetail(paramEbccModel){
         INSERT_USER: paramEbccModel.INSERT_USER,
         UPDATE_USER: '',
         UPDATE_TIME: 0
-    }
+    };
 
-    await fetchPost("EBCC-VALIDATION-DETAIL-INSERT", ebccModel, null)
-        .then(((response) => {
-            if (response !== undefined) {
-                if (response.status) {
+    await syncFetchPost("EBCC-VALIDATION-DETAIL-INSERT", ebccModel, null)
+        .then(((data) => {
+            if (data !== null) {
                     TaskServices.updateByPrimaryKey('TR_D_EBCC_VALIDATION', {
                         "EBCC_VALIDATION_CODE_D": paramEbccModel.EBCC_VALIDATION_CODE_D,
                         "STATUS_SYNC": "Y"
@@ -152,17 +143,7 @@ async function postEbccDetail(paramEbccModel){
                         "EBCC_VALIDATION_CODE": ebccModel.EBCC_VALIDATION_CODE,
                         "syncDetail": "Y"
                     });
-                }
-                else {
-                    fetchStatus = false;
-                    console.log("upload postEbccDetail failed");
-                    console.log("upload postEbccDetail request", ebccModel);
-                    console.log("upload postEbccDetail response", response);
-                }
-            }
-            else {
-                fetchStatus = false;
-                console.log("upload postEbccDetail Server Timeout");
+                    fetchStatus = true
             }
         }));
     return fetchStatus;

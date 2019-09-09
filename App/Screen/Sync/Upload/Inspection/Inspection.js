@@ -1,5 +1,6 @@
 import TaskServices from "../../../../Database/TaskServices";
 import {fetchPost, fetchPostAPI} from "../../../../Api/FetchingApi";
+import {syncFetchPost} from "../../../../Api";
 import {convertTimestampToDate, getTodayDate} from "../../../../Lib/Utils";
 
 //Header
@@ -69,28 +70,18 @@ async function postInspectionHeader(headerModel){
         INSERT_USER: user.USER_AUTH_CODE
     };
 
-    await fetchPost("INSPECTION-HEADER-INSERT", inspectionHeaderModel, null)
-        .then(((response) => {
-            if (response !== undefined) {
-                if (response.status) {
-                    TaskServices.updateByPrimaryKey('TR_BLOCK_INSPECTION_H', {
-                        "BLOCK_INSPECTION_CODE": inspectionHeaderModel.BLOCK_INSPECTION_CODE,
-                        "STATUS_SYNC": "Y"
-                    });
-                    TaskServices.updateByPrimaryKey('TR_BARIS_INSPECTION',{
-                        "ID_INSPECTION": headerModel.ID_INSPECTION,
-                        "syncHeader": "Y"
-                    });
-                    fetchStatus = true;
-                }
-                else {
-                    fetchStatus = false;
-                    console.log("upload postInspectionHeader failed", inspectionHeaderModel);
-                }
-            }
-            else {
-                fetchStatus = false;
-                console.log("upload postInspectionHeader Server Timeout")
+    await syncFetchPost("INSPECTION-HEADER-INSERT", inspectionHeaderModel, null)
+        .then(((data) => {
+            if (data !== null) {
+                TaskServices.updateByPrimaryKey('TR_BLOCK_INSPECTION_H', {
+                    "BLOCK_INSPECTION_CODE": inspectionHeaderModel.BLOCK_INSPECTION_CODE,
+                    "STATUS_SYNC": "Y"
+                });
+                TaskServices.updateByPrimaryKey('TR_BARIS_INSPECTION',{
+                    "ID_INSPECTION": headerModel.ID_INSPECTION,
+                    "syncHeader": "Y"
+                });
+                fetchStatus = true;
             }
         }));
     return fetchStatus;
@@ -153,28 +144,18 @@ async function postInspectionDetail(detailModel){
         INSERT_TIME: parseInt(convertTimestampToDate(detailModel.INSERT_TIME, 'YYYYMMDDkkmmss'))
     };
 
-    await fetchPost("INSPECTION-DETAIL-INSERT", inspectionDetailModel, null)
-        .then(((response) => {
-            if (response !== undefined) {
-                if (response.status) {
-                    TaskServices.updateByPrimaryKey('TR_BLOCK_INSPECTION_D', {
-                        "BLOCK_INSPECTION_CODE_D": inspectionDetailModel.BLOCK_INSPECTION_CODE_D,
-                        "STATUS_SYNC": "Y"
-                    });
-                    TaskServices.updateByPrimaryKey('TR_BARIS_INSPECTION',{
-                        "ID_INSPECTION": inspectionDetailModel.ID_INSPECTION,
-                        "syncDetail": "Y"
-                    });
-                    fetchStatus = true;
-                }
-                else {
-                    fetchStatus = false;
-                    console.log("upload postInspectionHeader failed");
-                }
-            }
-            else {
-                fetchStatus = false;
-                console.log("upload postInspectionHeader Server Timeout")
+    await syncFetchPost("INSPECTION-DETAIL-INSERT", inspectionDetailModel, null)
+        .then(((data) => {
+            if (data !== null) {
+                TaskServices.updateByPrimaryKey('TR_BLOCK_INSPECTION_D', {
+                    "BLOCK_INSPECTION_CODE_D": inspectionDetailModel.BLOCK_INSPECTION_CODE_D,
+                    "STATUS_SYNC": "Y"
+                });
+                TaskServices.updateByPrimaryKey('TR_BARIS_INSPECTION',{
+                    "ID_INSPECTION": inspectionDetailModel.ID_INSPECTION,
+                    "syncDetail": "Y"
+                });
+                fetchStatus = true;
             }
         }));
     return fetchStatus;
@@ -234,28 +215,18 @@ async function postInspectionTrack(trackingModel){
         INSERT_TIME: parseInt(trackingModel.INSERT_TIME.replace(/-/g, '').replace(/ /g, '').replace(/:/g, ''))
     };
 
-    await fetchPost("INSPECTION-TRACKING-INSERT", inspectionTrackingModel, null)
-        .then(((response) => {
-            if (response !== undefined) {
-                if (response.status) {
-                    TaskServices.updateByPrimaryKey('TM_INSPECTION_TRACK', {
-                        "TRACK_INSPECTION_CODE": inspectionTrackingModel.TRACK_INSPECTION_CODE,
-                        "STATUS_SYNC": "Y"
-                    });
-                    TaskServices.updateByPrimaryKey('TR_BARIS_INSPECTION',{
-                        "ID_INSPECTION": trackingModel.ID_INSPECTION,
-                        "syncTracking": "Y"
-                    });
-                    fetchStatus = true;
-                }
-                else {
-                    fetchStatus = false;
-                    console.log("upload postInspectionTrack failed");
-                }
-            }
-            else {
-                fetchStatus = false;
-                console.log("upload postInspectionTrack Server Timeout")
+    await syncFetchPost("INSPECTION-TRACKING-INSERT", inspectionTrackingModel, null)
+        .then(((data) => {
+            if (data !== null) {
+                TaskServices.updateByPrimaryKey('TM_INSPECTION_TRACK', {
+                    "TRACK_INSPECTION_CODE": inspectionTrackingModel.TRACK_INSPECTION_CODE,
+                    "STATUS_SYNC": "Y"
+                });
+                TaskServices.updateByPrimaryKey('TR_BARIS_INSPECTION',{
+                    "ID_INSPECTION": trackingModel.ID_INSPECTION,
+                    "syncTracking": "Y"
+                });
+                fetchStatus = true;
             }
         }));
     return fetchStatus;
@@ -378,25 +349,14 @@ async function postGenba(genbaModel) {
         GENBA_USER: genbaUser
     };
 
-    await fetchPost("INSPECTION-GENBA-INSERT", inspectionGenbaModel, null)
-        .then(((response) => {
-            if (response !== undefined) {
-                if (response.status) {
+    await syncFetchPost("INSPECTION-GENBA-INSERT", inspectionGenbaModel, null)
+        .then(((data) => {
+            if (data !== null) {
                     TaskServices.updateByPrimaryKey('TR_GENBA_INSPECTION', {
                         "BLOCK_INSPECTION_CODE": inspectionGenbaModel.BLOCK_INSPECTION_CODE,
                         "STATUS_SYNC": "Y"
                     });
-                }
-                else {
-                    fetchStatus = false;
-                    console.log("upload postGenba failed");
-                    console.log("upload postImageUser request", inspectionGenbaModel);
-                    console.log("upload postImageUser response", response);
-                }
-            }
-            else {
-                fetchStatus = false;
-                console.log("upload postGenba Server Timeout")
+                fetchStatus = true;
             }
         }));
     return fetchStatus;

@@ -1,5 +1,6 @@
 import TaskServices from "../../../../Database/TaskServices";
 import { fetchPost } from "../../../../Api/FetchingApi";
+import { syncFetchPost } from "../../../../Api";
 import {getTodayDate} from "../../../../Lib/Utils";
 
 //Upload-Finding
@@ -42,7 +43,7 @@ export async function uploadFinding() {
 }
 
 async function postFinding(paramFindingModel){
-    let fetchStatus = true;
+    let fetchStatus = false;
 
     let findingModel = {
         FINDING_CODE: paramFindingModel.FINDING_CODE,
@@ -68,33 +69,18 @@ async function postFinding(paramFindingModel){
         END_TIME: paramFindingModel.END_TIME !== "" ? parseInt(paramFindingModel.END_TIME) : "",
     };
 
-    await fetchPost("FINDING-INSERT", findingModel, null)
-        .then(((response) => {
-            if (response !== undefined) {
-                if (response.status) {
-                    console.log("RESPONSE",response);
-                    //check if image finding is sync
-                    let getImage = TaskServices.findBy("TR_IMAGE", "TR_CODE", findingModel.FINDING_CODE).filtered('STATUS_SYNC = "N"');
-                    if(getImage === undefined){
-                        TaskServices.updateByPrimaryKey('TR_FINDING', {
-                            "FINDING_CODE": paramFindingModel.FINDING_CODE,
-                            "STATUS_SYNC": "Y"
-                        });
-                    }
-                    else {
-                        console.log("postFinding Image not yet sync!", getImage)
-                    }
+    await syncFetchPost("FINDING-INSERT", findingModel, null)
+        .then(((data) => {
+            if (data !== null) {
+                //check if image finding is sync
+                let getImage = TaskServices.findBy("TR_IMAGE", "TR_CODE", findingModel.FINDING_CODE).filtered('STATUS_SYNC = "N"');
+                if(getImage === undefined){
+                    TaskServices.updateByPrimaryKey('TR_FINDING', {
+                        "FINDING_CODE": paramFindingModel.FINDING_CODE,
+                        "STATUS_SYNC": "Y"
+                    });
                 }
-                else {
-                    fetchStatus = false;
-                    console.log("upload postFinding failed");
-                    console.log("upload postFinding request", findingModel);
-                    console.log("upload postFinding response", response);
-                }
-            }
-            else {
-                fetchStatus = false;
-                console.log("upload postFinding Server Timeout")
+                fetchStatus = true;
             }
         }));
     return fetchStatus;
