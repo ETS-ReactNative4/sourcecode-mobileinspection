@@ -5,7 +5,7 @@ export async function getAPIFunction(apiName) {
     await fetchGet(apiName)
         .then(((response) => {
             if (response !== undefined) {
-                console.log(`Response Status Download ${apiName} : `, response.status)
+                // console.log(`Response Status Download ${apiName} : `, response.status)
                 if (response.status) {
                     return dataAPI = response.data
                 } else {
