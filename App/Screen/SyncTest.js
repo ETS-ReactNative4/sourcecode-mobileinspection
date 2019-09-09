@@ -66,6 +66,8 @@ import { getParamTrack } from './Sync/Download/DownloadParamTrack';
 import { getKualitas } from './Sync/Download/DownloadKualitas';
 import { getFindingComment } from './Sync/Download/DownloadFindingComment';
 import { getFindingImage } from './Sync/Download/DownloadFindingImage';
+import { getTimeServer } from './Sync/Download/DownloadTimeServer';
+import { getResetToken } from './Sync/Download/DownloadResetToken';
 
 class SyncScreen extends React.Component {
 
@@ -207,10 +209,11 @@ class SyncScreen extends React.Component {
     }
 
     /** CREATE BY AMINJU SPRINT 16 ==> 02-06 SEPT 2019 */
-    syncDownload() {
+    syncDownload = async () => {
+
         /* DOWNLOAD FINDING */
         /* INCLUDE NOTIFICATION FINDING */
-        getFinding().then((data) => {
+        await getFinding().then((data) => {
             console.log('Data Callback Finding : ', data)
             this.setState({
                 progressFinding: 1,
@@ -220,7 +223,7 @@ class SyncScreen extends React.Component {
         })
 
         /* DOWNLOAD FINDING IMAGE */
-        getFindingImage().then((data) => {
+        await getFindingImage().then((data) => {
             console.log('Data Callback Finding Image: ', data)
             this.setState({
                 progressFindingImage: 1,
@@ -230,7 +233,7 @@ class SyncScreen extends React.Component {
         })
 
         /* DOWNLOAD FINDING COMMENT */
-        getFindingComment().then((data) => {
+        await getFindingComment().then((data) => {
             console.log('Data Callback Finding Comment: ', data)
             this.setState({
                 progressFindingCommentDownload: 1,
@@ -240,7 +243,7 @@ class SyncScreen extends React.Component {
         })
 
         /* DOWNLOAD BLOCK */
-        getBlock().then((data) => {
+        await getBlock().then((data) => {
             console.log('Data Callback Block : ', data)
             this.setState({
                 progress: 1,
@@ -250,7 +253,7 @@ class SyncScreen extends React.Component {
         })
 
         /* DOWNLOAD AFDELING */
-        getAfd().then((data) => {
+        await getAfd().then((data) => {
             console.log('Data Callback Afd : ', data)
             this.setState({
                 progressAfd: 1,
@@ -260,7 +263,7 @@ class SyncScreen extends React.Component {
         })
 
         /* DOWNLOAD REGION */
-        getRegion().then((data) => {
+        await getRegion().then((data) => {
             console.log('Data Callback Region : ', data)
             this.setState({
                 progressRegion: 1,
@@ -270,7 +273,7 @@ class SyncScreen extends React.Component {
         })
 
         /* DOWNLOAD ESTATE */
-        getEstate().then((data) => {
+        await getEstate().then((data) => {
             console.log('Data Callback Estate : ', data)
             this.setState({
                 progressEst: 1,
@@ -280,7 +283,7 @@ class SyncScreen extends React.Component {
         })
 
         /* DOWNLOAD LANDUSE */
-        getLandUse().then((data) => {
+        await getLandUse().then((data) => {
             console.log('Data Callback LandUse : ', data)
             this.setState({
                 progressLandUse: 1,
@@ -290,7 +293,7 @@ class SyncScreen extends React.Component {
         })
 
         /* DOWNLOAD COMP */
-        getComp().then((data) => {
+        await getComp().then((data) => {
             console.log('Data Callback Comp : ', data)
             this.setState({
                 progressComp: 1,
@@ -300,7 +303,7 @@ class SyncScreen extends React.Component {
         })
 
         /* DOWNLOAD CONTENT */
-        getContent().then((data) => {
+        await getContent().then((data) => {
             console.log('Data Callback Content : ', data)
             this.setState({
                 progressContent: 1,
@@ -310,7 +313,7 @@ class SyncScreen extends React.Component {
         })
 
         /* DOWNLOAD KRITERIA */
-        getKriteria().then((data) => {
+        await getKriteria().then((data) => {
             console.log('Data Callback Kriteria : ', data)
             this.setState({
                 progressKriteria: 1,
@@ -320,7 +323,7 @@ class SyncScreen extends React.Component {
         })
 
         /* DOWNLOAD CATEGORY */
-        getCategory().then((data) => {
+        await getCategory().then((data) => {
             console.log('Data Callback Category : ', data)
             this.setState({
                 progressCategory: 1,
@@ -330,7 +333,7 @@ class SyncScreen extends React.Component {
         })
 
         /* DOWNLOAD CATEGORY */
-        getContact().then((data) => {
+        await getContact().then((data) => {
             console.log('Data Callback Contact : ', data)
             this.setState({
                 progressContact: 1,
@@ -340,7 +343,7 @@ class SyncScreen extends React.Component {
         })
 
         /* DOWNLOAD PARAM TRACK INSPECTION */
-        getParamTrack().then((data) => {
+        await getParamTrack().then((data) => {
             console.log('Data Callback Param Track  : ', data)
             this.setState({
                 progressParamInspection: 1,
@@ -350,13 +353,44 @@ class SyncScreen extends React.Component {
         })
 
         /* DOWNLOAD PARAM KUALITAS */
-        getKualitas().then((data) => {
+        await getKualitas().then((data) => {
             console.log('Data Callback Kualitas : ', data)
             this.setState({
                 progressKualitas: 1,
                 valueKualitas: data.downloadCount,
                 totalKualitas: data.totalCount
             })
+        })
+
+        /* DOWNLOAD TIME SERVER */
+        await getTimeServer().then((isSync) => {
+            console.log('Data Callback Time Server : ', isSync)
+
+            if (isSync) {
+                getResetToken(isSync).then((data) => {
+                    console.log('Data Callback Reset Token : ', data)
+                    if (data.isResetSync) {
+                        this.setState({
+                            showModal: true,
+                            title: 'Sync Berhasil',
+                            message: 'Yeay sinkronisasi udah selesai!',
+                            icon: require('../Images/ic-sync-berhasil.png'),
+                            showButton: true,
+                            finishedSync: true,
+                            pickedWerks: data.pickedWerks
+                        });
+                    } else {
+                        this.setState({
+                            showButton: true,
+                            showModal: true,
+                            title: 'Tidak Sinkron',
+                            message: 'Jam di HP kamu salah',
+                            icon: require('../Images/ic-sync-gagal.png')
+                        })
+                    }
+                });
+            }
+
         })
     }
 

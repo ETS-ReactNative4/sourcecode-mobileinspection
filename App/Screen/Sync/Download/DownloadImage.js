@@ -26,7 +26,6 @@ export async function downloadImageCategory(data) {
 }
 
 export async function downloadImageFinding(data) {
-    console.log('Data Images Finding Download : ', data)
     let isExist = await RNFS.exists(`${dirPhotoTemuan}/${data.IMAGE_NAME}`)
     if (!isExist) {
         var url = data.IMAGE_URL;
