@@ -85,12 +85,12 @@ async function postInspectionHeader(headerModel){
                 }
                 else {
                     fetchStatus = false;
-                    console.log("postInspectionHeader upload failed", inspectionHeaderModel);
+                    console.log("upload postInspectionHeader failed", inspectionHeaderModel);
                 }
             }
             else {
                 fetchStatus = false;
-                console.log("postInspectionHeader Server Timeout")
+                console.log("upload postInspectionHeader Server Timeout")
             }
         }));
     return fetchStatus;
@@ -169,12 +169,12 @@ async function postInspectionDetail(detailModel){
                 }
                 else {
                     fetchStatus = false;
-                    console.log("postInspectionHeader upload failed");
+                    console.log("upload postInspectionHeader failed");
                 }
             }
             else {
                 fetchStatus = false;
-                console.log("postInspectionHeader Server Timeout")
+                console.log("upload postInspectionHeader Server Timeout")
             }
         }));
     return fetchStatus;
@@ -250,12 +250,12 @@ async function postInspectionTrack(trackingModel){
                 }
                 else {
                     fetchStatus = false;
-                    console.log("postInspectionTrack upload failed");
+                    console.log("upload postInspectionTrack failed");
                 }
             }
             else {
                 fetchStatus = false;
-                console.log("postInspectionTrack Server Timeout")
+                console.log("upload postInspectionTrack Server Timeout")
             }
         }));
     return fetchStatus;
@@ -389,12 +389,12 @@ async function postGenba(genbaModel) {
                 }
                 else {
                     fetchStatus = false;
-                    console.log("postGenba upload failed");
+                    console.log("upload postGenba failed");
                 }
             }
             else {
                 fetchStatus = false;
-                console.log("postGenba Server Timeout")
+                console.log("upload postGenba Server Timeout")
             }
         }));
     return fetchStatus;

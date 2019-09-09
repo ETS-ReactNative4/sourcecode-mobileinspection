@@ -401,8 +401,8 @@ class SyncScreen extends React.Component {
                                 index++;
                             }
                         }
-                        this.syncDownload()
-                        // this._onSync()
+
+                        this._onSync()
                     });
             } else {
                 this.setState({

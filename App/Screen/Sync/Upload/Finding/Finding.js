@@ -87,12 +87,12 @@ async function postFinding(paramFindingModel){
                 }
                 else {
                     fetchStatus = false;
-                    console.log("postFinding upload failed");
+                    console.log("upload postFinding failed");
                 }
             }
             else {
                 fetchStatus = false;
-                console.log("postFinding Server Timeout")
+                console.log("upload postFinding Server Timeout")
             }
         }));
     return fetchStatus;

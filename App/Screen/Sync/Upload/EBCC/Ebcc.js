@@ -75,12 +75,12 @@ async function postEbccHeader(paramEbccModel){
                 }
                 else {
                     fetchStatus = false;
-                    console.log("postEbccHeader upload failed");
+                    console.log("upload postEbccHeader failed");
                 }
             }
             else {
                 fetchStatus = false;
-                console.log("postEbccHeader Server Timeout")
+                console.log("upload postEbccHeader Server Timeout")
             }
         }));
     return fetchStatus;
@@ -155,12 +155,12 @@ async function postEbccDetail(paramEbccModel){
                 }
                 else {
                     fetchStatus = false;
-                    console.log("postEbccDetail upload failed");
+                    console.log("upload postEbccDetail failed");
                 }
             }
             else {
                 fetchStatus = false;
-                console.log("postEbccDetail Server Timeout")
+                console.log("upload postEbccDetail Server Timeout")
             }
         }));
     return fetchStatus;

@@ -68,12 +68,12 @@ async function postFindingComment(model) {
                 }
                 else {
                     fetchStatus = false;
-                    console.log("postFindingComment upload failed");
+                    console.log("upload postFindingComment failed");
                 }
             }
             else {
                 fetchStatus = false;
-                console.log("finding comment Server Timeout")
+                console.log("upload postFindingComment Server Timeout")
             }
         }));
     return fetchStatus;

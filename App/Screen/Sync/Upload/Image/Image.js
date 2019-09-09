@@ -80,12 +80,12 @@ async function postImage(paramImageModel){
                 }
                 else {
                     fetchStatus = false;
-                    console.log("postImage upload failed")
+                    console.log("upload postImage failed")
                 }
             }
             else {
                 fetchStatus = false;
-                console.log("postImage Server Timeout")
+                console.log("upload postImage Server Timeout")
             }
         });
     return fetchStatus
