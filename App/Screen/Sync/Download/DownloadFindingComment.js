@@ -19,18 +19,22 @@ export async function getFindingComment() {
         try {
             if (data != null) {
                 if (data.simpan.length > 0) {
+
                     Promise.all(
                         data.simpan.map(item => {
+
+                            console.log('Item Comment : ', item.FULLNAME)
+
                             let model = {
                                 FINDING_COMMENT_ID: item.FINDING_COMMENT_ID,
                                 FINDING_CODE: item.FINDING_CODE,
                                 USER_AUTH_CODE: item.USER_AUTH_CODE,
                                 MESSAGE: item.MESSAGE,
-                                INSERT_TIME: data.INSERT_TIME !== undefined ? item.INSERT_TIME.toString() : "0",
-                                TAGS: data.TAGS !== undefined ? item.TAGS : [],
+                                INSERT_TIME: item.INSERT_TIME !== undefined ? item.INSERT_TIME.toString() : "0",
+                                TAGS: item.TAGS !== undefined ? item.TAGS : [],
                                 /* LOCAL PARAM */
                                 STATUS_SYNC: 'Y',
-                                USERNAME: data.FULLNAME !== undefined ? item.FULLNAME : "NO_NAME"
+                                USERNAME: item.FULLNAME !== undefined ? item.FULLNAME : "NO_NAME"
                             };
 
 

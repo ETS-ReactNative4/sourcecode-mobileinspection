@@ -28,8 +28,9 @@ export async function uploadFindingComment() {
                     "USER_AUTH_CODE": data.USER_AUTH_CODE,
                     "MESSAGE": data.MESSAGE,
                     "INSERT_TIME": data.INSERT_TIME,
-                    "TAGS": taggedUser
+                    "TAG_USER": taggedUser
                 };
+
                 await postFindingComment(commentModel)
                     .then((response) => {
                         if (response) {
@@ -57,6 +58,8 @@ export async function uploadFindingComment() {
 
 async function postFindingComment(model) {
     let fetchStatus = false;
+
+    console.log('Param Comment : ', model)
 
     await syncFetchPost("FINDING-COMMENT-INSERT", model, null)
         .then(((data) => {

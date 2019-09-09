@@ -33,9 +33,12 @@ export function NotificationFinding(data, user) {
     else if (data.INSERT_USER == user.USER_AUTH_CODE
         && data.INSERT_USER != data.ASSIGN_TO) {
         if (data.PROGRESS >= 100) {
-
-            /* PROGRAM SUDAH SELESAI */
+            /* TEMUAN SUDAH SELESAI */
             newNotif.NOTIFICATION_TYPE = 4;
+            TaskServices.saveData('TR_NOTIFICATION', newNotif);
+        } else if (data.PROGRESS > 0 && data.PROGRESS < 100) {
+            /* TEMUAN INPROGRESS */
+            newNotif.NOTIFICATION_TYPE = 1;
             TaskServices.saveData('TR_NOTIFICATION', newNotif);
         }
     }
