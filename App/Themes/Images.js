@@ -31,6 +31,8 @@ const images = {
     ic_blm_input_lokasi: require('../Images/ic-blm-input-lokasi.png'),
     ic_data_not_match: require('../Images/ic_datanotmatch.png'),
     ic_add_image: require('../Images/icon/icon_add_img.png'),
+    ic_sync_berhasil : require('../Images/ic-sync-berhasil.png'),
+    ic_sync_gagal : require('../Images/ic-sync-gagal.png'),
 
     //Icon Inbox
     ic_wait_rating: require('../Images/icon/icon_menunggu_rating.png'),
