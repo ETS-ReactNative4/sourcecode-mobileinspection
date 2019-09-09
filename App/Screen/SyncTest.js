@@ -68,6 +68,7 @@ import { getFindingComment } from './Sync/Download/DownloadFindingComment';
 import { getFindingImage } from './Sync/Download/DownloadFindingImage';
 import { getTimeServer } from './Sync/Download/DownloadTimeServer';
 import { getResetToken } from './Sync/Download/DownloadResetToken';
+import { Images, AlertContent } from '../Themes';
 
 class SyncScreen extends React.Component {
 
@@ -370,25 +371,24 @@ class SyncScreen extends React.Component {
                 getResetToken(isSync).then((data) => {
                     console.log('Data Callback Reset Token : ', data)
                     if (data.isResetSync) {
-                        this.setState({
-                            showModal: true,
-                            title: 'Sync Berhasil',
-                            message: 'Yeay sinkronisasi udah selesai!',
-                            icon: require('../Images/ic-sync-berhasil.png'),
-                            showButton: true,
-                            finishedSync: true,
-                            pickedWerks: data.pickedWerks
-                        });
+                        if (data.isUpdateToken) {
+
+                            let tempSync = {
+                                ...AlertContent.sync_berhasil,
+                                pickedWerks: data.pickedWerks
+                            }
+
+                            this.setState(tempSync)
+
+                        } else {
+                            this.setState(AlertContent.sync_gagal_token);
+                        }
                     } else {
-                        this.setState({
-                            showButton: true,
-                            showModal: true,
-                            title: 'Tidak Sinkron',
-                            message: 'Jam di HP kamu salah',
-                            icon: require('../Images/ic-sync-gagal.png')
-                        })
+                        this.setState(AlertContent.sync_tidak_sinkron)
                     }
                 });
+            } else {
+                this.setState(AlertContent.sync_tidak_sinkron)
             }
 
         })
@@ -435,7 +435,6 @@ class SyncScreen extends React.Component {
                                 index++;
                             }
                         }
-
                         this._onSync()
                     });
             } else {
