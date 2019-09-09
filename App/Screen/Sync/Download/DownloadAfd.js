@@ -12,44 +12,58 @@ export async function getAfd() {
         totalCount: dbLocal.length
     };
 
+    /* DEFAULT MIDLEWARE */
     await getAPIFunction('AUTH-SYNC-HS-AFD').then((data) => {
 
-        if (data != null) {
-            if (data.simpan.length > 0) {
-                Promise.all(
-                    data.simpan.map(item => {
-                        TaskServices.saveData('TM_AFD', item);
-                        downloadLabels = {
-                            ...downloadLabels,
-                            downloadCount: downloadLabels.downloadCount + 1
-                        }
-                    })
-                )
+        try {
+            if (data != null) {
+                if (data.simpan.length > 0) {
+                    Promise.all(
+                        data.simpan.map(item => {
 
-                const param = {
-                    TGL_MOBILE_SYNC: moment().format('YYYY-MM-DD kk:mm:ss'),
-                    TABEL_UPDATE: 'hectare-statement/afdeling'
+                            /* INSERT DATA AFD */
+                            TaskServices.saveData('TM_AFD', item);
+
+                            /* CALLBACK DATA */
+                            downloadLabels = {
+                                ...downloadLabels,
+                                downloadCount: downloadLabels.downloadCount + 1
+                            }
+                        })
+                    )
+
+                    const param = {
+                        TGL_MOBILE_SYNC: moment().format('YYYY-MM-DD kk:mm:ss'),
+                        TABEL_UPDATE: 'hectare-statement/afdeling'
+                    }
+
+                    /* UPDATE MOBILE SYNC DATA */
+                    postMobileSync(param, 'TM_AFD');
                 }
 
-                postMobileSync(param, 'TM_AFD');
-            }
+                if (data.ubah.length > 0 && allData.length > 0) {
+                    data.ubah.map(item => {
+                          /* UPDATE DATA AFD */
+                        TaskServices.updateByPrimaryKey('TM_AFD', item);
+                    })
+                }
 
-            if (data.ubah.length > 0 && allData.length > 0) {
-                data.ubah.map(item => {
-                    TaskServices.updateByPrimaryKey('TM_AFD', item);
-                })
+                if (data.hapus.length > 0 && allData.length > 0) {
+                    data.hapus.map(item => {
+                          /* DELETE DATA AFD */
+                        TaskServices.deleteRecordByPK('TM_AFD', 'WERKS_AFD_CODE', item.WERKS_AFD_CODE);
+                    });
+                }
+            } else {
+                downloadLabels = {
+                    ...downloadLabels
+                }
             }
-
-            if (data.hapus.length > 0 && allData.length > 0) {
-                data.hapus.map(item => {
-                    TaskServices.deleteRecordByPK('TM_AFD', 'WERKS_AFD_CODE', item.WERKS_AFD_CODE);
-                });
-            }
-        } else {
-            downloadLabels = {
-                ...downloadLabels
-            }
+        } catch (error) {
+            console.log('CATCH AFD : ', error)
         }
+
+
     })
 
     return downloadLabels;
