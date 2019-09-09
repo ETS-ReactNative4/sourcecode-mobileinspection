@@ -80,7 +80,8 @@ async function postImage(paramImageModel){
                 }
                 else {
                     fetchStatus = false;
-                    console.log("upload postImage failed")
+                    console.log("upload postImage failed");
+                    console.log("upload postImage response", response);
                 }
             }
             else {

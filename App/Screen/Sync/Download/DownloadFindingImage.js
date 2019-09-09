@@ -19,8 +19,12 @@ export async function getFindingImage() {
             if (data.simpan.length > 0) {
                 Promise.all(
                     data.simpan.map(item => {
-                        TaskServices.saveData('TR_IMAGE', item);
-                        downloadImageFinding(item)
+                        let tempItem = {
+                            ...item,
+                            STATUS_SYNC: 'Y'
+                        }
+                        TaskServices.saveData('TR_IMAGE', tempItem);
+                        downloadImageFinding(item);
                         downloadLabels = {
                             ...downloadLabels,
                             downloadCount: downloadLabels.downloadCount + 1

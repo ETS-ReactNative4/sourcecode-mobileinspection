@@ -72,6 +72,7 @@ async function postImageUser(paramImageModel){
                 else {
                     fetchStatus = false;
                     console.log("upload postImageUser failed")
+                    console.log("upload postImageUser response", response);
                 }
             }
             else {

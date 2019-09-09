@@ -692,82 +692,6 @@ class SyncScreen extends React.Component {
         }
     }
 
-    kirimEbccHeader() {
-        let dataHeader = TaskServices.getAllData('TR_H_EBCC_VALIDATION');
-        var query = dataHeader.filtered('STATUS_SYNC = "N"');
-        let countData = query;
-        this.setState({ progressEbcc: 1, valueEbcc: countData.length, totalEbcc: countData.length });
-        if (countData.length > 0) {
-            for (var i = 0; i < countData.length; i++) {
-                this.postEbccHeader(countData[i]);
-            }
-        } else {
-            this.setState({ progressEbcc: 1, valueEbcc: 0, totalEbcc: 0 });
-        }
-    }
-
-    kirimEbccDetail() {
-        let dataHeader = TaskServices.getAllData('TR_D_EBCC_VALIDATION');
-        var query = dataHeader.filtered('STATUS_SYNC = "N"');
-        let countData = query;
-        this.setState({ progressEbccDetail: 1, valueEbccDetail: countData.length, totalEbccDetail: countData.length });
-        if (countData.length > 0) {
-            for (var i = 0; i < countData.length; i++) {
-                this.postEbccDetail(countData[i]);
-            }
-        } else {
-            this.setState({ progressEbccDetail: 1, valueEbccDetail: 0, totalEbccDetail: 0 });
-        }
-    }
-
-    kirimUserImage() {
-        try {
-            const user = TaskServices.getAllData('TR_LOGIN')[0];
-            let all = TaskServices.getAllData('TR_IMAGE_PROFILE');
-            var dataImageUser = TaskServices.query('TR_IMAGE_PROFILE', `STATUS_SYNC = 'N'`);
-            if (all !== undefined && dataImageUser !== undefined) {
-                this.setState({ totalImageUserUpload: dataImageUser.length })
-                for (let i = 0; i < dataImageUser.length; ++i) {
-                    let model = dataImageUser[i];
-                    RNFS.exists(`file://${model.IMAGE_PATH_LOCAL}`).
-                        then((exists) => {
-                            if (exists) {
-                                var data = new FormData();
-                                data.append('FILENAME', {
-                                    uri: `file://${model.IMAGE_PATH_LOCAL}`,
-                                    type: 'image/jpeg',
-                                    name: model.IMAGE_NAME,
-                                });
-                                const url = this.getAPIURL("IMAGES-PROFILE");
-                                fetchFormPostAPI(this.state.user.ACCESS_TOKEN, url.API_URL, data).then(((result) => {
-                                    if (result != undefined) {
-                                        if (result.status) {
-                                            this.setState({ valueImageUserUpload: i + 1 });
-                                            TaskServices.updateByPrimaryKey('TR_IMAGE_PROFILE', {
-                                                "USER_AUTH_CODE": model.USER_AUTH_CODE,
-                                                "STATUS_SYNC": "Y"
-                                            });
-                                        }
-                                    } else {
-                                        this.setState({
-                                            uploadErrorFlag: true
-                                        }, () => { console.log("kirimUserImage Server Timeout") })
-                                    }
-                                }));
-                            } else {
-                                let data = TaskServices.getAllData('TR_IMAGE');
-                                let indexData = R.findIndex(R.propEq('IMAGE_CODE', model.IMAGE_CODE))(data);
-                                TaskServices.deleteRecord('TR_IMAGE', indexData)
-                            }
-                        })
-                }
-            }
-            this.setState({ progressUploadImageUser: 1 });
-        } catch (error) {
-            this.setState({ progressUploadImageUser: 1, valueImageUserUpload: 0, totalImageUserUpload: 0 });
-        }
-    }
-
     downloadFindingComment() {
         let TM_SERVICE = TaskServices.findBy2("TM_SERVICE", 'API_NAME', 'AUTH-SYNC-FINDING-COMMENT');
         const user = TaskServices.getAllData('TR_LOGIN')[0];
@@ -880,253 +804,6 @@ class SyncScreen extends React.Component {
                 }, () => { console.log("weekly summary Server Timeout"); })
             }
         }));
-    }
-
-    uploadData(URL, dataPost, table, idInspection) {
-        const user = TaskServices.getAllData('TR_LOGIN')[0];
-        fetchPostAPI(user.ACCESS_TOKEN, URL.API_URL, dataPost).then(((result) => {
-            console.log('Result Upload Data : ' + table, result)
-            if (result != undefined) {
-                if (result.status) {
-                    if (table == 'header') {
-                        this.updateInspeksi(dataPost);
-                        // this.updateInspeksiBaris(idInspection);
-                    } else if (table == 'detailHeader') {
-                        this.updateInspeksiDetail(dataPost)
-                        this.updateSyncInpesctionBaris()
-                    } else if (table == 'tracking') {
-                        console.log("track", result);
-                        this.updateInspeksiTrack(dataPost)
-                    } else if (table == 'finding') {
-                        //let imgHasSent = this.checkImageHasSent(dataPost.FINDING_CODE)
-                        //if(imgHasSent){
-                        this.updateFinding(dataPost)
-                        //}
-                    } else if (table == 'ebccH') {
-                        //let imgHasSent = this.checkImageHasSent(dataPost.EBCC_VALIDATION_CODE)
-                        //if(imgHasSent){
-                        this.updateEbccHeader(dataPost)
-                        //}
-                    } else if (table == 'ebccD') {
-                        this.updateEbccDetail(dataPost, idInspection)
-                    }
-                }
-            } else {
-                this.setState({
-                    uploadErrorFlag: true
-                }, () => { console.log("upload data Server Timeout") })
-            }
-        }));
-    }
-
-    checkImageHasSent(trCode) {
-        let images = TaskServices.findBy('TR_IMAGE', 'TR_CODE', trCode);
-        if (images !== undefined) {
-            for (var i = 0; i < images.length; i++) {
-                if (images.STATUS_SYNC == 'N') {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    headerHasSent(idInspection) {
-        let header = TaskServices.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', idInspection);
-        if (header !== undefined) {
-            for (var i = 0; i < header.length; i++) {
-                let image = this.checkImageHasSent(header[i].BLOCK_INSPECTION_CODE)
-                if (image && header[i].STATUS_SYNC == 'N') {
-                    return false;
-                }
-            }
-            return true;
-        }
-        return false;
-    }
-
-    detailHasSent(blockInsCode) {
-        let detail = TaskServices.findBy('TR_BLOCK_INSPECTION_D', 'ID_INSPECTION', blockInsCode);
-        if (detail !== undefined) {
-            for (var j = 0; j < detail.length; j++) {
-                if (detail[j].STATUS_SYNC == 'N') {
-                    return false;
-                }
-            }
-            return true;
-        }
-        return false;
-    }
-
-    updateSyncInpesctionBaris() {
-        let barisIns = TaskServices.findBy('TR_BARIS_INSPECTION', 'STATUS_SYNC', 'N')
-        if (barisIns !== undefined) {
-            barisIns.map(item => {
-                let header = this.headerHasSent(item.ID_INSPECTION)
-                let detail = this.detailHasSent(item.ID_INSPECTION)
-                if (header && detail) {
-                    this.updateInspeksiBaris(item.ID_INSPECTION)
-                }
-            })
-        }
-    }
-
-    updateInspeksi = param => {
-        if (param !== null) {
-            /*let allData = TaskServices.getAllData('TR_BLOCK_INSPECTION_H')
-            let indexData = R.findIndex(R.propEq('BLOCK_INSPECTION_CODE', param.BLOCK_INSPECTION_CODE))(allData);
-            TaskServices.updateInspeksiSync('TR_BLOCK_INSPECTION_H', 'Y', indexData);*/
-            TaskServices.updateByPrimaryKey('TR_BLOCK_INSPECTION_H', {
-                "BLOCK_INSPECTION_CODE": param.BLOCK_INSPECTION_CODE,
-                "STATUS_SYNC": "Y"
-            });
-        }
-    }
-
-    updateInspeksiDetail = param => {
-        if (param !== null) {
-            /*let allData = TaskServices.getAllData('TR_BLOCK_INSPECTION_D')
-            let indexData = R.findIndex(R.propEq('BLOCK_INSPECTION_CODE_D', param.BLOCK_INSPECTION_CODE_D))(allData);
-            TaskServices.updateInspeksiSync('TR_BLOCK_INSPECTION_D', 'Y', indexData);*/
-            TaskServices.updateByPrimaryKey('TR_BLOCK_INSPECTION_D', {
-                "BLOCK_INSPECTION_CODE_D": param.BLOCK_INSPECTION_CODE_D,
-                "STATUS_SYNC": "Y"
-            });
-        }
-    }
-
-    updateInspeksiTrack = param => {
-        if (param !== null) {
-            /*let allData = TaskServices.getAllData('TM_INSPECTION_TRACK')
-            let indexData = R.findIndex(R.propEq('TRACK_INSPECTION_CODE', param.TRACK_INSPECTION_CODE))(allData);
-            TaskServices.updateInspeksiSync('TM_INSPECTION_TRACK', 'Y', indexData);*/
-            TaskServices.updateByPrimaryKey('TM_INSPECTION_TRACK', {
-                "TRACK_INSPECTION_CODE": param.TRACK_INSPECTION_CODE,
-                "STATUS_SYNC": "Y"
-            });
-        }
-    }
-
-    updateInspeksiBaris = param => {
-        if (param !== null) {
-            /*let allData = TaskServices.getAllData('TR_BARIS_INSPECTION');
-            let indexData = R.findIndex(R.propEq('ID_INSPECTION', param))(allData);
-            TaskServices.updateInspeksiSync('TR_BARIS_INSPECTION', 'Y', indexData);*/
-            TaskServices.updateByPrimaryKey('TR_BARIS_INSPECTION', {
-                "ID_INSPECTION": param,
-                "STATUS_SYNC": "Y"
-            });
-        }
-    }
-
-    updateFinding = param => {
-        if (param !== undefined) {
-            try {
-                TaskServices.updateByPrimaryKey('TR_FINDING', {
-                    "FINDING_CODE": param.FINDING_CODE,
-                    "STATUS_SYNC": "Y"
-                });
-            }
-            catch (e) {
-                console.log("error updateFinding", e);
-            }
-        }
-    }
-    updateEbccHeader = param => {
-        if (param !== undefined) {
-            TaskServices.updateByPrimaryKey('TR_H_EBCC_VALIDATION', {
-                "EBCC_VALIDATION_CODE": param.EBCC_VALIDATION_CODE,
-                "STATUS_SYNC": "Y"
-            });
-        }
-    }
-
-    updateEbccDetail = (param, ebccValCodeD) => {
-        if (param !== undefined) {
-            TaskServices.updateByPrimaryKey('TR_D_EBCC_VALIDATION', {
-                "EBCC_VALIDATION_CODE_D": ebccValCodeD,
-                "STATUS_SYNC": "Y"
-            });
-        }
-    }
-
-    kirimFinding(param) {
-
-        let dueDate = param.DUE_DATE;
-        if (dueDate.includes(' ')) {
-            dueDate = dueDate.substring(0, dueDate.indexOf(' '))
-        }
-        if (dueDate.length > 0) {
-            dueDate += " 00:00:00"
-        }
-        let data = {
-            FINDING_CODE: param.FINDING_CODE,
-            WERKS: param.WERKS,
-            AFD_CODE: param.AFD_CODE,
-            BLOCK_CODE: param.BLOCK_CODE,
-            FINDING_CATEGORY: param.FINDING_CATEGORY,
-            FINDING_DESC: param.FINDING_DESC,
-            FINDING_PRIORITY: param.FINDING_PRIORITY,
-            DUE_DATE: dueDate,
-            ASSIGN_TO: param.ASSIGN_TO,
-            PROGRESS: param.PROGRESS.toString(),
-            LAT_FINDING: param.LAT_FINDING,
-            LONG_FINDING: param.LONG_FINDING,
-            //STATUS_TRACK: param.STATUS_LAT_LONG,
-            REFFERENCE_INS_CODE: param.REFFERENCE_INS_CODE,
-            STATUS_SYNC: 'Y',
-            INSERT_USER: param.INSERT_USER,
-            INSERT_TIME: param.INSERT_TIME == '' ? parseInt(getTodayDate('YYYYMMDDkkmmss')) : parseInt(param.INSERT_TIME.replace(/-/g, '').replace(/ /g, '').replace(/:/g, '')),
-            UPDATE_USER: param.UPDATE_USER,
-            UPDATE_TIME: param.UPDATE_TIME == '' ? parseInt(getTodayDate('YYYYMMDDkkmmss')) : parseInt(param.UPDATE_TIME.replace(/-/g, '').replace(/ /g, '').replace(/:/g, '')),
-            RATING_VALUE: param.RATING_VALUE,
-            RATING_MESSAGE: param.RATING_MESSAGE,
-            END_TIME: param.END_TIME != "" ? parseInt(param.END_TIME) : "",
-        }
-
-        console.log('Param Finding : ', data)
-        // if (param.RATING) {
-        //     data.RATING = param.RATING;
-        // }
-        this.uploadData(this.getAPIURL("FINDING-INSERT"), data, 'finding', '');
-    }
-
-    postEbccHeader(param) {
-        let data = {
-            EBCC_VALIDATION_CODE: param.EBCC_VALIDATION_CODE,
-            WERKS: param.WERKS,
-            AFD_CODE: param.AFD_CODE,
-            BLOCK_CODE: param.BLOCK_CODE,
-            NO_TPH: param.NO_TPH,
-            STATUS_TPH_SCAN: param.STATUS_TPH_SCAN,
-            ALASAN_MANUAL: param.ALASAN_MANUAL,
-            LAT_TPH: param.LAT_TPH,
-            LON_TPH: param.LON_TPH,
-            DELIVERY_CODE: param.DELIVERY_CODE,
-            STATUS_DELIVERY_CODE: param.STATUS_DELIVERY_CODE,
-            STATUS_SYNC: 'SYNC',
-            SYNC_TIME: parseInt(getTodayDate('YYYYMMDDkkmmss')),
-            INSERT_USER: param.INSERT_USER,
-            INSERT_TIME: parseInt(convertTimestampToDate(param.INSERT_TIME, 'YYYYMMDDkkmmss')),
-            UPDATE_USER: '',
-            UPDATE_TIME: parseInt(getTodayDate('YYYYMMDDkkmmss'))
-        }
-        this.uploadData(this.getAPIURL("EBCC-VALIDATION-HEADER-INSERT"), data, 'ebccH', '');
-    }
-
-    postEbccDetail(param) {
-        let data = {
-            EBCC_VALIDATION_CODE: param.EBCC_VALIDATION_CODE,
-            ID_KUALITAS: param.ID_KUALITAS,
-            JUMLAH: param.JUMLAH,
-            STATUS_SYNC: 'SYNC',
-            SYNC_TIME: parseInt(getTodayDate('YYYYMMDDkkmmss')),
-            INSERT_TIME: parseInt(convertTimestampToDate(param.INSERT_TIME, 'YYYYMMDDkkmmss')),
-            INSERT_USER: param.INSERT_USER,
-            UPDATE_USER: '',
-            UPDATE_TIME: 0
-        }
-        this.uploadData(this.getAPIURL("EBCC-VALIDATION-DETAIL-INSERT"), data, 'ebccD', param.EBCC_VALIDATION_CODE_D);
     }
 
     hasDownload(item, total) {
@@ -1921,31 +1598,6 @@ class SyncScreen extends React.Component {
                 }
             });
 
-        //Upload Finding Comment
-        // await uploadFindingComment()
-        // this.SyncInspection()
-        //     .then((response) => { });
-
-        uploadGenba()
-            .then((response) => {
-                if (response.syncStatus) {
-                    this.setState({
-                        progressFindingCommentData: 1,
-                        valueFindingCommentDataUpload: response.uploadCount,
-                        totalFindingCommentDataUpload: response.totalCount
-                    });
-                }
-                else {
-                    //error
-                    this.setState({
-                        uploadErrorFlag: true,
-                        progressFindingCommentData: 1,
-                        valueFindingCommentDataUpload: 0,
-                        totalFindingCommentDataUpload: 0
-                    });
-                }
-            });
-
         this.downloadWeeklySummary();
 
         this.checkUpdate()
@@ -1997,6 +1649,26 @@ class SyncScreen extends React.Component {
                         progressFindingData: 1,
                         valueFindingDataUpload: 0,
                         totalFindingDataUpload: 0,
+                    });
+                }
+            });
+
+        await uploadFindingComment()
+            .then(async (response) => {
+                if (response.syncStatus) {
+                    await this.setState({
+                        progressFindingCommentData: 1,
+                        valueFindingCommentDataUpload: response.uploadCount,
+                        totalFindingCommentDataUpload: response.totalCount
+                    });
+                }
+                else {
+                    //error
+                    await this.setState({
+                        uploadErrorFlag: true,
+                        progressFindingCommentData: 1,
+                        valueFindingCommentDataUpload: 0,
+                        totalFindingCommentDataUpload: 0,
                     });
                 }
             });
@@ -2066,7 +1738,17 @@ class SyncScreen extends React.Component {
                 }
             });
 
-        uploadGenba()
+        // check inspection image klo sudah terkirim, imageSync = "Y"
+        // response = true, semua image sudah terkirim.
+        await inspectionImageSyncStatus()
+            .then((response) => {
+            });
+
+        await updateInspectionStatus()
+            .then((response) => {
+            });
+
+        await uploadGenba()
             .then((response) => {
                 if (response.syncStatus) {
                     this.setState({
@@ -2084,16 +1766,6 @@ class SyncScreen extends React.Component {
                         totalGenbaInspection: 0
                     });
                 }
-            });
-
-        // check inspection image klo sudah terkirim, imageSync = "Y"
-        // response = true, semua image sudah terkirim.
-        await inspectionImageSyncStatus()
-            .then((response) => {
-            });
-
-        await updateInspectionStatus()
-            .then((response) => {
             });
 
     }

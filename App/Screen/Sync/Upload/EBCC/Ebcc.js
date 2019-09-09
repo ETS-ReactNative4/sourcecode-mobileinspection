@@ -156,11 +156,13 @@ async function postEbccDetail(paramEbccModel){
                 else {
                     fetchStatus = false;
                     console.log("upload postEbccDetail failed");
+                    console.log("upload postEbccDetail request", ebccModel);
+                    console.log("upload postEbccDetail response", response);
                 }
             }
             else {
                 fetchStatus = false;
-                console.log("upload postEbccDetail Server Timeout")
+                console.log("upload postEbccDetail Server Timeout");
             }
         }));
     return fetchStatus;

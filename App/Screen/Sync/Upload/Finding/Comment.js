@@ -69,6 +69,8 @@ async function postFindingComment(model) {
                 else {
                     fetchStatus = false;
                     console.log("upload postFindingComment failed");
+                    console.log("upload postFindingComment request", model);
+                    console.log("upload postFindingComment response", response);
                 }
             }
             else {

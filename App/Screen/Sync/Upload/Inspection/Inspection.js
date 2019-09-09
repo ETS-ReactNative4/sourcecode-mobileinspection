@@ -390,6 +390,8 @@ async function postGenba(genbaModel) {
                 else {
                     fetchStatus = false;
                     console.log("upload postGenba failed");
+                    console.log("upload postImageUser request", inspectionGenbaModel);
+                    console.log("upload postImageUser response", response);
                 }
             }
             else {

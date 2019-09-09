@@ -88,6 +88,8 @@ async function postFinding(paramFindingModel){
                 else {
                     fetchStatus = false;
                     console.log("upload postFinding failed");
+                    console.log("upload postFinding request", findingModel);
+                    console.log("upload postFinding response", response);
                 }
             }
             else {
