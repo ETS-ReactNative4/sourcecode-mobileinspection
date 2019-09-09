@@ -50,6 +50,22 @@ import { uploadInspectionHeader, uploadInspectionDetail, uploadInspectionTrack, 
 //EBCC
 import { uploadEbccHeader, uploadEbccDetail, EBCCImageSyncStatus } from './Sync/Upload/EBCC/Ebcc';
 
+/* DOWNLOAD */
+import { getFinding } from './Sync/Download/DownloadFinding';
+import { getBlock } from './Sync/Download/DownloadBlock';
+import { getAfd } from './Sync/Download/DownloadAfd';
+import { getRegion } from './Sync/Download/DownloadRegion';
+import { getEstate } from './Sync/Download/DownloadEstate';
+import { getLandUse } from './Sync/Download/DownloadLandUse';
+import { getComp } from './Sync/Download/DownloadComp';
+import { getContent } from './Sync/Download/DownloadContent';
+import { getKriteria } from './Sync/Download/DownloadKriteria';
+import { getCategory } from './Sync/Download/DownloadCategory';
+import { getContact } from './Sync/Download/DownloadContact';
+import { getParamTrack } from './Sync/Download/DownloadParamTrack';
+import { getKualitas } from './Sync/Download/DownloadKualitas';
+import { getFindingComment } from './Sync/Download/DownloadFindingComment';
+import { getFindingImage } from './Sync/Download/DownloadFindingImage';
 
 class SyncScreen extends React.Component {
 
@@ -190,6 +206,160 @@ class SyncScreen extends React.Component {
         }
     }
 
+    /** CREATE BY AMINJU SPRINT 16 ==> 02-06 SEPT 2019 */
+    syncDownload() {
+        /* DOWNLOAD FINDING */
+        /* INCLUDE NOTIFICATION FINDING */
+        getFinding().then((data) => {
+            console.log('Data Callback Finding : ', data)
+            this.setState({
+                progressFinding: 1,
+                valueFindingDownload: data.downloadCount,
+                totalFindingDownload: data.totalCount
+            })
+        })
+
+        /* DOWNLOAD FINDING IMAGE */
+        getFindingImage().then((data) => {
+            console.log('Data Callback Finding Image: ', data)
+            this.setState({
+                progressFindingImage: 1,
+                valueFindingImageDownload: data.downloadCount,
+                totalFindingImageDownload: data.totalCount
+            })
+        })
+
+        /* DOWNLOAD FINDING COMMENT */
+        getFindingComment().then((data) => {
+            console.log('Data Callback Finding Comment: ', data)
+            this.setState({
+                progressFindingCommentDownload: 1,
+                valueFindingCommentDownload: data.downloadCount,
+                totalFindingCommentDownload: data.totalCount
+            })
+        })
+
+        /* DOWNLOAD BLOCK */
+        getBlock().then((data) => {
+            console.log('Data Callback Block : ', data)
+            this.setState({
+                progress: 1,
+                valueDownload: data.downloadCount,
+                totalDownload: data.totalCount
+            })
+        })
+
+        /* DOWNLOAD AFDELING */
+        getAfd().then((data) => {
+            console.log('Data Callback Afd : ', data)
+            this.setState({
+                progressAfd: 1,
+                valueAfdDownload: data.downloadCount,
+                totalAfdDownload: data.totalCount
+            })
+        })
+
+        /* DOWNLOAD REGION */
+        getRegion().then((data) => {
+            console.log('Data Callback Region : ', data)
+            this.setState({
+                progressRegion: 1,
+                valueRegionDownload: data.downloadCount,
+                totalRegionDownload: data.totalCount
+            })
+        })
+
+        /* DOWNLOAD ESTATE */
+        getEstate().then((data) => {
+            console.log('Data Callback Estate : ', data)
+            this.setState({
+                progressEst: 1,
+                valueEstDownload: data.downloadCount,
+                totalEstDownload: data.totalCount
+            })
+        })
+
+        /* DOWNLOAD LANDUSE */
+        getLandUse().then((data) => {
+            console.log('Data Callback LandUse : ', data)
+            this.setState({
+                progressLandUse: 1,
+                valueLandUseDownload: data.downloadCount,
+                totalLandUseDownload: data.totalCount
+            })
+        })
+
+        /* DOWNLOAD COMP */
+        getComp().then((data) => {
+            console.log('Data Callback Comp : ', data)
+            this.setState({
+                progressComp: 1,
+                valueCompDownload: data.downloadCount,
+                totalCompDownload: data.totalCount
+            })
+        })
+
+        /* DOWNLOAD CONTENT */
+        getContent().then((data) => {
+            console.log('Data Callback Content : ', data)
+            this.setState({
+                progressContent: 1,
+                valueContentDownload: data.downloadCount,
+                totalContentDownload: data.totalCount
+            })
+        })
+
+        /* DOWNLOAD KRITERIA */
+        getKriteria().then((data) => {
+            console.log('Data Callback Kriteria : ', data)
+            this.setState({
+                progressKriteria: 1,
+                valueKriteriaDownload: data.downloadCount,
+                totalKriteriaDownload: data.totalCount
+            })
+        })
+
+        /* DOWNLOAD CATEGORY */
+        getCategory().then((data) => {
+            console.log('Data Callback Category : ', data)
+            this.setState({
+                progressCategory: 1,
+                valueCategoryDownload: data.downloadCount,
+                totalCategoryDownload: data.totalCount
+            })
+        })
+
+        /* DOWNLOAD CATEGORY */
+        getContact().then((data) => {
+            console.log('Data Callback Contact : ', data)
+            this.setState({
+                progressContact: 1,
+                valueContactDownload: data.downloadCount,
+                totalContactDownload: data.totalCount
+            })
+        })
+
+        /* DOWNLOAD PARAM TRACK INSPECTION */
+        getParamTrack().then((data) => {
+            console.log('Data Callback Param Track  : ', data)
+            this.setState({
+                progressParamInspection: 1,
+                valueParamInspection: data.downloadCount,
+                totalParamInspection: data.totalCount
+            })
+        })
+
+        /* DOWNLOAD PARAM KUALITAS */
+        getKualitas().then((data) => {
+            console.log('Data Callback Kualitas : ', data)
+            this.setState({
+                progressKualitas: 1,
+                valueKualitas: data.downloadCount,
+                totalKualitas: data.totalCount
+            })
+        })
+    }
+
     getAPIURL(apiName) {
         let serv = TaskServices.getAllData("TM_SERVICE").filtered('API_NAME="' + apiName + '" AND MOBILE_VERSION="' + ServerName.verAPK + '"');
         if (serv.length > 0) {
@@ -231,7 +401,8 @@ class SyncScreen extends React.Component {
                                 index++;
                             }
                         }
-                        this._onSync()
+                        this.syncDownload()
+                        // this._onSync()
                     });
             } else {
                 this.setState({
@@ -1323,8 +1494,8 @@ class SyncScreen extends React.Component {
     }
 
     _updateTR_Notif_Comment(param) {
-        let getFinding = TaskServices.findBy("TR_FINDING", "FINDING_CODE", param.FINDING_CODE).sorted('INSERT_TIME', true);
-        if (getFinding !== undefined) {
+        let getFindingNgakak = TaskServices.findBy("TR_FINDING", "FINDING_CODE", param.FINDING_CODE).sorted('INSERT_TIME', true);
+        if (getFindingNgakak !== undefined) {
             let newNotif = {
                 NOTIFICATION_ID: param.FINDING_COMMENT_ID + "$" + param.USERNAME,
                 NOTIFICATION_TIME: new Date(),
@@ -1332,7 +1503,7 @@ class SyncScreen extends React.Component {
                 FINDING_CODE: param.FINDING_CODE
             };
             //inbox comment kalo di assign/nge assign
-            getFinding.map(data => {
+            getFindingNgakak.map(data => {
                 if (data.ASSIGN_TO == this.state.user.USER_AUTH_CODE || data.INSERT_USER == this.state.user.USER_AUTH_CODE) {
                     let newData = { ...newNotif, NOTIFICATION_TYPE: 6 }
                     TaskServices.saveData('TR_NOTIFICATION', newData);
@@ -1558,7 +1729,7 @@ class SyncScreen extends React.Component {
 
     resetSagas() {
         this.props.resetServerTime();
-        this.props.resetFinding();
+        // this.props.resetFinding();
         this.props.resetFindingImage();
         this.props.resetBlock();
         this.props.resetAfd();
@@ -1670,11 +1841,11 @@ class SyncScreen extends React.Component {
             .then((response) => {
                 if (response.syncStatus) {
                     this.SyncUploadFinding()
-                        .then(()=>{});
+                        .then(() => { });
                     this.SyncUploadInspection()
-                        .then(()=>{});
+                        .then(() => { });
                     this.SyncUploadEBCC()
-                        .then(()=>{})
+                        .then(() => { })
 
                     // this.kirimEbccHeader();
                     // this.kirimEbccDetail();
@@ -1697,7 +1868,7 @@ class SyncScreen extends React.Component {
             });
         // this.kirimUserImage();
         await uploadImageProfile()
-            .then((response)=>{
+            .then((response) => {
                 if (response.syncStatus) {
                     this.setState({
                         progressUploadImageUser: 1,
@@ -1717,7 +1888,11 @@ class SyncScreen extends React.Component {
             });
 
         //Upload Finding Comment
-        await uploadFindingComment()
+        // await uploadFindingComment()
+        // this.SyncInspection()
+        //     .then((response) => { });
+
+        uploadGenba()
             .then((response) => {
                 if (response.syncStatus) {
                     this.setState({
@@ -1754,8 +1929,9 @@ class SyncScreen extends React.Component {
                     }
                     else {
                         //cara redux saga
-                        this.props.findingRequest();
-                        this.props.blockRequest();
+                        // this.props.findingRequest();
+                        // this.props.blockRequest();
+                        this.syncDownload()
                     }
                 }
                 else {
@@ -1770,9 +1946,9 @@ class SyncScreen extends React.Component {
             });
     }
 
-    async SyncUploadFinding(){
+    async SyncUploadFinding() {
         await uploadFinding()
-            .then(async (response)=>{
+            .then(async (response) => {
                 if (response.syncStatus) {
                     await this.setState({
                         progressFindingData: 1,
@@ -1857,7 +2033,7 @@ class SyncScreen extends React.Component {
             });
 
         uploadGenba()
-            .then((response)=>{
+            .then((response) => {
                 if (response.syncStatus) {
                     this.setState({
                         progressGenbaInspection: 1,
@@ -1888,9 +2064,9 @@ class SyncScreen extends React.Component {
 
     }
 
-    async SyncUploadEBCC(){
+    async SyncUploadEBCC() {
         await uploadEbccHeader()
-            .then((response)=>{
+            .then((response) => {
                 if (response.syncStatus) {
                     this.setState({
                         progressEbcc: 1,
@@ -1910,7 +2086,7 @@ class SyncScreen extends React.Component {
             });
 
         await uploadEbccDetail()
-            .then((response)=>{
+            .then((response) => {
                 if (response.syncStatus) {
                     this.setState({
                         progressEbccDetail: 1,
@@ -1930,7 +2106,7 @@ class SyncScreen extends React.Component {
             });
 
         await EBCCImageSyncStatus()
-            .then((reponse)=>{})
+            .then((reponse) => { })
     }
 
     async checkUpdate() {
@@ -2511,7 +2687,7 @@ const mapDispatchToProps = dispatch => {
         // contentLabelPost: obj => dispatch(ContentLabelAction.contentLabelPost(obj)),
         contactRequest: () => dispatch(ContactAction.contactRequest()),
         categoryRequest: () => dispatch(CategoryAction.categoryRequest()),
-        findingRequest: () => dispatch(FindingAction.findingRequest()),
+        // findingRequest: () => dispatch(FindingAction.findingRequest()),
         // findingPost: obj => dispatch(FindingAction.findingPost(obj)),
         findingImageRequest: () => dispatch(FindingImageAction.findingImageRequest()),
         // inspeksiPostHeader: obj => dispatch(InspeksiAction.inspeksiPostHeader(obj)),
@@ -2535,7 +2711,7 @@ const mapDispatchToProps = dispatch => {
         resetCategory: () => dispatch(CategoryAction.resetCategory()),
         resetContact: () => dispatch(ContactAction.resetContact()),
         resetParamTrack: () => dispatch(ParamTrackAction.resetParamTrack()),
-        resetFinding: () => dispatch(FindingAction.resetFinding()),
+        // resetFinding: () => dispatch(FindingAction.resetFinding()),
         resetFindingImage: () => dispatch(FindingImageAction.resetFindingImage()),
         resetKualitas: () => dispatch(KualitasAction.resetKualitas())
     };

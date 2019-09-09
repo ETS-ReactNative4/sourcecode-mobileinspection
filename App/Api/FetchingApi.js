@@ -61,13 +61,15 @@ export function fetchFormPostAPI(token, url, param) {
     });
 }
 
+// ======================================================================
+
 export function fetchPost(serviceName, fetchBody, fetchHeaders) {
     let serviceDetail = TaskServices.getService(serviceName);
     let user = TaskServices.getAllData('TR_LOGIN')[0];
 
     let headers = null;
 
-    if (fetchHeaders !== undefined && fetchHeaders !== null){
+    if (fetchHeaders !== undefined && fetchHeaders !== null) {
         let tempHeaders = {
             ...fetchHeaders,
             'Authorization': 'Bearer ' + user.ACCESS_TOKEN
@@ -103,7 +105,7 @@ export function fetchPostForm(serviceName, fetchBody, fetchHeaders) {
 
     let headers = null;
 
-    if (fetchHeaders !== undefined && fetchHeaders !== null){
+    if (fetchHeaders !== undefined && fetchHeaders !== null) {
         let tempHeaders = {
             ...fetchHeaders,
             'Authorization': 'Bearer ' + user.ACCESS_TOKEN
@@ -123,6 +125,32 @@ export function fetchPostForm(serviceName, fetchBody, fetchHeaders) {
         method: 'POST',
         headers: headers,
         body: fetchBody
+    }).then((response) => {
+        if (response.status === 200) {
+            return response.json()
+        }
+    }).then((data) => {
+        return data;
+    }).catch((err) => {
+        console.log(err)
+    });
+}
+
+// ========================================================================
+
+export function fetchGet(serviceName) {
+    let serviceDetail = TaskServices.getService(serviceName);
+    let user = TaskServices.getAllData('TR_LOGIN')[0];
+
+    headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + user.ACCESS_TOKEN
+    }
+
+    return fetch(serviceDetail.API_URL, {
+        method: 'GET',
+        headers: headers
     }).then((response) => {
         if (response.status === 200) {
             return response.json()

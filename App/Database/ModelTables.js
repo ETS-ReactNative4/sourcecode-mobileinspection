@@ -428,6 +428,7 @@ const TM_CONTENT_LABEL = {
 
 const TM_TIME_TRACK = {
     name: 'TM_TIME_TRACK',
+    primaryKey: 'PARAMETER_GROUP',
     properties: {
         PARAMETER_GROUP: 'string',
         PARAMETER_NAME: 'string',
