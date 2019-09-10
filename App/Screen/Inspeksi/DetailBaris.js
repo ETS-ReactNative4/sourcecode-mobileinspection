@@ -166,7 +166,7 @@ class DetailBaris extends React.Component {
                     return(
                         <View style={{flex:1, flexDirectmion:'column', justifyContent:'center', paddingVertical: 5}}>
                             <Text style={{fontSize:14,fontWeight:'600'}}>{data.FULLNAME}</Text>
-                            <Text style={{fontSize:11, color:'#bdbdbd', marginTop:4}}>{data.JOB}</Text>
+                            <Text style={{fontSize:11, color:'#bdbdbd', marginTop:4}}>{data.USER_ROLE}</Text>
                         </View>
                     )
                 })

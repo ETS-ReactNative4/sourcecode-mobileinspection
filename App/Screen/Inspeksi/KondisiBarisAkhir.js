@@ -54,7 +54,7 @@ class KondisiBarisAkhir extends Component {
         let dataInspeksi = R.clone(params.dataInspeksi);
 
 
-        console.log('DATA LOGIN : ', DATA_LOGIN[0].USER_ROLE);
+        console.log('FROMMMM', from);
 
         this.state = {
             intervalId,
@@ -147,7 +147,7 @@ class KondisiBarisAkhir extends Component {
                 var lon = parseFloat(lastTrack.LONG_TRACK);
                 let totalJarak = this.state.from == 'history' ? this.state.distance : this.totalJarak({ latitude: lat, longitude: lon });
                 region = {
-                    latitude: lat,
+                    latitude: lat - 0.003,
                     longitude: lon,
                     latitudeDelta: 0.0075,
                     longitudeDelta: 0.00721
@@ -159,7 +159,7 @@ class KondisiBarisAkhir extends Component {
                 var lon = parseFloat(lastTrack.LONG_TRACK);
                 let totalJarak = this.state.from == 'history' ? this.state.distance : this.totalJarak({ latitude: lat, longitude: lon });
                 region = {
-                    latitude: lat,
+                    latitude: lat - 0.003,
                     longitude: lon,
                     latitudeDelta: 0.0075,
                     longitudeDelta: 0.00721
@@ -904,6 +904,7 @@ class KondisiBarisAkhir extends Component {
                                                 underlineColorAndroid={'transparent'}
                                                 style={[styles.searchInput, { marginBottom: 10, position: 'absolute', right: 0 }]}
                                                 value={this.state.txtBaris}
+                                                maxLength={3}
                                                 onChangeText={(baris) => {
                                                     baris = baris.replace(/[^0-9]/g, '');
                                                     if (baris !== "0") {

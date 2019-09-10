@@ -119,15 +119,23 @@ class ManualInputTPH extends React.Component{
     }
 
     backSpaceFocus3({ nativeEvent: { key: keyValue } }) {
-        if (keyValue === 'Backspace') {
-            this.txt2.focus()
+        if (keyValue === 'Backspace' && this.state.text3 === "") {
+            this.setState({
+                text2: ""
+            },()=>{
+                this.txt2.focus()
+            });
         }
 
     }
 
     backSpaceFocus2({ nativeEvent: { key: keyValue } }) {
-        if (keyValue === 'Backspace') {
-            this.txt1.focus()
+        if (keyValue === 'Backspace' && this.state.text2 === "") {
+            this.setState({
+                text1: ""
+            },()=>{
+                this.txt1.focus()
+            });
         }
     }
 
@@ -188,7 +196,7 @@ class ManualInputTPH extends React.Component{
     validation(){
         let tph = `${this.state.text1}${this.state.text2}${this.state.text3}`
         let tphAfdWerksBlockCode = `${tph}-${this.state.afdCode}-${this.state.werks}-${this.state.blokCode}`
-        if(this.state.text1 == '' && this.state.text1 == '' && this.state.text1 == '') {
+        if(this.state.text1 == '' || this.state.text2 == '' || this.state.text3 == '') {
             this.setState({ showModal: true, title: 'TPH Belum di Isi', message: 'Kamu harus isi TPH dulu', icon: require('../../Images/ic-blm-input-lokasi.png') });
         }else if(tph === '000'){
             this.setState({ showModal: true, title: 'TPH Salah cuy', message: 'Kamu ga boleh isi no TPH 000', icon: require('../../Images/ic-blm-input-lokasi.png') });
@@ -247,7 +255,17 @@ class ManualInputTPH extends React.Component{
                             maxLength={1}
                             onSubmitEditing={() => this.txt2.focus()}
                             value={this.state.text1}
-                            onChangeText={(text) => { text = text.replace(/[^0-9 ]/g, ''); this.setState({text1: text}); this.nextFocus(text, '1')}} />
+                            onChangeText={(text) => {
+                                text = text.replace(/[^0-9 ]/g, '');
+                                this.setState({
+                                    text1: text
+                                },()=>{
+                                    if(text !== ""){
+                                        this.txt2.focus()
+                                    }
+                                });
+                            }}
+                        />
                         <TextInput
                             ref={(input) => this.txt2 = input}
                             underlineColorAndroid={'transparent'}
@@ -257,7 +275,16 @@ class ManualInputTPH extends React.Component{
                             onSubmitEditing={() => this.txt3.focus()}
                             onKeyPress={ this.backSpaceFocus2 }
                             value={this.state.text2}
-                            onChangeText={(text) => { text = text.replace(/[^0-9 ]/g, ''); this.setState({text2: text}); this.nextFocus(text, '2') }}/>
+                            onChangeText={(text) => {
+                                text = text.replace(/[^0-9 ]/g, '');
+                                this.setState({
+                                    text2: text
+                                },()=>{
+                                    if(text !== ""){
+                                        this.txt3.focus()
+                                    }
+                                });
+                            }}/>
                         <TextInput
                             ref={(input) => this.txt3 = input}
                             underlineColorAndroid={'transparent'}
@@ -266,7 +293,12 @@ class ManualInputTPH extends React.Component{
                             maxLength={1}
                             onKeyPress={ this.backSpaceFocus3 }
                             value={this.state.text3}
-                            onChangeText={(text) => { text = text.replace(/[^0-9 ]/g, ''); this.setState({text3: text}) }}/>
+                            onChangeText={(text) => {
+                                text = text.replace(/[^0-9 ]/g, '');
+                                this.setState({
+                                    text3: text
+                                });
+                            }}/>
                     </View>
 
                     <Text style={[styles.textLabel, {marginTop:60}]}>

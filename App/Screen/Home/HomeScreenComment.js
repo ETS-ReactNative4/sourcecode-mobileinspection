@@ -303,17 +303,16 @@ export default class HomeScreenComment extends Component {
                         >
                             {this.state.commentValue}
                         </TextInput>
-                        <TouchableOpacity onPress={() => {
-                            if(this.state.commentValue.length > 0){
-                                this.insertComment()
-                            }
-                        }}>
-                            <Icon1
-                                style={{ marginLeft: 12 }}
-                                iconName={'keyboard-arrow-right'}
-                                iconSize={25} />
-                        </TouchableOpacity>
                     </View>
+                    <TouchableOpacity onPress={() => {
+                        if(this.state.commentValue.length > 0){
+                            this.insertComment()
+                        }
+                    }}>
+                        <Icon1
+                            iconName={'keyboard-arrow-right'}
+                            iconSize={25} />
+                    </TouchableOpacity>
                 </View>
             </View>
         )

@@ -80,10 +80,12 @@ async function postImage(paramImageModel) {
 
     await fetchPostForm("IMAGES-UPLOAD", imageModel, null)
         .then((response) => {
-            console.log("response",response)
-            console.log("model",imageModel)
             if (response !== undefined) {
                 if (response.status) {
+                    fetchStatus = true;
+                }
+                //temporary di hardcode (HARDCODE - 10 sept 2019)
+                else if (response.status === false && response.message === "Image Code sudah ada di database, gunakan Image Code yang lain."){
                     fetchStatus = true;
                 }
                 else {

@@ -365,7 +365,7 @@ class KondisiBaris1 extends Component {
                             <TextInput
                                 underlineColorAndroid={'transparent'}
                                 style={[styles.searchInput]}
-                                maxLength={2}
+                                maxLength={3}
                                 keyboardType={'numeric'}
                                 value={this.state.brondolPinggir}
                                 onChangeText={(text) => { text = text.replace(/[^0-9]/g, ''); this.setState({ brondolPinggir: text }) }} />
@@ -384,7 +384,7 @@ class KondisiBaris1 extends Component {
                             <TextInput
                                 underlineColorAndroid={'transparent'}
                                 style={[styles.searchInput]}
-                                maxLength={2}
+                                maxLength={3}
                                 keyboardType={'numeric'}
                                 value={this.state.brondolTPH}
                                 onChangeText={(text) => { text = text.replace(/[^0-9]/g, ''); this.setState({ brondolTPH: text }) }}

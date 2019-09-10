@@ -799,7 +799,7 @@ class SyncScreen extends React.Component {
                 }
             } else {
                 this.setState({
-                    uploadErrorFlag: true
+                    uploadErrorFlag: "weeklysummary"
                 }, () => { console.log("weekly summary Server Timeout"); })
             }
         }));
@@ -1570,7 +1570,7 @@ class SyncScreen extends React.Component {
                 else {
                     //error
                     this.setState({
-                        uploadErrorFlag: true,
+                        uploadErrorFlag: "upload-image",
                         progressUploadImage: 1,
                         valueImageUpload: 0,
                         totalImagelUpload: 0
@@ -1590,7 +1590,7 @@ class SyncScreen extends React.Component {
                 else {
                     //error
                     this.setState({
-                        uploadErrorFlag: true,
+                        uploadErrorFlag: "upload-image-profile",
                         progressUploadImageUser: 1,
                         valueImageUserUpload: 0,
                         totalImageUserUpload: 0
