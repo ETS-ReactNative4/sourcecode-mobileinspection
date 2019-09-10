@@ -41,6 +41,14 @@ export async function uploadImage() {
                                     }
                                 });
                         }
+                        else {
+                            console.log("IMAGE PATH DOESNT EXIST, DELETING TR_IMAGE");
+                            TaskServices.deleteRecordByPK('TR_IMAGE', 'IMAGE_CODE', imageModel.IMAGE_CODE);
+                            uploadLabels = {
+                                ...uploadLabels,
+                                totalCount: uploadLabels.totalCount - 1
+                            }
+                        }
                     })
             })
         );
@@ -72,6 +80,8 @@ async function postImage(paramImageModel) {
 
     await fetchPostForm("IMAGES-UPLOAD", imageModel, null)
         .then((response) => {
+            console.log("response",response)
+            console.log("model",imageModel)
             if (response !== undefined) {
                 if (response.status) {
                     fetchStatus = true;

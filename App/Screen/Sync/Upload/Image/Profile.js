@@ -40,7 +40,12 @@ export async function uploadImageProfile(){
                                 }
                             })
                     } else {
-                        TaskServices.deleteRecordByPK('TR_IMAGE', 'USER_AUTH_CODE', imageModel.USER_AUTH_CODE)
+                        console.log("IMAGE PATH DOESNT EXIST, DELETING TR_IMAGE");
+                        TaskServices.deleteRecordByPK('TR_IMAGE', 'USER_AUTH_CODE', imageModel.USER_AUTH_CODE);
+                        uploadLabels = {
+                            ...uploadLabels,
+                            totalCount: uploadLabels.totalCount - 1
+                        }
                     }
                 })
             })

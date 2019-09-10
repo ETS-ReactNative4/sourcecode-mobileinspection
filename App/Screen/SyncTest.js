@@ -1456,6 +1456,7 @@ class SyncScreen extends React.Component {
     }
 
     async _onSync() {
+        console.log("#################### SYNC START ####################");
         this._deleteFinding();
         // DELETE_FINDING();
         this.deleteEbccHeader();
