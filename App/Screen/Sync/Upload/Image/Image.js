@@ -53,7 +53,7 @@ export async function uploadImage() {
 }
 
 async function postImage(paramImageModel) {
-    let fetchStatus = true;
+    let fetchStatus = false;
 
     let imageModel = new FormData();
     imageModel.append('IMAGE_CODE', paramImageModel.IMAGE_CODE);
@@ -75,12 +75,6 @@ async function postImage(paramImageModel) {
             if (response !== undefined) {
                 if (response.status) {
                     fetchStatus = true;
-
-                    /* UPDATE SYNC BERHASIL */
-                    TaskServices.updateByPrimaryKey('TR_IMAGE', {
-                        "FINDING_CODE": paramFindingModel.TR_CODE,
-                        "STATUS_SYNC": "Y"
-                    });
                 }
                 else {
                     fetchStatus = false;
