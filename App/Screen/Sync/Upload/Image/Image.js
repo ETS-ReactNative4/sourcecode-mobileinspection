@@ -1,7 +1,7 @@
 import RNFS from 'react-native-fs';
 import TaskServices from "../../../../Database/TaskServices";
-import {convertTimestampToDate, getTodayDate} from "../../../../Lib/Utils";
-import {fetchPostForm} from "../../../../Api/FetchingApi";
+import { convertTimestampToDate, getTodayDate } from "../../../../Lib/Utils";
+import { fetchPostForm } from "../../../../Api/FetchingApi";
 
 //Upload - Image
 export async function uploadImage() {
@@ -16,14 +16,14 @@ export async function uploadImage() {
 
     if (getImages.length > 0) {
         await Promise.all(
-            getImages.map(async (imageModel)=>{
-                let imagePath = 'file://'+imageModel.IMAGE_PATH_LOCAL;
+            getImages.map(async (imageModel) => {
+                let imagePath = 'file://' + imageModel.IMAGE_PATH_LOCAL;
                 await RNFS.exists(imagePath)
-                    .then(async (isExist)=>{
-                        if(isExist){
+                    .then(async (isExist) => {
+                        if (isExist) {
                             await postImage(imageModel)
-                                .then((response)=>{
-                                    if(response){
+                                .then((response) => {
+                                    if (response) {
                                         uploadLabels = {
                                             ...uploadLabels,
                                             uploadCount: uploadLabels.uploadCount + 1
@@ -52,7 +52,7 @@ export async function uploadImage() {
     };
 }
 
-async function postImage(paramImageModel){
+async function postImage(paramImageModel) {
     let fetchStatus = true;
 
     let imageModel = new FormData();
@@ -71,10 +71,16 @@ async function postImage(paramImageModel){
     });
 
     await fetchPostForm("IMAGES-UPLOAD", imageModel, null)
-        .then((response)=>{
+        .then((response) => {
             if (response !== undefined) {
                 if (response.status) {
                     fetchStatus = true;
+
+                    /* UPDATE SYNC BERHASIL */
+                    TaskServices.updateByPrimaryKey('TR_IMAGE', {
+                        "FINDING_CODE": paramFindingModel.TR_CODE,
+                        "STATUS_SYNC": "Y"
+                    });
                 }
                 else {
                     fetchStatus = false;
