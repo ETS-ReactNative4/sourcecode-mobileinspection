@@ -15,6 +15,8 @@ import { getPhoto, getThumnail } from '../../Lib/Utils';
 import { Images } from '../../Themes'
 import { dirDatabase } from '../../Lib/dirStorage';
 import RNFS from 'react-native-fs'
+import { retrieveData } from '../../Database/Resources';
+import WeeklySummary from '../../Component/WeeklySummary';
 
 export default class MoreScreen extends Component {
 
@@ -157,6 +159,15 @@ export default class MoreScreen extends Component {
           message={`Yakin nih mau keluar dari aplikasi ini? Untuk login lagi, kamu harus terhubung ke WIFI dulu ya`}
         />
 
+        <WeeklySummary
+          dataInspeksi={this.state.dataInspectionSummary}
+          dataEbcc={this.state.dataEbccSummary}
+          dataTemuan={this.state.dataFindingSummary}
+          visible={this.state.isVisibleSummary}
+          onPressClose={() => {
+            this.setState({ isVisibleSummary: false })
+          }} />
+
         <ModalAlert
           visible={this.state.showModal}
           icon={this.state.icon}
@@ -202,24 +213,24 @@ export default class MoreScreen extends Component {
             </View>
           </View>
 
-          {/*Sign Out*/}
-          {/* <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: 10 }}>
-            <Text>Versi: {DeviceInfo.getVersion()}</Text>
-          </View>
-          <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: 10 }}>
-            <Text style={{ fontSize: 10 }}>Server Data: {ServerName[this.state.user.SERVER_NAME_INDEX].data}</Text>
-            <Text style={{ fontSize: 10 }} >Server Image: {this.state.imageServer}</Text>
-          </View> */}
-
           {/* Menu Peta Lokasi  */}
           <FeatureLainnya
+            lineTop={true}
             sizeIcon={20}
             title={'Peta Lokasi'}
             icon={Images.ic_lainnya_peta}
             onPressDefault={() => this.onPressMenu('Maps')} />
 
+          {/* Menu Dashboard Mingguan */}
+          <FeatureLainnya
+            sizeIcon={20}
+            title={'Dashboard Mingguan'}
+            icon={Images.ic_lainnya_dashboard}
+            onPressDefault={() => this.onPressMenu('Dashboard')} />
+
           {/* Menu Export Database */}
           <FeatureLainnya
+            lineTop={true}
             sizeIcon={20}
             title={'Export Database'}
             icon={Images.ic_lainnya_database}
@@ -242,11 +253,13 @@ export default class MoreScreen extends Component {
     )
   }
 
-  //Function onPressMenu
+  /* Function onPressMenu */
   onPressMenu(menu) {
     switch (menu) {
       case 'Maps':
         return this.menuMaps()
+      case 'Dashboard':
+        return this.menuDashboard()
       case 'Database':
         return this.menuDatabase()
       default:
@@ -254,7 +267,7 @@ export default class MoreScreen extends Component {
     }
   }
 
-  //Function Peta Lokasi
+  /* Function Peta Lokasi */
   menuMaps() {
     const checkBlock = TaskServices.getAllData('TM_BLOCK');
     if (checkBlock.length > 0) {
@@ -264,7 +277,31 @@ export default class MoreScreen extends Component {
     }
   }
 
-  // Function Export Database
+  /* Function Dashboard Mingguan */
+  menuDashboard = async () => {
+
+    await retrieveData('FindingSummary').then((result) => {
+      if (result != null) {
+        this.setState({ dataFindingSummary: result })
+      }
+    })
+
+    await retrieveData('EbccSummary').then((result) => {
+      if (result != null) {
+        this.setState({ dataEbccSummary: result })
+      }
+    })
+
+    await retrieveData('InspectionSummary').then((result) => {
+      if (result != null) {
+        this.setState({ dataInspectionSummary: result })
+      }
+    })
+
+    this.setState({ isVisibleSummary: true });
+  }
+
+  /* Function Export Database */
   menuDatabase() {
     RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
 
@@ -276,13 +313,16 @@ export default class MoreScreen extends Component {
       );
     }, 2000)
   }
+
+
 }
 
 
 const FeatureLainnya = (props) => {
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ flex: 1, height: props.signout ? 10 : 1, backgroundColor: '#F5F5F5' }} />
+
+      <View style={{ flex: 1, height: props.signout || props.lineTop ? 10 : 1, backgroundColor: '#F5F5F5' }} />
 
       {/*SignOut Menu*/}
       {props.signout ? <TouchableOpacity style={[styles.containerLabel, { justifyContent: 'center' }]} onPress={props.onPressSignOut}>
@@ -299,7 +339,7 @@ const FeatureLainnya = (props) => {
         </TouchableOpacity>
       }
 
-      <View style={{ flex: 1, height: props.signout ? 10 : 1, backgroundColor: '#F5F5F5' }} />
+      <View style={{ flex: 1, height: props.signout || props.line ? 10 : 1, backgroundColor: '#F5F5F5' }} />
     </View>
   )
 }

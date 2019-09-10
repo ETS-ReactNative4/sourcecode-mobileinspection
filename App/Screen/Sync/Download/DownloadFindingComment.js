@@ -23,8 +23,6 @@ export async function getFindingComment() {
                     Promise.all(
                         data.simpan.map(item => {
 
-                            console.log('Item Comment : ', item.FULLNAME)
-
                             let model = {
                                 FINDING_COMMENT_ID: item.FINDING_COMMENT_ID,
                                 FINDING_CODE: item.FINDING_CODE,

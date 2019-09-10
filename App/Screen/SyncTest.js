@@ -68,7 +68,8 @@ import { getFindingComment } from './Sync/Download/DownloadFindingComment';
 import { getFindingImage } from './Sync/Download/DownloadFindingImage';
 import { getTimeServer } from './Sync/Download/DownloadTimeServer';
 import { getResetToken } from './Sync/Download/DownloadResetToken';
-import { Images, AlertContent } from '../Themes';
+import { AlertContent } from '../Themes';
+import { postWeeklySummary } from './Sync/Upload/UploadWeeklySummary';
 
 class SyncScreen extends React.Component {
 
@@ -435,6 +436,8 @@ class SyncScreen extends React.Component {
                                 index++;
                             }
                         }
+
+                        // this.downloadWeeklySummary();
                         this._onSync()
                     });
             } else {
@@ -766,43 +769,11 @@ class SyncScreen extends React.Component {
         })
     }
 
-    // Aminju => Weekly Summary
-    downloadWeeklySummary() {
-
-        const param = {
-            IS_VIEW: 1
-        }
-        let urlInspeksi = this.getAPIURL("INSPECTION-SUMMARY")
-        let urlFinding = this.getAPIURL("FINDING-SUMMARY")
-        let urlEbcc = this.getAPIURL("EBCC-SUMMARY")
-
-        const user = TaskServices.getAllData('TR_LOGIN')[0];
-
-        this.fetchWeeklySummary(user.ACCESS_TOKEN, urlInspeksi.API_URL, param, 'inspeksi');
-        this.fetchWeeklySummary(user.ACCESS_TOKEN, urlFinding.API_URL, param, 'finding');
-        this.fetchWeeklySummary(user.ACCESS_TOKEN, urlEbcc.API_URL, param, 'ebcc');
-    }
-
-    //Fetch Weekly Summary
-    fetchWeeklySummary(token, url, param, type) {
-        fetchPostAPI(token, url, param).then(((result) => {
-            if (result != undefined) {
-                if (type == 'inspeksi') {
-                    // console.log('Result Weekly InspectionSummary : ', result)
-                    storeData('InspectionSummary', result)
-                } else if (type == 'finding') {
-                    // console.log('Result Weekly FindingSummary : ', result)
-                    storeData('FindingSummary', result)
-                } else if (type == 'ebcc') {
-                    // console.log('Result Weekly EbccSummary : ', result)
-                    storeData('EbccSummary', result)
-                }
-            } else {
-                this.setState({
-                    uploadErrorFlag: "weeklysummary"
-                }, () => { console.log("weekly summary Server Timeout"); })
-            }
-        }));
+    /* UPLOAD WEEKLY SUMMARY */
+    downloadWeeklySummary = async () => {
+        await postWeeklySummary('INSPECTION-SUMMARY')
+        await postWeeklySummary('FINDING-SUMMARY')
+        await postWeeklySummary('EBCC-SUMMARY')
     }
 
     hasDownload(item, total) {
@@ -1624,7 +1595,7 @@ class SyncScreen extends React.Component {
                     this.setState({
                         showButton: true,
                         showModal: true,
-                        title: 'Sync Upload Putus ('+ this.state.uploadErrorFlag +')',
+                        title: 'Sync Upload Putus (' + this.state.uploadErrorFlag + ')',
                         message: 'Yaaah jaringannya mati, coba Sync lagi yaa.',
                         icon: require('../Images/ic-sync-gagal.png')
                     })
