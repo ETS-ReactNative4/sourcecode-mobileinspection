@@ -1623,7 +1623,7 @@ class SyncScreen extends React.Component {
                     this.setState({
                         showButton: true,
                         showModal: true,
-                        title: 'Sync Putus (Upload)',
+                        title: 'Sync Upload Putus ('+ this.state.uploadErrorFlag +')',
                         message: 'Yaaah jaringannya mati, coba Sync lagi yaa.',
                         icon: require('../Images/ic-sync-gagal.png')
                     })
@@ -1644,7 +1644,7 @@ class SyncScreen extends React.Component {
                 else {
                     //error
                     await this.setState({
-                        uploadErrorFlag: true,
+                        uploadErrorFlag: "upload-finding",
                         progressFindingData: 1,
                         valueFindingDataUpload: 0,
                         totalFindingDataUpload: 0,
@@ -1664,7 +1664,7 @@ class SyncScreen extends React.Component {
                 else {
                     //error
                     await this.setState({
-                        uploadErrorFlag: true,
+                        uploadErrorFlag: "upload-finding-comment",
                         progressFindingCommentData: 1,
                         valueFindingCommentDataUpload: 0,
                         totalFindingCommentDataUpload: 0,
@@ -1687,7 +1687,7 @@ class SyncScreen extends React.Component {
                 else {
                     //error
                     await this.setState({
-                        uploadErrorFlag: true,
+                        uploadErrorFlag: "upload-inspection-header",
                         progressInspeksiHeader: 1,
                         valueInspeksiHeaderUpload: 0,
                         totalInspeksiHeaderUpload: 0,
@@ -1708,7 +1708,7 @@ class SyncScreen extends React.Component {
                 else {
                     //error
                     await this.setState({
-                        uploadErrorFlag: true,
+                        uploadErrorFlag: "upload-inspection-detail",
                         progressInspeksiDetail: 1,
                         valueInspeksiDetailUpload: 0,
                         totalInspeksiDetailUpload: 0
@@ -1729,7 +1729,7 @@ class SyncScreen extends React.Component {
                 else {
                     //error
                     await this.setState({
-                        uploadErrorFlag: true,
+                        uploadErrorFlag: "upload-inspection-track",
                         progressInspectionTrack: 1,
                         valueInspectionTrack: 0,
                         totalInspectionTrack: 0
@@ -1759,7 +1759,7 @@ class SyncScreen extends React.Component {
                 else {
                     //error
                     this.setState({
-                        uploadErrorFlag: true,
+                        uploadErrorFlag: "upload-genba",
                         progressGenbaInspection: 1,
                         valueGenbaInspection: 0,
                         totalGenbaInspection: 0
@@ -1782,7 +1782,7 @@ class SyncScreen extends React.Component {
                 else {
                     //error
                     this.setState({
-                        uploadErrorFlag: true,
+                        uploadErrorFlag: "upload-ebcc-header",
                         progressEbcc: 1,
                         valueEbcc: 0,
                         totalEbcc: 0
@@ -1802,7 +1802,7 @@ class SyncScreen extends React.Component {
                 else {
                     //error
                     this.setState({
-                        uploadErrorFlag: true,
+                        uploadErrorFlag: "upload-ebcc-detail",
                         progressEbccDetail: 1,
                         valueEbccDetail: 0,
                         totalEbccDetail: 0

@@ -32,8 +32,6 @@ export async function uploadImage() {
                                             "IMAGE_CODE": imageModel.IMAGE_CODE,
                                             "STATUS_SYNC": "Y"
                                         });
-                                        let imageModelz = TaskServices.findBy2('TR_IMAGE',"IMAGE_CODE", imageModel.IMAGE_CODE)
-                                        console.log("imageModelz",imageModelz);
                                     }
                                     else {
                                         uploadLabels = {
