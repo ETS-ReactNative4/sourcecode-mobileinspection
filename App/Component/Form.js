@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
     Alert,
     Icon,
@@ -12,10 +12,10 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
-import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import {heightPercentageToDP as hp, widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import ModalAlert from '../Component/ModalAlert'
 import PropTypes from 'prop-types';
-import { AlertContent, Images } from '../Themes'
+import {AlertContent, Images} from '../Themes'
 
 class Form extends Component {
 
@@ -61,28 +61,6 @@ class Form extends Component {
                         break;
                     case this.state.strPassword === '':
                         this.setState(AlertContent.password_kosong)
-                        break;
-                    case this.state.selectedServer === '1':
-                        navigator.geolocation.getCurrentPosition((position) => {
-                            console.log('position : ', position);
-                            // if (position.mocked) {
-                            //     this.setState(AlertContent.mock_location)
-                            // } else {
-                            //     props.onBtnClick({
-                            //         ...this.state
-                            //     });
-                            // }
-                        });
-                        // navigator.geolocation.watchPosition((position) => {
-                        //     console.log('watch position : ', position);
-                        //     // if (position.mocked) {
-                        //     //     this.setState(AlertContent.mock_location)
-                        //     // } else {
-                        //     //     props.onBtnClick({
-                        //     //         ...this.state
-                        //     //     });
-                        //     // }
-                        // });
                         break;
                     default:
                         props.onBtnClick({
