@@ -95,7 +95,8 @@ export function fetchPost(serviceName, fetchBody, fetchHeaders) {
     }).then((data) => {
         return data;
     }).catch((err) => {
-        console.log(err)
+        console.log("fetch "+ serviceName +" api error :", err);
+        return undefined;
     });
 }
 
@@ -132,7 +133,8 @@ export function fetchPostForm(serviceName, fetchBody, fetchHeaders) {
     }).then((data) => {
         return data;
     }).catch((err) => {
-        console.log(err)
+        console.log("fetch "+ serviceName +" api error :", err);
+        return undefined;
     });
 }
 

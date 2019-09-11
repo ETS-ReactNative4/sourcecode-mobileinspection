@@ -49,7 +49,7 @@ class KondisiBarisAkhir extends Component {
         let kondisiBaris2 = R.clone(params.kondisiBaris2);
         let dataUsual = R.clone(params.dataUsual);
         let statusBlok = R.clone(params.statusBlok);
-        let from = R.clone(params.from);
+        // let from = R.clone(params.from);
         let intervalId = R.clone(params.intervalId);
         let dataInspeksi = R.clone(params.dataInspeksi);
 
@@ -90,7 +90,7 @@ class KondisiBarisAkhir extends Component {
             statusBlok,
             dataInspeksi,
             fetchLocation: false,
-            from,
+            // from,
             distance: '',
             polyTrack: [],
             poligons: [],
@@ -105,14 +105,17 @@ class KondisiBarisAkhir extends Component {
     }
 
     componentDidMount() {
-        if (this.state.from === 'history') {
-            let time = this.state.inspeksiHeader.TIME;
-            let distance = this.state.inspeksiHeader.DISTANCE;
-            this.setState({ menit: time, distance: distance, jarak: distance });
-        } else {
-            let sda = this.totalWaktu();
-            this.setState({ menit: sda.toString() })
-        }
+        // if (this.state.from === 'history') {
+        //     let time = this.state.inspeksiHeader.TIME;
+        //     let distance = this.state.inspeksiHeader.DISTANCE;
+        //     this.setState({ menit: time, distance: distance, jarak: distance });
+        // } else {
+        //     let sda = this.totalWaktu();
+        //     this.setState({ menit: sda.toString() })
+        // }
+
+        let sda = this.totalWaktu();
+        this.setState({ menit: sda.toString() })
         this.getLocation();
         this.makeLineTrack();
     }
@@ -126,12 +129,23 @@ class KondisiBarisAkhir extends Component {
         return time;
     }
 
-    totalJarak(coord) {
-        let distance = geolib.getDistance(coord, {
-            latitude: parseFloat(this.state.inspeksiHeader.LAT_START_INSPECTION),
-            longitude: parseFloat(this.state.inspeksiHeader.LONG_START_INSPECTION)
-        });
-        return distance;
+    // totalJarak(coord) {
+    //     let distance = geolib.getDistance(coord, {
+    //         latitude: parseFloat(this.state.inspeksiHeader.LAT_START_INSPECTION),
+    //         longitude: parseFloat(this.state.inspeksiHeader.LONG_START_INSPECTION)
+    //     });
+    //     return distance;
+    // }
+    totalJarak(){
+        let totalDistance = 0;
+        let getTrack = TaskServices.findBy("TM_INSPECTION_TRACK", "BLOCK_INSPECTION_CODE", this.state.inspeksiHeader.ID_INSPECTION);
+        if(getTrack.length > 0){
+            for (let count = 0; count < getTrack.length-2; count++){
+                let getTrackDistance = geolib.getDistance({latitude: parseFloat(getTrack[count].LAT_TRACK), longitude: parseFloat(getTrack[count].LONG_TRACK)}, {latitude: parseFloat(getTrack[count+1].LAT_TRACK), longitude: parseFloat(getTrack[count+1].LONG_TRACK)});
+                totalDistance = totalDistance + getTrackDistance;
+            }
+        }
+        return totalDistance;
     }
 
     searchLocation = () => {
@@ -145,7 +159,8 @@ class KondisiBarisAkhir extends Component {
                 let lastTrack = TaskService.getLastTracking(this.state.dataUsual.BLOCK_INSPECTION_CODE);
                 var lat = parseFloat(lastTrack.LAT_TRACK);
                 var lon = parseFloat(lastTrack.LONG_TRACK);
-                let totalJarak = this.state.from == 'history' ? this.state.distance : this.totalJarak({ latitude: lat, longitude: lon });
+                // let totalJarak = this.state.from == 'history' ? this.state.distance : this.totalJarak({ latitude: lat, longitude: lon });
+                let totalJarak = this.totalJarak();
                 region = {
                     latitude: lat - 0.003,
                     longitude: lon,
@@ -157,7 +172,8 @@ class KondisiBarisAkhir extends Component {
                 let lastTrack = TaskService.getLastTracking(this.state.dataUsual.BLOCK_INSPECTION_CODE);
                 var lat = parseFloat(lastTrack.LAT_TRACK);
                 var lon = parseFloat(lastTrack.LONG_TRACK);
-                let totalJarak = this.state.from == 'history' ? this.state.distance : this.totalJarak({ latitude: lat, longitude: lon });
+                // let totalJarak = this.state.from == 'history' ? this.state.distance : this.totalJarak({ latitude: lat, longitude: lon });
+                let totalJarak = this.totalJarak();
                 region = {
                     latitude: lat - 0.003,
                     longitude: lon,
@@ -170,27 +186,34 @@ class KondisiBarisAkhir extends Component {
     }
 
     makeLineTrack() {
-        if (this.state.from === 'history') {
-            let header = TaskService.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION)
-            if (header !== null) {
-                header.map(hdr => {
-                    let data = TaskService.findBy('TM_INSPECTION_TRACK', 'BLOCK_INSPECTION_CODE', hdr.BLOCK_INSPECTION_CODE)
-                    if (data !== undefined) {
-                        data.map(item => {
-                            let arr = { latitude: parseFloat(item.LAT_TRACK), longitude: parseFloat(item.LONG_TRACK) }
-                            this.state.polyTrack.push(arr)
-                        })
-                    }
-                })
-            }
-        } else {
-            let data = TaskService.findBy('TM_INSPECTION_TRACK', 'BLOCK_INSPECTION_CODE', this.state.dataInspeksi.BLOCK_INSPECTION_CODE)
-            if (data !== undefined) {
-                data.map(item => {
-                    let arr = { latitude: parseFloat(item.LAT_TRACK), longitude: parseFloat(item.LONG_TRACK) }
-                    this.state.polyTrack.push(arr)
-                })
-            }
+        // if (this.state.from === 'history') {
+        //     let header = TaskService.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION)
+        //     if (header !== null) {
+        //         header.map(hdr => {
+        //             let data = TaskService.findBy('TM_INSPECTION_TRACK', 'BLOCK_INSPECTION_CODE', hdr.BLOCK_INSPECTION_CODE)
+        //             if (data !== undefined) {
+        //                 data.map(item => {
+        //                     let arr = { latitude: parseFloat(item.LAT_TRACK), longitude: parseFloat(item.LONG_TRACK) }
+        //                     this.state.polyTrack.push(arr)
+        //                 })
+        //             }
+        //         })
+        //     }
+        // } else {
+        //     let data = TaskService.findBy('TM_INSPECTION_TRACK', 'BLOCK_INSPECTION_CODE', this.state.dataInspeksi.BLOCK_INSPECTION_CODE)
+        //     if (data !== undefined) {
+        //         data.map(item => {
+        //             let arr = { latitude: parseFloat(item.LAT_TRACK), longitude: parseFloat(item.LONG_TRACK) }
+        //             this.state.polyTrack.push(arr)
+        //         })
+        //     }
+        // }
+        let data = TaskService.findBy('TM_INSPECTION_TRACK', 'BLOCK_INSPECTION_CODE', this.state.dataInspeksi.BLOCK_INSPECTION_CODE)
+        if (data !== undefined) {
+            data.map(item => {
+                let arr = { latitude: parseFloat(item.LAT_TRACK), longitude: parseFloat(item.LONG_TRACK) }
+                this.state.polyTrack.push(arr)
+            })
         }
     }
 
@@ -212,18 +235,23 @@ class KondisiBarisAkhir extends Component {
 
     has2Row() {
         let total = TaskService.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION).length;
-        if (this.state.from !== 'history') {
-            if (total >= 1) {
-                return true
-            } else {
-                return false
-            }
+        // if (this.state.from !== 'history') {
+        //     if (total >= 1) {
+        //         return true
+        //     } else {
+        //         return false
+        //     }
+        // } else {
+        //     if (total >= 2) {
+        //         return true
+        //     } else {
+        //         return false
+        //     }
+        // }
+        if (total >= 2) {
+            return true
         } else {
-            if (total >= 2) {
-                return true
-            } else {
-                return false
-            }
+            return false
         }
     }
     changeColorSlide() {
@@ -505,128 +533,250 @@ class KondisiBarisAkhir extends Component {
         // }
         let insertTime = getTodayDate('YYYY-MM-DD HH:mm:ss');
 
-        if (this.state.from !== 'history') {
-            var modelInspeksiH = {
+        // if (this.state.from !== 'history') {
+        //     var modelInspeksiH = {
+        //         BLOCK_INSPECTION_CODE: this.state.inspeksiHeader.BLOCK_INSPECTION_CODE,
+        //         ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
+        //         WERKS: this.state.inspeksiHeader.WERKS,
+        //         AFD_CODE: this.state.inspeksiHeader.AFD_CODE,
+        //         BLOCK_CODE: this.state.inspeksiHeader.BLOCK_CODE,
+        //         AREAL: this.state.inspeksiHeader.AREAL,
+        //         INSPECTION_TYPE: "PANEN",
+        //         STATUS_BLOCK: this.state.inspeksiHeader.STATUS_BLOCK,
+        //         INSPECTION_DATE: this.state.inspeksiHeader.INSPECTION_DATE, //getTodayDate('DD MMM YYYY HH:mm:ss'), //12 oct 2018 01:01:01
+        //         INSPECTION_SCORE: '',
+        //         INSPECTION_RESULT: '',
+        //         STATUS_SYNC: 'N',
+        //         SYNC_TIME: '',
+        //         START_INSPECTION: this.state.inspeksiHeader.START_INSPECTION,
+        //         END_INSPECTION: insertTime,
+        //         LAT_START_INSPECTION: this.state.inspeksiHeader.LAT_START_INSPECTION,
+        //         LONG_START_INSPECTION: this.state.inspeksiHeader.LONG_START_INSPECTION,
+        //         LAT_END_INSPECTION: this.state.latitude.toString(),
+        //         LONG_END_INSPECTION: this.state.longitude.toString(),
+        //         INSERT_TIME: insertTime,
+        //         INSERT_USER: this.state.dataUsual.USER_AUTH,
+        //         TIME: this.state.menit,
+        //         DISTANCE: this.state.jarak,
+        //
+        //         //localParam:
+        //         inspectionType: this.state.inspectionType
+        //     }
+        //     TaskService.saveData('TR_BLOCK_INSPECTION_H', modelInspeksiH);
+        //
+        //     var image = {
+        //         TR_CODE: this.state.fotoBaris.TR_CODE,
+        //         IMAGE_CODE: this.state.fotoBaris.IMAGE_CODE,
+        //         IMAGE_NAME: this.state.fotoBaris.IMAGE_NAME,
+        //         IMAGE_PATH_LOCAL: this.state.fotoBaris.IMAGE_PATH_LOCAL,
+        //         IMAGE_URL: '',
+        //         STATUS_IMAGE: 'BARIS',
+        //         STATUS_SYNC: 'N',
+        //         INSERT_USER: this.state.dataUsual.USER_AUTH,
+        //         INSERT_TIME: insertTime
+        //     }
+        //     console.log("SAVE IMAGE BARIS",image);
+        //     TaskService.saveData('TR_IMAGE', image);
+        //
+        //     var selfie = {
+        //         TR_CODE: this.state.fotoSelfie.TR_CODE,
+        //         IMAGE_CODE: this.state.fotoSelfie.IMAGE_CODE,
+        //         IMAGE_NAME: this.state.fotoSelfie.IMAGE_NAME,
+        //         IMAGE_PATH_LOCAL: this.state.fotoSelfie.IMAGE_PATH_LOCAL,
+        //         IMAGE_URL: '',
+        //         STATUS_IMAGE: 'SELFIE',
+        //         STATUS_SYNC: 'N',
+        //         INSERT_USER: this.state.dataUsual.USER_AUTH,
+        //         INSERT_TIME: insertTime
+        //     }
+        //     TaskService.saveData('TR_IMAGE', selfie);
+        //
+        //     if (this.state.kondisiBaris1 !== 'undefined') {
+        //         for (var i = 0; i < this.state.kondisiBaris1.length; i++) {
+        //             var model = this.state.kondisiBaris1[i];
+        //             mdl = {
+        //                 BLOCK_INSPECTION_CODE_D: model.BLOCK_INSPECTION_CODE_D,
+        //                 BLOCK_INSPECTION_CODE: model.BLOCK_INSPECTION_CODE,
+        //                 ID_INSPECTION: model.ID_INSPECTION,
+        //                 CONTENT_INSPECTION_CODE: model.CONTENT_INSPECTION_CODE,
+        //                 VALUE: model.VALUE,
+        //                 AREAL: this.state.dataUsual.BARIS,
+        //                 STATUS_SYNC: 'N',
+        //                 INSERT_USER: this.state.dataUsual.USER_AUTH,
+        //                 INSERT_TIME: insertTime
+        //
+        //             }
+        //             TaskService.saveData('TR_BLOCK_INSPECTION_D', mdl);
+        //         }
+        //     }
+        //
+        //     if (this.state.kondisiBaris2 !== 'undefined') {
+        //         for (var i = 0; i < this.state.kondisiBaris2.length; i++) {
+        //             var model = this.state.kondisiBaris2[i];
+        //             mdl = {
+        //                 BLOCK_INSPECTION_CODE_D: model.BLOCK_INSPECTION_CODE_D,
+        //                 BLOCK_INSPECTION_CODE: model.BLOCK_INSPECTION_CODE,
+        //                 ID_INSPECTION: model.ID_INSPECTION,
+        //                 CONTENT_INSPECTION_CODE: model.CONTENT_INSPECTION_CODE,
+        //                 VALUE: model.VALUE,
+        //                 AREAL: this.state.dataUsual.BARIS,
+        //                 STATUS_SYNC: 'N',
+        //                 INSERT_USER: this.state.dataUsual.USER_AUTH,
+        //                 INSERT_TIME: insertTime
+        //             }
+        //             TaskService.saveData('TR_BLOCK_INSPECTION_D', mdl);
+        //         }
+        //     }
+        //
+        //     let getBarisInspection = TaskService.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION);
+        //     if (getBarisInspection !== null && typeof getBarisInspection !== undefined) {
+        //         TaskService.deleteRecordByPK('TR_BARIS_INSPECTION', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION);
+        //     }
+        //
+        //     let dataInspeksiRemoveDuplicate = this.state.dataInspeksi;
+        //     dataInspeksiRemoveDuplicate.TR_FINDING_CODES = [...new Set(dataInspeksiRemoveDuplicate.TR_FINDING_CODES)];
+        //     dataInspeksiRemoveDuplicate = {
+        //         ...dataInspeksiRemoveDuplicate,
+        //         syncHeader: 'N',
+        //         syncDetail: 'N',
+        //         syncTracking: 'N',
+        //         syncImage: 'N'
+        //     };
+        //     TaskService.saveData('TR_BARIS_INSPECTION', dataInspeksiRemoveDuplicate);
+        //
+        //     //TAMBAHAN GEMBA
+        //
+        //     if (this.state.inspectionType === "genba") {
+        //         let selectedGenbaUser = TaskServices.getAllData("TR_GENBA_SELECTED");
+        //         let model_TR_GENBA_INSPECTION = {
+        //             BLOCK_INSPECTION_CODE: this.state.inspeksiHeader.BLOCK_INSPECTION_CODE,
+        //             GENBA_USER: selectedGenbaUser,
+        //             STATUS_SYNC: "N"
+        //         }
+        //         TaskService.saveData('TR_GENBA_INSPECTION', model_TR_GENBA_INSPECTION);
+        //     }
+        // }
+
+        var modelInspeksiH = {
+            BLOCK_INSPECTION_CODE: this.state.inspeksiHeader.BLOCK_INSPECTION_CODE,
+            ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
+            WERKS: this.state.inspeksiHeader.WERKS,
+            AFD_CODE: this.state.inspeksiHeader.AFD_CODE,
+            BLOCK_CODE: this.state.inspeksiHeader.BLOCK_CODE,
+            AREAL: this.state.inspeksiHeader.AREAL,
+            INSPECTION_TYPE: "PANEN",
+            STATUS_BLOCK: this.state.inspeksiHeader.STATUS_BLOCK,
+            INSPECTION_DATE: this.state.inspeksiHeader.INSPECTION_DATE, //getTodayDate('DD MMM YYYY HH:mm:ss'), //12 oct 2018 01:01:01
+            INSPECTION_SCORE: '',
+            INSPECTION_RESULT: '',
+            STATUS_SYNC: 'N',
+            SYNC_TIME: '',
+            START_INSPECTION: this.state.inspeksiHeader.START_INSPECTION,
+            END_INSPECTION: insertTime,
+            LAT_START_INSPECTION: this.state.inspeksiHeader.LAT_START_INSPECTION,
+            LONG_START_INSPECTION: this.state.inspeksiHeader.LONG_START_INSPECTION,
+            LAT_END_INSPECTION: this.state.latitude.toString(),
+            LONG_END_INSPECTION: this.state.longitude.toString(),
+            INSERT_TIME: insertTime,
+            INSERT_USER: this.state.dataUsual.USER_AUTH,
+            TIME: this.state.menit,
+            DISTANCE: this.state.jarak,
+
+            //localParam:
+            inspectionType: this.state.inspectionType
+        }
+        TaskService.saveData('TR_BLOCK_INSPECTION_H', modelInspeksiH);
+
+        var image = {
+            TR_CODE: this.state.fotoBaris.TR_CODE,
+            IMAGE_CODE: this.state.fotoBaris.IMAGE_CODE,
+            IMAGE_NAME: this.state.fotoBaris.IMAGE_NAME,
+            IMAGE_PATH_LOCAL: this.state.fotoBaris.IMAGE_PATH_LOCAL,
+            IMAGE_URL: '',
+            STATUS_IMAGE: 'BARIS',
+            STATUS_SYNC: 'N',
+            INSERT_USER: this.state.dataUsual.USER_AUTH,
+            INSERT_TIME: insertTime
+        }
+        console.log("SAVE IMAGE BARIS",image);
+        TaskService.saveData('TR_IMAGE', image);
+
+        var selfie = {
+            TR_CODE: this.state.fotoSelfie.TR_CODE,
+            IMAGE_CODE: this.state.fotoSelfie.IMAGE_CODE,
+            IMAGE_NAME: this.state.fotoSelfie.IMAGE_NAME,
+            IMAGE_PATH_LOCAL: this.state.fotoSelfie.IMAGE_PATH_LOCAL,
+            IMAGE_URL: '',
+            STATUS_IMAGE: 'SELFIE',
+            STATUS_SYNC: 'N',
+            INSERT_USER: this.state.dataUsual.USER_AUTH,
+            INSERT_TIME: insertTime
+        }
+        TaskService.saveData('TR_IMAGE', selfie);
+
+        if (this.state.kondisiBaris1 !== 'undefined') {
+            for (var i = 0; i < this.state.kondisiBaris1.length; i++) {
+                var model = this.state.kondisiBaris1[i];
+                mdl = {
+                    BLOCK_INSPECTION_CODE_D: model.BLOCK_INSPECTION_CODE_D,
+                    BLOCK_INSPECTION_CODE: model.BLOCK_INSPECTION_CODE,
+                    ID_INSPECTION: model.ID_INSPECTION,
+                    CONTENT_INSPECTION_CODE: model.CONTENT_INSPECTION_CODE,
+                    VALUE: model.VALUE,
+                    AREAL: this.state.dataUsual.BARIS,
+                    STATUS_SYNC: 'N',
+                    INSERT_USER: this.state.dataUsual.USER_AUTH,
+                    INSERT_TIME: insertTime
+
+                }
+                TaskService.saveData('TR_BLOCK_INSPECTION_D', mdl);
+            }
+        }
+
+        if (this.state.kondisiBaris2 !== 'undefined') {
+            for (var i = 0; i < this.state.kondisiBaris2.length; i++) {
+                var model = this.state.kondisiBaris2[i];
+                mdl = {
+                    BLOCK_INSPECTION_CODE_D: model.BLOCK_INSPECTION_CODE_D,
+                    BLOCK_INSPECTION_CODE: model.BLOCK_INSPECTION_CODE,
+                    ID_INSPECTION: model.ID_INSPECTION,
+                    CONTENT_INSPECTION_CODE: model.CONTENT_INSPECTION_CODE,
+                    VALUE: model.VALUE,
+                    AREAL: this.state.dataUsual.BARIS,
+                    STATUS_SYNC: 'N',
+                    INSERT_USER: this.state.dataUsual.USER_AUTH,
+                    INSERT_TIME: insertTime
+                }
+                TaskService.saveData('TR_BLOCK_INSPECTION_D', mdl);
+            }
+        }
+
+        let getBarisInspection = TaskService.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION);
+        if (getBarisInspection !== null && typeof getBarisInspection !== undefined) {
+            TaskService.deleteRecordByPK('TR_BARIS_INSPECTION', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION);
+        }
+
+        let dataInspeksiRemoveDuplicate = this.state.dataInspeksi;
+        dataInspeksiRemoveDuplicate.TR_FINDING_CODES = [...new Set(dataInspeksiRemoveDuplicate.TR_FINDING_CODES)];
+        dataInspeksiRemoveDuplicate = {
+            ...dataInspeksiRemoveDuplicate,
+            syncHeader: 'N',
+            syncDetail: 'N',
+            syncTracking: 'N',
+            syncImage: 'N'
+        };
+        TaskService.saveData('TR_BARIS_INSPECTION', dataInspeksiRemoveDuplicate);
+
+        //TAMBAHAN GEMBA
+
+        if (this.state.inspectionType === "genba") {
+            let selectedGenbaUser = TaskServices.getAllData("TR_GENBA_SELECTED");
+            let model_TR_GENBA_INSPECTION = {
                 BLOCK_INSPECTION_CODE: this.state.inspeksiHeader.BLOCK_INSPECTION_CODE,
-                ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
-                WERKS: this.state.inspeksiHeader.WERKS,
-                AFD_CODE: this.state.inspeksiHeader.AFD_CODE,
-                BLOCK_CODE: this.state.inspeksiHeader.BLOCK_CODE,
-                AREAL: this.state.inspeksiHeader.AREAL,
-                INSPECTION_TYPE: "PANEN",
-                STATUS_BLOCK: this.state.inspeksiHeader.STATUS_BLOCK,
-                INSPECTION_DATE: this.state.inspeksiHeader.INSPECTION_DATE, //getTodayDate('DD MMM YYYY HH:mm:ss'), //12 oct 2018 01:01:01
-                INSPECTION_SCORE: '',
-                INSPECTION_RESULT: '',
-                STATUS_SYNC: 'N',
-                SYNC_TIME: '',
-                START_INSPECTION: this.state.inspeksiHeader.START_INSPECTION,
-                END_INSPECTION: insertTime,
-                LAT_START_INSPECTION: this.state.inspeksiHeader.LAT_START_INSPECTION,
-                LONG_START_INSPECTION: this.state.inspeksiHeader.LONG_START_INSPECTION,
-                LAT_END_INSPECTION: this.state.latitude.toString(),
-                LONG_END_INSPECTION: this.state.longitude.toString(),
-                INSERT_TIME: insertTime,
-                INSERT_USER: this.state.dataUsual.USER_AUTH,
-                TIME: this.state.menit,
-                DISTANCE: this.state.jarak,
-
-                //localParam:
-                inspectionType: this.state.inspectionType
+                GENBA_USER: selectedGenbaUser,
+                STATUS_SYNC: "N"
             }
-            TaskService.saveData('TR_BLOCK_INSPECTION_H', modelInspeksiH);
-
-            var image = {
-                TR_CODE: this.state.fotoBaris.TR_CODE,
-                IMAGE_CODE: this.state.fotoBaris.IMAGE_CODE,
-                IMAGE_NAME: this.state.fotoBaris.IMAGE_NAME,
-                IMAGE_PATH_LOCAL: this.state.fotoBaris.IMAGE_PATH_LOCAL,
-                IMAGE_URL: '',
-                STATUS_IMAGE: 'BARIS',
-                STATUS_SYNC: 'N',
-                INSERT_USER: this.state.dataUsual.USER_AUTH,
-                INSERT_TIME: insertTime
-            }
-            console.log("SAVE IMAGE BARIS",image);
-            TaskService.saveData('TR_IMAGE', image);
-
-            var selfie = {
-                TR_CODE: this.state.fotoSelfie.TR_CODE,
-                IMAGE_CODE: this.state.fotoSelfie.IMAGE_CODE,
-                IMAGE_NAME: this.state.fotoSelfie.IMAGE_NAME,
-                IMAGE_PATH_LOCAL: this.state.fotoSelfie.IMAGE_PATH_LOCAL,
-                IMAGE_URL: '',
-                STATUS_IMAGE: 'SELFIE',
-                STATUS_SYNC: 'N',
-                INSERT_USER: this.state.dataUsual.USER_AUTH,
-                INSERT_TIME: insertTime
-            }
-            TaskService.saveData('TR_IMAGE', selfie);
-
-            if (this.state.kondisiBaris1 !== 'undefined') {
-                for (var i = 0; i < this.state.kondisiBaris1.length; i++) {
-                    var model = this.state.kondisiBaris1[i];
-                    mdl = {
-                        BLOCK_INSPECTION_CODE_D: model.BLOCK_INSPECTION_CODE_D,
-                        BLOCK_INSPECTION_CODE: model.BLOCK_INSPECTION_CODE,
-                        ID_INSPECTION: model.ID_INSPECTION,
-                        CONTENT_INSPECTION_CODE: model.CONTENT_INSPECTION_CODE,
-                        VALUE: model.VALUE,
-                        AREAL: this.state.dataUsual.BARIS,
-                        STATUS_SYNC: 'N',
-                        INSERT_USER: this.state.dataUsual.USER_AUTH,
-                        INSERT_TIME: insertTime
-
-                    }
-                    TaskService.saveData('TR_BLOCK_INSPECTION_D', mdl);
-                }
-            }
-
-            if (this.state.kondisiBaris2 !== 'undefined') {
-                for (var i = 0; i < this.state.kondisiBaris2.length; i++) {
-                    var model = this.state.kondisiBaris2[i];
-                    mdl = {
-                        BLOCK_INSPECTION_CODE_D: model.BLOCK_INSPECTION_CODE_D,
-                        BLOCK_INSPECTION_CODE: model.BLOCK_INSPECTION_CODE,
-                        ID_INSPECTION: model.ID_INSPECTION,
-                        CONTENT_INSPECTION_CODE: model.CONTENT_INSPECTION_CODE,
-                        VALUE: model.VALUE,
-                        AREAL: this.state.dataUsual.BARIS,
-                        STATUS_SYNC: 'N',
-                        INSERT_USER: this.state.dataUsual.USER_AUTH,
-                        INSERT_TIME: insertTime
-                    }
-                    TaskService.saveData('TR_BLOCK_INSPECTION_D', mdl);
-                }
-            }
-
-            let getBarisInspection = TaskService.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION);
-            if (getBarisInspection !== null && typeof getBarisInspection !== undefined) {
-                TaskService.deleteRecordByPK('TR_BARIS_INSPECTION', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION);
-            }
-
-            let dataInspeksiRemoveDuplicate = this.state.dataInspeksi;
-            dataInspeksiRemoveDuplicate.TR_FINDING_CODES = [...new Set(dataInspeksiRemoveDuplicate.TR_FINDING_CODES)];
-            dataInspeksiRemoveDuplicate = {
-                ...dataInspeksiRemoveDuplicate,
-                syncHeader: 'N',
-                syncDetail: 'N',
-                syncTracking: 'N',
-                syncImage: 'N'
-            };
-            TaskService.saveData('TR_BARIS_INSPECTION', dataInspeksiRemoveDuplicate);
-
-            //TAMBAHAN GEMBA
-
-            if (this.state.inspectionType === "genba") {
-                let selectedGenbaUser = TaskServices.getAllData("TR_GENBA_SELECTED");
-                let model_TR_GENBA_INSPECTION = {
-                    BLOCK_INSPECTION_CODE: this.state.inspeksiHeader.BLOCK_INSPECTION_CODE,
-                    GENBA_USER: selectedGenbaUser,
-                    STATUS_SYNC: "N"
-                }
-                TaskService.saveData('TR_GENBA_INSPECTION', model_TR_GENBA_INSPECTION);
-            }
+            TaskService.saveData('TR_GENBA_INSPECTION', model_TR_GENBA_INSPECTION);
         }
 
         let today = getTodayDate('YYMMDDHHmmss');
@@ -684,10 +834,10 @@ class KondisiBarisAkhir extends Component {
                 TR_FINDING_CODES: []
             }
 
-            if (this.state.from !== 'history') {
-                //for track
-                clearInterval(this.state.intervalId)
-            }
+            // if (this.state.from !== 'history') {
+            //     //for track
+            //     clearInterval(this.state.intervalId)
+            // }
 
             let time = TaskService.getAllData('TM_TIME_TRACK')[0];
             let duration = 10000
