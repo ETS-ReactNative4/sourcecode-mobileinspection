@@ -16,8 +16,6 @@ import {ProgressDialog} from 'react-native-simple-dialogs';
 import ModalAlert from '../../Component/ModalAlert';
 import {retrieveData} from '../../Database/Resources';
 
-const skm = require('../../Data/MegaKuningan.json');
-
 const LATITUDE = -2.1890660;
 const LONGITUDE = 111.3609873;
 const DATA_LOGIN = TaskServices.getAllData('TR_LOGIN')
@@ -52,9 +50,6 @@ class KondisiBarisAkhir extends Component {
         // let from = R.clone(params.from);
         let intervalId = R.clone(params.intervalId);
         let dataInspeksi = R.clone(params.dataInspeksi);
-
-
-        console.log('FROMMMM', from);
 
         this.state = {
             intervalId,
