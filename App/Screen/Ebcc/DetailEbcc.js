@@ -250,7 +250,6 @@ class DetailEbcc extends Component {
                                 editable={false}
                                 underlineColorAndroid={'transparent'}
                                 style={[styles.searchInput, {backgroundColor: Colors.abuabu}]}
-                                maxLength={3}
                                 keyboardType={'numeric'}
                                 value={this.state.totalJanjang} />
                         </View>
