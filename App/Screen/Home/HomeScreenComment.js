@@ -234,7 +234,7 @@ export default class HomeScreenComment extends Component {
                         flexDirection: 'row',
                         borderTopWidth: 1,
                         borderTopColor: 'black',
-                        height: 65,
+                        maxHeight: 100,
                         alignItems: "center",
                         justifyContent: "center",
                         paddingHorizontal: 10
@@ -309,9 +309,10 @@ export default class HomeScreenComment extends Component {
                             this.insertComment()
                         }
                     }}>
-                        <Icon1
-                            iconName={'keyboard-arrow-right'}
-                            iconSize={25} />
+                        <Image
+                            style={{width: 25, height: 25}}
+                            source={require('../../Images/icon/Comment/Icon_Comment_Send.png')}
+                        />
                     </TouchableOpacity>
                 </View>
             </View>
