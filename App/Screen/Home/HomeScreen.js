@@ -24,7 +24,7 @@ import CustomHeader from '../../Component/CustomHeader'
 import ServerName from '../../Constant/ServerName'
 import Moment from 'moment';
 import RNFetchBlob from 'rn-fetch-blob'
-import { changeFormatDate, dateDisplayMobile } from '../../Lib/Utils';
+import { changeFormatDate, dateDisplayMobile, showInbox, syncDays, notifInbox } from '../../Lib/Utils';
 import FastImage from 'react-native-fast-image'
 import SwiperSlider from 'react-native-swiper'
 import {
@@ -42,31 +42,18 @@ import WeeklySummary from "../../Component/WeeklySummary";
 import { clipString } from '../../Constant/Function';
 import { Images } from '../../Themes';
 import { changeBgFilter, changeIconFilter, getColor, getIconProgress, getStatusImage } from '../../Themes/Resources';
-import IconHeader from '../../Component/IconHeader'
 import { getBlokName, getCategoryName, getEstateName, getStatusBlok, retrieveData, removeData, storeData } from '../../Database/Resources';
 
 import RNFS from 'react-native-fs'
 
 let { width } = Dimensions.get('window')
 
+import Header from '../../Component/Header'
+
 class HomeScreen extends React.Component {
 
-  static navigationOptions = ({ navigation }) => ({
-    headerStyle: {
-      backgroundColor: Colors.tintColorPrimary
-    },
-    headerTitleStyle: {
-      textAlign: "center",
-      flex: 1,
-      fontSize: 18,
-      fontWeight: '400',
-      marginHorizontal: 12
-    },
-    title: 'Beranda',
-    headerTintColor: '#fff',
-    headerRight: <IconHeader padding={{ paddingRight: 12 }} onPress={() => navigation.navigate('Inbox')} icon={Images.ic_inbox} show={true} />,
-    headerLeft: <IconHeader padding={{ paddingLeft: 12 }} onPress={() => navigation.navigate('Sync')} icon={Images.ic_sync} show={true} />,
-    header: props => <CustomHeader {...props} />
+  static navigationOptions = () => ({
+    header: null
   });
 
   constructor(props) {
@@ -128,6 +115,11 @@ class HomeScreen extends React.Component {
     })
   }
 
+  componentWillUnmount() {
+    this.willFocus.remove()
+  }
+
+
   willFocus = this.props.navigation.addListener(
     'willFocus',
     () => {
@@ -145,12 +137,16 @@ class HomeScreen extends React.Component {
           this.addRecords(0);
         });
       }
+
+      this.setState({
+        /* SET JUMLAH HARI BELUM SYNC */
+        divDays: syncDays(),
+
+        /* SET JUMLAH NOTIF  */
+        notifCount: notifInbox()
+      })
     }
   )
-
-  componentWillUnmount() {
-    this.willFocus.remove()
-  }
 
   componentDidMount() {
     RNFS.mkdir(dirDatabase);
@@ -846,30 +842,28 @@ class HomeScreen extends React.Component {
 
   _renderData() {
     return (
-      <View>
-        <ScrollView
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}>
-          <View style={{ marginBottom: 48 }}>
-            {this.state.data.map((item, index) => this._renderItem(item, index))}
-            {/* Aminju */}
-            <View style={{ justifyContent: 'center', alignItems: 'center', padding: 16 }}>
-              <TouchableOpacity
-                activeOpacity={0.9}
-                style={{
-                  height: 48,
-                  width: 200,
-                  backgroundColor: Colors.tintColorPrimary,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderRadius: 10
-                }} onPress={this.onScrollHandler}>
-                {this.state.isLoading ? <ActivityIndicator color={'white'} /> : <Text style={{ textAlign: 'center', fontSize: 14, color: 'white' }}>Lebih Banyak</Text>}
-              </TouchableOpacity>
-            </View>
+      <ScrollView
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}>
+        <View style={{ marginBottom: 0 }}>
+          {this.state.data.map((item, index) => this._renderItem(item, index))}
+          {/* Aminju */}
+          <View style={{ justifyContent: 'center', alignItems: 'center', padding: 16 }}>
+            <TouchableOpacity
+              activeOpacity={0.9}
+              style={{
+                height: 48,
+                width: 200,
+                backgroundColor: Colors.tintColorPrimary,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: 10
+              }} onPress={this.onScrollHandler}>
+              {this.state.isLoading ? <ActivityIndicator color={'white'} /> : <Text style={{ textAlign: 'center', fontSize: 14, color: 'white' }}>Lebih Banyak</Text>}
+            </TouchableOpacity>
           </View>
-        </ScrollView>
-      </View>
+        </View>
+      </ScrollView>
     )
   }
 
@@ -896,6 +890,15 @@ class HomeScreen extends React.Component {
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>
 
+        {/* HEADER */}
+        <Header
+          notif={this.state.notifCount}
+          divDays={this.state.divDays}
+          onPressLeft={() => this.props.navigation.navigate('Sync')}
+          onPressRight={() => this.props.navigation.navigate('Inbox')}
+          title={'Beranda'}
+          showInbox={showInbox()} />
+
         <WeeklySummary
           dataInspeksi={this.state.dataInspectionSummary}
           dataEbcc={this.state.dataEbccSummary}
@@ -910,10 +913,8 @@ class HomeScreen extends React.Component {
         <View style={styles.sectionTimeline}>
           <Text style={styles.textTimeline}>Temuan di Wilayahmu</Text>
           <View style={styles.rightSection}>
-            {/* <Text style={styles.textFilter}>Filter</Text> */}
             <TouchableOpacity onPress={() => this.props.navigation.navigate('Filter', { _changeFilterList: this._changeFilterList })} >
               <Image style={{ width: 22, height: 22, marginRight: 16, marginTop: 1 }} source={changeIconFilter(this.state.isFilter)} />
-              {/* <Icons name="filter-list" size={24} style={{ marginRight: 15, marginTop: 4 }} /> */}
             </TouchableOpacity>
           </View>
         </View>

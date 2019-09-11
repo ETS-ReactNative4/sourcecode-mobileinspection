@@ -1,11 +1,12 @@
-import {isEmpty, isNil} from 'ramda';
+import { isEmpty, isNil } from 'ramda';
 import DeviceInfo from 'react-native-device-info';
-import {Alert, Dimensions, PermissionsAndroid, PixelRatio, Platform} from 'react-native';
+import { Alert, Dimensions, PermissionsAndroid, PixelRatio, Platform } from 'react-native';
 import RNFS from 'react-native-fs';
 
 const moment = require('moment');
 const momentTimezone = require('moment-timezone');
 var uuid = require('react-native-uuid');
+import TaskServices from '../Database/TaskServices'
 
 export function downloadImage(url, path) {
 	const { config, fs } = RNFetchBlob
@@ -494,3 +495,37 @@ export function getFormatDate(time) {
 
 	return `${day}, ${date} ${month} ${year}, ${clock}`
 }
+
+export function syncDays() {
+	let latestSync = TaskServices.getAllData('TR_SYNC_LOG');
+
+	let divDays = 0;
+	if (latestSync.length > 0) {
+		latestSyncDay = new Date(latestSync.max("SYNC_TIME"));
+		console.log('latestSyncDay : ', latestSyncDay)
+		divDays = Math.floor((new Date() - latestSyncDay) / (1000 * 60 * 60 * 24));
+	}
+
+	return divDays;
+}
+
+export function notifInbox() {
+	let notifCount = TaskServices.getAllData('TR_NOTIFICATION').filtered('NOTIFICATION_STATUS=0').length;
+
+	if (notifCount > 99) {
+		notifCount = 99
+	}
+
+	return notifCount;
+}
+
+export function showInbox() {
+    const data = TaskServices.getAllData('TR_LOGIN')
+    if (data != undefined) {
+      if (data[0].USER_ROLE == 'FFB_GRADING_MILL') {
+        return false
+      } else {
+        return true
+      }
+    }
+  }

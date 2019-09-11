@@ -1,35 +1,55 @@
-import React, {Component} from 'react';
-import {StyleSheet, View} from 'react-native';
-import CustomHeader from '../../Component/CustomHeader'
-import Colors from '../../Constant/Colors'
+import React, { Component } from 'react';
+import { StyleSheet, View } from 'react-native';
 import FindingTabNavigator from './FindingTabNavigator'
-import IconHeader from '../../Component/IconHeader'
-import {Images} from '../../Themes'
+import { showInbox, syncDays, notifInbox } from '../../Lib/Utils';
+import Header from '../../Component/Header'
 
 export default class FindingScreen extends Component {
   static router = FindingTabNavigator.router;
 
-  static navigationOptions = ({ navigation }) => ({
-    headerStyle: {
-      backgroundColor: Colors.tintColorPrimary
-    },
-    headerTitleStyle: {
-      textAlign: "center",
-      flex: 1,
-      fontSize: 18,
-      fontWeight: '400',
-      marginHorizontal: 12
-    },
-    title: 'Temuan',
-    headerTintColor: '#fff',
-    headerRight: <IconHeader padding={{ paddingRight: 12 }} onPress={() => navigation.navigate('Inbox')} icon={Images.ic_inbox} show={true} />,
-    headerLeft: <IconHeader padding={{ paddingLeft: 12 }} onPress={() => navigation.navigate('Sync')} icon={Images.ic_sync} show={true} />,
-    header: props => <CustomHeader {...props} />
+  static navigationOptions = () => ({
+    header: null
   });
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      divDays: 0,
+      notifCount: 0
+    }
+  }
+
+  willFocus = this.props.navigation.addListener(
+    'willFocus',
+    () => {
+      this.setState({
+        /* SET JUMLAH HARI BELUM SYNC */
+        divDays: syncDays(),
+
+        /* SET JUMLAH NOTIF  */
+        notifCount: notifInbox()
+      })
+    }
+  )
+
+  componentWillUnmount() {
+    this.willFocus.remove()
+  }
 
   render() {
     return (
       <View style={styles.container}>
+
+        {/* HEADER */}
+        <Header
+          notif={this.state.notifCount}
+          divDays={this.state.divDays}
+          onPressLeft={() => this.props.navigation.navigate('Sync')}
+          onPressRight={() => this.props.navigation.navigate('Inbox')}
+          title={'Temuan'}
+          showInbox={showInbox()} />
+
         <FindingTabNavigator navigation={this.props.navigation} />
       </View >
     )

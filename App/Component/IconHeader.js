@@ -1,5 +1,5 @@
 import React from 'react'
-import {Image, TouchableOpacity, View} from 'react-native'
+import { Image, TouchableOpacity, View } from 'react-native'
 
 const IconHeader = (props) => {
     if (props.show) {
@@ -11,7 +11,13 @@ const IconHeader = (props) => {
             </TouchableOpacity>
         )
     } else {
-        return null
+        return (
+            <TouchableOpacity onPress={props.onPress}>
+                <View style={[{ flex: 1, alignItems: 'center', justifyContent: 'center' }, props.padding]}>
+                    <Image style={{ width: 28, height: 28 }} />
+                </View>
+            </TouchableOpacity>
+        )
     }
 }
 
