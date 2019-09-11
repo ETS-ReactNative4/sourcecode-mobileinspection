@@ -43,7 +43,7 @@ import { clipString } from '../../Constant/Function';
 import { Images } from '../../Themes';
 import { changeBgFilter, changeIconFilter, getColor, getIconProgress, getStatusImage } from '../../Themes/Resources';
 import IconHeader from '../../Component/IconHeader'
-import { getBlokName, getCategoryName, getEstateName, getStatusBlok, retrieveData, removeData } from '../../Database/Resources';
+import { getBlokName, getCategoryName, getEstateName, getStatusBlok, retrieveData, removeData, storeData } from '../../Database/Resources';
 
 import RNFS from 'react-native-fs'
 
@@ -95,40 +95,44 @@ class HomeScreen extends React.Component {
     }
   }
 
+  showWeeklySummary = async () => {
+
+    await retrieveData('FindingSummary').then((result) => {
+      if (result != null) {
+        this.setState({ dataFindingSummary: result })
+      }
+    })
+
+    await retrieveData('EbccSummary').then((result) => {
+      if (result != null) {
+        this.setState({ dataEbccSummary: result })
+      }
+    })
+
+    await retrieveData('InspectionSummary').then((result) => {
+      if (result != null) {
+        this.setState({ dataInspectionSummary: result })
+      }
+    })
+
+    await retrieveData('FirstShow').then((result) => {
+      if (result != null) {
+        this.setState({ isVisibleSummary: false });
+      } else {
+        retrieveData('FindingSummary').then((result) => {
+          if (result != null) {
+            this.setState({ isVisibleSummary: true });
+          }
+        })
+      }
+    })
+  }
+
   willFocus = this.props.navigation.addListener(
     'willFocus',
     () => {
 
-      retrieveData('FindingSummary').then((result) => {
-        if (result != null) {
-          this.setState({ dataFindingSummary: result.data })
-        } else {
-          this.setState({ isVisibleSummary: false })
-        }
-      })
-
-      retrieveData('EbccSummary').then((result) => {
-        if (result != null) {
-          this.setState({ dataEbccSummary: result.data })
-        } else {
-          this.setState({ isVisibleSummary: false })
-        }
-      })
-
-      retrieveData('InspectionSummary').then((result) => {
-        if (result != null) {
-          this.setState({ dataInspectionSummary: result.data })
-
-          if (result.status) {
-            this.setState({ isVisibleSummary: true })
-          }
-        } else {
-          this.setState({ isVisibleSummary: false })
-        }
-      })
-
-      // this.retrieveDataSummary('InspectionSummary')
-      // this.retrieveDataSummary('FindingSummary')
+      this.showWeeklySummary()
 
       if (this.state.loadAll) {
         //this._initData()
@@ -883,7 +887,6 @@ class HomeScreen extends React.Component {
   }
 
   render() {
-    const TM_SERVICE = TaskServices.getAllData('TM_SERVICE')
     let show;
     if (this.state.data.length > 0) {
       show = this._renderData()
@@ -900,9 +903,7 @@ class HomeScreen extends React.Component {
           visible={this.state.isVisibleSummary}
           onPressClose={() => {
             this.setState({ isVisibleSummary: false })
-            removeData('InspectionSummary')
-            removeData('FindingSummary')
-            removeData('EbccSummary')
+            storeData('FirstShow', true)
           }} />
 
         <StatusBar hidden={false} backgroundColor={Colors.tintColor} barStyle="light-content" />

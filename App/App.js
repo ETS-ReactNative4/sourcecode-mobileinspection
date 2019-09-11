@@ -23,6 +23,7 @@ class AppMain extends Component{
     }
 }
 
+//Test
 //AppRegistry.registerHeadlessTask('LogLocation', () => LogLocation);
 // allow reactotron overlay for fast design in dev mode
 export default (DebugConfig.useReactotron ? console.tron.overlay(AppMain) : AppMain);
