@@ -292,7 +292,13 @@ export default class MoreScreen extends Component {
       }
     })
 
-    this.setState({ isVisibleSummary: true });
+    const checkBlock = TaskServices.getAllData('TM_BLOCK');
+    if (checkBlock.length > 0) {
+      this.setState({ isVisibleSummary: true });
+    } else {
+      this.props.navigation.navigate('Sync')
+    }
+
   }
 
   /* Function Export Database */
