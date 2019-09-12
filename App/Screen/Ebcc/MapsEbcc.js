@@ -73,8 +73,6 @@ class MapsEbcc extends React.Component {
     componentDidMount() {
         this.props.navigation.setParams({ searchLocation: this.searchLocation })
         this.getLocation()
-
-        this.detectFakeGPS();
     }
 
     searchLocation = () => {
@@ -88,6 +86,12 @@ class MapsEbcc extends React.Component {
                 console.log('Mocked : ', position.mocked)
                 if (position.mocked) {
                     this.validateType(position.mocked)
+                } else {
+                    this.setState({ fetchLocation: true })
+                    setTimeout(() => {
+                        this.setState({ fetchLocation: false });
+                    }, 5000);
+                    this.getLocation();
                 }
 
             },

@@ -63,8 +63,6 @@ class MapsInspeksi extends React.Component {
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
     this.props.navigation.setParams({ searchLocation: this.searchLocation });
     this.getLocation()
-
-    this.detectFakeGPS();
   }
 
   componentWillUnmount() {
@@ -246,8 +244,13 @@ class MapsInspeksi extends React.Component {
         console.log('Mocked : ', position.mocked)
         if (position.mocked) {
           this.validateType(position.mocked)
+        } else {
+          this.setState({ fetchLocation: true });
+          setTimeout(() => {
+            this.setState({ fetchLocation: false });
+          }, 3000);
+          this.getLocation();
         }
-
       },
       (error) => {
         let message = error && error.message ? error.message : 'Terjadi kesalahan ketika mencari lokasi anda !';

@@ -91,10 +91,10 @@ class WeeklySummary extends Component {
                                     value={this.props.dataEbcc.jumlah}
                                     title={'sampling ebcc'}
                                     img={require('../Images/summaryInspeksi/ebcc.png')}
-                                    target={'Target : ' + 50}
+                                    target={'Target : ' + this.props.dataEbcc.target}
                                 />
                                 <WeeklyFeature
-                                    value={this.props.dataInspeksi.jarak_meter / 1000 + ' KM'}
+                                    value={this.props.dataInspeksi.jarak_meter + ' KM'}
                                     title={'berjalan kaki'}
                                     img={require('../Images/summaryInspeksi/walk.png')}
                                     target={this.props.dataInspeksi.durasi_jam + ' jam ' + this.props.dataInspeksi.durasi_menit + ' menit'}
