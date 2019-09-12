@@ -8,7 +8,7 @@ import Taskservices from '../../Database/TaskServices'
 import R from 'ramda';
 import {getSticker} from '../../Lib/Utils'
 
-class HistoryInspeksiDetail extends React.Component {
+export default class HistoryInspectionDetail extends React.Component {
 
     constructor(props) {
         super(props);
@@ -75,7 +75,7 @@ class HistoryInspeksiDetail extends React.Component {
     }
 
     loadTemuan(){
-        let data = Taskservices.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION)
+        let data = Taskservices.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', this.state.data.ID_INSPECTION)
         if (data !== undefined) {
             let tempInspeksiTemuan = [];
             let trCodes = data.TR_FINDING_CODES;
@@ -620,8 +620,6 @@ class HistoryInspeksiDetail extends React.Component {
     }
 
 }
-
-export default HistoryInspeksiDetail;
 
 const styles = StyleSheet.create({
     container: {

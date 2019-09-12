@@ -11,7 +11,6 @@ import {
     View
 } from 'react-native';
 import {Card, Container, Content,} from 'native-base';
-import {connect} from 'react-redux'
 import ModalAlert from '../../Component/ModalAlert';
 import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
@@ -27,7 +26,7 @@ const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
 const LATITUDE = -2.952421;
 const LONGITUDE = 112.354931;
 
-class FormStep1 extends Component {
+export default class FormStep1 extends Component {
 
     static navigationOptions = ({ navigation }) => {
         const { params = {} } = navigation.state;
@@ -145,33 +144,6 @@ class FormStep1 extends Component {
         );
     }
 
-    // exitAlert = () => {
-    //     if (this.state.photos.length == 0) {
-    //         this.props.navigation.goBack(null)
-    //     } else {
-    //         Alert.alert(
-    //             'Peringatan',
-    //             'Transaksi kamu tidak akan tersimpan, kamu yakin akan melanjutkan?',
-    //             [
-    //                 { text: 'NO', style: 'cancel' },
-    //                 { text: 'YES', onPress: () => this.props.navigation.goBack(null) }
-    //             ]
-    //         );
-    //     }
-
-    // };
-
-    // handleAndroidBackButton = callback => {
-    //     BackHandler.addEventListener('hardwareBackPress', () => {
-    //         callback();
-    //         return true;
-    //     });
-    // };
-
-    // componentDidMount() {
-    // this.handleAndroidBackButton(this.exitAlert);
-    // }
-
     onBtnClick() {
         if (this.state.photos.length == 0) {
             this.setState({ showModal: true, title: "Ambil Foto", message: 'Opps kamu belum ambil Foto Temuan yaaa', icon: require('../../Images/ic-no-pic.png') });
@@ -184,13 +156,6 @@ class FormStep1 extends Component {
                 let imgName = da[da.length - 1];
                 images.push(imgName);
                 this.props.navigation.navigate('Step2', { image: images, lat: this.state.latitude, lon: this.state.longitude });
-                // const navigation = this.props.navigation;
-                // const resetAction = StackActions.reset({
-                //     index: 0,
-                //     actions: [NavigationActions.navigate({ routeName: 'Step2', params:{image: images, lat: this.state.latitude, lon:this.state.longitude} })],
-                // });
-                // navigation.dispatch(resetAction);
-
             });
         }
     }
@@ -398,18 +363,6 @@ class FormStep1 extends Component {
         )
     }
 }
-
-const mapStateToProps = state => {
-    return {};
-};
-
-const mapDispatchToProps = dispatch => {
-    return {
-
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(FormStep1);
 
 const style = {
     map: {

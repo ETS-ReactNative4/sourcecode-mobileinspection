@@ -20,7 +20,7 @@ import PilihBlok from '../Screen/Finding/PilihBlok'
 import MapsFinding from '../Screen/Finding/MapsFinding'
 import LihatLokasi from '../Screen/Finding/LihatLokasi'
 //inspeksi
-import DetailHistoryInspeksi from '../Screen/Inspeksi/HistoryInspeksiDetail'
+import DetailHistoryInspeksi from '../Screen/Inspeksi/HistoryInspectionDetail'
 import BuatInspeksi from '../Screen/Inspeksi/BuatInspeksi'
 import TakeFotoBaris from '../Screen/Inspeksi/TakePhotoBaris'
 import KondisiBaris1 from '../Screen/Inspeksi/KondisiBaris1'
