@@ -20,7 +20,6 @@ class SelesaiInspeksi extends React.Component {
         let statusBlok = R.clone(params.statusBlok);
         let dataInspeksi = R.clone(params.dataInspeksi);
         let inspectionType = R.clone(params.inspectionType);
-        //alert(JSON.stringify(dataInspeksi))
 
         this.state = {
             dataInspeksi,
@@ -98,16 +97,23 @@ class SelesaiInspeksi extends React.Component {
         }
     }
 
-    loadData() {
+    loadTemuan(){
         let data = Taskservices.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION)
-        if (data != undefined) {
+        if (data !== undefined) {
+            let tempInspeksiTemuan = [];
             let trCodes = data.TR_FINDING_CODES;
             if (trCodes.length > 0) {
                 trCodes.map((item, index) => {
-                    this.state.arrTemuan.push(this.renderTemuan(item, index))
+                    tempInspeksiTemuan.push(this.renderTemuan(item, index))
                 });
             }
+            this.setState({
+                arrTemuan: tempInspeksiTemuan
+            })
         }
+    }
+    loadData() {
+        this.loadTemuan();
 
         let dataBaris = Taskservices.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION);
         let barisPembagi = dataBaris.length;
