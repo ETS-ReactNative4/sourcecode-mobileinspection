@@ -74,16 +74,33 @@ class HistoryInspeksiDetail extends React.Component {
         }
     }
 
-    loadData() {
-        let data = Taskservices.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', this.state.data.ID_INSPECTION)
-        if(data != undefined){
+    loadTemuan(){
+        let data = Taskservices.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION)
+        if (data !== undefined) {
+            let tempInspeksiTemuan = [];
             let trCodes = data.TR_FINDING_CODES;
-            if(trCodes.length > 0){
-                trCodes.map((item,index) => {
-                    this.state.arrTemuan.push(this.renderTemuan(item, index))
+            if (trCodes.length > 0) {
+                trCodes.map((item, index) => {
+                    tempInspeksiTemuan.push(this.renderTemuan(item, index))
                 });
             }
+            this.setState({
+                arrTemuan: tempInspeksiTemuan
+            })
         }
+    }
+
+    loadData() {
+        this.loadTemuan();
+        // let data = Taskservices.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', this.state.data.ID_INSPECTION)
+        // if(data != undefined){
+        //     let trCodes = data.TR_FINDING_CODES;
+        //     if(trCodes.length > 0){
+        //         trCodes.map((item,index) => {
+        //             this.state.arrTemuan.push(this.renderTemuan(item, index))
+        //         });
+        //     }
+        // }
 
         let dataBaris = Taskservices.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', this.state.data.ID_INSPECTION);
         let barisPembagi = dataBaris.length;

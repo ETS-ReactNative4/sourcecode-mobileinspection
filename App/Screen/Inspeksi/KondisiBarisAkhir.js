@@ -100,15 +100,6 @@ class KondisiBarisAkhir extends Component {
     }
 
     componentDidMount() {
-        // if (this.state.from === 'history') {
-        //     let time = this.state.inspeksiHeader.TIME;
-        //     let distance = this.state.inspeksiHeader.DISTANCE;
-        //     this.setState({ menit: time, distance: distance, jarak: distance });
-        // } else {
-        //     let sda = this.totalWaktu();
-        //     this.setState({ menit: sda.toString() })
-        // }
-
         let sda = this.totalWaktu();
         this.setState({ menit: sda.toString() })
         this.getLocation();
@@ -182,28 +173,6 @@ class KondisiBarisAkhir extends Component {
     }
 
     makeLineTrack() {
-        // if (this.state.from === 'history') {
-        //     let header = TaskService.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION)
-        //     if (header !== null) {
-        //         header.map(hdr => {
-        //             let data = TaskService.findBy('TM_INSPECTION_TRACK', 'BLOCK_INSPECTION_CODE', hdr.BLOCK_INSPECTION_CODE)
-        //             if (data !== undefined) {
-        //                 data.map(item => {
-        //                     let arr = { latitude: parseFloat(item.LAT_TRACK), longitude: parseFloat(item.LONG_TRACK) }
-        //                     this.state.polyTrack.push(arr)
-        //                 })
-        //             }
-        //         })
-        //     }
-        // } else {
-        //     let data = TaskService.findBy('TM_INSPECTION_TRACK', 'BLOCK_INSPECTION_CODE', this.state.dataInspeksi.BLOCK_INSPECTION_CODE)
-        //     if (data !== undefined) {
-        //         data.map(item => {
-        //             let arr = { latitude: parseFloat(item.LAT_TRACK), longitude: parseFloat(item.LONG_TRACK) }
-        //             this.state.polyTrack.push(arr)
-        //         })
-        //     }
-        // }
         let data = TaskService.findBy('TM_INSPECTION_TRACK', 'BLOCK_INSPECTION_CODE', this.state.dataInspeksi.BLOCK_INSPECTION_CODE)
         if (data !== undefined) {
             data.map(item => {
@@ -232,22 +201,9 @@ class KondisiBarisAkhir extends Component {
     has2Row() {
         let total = TaskService.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION).length;
         return total >= 1;
-        // if (this.state.from !== 'history') {
-        //     if (total >= 1) {
-        //         return true
-        //     } else {
-        //         return false
-        //     }
-        // } else {
-        //     if (total >= 2) {
-        //         return true
-        //     } else {
-        //         return false
-        //     }
-        // }
     }
     changeColorSlide() {
-        if (this.state.inspectionType === 'genba' || DATA_LOGIN[0].USER_ROLE != 'ASISTEN_LAPANGAN') {
+        if (this.state.inspectionType === 'genba' || DATA_LOGIN[0].USER_ROLE !== 'ASISTEN_LAPANGAN') {
             if (!this.state.switchLanjut) {
                 this.setState({ fulFillMandatory: false, txtBaris: '' })
                 btn = {
@@ -272,9 +228,6 @@ class KondisiBarisAkhir extends Component {
             this.setState({ tumbButtonSlide: btn })
         }
         else {
-
-            console.log('DATA USER LOGIN ASU : ', );
-
             if (this.has2Row() >= 1 ) {
                 if (!this.state.switchLanjut) {
                     this.setState({ fulFillMandatory: false, txtBaris: '' })
@@ -344,13 +297,13 @@ class KondisiBarisAkhir extends Component {
     }
 
     validation() {
-        if (this.state.txtBaris == '' && this.state.switchLanjut) {
+        if (this.state.txtBaris === '' && this.state.switchLanjut) {
             this.setState({
                 showModal: true, title: 'Isi Baris', message: 'Kamu harus selalu pilih baris yaa :)',
                 icon: require('../../Images/ic-blm-input-lokasi.png')
             });
         }
-        else if (this.state.txtBaris == this.state.dataUsual.BARIS && this.state.switchLanjut) {
+        else if (this.state.txtBaris === this.state.dataUsual.BARIS && this.state.switchLanjut) {
             this.setState({
                 showModal: true, title: 'Baris Sama', message: 'Opps, baris tidak boleh sama dengan sebelumnya ya',
                 icon: require('../../Images/ic-blm-input-lokasi.png')
@@ -486,7 +439,7 @@ class KondisiBarisAkhir extends Component {
     getTotalNilaiComponent(allComponent) {
         var val = 0;
         for (var i = 0; i < allComponent.length; i++) {
-            if (i == 0) {
+            if (i === 0) {
                 val = this.getKonversiNilai(allComponent[i].VALUE);
             } else {
                 val = val + this.getKonversiNilai(allComponent[i].VALUE);
@@ -510,144 +463,7 @@ class KondisiBarisAkhir extends Component {
     }
 
     saveData() {
-        // let lat = '0.0';
-        // let lon = '0.0';
-        // if(this.state.latitude === 0.0 && this.state.longitude === 0.0){
-        //     let data = TaskService.findBy2('TM_INSPECTION_TRACK', 'BLOCK_INSPECTION_CODE', this.state.inspeksiHeader.BLOCK_INSPECTION_CODE);
-        //     if(data !== undefined){
-        //         let record = data[0];
-        //         lat = record.LAT_TRACK;
-        //         lon = record.LONG_TRACK;
-        //     }
-        // }else{
-        //     lat = this.state.latitude.toString();
-        //     lon = this.state.longitude.toString();
-        // }
         let insertTime = getTodayDate('YYYY-MM-DD HH:mm:ss');
-
-        // if (this.state.from !== 'history') {
-        //     var modelInspeksiH = {
-        //         BLOCK_INSPECTION_CODE: this.state.inspeksiHeader.BLOCK_INSPECTION_CODE,
-        //         ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
-        //         WERKS: this.state.inspeksiHeader.WERKS,
-        //         AFD_CODE: this.state.inspeksiHeader.AFD_CODE,
-        //         BLOCK_CODE: this.state.inspeksiHeader.BLOCK_CODE,
-        //         AREAL: this.state.inspeksiHeader.AREAL,
-        //         INSPECTION_TYPE: "PANEN",
-        //         STATUS_BLOCK: this.state.inspeksiHeader.STATUS_BLOCK,
-        //         INSPECTION_DATE: this.state.inspeksiHeader.INSPECTION_DATE, //getTodayDate('DD MMM YYYY HH:mm:ss'), //12 oct 2018 01:01:01
-        //         INSPECTION_SCORE: '',
-        //         INSPECTION_RESULT: '',
-        //         STATUS_SYNC: 'N',
-        //         SYNC_TIME: '',
-        //         START_INSPECTION: this.state.inspeksiHeader.START_INSPECTION,
-        //         END_INSPECTION: insertTime,
-        //         LAT_START_INSPECTION: this.state.inspeksiHeader.LAT_START_INSPECTION,
-        //         LONG_START_INSPECTION: this.state.inspeksiHeader.LONG_START_INSPECTION,
-        //         LAT_END_INSPECTION: this.state.latitude.toString(),
-        //         LONG_END_INSPECTION: this.state.longitude.toString(),
-        //         INSERT_TIME: insertTime,
-        //         INSERT_USER: this.state.dataUsual.USER_AUTH,
-        //         TIME: this.state.menit,
-        //         DISTANCE: this.state.jarak,
-        //
-        //         //localParam:
-        //         inspectionType: this.state.inspectionType
-        //     }
-        //     TaskService.saveData('TR_BLOCK_INSPECTION_H', modelInspeksiH);
-        //
-        //     var image = {
-        //         TR_CODE: this.state.fotoBaris.TR_CODE,
-        //         IMAGE_CODE: this.state.fotoBaris.IMAGE_CODE,
-        //         IMAGE_NAME: this.state.fotoBaris.IMAGE_NAME,
-        //         IMAGE_PATH_LOCAL: this.state.fotoBaris.IMAGE_PATH_LOCAL,
-        //         IMAGE_URL: '',
-        //         STATUS_IMAGE: 'BARIS',
-        //         STATUS_SYNC: 'N',
-        //         INSERT_USER: this.state.dataUsual.USER_AUTH,
-        //         INSERT_TIME: insertTime
-        //     }
-        //     console.log("SAVE IMAGE BARIS",image);
-        //     TaskService.saveData('TR_IMAGE', image);
-        //
-        //     var selfie = {
-        //         TR_CODE: this.state.fotoSelfie.TR_CODE,
-        //         IMAGE_CODE: this.state.fotoSelfie.IMAGE_CODE,
-        //         IMAGE_NAME: this.state.fotoSelfie.IMAGE_NAME,
-        //         IMAGE_PATH_LOCAL: this.state.fotoSelfie.IMAGE_PATH_LOCAL,
-        //         IMAGE_URL: '',
-        //         STATUS_IMAGE: 'SELFIE',
-        //         STATUS_SYNC: 'N',
-        //         INSERT_USER: this.state.dataUsual.USER_AUTH,
-        //         INSERT_TIME: insertTime
-        //     }
-        //     TaskService.saveData('TR_IMAGE', selfie);
-        //
-        //     if (this.state.kondisiBaris1 !== 'undefined') {
-        //         for (var i = 0; i < this.state.kondisiBaris1.length; i++) {
-        //             var model = this.state.kondisiBaris1[i];
-        //             mdl = {
-        //                 BLOCK_INSPECTION_CODE_D: model.BLOCK_INSPECTION_CODE_D,
-        //                 BLOCK_INSPECTION_CODE: model.BLOCK_INSPECTION_CODE,
-        //                 ID_INSPECTION: model.ID_INSPECTION,
-        //                 CONTENT_INSPECTION_CODE: model.CONTENT_INSPECTION_CODE,
-        //                 VALUE: model.VALUE,
-        //                 AREAL: this.state.dataUsual.BARIS,
-        //                 STATUS_SYNC: 'N',
-        //                 INSERT_USER: this.state.dataUsual.USER_AUTH,
-        //                 INSERT_TIME: insertTime
-        //
-        //             }
-        //             TaskService.saveData('TR_BLOCK_INSPECTION_D', mdl);
-        //         }
-        //     }
-        //
-        //     if (this.state.kondisiBaris2 !== 'undefined') {
-        //         for (var i = 0; i < this.state.kondisiBaris2.length; i++) {
-        //             var model = this.state.kondisiBaris2[i];
-        //             mdl = {
-        //                 BLOCK_INSPECTION_CODE_D: model.BLOCK_INSPECTION_CODE_D,
-        //                 BLOCK_INSPECTION_CODE: model.BLOCK_INSPECTION_CODE,
-        //                 ID_INSPECTION: model.ID_INSPECTION,
-        //                 CONTENT_INSPECTION_CODE: model.CONTENT_INSPECTION_CODE,
-        //                 VALUE: model.VALUE,
-        //                 AREAL: this.state.dataUsual.BARIS,
-        //                 STATUS_SYNC: 'N',
-        //                 INSERT_USER: this.state.dataUsual.USER_AUTH,
-        //                 INSERT_TIME: insertTime
-        //             }
-        //             TaskService.saveData('TR_BLOCK_INSPECTION_D', mdl);
-        //         }
-        //     }
-        //
-        //     let getBarisInspection = TaskService.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION);
-        //     if (getBarisInspection !== null && typeof getBarisInspection !== undefined) {
-        //         TaskService.deleteRecordByPK('TR_BARIS_INSPECTION', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION);
-        //     }
-        //
-        //     let dataInspeksiRemoveDuplicate = this.state.dataInspeksi;
-        //     dataInspeksiRemoveDuplicate.TR_FINDING_CODES = [...new Set(dataInspeksiRemoveDuplicate.TR_FINDING_CODES)];
-        //     dataInspeksiRemoveDuplicate = {
-        //         ...dataInspeksiRemoveDuplicate,
-        //         syncHeader: 'N',
-        //         syncDetail: 'N',
-        //         syncTracking: 'N',
-        //         syncImage: 'N'
-        //     };
-        //     TaskService.saveData('TR_BARIS_INSPECTION', dataInspeksiRemoveDuplicate);
-        //
-        //     //TAMBAHAN GEMBA
-        //
-        //     if (this.state.inspectionType === "genba") {
-        //         let selectedGenbaUser = TaskServices.getAllData("TR_GENBA_SELECTED");
-        //         let model_TR_GENBA_INSPECTION = {
-        //             BLOCK_INSPECTION_CODE: this.state.inspeksiHeader.BLOCK_INSPECTION_CODE,
-        //             GENBA_USER: selectedGenbaUser,
-        //             STATUS_SYNC: "N"
-        //         }
-        //         TaskService.saveData('TR_GENBA_INSPECTION', model_TR_GENBA_INSPECTION);
-        //     }
-        // }
 
         var modelInspeksiH = {
             BLOCK_INSPECTION_CODE: this.state.inspeksiHeader.BLOCK_INSPECTION_CODE,
@@ -676,7 +492,7 @@ class KondisiBarisAkhir extends Component {
 
             //localParam:
             inspectionType: this.state.inspectionType
-        }
+        };
         TaskService.saveData('TR_BLOCK_INSPECTION_H', modelInspeksiH);
 
         var image = {
@@ -780,7 +596,7 @@ class KondisiBarisAkhir extends Component {
             BLOK: this.state.dataUsual.BLOK,
             BARIS: this.state.txtBaris,
             BLOCK_INSPECTION_CODE: blokInspectionCode
-        }
+        };
 
         if (this.state.fulFillMandatory) {
             this.calculate();
@@ -809,7 +625,7 @@ class KondisiBarisAkhir extends Component {
                 LONG_START_INSPECTION: this.state.inspeksiHeader.LONG_START_INSPECTION,
                 LAT_END_INSPECTION: '',
                 LONG_END_INSPECTION: '',
-            }
+            };
             let model = {
                 ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
                 BLOCK_INSPECTION_CODE: blokInspectionCode,
@@ -824,64 +640,12 @@ class KondisiBarisAkhir extends Component {
                 INSPECTION_SCORE: '',
                 FULFILL_BARIS: this.state.dataInspeksi.FULFILL_BARIS,
                 TR_FINDING_CODES: []
-            }
+            };
 
-            // if (this.state.from !== 'history') {
-            //     //for track
-            //     clearInterval(this.state.intervalId)
-            // }
-
-            let time = TaskService.getAllData('TM_TIME_TRACK')[0];
-            let duration = 10000
-            if (time !== undefined) {
-                duration = parseFloat(time.DESC);
-            }
             let id = 0;//setInterval(()=> this.getLocation2(blokInspectionCode), duration);
             this.navigateScreen('TakeFotoBaris', params, modelInspeksi, model, id);
-
-            // REMOVE ASYNSTORAGE MAPS
-            // removeData('PoligonsInspeksi');
         }
 
-    }
-
-    getLocation2(blokInsCode) {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                var lat = parseFloat(position.coords.latitude);
-                var lon = parseFloat(position.coords.longitude);
-                this.insertTrackLokasi(blokInsCode, lat, lon)
-            },
-            (error) => {
-                let message = error && error.message ? error.message : 'Terjadi kesalahan ketika mencari lokasi anda !';
-                if (error && error.message == "No location provider available.") {
-                    message = "Mohon nyalakan GPS anda terlebih dahulu.";
-                }
-            },
-            { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
-        );
-    }
-
-    insertTrackLokasi(blokInsCode, lat, lon) {
-        try {
-            var curr = getTodayDate('YYMMDDkkmmss');
-            var trInsCode = `T${this.state.dataUsual.USER_AUTH}${curr}`;
-            // var today = getTodayDate('YYYY-MM-DD HH:mm:ss');
-            data = {
-                TRACK_INSPECTION_CODE: trInsCode,
-                BLOCK_INSPECTION_CODE: blokInsCode,
-                ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
-                DATE_TRACK: curr,
-                LAT_TRACK: lat.toString(),
-                LONG_TRACK: lon.toString(),
-                INSERT_USER: this.state.dataUsual.USER_AUTH,
-                INSERT_TIME: curr,
-                STATUS_SYNC: 'N'
-            }
-            TaskService.saveData('TM_INSPECTION_TRACK', data)
-        } catch (error) {
-            alert('insert track lokasi baris akhir inspeksi ' + error)
-        }
     }
 
     navigateScreen(screenName, params, inspeksiH, dataInspeksi, intervalId) {
@@ -1015,12 +779,6 @@ class KondisiBarisAkhir extends Component {
                         </MapView>
                     }
 
-                    {/* <IconLoc
-                        onPress={() => { this.searchLocation() }}
-                        name="location-arrow"
-                        size={24}
-                        style={{ alignSelf: 'flex-start', marginBottom: 210, marginLeft: 10 }} /> */}
-
                     <View style={{ height: 250, marginLeft: 20, marginRight: 20 }}>
                         <Card style={[styles.cardContainer]}>
                             <CardItem>
@@ -1034,7 +792,6 @@ class KondisiBarisAkhir extends Component {
                                             onTintColor={'#5bc236'}
                                             tintColor={'#ff8080'}
                                             onValueChange={(value) => { this.setState({ switchLanjut: value }); this.changeColorSlide() }}
-                                            // style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }], marginBottom: 10, position: 'absolute', right: 0 }}
                                             style={{ marginBottom: 10, position: 'absolute', right: 0 }}
                                             value={this.state.switchLanjut} />
                                     </View>
@@ -1089,10 +846,6 @@ class KondisiBarisAkhir extends Component {
         )
     }
 }
-
-KondisiBarisAkhir.propTypes = {
-    provider: ProviderPropType,
-};
 
 
 const styles = {
@@ -1168,31 +921,7 @@ const styles = {
         color: '#A9A9A9',
         paddingHorizontal: 18,
         paddingVertical: 12,
-
     }
-    // bubble: {
-    //     backgroundColor: '#ff8080',
-    //     paddingHorizontal: 18,
-    //     paddingVertical: 12,
-    //     borderRadius: 20,
-    // },
-    // buttonText: {
-    //     fontSize:17,
-    //     color:'#ffffff',
-    //     textAlign:'center'
-    // },
-    // button: {
-    //     width: 200,
-    //     paddingHorizontal: 12,
-    //     alignItems: 'center',
-    //     marginHorizontal: 10,
-    //     padding:10 ,
-    // },
-    // buttonContainer: {
-    //     flexDirection: 'row',
-    //     marginVertical: 20,
-    //     backgroundColor: 'transparent',
-    // },
 }
 
 export default KondisiBarisAkhir;
