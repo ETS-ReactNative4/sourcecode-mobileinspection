@@ -230,24 +230,7 @@ class KondisiBarisAkhir extends Component {
 
     has2Row() {
         let total = TaskService.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION).length;
-        // if (this.state.from !== 'history') {
-        //     if (total >= 1) {
-        //         return true
-        //     } else {
-        //         return false
-        //     }
-        // } else {
-        //     if (total >= 2) {
-        //         return true
-        //     } else {
-        //         return false
-        //     }
-        // }
-        if (total >= 2) {
-            return true
-        } else {
-            return false
-        }
+        return total >= 1;
     }
     changeColorSlide() {
         if (this.state.inspectionType === 'genba' || DATA_LOGIN[0].USER_ROLE != 'ASISTEN_LAPANGAN') {
