@@ -133,12 +133,13 @@ class KondisiBarisAkhir extends Component {
     // }
     totalJarak(){
         let totalDistance = 0;
-        let getTrack = TaskServices.findBy("TM_INSPECTION_TRACK", "BLOCK_INSPECTION_CODE", this.state.inspeksiHeader.ID_INSPECTION);
+        let getTrack = TaskServices.findBy("TM_INSPECTION_TRACK", "BLOCK_INSPECTION_CODE", this.state.inspeksiHeader.BLOCK_INSPECTION_CODE);
         if(getTrack.length > 0){
             for (let count = 0; count < getTrack.length-2; count++){
                 let getTrackDistance = geolib.getDistance({latitude: parseFloat(getTrack[count].LAT_TRACK), longitude: parseFloat(getTrack[count].LONG_TRACK)}, {latitude: parseFloat(getTrack[count+1].LAT_TRACK), longitude: parseFloat(getTrack[count+1].LONG_TRACK)});
                 totalDistance = totalDistance + getTrackDistance;
             }
+            console.log("TOTAL DISTANCE", totalDistance);
         }
         return totalDistance;
     }
@@ -231,6 +232,19 @@ class KondisiBarisAkhir extends Component {
     has2Row() {
         let total = TaskService.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION).length;
         return total >= 1;
+        // if (this.state.from !== 'history') {
+        //     if (total >= 1) {
+        //         return true
+        //     } else {
+        //         return false
+        //     }
+        // } else {
+        //     if (total >= 2) {
+        //         return true
+        //     } else {
+        //         return false
+        //     }
+        // }
     }
     changeColorSlide() {
         if (this.state.inspectionType === 'genba' || DATA_LOGIN[0].USER_ROLE != 'ASISTEN_LAPANGAN') {
