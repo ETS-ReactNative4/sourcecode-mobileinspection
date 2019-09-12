@@ -232,7 +232,7 @@ class FormStep2 extends Component {
     }
 
     saveData() {
-        var insertTime = getTodayDate('YYYYMMDDkkmmss');
+        let insertTime = getTodayDate('YYYY-MM-DD HH:mm:ss');
         //insertTime = parseInt(insertTime);
         var data = {
             FINDING_CODE: this.state.TRANS_CODE,

@@ -1,6 +1,6 @@
 import {createMaterialTopTabNavigator} from 'react-navigation';
 
-import HistoryInspection from './HistoryInscpection';
+import HistoryInspection from './HistoryInspection';
 import ListInspection from './ListInspection';
 
 export default createMaterialTopTabNavigator({
