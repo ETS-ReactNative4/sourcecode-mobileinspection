@@ -11,7 +11,6 @@ import {
     View
 } from 'react-native';
 import {Card, Container, Content,} from 'native-base';
-import {connect} from 'react-redux'
 import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
 import Icon from 'react-native-vector-icons/MaterialIcons'
@@ -23,10 +22,9 @@ import ModalAlert from '../../Component/ModalAlert';
 
 const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
 
-class Step1Finding extends Component {
+export default class Step1Finding extends Component {
 
     static navigationOptions = ({ navigation }) => {
-        const { params = {} } = navigation.state;
         return {
             headerStyle: {
                 backgroundColor: Colors.tintColorPrimary
@@ -92,12 +90,10 @@ class Step1Finding extends Component {
         this.getLocation();
         this.props.navigation.setParams({ clearFoto: this.clearFoto })
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
-        // BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
     }
 
     componentWillUnmount() {
         BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
-        // BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
     }
 
     handleBackButtonClick() {
@@ -110,8 +106,6 @@ class Step1Finding extends Component {
             (position) => {
                 var lat = parseFloat(position.coords.latitude);
                 var lon = parseFloat(position.coords.longitude);
-                // const timestamp = convertTimestampToDate(position.timestamp, 'DD/MM/YYYY HH:mm:ss')//moment(position.timestamp).format('DD/MM/YYYY HH:mm:ss');
-                // console.log(timestamp);
                 this.setState({ latitude: lat, longitude: lon, fetchLocation: false });
 
             },
@@ -121,8 +115,6 @@ class Step1Finding extends Component {
                     message = "Mohon nyalakan GPS anda terlebih dahulu.";
                 }
                 this.setState({ fetchLocation: false })
-                // alert('Informasi', message);
-                // console.log(message);
             }, // go here if error while fetch location
             { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
         );
@@ -204,10 +196,16 @@ class Step1Finding extends Component {
                 onPress={() => { this._onSelectedPhoto(foto.uri) }}
                 style={{ height: 100, width: 100, marginLeft: 10 }}
                 key={foto.index}>
-                <Image style={[{
-                    alignItems: 'stretch', width: 100, height: 100,
-                    borderRadius: 10
-                }, border]} source={foto} />
+                <Image style={[
+                    {
+                        alignItems: 'stretch',
+                        width: 100,
+                        height: 100,
+                        borderRadius: 10
+                    },
+                    border
+                ]}
+                       source={foto} />
             </TouchableOpacity>
         )
     }
@@ -289,10 +287,12 @@ class Step1Finding extends Component {
                             onPress={() => { this.takePicture() }}
                         >
                             <Image style={{
-                                alignSelf: 'center', alignItems: 'stretch',
-                                width: 55, height: 55
-                            }}
-                                source={require('../../Images/icon/ic_camera_big.png')}></Image>
+                                alignSelf: 'center',
+                                alignItems: 'stretch',
+                                width: 55,
+                                height: 55}}
+                                source={require('../../Images/icon/ic_camera_big.png')}
+                            />
                         </TouchableOpacity>
                     </Card>
 
@@ -311,18 +311,6 @@ class Step1Finding extends Component {
         )
     }
 }
-
-const mapStateToProps = state => {
-    return {};
-};
-
-const mapDispatchToProps = dispatch => {
-    return {
-
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Step1Finding);
 
 const style = {
     stepperContainer: {

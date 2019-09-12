@@ -46,7 +46,7 @@ const alcatraz = {
     ]
 };
 
-class Step2Finding extends Component {
+export default class Step2Finding extends Component {
 
     constructor(props) {
         super(props);
@@ -126,17 +126,6 @@ class Step2Finding extends Component {
     };
 
     updateTrBaris() {
-        // this.state.tr_finding_codes.push(this.state.TRANS_CODE);
-        // let data = TaskServices.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION)
-        // if(data !== undefined){
-        //     let trCodes = data.TR_FINDING_CODES
-        //     if(trCodes !== ''){
-        //         let arr = trCodes.split(',');
-        //         arr.map(item => {
-        //             this.state.tr_finding_codes.push(item)
-        //         });
-        //     }
-        // }
         let model = {
             ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
             BLOCK_INSPECTION_CODE: this.state.dataInspeksi.BLOCK_INSPECTION_CODE,
@@ -335,7 +324,6 @@ class Step2Finding extends Component {
                 this.setState({ showModalBack: true, title: 'Berhasil Disimpan', message: 'Yeaay! Data kamu berhasil disimpan', icon: require('../../Images/ic-save-berhasil.png') });
             }, 1000);
         })
-        // this.props.navigation.popToTop()
     }
 
     _showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
@@ -346,12 +334,6 @@ class Step2Finding extends Component {
         this.setState({ batasWaktu: dateDisplayMobileWithoutHours(date) })
         this._hideDateTimePicker();
     };
-
-    _showLocation = () => {
-        this.setState({
-            isMapsVisible: true
-        })
-    }
 
     changeColorPriority(priority) {
         switch (priority) {
@@ -617,8 +599,6 @@ class Step2Finding extends Component {
         )
     }
 }
-
-export default Step2Finding;
 
 const style = {
     stepperContainer: {

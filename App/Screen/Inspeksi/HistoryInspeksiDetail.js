@@ -92,15 +92,6 @@ class HistoryInspeksiDetail extends React.Component {
 
     loadData() {
         this.loadTemuan();
-        // let data = Taskservices.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', this.state.data.ID_INSPECTION)
-        // if(data != undefined){
-        //     let trCodes = data.TR_FINDING_CODES;
-        //     if(trCodes.length > 0){
-        //         trCodes.map((item,index) => {
-        //             this.state.arrTemuan.push(this.renderTemuan(item, index))
-        //         });
-        //     }
-        // }
 
         let dataBaris = Taskservices.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', this.state.data.ID_INSPECTION);
         let barisPembagi = dataBaris.length;
@@ -286,28 +277,6 @@ class HistoryInspeksiDetail extends React.Component {
             }
             listData.push(this.renderComponent(data));
         }
-        // if (penabur.length > 0) {
-        //     var jmlNilaiPenabur = this.getTotalNilaiComponent(penabur);
-        //     var avg_penabur = jmlNilaiPenabur / penabur.length;
-        //     var nilaiPenabur = this.getKonversiNilaiKeHuruf(avg_penabur);
-        //     data = {
-        //         idx: 6,
-        //         name: 'Sistem Penaburan',
-        //         value: `${nilaiPenabur}/${avg_penabur.toFixed(2)}`
-        //     }
-        //     listData.push(this.renderComponent(data));
-        // }
-        // if (pupuk.length > 0) {
-        //     var jmlNilaiPupuk = this.getTotalNilaiComponent(pupuk);
-        //     var avg_pupuk = jmlNilaiPupuk / pupuk.length;
-        //     var nilaiPupuk = this.getKonversiNilaiKeHuruf(avg_pupuk);
-        //     data = {
-        //         idx: 9,
-        //         name: 'Kondisi Pemupukan',
-        //         value: `${nilaiPupuk}/${avg_pupuk.toFixed(2)}`
-        //     }
-        //     listData.push(this.renderComponent(data));
-        // }
         if (penabur.length > 0) {
             var jmlNilaiPenabur = this.getTotalNilaiComponent(penabur);
             var avg_penabur;
