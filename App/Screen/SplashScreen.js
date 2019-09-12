@@ -132,8 +132,8 @@ class SplashScreen extends Component {
                 if (data == 'PROD') {
                     this.setState({
                         modalUpdate: {
-                            title: 'Mock Lokasi Terdeteksi',
-                            message: 'Silahkan hapus aplikasi mock untuk melanjutkan aplikasi',
+                            title: 'Lokasi Palsu Terdeteksi',
+                            message: 'Kamu harus non-aktifkan lokasi palsu untuk bisa menggunakan Mobile Inspection',
                             showModal: true,
                             icon: Images.ic_blm_input_lokasi,
                             titleType: 'KEMBALI'

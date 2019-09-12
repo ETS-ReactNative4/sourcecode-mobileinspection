@@ -1,7 +1,7 @@
 'use strict';
-import React, {Component} from 'react'
-import {Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import {isEmpty} from 'ramda'
+import React, { Component } from 'react'
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { isEmpty } from 'ramda'
 import moment from 'moment'
 import ActionButton from 'react-native-action-button'
 import Colors from '../../Constant/Colors'
@@ -10,13 +10,13 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 import Icon2 from 'react-native-vector-icons/MaterialIcons'
 import RNFS from 'react-native-fs'
 import RNFetchBlob from 'rn-fetch-blob'
-import {dirPhotoTemuan} from '../../Lib/dirStorage';
+import { dirPhotoTemuan } from '../../Lib/dirStorage';
 import ServerName from '../../Constant/ServerName'
-import {getColor} from '../../Themes/Resources';
-import {getBlokName, getEstateName} from '../../Database/Resources';
+import { getColor } from '../../Themes/Resources';
+import { getBlokName, getEstateName } from '../../Database/Resources';
 import FeatureDaftarTemuan from '../../Component/FeatureDaftarTemuan'
 import TemplateNoData from '../../Component/TemplateNoData';
-import {Images} from '../../Themes';
+import { Images } from '../../Themes';
 
 export default class ListFinding extends Component {
 
@@ -54,8 +54,6 @@ export default class ListFinding extends Component {
     const login = TaskServices.getAllData('TR_LOGIN');
     const user_auth = login[0].USER_AUTH_CODE;
 
-    const dataFinding = TaskServices.getAllData('TR_FINDING');
-
     var data = TaskServices.query('TR_FINDING', `PROGRESS < 100 AND ASSIGN_TO = "${user_auth}"`);
 
     var dataLewat = []
@@ -86,7 +84,7 @@ export default class ListFinding extends Component {
 
     var dataSelesai = TaskServices.query('TR_FINDING', `PROGRESS = 100 AND ASSIGN_TO = "${user_auth}"`);
 
-    this.setState({ dataFinding, dataLewat, data7Hari, dataMore7Hari, dataNoDate, dataSelesai })
+    this.setState({ dataFinding: data, dataLewat, data7Hari, dataMore7Hari, dataNoDate, dataSelesai })
   }
 
   actionButtonClick() {

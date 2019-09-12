@@ -14,7 +14,7 @@ const alert = {
     'foto_gagal': { showModal: true, title: 'Pengambilan Foto Gagal', message: 'Lakukan pengambilan foto lagi', icon: Images.ic_ambil_foto_gagal },
     'no_data_map': { fetchLocation: false, showModal: true, title: 'Tidak ada data', message: "Kamu belum download data map", icon: Images.ic_blm_input_lokasi },
     'no_location': { fetchLocation: false, showModal: true, title: 'Tidak ada lokasi', message: "Kamu belum pilih lokasi kamu", icon: Images.ic_blm_input_lokasi },
-    'mock_location': { fetchLocation: false, showModal: true, title: 'Mock Lokasi Terdeteksi', message: "Silahkan hapus aplikasi mock untuk melanjutkan aplikasi", icon: Images.ic_blm_input_lokasi },
+    'mock_location': { fetchLocation: false, showModal: true, title: 'Lokasi Palsu Terdeteksi', message: "Kamu harus non-aktifkan lokasi palsu untuk bisa menggunakan Mobile Inspection", icon: Images.ic_blm_input_lokasi },
     'sync_berhasil': { showModal: true, title: 'Sync Berhasil', message: 'Yeay sinkronisasi udah selesai!', icon: Images.ic_sync_berhasil, showButton: true, finishedSync: true },
     'sync_gagal_token': { showModal: true, title: 'Sync Gagal', message: 'Gagal memperbarui token', icon: Images.ic_sync_gagal, showButton: true },
     'sync_tidak_sinkron': { showButton: true, showModal: true, title: 'Tidak Sinkron', message: 'Jam di HP kamu salah', icon: Images.ic_sync_gagal },
