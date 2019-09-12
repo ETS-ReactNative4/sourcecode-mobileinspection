@@ -49,9 +49,14 @@ class PilihKontak extends Component {
 
     //Fix by Aminju 29082019
     let data = TaskServices.query('TR_CONTACT', `REF_ROLE = "AFD_CODE" AND LOCATION_CODE CONTAINS[c] "${withAfd}" AND USER_ROLE CONTAINS[c] "ASISTEN" AND USER_AUTH_CODE != "${login[0].USER_AUTH_CODE}"`);
-    console.log('Data Query AFD Code : ', data)
     let data1 = TaskServices.query('TR_CONTACT', `REF_ROLE = "BA_CODE" AND LOCATION_CODE CONTAINS[c] "${werks}" AND USER_ROLE CONTAINS[c] "ASISTEN" AND USER_AUTH_CODE != "${login[0].USER_AUTH_CODE}"`);
-    console.log('Data Query WERKS Code : ', data1)
+
+    //infra filter
+    let compCode = TaskServices.findBy2('TM_EST', 'WERKS', werks);
+    let contactInfra = [];
+    if(compCode !== undefined){
+        contactInfra = TaskServices.getAllData('TR_CONTACT').filtered( `REF_ROLE = "COMP_CODE" AND LOCATION_CODE CONTAINS[c] "${compCode.COMP_CODE}" AND USER_ROLE CONTAINS[c] "ASISTEN" AND USER_AUTH_CODE != "${login[0].USER_AUTH_CODE}"`);
+    }
 
     let currentUser = null;
     let arr = [];
@@ -89,6 +94,16 @@ class PilihKontak extends Component {
             })
         }
     }
+
+      for (let loopEST = 0; loopEST < contactInfra.length; loopEST++) {
+          if(contactInfra[k].USER_AUTH_CODE !== undefined && contactInfra[k].FULLNAME !== undefined && contactInfra[k].USER_ROLE !== undefined){
+              arr.push({
+                  userAuth: contactInfra[k].USER_AUTH_CODE,
+                  fullName: contactInfra[k].FULLNAME,
+                  userRole: contactInfra[k].USER_ROLE
+              })
+          }
+      }
 
       arr.sort((a, b)=>{
           let nameA=a.fullName.toLowerCase();
