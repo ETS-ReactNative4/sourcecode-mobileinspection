@@ -66,8 +66,6 @@ class MapsInspeksi extends React.Component {
     removeData('PoligonsInspeksi');
     this.props.navigation.setParams({ searchLocation: this.searchLocation })
     this.getLocation();
-
-    this.detectFakeGPS();
   }
 
   /* DETECT FAKE GPS */
@@ -77,6 +75,12 @@ class MapsInspeksi extends React.Component {
         console.log('Mocked : ', position.mocked)
         if (position.mocked) {
           this.validateType(position.mocked)
+        } else {
+          this.setState({ fetchLocation: true });
+          setTimeout(() => {
+            this.setState({ fetchLocation: false });
+          }, 5000);
+          this.getLocation();
         }
 
       },
