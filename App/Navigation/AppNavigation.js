@@ -43,7 +43,8 @@ import ManualInputTPH from '../Screen/Ebcc/ManualInputTPH'
 import DetailEbcc from '../Screen/Ebcc/DetailEbcc'
 import MapsEbcc from '../Screen/Ebcc/MapsEbcc'
 
-import SyncScreen from '../Screen/SyncTest';
+//import SyncScreen from '../Screen/SyncTest';
+import SyncScreen from '../Screen/Sync';
 import InboxScreen from '../Screen/Inbox';
 import FilterScreen from '../Screen/FilterScreen';
 import BisnisAreaScreen from '../Screen/BisnisArea';
