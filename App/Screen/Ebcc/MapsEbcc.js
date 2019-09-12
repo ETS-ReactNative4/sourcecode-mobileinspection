@@ -1,15 +1,16 @@
 import React from 'react';
-import {Dimensions, StatusBar, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import { Dimensions, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import MapView, {Marker, Polygon, ProviderPropType} from 'react-native-maps';
+import MapView, { Marker, Polygon, ProviderPropType } from 'react-native-maps';
 import Colors from '../../Constant/Colors'
-import {NavigationActions, StackActions} from 'react-navigation';
+import { NavigationActions, StackActions } from 'react-navigation';
 import IconLoc from 'react-native-vector-icons/FontAwesome5';
 import ModalAlert from '../../Component/ModalLoading';
 import ModalGps from '../../Component/ModalAlert';
 import TaskServices from '../../Database/TaskServices';
 import R from 'ramda';
-import {AlertContent} from '../../Themes'
+import { AlertContent } from '../../Themes'
+import { retrieveData } from '../../Database/Resources';
 
 let polyMap = false;// = require('../../Data/MegaKuningan.json');
 let LATITUDE = -2.1890660;
@@ -72,14 +73,55 @@ class MapsEbcc extends React.Component {
     componentDidMount() {
         this.props.navigation.setParams({ searchLocation: this.searchLocation })
         this.getLocation()
+
+        this.detectFakeGPS();
     }
 
     searchLocation = () => {
-        this.setState({ fetchLocation: true })
-        setTimeout(() => {
-            this.setState({ fetchLocation: false });
-        }, 5000);
-        this.getLocation();
+        this.detectFakeGPS()
+    }
+
+    /* DETECT FAKE GPS */
+    detectFakeGPS() {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                console.log('Mocked : ', position.mocked)
+                if (position.mocked) {
+                    this.validateType(position.mocked)
+                }
+
+            },
+            (error) => {
+                let message = error && error.message ? error.message : 'Terjadi kesalahan ketika mencari lokasi anda !';
+                if (error && error.message == "No location provider available.") {
+                    message = "Mohon nyalakan GPS anda terlebih dahulu.";
+                }
+
+            }, // go here if error while fetch location
+            { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
+        );
+    }
+
+    validateType(type) {
+        retrieveData('typeApp').then(data => {
+            if (data != null) {
+                if (data == 'PROD') {
+                    this.setState(AlertContent.mock_location)
+                } else {
+                    this.setState({ fetchLocation: true })
+                    setTimeout(() => {
+                        this.setState({ fetchLocation: false });
+                    }, 5000);
+                    this.getLocation();
+                }
+            } else {
+                this.setState({ fetchLocation: true })
+                setTimeout(() => {
+                    this.setState({ fetchLocation: false });
+                }, 5000);
+                this.getLocation();
+            }
+        })
     }
 
     totalPolygons() {

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
     Alert,
     Icon,
@@ -12,10 +12,11 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
-import {heightPercentageToDP as hp, widthPercentageToDP as wp} from 'react-native-responsive-screen';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import ModalAlert from '../Component/ModalAlert'
 import PropTypes from 'prop-types';
-import {AlertContent, Images} from '../Themes'
+import { AlertContent, Images } from '../Themes'
+import { storeData } from '../Database/Resources';
 
 class Form extends Component {
 
@@ -62,6 +63,8 @@ class Form extends Component {
                     case this.state.strPassword === '':
                         this.setState(AlertContent.password_kosong)
                         break;
+                    case this.state.selectedServer === '1':
+                        storeData('typeApp', 'PROD')
                     default:
                         props.onBtnClick({
                             ...this.state

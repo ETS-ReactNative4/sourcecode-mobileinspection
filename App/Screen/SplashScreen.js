@@ -1,9 +1,9 @@
-import React, {Component} from 'react';
-import {ImageBackground, Linking, StatusBar} from 'react-native';
-import {Container} from 'native-base'
-import {NavigationActions, StackActions} from 'react-navigation';
-import {getPermission} from '../Lib/Utils'
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { ImageBackground, Linking, StatusBar, BackHandler } from 'react-native';
+import { Container } from 'native-base'
+import { NavigationActions, StackActions } from 'react-navigation';
+import { getPermission } from '../Lib/Utils'
+import { connect } from 'react-redux';
 import TaskServices from '../Database/TaskServices'
 import CategoryAction from '../Redux/CategoryRedux'
 import ContactAction from '../Redux/ContactRedux'
@@ -18,9 +18,9 @@ import {
     dirPhotoTemuan,
     dirPhotoUser
 } from '../Lib/dirStorage';
-import geolib from 'geolib';
 import ModalAlert from "../Component/ModalAlert";
-import {retrieveData} from '../Database/Resources';
+import { retrieveData } from '../Database/Resources';
+import { Images } from '../Themes';
 
 var RNFS = require('react-native-fs');
 const skm = require('../Data/MegaKuningan.json');
@@ -40,6 +40,7 @@ class SplashScreen extends Component {
                 message: 'Message',
                 showModal: false,
                 icon: '',
+                titleType: ''
             }
         }
     }
@@ -58,6 +59,7 @@ class SplashScreen extends Component {
     }
 
     checkUser() {
+
         retrieveData('expiredToken').then((token) => {
             if (token != null) {
                 const dateToday = new Date();
@@ -104,22 +106,12 @@ class SplashScreen extends Component {
         RNFS.mkdir(dirMaps);
     }
 
-    getLocation() {
+    detectFakeGPS() {
         navigator.geolocation.getCurrentPosition(
             (position) => {
-                var lat = parseFloat(position.coords.latitude);
-                var lon = parseFloat(position.coords.longitude);
-                position = {
-                    latitude: lat, longitude: lon
-                }
-                this.setState({ position })
-                let data = skm.data.polygons
-                for (var i = 0; i < data.length; i++) {
-                    let coords = data[i];
-                    if (geolib.isPointInside(position, coords.coords)) {
-                        alert(coords.blokname)
-                        break;
-                    }
+                console.log('Mocked : ', position.mocked)
+                if (position.mocked) {
+                    this.validateType(position.mocked)
                 }
 
             },
@@ -134,14 +126,33 @@ class SplashScreen extends Component {
         );
     }
 
-    componentWillMount() {
-        // this.getLocation()
-        this.checkUpdate();
+    validateType(type) {
+        retrieveData('typeApp').then(data => {
+            if (data != null) {
+                if (data == 'PROD') {
+                    this.setState({
+                        modalUpdate: {
+                            title: 'Mock Lokasi Terdeteksi',
+                            message: 'Silahkan hapus aplikasi mock untuk melanjutkan aplikasi',
+                            showModal: true,
+                            icon: Images.ic_blm_input_lokasi,
+                            titleType: 'KEMBALI'
+                        },
+                        type: 'mock'
+                    })
+                }
+            }
+        })
     }
+
 
     async componentDidMount() {
         var isAllGrandted = await getPermission();
         if (isAllGrandted === true) {
+
+            this.checkUpdate();
+            this.detectFakeGPS();
+
             this.makeFolder()
             setTimeout(() => {
                 if (!this.state.modalUpdate.showModal) {
@@ -163,7 +174,9 @@ class SplashScreen extends Component {
                         message: 'Kamu harus lakukan update aplikasi',
                         showModal: true,
                         icon: require('../Images/icon/icon_update_apps.png'),
-                    }
+                        titleType: 'UPDATE'
+                    },
+                    type: 'update'
                 })
             }
         }
@@ -177,11 +190,15 @@ class SplashScreen extends Component {
                     icon={this.state.modalUpdate.icon}
                     visible={this.state.modalUpdate.showModal}
                     onPressCancel={() => {
-                        Linking.openURL("market://details?id=com.bluezoneinspection.app")
+                        if (this.state.type == 'update') {
+                            Linking.openURL("market://details?id=com.bluezoneinspection.app")
+                        } else {
+                            BackHandler.exitApp();
+                        }
                     }}
                     title={this.state.modalUpdate.title}
                     message={this.state.modalUpdate.message}
-                    closeText={"UPDATE"}
+                    closeText={this.state.modalUpdate.titleType}
                 />
                 <StatusBar
                     hidden={true}

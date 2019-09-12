@@ -32,7 +32,7 @@ import ModalAlert from '../Component/ModalAlert'
 import ServerName from '../Constant/ServerName'
 import IMEI from 'react-native-imei'
 import {AlertContent} from '../Themes';
-import {storeData} from '../Database/Resources';
+import {storeData, removeData} from '../Database/Resources';
 import moment from 'moment'
 
 class Login extends Component {
@@ -121,6 +121,8 @@ class Login extends Component {
         const { navigation } = this.props;
         const itemId = navigation.getParam('exit');
         this.state.logOut = itemId;
+
+        removeData('typeApp')
     }
 
     checkUser(param) {
