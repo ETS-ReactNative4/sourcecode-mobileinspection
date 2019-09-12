@@ -49,7 +49,7 @@ export default class EbccValidationScreen extends Component {
           divDays={this.state.divDays}
           onPressLeft={() => this.props.navigation.navigate('Sync')}
           onPressRight={() => this.props.navigation.navigate('Inbox')}
-          title={'Temuan'}
+          title={'Sampling EBCC'}
           showInbox={showInbox()} />
 
         <EbccTabNavigator navigation={this.props.navigation} />
