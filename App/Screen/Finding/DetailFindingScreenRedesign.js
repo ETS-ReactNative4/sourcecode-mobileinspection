@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View, BackHandler } from 'react-native'
 import { Card, Container, Content } from 'native-base'
 import Colors from '../../Constant/Colors'
 import FastImage from 'react-native-fast-image'
@@ -75,6 +75,8 @@ class DetailFindingScreenRedesign extends Component {
             activeRatingOk: false,
             activeRatingGreat: false,
         }
+
+        this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     }
 
     static navigationOptions = {
@@ -101,6 +103,17 @@ class DetailFindingScreenRedesign extends Component {
             this.state.images.push(item);
         });
 
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+    }
+
+    componentWillUnmount() {
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+    }
+
+    //Fumc Handle Back Press (Aminju)
+    handleBackButtonClick() {
+        this.props.navigation.goBack();
+        return true;
     }
 
     componentDidMount() {
