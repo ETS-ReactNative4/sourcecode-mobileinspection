@@ -15,36 +15,44 @@ export async function getFindingImage() {
 
     await getAPIFunction('AUTH-SYNC-FINDING-IMAGES').then((data) => {
 
-        if (data != null) {
-            if (data.simpan.length > 0) {
-                Promise.all(
-                    data.simpan.map(item => {
-                        let tempItem = {
-                            ...item,
-                            STATUS_SYNC: 'Y'
-                        }
-                        TaskServices.saveData('TR_IMAGE', tempItem);
-                        downloadImageFinding(item);
-                        downloadLabels = {
-                            ...downloadLabels,
-                            downloadCount: downloadLabels.downloadCount + 1
-                        }
-                    })
+        try {
+            if (data != null) {
 
-                )
+                /* INSERT DATA FINDING IMAGE */
+                if (data.simpan.length > 0) {
+                    Promise.all(
+                        data.simpan.map(item => {
+                            let tempItem = {
+                                ...item,
+                                STATUS_SYNC: 'Y'
+                            }
+                            TaskServices.saveData('TR_IMAGE', tempItem);
+                            downloadImageFinding(item);
+                            downloadLabels = {
+                                ...downloadLabels,
+                                downloadCount: downloadLabels.downloadCount + 1
+                            }
+                        })
 
+                    )
+                }
+
+                /* UPDATE TM_MOBILE_SYNC */
                 const param = {
                     TGL_MOBILE_SYNC: moment().format('YYYY-MM-DD kk:mm:ss'),
                     TABEL_UPDATE: 'finding'
                 }
 
                 postMobileSync(param, 'TR_IMAGE FINDING');
+            } else {
+                downloadLabels = {
+                    ...downloadLabels
+                }
             }
-        } else {
-            downloadLabels = {
-                ...downloadLabels
-            }
+        } catch (error) {
+            console.log('CATCH FINDING IMAGE : ', error)
         }
+
     })
 
     return downloadLabels;

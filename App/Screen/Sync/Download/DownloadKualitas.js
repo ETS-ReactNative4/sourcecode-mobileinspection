@@ -16,6 +16,16 @@ export async function getKualitas() {
 
         try {
             if (data != null) {
+
+                /* DELETE DATA KUALITAS */
+                if (data.hapus.length > 0 && allData.length > 0) {
+                    data.hapus.map(item => {
+                        item.ID_KUALITAS = item.ID_KUALITAS.toString();
+                        TaskServices.deleteRecordByPK('TM_KUALITAS', 'ID_KUALITAS', item.ID_KUALITAS);
+                    });
+                }
+
+                /* INSERT DATA KUALITAS */
                 if (data.simpan.length > 0) {
                     Promise.all(
                         data.simpan.map(item => {
@@ -30,6 +40,7 @@ export async function getKualitas() {
                     )
                 }
 
+                /* UPDATE DATA KUALITAS */
                 if (data.ubah.length > 0 && allData.length > 0) {
                     data.ubah.map(item => {
                         item.ID_KUALITAS = item.ID_KUALITAS.toString();
@@ -37,13 +48,7 @@ export async function getKualitas() {
                     })
                 }
 
-                if (data.hapus.length > 0 && allData.length > 0) {
-                    data.hapus.map(item => {
-                        item.ID_KUALITAS = item.ID_KUALITAS.toString();
-                        TaskServices.deleteRecordByPK('TM_KUALITAS', 'ID_KUALITAS', item.ID_KUALITAS);
-                    });
-                }
-
+                /* UPDATE TM_MOBILE_SYNC */
                 const param = {
                     TGL_MOBILE_SYNC: moment().format('YYYY-MM-DD kk:mm:ss'),
                     TABEL_UPDATE: 'ebcc/kualitas'

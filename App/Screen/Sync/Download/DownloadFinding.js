@@ -20,6 +20,15 @@ export async function getFinding() {
 
         try {
             if (data != null) {
+
+                /* DELETE DATA FINDING */
+                if (data.hapus.length > 0 && dbLocal.length > 0) {
+                    data.hapus.map(item => {
+                        TaskServices.deleteRecordByPK('TR_FINDING', 'FINDING_CODE', item.FINDING_CODE);
+                    });
+                }
+
+                /* INSERT DATA FINDING */
                 if (data.simpan.length > 0) {
                     Promise.all(
                         data.simpan.map(item => {
@@ -34,7 +43,6 @@ export async function getFinding() {
                             /* INSERT NOTIFICATION FINDING */
                             NotificationFinding(newItem, user)
 
-                            /* INSERT DATA FINDING */
                             TaskServices.saveData('TR_FINDING', newItem);
 
                             /* CALLBACK DATA */
@@ -46,29 +54,21 @@ export async function getFinding() {
                     )
                 }
 
+                /* UPDATE DATA FINDING */
                 if (data.ubah.length > 0 && dbLocal.length > 0) {
                     data.ubah.map(item => {
                         let newRating = item.RATING ? item.RATING[0] : null;
                         let newItem = { ...item, STATUS_SYNC: 'Y', RATING: newRating };
 
-                        /* UPDATE DATA FINDING */
                         TaskServices.updateByPrimaryKey('TR_FINDING', newItem)
                     })
                 }
 
-                if (data.hapus.length > 0 && dbLocal.length > 0) {
-                    data.hapus.map(item => {
-                         /* DELETE DATA FINDING */
-                        TaskServices.deleteRecordByPK('TR_FINDING', 'FINDING_CODE', item.FINDING_CODE);
-                    });
-                }
-
+                /* UPDATE TM_MOBILE_SYNC  */
                 const param = {
                     TGL_MOBILE_SYNC: getTodayDate('YYYY-MM-DD HH:mm:ss'),
                     TABEL_UPDATE: 'finding'
                 }
-
-                /* UPDATE MOBILE SYNC DATA */
                 postMobileSync(param, 'TR_FINDING');
             } else {
                 downloadLabels = {

@@ -17,11 +17,19 @@ export async function getBlock() {
 
         try {
             if (data != null) {
+
+                /* DELETE DATA BLOCK */
+                if (data.hapus.length > 0 && allData.length > 0) {
+                    data.hapus.map(item => {
+                        TaskServices.deleteRecordByPK('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', item.WERKS_AFD_BLOCK_CODE);
+                    });
+                }
+
+                /* INSERT DATA BLOCK */
                 if (data.simpan.length > 0) {
                     Promise.all(
                         data.simpan.map(item => {
 
-                            /* INSERT DATA BLOCK */
                             TaskServices.saveData('TM_BLOCK', item);
 
                             /* CALLBACK DATA */
@@ -34,26 +42,19 @@ export async function getBlock() {
                     )
                 }
 
+                /* UPDATE DATA BLOCK */
                 if (data.ubah.length > 0 && allData.length > 0) {
                     data.ubah.map(item => {
-                         /* UPDATE DATA BLOCK */
                         TaskServices.updateByPrimaryKey('TM_BLOCK', item);
                     })
                 }
 
-                if (data.hapus.length > 0 && allData.length > 0) {
-                    data.hapus.map(item => {
-                        /* DELETE DATA BLOCK */
-                        TaskServices.deleteRecordByPK('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', item.WERKS_AFD_BLOCK_CODE);
-                    });
-                }
-
+                /* UPDATE TM_MOBILE_SYNC */
                 const param = {
                     TGL_MOBILE_SYNC: moment().format('YYYY-MM-DD kk:mm:ss'),
                     TABEL_UPDATE: 'hectare-statement/block'
                 }
 
-                /* UPDATE MOBILE SYNC DATA */
                 postMobileSync(param, 'TM_BLOCK');
             } else {
                 downloadLabels = {

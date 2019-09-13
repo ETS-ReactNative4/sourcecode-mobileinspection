@@ -14,42 +14,51 @@ export async function getLandUse() {
 
     await getAPIFunction('AUTH-SYNC-HS-LANDUSE').then((data) => {
 
-        if (data != null) {
-            if (data.simpan.length > 0) {
-                Promise.all(
-                    data.simpan.map(item => {
-                        TaskServices.saveData('TM_LAND_USE', item);
-                        downloadLabels = {
-                            ...downloadLabels,
-                            downloadCount: downloadLabels.downloadCount + 1
-                        }
-                    })
-                )
+        try {
+            if (data != null) {
 
-                const param = {
-                    TGL_MOBILE_SYNC: moment().format('YYYY-MM-DD kk:mm:ss'),
-                    TABEL_UPDATE: 'hectare-statement/land-use'
+                /* DELETE DATA LAND_USE */
+                if (data.hapus.length > 0 && allData.length > 0) {
+                    data.hapus.map(item => {
+                        TaskServices.deleteRecordByPK('TM_LAND_USE', 'WERKS_AFD_BLOCK_CODE', item.WERKS_AFD_BLOCK_CODE);
+                    });
                 }
 
-                postMobileSync(param, 'TM_LAND_USE');
-            }
+                /* INSERT DATA LAND_USE */
+                if (data.simpan.length > 0) {
+                    Promise.all(
+                        data.simpan.map(item => {
+                            TaskServices.saveData('TM_LAND_USE', item);
+                            downloadLabels = {
+                                ...downloadLabels,
+                                downloadCount: downloadLabels.downloadCount + 1
+                            }
+                        })
+                    )
 
-            if (data.ubah.length > 0 && allData.length > 0) {
-                data.ubah.map(item => {
-                    TaskServices.updateByPrimaryKey('TM_LAND_USE', item);
-                })
-            }
+                    const param = {
+                        TGL_MOBILE_SYNC: moment().format('YYYY-MM-DD kk:mm:ss'),
+                        TABEL_UPDATE: 'hectare-statement/land-use'
+                    }
 
-            if (data.hapus.length > 0 && allData.length > 0) {
-                data.hapus.map(item => {
-                    TaskServices.deleteRecordByPK('TM_LAND_USE', 'WERKS_AFD_BLOCK_CODE', item.WERKS_AFD_BLOCK_CODE);
-                });
+                    postMobileSync(param, 'TM_LAND_USE');
+                }
+
+                /* UPDATE DATA LAND_USE */
+                if (data.ubah.length > 0 && allData.length > 0) {
+                    data.ubah.map(item => {
+                        TaskServices.updateByPrimaryKey('TM_LAND_USE', item);
+                    })
+                }
+            } else {
+                downloadLabels = {
+                    ...downloadLabels
+                }
             }
-        } else {
-            downloadLabels = {
-                ...downloadLabels
-            }
+        } catch (error) {
+            console.log('CATCH LAND_USE : ', error)
         }
+
     })
 
     return downloadLabels;

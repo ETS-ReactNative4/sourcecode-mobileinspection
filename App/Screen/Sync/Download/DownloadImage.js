@@ -18,7 +18,7 @@ export async function downloadImageCategory(data) {
         }
         config(options).fetch('GET', url).then((res) => {
             // console.log(res)
-            console.log('Response Image Category Success Insert')
+            // console.log('Response Image Category Success Insert')
         }).catch((error) => {
             console.log(error);
         });

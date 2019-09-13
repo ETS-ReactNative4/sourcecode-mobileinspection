@@ -1,7 +1,7 @@
 import DeviceInfo from 'react-native-device-info'
 
 let verAPI = "v1.1";
-let verAPK = "2.8";
+let verAPK = "2.9";
 export default {
 	verAPK,
 	verAPI,

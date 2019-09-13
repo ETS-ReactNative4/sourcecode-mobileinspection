@@ -16,47 +16,51 @@ export async function getResetToken(isSync) {
 
     await getAPIFunction('AUTH-GENERATE-TOKEN').then((data) => {
 
-        console.log('AUTH-GENERATE-TOKEN : ', data)
+        // console.log('AUTH-GENERATE-TOKEN : ', data)
 
-        if (data != null) {
-            if (sync) {
-                let newToken = data.data;
-                let allLoginData = TaskServices.findBy('TR_LOGIN', 'STATUS', 'LOGIN');
-                if (allLoginData.length > 0) {
-                    let loginData = {
-                        ...allLoginData[0],
-                        ACCESS_TOKEN: newToken
-                    };
+        try {
+            if (data != null) {
+                if (sync) {
+                    let newToken = data.data;
+                    let allLoginData = TaskServices.findBy('TR_LOGIN', 'STATUS', 'LOGIN');
+                    if (allLoginData.length > 0) {
+                        let loginData = {
+                            ...allLoginData[0],
+                            ACCESS_TOKEN: newToken
+                        };
 
-                    TaskServices.updateByPrimaryKey('TR_LOGIN', loginData);
-                    let newLoginData = TaskServices.findBy('TR_LOGIN', 'STATUS', 'LOGIN');
+                        TaskServices.updateByPrimaryKey('TR_LOGIN', loginData);
+                        let newLoginData = TaskServices.findBy('TR_LOGIN', 'STATUS', 'LOGIN');
 
-                    /* COPY DATABASE TO FOLDER MOBILE INSPECTION  */
-                    RNFS.copyFile(TaskServices.getPath(), 'file:///storage/emulated/0/MobileInspection/data.realm');
+                        /* COPY DATABASE TO FOLDER MOBILE INSPECTION  */
+                        RNFS.copyFile(TaskServices.getPath(), 'file:///storage/emulated/0/MobileInspection/data.realm');
 
-                    /* UPDATE TOKEN +7 Hari  */
-                    tokenExpired();
+                        /* UPDATE TOKEN +7 Hari  */
+                        tokenExpired();
 
-                    /* SAVE LOG SYNC */
-                    saveSyncLog();
+                        /* SAVE LOG SYNC */
+                        saveSyncLog();
 
-                    callbackValue = {
-                        ...callbackValue,
-                        isResetSync: true,
-                        isUpdateToken: true,
-                        pickedWerks: (newLoginData[0].CURR_WERKS ? true : false)
+                        callbackValue = {
+                            ...callbackValue,
+                            isResetSync: true,
+                            isUpdateToken: true,
+                            pickedWerks: (newLoginData[0].CURR_WERKS ? true : false)
+                        }
+                    }
+                    else {
+                        callbackValue = {
+                            ...callbackValue
+                        }
                     }
                 }
-                else {
-                    callbackValue = {
-                        ...callbackValue
-                    }
+            } else {
+                callbackValue = {
+                    ...callbackValue
                 }
             }
-        } else {
-            callbackValue = {
-                ...callbackValue
-            }
+        } catch (error) {
+            console.log('CATCH RESET TOKEN : ', error)
         }
     })
 

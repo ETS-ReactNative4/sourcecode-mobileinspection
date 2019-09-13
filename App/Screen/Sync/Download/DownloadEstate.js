@@ -14,41 +14,50 @@ export async function getEstate() {
 
     await getAPIFunction('AUTH-SYNC-HS-EST').then((data) => {
 
-        if (data != null) {
-            if (data.simpan.length > 0) {
-                Promise.all(
-                    data.simpan.map(item => {
-                        TaskServices.saveData('TM_EST', item);
-                        downloadLabels = {
-                            ...downloadLabels,
-                            downloadCount: downloadLabels.downloadCount + 1
-                        }
-                    })
-                )
+        try {
+            if (data != null) {
 
+                /* DELETE DATA ESTATE */
+                if (data.hapus.length > 0 && allData.length > 0) {
+                    data.hapus.map(item => {
+                        TaskServices.deleteRecordByPK('TM_EST', 'WERKS', item.WERKS);
+                    });
+                }
+
+                /* INSERT DATA ESTATE */
+                if (data.simpan.length > 0) {
+                    Promise.all(
+                        data.simpan.map(item => {
+                            TaskServices.saveData('TM_EST', item);
+                            downloadLabels = {
+                                ...downloadLabels,
+                                downloadCount: downloadLabels.downloadCount + 1
+                            }
+                        })
+                    )
+                }
+
+                /* UPDATE DATA ESTATE */
+                if (data.ubah.length > 0 && allData.length > 0) {
+                    data.ubah.map(item => {
+                        TaskServices.updateByPrimaryKey('TM_EST', item);
+                    })
+                }
+
+                /* UPDATE TM_MOBILE_SYNC */
                 const param = {
                     TGL_MOBILE_SYNC: moment().format('YYYY-MM-DD kk:mm:ss'),
                     TABEL_UPDATE: 'hectare-statement/est'
                 }
 
                 postMobileSync(param, 'TM_EST');
+            } else {
+                downloadLabels = {
+                    ...downloadLabels
+                }
             }
-
-            if (data.ubah.length > 0 && allData.length > 0) {
-                data.ubah.map(item => {
-                    TaskServices.updateByPrimaryKey('TM_EST', item);
-                })
-            }
-
-            if (data.hapus.length > 0 && allData.length > 0) {
-                data.hapus.map(item => {
-                    TaskServices.deleteRecordByPK('TM_EST', 'WERKS', item.WERKS);
-                });
-            }
-        } else {
-            downloadLabels = {
-                ...downloadLabels
-            }
+        } catch (error) {
+            console.log('CATCH ESTATE : ', error)
         }
     })
 

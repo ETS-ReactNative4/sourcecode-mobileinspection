@@ -18,6 +18,7 @@ export async function getFindingComment() {
 
         try {
             if (data != null) {
+                /* INSERT DATA FINDING COMMENT */
                 if (data.simpan.length > 0) {
 
                     Promise.all(
@@ -41,7 +42,6 @@ export async function getFindingComment() {
                                 NotificationComment(model, user)
                             }
 
-                            /* INSERT DATA FINDING COMMENT */
                             TaskServices.saveData("TR_FINDING_COMMENT", model);
 
                             /* CALLBACK DATA */
@@ -53,6 +53,8 @@ export async function getFindingComment() {
                     )
                 }
 
+
+                /* UPDATE DATA FINDING COMMENT */
                 if (data.ubah.length > 0 && dbLocal.length > 0) {
                     data.ubah.map(item => {
                         let model = {
@@ -67,7 +69,6 @@ export async function getFindingComment() {
                             USERNAME: item.FULLNAME !== undefined ? item.FULLNAME : "NO_NAME"
                         };
 
-                        /* UPDATE DATA FINDING COMMENT */
                         TaskServices.updateByPrimaryKey('TR_FINDING_COMMENT', model)
                     })
                 }

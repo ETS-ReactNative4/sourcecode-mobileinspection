@@ -17,11 +17,19 @@ export async function getAfd() {
 
         try {
             if (data != null) {
+
+                /* DELETE DATA AFD */
+                if (data.hapus.length > 0 && allData.length > 0) {
+                    data.hapus.map(item => {
+                        TaskServices.deleteRecordByPK('TM_AFD', 'WERKS_AFD_CODE', item.WERKS_AFD_CODE);
+                    });
+                }
+
+                /* INSERT DATA AFD */
                 if (data.simpan.length > 0) {
                     Promise.all(
                         data.simpan.map(item => {
 
-                            /* INSERT DATA AFD */
                             TaskServices.saveData('TM_AFD', item);
 
                             /* CALLBACK DATA */
@@ -31,29 +39,23 @@ export async function getAfd() {
                             }
                         })
                     )
-
-                    const param = {
-                        TGL_MOBILE_SYNC: moment().format('YYYY-MM-DD kk:mm:ss'),
-                        TABEL_UPDATE: 'hectare-statement/afdeling'
-                    }
-
-                    /* UPDATE MOBILE SYNC DATA */
-                    postMobileSync(param, 'TM_AFD');
                 }
 
+                /* UPDATE DATA AFD */
                 if (data.ubah.length > 0 && allData.length > 0) {
                     data.ubah.map(item => {
-                          /* UPDATE DATA AFD */
                         TaskServices.updateByPrimaryKey('TM_AFD', item);
                     })
                 }
 
-                if (data.hapus.length > 0 && allData.length > 0) {
-                    data.hapus.map(item => {
-                          /* DELETE DATA AFD */
-                        TaskServices.deleteRecordByPK('TM_AFD', 'WERKS_AFD_CODE', item.WERKS_AFD_CODE);
-                    });
+                /* UPDATE TM_MOBILE_SYNC */
+                const param = {
+                    TGL_MOBILE_SYNC: moment().format('YYYY-MM-DD kk:mm:ss'),
+                    TABEL_UPDATE: 'hectare-statement/afdeling'
                 }
+
+                postMobileSync(param, 'TM_AFD');
+
             } else {
                 downloadLabels = {
                     ...downloadLabels

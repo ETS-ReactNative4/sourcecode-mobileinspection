@@ -12,16 +12,21 @@ export async function getParamTrack() {
 
     await getAPIFunction('AUTH-PARAMETER-TRACK').then((data) => {
 
-        if (data != null) {
-            TaskServices.saveData('TM_TIME_TRACK', data);
-            downloadLabels = {
-                ...downloadLabels,
-                downloadCount: downloadLabels.downloadCount + 1
+        try {
+            /* INSERT DATA PARAM TRACK INSPECTION */
+            if (data != null) {
+                TaskServices.saveData('TM_TIME_TRACK', data);
+                downloadLabels = {
+                    ...downloadLabels,
+                    downloadCount: downloadLabels.downloadCount + 1
+                }
+            } else {
+                downloadLabels = {
+                    ...downloadLabels
+                }
             }
-        } else {
-            downloadLabels = {
-                ...downloadLabels
-            }
+        } catch (error) {
+            console.log('CATCH PARAM TRACK INSPECTION : ', error)
         }
     })
 
