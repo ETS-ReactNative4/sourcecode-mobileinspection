@@ -560,9 +560,15 @@ class KondisiBarisAkhir extends Component {
         }
 
         let getBarisInspection = TaskService.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION);
-        if (getBarisInspection !== null && typeof getBarisInspection !== undefined) {
-            TaskService.deleteRecordByPK('TR_BARIS_INSPECTION', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION);
+        // if (getBarisInspection !== null && typeof getBarisInspection !== undefined) {
+        //     TaskService.deleteRecordByPK('TR_BARIS_INSPECTION', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION);
+        // }
+
+        let dataInspeksiRemoveDuplicate = this.state.dataInspeksi;
+        if (getBarisInspection !== null && getBarisInspection !== undefined && getBarisInspection.TR_FINDING_CODES.length > 0) {
+            dataInspeksiRemoveDuplicate.TR_FINDING_CODES = [...getBarisInspection.TR_FINDING_CODES, ...this.state.dataInspeksi.TR_FINDING_CODES];
         }
+
 
         let dataInspeksiRemoveDuplicate = this.state.dataInspeksi;
         dataInspeksiRemoveDuplicate.TR_FINDING_CODES = [...new Set(dataInspeksiRemoveDuplicate.TR_FINDING_CODES)];
