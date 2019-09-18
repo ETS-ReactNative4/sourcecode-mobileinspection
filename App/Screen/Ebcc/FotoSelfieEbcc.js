@@ -1,16 +1,16 @@
-import React, {Component} from 'react';
-import {BackHandler, Dimensions, Image, Platform, StatusBar, StyleSheet, TouchableOpacity, View} from 'react-native';
+import React, { Component } from 'react';
+import { BackHandler, Dimensions, Image, Platform, StatusBar, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Colors from '../../Constant/Colors';
 import imgTakePhoto from '../../Images/icon/ic_take_photo.png';
 import imgNextPhoto from '../../Images/icon/ic_next_photo.png';
-import {RNCamera as Camera} from 'react-native-camera';
-import {getTodayDate} from '../../Lib/Utils'
+import { RNCamera as Camera } from 'react-native-camera';
+import { getTodayDate } from '../../Lib/Utils'
 import ImageResizer from 'react-native-image-resizer';
-import {dirPhotoEbccSelfie} from '../../Lib/dirStorage'
+import { dirPhotoEbccSelfie } from '../../Lib/dirStorage'
 import R from 'ramda';
 import moment from 'moment'
 import ModalAlertBack from '../../Component/ModalAlert';
-import {NavigationActions} from 'react-navigation';
+import { NavigationActions, StackActions } from 'react-navigation';
 import TaskServices from '../../Database/TaskServices';
 
 var RNFS = require('react-native-fs');
@@ -190,12 +190,12 @@ class FotoSelfieEbcc extends Component {
     RNFS.unlink(this.state.pathCache);
     let isImageContain = await RNFS.exists(`file://${dirPhotoEbccSelfie}/${this.state.dataModel.IMAGE_NAME}`);
     if (isImageContain) {
-        let tempHeader = this.state.dataHeader;
-        tempHeader = {
-            ...tempHeader,
-            syncImage: 'N',
-            syncDetail: 'N'
-        }
+      let tempHeader = this.state.dataHeader;
+      tempHeader = {
+        ...tempHeader,
+        syncImage: 'N',
+        syncDetail: 'N'
+      }
       //insert TR_H_EBCC_VALIDATION
       TaskServices.saveData('TR_H_EBCC_VALIDATION', tempHeader);
 
@@ -227,9 +227,13 @@ class FotoSelfieEbcc extends Component {
       } else {
         routeName = 'MainMenu';
       }
-      console.log('Route Name : ', routeName)
-      Promise.all([navigation.dispatch(NavigationActions.navigate({ routeName: routeName }))]).
-        then(() => navigation.navigate('EbccValidation')).then(() => navigation.navigate('Riwayat'));
+      Promise.all([
+        navigation.dispatch(
+            StackActions.reset({
+                index: 0,
+                actions: [NavigationActions.navigate({ routeName: routeName })]
+            })
+        )]).then(() => navigation.navigate('EbccValidation')).then(() => navigation.navigate('Riwayat'))
       this.setState({ showModalBack: false })
     }
   }
