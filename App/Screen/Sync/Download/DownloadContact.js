@@ -19,7 +19,7 @@ export async function getContact() {
 
 
                 /* DELETE DATA CONTACT */
-                if (data.hapus.length > 0 && allData.length > 0) {
+                if (data.hapus.length > 0 && dbLocal.length > 0) {
                     data.hapus.map(item => {
                         TaskServices.deleteRecordByPK('TR_CONTACT', 'USER_AUTH_CODE', item.USER_AUTH_CODE);
                     });
@@ -39,7 +39,7 @@ export async function getContact() {
                 }
 
                 /* UPDATE DATA CONTACT */
-                if (data.ubah.length > 0 && allData.length > 0) {
+                if (data.ubah.length > 0 && dbLocal.length > 0) {
                     data.ubah.map(item => {
                         TaskServices.updateByPrimaryKey('TR_CONTACT', item);
                     })

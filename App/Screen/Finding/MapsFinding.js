@@ -94,7 +94,7 @@ class MapsInspeksi extends React.Component {
         LONGITUDE = est[0].LONGITUDE;
       }
       let polygons = TaskServices.findBy('TR_POLYGON', 'WERKS', user.CURR_WERKS);
-      console.log('Poligons from DB : ', polygons)
+      // console.log('Poligons from DB : ', polygons)
       polygons = this.convertGeoJson(polygons);
       if (polygons && polygons.length > 0) {
         let mapData = {
