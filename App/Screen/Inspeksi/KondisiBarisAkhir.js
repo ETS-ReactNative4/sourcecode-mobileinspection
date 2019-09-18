@@ -1,20 +1,20 @@
-import React, {Component} from 'react';
-import {Dimensions, StatusBar, Switch, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import {Card, CardItem,} from 'native-base';
+import React, { Component } from 'react';
+import { Dimensions, StatusBar, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Card, CardItem, } from 'native-base';
 import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import MapView, {Marker, Polygon, Polyline, ProviderPropType} from 'react-native-maps';
-import {RNSlidingButton, SlideDirection} from 'rn-sliding-button';
+import MapView, { Marker, Polygon, Polyline, ProviderPropType } from 'react-native-maps';
+import { RNSlidingButton, SlideDirection } from 'rn-sliding-button';
 import TaskService from '../../Database/TaskServices';
 import TaskServices from '../../Database/TaskServices';
-import {getCalculateTime, getTodayDate} from '../../Lib/Utils'
-import {NavigationActions, StackActions} from 'react-navigation';
+import { getCalculateTime, getTodayDate } from '../../Lib/Utils'
+import { NavigationActions, StackActions } from 'react-navigation';
 import R from 'ramda';
 import geolib from 'geolib';
-import {ProgressDialog} from 'react-native-simple-dialogs';
+import { ProgressDialog } from 'react-native-simple-dialogs';
 import ModalAlert from '../../Component/ModalAlert';
-import {retrieveData} from '../../Database/Resources';
+import { retrieveData } from '../../Database/Resources';
 
 const LATITUDE = -2.1890660;
 const LONGITUDE = 111.3609873;
@@ -122,12 +122,12 @@ class KondisiBarisAkhir extends Component {
     //     });
     //     return distance;
     // }
-    totalJarak(){
+    totalJarak() {
         let totalDistance = 0;
         let getTrack = TaskServices.findBy("TM_INSPECTION_TRACK", "BLOCK_INSPECTION_CODE", this.state.inspeksiHeader.BLOCK_INSPECTION_CODE);
-        if(getTrack.length > 0){
-            for (let count = 0; count < getTrack.length-2; count++){
-                let getTrackDistance = geolib.getDistance({latitude: parseFloat(getTrack[count].LAT_TRACK), longitude: parseFloat(getTrack[count].LONG_TRACK)}, {latitude: parseFloat(getTrack[count+1].LAT_TRACK), longitude: parseFloat(getTrack[count+1].LONG_TRACK)});
+        if (getTrack.length > 0) {
+            for (let count = 0; count < getTrack.length - 2; count++) {
+                let getTrackDistance = geolib.getDistance({ latitude: parseFloat(getTrack[count].LAT_TRACK), longitude: parseFloat(getTrack[count].LONG_TRACK) }, { latitude: parseFloat(getTrack[count + 1].LAT_TRACK), longitude: parseFloat(getTrack[count + 1].LONG_TRACK) });
                 totalDistance = totalDistance + getTrackDistance;
             }
             console.log("TOTAL DISTANCE", totalDistance);
@@ -228,7 +228,7 @@ class KondisiBarisAkhir extends Component {
             this.setState({ tumbButtonSlide: btn })
         }
         else {
-            if (this.has2Row() >= 1 ) {
+            if (this.has2Row() >= 1) {
                 if (!this.state.switchLanjut) {
                     this.setState({ fulFillMandatory: false, txtBaris: '' })
                     btn = {
@@ -506,7 +506,7 @@ class KondisiBarisAkhir extends Component {
             INSERT_USER: this.state.dataUsual.USER_AUTH,
             INSERT_TIME: insertTime
         }
-        console.log("SAVE IMAGE BARIS",image);
+        console.log("SAVE IMAGE BARIS", image);
         TaskService.saveData('TR_IMAGE', image);
 
         var selfie = {
@@ -569,8 +569,6 @@ class KondisiBarisAkhir extends Component {
             dataInspeksiRemoveDuplicate.TR_FINDING_CODES = [...getBarisInspection.TR_FINDING_CODES, ...this.state.dataInspeksi.TR_FINDING_CODES];
         }
 
-
-        let dataInspeksiRemoveDuplicate = this.state.dataInspeksi;
         dataInspeksiRemoveDuplicate.TR_FINDING_CODES = [...new Set(dataInspeksiRemoveDuplicate.TR_FINDING_CODES)];
         dataInspeksiRemoveDuplicate = {
             ...dataInspeksiRemoveDuplicate,
