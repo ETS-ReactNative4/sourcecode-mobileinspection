@@ -187,7 +187,7 @@ class KriteriaBuah extends Component {
                 })
             }
         }else{
-            this.setState({ showModal2: true, title: 'Salah Blok', message: 'Kamu ga bisa buat inspeksi di blok ini', icon: require('../../Images/ic-blm-input-lokasi.png') });
+            this.setState({ showModal2: true, title: 'Salah Blok', message: 'Kamu ga bisa buat sampling ebcc di blok ini', icon: require('../../Images/ic-blm-input-lokasi.png') });
         }
 
     }
