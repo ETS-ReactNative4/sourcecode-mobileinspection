@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {Image, ScrollView, StatusBar, Text, TextInput, View} from 'react-native';
+import React, { Component } from 'react';
+import { Image, ScrollView, StatusBar, Text, TextInput, View } from 'react-native';
 import Colors from '../../Constant/Colors'
 import R from 'ramda';
 import TaskServices from '../../Database/TaskServices'
@@ -8,14 +8,14 @@ class DetailEbcc extends Component {
 
     static navigationOptions = {
         headerStyle: {
-          backgroundColor: Colors.tintColorPrimary
+            backgroundColor: Colors.tintColorPrimary
         },
         title: 'Kriteria Buah',
         headerTintColor: '#fff',
         headerTitleStyle: {
-          flex: 1,
-          fontSize: 18,
-          fontWeight: '400'
+            flex: 1,
+            fontSize: 18,
+            fontWeight: '400'
         },
     };
 
@@ -27,13 +27,13 @@ class DetailEbcc extends Component {
 
         this.state = {
             arrHasilPanen: [],
-            valueHasilPanen:[],
-            arrKondisiBuah:[],
-            valueKondisiBuah:[],
-            arrPenaltyTph:[],
-            valuePenaltyTph:[],
-            arrJjg:[],
-            valueJjg:[],
+            valueHasilPanen: [],
+            arrKondisiBuah: [],
+            valueKondisiBuah: [],
+            arrPenaltyTph: [],
+            valuePenaltyTph: [],
+            arrJjg: [],
+            valueJjg: [],
             totalJanjang: data.TOTAL_JANJANG,
             data,
             path: '',
@@ -43,11 +43,11 @@ class DetailEbcc extends Component {
         }
     }
 
-    componentWillMount(){
+    componentWillMount() {
         this.loadData()
     }
 
-    getEstateName(werks){
+    getEstateName(werks) {
         try {
             let data = TaskServices.findBy2('TM_EST', 'WERKS', werks);
             return data.EST_NAME;
@@ -55,7 +55,7 @@ class DetailEbcc extends Component {
             return '';
         }
     }
-    getStatusBlok(werk_afd_blok_code){
+    getStatusBlok(werk_afd_blok_code) {
         try {
             let data = TaskServices.findBy2('TM_LAND_USE', 'WERKS_AFD_BLOCK_CODE', werk_afd_blok_code);
             return data.MATURITY_STATUS;
@@ -73,12 +73,13 @@ class DetailEbcc extends Component {
     //     }
     // }
 
-    loadData(){
+    loadData() {
         var werksAfdBlockCode = `${this.state.data.WERKS}${this.state.data.AFD_CODE}${this.state.data.BLOCK_CODE}`
         var dataBlock = TaskServices.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', werksAfdBlockCode)
-        var blockName = dataBlock !== undefined ? dataBlock.BLOCK_NAME:''
-        var werk_afd_blok_code = dataBlock !== undefined ? dataBlock.WERKS_AFD_BLOCK_CODE:''
-        var werks = dataBlock !== undefined ? dataBlock.WERKS:''
+
+        var blockName = dataBlock !== undefined ? dataBlock.BLOCK_NAME : this.state.data.BLOCK_CODE
+        var werk_afd_blok_code = dataBlock !== undefined ? dataBlock.WERKS_AFD_BLOCK_CODE : ''
+        var werks = dataBlock !== undefined ? dataBlock.WERKS : this.state.data.WERKS
 
         let imgBaris = TaskServices.findByWithList('TR_IMAGE', ['TR_CODE', 'STATUS_IMAGE'], [this.state.data.EBCC_VALIDATION_CODE, 'JANJANG']);
         let path = '';
@@ -88,12 +89,12 @@ class DetailEbcc extends Component {
             path = '';
         }
 
-        this.setState({blockName, werk_afd_blok_code, werks, path})
+        this.setState({ blockName, werk_afd_blok_code, werks, path })
 
         //kondisi panen
         let hasilPanen = TaskServices.findByWithList('TR_D_EBCC_VALIDATION', ['GROUP_KUALITAS', 'UOM', 'EBCC_VALIDATION_CODE'], ['HASIL PANEN', 'JJG', this.state.data.EBCC_VALIDATION_CODE])
-        if(hasilPanen !== undefined){
-            hasilPanen.map(item =>{
+        if (hasilPanen !== undefined) {
+            hasilPanen.map(item => {
                 this.state.arrHasilPanen.push(item)
                 let model = {
                     EBCC_VALIDATION_CODE: item.EBCC_VALIDATION_CODE,
@@ -112,8 +113,8 @@ class DetailEbcc extends Component {
 
         //kondisi panen janjang
         let hasilPanen2 = TaskServices.findByWithList('TR_D_EBCC_VALIDATION', ['GROUP_KUALITAS', 'UOM', 'EBCC_VALIDATION_CODE'], ['HASIL PANEN', 'KG', this.state.data.EBCC_VALIDATION_CODE])
-        if(hasilPanen2 !== undefined){
-            hasilPanen2.map(item =>{
+        if (hasilPanen2 !== undefined) {
+            hasilPanen2.map(item => {
                 this.state.arrJjg.push(item)
                 let model = {
                     EBCC_VALIDATION_CODE: item.EBCC_VALIDATION_CODE,
@@ -132,8 +133,8 @@ class DetailEbcc extends Component {
 
         //kondisi buah
         let kondisiBuah = TaskServices.findByWithList('TR_D_EBCC_VALIDATION', ['GROUP_KUALITAS', 'UOM', 'EBCC_VALIDATION_CODE'], ['KONDISI BUAH', 'JJG', this.state.data.EBCC_VALIDATION_CODE])
-        if(kondisiBuah !== undefined){
-            kondisiBuah.map(item =>{
+        if (kondisiBuah !== undefined) {
+            kondisiBuah.map(item => {
                 this.state.arrKondisiBuah.push(item)
                 let model = {
                     EBCC_VALIDATION_CODE: item.EBCC_VALIDATION_CODE,
@@ -151,8 +152,8 @@ class DetailEbcc extends Component {
         }
 
         let penaltyTph = TaskServices.findByWithList('TR_D_EBCC_VALIDATION', ['GROUP_KUALITAS', 'UOM', 'EBCC_VALIDATION_CODE'], ['PENALTY DI TPH', 'TPH', this.state.data.EBCC_VALIDATION_CODE])
-        if(penaltyTph !== undefined){
-            penaltyTph.map(item =>{
+        if (penaltyTph !== undefined) {
+            penaltyTph.map(item => {
                 this.state.arrPenaltyTph.push(item)
                 let model = {
                     EBCC_VALIDATION_CODE: item.EBCC_VALIDATION_CODE,
@@ -171,8 +172,8 @@ class DetailEbcc extends Component {
 
     }
 
-    renderDynamicComp(data, index){
-        return(
+    renderDynamicComp(data, index) {
+        return (
             <View style={styles.containerLabel} key={index}>
                 <Text style={styles.txtLabel}>{data.NAMA_KUALITAS}</Text>
                 <View style={[styles.containerInput, { flex: 1 }]}>
@@ -186,8 +187,8 @@ class DetailEbcc extends Component {
         )
     }
 
-    renderDynamicCompNotUpdate(data, index){
-        return(
+    renderDynamicCompNotUpdate(data, index) {
+        return (
             <View style={styles.containerLabel} key={index}>
                 <Text style={styles.txtLabel}>{data.NAMA_KUALITAS}</Text>
                 <View style={[styles.containerInput, { flex: 1 }]}>
@@ -195,29 +196,30 @@ class DetailEbcc extends Component {
                         editable={false}
                         underlineColorAndroid={'transparent'}
                         style={[styles.searchInput]}
-                        value={data.JUMLAH.toString()}/>
+                        value={data.JUMLAH.toString()} />
                 </View>
             </View>
         )
     }
 
-    renderDynamicCompBtn(data, index){
-        let val = data.JUMLAH > 0 ? 'Ada':'Tidak Ada'
-        return(
+    renderDynamicCompBtn(data, index) {
+        let val = data.JUMLAH > 0 ? 'Ada' : 'Tidak Ada'
+        return (
             <View style={styles.containerLabel} key={index}>
                 <Text style={styles.txtLabel}>{data.NAMA_KUALITAS}</Text>
                 <View style={[styles.containerInput, { flex: 1 }]}>
                     <TextInput
                         editable={false}
                         underlineColorAndroid={'transparent'}
-                        style={[styles.searchInput, {backgroundColor: Colors.brand, borderWidth:0, borderColor:'transparent', color: '#ffffff'}]}
-                        value={val}/>
+                        style={[styles.searchInput, { backgroundColor: Colors.brand, borderWidth: 0, borderColor: 'transparent', color: '#ffffff' }]}
+                        value={val} />
                 </View>
             </View>
         )
     }
 
     render() {
+
         return (
             <ScrollView style={styles.mainContainer}>
                 <StatusBar
@@ -229,9 +231,9 @@ class DetailEbcc extends Component {
                 {/*LABEL*/}
                 <View style={styles.containerHeader}>
                     <View style={{ flexDirection: 'row', height: 200 }} >
-                        <Image style={{ width: '100%', height: '100%' }} source={{uri: this.state.path}}></Image>
+                        <Image style={{ width: '100%', height: '100%' }} source={{ uri: this.state.path }}></Image>
                     </View>
-                    <Text style={{ fontSize: 17, fontWeight: '500', marginTop: 10 }}>{`${this.state.blockName}/${this.getStatusBlok(this.state.werk_afd_blok_code)}/${this.getEstateName(this.state.werks)}`}</Text>
+                    <Text style={{ fontSize: 17, fontWeight: '500', marginTop: 10 }}>{`${this.state.blockName}/${this.getStatusBlok(this.state.werk_afd_blok_code)}${this.state.werk_afd_blok_code != '' ? '/' : ''}${this.getEstateName(this.state.werks)}`}</Text >
                     <Text style={{ fontSize: 14, color: 'grey', fontWeight: '500', marginTop: 10 }}>TPH {this.state.data.NO_TPH}</Text>
                 </View>
 
@@ -249,7 +251,7 @@ class DetailEbcc extends Component {
                             <TextInput
                                 editable={false}
                                 underlineColorAndroid={'transparent'}
-                                style={[styles.searchInput, {backgroundColor: Colors.abuabu}]}
+                                style={[styles.searchInput, { backgroundColor: Colors.abuabu }]}
                                 keyboardType={'numeric'}
                                 value={this.state.totalJanjang} />
                         </View>
@@ -266,7 +268,7 @@ class DetailEbcc extends Component {
                     <Text style={{ fontSize: 20, fontWeight: '500', paddingLeft: 20, marginTop: 10 }}>Penalti di TPH</Text>
                     {this.state.arrPenaltyTph.map((data, idx) => this.renderDynamicCompBtn(data, idx))}
 
-                    <View style={{padding:10, alignItems:'center', marginTop:10, marginBottom: 10}}/>
+                    <View style={{ padding: 10, alignItems: 'center', marginTop: 10, marginBottom: 10 }} />
                 </View>
 
             </ScrollView>
@@ -278,7 +280,7 @@ export default DetailEbcc;
 
 const styles = {
 
-    mainContainer: {flex: 1,backgroundColor: 'white'},
+    mainContainer: { flex: 1, backgroundColor: 'white' },
     containerHeader: {
         alignItems: 'center',
         justifyContent: 'center',
@@ -291,8 +293,8 @@ const styles = {
         paddingRight: 20,
         marginTop: 10
     },
-    txtLabel: {flex: 2,color: 'grey',fontSize: 15,},
-    containerInput: {flexDirection: 'row',alignItems: 'center',justifyContent: 'center',},
+    txtLabel: { flex: 2, color: 'grey', fontSize: 15, },
+    containerInput: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', },
     btnMinus: {
         borderWidth: 3,
         borderColor: '#cca300',
@@ -347,13 +349,13 @@ const styles = {
         color: '#808080',
         textAlign: 'center'
     },
-    bubbleLeftOff: { backgroundColor: Colors.abuabu, borderTopLeftRadius: 20,borderBottomLeftRadius: 20,},
-    bubbleRightOff: { backgroundColor: Colors.abuabu, borderTopRightRadius: 20,borderBottomRightRadius: 20,},
-    bubbleLeftOn: { backgroundColor: Colors.brand, borderTopLeftRadius: 20,borderBottomLeftRadius: 20,},
-    bubbleRightOn: { backgroundColor: Colors.brand, borderTopRightRadius: 20,borderBottomRightRadius: 20,},
-    buttonTextSideOn: { fontSize: 11,color: '#ffffff',textAlign: 'center'},
-    buttonTextSideOff: {fontSize: 11,color: '#808080',textAlign: 'center'},
-    buttonSide: {width: 75,alignItems: 'center',padding: 10,},
+    bubbleLeftOff: { backgroundColor: Colors.abuabu, borderTopLeftRadius: 20, borderBottomLeftRadius: 20, },
+    bubbleRightOff: { backgroundColor: Colors.abuabu, borderTopRightRadius: 20, borderBottomRightRadius: 20, },
+    bubbleLeftOn: { backgroundColor: Colors.brand, borderTopLeftRadius: 20, borderBottomLeftRadius: 20, },
+    bubbleRightOn: { backgroundColor: Colors.brand, borderTopRightRadius: 20, borderBottomRightRadius: 20, },
+    buttonTextSideOn: { fontSize: 11, color: '#ffffff', textAlign: 'center' },
+    buttonTextSideOff: { fontSize: 11, color: '#808080', textAlign: 'center' },
+    buttonSide: { width: 75, alignItems: 'center', padding: 10, },
     bubble: {
         // backgroundColor: '#ff8080',
         backgroundColor: Colors.brand,
@@ -361,7 +363,7 @@ const styles = {
         paddingVertical: 12,
         borderRadius: 20,
     },
-    buttonText: {fontSize: 17,color: '#ffffff',textAlign: 'center'},
+    buttonText: { fontSize: 17, color: '#ffffff', textAlign: 'center' },
     button: {
         width: 200,
         paddingHorizontal: 12,
@@ -369,14 +371,14 @@ const styles = {
         marginHorizontal: 10,
         padding: 10,
     },
-    buttonContainer: {flexDirection: 'row',marginVertical: 20,backgroundColor: 'transparent',},
-    buttonSlide: {width: 200,borderRadius: 20,backgroundColor: '#DCDCDC',},
-    tumbButtonSlide:{
+    buttonContainer: { flexDirection: 'row', marginVertical: 20, backgroundColor: 'transparent', },
+    buttonSlide: { width: 200, borderRadius: 20, backgroundColor: '#DCDCDC', },
+    tumbButtonSlide: {
         width: 55,
-        height:45,
+        height: 45,
         borderRadius: 20,
-        borderWidth:1,
-        borderColor:'#C8C8C8',
+        borderWidth: 1,
+        borderColor: '#C8C8C8',
         backgroundColor: Colors.tintColor,
     },
     titleText: {

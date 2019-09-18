@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
 import FindingTabNavigator from './FindingTabNavigator'
-import { showInbox, syncDays, notifInbox } from '../../Lib/Utils';
+import { isNotUserMill, syncDays, notifInbox } from '../../Lib/Utils';
 import Header from '../../Component/Header'
 
 export default class FindingScreen extends Component {
@@ -48,7 +48,7 @@ export default class FindingScreen extends Component {
           onPressLeft={() => this.props.navigation.navigate('Sync')}
           onPressRight={() => this.props.navigation.navigate('Inbox')}
           title={'Temuan'}
-          showInbox={showInbox()} />
+          isNotUserMill={isNotUserMill()} />
 
         <FindingTabNavigator navigation={this.props.navigation} />
       </View >

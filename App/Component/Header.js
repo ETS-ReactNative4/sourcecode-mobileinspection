@@ -18,7 +18,7 @@ const Header = (props) => {
                 </View>
 
                 {/* ICON RIGHT HEADER */}
-                <IconHeader padding={{ paddingRight: 12 }} onPress={props.onPressRight} icon={Images.ic_inbox} show={props.showInbox} />
+                <IconHeader padding={{ paddingRight: 12 }} onPress={props.onPressRight} icon={Images.ic_inbox} show={props.isNotUserMill} />
 
                 {/* NOTIF HEADER */}
                 {props.notif > 0 && <View style={{ position: 'absolute', right: 8, top: 10 }}>

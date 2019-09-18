@@ -4,7 +4,7 @@ import InspectionTabNavigator from './InspectionTabNavigator'
 import { connect } from 'react-redux';
 import InspeksiAction from '../../Redux/InspeksiRedux';
 
-import { showInbox, syncDays, notifInbox } from '../../Lib/Utils';
+import { isNotUserMill, syncDays, notifInbox } from '../../Lib/Utils';
 import Header from '../../Component/Header'
 
 class InspectionScreen extends Component {
@@ -53,7 +53,7 @@ class InspectionScreen extends Component {
           onPressLeft={() => this.props.navigation.navigate('Sync')}
           onPressRight={() => this.props.navigation.navigate('Inbox')}
           title={'Inspeksi'}
-          showInbox={showInbox()} />
+          isNotUserMill={isNotUserMill()} />
 
         <InspectionTabNavigator navigation={this.props.navigation} />
       </View >

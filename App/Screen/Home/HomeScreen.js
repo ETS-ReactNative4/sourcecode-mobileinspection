@@ -24,7 +24,7 @@ import CustomHeader from '../../Component/CustomHeader'
 import ServerName from '../../Constant/ServerName'
 import Moment from 'moment';
 import RNFetchBlob from 'rn-fetch-blob'
-import { changeFormatDate, dateDisplayMobile, showInbox, syncDays, notifInbox } from '../../Lib/Utils';
+import { changeFormatDate, dateDisplayMobile, isNotUserMill, syncDays, notifInbox } from '../../Lib/Utils';
 import FastImage from 'react-native-fast-image'
 import SwiperSlider from 'react-native-swiper'
 import {
@@ -897,7 +897,7 @@ class HomeScreen extends React.Component {
           onPressLeft={() => this.props.navigation.navigate('Sync')}
           onPressRight={() => this.props.navigation.navigate('Inbox')}
           title={'Beranda'}
-          showInbox={showInbox()} />
+          isNotUserMill={isNotUserMill()} />
 
         <WeeklySummary
           dataInspeksi={this.state.dataInspectionSummary}

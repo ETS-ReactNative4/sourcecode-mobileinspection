@@ -1,11 +1,11 @@
-import React, {Component} from 'react';
-import {Image, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {Card} from 'native-base';
+import React, { Component } from 'react';
+import { Image, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Card } from 'native-base';
 import Colors from '../../Constant/Colors';
 import Taskservice from '../../Database/TaskServices'
 import TaskServices from '../../Database/TaskServices'
-import {dateDisplayMobile} from '../../Lib/Utils'
-import {getEstateName, getStatusBlok} from '../../Database/Resources';
+import { dateDisplayMobile } from '../../Lib/Utils'
+import { getEstateName, getStatusBlok } from '../../Database/Resources';
 
 export default class HistoryEbcc extends Component {
 
@@ -66,7 +66,18 @@ export default class HistoryEbcc extends Component {
       path = '';
     }
     let dataBlock = Taskservice.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', `${data.WERKS}${data.AFD_CODE}${data.BLOCK_CODE}`);
-    let statusBlok = getStatusBlok(dataBlock.WERKS_AFD_BLOCK_CODE)
+    let statusBlok = ''
+    let blockName = ''
+    if (dataBlock != undefined) {
+      statusBlok = getStatusBlok(dataBlock.WERKS_AFD_BLOCK_CODE) + '/'
+    }
+
+    if (dataBlock != undefined) {
+      blockName = dataBlock.BLOCK_NAME + '/'
+    } else {
+      blockName = data.BLOCK_CODE + '/'
+    }
+
     let ebccDate = data.INSERT_TIME == '' ? 'Insert Time kosong' : dateDisplayMobile(data.INSERT_TIME);
 
     return (
@@ -80,7 +91,7 @@ export default class HistoryEbcc extends Component {
               <Image style={{ alignItems: 'stretch', width: 100, borderRadius: 10 }} source={{ uri: path }}></Image>
             </View>
             <View style={styles.sectionDesc} >
-              <Text style={{ fontSize: 14, fontWeight: 'bold' }}>{`${dataBlock.BLOCK_NAME}/${statusBlok}/${estName}`}</Text>
+              <Text style={{ fontSize: 14, fontWeight: 'bold' }}>{`${blockName}${statusBlok}${estName}`}</Text>
               <Text style={{ fontSize: 12, marginTop: 8 }}>{`TPH ${data.NO_TPH}`}</Text>
               <Text style={{ fontSize: 12, marginTop: 5 }}>{ebccDate}</Text>
               <Text style={{ fontSize: 12, color: colorStatus, marginTop: 15, fontStyle: 'italic' }}>{status}</Text>

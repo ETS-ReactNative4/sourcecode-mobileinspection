@@ -519,7 +519,7 @@ export function notifInbox() {
 	return notifCount;
 }
 
-export function showInbox() {
+export function isNotUserMill() {
     const data = TaskServices.getAllData('TR_LOGIN')
     if (data != undefined) {
       if (data[0].USER_ROLE == 'FFB_GRADING_MILL') {

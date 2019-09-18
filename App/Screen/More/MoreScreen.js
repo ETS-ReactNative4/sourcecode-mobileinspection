@@ -11,7 +11,7 @@ import DeviceInfo from 'react-native-device-info';
 import Header from '../../Component/Header'
 import FeatureLainnya from '../../Component/FeatureLainnya'
 
-import { getPhoto, getThumnail, syncDays, notifInbox, showInbox } from '../../Lib/Utils';
+import { getPhoto, getThumnail, syncDays, notifInbox, isNotUserMill } from '../../Lib/Utils';
 import { Images } from '../../Themes'
 import { dirDatabase } from '../../Lib/dirStorage';
 import RNFS from 'react-native-fs'
@@ -136,7 +136,7 @@ export default class MoreScreen extends Component {
           onPressLeft={() => this.props.navigation.navigate('Sync')}
           onPressRight={() => this.props.navigation.navigate('Inbox')}
           title={'Lainnya'}
-          showInbox={showInbox()} />
+          isNotUserMill={isNotUserMill()} />
 
         <ScrollView style={styles.container}>
           <ModalConfirmation

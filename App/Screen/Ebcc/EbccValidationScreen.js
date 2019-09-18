@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
 import EbccTabNavigator from './EbccTabNavigator'
 
-import { showInbox, syncDays, notifInbox } from '../../Lib/Utils';
+import { isNotUserMill, syncDays, notifInbox } from '../../Lib/Utils';
 import Header from '../../Component/Header'
 
 export default class EbccValidationScreen extends Component {
@@ -50,7 +50,7 @@ export default class EbccValidationScreen extends Component {
           onPressLeft={() => this.props.navigation.navigate('Sync')}
           onPressRight={() => this.props.navigation.navigate('Inbox')}
           title={'Sampling EBCC'}
-          showInbox={showInbox()} />
+          isNotUserMill={isNotUserMill()} />
 
         <EbccTabNavigator navigation={this.props.navigation} />
       </View >
