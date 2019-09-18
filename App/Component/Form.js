@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {
     Alert,
-    Icon,
     Image,
     Keyboard,
     NetInfo,
@@ -15,8 +14,9 @@ import {
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import ModalAlert from '../Component/ModalAlert'
 import PropTypes from 'prop-types';
-import { AlertContent, Images } from '../Themes'
+import { AlertContent, Images, Colors } from '../Themes'
 import { storeData } from '../Database/Resources';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 class Form extends Component {
 
@@ -40,7 +40,8 @@ class Form extends Component {
             message: 'Message',
             showModal: false,
             icon: '',
-            secure: true
+            secure: true,
+            iconName: "eye-off"
         }
     }
 
@@ -93,9 +94,10 @@ class Form extends Component {
     }
 
     triggerShowHide = () => {
-        this.setState({
+        this.setState(prevState => ({
+            iconName: prevState.iconName === 'eye' ? 'eye-off' : 'eye',
             secure: !this.state.secure
-        });
+        }));
     }
 
     render() {
@@ -112,7 +114,9 @@ class Form extends Component {
                     title={this.state.title}
                     message={this.state.message} />
 
-                <Image source={Images.logo_pic} style={{ width: 250, height: 80, resizeMode: 'stretch', marginBottom: 30 }} />
+                <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                    <Image source={Images.logo_pic} style={{ width: 250, height: 80, resizeMode: 'stretch', marginBottom: 30 }} />
+                </View>
 
                 <View style={styles.sectionInput}>
                     <Image source={Images.ic_user} style={styles.iconInput} />
@@ -138,11 +142,13 @@ class Form extends Component {
                         onChangeText={(strPassword) => { this.setState({ strPassword: strPassword }) }}
                         value={this.state.strPassword}
                         ref={(input) => this.password = input} />
-                    <TouchableOpacity style={{ backgroundColor: '#212121' }} onPress={this.triggerShowHide}><Text></Text></TouchableOpacity>
+
+                    <Icon style={{ paddingRight: 10 }} name={this.state.iconName} onPress={() => this.triggerShowHide()} color={Colors.inputBox} size={20} />
                 </View>
 
                 <View style={styles.sectionInput}>
                     <Picker
+
                         mode="dropdown"
                         iosHeader="Select your SIM"
                         iosIcon={<Icon name="arrow-dropdown-circle" style={{ color: "#007aff", fontSize: 25 }} />}
@@ -160,6 +166,11 @@ class Form extends Component {
                     onPress={() => this.onBtnClick(props)}>
                     <Text style={styles.buttonText}>Login</Text>
                 </TouchableOpacity>
+
+
+                <View style={styles.footerView}>
+                    <Text style={styles.footerText}>{'\u00A9'} 2018 Copyrights PT Triputra Agro Persada</Text>
+                </View>
             </View>
             // </KeyboardAvoidingView>
 
@@ -172,10 +183,8 @@ export default Form
 const styles = StyleSheet.create({
 
     container: {
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: wp('50%')//200
+        flex: 1,
+        justifyContent: 'center'
     },
     tapText: {
         height: 41,
@@ -188,28 +197,25 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
     },
     sectionInput: {
-        width: wp('75%'),//280,
-        height: hp('6.7%'), //48
+        flexDirection: 1,
         flexDirection: 'row',
-        justifyContent: 'center',
         alignItems: 'center',
         opacity: 0.67,
         backgroundColor: '#FFFFFF',
         borderRadius: 25,
         marginVertical: 10,
+        paddingHorizontal: 12,
         borderColor: '#51a977',
         borderWidth: 1
     },
     iconInput: {
         padding: 10,
-        marginLeft: 100,
         height: 25,
         width: 25,
-        resizeMode: 'stretch',
-        alignItems: 'center'
+        resizeMode: 'stretch'
     },
     inputBox: {
-        width: 320,
+        width: 200,
         height: 42,
         fontSize: 16,
         color: '#51a977',
@@ -218,17 +224,18 @@ const styles = StyleSheet.create({
 
     },
     picker: {
-        width: 240,
+        flex: 1,
+        flexDirection: "row",
         height: 42,
         fontSize: 16,
         color: '#51a977',
         textAlign: "left",
-        paddingVertical: 10,
 
     },
     button: {
-        width: wp('75%'), //280,
-        height: hp('6.7%'), //48
+        justifyContent: 'center',
+        flexDirection: 1,
+        flexDirection: 'row',
         backgroundColor: '#068D0D',
         borderRadius: 25,
         marginVertical: 10,
@@ -239,5 +246,11 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         color: '#ffffff',
         textAlign: 'center'
+    },
+    footerView: {
+        position: 'absolute',
+        bottom: 20,
+
+
     }
 });

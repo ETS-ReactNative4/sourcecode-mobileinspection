@@ -1,5 +1,5 @@
 'use strict';
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
     BackHandler,
     ImageBackground,
@@ -14,10 +14,10 @@ import {
 
 import HandleBack from '../Component/Back'
 import Form from '../Component/Form';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import AuthAction from '../Redux/AuthRedux';
-import {ProgressDialog} from 'react-native-simple-dialogs';
-import {NavigationActions, StackActions} from 'react-navigation';
+import { ProgressDialog } from 'react-native-simple-dialogs';
+import { NavigationActions, StackActions } from 'react-navigation';
 import TaskServices from '../Database/TaskServices';
 import RNFetchBlob from 'rn-fetch-blob'
 import {
@@ -31,8 +31,8 @@ import {
 import ModalAlert from '../Component/ModalAlert'
 import ServerName from '../Constant/ServerName'
 import IMEI from 'react-native-imei'
-import {AlertContent} from '../Themes';
-import {storeData, removeData} from '../Database/Resources';
+import { AlertContent } from '../Themes';
+import { storeData, removeData } from '../Database/Resources';
 import moment from 'moment'
 
 class Login extends Component {
@@ -295,29 +295,24 @@ class Login extends Component {
             //Add By Aminju 20/01/2019 15:45 (Handle Back Method)
             <HandleBack onBack={this.onBack}>
 
-                <ModalAlert
-                    icon={this.state.icon}
-                    visible={this.state.showModal}
-                    onPressCancel={() => this.setState({ showModal: false })}
-                    title={this.state.title}
-                    message={this.state.message} />
-
                 <ImageBackground source={require('../Images/background_login.png')} style={styles.container}>
                     <KeyboardAvoidingView
                         style={styles.container}
                         behavior="padding" >
+
+                        <ModalAlert
+                            icon={this.state.icon}
+                            visible={this.state.showModal}
+                            onPressCancel={() => this.setState({ showModal: false })}
+                            title={this.state.title}
+                            message={this.state.message} />
+
                         <StatusBar
                             hidden={true}
                             barStyle="light-content" />
 
-                        {/* <Logo/> */}
-
                         <Form
                             onBtnClick={data => { this.onLogin(data.strEmail, data.strPassword, data.selectedServer) }} />
-
-                        <View style={styles.footerView}>
-                            <Text style={styles.footerText}>{'\u00A9'} 2018 Copyrights PT Triputra Agro Persada</Text>
-                        </View>
 
                         <ProgressDialog
                             visible={this.state.fetching}
