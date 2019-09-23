@@ -112,7 +112,7 @@ class KriteriaBuah extends Component {
             var blockName = `${arrTph[3]}`
             var werk_afd_blok_code = `${arrTph[2]}${arrTph[1]}${arrTph[3]}`
             var werks = arrTph[2]
-            this.setState({ TPH: arrTph[0], blockCode: arrTph[3], blockName, werk_afd_blok_code, werks })
+            this.setState({ TPH: arrTph[0], blockCode: arrTph[3], blockName, werk_afd_blok_code: "", werks })
 
             this.dataQuery();
         }
@@ -456,6 +456,17 @@ class KriteriaBuah extends Component {
     }
 
     render() {
+
+        const dataWerks = this.getStatusBlok(this.state.werk_afd_blok_code);
+        let statusBlock
+
+        if (dataWerks != '') {
+            statusBlock = '/' + dataWerks;
+        } else {
+            statusBlock = ''
+        }
+
+
         return (
             <ScrollView style={styles.mainContainer}>
                 <StatusBar
@@ -481,7 +492,7 @@ class KriteriaBuah extends Component {
 
                 {/*LABEL*/}
                 <View style={styles.containerHeader}>
-                    <Text style={{ fontSize: 17, fontWeight: '500' }}>{`${this.state.blockName}/${this.getStatusBlok(this.state.werk_afd_blok_code)}/${this.getEstateName(this.state.werks)}`}</Text>
+                    <Text style={{ fontSize: 17, fontWeight: '500' }}>{`${this.state.blockName}${statusBlock}/${this.getEstateName(this.state.werks)}`}</Text>
                     <Text style={{ fontSize: 14, color: 'grey', fontWeight: '500', marginTop: 10 }}>TPH {this.state.TPH}</Text>
                 </View>
 

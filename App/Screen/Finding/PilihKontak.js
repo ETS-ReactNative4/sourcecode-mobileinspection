@@ -1,8 +1,8 @@
 
 'use strict';
 
-import React, {Component} from 'react';
-import {BackHandler, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import React, { Component } from 'react';
+import { BackHandler, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import TaskServices from '../../Database/TaskServices';
 
 // var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
@@ -26,7 +26,7 @@ class PilihKontak extends Component {
     this.props.navigation.goBack();
   };
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
   }
 
@@ -54,78 +54,79 @@ class PilihKontak extends Component {
     //infra filter
     let compCode = TaskServices.findBy2('TM_EST', 'WERKS', werks);
     let contactInfra = [];
-    if(compCode !== undefined){
-        contactInfra = TaskServices.getAllData('TR_CONTACT').filtered( `REF_ROLE = "COMP_CODE" AND LOCATION_CODE CONTAINS[c] "${compCode.COMP_CODE}" AND USER_ROLE CONTAINS[c] "ASISTEN" AND USER_AUTH_CODE != "${login[0].USER_AUTH_CODE}"`);
+    if (compCode !== undefined) {
+      contactInfra = TaskServices.getAllData('TR_CONTACT').filtered(`REF_ROLE = "COMP_CODE" AND LOCATION_CODE CONTAINS[c] "${compCode.COMP_CODE}" AND USER_ROLE CONTAINS[c] "ASISTEN" AND USER_AUTH_CODE != "${login[0].USER_AUTH_CODE}"`);
     }
 
     let currentUser = null;
     let arr = [];
     for (var i = 0; i < dataUser.length; i++) {
-        if(dataUser[i].USER_AUTH_CODE !== undefined && dataUser[i].FULLNAME !== undefined && dataUser[i].USER_ROLE !== undefined){
-            currentUser = {
-                userAuth: dataUser[i].USER_AUTH_CODE,
-                fullName: dataUser[i].FULLNAME,
-                userRole: dataUser[i].USER_ROLE,
-            }
-            // arr.push({
-            //     userAuth: dataUser[i].USER_AUTH_CODE,
-            //     fullName: dataUser[i].FULLNAME,
-            //     userRole: dataUser[i].USER_ROLE,
-            // });
+      if (dataUser[i].USER_AUTH_CODE !== undefined && dataUser[i].FULLNAME !== undefined && dataUser[i].USER_ROLE !== undefined) {
+        currentUser = {
+          userAuth: dataUser[i].USER_AUTH_CODE,
+          fullName: dataUser[i].FULLNAME,
+          userRole: dataUser[i].USER_ROLE,
         }
+        // arr.push({
+        //     userAuth: dataUser[i].USER_AUTH_CODE,
+        //     fullName: dataUser[i].FULLNAME,
+        //     userRole: dataUser[i].USER_ROLE,
+        // });
+      }
     }
 
     for (var j = 0; j < data.length; j++) {
-        if(data[j].USER_AUTH_CODE !== undefined && data[j].FULLNAME !== undefined && data[j].USER_ROLE !== undefined){
-            arr.push({
-                userAuth: data[j].USER_AUTH_CODE,
-                fullName: data[j].FULLNAME,
-                userRole: data[j].USER_ROLE,
-            });
-        }
+      if (data[j].USER_AUTH_CODE !== undefined && data[j].FULLNAME !== undefined && data[j].USER_ROLE !== undefined) {
+        arr.push({
+          userAuth: data[j].USER_AUTH_CODE,
+          fullName: data[j].FULLNAME,
+          userRole: data[j].USER_ROLE,
+        });
+      }
     }
 
     for (var k = 0; k < data1.length; k++) {
-        if(data1[k].USER_AUTH_CODE !== undefined && data1[k].FULLNAME !== undefined && data1[k].USER_ROLE !== undefined){
-            arr.push({
-                userAuth: data1[k].USER_AUTH_CODE,
-                fullName: data1[k].FULLNAME,
-                userRole: data1[k].USER_ROLE
-            })
-        }
+      if (data1[k].USER_AUTH_CODE !== undefined && data1[k].FULLNAME !== undefined && data1[k].USER_ROLE !== undefined) {
+        arr.push({
+          userAuth: data1[k].USER_AUTH_CODE,
+          fullName: data1[k].FULLNAME,
+          userRole: data1[k].USER_ROLE
+        })
+      }
     }
 
-      for (let loopEST = 0; loopEST < contactInfra.length; loopEST++) {
-          if(contactInfra[k].USER_AUTH_CODE !== undefined && contactInfra[k].FULLNAME !== undefined && contactInfra[k].USER_ROLE !== undefined){
-              arr.push({
-                  userAuth: contactInfra[k].USER_AUTH_CODE,
-                  fullName: contactInfra[k].FULLNAME,
-                  userRole: contactInfra[k].USER_ROLE
-              })
-          }
+    for (let loopEST = 0; loopEST < contactInfra.length; loopEST++) {
+      if (contactInfra[k].USER_AUTH_CODE !== undefined && contactInfra[k].FULLNAME !== undefined && contactInfra[k].USER_ROLE !== undefined) {
+        arr.push({
+          userAuth: contactInfra[k].USER_AUTH_CODE,
+          fullName: contactInfra[k].FULLNAME,
+          userRole: contactInfra[k].USER_ROLE
+        })
       }
+    }
 
-      arr.sort((a, b)=>{
-          let nameA=a.fullName.toLowerCase();
-          let nameB=b.fullName.toLowerCase();
-          if (nameA < nameB) //sort string ascending
-              return -1;
-          if (nameA > nameB)
-              return 1;
-          return 0 //default return value (no sorting)
-      });
+    arr.sort((a, b) => {
+      let nameA = a.fullName.toLowerCase();
+      let nameB = b.fullName.toLowerCase();
+      if (nameA < nameB) //sort string ascending
+        return -1;
+      if (nameA > nameB)
+        return 1;
+      return 0 //default return value (no sorting)
+    });
     arr = [currentUser, ...arr];
 
     let tempId = [];
     let tempValue = [];
-    arr.map((data)=>{
-        if(!tempId.includes(data.userAuth)){
-            tempValue.push(data);
-            tempId.push(data.userAuth);
-        }
+    arr.map((data) => {
+      console.log('Data Pilih Contact : ', data)
+      if (!tempId.includes(data.userAuth)) {
+        tempValue.push(data);
+        tempId.push(data.userAuth);
+      }
     });
 
-    this.setState({ adresses: arr, dataList: arr })
+    this.setState({ adresses: arr, dataList: tempValue })
   }
 
   searchedAdresses = (searchedText) => {
@@ -149,13 +150,13 @@ class PilihKontak extends Component {
   render() {
     return (
       <View style={{
-          flex: 1,
-          backgroundColor: '#FFFFFF',
+        flex: 1,
+        backgroundColor: '#FFFFFF',
       }}>
         <View style={{
-            flexDirection: 'row',
-            backgroundColor: '#DDDDDD',
-            padding: 10
+          flexDirection: 'row',
+          backgroundColor: '#DDDDDD',
+          padding: 10
         }}>
           <TextInput
             style={styles.textinput}
@@ -163,35 +164,35 @@ class PilihKontak extends Component {
             placeholder="Cari nama" />
         </View>
         <View style={{
-            flex: 1
+          flex: 1
         }}>
-            <FlatList
-                style={{ flex: 1 }}
-                data={this.state.dataList}
-                extraData={this.state}
-                removeClippedSubviews={true}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={({ item }) => {
-                    return (
-                        <TouchableOpacity
-                            onPress={() => {
-                                this.onSelect(item)
-                            }}
-                            style={{
-                                borderBottomWidth: 1,
-                                borderColor: '#8E8E8E'
-                            }}
-                        >
-                            <View
-                                style={{paddingVertical: 5, paddingHorizontal: 10}}
-                            >
-                                <Text style={{ fontSize: 15, color: 'black' }}>{item.fullName}</Text>
-                                <Text style={{ fontSize: 13, color: 'grey', marginTop: 3 }}>{item.userRole.replace(/_/g," ")}</Text>
-                            </View>
-                        </TouchableOpacity>
-                    )
-                }}
-            />
+          <FlatList
+            style={{ flex: 1 }}
+            data={this.state.dataList}
+            extraData={this.state}
+            removeClippedSubviews={true}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => {
+              return (
+                <TouchableOpacity
+                  onPress={() => {
+                    this.onSelect(item)
+                  }}
+                  style={{
+                    borderBottomWidth: 1,
+                    borderColor: '#8E8E8E'
+                  }}
+                >
+                  <View
+                    style={{ paddingVertical: 5, paddingHorizontal: 10 }}
+                  >
+                    <Text style={{ fontSize: 15, color: 'black' }}>{item.fullName}</Text>
+                    <Text style={{ fontSize: 13, color: 'grey', marginTop: 3 }}>{item.userRole.replace(/_/g, " ")}</Text>
+                  </View>
+                </TouchableOpacity>
+              )
+            }}
+          />
           {/*<ListView*/}
           {/*  dataSource={ds.cloneWithRows(this.state.dataList)}*/}
           {/*  renderRow={this.renderAdress}*/}
