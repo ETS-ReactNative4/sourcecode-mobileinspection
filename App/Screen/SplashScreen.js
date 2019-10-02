@@ -9,6 +9,7 @@ import CategoryAction from '../Redux/CategoryRedux'
 import ContactAction from '../Redux/ContactRedux'
 import RegionAction from '../Redux/RegionRedux'
 import {
+    dirSummary,
     dirMaps,
     dirPhotoEbccJanjang,
     dirPhotoEbccSelfie,
@@ -96,6 +97,7 @@ class SplashScreen extends Component {
         //buat Folder DiExtrnal
         RNFS.mkdir('file:///storage/emulated/0/MobileInspection');
         //buat folder internal
+        RNFS.mkdir(dirSummary);
         RNFS.mkdir(dirPhotoInspeksiBaris);
         RNFS.mkdir(dirPhotoInspeksiSelfie);
         RNFS.mkdir(dirPhotoTemuan);

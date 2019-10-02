@@ -7,14 +7,21 @@ import ModalConfirmation from '../../Component/ModalAlertConfirmation'
 import ModalAlert from '../../Component/ModalAlert'
 import ServerName from '../../Constant/ServerName';
 import DeviceInfo from 'react-native-device-info';
+import {zip} from 'react-native-zip-archive';
+import Mailer from 'react-native-mail';
+import moment from 'moment';
 
 import Header from '../../Component/Header'
 import FeatureLainnya from '../../Component/FeatureLainnya'
 
 import { getPhoto, getThumnail, syncDays, notifInbox, isNotUserMill } from '../../Lib/Utils';
 import { Images } from '../../Themes'
-import { dirDatabase } from '../../Lib/dirStorage';
-import RNFS from 'react-native-fs'
+import {
+    dirDatabase,
+    dirSummary,
+    dirLocal
+} from '../../Lib/dirStorage';
+import RNFS from 'react-native-fs';
 import { retrieveData } from '../../Database/Resources';
 import WeeklySummary from '../../Component/WeeklySummary';
 
@@ -255,7 +262,7 @@ export default class MoreScreen extends Component {
       case 'Dashboard':
         return this.menuDashboard()
       case 'Database':
-        return this.menuDatabase()
+        return this.sendFile()
       default:
         break;
     }
@@ -302,7 +309,7 @@ export default class MoreScreen extends Component {
   }
 
   /* Function Export Database */
-  menuDatabase() {
+  async menuDatabase() {
     RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
 
     setTimeout(() => {
@@ -313,6 +320,65 @@ export default class MoreScreen extends Component {
       );
     }, 2000)
   }
+
+  async sendFile(){
+      //create zip file
+      let currentTime = moment().format("YYYYMMDDHHmmss");
+      let zipPath = `${dirLocal}`;
+      let zipDestination = `${dirSummary}/${this.state.user.USERNAME}_${currentTime}.zip`;
+      this.zipFile(zipPath.toString(), zipDestination.toString())
+          .then((response)=>{
+              if(response.status){
+                  this.sendEmail(response.filePath, this.state.user.USERNAME, currentTime);
+              }
+          })
+  }
+
+    async zipFile(zipPath, zipDestination){
+      let zipStatus={
+          status: false,
+          filePath: null
+      };
+
+      await zip(zipPath.toString(), zipDestination.toString())
+          .then((path) => {
+              zipStatus={
+                  status: true,
+                  filePath: path
+              };
+          })
+          .catch((error) => {
+              console.log("ZIP ERR:",error)
+          });
+
+
+      return zipStatus;
+    }
+
+    sendEmail(filePath, Username, FileTime){
+        let formatDate = moment(FileTime, "YYYYMMDDHHmmss").format("DD MMM YY, HH:mm");
+        try {
+            Mailer.mail({
+                subject: `Database - ${Username} - ${formatDate}`,
+                recipients: ['helpdesk@tap-agri.com'],
+                ccRecipients: [''],
+                bccRecipients: [''],
+                body: `Berikut terlampir database Aplikasi Mobile Inspection saya ${Username} per ${formatDate}.`,
+                isHTML: false,
+                attachment: {
+                    path: filePath,  // The absolute path of the file from which to read data.
+                    type: 'zip',   // Mime Type: jpg, png, doc, ppt, html, pdf, csv
+                    name: null   // Optional: Custom filename for attachment
+                }
+            }, (error, event) => {
+                return false
+            });
+            return true
+        }
+        catch (e) {
+            return false
+        }
+    };
 }
 
 const styles = StyleSheet.create({

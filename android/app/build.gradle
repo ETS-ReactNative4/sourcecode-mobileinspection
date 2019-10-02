@@ -156,6 +156,8 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-mail')
+    implementation project(':react-native-zip-archive')
     implementation project(':rn-fetch-blob')
     implementation project(':react-native-image-resizer')
     implementation project(':react-native-image-crop-picker')
