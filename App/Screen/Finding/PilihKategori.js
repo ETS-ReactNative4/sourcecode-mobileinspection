@@ -83,27 +83,28 @@ class PilihKategori extends Component {
 
   tabClicked(index) {
     this.setState({
-      activeIndex: index
+      activeIndex: index,
     })
   }
 
   renderSection() {
-    if (this.state.activeIndex == 0) {
+    if (this.state.activeIndex === 0) {
       return (
         <FlatList
+            extraData={this.state}
           data={this.state.categoriesBlock}
-          keyExtractor={item => item.id}
+          keyExtractor={(item , index) => "Block"+item.id+index}
           numColumns={4}
           renderItem={({ item }) => {
             return <ItemCategory onPress={() => this.onSelect(item)} icon={item.ICON} catergoryName={item.CATEGORY_NAME} />
           }} />
       )
     }
-    else if (this.state.activeIndex == 1) {
+    else if (this.state.activeIndex === 1) {
       return (
         <FlatList
           data={this.state.categoriesInfra}
-          keyExtractor={item => item.id}
+          keyExtractor={(item , index) => "Infra"+item.id+index}
           numColumns={4}
           renderItem={({ item }) => {
             return <ItemCategory onPress={() => this.onSelect(item)} icon={item.ICON} catergoryName={item.CATEGORY_NAME} />
