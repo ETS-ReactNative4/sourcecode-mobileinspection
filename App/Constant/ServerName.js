@@ -1,8 +1,8 @@
 import DeviceInfo from 'react-native-device-info'
 
 let verAPI = "v1.1";
-// let verAPK = "2.9";
-let verAPK = DeviceInfo.getVersion;
+let verAPK = DeviceInfo.getVersion();
+
 export default {
 	verAPK,
 	verAPI,
@@ -23,3 +23,19 @@ export default {
 		service: "http://app.tap-agri.com/mobileinspectiondev/ins-msa-dev-auth/api/v1.0/server/service-list?v=" + verAPK
 	}
 };
+
+async function getServiceQA(){
+    let versionName = null;
+
+    await DeviceInfo.getVersion()
+        .then((response)=>{
+            versionName = response
+        });
+
+    if(versionName !== undefined){
+        return{
+            data: `http://app.tap-agri.com/mobileinspectionqa/ins-msa-qa-auth/api/${versionName}/`,
+            service: `http://app.tap-agri.com/mobileinspectionqa/ins-msa-qa-auth/api/${verAPI}/server/service-list?v=${versionName}`
+        }
+    }
+}
