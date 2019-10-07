@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Dimensions, StatusBar, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Dimensions, StatusBar, Switch, Text, TextInput, TouchableOpacity, View, Vibration } from 'react-native';
 import { Card, CardItem, } from 'native-base';
 import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
@@ -90,6 +90,8 @@ class KondisiBarisAkhir extends Component {
             polyTrack: [],
             poligons: [],
 
+            timer: 0,
+
             //Add Modal Alert by Aminju
             title: 'Title',
             message: 'Message',
@@ -104,6 +106,40 @@ class KondisiBarisAkhir extends Component {
         this.setState({ menit: sda.toString() })
         this.getLocation();
         this.makeLineTrack();
+
+        this.didFocus = this.props.navigation.addListener(
+            'didFocus',
+            ()=>{
+                this.timerStart()
+            }
+        );
+    }
+
+    componentWillUnmount() {
+        this.timerStop();
+        this.didFocus.remove();
+    }
+
+    timerStart(){
+        let timerInterval = setInterval(()=>{
+            let detik = parseInt(this.state.timer) + 1;
+
+            if(detik > 5){
+                Vibration.vibrate(500);
+            }
+
+            this.setState({
+                timer: detik
+            });
+        }, 1000);
+
+        this.setState({
+            timerInterval
+        });
+    }
+
+    timerStop(){
+        clearInterval(this.state.timerInterval);
     }
 
     totalWaktu() {
