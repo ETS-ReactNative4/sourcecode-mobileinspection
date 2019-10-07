@@ -1,6 +1,7 @@
 import { Images } from '../Themes'
 
 const alert = {
+    'versionName_salah': { showModal: true, title: 'Versi tidak terdeteksi', message: 'Kamu harus update terlebih dahulu!', icon: Images.img_input_tidak_lengkap },
     'email_kosong': { showModal: true, title: 'Email Kosong', message: 'Kamu harus isi email terlebih dahulu', icon: Images.img_input_tidak_lengkap },
     'password_kosong': { showModal: true, title: 'Password Kosong', message: 'Kamu harus isi password terlebih dahulu', icon: Images.img_input_tidak_lengkap },
     'no_internet': { showModal: true, title: 'Tidak Ada Koneksi', message: 'Opps, check koneksi internet mu dulu ya', icon: Images.img_no_internet },

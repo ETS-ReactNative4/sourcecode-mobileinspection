@@ -114,6 +114,9 @@ class Login extends Component {
                     }
                     this.checkUser(param);
                 }
+                else {
+                    this.setState(AlertContent.versionName_salah)
+                }
             });
     }
 
