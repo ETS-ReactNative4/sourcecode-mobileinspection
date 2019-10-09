@@ -10,6 +10,8 @@ export default class ModalConfirmation extends Component {
 	static propTypes = {
 		onPressCancel: PropTypes.func,
 		onPressSubmit: PropTypes.func,
+        cancelText: PropTypes.string,
+        submitText: PropTypes.string,
 		icon: PropTypes.string,
 		title: PropTypes.string,
 		message: PropTypes.string,
@@ -20,6 +22,8 @@ export default class ModalConfirmation extends Component {
 	static defaultProps = {
 		onPressCancel: () => { },
 		onPressSubmit: () => { },
+        cancelText: "Tidak",
+        submitText: "Iya",
 		icon: require('../Images/img-no-data.png'),
 		title: 'Title',
 		message: 'Message',
@@ -50,13 +54,13 @@ export default class ModalConfirmation extends Component {
 							}}>
 								<TouchableOpacity onPress={props.onPressCancel} style={{ flex: 1, width: '100%', justifyContent: 'center' }}>
 									<View transparent style={style.button}>
-										<Text style={{ color: 'black', fontSize: 16 }}>Tidak</Text>
+										<Text style={{ color: 'black', fontSize: 16 }}>{props.cancelText}</Text>
 									</View>
 								</TouchableOpacity>
 								<View style={{ backgroundColor: Colors.background, width: 0.5 }}></View>
 								<TouchableOpacity onPress={props.onPressSubmit} style={{ flex: 1, width: '100%', justifyContent: 'center' }}>
 									<View transparent style={style.button}>
-										<Text style={{ color: 'grey', fontSize: 16 }}>Iya</Text>
+										<Text style={{ color: 'grey', fontSize: 16 }}>{props.submitText}</Text>
 									</View>
 								</TouchableOpacity>
 							</View>

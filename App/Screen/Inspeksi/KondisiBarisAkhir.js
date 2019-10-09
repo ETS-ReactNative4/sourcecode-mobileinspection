@@ -14,6 +14,7 @@ import R from 'ramda';
 import geolib from 'geolib';
 import { ProgressDialog } from 'react-native-simple-dialogs';
 import ModalAlert from '../../Component/ModalAlert';
+import ModalAlertConfirmation from '../../Component/ModalAlertConfirmation';
 import { retrieveData } from '../../Database/Resources';
 
 const LATITUDE = -2.1890660;
@@ -91,6 +92,7 @@ class KondisiBarisAkhir extends Component {
             poligons: [],
 
             timer: 0,
+            showAlertTimer: false,
 
             //Add Modal Alert by Aminju
             title: 'Title',
@@ -124,13 +126,18 @@ class KondisiBarisAkhir extends Component {
         let timerInterval = setInterval(()=>{
             let detik = parseInt(this.state.timer) + 1;
 
-            if(detik > 5){
+            if(detik > 60){
                 Vibration.vibrate(500);
+                if(this.state.showAlertTimer === false && this.state.showModal === false){
+                    this.setState({
+                        showAlertTimer: true
+                    })
+                }
             }
 
             this.setState({
                 timer: detik
-            });
+            })
         }, 1000);
 
         this.setState({
@@ -138,9 +145,13 @@ class KondisiBarisAkhir extends Component {
         });
     }
 
-    timerStop(){
+    timerStop() {
         clearInterval(this.state.timerInterval);
+        this.setState({
+            timer: 0
+        });
     }
+
 
     totalWaktu() {
         let now = new Date();
@@ -347,7 +358,7 @@ class KondisiBarisAkhir extends Component {
         }
         else {
             if (!this.checkJarakBaris(this.state.txtBaris)) {
-                this.saveData()
+                this.saveData(false)
             }
             else {
                 this.setState({
@@ -498,7 +509,7 @@ class KondisiBarisAkhir extends Component {
         }
     }
 
-    saveData() {
+    saveData(isFromAlert) {
         let insertTime = getTodayDate('YYYY-MM-DD HH:mm:ss');
 
         if(this.state.from !== 'history'){
@@ -543,7 +554,6 @@ class KondisiBarisAkhir extends Component {
                 INSERT_USER: this.state.dataUsual.USER_AUTH,
                 INSERT_TIME: insertTime
             }
-            console.log("SAVE IMAGE BARIS", image);
             TaskService.saveData('TR_IMAGE', image);
 
             var selfie = {
@@ -640,7 +650,7 @@ class KondisiBarisAkhir extends Component {
             BLOCK_INSPECTION_CODE: blokInspectionCode
         };
 
-        if (this.state.fulFillMandatory) {
+        if (this.state.fulFillMandatory || isFromAlert) {
             this.calculate();
         } else {
 
@@ -728,7 +738,38 @@ class KondisiBarisAkhir extends Component {
                     onPressCancel={() => this.setState({ showModal: false })}
                     title={this.state.title}
                     message={this.state.message} />
-
+                <ModalAlertConfirmation
+                    icon={require('../../Images/ic-1-baris-lagi.png')}
+                    visible={this.state.showAlertTimer}
+                    cancelText={"Lanjutkan"}
+                    submitText={"Selesai"}
+                    message={"Kamu bisa selesaikan inspeksi atau lanjutkan inspeksi"}
+                    title={"Sudah selesai inspeksi?"}
+                    onPressSubmit={()=>{
+                        if (DATA_LOGIN[0].USER_ROLE === 'ASISTEN_LAPANGAN') {
+                            if (this.has2Row() >= 1) {
+                                this.saveData(true);
+                            }
+                            else {
+                                this.setState({
+                                    timer: 0,
+                                    showAlertTimer: false,
+                                    showModal: true, title: 'Lanjutkan Inspeksi', message: 'Sesuai SOP nih, inspeksi tuh minimal 2 baris per blok.',
+                                    icon: require('../../Images/ic-1-baris-lagi.png')
+                                });
+                            }
+                        }
+                        else{
+                            this.saveData(true);
+                        }
+                    }}
+                    onPressCancel={() => {
+                        this.setState({
+                            timer: 0,
+                            showAlertTimer: false
+                        })
+                    }}
+                />
                 {/*STEPPER*/}
                 <View style={{ flexDirection: 'row', marginLeft: 20, marginRight: 20, marginTop: 10 }}>
                     <View style={styles.containerStepper}>
