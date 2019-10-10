@@ -107,8 +107,8 @@ android {
         applicationId "com.bluezoneinspection.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 21
-        versionName "3.00"
+        versionCode 22
+        versionName "3.01"
         multiDexEnabled true
 		missingDimensionStrategy 'react-native-camera', 'general'
     }
