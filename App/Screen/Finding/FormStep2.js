@@ -18,6 +18,7 @@ import ModalAlert from '../../Component/ModalAlert';
 import ModalAlertBack from '../../Component/ModalAlert';
 import ModalAlertConfirmation from '../../Component/ModalAlertConfirmation'
 import { AlertContent } from '../../Themes';
+import { removeEmojis } from '../../Constant/Function';
 
 var RNFS = require('react-native-fs');
 
@@ -463,7 +464,12 @@ class FormStep2 extends Component {
                             <TextInput style={{ flex: 1, textAlignVertical: "top" }}
                                 multiline
                                 placeholder="Tulis di sini..."
-                                onChangeText={(keterangan) => this.setState({ keterangan })}
+                                keyboardType="email-address"
+                                value={this.state.keterangan}
+                                onChangeText={(keterangan) => {
+                                    let processString = removeEmojis(keterangan);
+                                    this.setState({ keterangan: processString })
+                                }}
                             />
                         </View>
                         <View style={{ alignSelf: 'flex-end', height: 80, width: 80, marginLeft: 10 }}>
