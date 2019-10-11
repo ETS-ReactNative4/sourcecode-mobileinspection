@@ -202,7 +202,16 @@ class FotoSelfieEbcc extends Component {
       // insert TR_D_EBCC_VALIDATION
       if (this.state.kriteriaBuah !== null) {
         this.state.kriteriaBuah.map(item => {
-          let newItem = { ...item, JUMLAH: parseInt(item.JUMLAH) }
+
+          /* CONDITION IF JUMLAH STRING KOSONG / NULL */
+          if (item.JUMLAH == '' || item.JUMLAH == null) {
+            itemJumlah = 0
+          } else {
+            itemJumlah = parseInt(item.JUMLAH)
+          }
+
+          let newItem = { ...item, JUMLAH: itemJumlah }
+
           TaskServices.saveData('TR_D_EBCC_VALIDATION', newItem);
         })
       }
@@ -229,10 +238,10 @@ class FotoSelfieEbcc extends Component {
       }
       Promise.all([
         navigation.dispatch(
-            StackActions.reset({
-                index: 0,
-                actions: [NavigationActions.navigate({ routeName: routeName })]
-            })
+          StackActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({ routeName: routeName })]
+          })
         )]).then(() => navigation.navigate('EbccValidation')).then(() => navigation.navigate('Riwayat'))
       this.setState({ showModalBack: false })
     }
