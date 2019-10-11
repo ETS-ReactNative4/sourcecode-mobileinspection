@@ -223,6 +223,7 @@ export default class FormStep1 extends Component {
                     ref={ref => this.map = ref}
                     style={style.map}
                     provider="google"
+                    mapType={"satellite"}
                     initialRegion={this.state.region}
                     region={this.state.region}
                     liteMode={true}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import MapView, { Marker, Polygon, ProviderPropType } from 'react-native-maps';
+import MapView, { Marker, Polygon, ProviderPropType, PROVIDER_GOOGLE } from 'react-native-maps';
 import Colors from '../../Constant/Colors'
 import { NavigationActions, StackActions } from 'react-navigation';
 import IconLoc from 'react-native-vector-icons/FontAwesome5';
@@ -354,8 +354,9 @@ class MapsInspeksi extends React.Component {
 
                 <MapView
                     ref={map => this.map = map}
-                    provider={this.props.provider}
+                    provider={PROVIDER_GOOGLE}
                     style={styles.map}
+                    mapType={"satellite"}
                     showsUserLocation={true}
                     showsMyLocationButton={true}
                     showsCompass={true}

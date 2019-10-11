@@ -351,6 +351,7 @@ class FotoJanjang extends Component {
           ref={ref => this.map = ref}
           style={styles.map}
           provider="google"
+          mapType={"satellite"}
           initialRegion={this.state.region}
           region={this.state.region}
           liteMode={true}

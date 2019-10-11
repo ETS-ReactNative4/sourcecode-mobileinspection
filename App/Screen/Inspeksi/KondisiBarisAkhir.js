@@ -815,6 +815,7 @@ class KondisiBarisAkhir extends Component {
                             ref={map => this.map = map}
                             provider={this.props.provider}
                             style={styles.map}
+                            mapType={"satellite"}
                             showsUserLocation={true}
                             showsMyLocationButton={true}
                             showsCompass={true}

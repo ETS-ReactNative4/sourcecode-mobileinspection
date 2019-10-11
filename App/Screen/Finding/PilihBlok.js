@@ -206,6 +206,7 @@ class PilihBlok extends Component {
                 <View style={styles.containerMap}>
                     <MapView
                         style={styles.map}
+                        mapType={"satellite"}
                         initialRegion={{
                             latitude:this.state.latitude,
                             longitude:this.state.longitude,
