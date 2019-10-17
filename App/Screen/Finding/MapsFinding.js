@@ -366,6 +366,34 @@ class MapsInspeksi extends React.Component {
           </Marker>
 
         </MapView>
+          <View style={{
+              width: "100%",
+              height: "100%",
+              position: "absolute",
+              alignItems: "flex-end",
+              justifyContent: "flex-end"
+          }}>
+              <View style={{
+                  padding: 10,
+                  margin: 5,
+                  borderRadius: 5,
+                  backgroundColor: "rgba(0,0,0,0.3)"
+              }}>
+                  <View style={{
+                      flexDirection: "row",
+                      alignItems:"center"
+                  }}>
+                      <Text style={{color:"white"}}>
+                          Latitude : {this.state.region.latitude}
+                      </Text>
+                  </View>
+                  <View>
+                      <Text style={{color:"white"}}>
+                          Longitude : {this.state.region.longitude}
+                      </Text>
+                  </View>
+              </View>
+          </View>
       </View>
     );
   }
