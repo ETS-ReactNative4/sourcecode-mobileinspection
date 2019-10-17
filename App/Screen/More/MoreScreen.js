@@ -360,7 +360,7 @@ export default class MoreScreen extends Component {
         try {
             Mailer.mail({
                 subject: `Database - ${Username} - ${formatDate}`,
-                recipients: ['helpdesk@tap-agri.com'],
+                recipients: ['TAP.callcenter.helpdesk@tap-agri.com'],
                 ccRecipients: [''],
                 bccRecipients: [''],
                 body: `Berikut terlampir database Aplikasi Mobile Inspection saya ${Username} per ${formatDate}.`,
