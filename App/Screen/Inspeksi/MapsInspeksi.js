@@ -72,14 +72,9 @@ class MapsInspeksi extends React.Component {
     detectFakeGPS() {
         navigator.geolocation.getCurrentPosition(
             (position) => {
-                console.log('Mocked : ', position.mocked)
                 if (position.mocked) {
                     this.validateType(position.mocked)
                 } else {
-                    this.setState({ fetchLocation: true });
-                    setTimeout(() => {
-                        this.setState({ fetchLocation: false });
-                    }, 5000);
                     this.getLocation();
                 }
 
@@ -101,17 +96,9 @@ class MapsInspeksi extends React.Component {
                 if (data == 'PROD') {
                     this.setState(AlertContent.mock_location)
                 } else {
-                    this.setState({ fetchLocation: true })
-                    setTimeout(() => {
-                        this.setState({ fetchLocation: false });
-                    }, 5000);
                     this.getLocation();
                 }
             } else {
-                this.setState({ fetchLocation: true });
-                setTimeout(() => {
-                    this.setState({ fetchLocation: false });
-                }, 5000);
                 this.getLocation();
             }
         })
@@ -248,24 +235,13 @@ class MapsInspeksi extends React.Component {
 
     getLocation() {
         if (this.state.latitude && this.state.longitude) {
-            var lat = this.state.latitude;
-            var lon = this.state.longitude;
-            region = {
-                latitude: lat,
-                longitude: lon,
-                latitudeDelta: 0.0075,
-                longitudeDelta: 0.00721
-            }
-            position = {
-                latitude: lat, longitude: lon
-            }
-            let poligons = this.getPolygons(position);
-            if (poligons != undefined) {
-                storeData('PoligonsInspeksi', poligons)
-                if (this.map !== undefined) {
-                    this.map.animateToCoordinate(region, 1);
-                }
-                this.setState({ latitude: lat, longitude: lon, fetchLocation: false, region, poligons });
+            let poligons = this.getPolygons({
+              latitude: this.state.latitude,
+              longitude: this.state.longitude
+            });
+            if (poligons !== undefined) {
+                storeData('PoligonsInspeksi', poligons);
+                this.setState({ fetchLocation: false, poligons });
             } else {
                 this.setState(AlertContent.no_data_map)
             }
@@ -352,33 +328,33 @@ class MapsInspeksi extends React.Component {
                     title={this.state.title}
                     message={this.state.message} />
 
-                <MapView
-                    ref={map => this.map = map}
-                    provider={PROVIDER_GOOGLE}
-                    style={styles.map}
-                    mapType={"satellite"}
-                    showsUserLocation={true}
-                    showsMyLocationButton={true}
-                    showsCompass={true}
-                    showScale={true}
-                    showsIndoors={true}
-                    initialRegion={this.state.region}
-                    followsUserLocation={false}
-                    scrollEnabled={false}
-                    zoomEnabled={true}
-                    onUserLocationChange={event => {
-                        let lat = event.nativeEvent.coordinate.latitude;
-                        let lon = event.nativeEvent.coordinate.longitude;
-                        this.setState({
-                            latitude: lat, longitude: lon, region: {
-                                latitude: lat,
-                                longitude: lon,
-                                latitudeDelta: 0.0075,
-                                longitudeDelta: 0.00721
-                            }
-                        });
-                    }}
-                    onMapReady={() => this.onMapReady()}
+              <MapView
+                  ref={map => this.map = map}
+                  provider={this.props.provider}
+                  style={styles.map}
+                  mapType={"satellite"}
+                  showsUserLocation={true}
+                  // showsMyLocationButton={true}
+                  showsCompass={true}
+                  showScale={true}
+                  showsIndoors={true}
+                  initialRegion={this.state.region}
+                  followsUserLocation={true}
+                  zoomEnabled={true}
+                  scrollEnabled={true}
+                  onUserLocationChange={event => {
+                    let lat = event.nativeEvent.coordinate.latitude;
+                    let lon = event.nativeEvent.coordinate.longitude;
+                    this.setState({
+                      latitude: lat, longitude: lon, region: {
+                        latitude: lat,
+                        longitude: lon,
+                        latitudeDelta: 0.0075,
+                        longitudeDelta: 0.00721
+                      }
+                    }, ()=>{this.map.animateToRegion(this.state.region, 1)});
+                  }}
+                  onMapReady={() => this.onMapReady()}
                 >
                     {this.state.poligons.length > 0 && this.state.poligons.map((poly, index) => (
                         <View key={index}>
@@ -446,47 +422,46 @@ class MapsInspeksi extends React.Component {
 }
 
 MapsInspeksi.propTypes = {
-    provider: ProviderPropType,
+  provider: ProviderPropType,
 };
 
 const styles = StyleSheet.create({
-    container: {
-        ...StyleSheet.absoluteFillObject,
-        flex: 1,
-        justifyContent: 'flex-end',
-        alignItems: 'center',
-    },
-    map: {
-        ...StyleSheet.absoluteFillObject,
-    },
-    bubble: {
-        flex: 1,
-        backgroundColor: 'rgba(255,255,255,0.7)',
-        paddingHorizontal: 18,
-        paddingVertical: 12,
-        borderRadius: 20,
-    },
-    marker: {
-        flex: 0,
-        flexDirection: 'row',
-        alignSelf: 'flex-start',
-        padding: 5,
-    },
-    latlng: {
-        width: 200,
-        alignItems: 'stretch',
-    },
-    button: {
-        width: 80,
-        paddingHorizontal: 12,
-        alignItems: 'center',
-        marginHorizontal: 10,
-    },
-    buttonContainer: {
-        flexDirection: 'row',
-        marginVertical: 20,
-        backgroundColor: 'transparent',
-    },
+  container: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  map: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  bubble: {
+    flex: 1,
+    backgroundColor: 'rgba(255,255,255,0.7)',
+    paddingHorizontal: 18,
+    paddingVertical: 12,
+    borderRadius: 20,
+  },
+  marker: {
+    flex: 0,
+    flexDirection: 'row',
+    alignSelf: 'flex-start',
+    padding: 5
+  },
+  latlng: {
+    width: 200,
+    alignItems: 'stretch',
+  },
+  button: {
+    width: 80,
+    paddingHorizontal: 12,
+    alignItems: 'center',
+    marginHorizontal: 10,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    marginVertical: 20,
+    backgroundColor: 'transparent',
+  },
 });
 
 export default MapsInspeksi;

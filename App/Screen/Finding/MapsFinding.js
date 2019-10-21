@@ -62,7 +62,6 @@ class MapsInspeksi extends React.Component {
   componentDidMount() {
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
     this.props.navigation.setParams({ searchLocation: this.searchLocation });
-    this.getLocation()
   }
 
   componentWillUnmount() {
@@ -185,26 +184,16 @@ class MapsInspeksi extends React.Component {
 
   getLocation() {
     if (this.state.latitude && this.state.longitude) {
-      var lat = this.state.latitude;
-      var lon = this.state.longitude;
-      console.log('Latitude : ', lat);
-      console.log('Longitude : ', lon)
-      region = {
-        latitude: lat,
-        longitude: lon,
-        latitudeDelta: 0.0075,
-        longitudeDelta: 0.00721
+      let poligons = this.getPolygons({
+        latitude: this.state.latitude,
+        longitude: this.state.longitude
+      });
+      if (poligons !== undefined) {
+        this.setState({
+          fetchLocation: false, poligons
+        });
       }
-      position = {
-        latitude: lat, longitude: lon
-      }
-      let poligons = this.getPolygons(position);
-      if (poligons != undefined) {
-        this.setState({ latitude: lat, longitude: lon, fetchLocation: false, region, poligons });
-        if (this.map !== undefined) {
-          this.map.animateToCoordinate(region, 1);
-        }
-      } else {
+      else {
         this.setState(AlertContent.no_data_map)
       }
     }
@@ -241,14 +230,9 @@ class MapsInspeksi extends React.Component {
   detectFakeGPS() {
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        console.log('Mocked : ', position.mocked)
         if (position.mocked) {
           this.validateType(position.mocked)
         } else {
-          this.setState({ fetchLocation: true });
-          setTimeout(() => {
-            this.setState({ fetchLocation: false });
-          }, 3000);
           this.getLocation();
         }
       },
@@ -263,23 +247,15 @@ class MapsInspeksi extends React.Component {
     );
   }
 
-  validateType(type) {
+  validateType() {
     retrieveData('typeApp').then(data => {
       if (data != null) {
         if (data == 'PROD') {
           this.setState(AlertContent.mock_location)
         } else {
-          this.setState({ fetchLocation: true });
-          setTimeout(() => {
-            this.setState({ fetchLocation: false });
-          }, 5000);
           this.getLocation();
         }
       } else {
-        this.setState({ fetchLocation: true });
-        setTimeout(() => {
-          this.setState({ fetchLocation: false });
-        }, 5000);
         this.getLocation();
       }
     })
@@ -311,14 +287,14 @@ class MapsInspeksi extends React.Component {
           style={styles.map}
           mapType={"satellite"}
           showsUserLocation={true}
-          showsMyLocationButton={true}
+          // showsMyLocationButton={true}
           showsCompass={true}
           showScale={true}
           showsIndoors={true}
           initialRegion={this.state.region}
-          followsUserLocation={false}
+          followsUserLocation={true}
           zoomEnabled={true}
-          scrollEnabled={false}
+          scrollEnabled={true}
           onUserLocationChange={event => {
             let lat = event.nativeEvent.coordinate.latitude;
             let lon = event.nativeEvent.coordinate.longitude;
@@ -329,7 +305,7 @@ class MapsInspeksi extends React.Component {
                 latitudeDelta: 0.0075,
                 longitudeDelta: 0.00721
               }
-            });
+            }, ()=>{this.map.animateToRegion(this.state.region, 1)});
           }}
           onMapReady={() => this.onMapReady()}
         >

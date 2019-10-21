@@ -83,14 +83,9 @@ class MapsEbcc extends React.Component {
     detectFakeGPS() {
         navigator.geolocation.getCurrentPosition(
             (position) => {
-                console.log('Mocked : ', position.mocked)
                 if (position.mocked) {
                     this.validateType(position.mocked)
                 } else {
-                    this.setState({ fetchLocation: true })
-                    setTimeout(() => {
-                        this.setState({ fetchLocation: false });
-                    }, 5000);
                     this.getLocation();
                 }
 
@@ -112,17 +107,9 @@ class MapsEbcc extends React.Component {
                 if (data == 'PROD') {
                     this.setState(AlertContent.mock_location)
                 } else {
-                    this.setState({ fetchLocation: true })
-                    setTimeout(() => {
-                        this.setState({ fetchLocation: false });
-                    }, 5000);
                     this.getLocation();
                 }
             } else {
-                this.setState({ fetchLocation: true })
-                setTimeout(() => {
-                    this.setState({ fetchLocation: false });
-                }, 5000);
                 this.getLocation();
             }
         })
@@ -241,23 +228,12 @@ class MapsEbcc extends React.Component {
 
     getLocation() {
         if (this.state.latitude && this.state.longitude) {
-            var lat = this.state.latitude;
-            var lon = this.state.longitude;
-            region = {
-                latitude: lat,
-                longitude: lon,
-                latitudeDelta: 0.0075,
-                longitudeDelta: 0.00721
-            }
-            position = {
-                latitude: lat, longitude: lon
-            }
-            let poligons = this.getPolygons(position);
+            let poligons = this.getPolygons({
+              latitude: this.state.latitude,
+              longitude: this.state.longitude
+            });
             if (poligons != undefined) {
-                this.setState({ latitude: lat, longitude: lon, fetchLocation: false, region, poligons });
-                if (this.map !== undefined) {
-                    this.map.animateToCoordinate(region, 1);
-                }
+                this.setState({ fetchLocation: false, poligons });
             } else {
                 this.setState(AlertContent.no_data_map)
             }
@@ -411,13 +387,13 @@ class MapsEbcc extends React.Component {
                     style={styles.map}
                     mapType={"satellite"}
                     showsUserLocation={true}
-                    showsMyLocationButton={true}
+                    // showsMyLocationButton={true}
                     showsCompass={true}
                     showScale={true}
                     showsIndoors={true}
                     initialRegion={this.state.region}
-                    followsUserLocation={false}
-                    scrollEnabled={false}
+                    followsUserLocation={true}
+                    scrollEnabled={true}
                     zoomEnabled={true}
                     onUserLocationChange={event => {
                         let lat = event.nativeEvent.coordinate.latitude;
@@ -429,7 +405,7 @@ class MapsEbcc extends React.Component {
                                 latitudeDelta: 0.0075,
                                 longitudeDelta: 0.00721
                             }
-                        });
+                        }, ()=>{this.map.animateToRegion(this.state.region, 1)});
                     }}
                     onMapReady={() => this.onMapReady()}
                 >
