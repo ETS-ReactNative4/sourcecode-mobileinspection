@@ -79,7 +79,10 @@ class Login extends Component {
         };
         var new_date = moment().add(7, 'days');
         const date = { tanggal: new_date }
+
+        /* SET EXPIRED TOKEN DATE */
         storeData('expiredToken', date);
+
         TaskServices.saveData('TR_LOGIN', data);
     }
 
