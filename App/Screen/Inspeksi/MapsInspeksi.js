@@ -407,12 +407,12 @@ class MapsInspeksi extends React.Component {
                             alignItems:"center"
                         }}>
                             <Text style={{color:"white"}}>
-                                Latitude : {this.state.region.latitude}
+                                Latitude : {this.state.latitude}
                             </Text>
                         </View>
                         <View>
                             <Text style={{color:"white"}}>
-                                Longitude : {this.state.region.longitude}
+                                Longitude : {this.state.longitude}
                             </Text>
                         </View>
                     </View>

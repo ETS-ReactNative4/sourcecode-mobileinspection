@@ -74,7 +74,9 @@ class MapsInspeksi extends React.Component {
   }
 
   searchLocation = () => {
-    this.map.animateToRegion(this.state.region, 1)
+    alert(JSON.stringify(this.state.longitude+":"+this.state.latitude));
+    this.map.animateToRegion(this.state.region, 1);
+
     this.detectFakeGPS()
   }
 
@@ -300,7 +302,9 @@ class MapsInspeksi extends React.Component {
             let lat = event.nativeEvent.coordinate.latitude;
             let lon = event.nativeEvent.coordinate.longitude;
             this.setState({
-              latitude: lat, longitude: lon, region: {
+              latitude: lat,
+              longitude: lon,
+              region: {
                 latitude: lat,
                 longitude: lon,
                 latitudeDelta: 0.0075,
@@ -361,12 +365,12 @@ class MapsInspeksi extends React.Component {
                       alignItems:"center"
                   }}>
                       <Text style={{color:"white"}}>
-                          Latitude : {this.state.region.latitude}
+                          Latitude : {this.state.latitude}
                       </Text>
                   </View>
                   <View>
                       <Text style={{color:"white"}}>
-                          Longitude : {this.state.region.longitude}
+                          Longitude : {this.state.longitude}
                       </Text>
                   </View>
               </View>
