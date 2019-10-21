@@ -76,7 +76,8 @@ class MapsEbcc extends React.Component {
     }
 
     searchLocation = () => {
-        this.detectFakeGPS()
+      this.map.animateToRegion(this.state.region, 1)
+      this.detectFakeGPS()
     }
 
     /* DETECT FAKE GPS */
@@ -335,25 +336,6 @@ class MapsEbcc extends React.Component {
         this.setState({ fetchLocation: false });
     }
 
-    setMyLocation = event => {
-        const myLocation = event.nativeEvent.coordinate;
-        let region = {
-            latitude: myLocation.latitude,
-            longitude: myLocation.longitude,
-            latitudeDelta: 0.0075,
-            longitudeDelta: 0.00721
-        }
-        if (myLocation.latitude && myLocation.longitude) {
-            this.setState({ latitude: myLocation.latitude, longitude: myLocation.longitude, region })
-            this.map.animateToRegion({
-                latitude: myLocation.latitude,
-                longitude: myLocation.longitude,
-                latitudeDelta: region.latitudeDelta,
-                longitudeDelta: region.longitudeDelta
-            });
-        }
-    };
-
     render() {
         return (
             <View style={styles.container}>
@@ -405,7 +387,7 @@ class MapsEbcc extends React.Component {
                                 latitudeDelta: 0.0075,
                                 longitudeDelta: 0.00721
                             }
-                        }, ()=>{this.map.animateToRegion(this.state.region, 1)});
+                        });
                     }}
                     onMapReady={() => this.onMapReady()}
                 >

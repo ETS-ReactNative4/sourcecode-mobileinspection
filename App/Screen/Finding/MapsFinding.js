@@ -74,6 +74,7 @@ class MapsInspeksi extends React.Component {
   }
 
   searchLocation = () => {
+    this.map.animateToRegion(this.state.region, 1)
     this.detectFakeGPS()
   }
 
@@ -305,7 +306,7 @@ class MapsInspeksi extends React.Component {
                 latitudeDelta: 0.0075,
                 longitudeDelta: 0.00721
               }
-            }, ()=>{this.map.animateToRegion(this.state.region, 1)});
+            });
           }}
           onMapReady={() => this.onMapReady()}
         >
