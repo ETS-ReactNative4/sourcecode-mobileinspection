@@ -144,7 +144,7 @@ export function fetchGet(serviceName) {
     let serviceDetail = TaskServices.getService(serviceName);
     let user = TaskServices.getAllData('TR_LOGIN')[0];
 
-    headers = {
+    let headers = {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + user.ACCESS_TOKEN

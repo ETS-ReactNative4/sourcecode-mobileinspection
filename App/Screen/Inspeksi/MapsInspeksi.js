@@ -104,10 +104,20 @@ class MapsInspeksi extends React.Component {
         })
     }
 
-    searchLocation = () => {
-      this.map.animateToRegion(this.state.region, 1)
-      this.detectFakeGPS();
-    };
+  searchLocation = () => {
+    if(this.state.longitude !== 0.0 || this.state.latitude !== 0.0){
+      this.map.animateToRegion(this.state.region, 1);
+      this.detectFakeGPS()
+    }
+    else {
+      this.setState({
+        modalGps:{
+          ...this.state.modalGps,
+          showModal: true
+        }
+      })
+    }
+  };
 
     totalPolygons() {
         if (!polyMap) {
@@ -323,11 +333,11 @@ class MapsInspeksi extends React.Component {
                     message={this.state.message} />
 
                 <ModalGps
-                    icon={this.state.icon}
-                    visible={this.state.showModal}
-                    onPressCancel={() => this.setState({ showModal: false })}
-                    title={this.state.title}
-                    message={this.state.message} />
+                  icon={this.state.modalGps.icon}
+                  visible={this.state.modalGps.showModal}
+                  onPressCancel={() => this.setState({ modalGps:{...this.state.modalGps, showModal: false} })}
+                  title={this.state.modalGps.title}
+                  message={this.state.modalGps.message} />
 
               <MapView
                   ref={map => this.map = map}

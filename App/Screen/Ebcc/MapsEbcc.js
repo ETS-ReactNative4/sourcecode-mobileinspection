@@ -44,7 +44,14 @@ class MapsEbcc extends React.Component {
             reason,
             title: 'Sabar Ya..',
             message: 'Sedang mencari lokasi kamu nih.',
-            icon: ''
+            icon: '',
+
+            modalGps:{
+              showModal: false,
+              title: 'Sabar Ya..',
+              message: 'Sedang mencari lokasi kamu nih.',
+              icon: require('../../Images/ic-no-gps.png')
+            }
         };
     }
 
@@ -75,10 +82,20 @@ class MapsEbcc extends React.Component {
         this.getLocation()
     }
 
-    searchLocation = () => {
-      this.map.animateToRegion(this.state.region, 1)
+  searchLocation = () => {
+    if(this.state.longitude !== 0.0 || this.state.latitude !== 0.0){
+      this.map.animateToRegion(this.state.region, 1);
       this.detectFakeGPS()
     }
+    else {
+      this.setState({
+        modalGps:{
+          ...this.state.modalGps,
+          showModal: true
+        }
+      })
+    }
+  };
 
     /* DETECT FAKE GPS */
     detectFakeGPS() {
@@ -339,12 +356,12 @@ class MapsEbcc extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <ModalAlert
-                    icon={this.state.icon}
-                    visible={this.state.showModal}
-                    onPressCancel={() => this.setState({ showModal: false })}
-                    title={this.state.title}
-                    message={this.state.message} />
+                <ModalGps
+                  icon={this.state.modalGps.icon}
+                  visible={this.state.modalGps.showModal}
+                  onPressCancel={() => this.setState({ modalGps:{...this.state.modalGps, showModal: false} })}
+                  title={this.state.modalGps.title}
+                  message={this.state.modalGps.message} />
                 <StatusBar
                     hidden={false}
                     barStyle="light-content"

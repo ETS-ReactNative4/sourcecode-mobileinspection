@@ -343,11 +343,9 @@ export default class SyncScreen extends React.Component {
 
         /* DOWNLOAD TIME SERVER */
         await getTimeServer().then((isSync) => {
-            console.log('Data Callback Time Server : ', isSync)
 
             if (isSync) {
                 getResetToken(isSync).then((data) => {
-                    console.log('Data Callback Reset Token : ', data)
                     if (data.isResetSync) {
                         if (data.isUpdateToken) {
 

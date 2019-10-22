@@ -18,7 +18,7 @@ const alert = {
     'mock_location': { fetchLocation: false, showModal: true, title: 'Lokasi Palsu Terdeteksi', message: "Kamu harus non-aktifkan lokasi palsu untuk bisa menggunakan Mobile Inspection", icon: Images.ic_blm_input_lokasi },
     'sync_berhasil': { showModal: true, title: 'Sync Berhasil', message: 'Yeay sinkronisasi udah selesai!', icon: Images.ic_sync_berhasil, showButton: true, finishedSync: true },
     'sync_gagal_token': { showModal: true, title: 'Sync Gagal', message: 'Gagal memperbarui token', icon: Images.ic_sync_gagal, showButton: true },
-    'sync_tidak_sinkron': { showButton: true, showModal: true, title: 'Tidak Sinkron', message: 'Jam di HP kamu salah', icon: Images.ic_sync_gagal },
+    'sync_tidak_sinkron': { showButton: true, showModal: true, title: 'Tidak Sinkron', message: 'Jam hp tidak sync dengan jam server!', icon: Images.ic_sync_gagal },
 }
 
 export default alert;
