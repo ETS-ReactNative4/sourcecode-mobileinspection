@@ -159,44 +159,47 @@ class MapsInspeksi extends React.Component {
     let index = 0;
     for (var i = 0; i < data.length; i++) {
       let coords = data[i];
-      if (geolib.isPointInside(position, coords.coords)) {
-        this.state.poligons.push(coords)
-        poligons.push(coords)
-        index = i;
-        break;
-      }
+      this.state.poligons.push(coords);
+      poligons.push(coords);
+      index = i;
+      // if (geolib.isPointInside(position, coords.coords)) {
+      //   this.state.poligons.push(coords)
+      //   poligons.push(coords)
+      //   index = i;
+      //   break;
+      // }
     }
-    //ambil map jika posisi index kurang dari 4
-    if (index < 2) {
-      for (var j = 0; j < index; j++) {
-        let coords = data[j];
-        this.state.poligons.push(coords)
-        poligons.push(coords)
-      }
-    }
-
-    if (index > 0) {
-      //ambil map setelah index
-      let lebih = this.totalPolygons() - index
-      if (lebih > 2) {
-        for (var j = 1; j < 2; j++) {
-          let coords = data[index + j];
-          this.state.poligons.push(coords)
-          poligons.push(coords)
-        }
-        for (var j = 1; j < 2; j++) {
-          let coords = data[index - j];
-          this.state.poligons.push(coords)
-          poligons.push(coords)
-        }
-      } else if (lebih > 0 && lebih < 2) {
-        for (var j = 0; j < lebih; j++) {
-          let coords = data[j];
-          this.state.poligons.push(coords)
-          poligons.push(coords)
-        }
-      }
-    }
+    // //ambil map jika posisi index kurang dari 4
+    // if (index < 2) {
+    //   for (var j = 0; j < index; j++) {
+    //     let coords = data[j];
+    //     this.state.poligons.push(coords)
+    //     poligons.push(coords)
+    //   }
+    // }
+    //
+    // if (index > 0) {
+    //   //ambil map setelah index
+    //   let lebih = this.totalPolygons() - index
+    //   if (lebih > 2) {
+    //     for (var j = 1; j < 2; j++) {
+    //       let coords = data[index + j];
+    //       this.state.poligons.push(coords)
+    //       poligons.push(coords)
+    //     }
+    //     for (var j = 1; j < 2; j++) {
+    //       let coords = data[index - j];
+    //       this.state.poligons.push(coords)
+    //       poligons.push(coords)
+    //     }
+    //   } else if (lebih > 0 && lebih < 2) {
+    //     for (var j = 0; j < lebih; j++) {
+    //       let coords = data[j];
+    //       this.state.poligons.push(coords)
+    //       poligons.push(coords)
+    //     }
+    //   }
+    // }
     return poligons;
   }
 
