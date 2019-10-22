@@ -1,5 +1,4 @@
 import TaskServices from "../../../../Database/TaskServices";
-import {fetchPost, fetchPostAPI} from "../../../../Api/FetchingApi";
 import {syncFetchPost} from "../../../../Api";
 import {convertTimestampToDate, getTodayDate} from "../../../../Lib/Utils";
 

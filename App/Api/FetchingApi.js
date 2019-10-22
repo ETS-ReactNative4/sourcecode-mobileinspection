@@ -1,65 +1,5 @@
 import TaskServices from "../Database/TaskServices";
-
-export function fetchGetAPI(url) {
-    return fetch(url, {
-        method: 'GET',
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-        }
-    }).then((response) => {
-        if (response.status == 200) {
-            return response.json()
-        }
-    }).then((data) => {
-        return data;
-    }).catch((err) => {
-        console.log(err)
-    });
-}
-
-export function fetchPostAPI(token, url, param) {
-    return fetch(url, {
-        method: 'POST',
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(param)
-    }).then((response) => {
-        // console.log('Response : ', response.json)
-        if (response.status == 200) {
-            return response.json()
-        }
-    }).then((data) => {
-        return data;
-    }).catch((err) => {
-        console.log(err)
-    });
-}
-
-export function fetchFormPostAPI(token, url, param) {
-    return fetch(url, {
-        method: 'POST',
-        headers: {
-            'Cache-Control': 'no-cache',
-            Accept: 'application/json',
-            'Content-Type': 'multipart/form-data',
-            Authorization: 'Bearer ' + token,
-        },
-        body: param
-    }).then((response) => {
-        // console.log('Response : ', response.json)
-        if (response.status == 200) {
-            return response.json()
-        }
-    }).then((data) => {
-        return data;
-    }).catch((err) => {
-        console.log(err)
-    });
-}
+import moment from 'moment';
 
 // ======================================================================
 
@@ -93,9 +33,28 @@ export function fetchPost(serviceName, fetchBody, fetchHeaders) {
             return response.json()
         }
     }).then((data) => {
+        if(data.status === false){
+          let momentTime = moment().format("YYYYMMDDHHmmss").toString();
+          let LogModel = {
+            ID_LOG: `fetchPost${momentTime}`,
+            INSERT_TIME: momentTime,
+            MESSAGE: data.message,
+            DEV_NOTE: `response status false`,
+            FROM: `POST - fetchPost - ${serviceDetail.API_URL}`,
+          };
+          TaskServices.saveData('TR_LOG', LogModel);
+        }
         return data;
     }).catch((err) => {
-        console.log("fetch "+ serviceName +" api error :", err);
+        let momentTime = moment().format("YYYYMMDDHHmmss").toString();
+        let LogModel = {
+          ID_LOG: `fetchPost${momentTime}`,
+          INSERT_TIME: momentTime,
+          MESSAGE: `response status !== 200`,
+          DEV_NOTE: null,
+          FROM: `POST - fetchPost - ${serviceDetail.API_URL}`,
+        };
+        TaskServices.saveData('TR_LOG', LogModel);
         return undefined;
     });
 }
@@ -131,9 +90,29 @@ export function fetchPostForm(serviceName, fetchBody, fetchHeaders) {
             return response.json()
         }
     }).then((data) => {
+        if(data.status === false){
+          let momentTime = moment().format("YYYYMMDDHHmmss").toString();
+          let LogModel = {
+            ID_LOG: `fetchPostForm${momentTime}`,
+            INSERT_TIME: momentTime,
+            MESSAGE: data.message,
+            DEV_NOTE: `response status false`,
+            FROM: `POST - fetchPostForm - ${serviceDetail.API_URL}`,
+          };
+          TaskServices.saveData('TR_LOG', LogModel);
+        }
         return data;
     }).catch((err) => {
-        console.log("fetch "+ serviceName +" api error :", err);
+        let momentTime = moment().format("YYYYMMDDHHmmss").toString();
+        let LogModel = {
+          ID_LOG: `fetchPost${momentTime}`,
+          INSERT_TIME: momentTime,
+          MESSAGE: `response status !== 200`,
+          DEV_NOTE: null,
+          FROM: `POST - fetchPostForm - ${serviceDetail.API_URL}`,
+        };
+        TaskServices.saveData('TR_LOG', LogModel);
+
         return undefined;
     });
 }
@@ -158,8 +137,28 @@ export function fetchGet(serviceName) {
             return response.json()
         }
     }).then((data) => {
+        if(data.status === false){
+          let momentTime = moment().format("YYYYMMDDHHmmss").toString();
+          let LogModel = {
+            ID_LOG: `fetchGet${momentTime}`,
+            INSERT_TIME: momentTime,
+            MESSAGE: data.message,
+            DEV_NOTE: `response status false`,
+            FROM: `POST - fetchGet - ${serviceDetail.API_URL}`,
+          };
+          TaskServices.saveData('TR_LOG', LogModel);
+        }
         return data;
     }).catch((err) => {
-        console.log(err)
+        let momentTime = moment().format("YYYYMMDDHHmmss").toString();
+        let LogModel = {
+          ID_LOG: `fetchGet${momentTime}`,
+          INSERT_TIME: momentTime,
+          MESSAGE: `response status !== 200`,
+          DEV_NOTE: null,
+          FROM: `POST - fetchGet - ${serviceDetail.API_URL}`,
+        };
+        TaskServices.saveData('TR_LOG', LogModel);
+        return undefined
     });
 }

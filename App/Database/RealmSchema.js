@@ -40,12 +40,10 @@ let realmSchema = new Realm({
         ModelTables.TR_SYNC_LOG,
         ModelTables.TR_GENBA_INSPECTION,
         ModelTables.TR_RATING,
-        ModelTables.TR_SUMMARY
+        ModelTables.TR_SUMMARY,
+        ModelTables.TR_LOG
     ],
 	schemaVersion: ModelTables.SCHEMA_VERSION
 });
 
-// let realmSchemaTrack = new Realm({
-
-// })
 export default realmSchema;

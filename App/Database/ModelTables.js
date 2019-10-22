@@ -575,8 +575,19 @@ const TR_SUMMARY = {
         VALUE_WALK: 'string',
         TARGET_WALK: 'string',
     }
+};
 
-}
+const TR_LOG = {
+  name: 'TR_LOG',
+  primaryKey: 'ID_LOG',
+  properties: {
+    ID_LOG: {type:'string', optional: false},
+    INSERT_TIME: {type:'string', optional: false},
+    MESSAGE: {type:'string', optional: false},
+    DEV_NOTE: {type:'string', optional: true},
+    FROM: {type:'string', optional: false},
+  }
+};
 
 export default {
     TR_LOGIN,
@@ -618,6 +629,7 @@ export default {
     TR_GENBA_INSPECTION,
     TR_RATING,
     TR_SUMMARY,
+    TR_LOG,
 
     SCHEMA_VERSION
 }

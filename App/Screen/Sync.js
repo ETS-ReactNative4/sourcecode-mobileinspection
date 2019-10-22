@@ -471,25 +471,25 @@ export default class SyncScreen extends React.Component {
         }
     }
     /* obsolete data genba by gani */
-    deleteGenbaSelected() {
-        var data = TaskServices.getAllData('TR_GENBA_SELECTED');
-        var now = moment(new Date());
-        if (data !== undefined) {
-            for (var i = 0; i < data.length; i++) {
-                if (data[i].INSERT_TIME !== '') {
-                    let insertTime = data[i].INSERT_TIME;
-                    if (insertTime.includes(' ')) {
-                        insertTime = insertTime.substring(0, insertTime.indexOf(' '))
-                    }
-                    var diff = moment(new Date(insertTime)).diff(now, 'day');
-                    if (diff < -7) {
-                        this.deleteImages(data[i].USER_AUTH_CODE)
-                        TaskServices.deleteRecordByPK('TR_GENBA_SELECTED', 'USER_AUTH_CODE', data[i].USER_AUTH_CODE)
-                    }
-                }
-            }
-        }
-    }
+    // deleteGenbaSelected() {
+    //     var data = TaskServices.getAllData('TR_GENBA_SELECTED');
+    //     var now = moment(new Date());
+    //     if (data !== undefined) {
+    //         for (var i = 0; i < data.length; i++) {
+    //             if (data[i].INSERT_TIME !== '') {
+    //                 let insertTime = data[i].INSERT_TIME;
+    //                 if (insertTime.includes(' ')) {
+    //                     insertTime = insertTime.substring(0, insertTime.indexOf(' '))
+    //                 }
+    //                 var diff = moment(new Date(insertTime)).diff(now, 'day');
+    //                 if (diff < -7) {
+    //                     this.deleteImages(data[i].USER_AUTH_CODE)
+    //                     TaskServices.deleteRecordByPK('TR_GENBA_SELECTED', 'USER_AUTH_CODE', data[i].USER_AUTH_CODE)
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
     // deleteGenbaInspection() {
     //     var data = TaskServices.getAllData('TR_GENBA_INSPECTION').filtered('STATUS_SYNC = "Y"');
     //     var now = moment(new Date());
