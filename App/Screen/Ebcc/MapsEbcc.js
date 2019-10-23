@@ -11,6 +11,7 @@ import TaskServices from '../../Database/TaskServices';
 import R from 'ramda';
 import { AlertContent } from '../../Themes'
 import { retrieveData } from '../../Database/Resources';
+import * as geolib from "geolib";
 
 let polyMap = false;// = require('../../Data/MegaKuningan.json');
 let LATITUDE = -2.1890660;
@@ -186,70 +187,35 @@ class MapsEbcc extends React.Component {
         return arrPoli;
     }
 
-    getMapsAround(afdCode) {
-        let pos = alfabet.indexOf(afdCode)
-        let posBeforeAfdNow = pos - 1;
-        let posAfterAfdNow = pos + 1;
-    }
-
-    getPolygons(position) {
-        if (!polyMap) {
-            this.setState(AlertContent.no_data_map);
-            return;
+    getPolygons() {
+      if (!polyMap) {
+        this.setState(AlertContent.no_data_map);
+        return;
+      }
+      let data = polyMap.data.polygons;
+      let poligons = [];
+      for (var i = 0; i < data.length; i++) {
+        let coords = data[i];
+        if(
+          geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude+0.006 }, coords.coords) ||
+          geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude-0.006 }, coords.coords) ||
+          geolib.isPointInPolygon({ latitude: this.state.latitude+0.0025, longitude: this.state.longitude }, coords.coords) ||
+          geolib.isPointInPolygon({ latitude: this.state.latitude-0.0025, longitude: this.state.longitude }, coords.coords) ||
+          geolib.isPointInPolygon({ latitude: this.state.latitude-0.0025, longitude: this.state.longitude-0.006 }, coords.coords) ||
+          geolib.isPointInPolygon({ latitude: this.state.latitude-0.0025, longitude: this.state.longitude+0.006 }, coords.coords) ||
+          geolib.isPointInPolygon({ latitude: this.state.latitude+0.0025, longitude: this.state.longitude-0.006 }, coords.coords) ||
+          geolib.isPointInPolygon({ latitude: this.state.latitude+0.0025, longitude: this.state.longitude+0.006 }, coords.coords) ||
+          geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude }, coords.coords)
+        ){
+          poligons.push(coords);
         }
-        let data = polyMap.data.polygons;
-        let poligons = [];
-        let index = 0;
-        for (var i = 0; i < data.length; i++) {
-            let coords = data[i];
-            if (geolib.isPointInside(position, coords.coords)) {
-                this.state.poligons.push(coords)
-                poligons.push(coords)
-                index = i;
-                break;
-            }
-        }
-        //ambil map jika posisi index kurang dari 4
-        if (index < 2) {
-            for (var j = 0; j < index; j++) {
-                let coords = data[j];
-                this.state.poligons.push(coords)
-                poligons.push(coords)
-            }
-        }
-
-
-        if (index > 0) {
-            //ambil map setelah index
-            let lebih = this.totalPolygons() - index
-            if (lebih > 2) {
-                for (var j = 1; j < 2; j++) {
-                    let coords = data[index + j];
-                    this.state.poligons.push(coords)
-                    poligons.push(coords)
-                }
-                for (var j = 1; j < 2; j++) {
-                    let coords = data[index - j];
-                    this.state.poligons.push(coords)
-                    poligons.push(coords)
-                }
-            } else if (lebih > 0 && lebih < 2) {
-                for (var j = 0; j < lebih; j++) {
-                    let coords = data[j];
-                    this.state.poligons.push(coords)
-                    poligons.push(coords)
-                }
-            }
-        }
-        return poligons;
+      }
+      return poligons;
     }
 
     getLocation() {
         if (this.state.latitude && this.state.longitude) {
-            let poligons = this.getPolygons({
-              latitude: this.state.latitude,
-              longitude: this.state.longitude
-            });
+            let poligons = this.getPolygons();
             if (poligons != undefined) {
                 this.setState({ fetchLocation: false, poligons });
             } else {
