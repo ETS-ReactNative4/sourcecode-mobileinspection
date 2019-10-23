@@ -10,7 +10,7 @@
     "@mapbox/polyline": "^1.0.0",
     "apisauce": "^1.0.0",
     "buffer": "^5.2.1",
-    "geolib": "^2.0.24",
+    "geolib": "^3.0.4",
     "moment": "^2.22.2",
     "moment-timezone": "^0.5.23",
     "native-base": "^2.12.1",
