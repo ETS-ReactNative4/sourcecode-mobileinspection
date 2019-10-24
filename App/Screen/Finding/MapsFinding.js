@@ -7,7 +7,7 @@ import IconLoc from 'react-native-vector-icons/FontAwesome5';
 import ModalAlert from '../../Component/ModalLoading'
 import ModalGps from '../../Component/ModalAlert';
 import TaskServices from '../../Database/TaskServices';
-import geolib from 'geolib';
+import * as geolib from 'geolib';
 import { AlertContent } from '../../Themes';
 import { retrieveData } from '../../Database/Resources';
 
@@ -82,6 +82,7 @@ class MapsInspeksi extends React.Component {
 
   searchLocation = () => {
     if(this.state.longitude !== 0.0 || this.state.latitude !== 0.0){
+        this.setState({fetchLocation: true});
       this.map.animateToRegion(this.state.region, 1);
       this.detectFakeGPS()
     }
@@ -150,25 +151,29 @@ class MapsInspeksi extends React.Component {
   }
 
   getPolygons() {
-    if (!polyMap) {
-      this.setState(AlertContent.no_data_map);
-      return;
-    }
-    let data = polyMap.data.polygons;
-    let poligons = [];
-    for (var i = 0; i < data.length; i++) {
-      let coords = data[i];
-      if(
-        geolib.isPointInPolygon({ latitude: this.state.latitude-0.0025, longitude: this.state.longitude-0.006 }, coords.coords) ||
-        geolib.isPointInPolygon({ latitude: this.state.latitude-0.0025, longitude: this.state.longitude+0.006 }, coords.coords) ||
-        geolib.isPointInPolygon({ latitude: this.state.latitude+0.0025, longitude: this.state.longitude-0.006 }, coords.coords) ||
-        geolib.isPointInPolygon({ latitude: this.state.latitude+0.0025, longitude: this.state.longitude+0.006 }, coords.coords) ||
-        geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude }, coords.coords)
-      ){
-        poligons.push(coords);
+      if (!polyMap) {
+          this.setState(AlertContent.no_data_map);
+          return;
       }
-    }
-    return poligons;
+      let data = polyMap.data.polygons;
+      let poligons = [];
+      for (var i = 0; i < data.length; i++) {
+          let coords = data[i];
+          if(
+              geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude+0.006 }, coords.coords) ||
+              geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude-0.006 }, coords.coords) ||
+              geolib.isPointInPolygon({ latitude: this.state.latitude+0.0025, longitude: this.state.longitude }, coords.coords) ||
+              geolib.isPointInPolygon({ latitude: this.state.latitude-0.0025, longitude: this.state.longitude }, coords.coords) ||
+              geolib.isPointInPolygon({ latitude: this.state.latitude-0.0025, longitude: this.state.longitude-0.006 }, coords.coords) ||
+              geolib.isPointInPolygon({ latitude: this.state.latitude-0.0025, longitude: this.state.longitude+0.006 }, coords.coords) ||
+              geolib.isPointInPolygon({ latitude: this.state.latitude+0.0025, longitude: this.state.longitude-0.006 }, coords.coords) ||
+              geolib.isPointInPolygon({ latitude: this.state.latitude+0.0025, longitude: this.state.longitude+0.006 }, coords.coords) ||
+              geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude }, coords.coords)
+          ){
+              poligons.push(coords);
+          }
+      }
+      return poligons;
   }
 
   getLocation() {
@@ -269,19 +274,13 @@ class MapsInspeksi extends React.Component {
           message={this.state.modalGps.message} />
 
         <MapView
-          ref={map => this.map = map}
-          provider={this.props.provider}
-          style={styles.map}
-          mapType={"satellite"}
-          showsUserLocation={true}
-          // showsMyLocationButton={true}
-          showsCompass={true}
-          showScale={true}
-          showsIndoors={true}
-          initialRegion={this.state.region}
-          followsUserLocation={true}
-          zoomEnabled={true}
-          scrollEnabled={true}
+            ref={map => this.map = map}
+            style={styles.map}
+            mapType={"satellite"}
+            showsUserLocation={true}
+            initialRegion={this.state.region}
+            zoomEnabled={true}
+            scrollEnabled={true}
           onUserLocationChange={event => {
             let lat = event.nativeEvent.coordinate.latitude;
             let lon = event.nativeEvent.coordinate.longitude;
@@ -303,20 +302,20 @@ class MapsInspeksi extends React.Component {
               <Polygon
                 coordinates={poly.coords}
                 fillColor="rgba(0, 200, 0, 0.5)"
-                strokeColor="rgba(0,0,0,0.5)"
-                strokeWidth={2}
+                strokeColor="rgba(255,255,255,1)"
+                strokeWidth={3}
                 tappable={true}
                 onPress={() => this.onClickBlok(poly.werks_afd_block_code)}
               />
-              <Marker
-                ref={ref => poly.marker = ref}
-                coordinate={this.centerCoordinate(poly.coords)}>
-                <View style={{ flexDirection: 'column', alignSelf: 'flex-start' }}>
-                  <View style={styles.marker}>
-                    <Text style={{ color: '#000000', fontSize: 20 }}>{poly.blokname}</Text>
-                  </View>
-                </View>
-              </Marker>
+                <Marker
+                    ref={ref => poly.marker = ref}
+                    coordinate={this.centerCoordinate(poly.coords)}>
+                    <View style={{ flexDirection: 'column', alignSelf: 'flex-start' }}>
+                        <View style={styles.marker}>
+                            <Text style={{ color: 'rgba(255,255,255,1)', fontSize: 25, fontWeight:'900'}}>{poly.blokname}</Text>
+                        </View>
+                    </View>
+                </Marker>
             </View>
           ))}
 

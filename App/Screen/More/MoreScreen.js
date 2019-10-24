@@ -323,6 +323,8 @@ export default class MoreScreen extends Component {
 
   async sendFile(){
       //create zip file
+      RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
+
       let currentTime = moment().format("YYYYMMDDHHmmss");
       let zipPath = `${dirLocal}`;
       let zipDestination = `${dirSummary}/${this.state.user.USERNAME}_${currentTime}.zip`;

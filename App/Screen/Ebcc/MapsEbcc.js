@@ -1,17 +1,17 @@
 import React from 'react';
-import { Dimensions, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {Dimensions, StatusBar, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
-import MapView, { Marker, Polygon, ProviderPropType } from 'react-native-maps';
+import MapView, {Marker, Polygon, ProviderPropType} from 'react-native-maps';
 import Colors from '../../Constant/Colors'
-import { NavigationActions, StackActions } from 'react-navigation';
+import {NavigationActions, StackActions} from 'react-navigation';
 import IconLoc from 'react-native-vector-icons/FontAwesome5';
 import ModalAlert from '../../Component/ModalLoading';
 import ModalGps from '../../Component/ModalAlert';
 import TaskServices from '../../Database/TaskServices';
 import R from 'ramda';
-import { AlertContent } from '../../Themes'
-import { retrieveData } from '../../Database/Resources';
-import * as geolib from "geolib";
+import {AlertContent} from '../../Themes'
+import {retrieveData} from '../../Database/Resources';
+import * as geolib from 'geolib';
 
 let polyMap = false;// = require('../../Data/MegaKuningan.json');
 let LATITUDE = -2.1890660;
@@ -48,10 +48,10 @@ class MapsEbcc extends React.Component {
             icon: '',
 
             modalGps:{
-              showModal: false,
-              title: 'Sabar Ya..',
-              message: 'Sedang mencari lokasi kamu nih.',
-              icon: require('../../Images/ic-no-gps.png')
+                showModal: false,
+                title: 'Sabar Ya..',
+                message: 'Sedang mencari lokasi kamu nih.',
+                icon: require('../../Images/ic-no-gps.png')
             }
         };
     }
@@ -80,23 +80,23 @@ class MapsEbcc extends React.Component {
 
     componentDidMount() {
         this.props.navigation.setParams({ searchLocation: this.searchLocation })
-        this.getLocation()
     }
 
-  searchLocation = () => {
-    if(this.state.longitude !== 0.0 || this.state.latitude !== 0.0){
-      this.map.animateToRegion(this.state.region, 1);
-      this.detectFakeGPS()
-    }
-    else {
-      this.setState({
-        modalGps:{
-          ...this.state.modalGps,
-          showModal: true
+    searchLocation = () => {
+        if(this.state.longitude !== 0.0 || this.state.latitude !== 0.0){
+            this.setState({fetchLocation: true});
+            this.map.animateToRegion(this.state.region, 1);
+            this.detectFakeGPS()
         }
-      })
-    }
-  };
+        else {
+            this.setState({
+                modalGps:{
+                    ...this.state.modalGps,
+                    showModal: true
+                }
+            })
+        }
+    };
 
     /* DETECT FAKE GPS */
     detectFakeGPS() {
@@ -188,29 +188,29 @@ class MapsEbcc extends React.Component {
     }
 
     getPolygons() {
-      if (!polyMap) {
-        this.setState(AlertContent.no_data_map);
-        return;
-      }
-      let data = polyMap.data.polygons;
-      let poligons = [];
-      for (var i = 0; i < data.length; i++) {
-        let coords = data[i];
-        if(
-          geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude+0.006 }, coords.coords) ||
-          geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude-0.006 }, coords.coords) ||
-          geolib.isPointInPolygon({ latitude: this.state.latitude+0.0025, longitude: this.state.longitude }, coords.coords) ||
-          geolib.isPointInPolygon({ latitude: this.state.latitude-0.0025, longitude: this.state.longitude }, coords.coords) ||
-          geolib.isPointInPolygon({ latitude: this.state.latitude-0.0025, longitude: this.state.longitude-0.006 }, coords.coords) ||
-          geolib.isPointInPolygon({ latitude: this.state.latitude-0.0025, longitude: this.state.longitude+0.006 }, coords.coords) ||
-          geolib.isPointInPolygon({ latitude: this.state.latitude+0.0025, longitude: this.state.longitude-0.006 }, coords.coords) ||
-          geolib.isPointInPolygon({ latitude: this.state.latitude+0.0025, longitude: this.state.longitude+0.006 }, coords.coords) ||
-          geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude }, coords.coords)
-        ){
-          poligons.push(coords);
+        if (!polyMap) {
+            this.setState(AlertContent.no_data_map);
+            return;
         }
-      }
-      return poligons;
+        let data = polyMap.data.polygons;
+        let poligons = [];
+        for (var i = 0; i < data.length; i++) {
+            let coords = data[i];
+            if(
+                geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude+0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude-0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude+0.0025, longitude: this.state.longitude }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude-0.0025, longitude: this.state.longitude }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude-0.0025, longitude: this.state.longitude-0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude-0.0025, longitude: this.state.longitude+0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude+0.0025, longitude: this.state.longitude-0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude+0.0025, longitude: this.state.longitude+0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude }, coords.coords)
+            ){
+                poligons.push(coords);
+            }
+        }
+        return poligons;
     }
 
     getLocation() {
@@ -323,11 +323,11 @@ class MapsEbcc extends React.Component {
         return (
             <View style={styles.container}>
                 <ModalGps
-                  icon={this.state.modalGps.icon}
-                  visible={this.state.modalGps.showModal}
-                  onPressCancel={() => this.setState({ modalGps:{...this.state.modalGps, showModal: false} })}
-                  title={this.state.modalGps.title}
-                  message={this.state.modalGps.message} />
+                    icon={this.state.modalGps.icon}
+                    visible={this.state.modalGps.showModal}
+                    onPressCancel={() => this.setState({ modalGps:{...this.state.modalGps, showModal: false} })}
+                    title={this.state.modalGps.title}
+                    message={this.state.modalGps.message} />
                 <StatusBar
                     hidden={false}
                     barStyle="light-content"
@@ -348,18 +348,12 @@ class MapsEbcc extends React.Component {
 
                 <MapView
                     ref={map => this.map = map}
-                    provider={this.props.provider}
                     style={styles.map}
                     mapType={"satellite"}
                     showsUserLocation={true}
-                    // showsMyLocationButton={true}
-                    showsCompass={true}
-                    showScale={true}
-                    showsIndoors={true}
                     initialRegion={this.state.region}
-                    followsUserLocation={true}
-                    scrollEnabled={true}
                     zoomEnabled={true}
+                    scrollEnabled={true}
                     onUserLocationChange={event => {
                         let lat = event.nativeEvent.coordinate.latitude;
                         let lon = event.nativeEvent.coordinate.longitude;
@@ -379,7 +373,7 @@ class MapsEbcc extends React.Component {
                             <Polygon
                                 coordinates={poly.coords}
                                 fillColor="rgba(0, 200, 0, 0.5)"
-                                strokeColor="rgba(0,0,0,0.5)"
+                                strokeColor="rgba(255,255,255,1)"
                                 strokeWidth={2}
                                 tappable={true}
                                 onPress={() => this.navigateScreen('ManualInputTPH', poly.werks_afd_block_code)}
@@ -389,7 +383,7 @@ class MapsEbcc extends React.Component {
                                 coordinate={this.centerCoordinate(poly.coords)}>
                                 <View style={{ flexDirection: 'column', alignSelf: 'flex-start' }}>
                                     <View style={styles.marker}>
-                                        <Text style={{ color: '#000000', fontSize: 20 }}>{poly.blokname}</Text>
+                                        <Text style={{ color: 'rgba(255,255,255,1)', fontSize: 25, fontWeight:'900'}}>{poly.blokname}</Text>
                                     </View>
                                 </View>
                             </Marker>
