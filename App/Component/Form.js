@@ -146,21 +146,20 @@ class Form extends Component {
                     <Icon style={{ paddingRight: 10 }} name={this.state.iconName} onPress={() => this.triggerShowHide()} color={Colors.inputBox} size={20} />
                 </View>
 
-                {/*<View style={styles.sectionInput}>*/}
-                {/*    <Picker*/}
+                <View style={styles.sectionInput}>
+                    <Picker
+                        mode="dropdown"
+                        iosHeader="Select your SIM"
+                        iosIcon={<Icon name="arrow-dropdown-circle" style={{ color: "#007aff", fontSize: 25 }} />}
+                        style={styles.picker}
+                        selectedValue={this.state.selectedServer}
+                        onValueChange={this.onValueChange.bind(this)}>
 
-                {/*        mode="dropdown"*/}
-                {/*        iosHeader="Select your SIM"*/}
-                {/*        iosIcon={<Icon name="arrow-dropdown-circle" style={{ color: "#007aff", fontSize: 25 }} />}*/}
-                {/*        style={styles.picker}*/}
-                {/*        selectedValue={this.state.selectedServer}*/}
-                {/*        onValueChange={this.onValueChange.bind(this)}>*/}
-
-                {/*        <Picker.Item label="Production" value="1" />*/}
-                {/*        <Picker.Item label="QA" value="2" />*/}
-                {/*        <Picker.Item label="Development" value="3" />*/}
-                {/*    </Picker>*/}
-                {/*</View>*/}
+                        <Picker.Item label="Production" value="1" />
+                        <Picker.Item label="QA" value="2" />
+                        <Picker.Item label="Development" value="3" />
+                    </Picker>
+                </View>
 
                 <TouchableOpacity style={[styles.button, { marginTop: 20 }]}
                     onPress={() => this.onBtnClick(props)}>

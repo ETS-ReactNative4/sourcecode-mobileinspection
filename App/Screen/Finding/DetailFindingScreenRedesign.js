@@ -16,6 +16,7 @@ import ModalAlertBack from '../../Component/ModalAlert';
 import { AlertContent, Images } from '../../Themes';
 import { getColor, getIconProgress, getRating, getStatusImage, getStatusTemuan } from '../../Themes/Resources';
 import { getBlokName, getContactName, getEstateName, getStatusBlok } from '../../Database/Resources';
+import {dirPhotoTemuan} from "../../Lib/dirStorage";
 
 const IconRating = (props) => {
     const styImage = {
@@ -304,11 +305,16 @@ class DetailFindingScreenRedesign extends Component {
                                                 </Image>
                                             }
                                             {this.state.images[0] != "NO IMAGES" &&
-                                                <FastImage style={{ alignItems: 'center', width: '100%', height: '100%' }}
-                                                    source={{
-                                                        uri: 'file://' + item.IMAGE_PATH_LOCAL,
-                                                        priority: FastImage.priority.normal,
-                                                    }} />
+                                                <Image
+                                                    style={{ alignItems: 'center', width: '100%', height: '100%' }}
+                                                    source={{uri: `file://${dirPhotoTemuan}/${item.IMAGE_NAME}`}}
+                                                    // source={{uri: 'file://' + item.IMAGE_PATH_LOCAL}}
+                                                />
+                                                // <FastImage style={{ alignItems: 'center', width: '100%', height: '100%' }}
+                                                //         source={{
+                                                //             uri: 'file://' + item.IMAGE_PATH_LOCAL,
+                                                //             priority: FastImage.priority.normal,
+                                                //         }} />
                                             }
                                             {/*End Gani*/}
                                             <View style={{

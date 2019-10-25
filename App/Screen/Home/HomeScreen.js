@@ -446,10 +446,13 @@ class HomeScreen extends React.Component {
   renderCarousel = (item, status, i) => {
     let uri;
     if (item.IMAGE_PATH_LOCAL != undefined) {
-      uri = "file://" + item.IMAGE_PATH_LOCAL;
+      uri = `file://${dirPhotoTemuan}/${item.IMAGE_NAME}`;
     } else {
       uri = Images.img_no_picture
     }
+    console.log("IMAGEPATHLOCAL",item.IMAGE_PATH_LOCAL);
+    console.log("ITEM",item);
+    console.log("FASTIMAGE",uri);
 
     return (
       <View style={{ flex: 1 }}>
@@ -462,6 +465,10 @@ class HomeScreen extends React.Component {
             <Text style={{ fontSize: 10, marginBottom: 5, color: 'white' }}>{getStatusImage(item.STATUS_IMAGE)}</Text>
           </View>}
 
+          {/*<Image*/}
+          {/*    style={{width: 50, height: 50}}*/}
+          {/*    source={{uri: item.IMAGE_URL}}*/}
+          {/*/>*/}
         <FastImage style={{ height: 300 }}
           source={{
             uri: uri,
