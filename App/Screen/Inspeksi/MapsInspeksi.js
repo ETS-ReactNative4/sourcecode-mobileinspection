@@ -1,7 +1,7 @@
 import React from 'react';
 import {StatusBar, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
-import MapView, {Marker, Polygon, ProviderPropType} from 'react-native-maps';
+import MapView, {Marker, Polygon, ProviderPropType, PROVIDER_GOOGLE} from 'react-native-maps';
 import Colors from '../../Constant/Colors'
 import {NavigationActions, StackActions} from 'react-navigation';
 import IconLoc from 'react-native-vector-icons/FontAwesome5';
@@ -185,19 +185,20 @@ class MapsInspeksi extends React.Component {
         let poligons = [];
         for (var i = 0; i < data.length; i++) {
             let coords = data[i];
-            if(
-                geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude+0.006 }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude-0.006 }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.latitude+0.0025, longitude: this.state.longitude }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.latitude-0.0025, longitude: this.state.longitude }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.latitude-0.0025, longitude: this.state.longitude-0.006 }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.latitude-0.0025, longitude: this.state.longitude+0.006 }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.latitude+0.0025, longitude: this.state.longitude-0.006 }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.latitude+0.0025, longitude: this.state.longitude+0.006 }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude }, coords.coords)
-            ){
-                poligons.push(coords);
-            }
+            // if(
+            //     geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude+0.006 }, coords.coords) ||
+            //     geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude-0.006 }, coords.coords) ||
+            //     geolib.isPointInPolygon({ latitude: this.state.latitude+0.0025, longitude: this.state.longitude }, coords.coords) ||
+            //     geolib.isPointInPolygon({ latitude: this.state.latitude-0.0025, longitude: this.state.longitude }, coords.coords) ||
+            //     geolib.isPointInPolygon({ latitude: this.state.latitude-0.0025, longitude: this.state.longitude-0.006 }, coords.coords) ||
+            //     geolib.isPointInPolygon({ latitude: this.state.latitude-0.0025, longitude: this.state.longitude+0.006 }, coords.coords) ||
+            //     geolib.isPointInPolygon({ latitude: this.state.latitude+0.0025, longitude: this.state.longitude-0.006 }, coords.coords) ||
+            //     geolib.isPointInPolygon({ latitude: this.state.latitude+0.0025, longitude: this.state.longitude+0.006 }, coords.coords) ||
+            //     geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude }, coords.coords)
+            // ){
+            //     poligons.push(coords);
+            // }
+            poligons.push(coords);
         }
         return poligons;
     }
@@ -297,6 +298,7 @@ class MapsInspeksi extends React.Component {
                 <MapView
                     ref={map => this.map = map}
                     style={styles.map}
+                    provider={PROVIDER_GOOGLE}
                     mapType={"satellite"}
                     showsUserLocation={true}
                     initialRegion={this.state.region}
