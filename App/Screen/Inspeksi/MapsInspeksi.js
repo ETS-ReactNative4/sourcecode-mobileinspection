@@ -210,7 +210,7 @@ class MapsInspeksi extends React.Component {
                 storeData('PoligonsInspeksi', poligons);
                 this.setState({ fetchLocation: false, poligons });
             } else {
-                this.setState(AlertContent.no_data_map)
+                this.setState({...AlertContent.no_data_map, fetchLocation:false})
             }
         }
     }

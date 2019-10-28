@@ -220,7 +220,7 @@ class MapsEbcc extends React.Component {
             if (poligons != undefined) {
                 this.setState({ fetchLocation: false, poligons });
             } else {
-                this.setState(AlertContent.no_data_map)
+                this.setState({...AlertContent.no_data_map, fetchLocation:false})
             }
         }
     }

@@ -183,12 +183,11 @@ class MapsInspeksi extends React.Component {
       let poligons = this.getPolygons();
       if (poligons !== undefined) {
         this.setState({
-          fetchLocation: false,
-          poligons
+          fetchLocation: false, poligons
         });
       }
       else {
-        this.setState(AlertContent.no_data_map)
+        this.setState({...AlertContent.no_data_map, fetchLocation:false})
       }
     }
   }
