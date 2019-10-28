@@ -450,9 +450,6 @@ class HomeScreen extends React.Component {
     } else {
       uri = Images.img_no_picture
     }
-    console.log("IMAGEPATHLOCAL",item.IMAGE_PATH_LOCAL);
-    console.log("ITEM",item);
-    console.log("FASTIMAGE",uri);
 
     return (
       <View style={{ flex: 1 }}>

@@ -33,16 +33,15 @@ class MapsInspeksi extends React.Component {
                 longitudeDelta: 0.00721
             },
             poligons: [],
-            fetchLocation: true,
-            showModal: false,
+            fetchLocation: false,
             title: 'Sabar Ya..',
             message: 'Sedang mencari lokasi kamu nih.',
             icon: '',
             inspectionType: props.navigation.getParam('inspectionType', 'normal'),
             modalGps:{
                 showModal: false,
-                title: 'Sabar Ya..',
-                message: 'Sedang mencari lokasi kamu nih.',
+                title: 'Gps tidak di temukan',
+                message: 'Signal gps tidak di temukan, coba lagi!',
                 icon: require('../../Images/ic-no-gps.png')
             }
         };
@@ -86,7 +85,9 @@ class MapsInspeksi extends React.Component {
                 }
 
             },
-            (error) => {},
+            (error) => {
+                this.setState({fetchLocation: false});
+            },
             { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
         );
     }
@@ -115,7 +116,8 @@ class MapsInspeksi extends React.Component {
             this.setState({
                 modalGps:{
                     ...this.state.modalGps,
-                    showModal: true
+                    showModal: true,
+                    fetchLocation: false
                 }
             })
         }
@@ -143,7 +145,6 @@ class MapsInspeksi extends React.Component {
                 //belum download map
                 this.setState({
                     fetchLocation: false,
-                    showModal: true,
                     title: 'Tidak ada data',
                     message: "Kamu belum download data map",
                     icon: require('../../Images/ic-blm-input-lokasi.png')
@@ -153,11 +154,7 @@ class MapsInspeksi extends React.Component {
         else {
             //belum pilih lokasi
             this.setState({
-                fetchLocation: false,
-                showModal: true,
-                title: 'Tidak ada lokasi',
-                message: "Kamu belum pilih lokasi kamu",
-                icon: require('../../Images/ic-blm-input-lokasi.png')
+                fetchLocation: false
             });
         }
     }
@@ -206,12 +203,16 @@ class MapsInspeksi extends React.Component {
     getLocation() {
         if (this.state.latitude && this.state.longitude) {
             let poligons = this.getPolygons();
-            if (poligons !== undefined) {
-                storeData('PoligonsInspeksi', poligons);
-                this.setState({ fetchLocation: false, poligons });
-            } else {
-                this.setState({...AlertContent.no_data_map, fetchLocation:false})
-            }
+            this.setState({fetchLocation: false},()=>{
+                if (poligons !== undefined) {
+                    this.setState({
+                        poligons
+                    });
+                }
+                else {
+                    this.setState({...AlertContent.no_data_map})
+                }
+            });
         }
     }
 
@@ -264,7 +265,7 @@ class MapsInspeksi extends React.Component {
             navigation.dispatch(resetAction);
         } else {
             this.setState({
-                fetchLocation: false, showModal: true, title: 'Bukan Wilayah Otorisasimu',
+                fetchLocation: false, title: 'Bukan Wilayah Otorisasimu',
                 message: "Kamu tidak bisa inspeksi di wilayah ini", icon: Images.ic_blm_input_lokasi
             });
         }

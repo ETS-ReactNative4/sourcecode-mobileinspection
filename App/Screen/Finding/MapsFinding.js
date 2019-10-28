@@ -31,7 +31,6 @@ class MapsInspeksi extends React.Component {
       },
       poligons: [],
       fetchLocation: true,
-      showModal: false,
       title: 'Sabar Ya..',
       message: 'Sedang mencari lokasi kamu nih.',
       icon: '',
@@ -181,14 +180,16 @@ class MapsInspeksi extends React.Component {
   getLocation() {
     if (this.state.latitude && this.state.longitude) {
       let poligons = this.getPolygons();
-      if (poligons !== undefined) {
-        this.setState({
-          fetchLocation: false, poligons
-        });
-      }
-      else {
-        this.setState({...AlertContent.no_data_map, fetchLocation:false})
-      }
+      this.setState({fetchLocation: false},()=>{
+          if (poligons !== undefined) {
+              this.setState({
+                  poligons
+              });
+          }
+          else {
+              this.setState({...AlertContent.no_data_map})
+          }
+      });
     }
   }
 

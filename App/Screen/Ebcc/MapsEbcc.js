@@ -40,7 +40,6 @@ class MapsEbcc extends React.Component {
             },
             poligons: [],
             fetchLocation: true,
-            showModal: false,
             statusScan,
             reason,
             title: 'Sabar Ya..',
@@ -217,11 +216,16 @@ class MapsEbcc extends React.Component {
     getLocation() {
         if (this.state.latitude && this.state.longitude) {
             let poligons = this.getPolygons();
-            if (poligons != undefined) {
-                this.setState({ fetchLocation: false, poligons });
-            } else {
-                this.setState({...AlertContent.no_data_map, fetchLocation:false})
-            }
+            this.setState({fetchLocation: false},()=>{
+                if (poligons !== undefined) {
+                    this.setState({
+                        poligons
+                    });
+                }
+                else {
+                    this.setState({...AlertContent.no_data_map})
+                }
+            });
         }
     }
 
@@ -257,14 +261,6 @@ class MapsEbcc extends React.Component {
                 })]
             });
             navigation.dispatch(resetAction);
-        }
-        else {
-            this.setState({
-                showModal: true,
-                title: "Bukan Wilayah Otorisasimu",
-                message: "Kamu tidak bisa sampling EBCC di wilayah ini",
-                icon: require('../../Images/ic-blm-input-lokasi.png')
-            });
         }
     }
 
@@ -337,13 +333,6 @@ class MapsEbcc extends React.Component {
 
                 <ModalAlert
                     visible={this.state.fetchLocation}
-                    title={this.state.title}
-                    message={this.state.message} />
-
-                <ModalGps
-                    icon={this.state.icon}
-                    visible={this.state.showModal}
-                    onPressCancel={() => this.setState({ showModal: false })}
                     title={this.state.title}
                     message={this.state.message} />
 
