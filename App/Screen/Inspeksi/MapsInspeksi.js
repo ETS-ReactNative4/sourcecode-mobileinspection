@@ -83,6 +83,7 @@ class MapsInspeksi extends React.Component {
 
     /* DETECT FAKE GPS */
     detectFakeGPS() {
+        console.log("keps1");
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 if (position.mocked) {
@@ -102,7 +103,10 @@ class MapsInspeksi extends React.Component {
         retrieveData('typeApp').then(data => {
             if (data != null) {
                 if (data == 'PROD') {
-                    this.setState(AlertContent.mock_location)
+                    this.setState({
+                        modalLoading: {...this.state.modalLoading, showModal: false},
+                        modalAlert: {...AlertContent.mock_location}
+                    })
                 } else {
                     this.getLocation();
                 }
@@ -182,9 +186,13 @@ class MapsInspeksi extends React.Component {
 
     getPolygons() {
         if (!polyMap) {
-            this.setState(AlertContent.no_data_map);
+            this.setState({
+                modalLoading: {...this.state.modalLoading, showModal: false},
+                modalAlert: {...AlertContent.no_data_map}
+            });
             return;
         }
+        console.log("keps3");
         let data = polyMap.data.polygons;
         let poligons = [];
         for (var i = 0; i < data.length; i++) {
@@ -209,8 +217,10 @@ class MapsInspeksi extends React.Component {
 
     getLocation() {
         if (this.state.latitude && this.state.longitude) {
+            console.log("keps2");
             let poligons = this.getPolygons();
             if(poligons.length > 0){
+                console.log("keps4");
                 this.setState({modalLoading: {...this.state.modalLoading, showModal: false}},()=>{
                     this.setState({
                         poligons
@@ -326,7 +336,9 @@ class MapsInspeksi extends React.Component {
                         let lat = event.nativeEvent.coordinate.latitude;
                         let lon = event.nativeEvent.coordinate.longitude;
                         this.setState({
-                            latitude: lat, longitude: lon, region: {
+                            latitude: lat,
+                            longitude: lon,
+                            region: {
                                 latitude: lat,
                                 longitude: lon,
                                 latitudeDelta: 0.0075,

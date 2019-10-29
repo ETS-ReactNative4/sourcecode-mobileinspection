@@ -127,12 +127,18 @@ class MapsInspeksi extends React.Component {
       }
       else {
         //belum download map
-        this.setState(AlertContent.no_data_map);
+          this.setState({
+              modalLoading: {...this.state.modalLoading, showModal: false},
+              modalAlert: {...AlertContent.no_data_map}
+          })
       }
     }
     else {
       //belum pilih lokasi
-      this.setState(AlertContent.no_location);
+        this.setState({
+            modalLoading: {...this.state.modalLoading, showModal: false},
+            modalAlert: {...AlertContent.no_location}
+        })
     }
   }
 
@@ -155,7 +161,10 @@ class MapsInspeksi extends React.Component {
 
   getPolygons() {
       if (!polyMap) {
-          this.setState(AlertContent.no_data_map);
+          this.setState({
+              modalLoading: {...this.state.modalLoading, showModal: false},
+              modalAlert: {...AlertContent.no_data_map}
+          })
           return;
       }
       let data = polyMap.data.polygons;
@@ -242,7 +251,10 @@ class MapsInspeksi extends React.Component {
     retrieveData('typeApp').then(data => {
       if (data != null) {
         if (data == 'PROD') {
-          this.setState(AlertContent.mock_location)
+            this.setState({
+                modalLoading: {...this.state.modalLoading, showModal: false},
+                modalAlert: {...AlertContent.mock_location}
+            })
         } else {
           this.getLocation();
         }
