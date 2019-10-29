@@ -5,8 +5,8 @@ import MapView, {Marker, Polygon, ProviderPropType, PROVIDER_GOOGLE} from 'react
 import Colors from '../../Constant/Colors'
 import {NavigationActions, StackActions} from 'react-navigation';
 import IconLoc from 'react-native-vector-icons/FontAwesome5';
-import ModalAlert from '../../Component/ModalLoading'
-import ModalGps from '../../Component/ModalAlert';
+import ModalLoading from '../../Component/ModalLoading'
+import ModalAlert from '../../Component/ModalAlert';
 import TaskServices from '../../Database/TaskServices';
 import {removeData, retrieveData, storeData} from '../../Database/Resources';
 import {AlertContent, Images} from '../../Themes';
@@ -33,11 +33,18 @@ class MapsInspeksi extends React.Component {
                 longitudeDelta: 0.00721
             },
             poligons: [],
-            fetchLocation: false,
-            title: 'Sabar Ya..',
-            message: 'Sedang mencari lokasi kamu nih.',
-            icon: '',
             inspectionType: props.navigation.getParam('inspectionType', 'normal'),
+            modalAlert:{
+                showModal: false,
+                title: "",
+                message: "",
+                icon: null
+            },
+            modalLoading:{
+                showModal: false,
+                title: "Sabar Ya..",
+                message: "Sedang mencari lokasi kamu nih"
+            },
             modalGps:{
                 showModal: false,
                 title: 'Gps tidak di temukan',
@@ -83,10 +90,9 @@ class MapsInspeksi extends React.Component {
                 } else {
                     this.getLocation();
                 }
-
             },
             (error) => {
-                this.setState({fetchLocation: false});
+                this.setState({modalLoading:{...this.state.modalLoading, showModal: false}});
             },
             { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
         );
@@ -108,7 +114,7 @@ class MapsInspeksi extends React.Component {
 
     searchLocation = () => {
         if(this.state.longitude !== 0.0 || this.state.latitude !== 0.0){
-            this.setState({fetchLocation: true});
+            this.setState({modalLoading:{...this.state.modalLoading, showModal: true}});
             this.map.animateToRegion(this.state.region, 1);
             this.detectFakeGPS()
         }
@@ -116,8 +122,7 @@ class MapsInspeksi extends React.Component {
             this.setState({
                 modalGps:{
                     ...this.state.modalGps,
-                    showModal: true,
-                    fetchLocation: false
+                    showModal: true
                 }
             })
         }
@@ -144,10 +149,12 @@ class MapsInspeksi extends React.Component {
             else {
                 //belum download map
                 this.setState({
-                    fetchLocation: false,
-                    title: 'Tidak ada data',
-                    message: "Kamu belum download data map",
-                    icon: require('../../Images/ic-blm-input-lokasi.png')
+                    modalLoading: {...this.state.modalLoading, showModal: false},
+                    modalAlert:{
+                        title: 'Tidak ada data',
+                        message: "Kamu belum download data map",
+                        icon: require('../../Images/ic-blm-input-lokasi.png')
+                    }
                 });
             }
         }
@@ -182,20 +189,20 @@ class MapsInspeksi extends React.Component {
         let poligons = [];
         for (var i = 0; i < data.length; i++) {
             let coords = data[i];
-            // if(
-            //     geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude+0.006 }, coords.coords) ||
-            //     geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude-0.006 }, coords.coords) ||
-            //     geolib.isPointInPolygon({ latitude: this.state.latitude+0.0025, longitude: this.state.longitude }, coords.coords) ||
-            //     geolib.isPointInPolygon({ latitude: this.state.latitude-0.0025, longitude: this.state.longitude }, coords.coords) ||
-            //     geolib.isPointInPolygon({ latitude: this.state.latitude-0.0025, longitude: this.state.longitude-0.006 }, coords.coords) ||
-            //     geolib.isPointInPolygon({ latitude: this.state.latitude-0.0025, longitude: this.state.longitude+0.006 }, coords.coords) ||
-            //     geolib.isPointInPolygon({ latitude: this.state.latitude+0.0025, longitude: this.state.longitude-0.006 }, coords.coords) ||
-            //     geolib.isPointInPolygon({ latitude: this.state.latitude+0.0025, longitude: this.state.longitude+0.006 }, coords.coords) ||
-            //     geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude }, coords.coords)
-            // ){
-            //     poligons.push(coords);
-            // }
-            poligons.push(coords);
+            if(
+                geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude+0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude-0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude+0.0025, longitude: this.state.longitude }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude-0.0025, longitude: this.state.longitude }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude-0.0025, longitude: this.state.longitude-0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude-0.0025, longitude: this.state.longitude+0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude+0.0025, longitude: this.state.longitude-0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude+0.0025, longitude: this.state.longitude+0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude }, coords.coords)
+            ){
+                poligons.push(coords);
+            }
+            // poligons.push(coords);
         }
         return poligons;
     }
@@ -203,16 +210,19 @@ class MapsInspeksi extends React.Component {
     getLocation() {
         if (this.state.latitude && this.state.longitude) {
             let poligons = this.getPolygons();
-            this.setState({fetchLocation: false},()=>{
-                if (poligons !== undefined) {
+            if(poligons.length > 0){
+                this.setState({modalLoading: {...this.state.modalLoading, showModal: false}},()=>{
                     this.setState({
                         poligons
                     });
-                }
-                else {
-                    this.setState({...AlertContent.no_data_map})
-                }
-            });
+                });
+            }
+            else {
+                this.setState({
+                    modalLoading: {...this.state.modalLoading, showModal: false},
+                    modalAlert: {...AlertContent.no_polygon}
+                })
+            }
         }
     }
 
@@ -265,14 +275,14 @@ class MapsInspeksi extends React.Component {
             navigation.dispatch(resetAction);
         } else {
             this.setState({
-                fetchLocation: false, title: 'Bukan Wilayah Otorisasimu',
-                message: "Kamu tidak bisa inspeksi di wilayah ini", icon: Images.ic_blm_input_lokasi
+                modalLoading: {...this.state.modalLoading, showModal: false},
+                modalAlert:{
+                    title: 'Tidak ada data',
+                    message: "Kamu belum download data map",
+                    icon: require('../../Images/ic-blm-input-lokasi.png')
+                }
             });
         }
-    }
-
-    onMapReady() {
-        this.setState({ fetchLocation: false });
     }
 
     render() {
@@ -284,12 +294,19 @@ class MapsInspeksi extends React.Component {
                     backgroundColor={Colors.tintColorPrimary}
                 />
 
-                <ModalAlert
-                    visible={this.state.fetchLocation}
-                    title={this.state.title}
-                    message={this.state.message} />
+                <ModalLoading
+                    visible={this.state.modalLoading.showModal}
+                    title={this.state.modalLoading.title}
+                    message={this.state.modalLoading.message} />
 
-                <ModalGps
+                <ModalAlert
+                    icon={this.state.modalAlert.icon}
+                    visible={this.state.modalAlert.showModal}
+                    onPressCancel={() => this.setState({ modalAlert:{...this.state.modalAlert, showModal: false} })}
+                    title={this.state.modalAlert.title}
+                    message={this.state.modalAlert.message} />
+
+                <ModalAlert
                     icon={this.state.modalGps.icon}
                     visible={this.state.modalGps.showModal}
                     onPressCancel={() => this.setState({ modalGps:{...this.state.modalGps, showModal: false} })}
@@ -317,7 +334,6 @@ class MapsInspeksi extends React.Component {
                             }
                         });
                     }}
-                    onMapReady={() => this.onMapReady()}
                 >
                     {this.state.poligons.length > 0 && this.state.poligons.map((poly, index) => (
                         <View key={index}>

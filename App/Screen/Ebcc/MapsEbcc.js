@@ -5,8 +5,8 @@ import MapView, {Marker, Polygon, ProviderPropType, PROVIDER_GOOGLE} from 'react
 import Colors from '../../Constant/Colors'
 import {NavigationActions, StackActions} from 'react-navigation';
 import IconLoc from 'react-native-vector-icons/FontAwesome5';
-import ModalAlert from '../../Component/ModalLoading';
-import ModalGps from '../../Component/ModalAlert';
+import ModalLoading from '../../Component/ModalLoading'
+import ModalAlert from '../../Component/ModalAlert';
 import TaskServices from '../../Database/TaskServices';
 import R from 'ramda';
 import {AlertContent} from '../../Themes'
@@ -39,17 +39,23 @@ class MapsEbcc extends React.Component {
                 longitudeDelta: 0.00721
             },
             poligons: [],
-            fetchLocation: true,
             statusScan,
             reason,
-            title: 'Sabar Ya..',
-            message: 'Sedang mencari lokasi kamu nih.',
-            icon: '',
-
+            modalAlert:{
+                showModal: false,
+                title: "",
+                message: "",
+                icon: null
+            },
+            modalLoading:{
+                showModal: false,
+                title: "Sabar Ya..",
+                message: "Sedang mencari lokasi kamu nih"
+            },
             modalGps:{
                 showModal: false,
-                title: 'Sabar Ya..',
-                message: 'Sedang mencari lokasi kamu nih.',
+                title: 'Gps tidak di temukan',
+                message: 'Signal gps tidak di temukan, coba lagi!',
                 icon: require('../../Images/ic-no-gps.png')
             }
         };
@@ -83,7 +89,7 @@ class MapsEbcc extends React.Component {
 
     searchLocation = () => {
         if(this.state.longitude !== 0.0 || this.state.latitude !== 0.0){
-            this.setState({fetchLocation: true});
+            this.setState({modalLoading:{...this.state.modalLoading, showModal: true}});
             this.map.animateToRegion(this.state.region, 1);
             this.detectFakeGPS()
         }
@@ -102,19 +108,14 @@ class MapsEbcc extends React.Component {
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 if (position.mocked) {
-                    this.validateType(position.mocked)
+                    this.validateType()
                 } else {
                     this.getLocation();
                 }
-
             },
             (error) => {
-                let message = error && error.message ? error.message : 'Terjadi kesalahan ketika mencari lokasi anda !';
-                if (error && error.message == "No location provider available.") {
-                    message = "Mohon nyalakan GPS anda terlebih dahulu.";
-                }
-
-            }, // go here if error while fetch location
+                this.setState({modalLoading:{...this.state.modalLoading, showModal: false}});
+            },
             { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
         );
     }
@@ -195,20 +196,20 @@ class MapsEbcc extends React.Component {
         let poligons = [];
         for (var i = 0; i < data.length; i++) {
             let coords = data[i];
-            // if(
-            //     geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude+0.006 }, coords.coords) ||
-            //     geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude-0.006 }, coords.coords) ||
-            //     geolib.isPointInPolygon({ latitude: this.state.latitude+0.0025, longitude: this.state.longitude }, coords.coords) ||
-            //     geolib.isPointInPolygon({ latitude: this.state.latitude-0.0025, longitude: this.state.longitude }, coords.coords) ||
-            //     geolib.isPointInPolygon({ latitude: this.state.latitude-0.0025, longitude: this.state.longitude-0.006 }, coords.coords) ||
-            //     geolib.isPointInPolygon({ latitude: this.state.latitude-0.0025, longitude: this.state.longitude+0.006 }, coords.coords) ||
-            //     geolib.isPointInPolygon({ latitude: this.state.latitude+0.0025, longitude: this.state.longitude-0.006 }, coords.coords) ||
-            //     geolib.isPointInPolygon({ latitude: this.state.latitude+0.0025, longitude: this.state.longitude+0.006 }, coords.coords) ||
-            //     geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude }, coords.coords)
-            // ){
-            //     poligons.push(coords);
-            // }
-            poligons.push(coords);
+            if(
+                geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude+0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude-0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude+0.0025, longitude: this.state.longitude }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude-0.0025, longitude: this.state.longitude }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude-0.0025, longitude: this.state.longitude-0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude-0.0025, longitude: this.state.longitude+0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude+0.0025, longitude: this.state.longitude-0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude+0.0025, longitude: this.state.longitude+0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude }, coords.coords)
+            ){
+                poligons.push(coords);
+            }
+            // poligons.push(coords);
         }
         return poligons;
     }
@@ -216,16 +217,19 @@ class MapsEbcc extends React.Component {
     getLocation() {
         if (this.state.latitude && this.state.longitude) {
             let poligons = this.getPolygons();
-            this.setState({fetchLocation: false},()=>{
-                if (poligons !== undefined) {
+            if(poligons.length > 0){
+                this.setState({modalLoading: {...this.state.modalLoading, showModal: false}},()=>{
                     this.setState({
                         poligons
                     });
-                }
-                else {
-                    this.setState({...AlertContent.no_data_map})
-                }
-            });
+                });
+            }
+            else {
+                this.setState({
+                    modalLoading: {...this.state.modalLoading, showModal: false},
+                    modalAlert: {...AlertContent.no_polygon}
+                })
+            }
         }
     }
 
@@ -311,30 +315,33 @@ class MapsEbcc extends React.Component {
         return auth
     }
 
-    onMapReady() {
-        //lakukan aoa yg mau dilakukan disini setelah map selesai
-        this.setState({ fetchLocation: false });
-    }
-
     render() {
         return (
             <View style={styles.container}>
-                <ModalGps
-                    icon={this.state.modalGps.icon}
-                    visible={this.state.modalGps.showModal}
-                    onPressCancel={() => this.setState({ modalGps:{...this.state.modalGps, showModal: false} })}
-                    title={this.state.modalGps.title}
-                    message={this.state.modalGps.message} />
                 <StatusBar
                     hidden={false}
                     barStyle="light-content"
                     backgroundColor={Colors.tintColorPrimary}
                 />
 
+                <ModalLoading
+                    visible={this.state.modalLoading.showModal}
+                    title={this.state.modalLoading.title}
+                    message={this.state.modalLoading.message} />
+
                 <ModalAlert
-                    visible={this.state.fetchLocation}
-                    title={this.state.title}
-                    message={this.state.message} />
+                    icon={this.state.modalAlert.icon}
+                    visible={this.state.modalAlert.showModal}
+                    onPressCancel={() => this.setState({ modalAlert:{...this.state.modalAlert, showModal: false} })}
+                    title={this.state.modalAlert.title}
+                    message={this.state.modalAlert.message} />
+
+                <ModalAlert
+                    icon={this.state.modalGps.icon}
+                    visible={this.state.modalGps.showModal}
+                    onPressCancel={() => this.setState({ modalGps:{...this.state.modalGps, showModal: false} })}
+                    title={this.state.modalGps.title}
+                    message={this.state.modalGps.message} />
 
                 <MapView
                     ref={map => this.map = map}
@@ -357,7 +364,6 @@ class MapsEbcc extends React.Component {
                             }
                         });
                     }}
-                    onMapReady={() => this.onMapReady()}
                 >
                     {this.state.poligons.length > 0 && this.state.poligons.map((poly, index) => (
                         <View key={index}>
