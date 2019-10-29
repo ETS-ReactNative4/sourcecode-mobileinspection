@@ -33,6 +33,7 @@ import Step1Finding from '../Screen/Inspeksi/Step1Finding'
 import Step2Finding from '../Screen/Inspeksi/Step2Finding'
 import TakeFotoFinding from '../Screen/Inspeksi/TakeFotoFinding'
 import MapsInspeksi from '../Screen/Inspeksi/MapsInspeksi'
+import DetailSuggestion from '../Screen/Inspeksi/DetailSuggestion'
 //ebcc
 import EbccQrCode from '../Screen/Ebcc/EbccQrCode'
 import FotoJanjang from '../Screen/Ebcc/FotoJanjangEbcc'
@@ -130,6 +131,7 @@ const main = createStackNavigator({
     SelesaiInspeksi: { screen: SelesaiInspeksi },
     DetailBaris: { screen: DetailBaris },
     MapsInspeksi: { screen: MapsInspeksi },
+    DetailSuggestion: { screen: DetailSuggestion },
 
     //ebccValidation
     EbccQrCode: { screen: EbccQrCode },

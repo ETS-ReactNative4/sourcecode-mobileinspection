@@ -4,6 +4,7 @@ const colors = {
     colorPrimaryDark: '#FF9300',
     background: '#fff',
     transparent: 'rgba(0,0,0,0.54)',
+    transparentGrey: 'rgba(214,214,214,0.60)',
     transparentDark: 'rgba(0,0,0,0.80)',
     label: '#979797',
     grey: '#666666',

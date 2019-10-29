@@ -1,4 +1,4 @@
-import {Images} from '../Themes'
+import { Images } from '../Themes'
 
 const DummyData = {
     suggestion: [
@@ -10,11 +10,11 @@ const DummyData = {
         },
         {
             id: 2,
-            title: 'B34/TM/GAWI INTI - 2',
+            title: 'B34/TM/GAWI INTI - 1',
             desc: 'Dikarenakan Panen Terakhir : 10 Agustus 2019',
-            image: Images.img_forest
+            image: Images.ic_no_pic
         }
     ]
 }
 
-export default DummyData
+export default { DummyData }
