@@ -1,11 +1,11 @@
 import React from 'react';
 import { BackHandler, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import MapView, { Marker, Polygon, ProviderPropType } from 'react-native-maps';
+import MapView, { Marker, Polygon, ProviderPropType, PROVIDER_GOOGLE } from 'react-native-maps';
 import Colors from '../../Constant/Colors'
 import IconLoc from 'react-native-vector-icons/FontAwesome5';
-import ModalAlert from '../../Component/ModalLoading'
-import ModalGps from '../../Component/ModalAlert';
+import ModalLoading from '../../Component/ModalLoading'
+import ModalAlert from '../../Component/ModalAlert';
 import TaskServices from '../../Database/TaskServices';
 import * as geolib from 'geolib';
 import { AlertContent } from '../../Themes';
@@ -31,17 +31,27 @@ class MapsInspeksi extends React.Component {
       },
       poligons: [],
       fetchLocation: true,
-      showModal: false,
       title: 'Sabar Ya..',
       message: 'Sedang mencari lokasi kamu nih.',
       icon: '',
 
-      modalGps:{
-        showModal: false,
-        title: 'Sabar Ya..',
-        message: 'Sedang mencari lokasi kamu nih.',
-        icon: require('../../Images/ic-no-gps.png')
-      }
+        modalAlert:{
+            showModal: false,
+            title: "",
+            message: "",
+            icon: null
+        },
+        modalLoading:{
+            showModal: false,
+            title: "Sabar Ya..",
+            message: "Sedang mencari lokasi kamu nih"
+        },
+        modalGps:{
+            showModal: false,
+            title: 'Gps tidak di temukan',
+            message: 'Signal gps tidak di temukan, coba lagi!',
+            icon: require('../../Images/ic-no-gps.png')
+        }
     };
   }
 
@@ -81,28 +91,21 @@ class MapsInspeksi extends React.Component {
   }
 
   searchLocation = () => {
-    if(this.state.longitude !== 0.0 || this.state.latitude !== 0.0){
-        this.setState({fetchLocation: true});
-      this.map.animateToRegion(this.state.region, 1);
-      this.detectFakeGPS()
-    }
-    else {
-      this.setState({
-        modalGps:{
-          ...this.state.modalGps,
-          showModal: true
-        }
-      })
-    }
+      if(this.state.longitude !== 0.0 || this.state.latitude !== 0.0){
+          this.setState({modalLoading:{...this.state.modalLoading, showModal: true}});
+          this.map.animateToRegion(this.state.region, 1);
+          this.detectFakeGPS()
+      }
+      else {
+          this.setState({
+              modalGps:{
+                  ...this.state.modalGps,
+                  showModal: true
+              }
+          })
+      }
   };
 
-  totalPolygons() {
-    if (!polyMap) {
-      this.setState(AlertContent.no_data_map);
-      return 0;
-    }
-    return polyMap.data.polygons.length;
-  }
   loadMap() {
     let user = TaskServices.getAllData('TR_LOGIN')[0];
     if (user.CURR_WERKS) {
@@ -124,12 +127,18 @@ class MapsInspeksi extends React.Component {
       }
       else {
         //belum download map
-        this.setState(AlertContent.no_data_map);
+          this.setState({
+              modalLoading: {...this.state.modalLoading, showModal: false},
+              modalAlert: {...AlertContent.no_data_map}
+          })
       }
     }
     else {
       //belum pilih lokasi
-      this.setState(AlertContent.no_location);
+        this.setState({
+            modalLoading: {...this.state.modalLoading, showModal: false},
+            modalAlert: {...AlertContent.no_location}
+        })
     }
   }
 
@@ -152,7 +161,10 @@ class MapsInspeksi extends React.Component {
 
   getPolygons() {
       if (!polyMap) {
-          this.setState(AlertContent.no_data_map);
+          this.setState({
+              modalLoading: {...this.state.modalLoading, showModal: false},
+              modalAlert: {...AlertContent.no_data_map}
+          })
           return;
       }
       let data = polyMap.data.polygons;
@@ -172,23 +184,28 @@ class MapsInspeksi extends React.Component {
           ){
               poligons.push(coords);
           }
+          // poligons.push(coords);
       }
       return poligons;
   }
 
   getLocation() {
-    if (this.state.latitude && this.state.longitude) {
-      let poligons = this.getPolygons();
-      if (poligons !== undefined) {
-        this.setState({
-          fetchLocation: false,
-          poligons
-        });
+      if (this.state.latitude && this.state.longitude) {
+          let poligons = this.getPolygons();
+          if(poligons.length > 0){
+              this.setState({modalLoading: {...this.state.modalLoading, showModal: false}},()=>{
+                  this.setState({
+                      poligons
+                  });
+              });
+          }
+          else {
+              this.setState({
+                  modalLoading: {...this.state.modalLoading, showModal: false},
+                  modalAlert: {...AlertContent.no_polygon}
+              })
+          }
       }
-      else {
-        this.setState(AlertContent.no_data_map)
-      }
-    }
   }
 
   centerCoordinate(coordinates) {
@@ -213,11 +230,6 @@ class MapsInspeksi extends React.Component {
     this.props.navigation.goBack();
   }
 
-  onMapReady() {
-    //lakukan aoa yg mau dilakukan disini setelah map selesai
-    this.setState({ fetchLocation: false })
-  }
-
   /* DETECT FAKE GPS */
   detectFakeGPS() {
     navigator.geolocation.getCurrentPosition(
@@ -229,11 +241,7 @@ class MapsInspeksi extends React.Component {
         }
       },
       (error) => {
-        let message = error && error.message ? error.message : 'Terjadi kesalahan ketika mencari lokasi anda !';
-        if (error && error.message == "No location provider available.") {
-          message = "Mohon nyalakan GPS anda terlebih dahulu.";
-        }
-
+          this.setState({modalLoading:{...this.state.modalLoading, showModal: false}});
       }, // go here if error while fetch location
       { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
     );
@@ -243,7 +251,10 @@ class MapsInspeksi extends React.Component {
     retrieveData('typeApp').then(data => {
       if (data != null) {
         if (data == 'PROD') {
-          this.setState(AlertContent.mock_location)
+            this.setState({
+                modalLoading: {...this.state.modalLoading, showModal: false},
+                modalAlert: {...AlertContent.mock_location}
+            })
         } else {
           this.getLocation();
         }
@@ -261,21 +272,29 @@ class MapsInspeksi extends React.Component {
           barStyle="light-content"
         />
 
-        <ModalAlert
-          visible={this.state.fetchLocation}
-          title={this.state.title}
-          message={this.state.message} />
+          <ModalLoading
+              visible={this.state.modalLoading.showModal}
+              title={this.state.modalLoading.title}
+              message={this.state.modalLoading.message} />
 
-        <ModalGps
-          icon={this.state.modalGps.icon}
-          visible={this.state.modalGps.showModal}
-          onPressCancel={() => this.setState({ modalGps:{...this.state.modalGps, showModal: false} })}
-          title={this.state.modalGps.title}
-          message={this.state.modalGps.message} />
+          <ModalAlert
+              icon={this.state.modalAlert.icon}
+              visible={this.state.modalAlert.showModal}
+              onPressCancel={() => this.setState({ modalAlert:{...this.state.modalAlert, showModal: false} })}
+              title={this.state.modalAlert.title}
+              message={this.state.modalAlert.message} />
+
+          <ModalAlert
+              icon={this.state.modalGps.icon}
+              visible={this.state.modalGps.showModal}
+              onPressCancel={() => this.setState({ modalGps:{...this.state.modalGps, showModal: false} })}
+              title={this.state.modalGps.title}
+              message={this.state.modalGps.message} />
 
         <MapView
             ref={map => this.map = map}
             style={styles.map}
+            provider={PROVIDER_GOOGLE}
             mapType={"satellite"}
             showsUserLocation={true}
             initialRegion={this.state.region}
@@ -295,7 +314,6 @@ class MapsInspeksi extends React.Component {
               }
             });
           }}
-          onMapReady={() => this.onMapReady()}
         >
           {this.state.poligons.length > 0 && this.state.poligons.map((poly, index) => (
             <View key={index}>
