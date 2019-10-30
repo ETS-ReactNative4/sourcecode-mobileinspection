@@ -355,7 +355,6 @@ class MapsInspeksi extends React.Component {
                             />
                                 <Marker
                                     ref={ref => poly.marker = ref}
-                                    style={{backgroundColor:"red"}}
                                     coordinate={this.centerCoordinate(poly.coords)}
                                     onPress={() => this.navigateScreen('BuatInspeksi', poly.werks_afd_block_code)}
                                 >

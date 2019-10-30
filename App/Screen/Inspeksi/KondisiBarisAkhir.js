@@ -4,7 +4,7 @@ import { Card, CardItem, } from 'native-base';
 import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import MapView, { Marker, Polygon, Polyline, ProviderPropType } from 'react-native-maps';
+import MapView, {Marker, Polygon, Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
 import { RNSlidingButton, SlideDirection } from 'rn-sliding-button';
 import TaskService from '../../Database/TaskServices';
 import TaskServices from '../../Database/TaskServices';
@@ -16,6 +16,8 @@ import { ProgressDialog } from 'react-native-simple-dialogs';
 import ModalAlert from '../../Component/ModalAlert';
 import ModalAlertConfirmation from '../../Component/ModalAlertConfirmation';
 import { retrieveData } from '../../Database/Resources';
+import ModalLoading from "../../Component/ModalLoading";
+import {AlertContent} from "../../Themes";
 
 const LATITUDE = -2.1890660;
 const LONGITUDE = 111.3609873;
@@ -94,6 +96,11 @@ class KondisiBarisAkhir extends Component {
             timer: 0,
             showAlertTimer: false,
 
+            modalLoading:{
+                showModal: false,
+                title: "Sabar Ya..",
+                message: "Memuat Map..."
+            },
             //Add Modal Alert by Aminju
             title: 'Title',
             message: 'Message',
@@ -358,7 +365,21 @@ class KondisiBarisAkhir extends Component {
         }
         else {
             if (!this.checkJarakBaris(this.state.txtBaris)) {
-                this.saveData(false)
+                if(this.state.latitude === 0.0 || this.state.longitude === 0.0){
+                    let getTracking = TaskServices.getLastTracking(this.state.dataUsual.BLOCK_INSPECTION_CODE);
+                    let latestLat = getTracking.LAT_TRACK;
+                    let latestLon = getTracking.LONG_TRACK;
+
+                    this.setState({
+                        latitude: parseFloat(latestLat),
+                        longitude: parseFloat(latestLon)
+                    },()=>{
+                        this.saveData(false)
+                    });
+                }
+                else {
+                    this.saveData(false)
+                }
             }
             else {
                 this.setState({
@@ -511,11 +532,6 @@ class KondisiBarisAkhir extends Component {
 
     saveData(isFromAlert) {
         let insertTime = getTodayDate('YYYY-MM-DD HH:mm:ss');
-
-        let getTracking = TaskServices.getLastTracking(this.state.dataUsual.BLOCK_INSPECTION_CODE);
-        let latestLat = getTracking.LAT_TRACK.toString();
-        let latestLon = getTracking.LONG_TRACK.toString();
-
 
         if(this.state.from !== 'history'){
             var modelInspeksiH = {
@@ -725,7 +741,6 @@ class KondisiBarisAkhir extends Component {
     }
 
     onMapReady() {
-        //lakukan aoa yg mau dilakukan disini setelah map selesai
         this.map.animateToCoordinate(this.state.region, 1)
     }
 
@@ -737,6 +752,10 @@ class KondisiBarisAkhir extends Component {
                     barStyle="light-content"
                     backgroundColor={Colors.tintColorPrimary}
                 />
+                <ModalLoading
+                    visible={this.state.modalLoading.showModal}
+                    title={this.state.modalLoading.title}
+                    message={this.state.modalLoading.message} />
                 <ModalAlert
                     icon={this.state.icon}
                     visible={this.state.showModal}
@@ -818,16 +837,13 @@ class KondisiBarisAkhir extends Component {
                     {this.state.latitude !== 0.0 && this.state.longitude !== 0.0 &&
                         <MapView
                             ref={map => this.map = map}
-                            provider={this.props.provider}
                             style={styles.map}
+                            provider={PROVIDER_GOOGLE}
                             mapType={"satellite"}
                             showsUserLocation={true}
-                            showsMyLocationButton={true}
-                            showsCompass={true}
-                            showScale={true}
-                            showsIndoors={true}
                             initialRegion={this.state.region}
-                            followsUserLocation={true}
+                            zoomEnabled={true}
+                            scrollEnabled={true}
                             onUserLocationChange={event => {
                                 let lat = event.nativeEvent.coordinate.latitude;
                                 let lon = event.nativeEvent.coordinate.longitude;

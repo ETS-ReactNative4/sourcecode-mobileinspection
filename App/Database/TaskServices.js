@@ -80,7 +80,6 @@ const TaskServices = {
         return RealmSchemas.objects('TM_INSPECTION_TRACK').filtered('BLOCK_INSPECTION_CODE = \"' + blokInsCode + '\" ').sorted('INSERT_TIME', true)[0];
     },
 
-
     getTotalData: function (table) {
         return RealmSchemas.objects(table).length;
     },
