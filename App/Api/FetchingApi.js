@@ -57,6 +57,10 @@ export function fetchPost(serviceName, fetchBody, fetchHeaders) {
           };
           TaskServices.saveData('TR_LOG', LogModel);
         }
+        else {
+            console.log(JSON.stringify(fetchBody));
+            console.log(JSON.stringify(data));
+        }
         return data;
     }).catch((err) => {
         let momentTime = moment().format("YYYYMMDDHHmmss").toString();

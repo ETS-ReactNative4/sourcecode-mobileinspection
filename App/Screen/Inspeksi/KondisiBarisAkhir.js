@@ -512,6 +512,11 @@ class KondisiBarisAkhir extends Component {
     saveData(isFromAlert) {
         let insertTime = getTodayDate('YYYY-MM-DD HH:mm:ss');
 
+        let getTracking = TaskServices.getLastTracking(this.state.dataUsual.BLOCK_INSPECTION_CODE);
+        let latestLat = getTracking.LAT_TRACK.toString();
+        let latestLon = getTracking.LONG_TRACK.toString();
+
+
         if(this.state.from !== 'history'){
             var modelInspeksiH = {
                 BLOCK_INSPECTION_CODE: this.state.inspeksiHeader.BLOCK_INSPECTION_CODE,
@@ -531,8 +536,8 @@ class KondisiBarisAkhir extends Component {
                 END_INSPECTION: insertTime,
                 LAT_START_INSPECTION: this.state.inspeksiHeader.LAT_START_INSPECTION,
                 LONG_START_INSPECTION: this.state.inspeksiHeader.LONG_START_INSPECTION,
-                LAT_END_INSPECTION: this.state.latitude.toString(),
-                LONG_END_INSPECTION: this.state.longitude.toString(),
+                LAT_END_INSPECTION: this.state.latitude.toString() !== "0.0" ? this.state.latitude.toString() : latestLat,
+                LONG_END_INSPECTION: this.state.longitude.toString() !== "0.0" ? this.state.longitude.toString() : latestLon,
                 INSERT_TIME: insertTime,
                 INSERT_USER: this.state.dataUsual.USER_AUTH,
                 TIME: this.state.menit,
@@ -823,6 +828,14 @@ class KondisiBarisAkhir extends Component {
                             showsIndoors={true}
                             initialRegion={this.state.region}
                             followsUserLocation={true}
+                            onUserLocationChange={event => {
+                                let lat = event.nativeEvent.coordinate.latitude;
+                                let lon = event.nativeEvent.coordinate.longitude;
+                                this.setState({
+                                    latitude: lat,
+                                    longitude: lon
+                                });
+                            }}
                             onMapReady={() => this.onMapReady()}
                         >
                             {this.state.poligons.length > 0 && this.state.poligons.map((poly, index) => (

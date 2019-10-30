@@ -765,7 +765,7 @@ export default class SyncScreen extends React.Component {
                     this.SyncUploadInspection()
                         .then(() => { });
                     this.SyncUploadEBCC()
-                        .then(() => { })
+                        .then(() => { });
 
                     this.setState({
                         progressUploadImage: 1,

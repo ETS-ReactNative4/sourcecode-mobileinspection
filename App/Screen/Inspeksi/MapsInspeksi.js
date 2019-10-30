@@ -190,7 +190,7 @@ class MapsInspeksi extends React.Component {
                 modalAlert: {...AlertContent.no_data_map}
             });
             return;
-        }s
+        }
         let data = polyMap.data.polygons;
         let poligons = [];
         for (var i = 0; i < data.length; i++) {
@@ -353,15 +353,18 @@ class MapsInspeksi extends React.Component {
                                 tappable={true}
                                 onPress={() => this.navigateScreen('BuatInspeksi', poly.werks_afd_block_code)}
                             />
-                            <Marker
-                                ref={ref => poly.marker = ref}
-                                coordinate={this.centerCoordinate(poly.coords)}>
-                                <View style={{ flexDirection: 'column', alignSelf: 'flex-start' }}>
-                                    <View style={styles.marker}>
-                                        <Text style={{ color: 'rgba(255,255,255,1)', fontSize: 25, fontWeight:'900' }}>{poly.blokname}</Text>
+                                <Marker
+                                    ref={ref => poly.marker = ref}
+                                    style={{backgroundColor:"red"}}
+                                    coordinate={this.centerCoordinate(poly.coords)}
+                                    onPress={() => this.navigateScreen('BuatInspeksi', poly.werks_afd_block_code)}
+                                >
+                                    <View style={{ flexDirection: 'column', alignSelf: 'flex-start' }}>
+                                        <View style={styles.marker}>
+                                            <Text style={{ color: 'rgba(255,255,255,1)', fontSize: 25, fontWeight:'900' }}>{poly.blokname}</Text>
+                                        </View>
                                     </View>
-                                </View>
-                            </Marker>
+                                </Marker>
                         </View>
                     ))}
 
