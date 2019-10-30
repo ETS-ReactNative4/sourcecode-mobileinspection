@@ -36,6 +36,7 @@ export function fetchPost(serviceName, fetchBody, fetchHeaders) {
             let momentTime = moment().format("YYYYMMDDHHmmss").toString();
             let LogModel = {
                 ID_LOG: `fetchPost${momentTime}`,
+                PARAM: JSON.stringify(fetchBody),
                 INSERT_TIME: momentTime,
                 MESSAGE: JSON.stringify(response),
                 DEV_NOTE: `response status !== 200`,
@@ -105,6 +106,7 @@ export function fetchPostForm(serviceName, fetchBody, fetchHeaders) {
             let momentTime = moment().format("YYYYMMDDHHmmss").toString();
             let LogModel = {
                 ID_LOG: `fetchPostForm${momentTime}`,
+                PARAM: JSON.stringify(fetchBody),
                 INSERT_TIME: momentTime,
                 MESSAGE: JSON.stringify(response),
                 DEV_NOTE: `response status !== 200`,

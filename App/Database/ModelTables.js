@@ -582,6 +582,7 @@ const TR_LOG = {
   primaryKey: 'ID_LOG',
   properties: {
     ID_LOG: {type:'string', optional: false},
+      PARAM: {type:'string', optional: true},
     INSERT_TIME: {type:'string', optional: false},
     MESSAGE: {type:'string', optional: false},
     DEV_NOTE: {type:'string', optional: true},

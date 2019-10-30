@@ -83,7 +83,6 @@ class MapsInspeksi extends React.Component {
 
     /* DETECT FAKE GPS */
     detectFakeGPS() {
-        console.log("keps1");
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 if (position.mocked) {
@@ -191,8 +190,7 @@ class MapsInspeksi extends React.Component {
                 modalAlert: {...AlertContent.no_data_map}
             });
             return;
-        }
-        console.log("keps3");
+        }s
         let data = polyMap.data.polygons;
         let poligons = [];
         for (var i = 0; i < data.length; i++) {
@@ -217,10 +215,8 @@ class MapsInspeksi extends React.Component {
 
     getLocation() {
         if (this.state.latitude && this.state.longitude) {
-            console.log("keps2");
             let poligons = this.getPolygons();
             if(poligons.length > 0){
-                console.log("keps4");
                 this.setState({modalLoading: {...this.state.modalLoading, showModal: false}},()=>{
                     this.setState({
                         poligons
