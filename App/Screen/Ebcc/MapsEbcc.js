@@ -382,7 +382,9 @@ class MapsEbcc extends React.Component {
                             />
                             <Marker
                                 ref={ref => poly.marker = ref}
-                                coordinate={this.centerCoordinate(poly.coords)}>
+                                coordinate={this.centerCoordinate(poly.coords)}
+                                onPress={() => this.navigateScreen('ManualInputTPH', poly.werks_afd_block_code)}
+                            >
                                 <View style={{ flexDirection: 'column', alignSelf: 'flex-start' }}>
                                     <View style={styles.marker}>
                                         <Text style={{ color: 'rgba(255,255,255,1)', fontSize: 25, fontWeight:'900'}}>{poly.blokname}</Text>
