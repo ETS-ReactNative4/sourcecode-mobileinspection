@@ -3,18 +3,22 @@ import { View, Image, TouchableOpacity, Text } from 'react-native';
 import TaskServices from '../../Database/TaskServices';
 import { getEstateName, getBlokName, getStatusBlok } from '../../Database/Resources';
 import { getColor } from '../../Themes/Resources';
+import { dirPhotoTemuan } from '../../Lib/dirStorage'
+import { Images } from '../../Themes';
 
 const ItemTemuan = (props) => {
 
-    const image = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', props.item.FINDING_CODE)
+    let image = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', props.item.FINDING_CODE)
 
-    var label = getColor(props.item.STATUS);
+    let label = getColor(props.item.STATUS);
 
     let showImage;
     if (image == undefined) {
-        showImage = <Image style={{ alignItems: 'stretch', width: 120, height: 120, borderRadius: 10 }} source={require('../../Images/ic-default-thumbnail.png')} />
+        showImage = <Image style={{ alignItems: 'stretch', width: 120, height: 120, borderRadius: 10 }} source={Images.img_thumbnail} />
     } else {
-        showImage = <Image style={{ alignItems: 'stretch', width: 120, height: 120, borderRadius: 10 }} source={{ uri: "file://" + image.IMAGE_PATH_LOCAL }} />
+        if (image.IMAGE_NAME != undefined) {
+            showImage = <Image style={{ alignItems: 'stretch', width: 120, height: 120, borderRadius: 10 }} source={{ uri: `file://${dirPhotoTemuan}/${image.IMAGE_NAME}` }} />
+        }
     }
 
     let werkAfdBlokCode = `${props.item.WERKS}${props.item.AFD_CODE}${props.item.BLOCK_CODE}`;

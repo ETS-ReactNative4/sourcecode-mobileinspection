@@ -1,12 +1,12 @@
-import React, {Component} from 'react';
-import {Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, { Component } from 'react';
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import TaskServices from '../../Database/TaskServices'
 import Colors from '../../Constant/Colors'
 import Moment from 'moment'
 import RNFS from 'react-native-fs'
 import RNFetchBlob from 'rn-fetch-blob'
-import {dirPhotoTemuan} from '../../Lib/dirStorage';
-import {changeFormatDate, dateDisplayMobile} from '../../Lib/Utils';
+import { dirPhotoTemuan } from '../../Lib/dirStorage';
+import { changeFormatDate, dateDisplayMobile } from '../../Lib/Utils';
 import ServerName from '../../Constant/ServerName';
 
 const moment = require('moment');
@@ -172,7 +172,9 @@ export default class HistoryFinding extends Component {
     if (image == undefined) {
       showImage = <Image style={{ alignItems: 'stretch', width: 90, height: 100, borderRadius: 10 }} source={require('../../Images/ic-default-thumbnail.png')} />
     } else {
-      showImage = <Image style={{ alignItems: 'stretch', width: 90, height: 100, borderRadius: 10 }} source={{ uri: "file://" + image.IMAGE_PATH_LOCAL }} />
+      if (image.IMAGE_NAME != undefined) {
+        showImage = <Image style={{ alignItems: 'stretch', width: 90, height: 100, borderRadius: 10 }} source={{ uri: `file://${dirPhotoTemuan}/${image.IMAGE_NAME}` }} />
+      }
     }
     let assignTo = item.ASSIGN_TO;
     let contact = TaskServices.query('TR_CONTACT', `USER_AUTH_CODE = "${assignTo}"`);

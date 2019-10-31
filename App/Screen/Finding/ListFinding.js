@@ -177,7 +177,9 @@ export default class ListFinding extends Component {
     if (image == undefined) {
       showImage = <Image style={{ alignItems: 'stretch', width: 120, height: 120, borderRadius: 10 }} source={require('../../Images/ic-default-thumbnail.png')} />
     } else {
-      showImage = <Image style={{ alignItems: 'stretch', width: 120, height: 120, borderRadius: 10 }} source={{ uri: "file://" + image.IMAGE_PATH_LOCAL }} />
+      if (image.IMAGE_NAME != undefined) {
+        showImage = <Image style={{ alignItems: 'stretch', width: 120, height: 120, borderRadius: 10 }} source={{ uri: `file://${dirPhotoTemuan}/${image.IMAGE_NAME}` }} />
+      }
     }
     let showBlockDetail = `${getEstateName(item.WERKS)}-${getBlokName(item.BLOCK_CODE)}`
     return (
