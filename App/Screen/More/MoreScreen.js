@@ -55,7 +55,8 @@ export default class MoreScreen extends Component {
   willFocus = this.props.navigation.addListener(
     'willFocus',
     () => {
-      this.loadData()
+        RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
+      this.loadData();
     }
   )
 

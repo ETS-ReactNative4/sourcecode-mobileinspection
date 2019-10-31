@@ -149,15 +149,15 @@ class HomeScreen extends React.Component {
   )
 
   componentDidMount() {
-    RNFS.mkdir(dirDatabase);
-    RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
-    RNFS.mkdir(dirPhotoInspeksiBaris);
-    RNFS.mkdir(dirPhotoInspeksiSelfie);
-    RNFS.mkdir(dirPhotoTemuan);
-    RNFS.mkdir(dirPhotoKategori);
-    RNFS.mkdir(dirPhotoEbccJanjang);
-    RNFS.mkdir(dirPhotoEbccSelfie);
-    RNFS.mkdir(dirMaps);
+      RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
+    // RNFS.mkdir(dirDatabase);
+    // RNFS.mkdir(dirPhotoInspeksiBaris);
+    // RNFS.mkdir(dirPhotoInspeksiSelfie);
+    // RNFS.mkdir(dirPhotoTemuan);
+    // RNFS.mkdir(dirPhotoKategori);
+    // RNFS.mkdir(dirPhotoEbccJanjang);
+    // RNFS.mkdir(dirPhotoEbccSelfie);
+    // RNFS.mkdir(dirMaps);
   }
 
   _changeFilterList = data => {

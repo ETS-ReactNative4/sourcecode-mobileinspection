@@ -17,7 +17,7 @@ import {
     dirPhotoInspeksiSelfie,
     dirPhotoKategori,
     dirPhotoTemuan,
-    dirPhotoUser
+    dirPhotoUser, dirDatabase
 } from '../Lib/dirStorage';
 import ModalAlert from "../Component/ModalAlert";
 import { retrieveData } from '../Database/Resources';
@@ -97,6 +97,7 @@ class SplashScreen extends Component {
         //buat Folder DiExtrnal
         RNFS.mkdir('file:///storage/emulated/0/MobileInspection');
         //buat folder internal
+        RNFS.mkdir(dirDatabase);
         RNFS.mkdir(dirSummary);
         RNFS.mkdir(dirPhotoInspeksiBaris);
         RNFS.mkdir(dirPhotoInspeksiSelfie);
