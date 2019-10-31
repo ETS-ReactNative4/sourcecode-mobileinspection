@@ -33,14 +33,15 @@ const EmptySuggestion = (props) => {
             <Card style={styles.container}>
                 <View style={{ flex: 1 }}>
 
-                    {/* <View style={{ flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+                    <View style={{ flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1 }}>
                         <Image source={Images.ic_data_not_match} style={styles.image} />
                         <Text style={[styles.text, { marginBottom: props.isGenba ? 0 : 36 }]}>{desc}</Text>
-                    </View> */}
+                    </View>
 
-                    <ScrollView
+                    {/* <ScrollView
                         horizontal={true}
-                        showsHorizontalScrollIndicator={false}>
+                        showsHorizontalScrollIndicator={false}
+                    >
                         <Card style={{ width: 170, borderRadius: 10, marginRight: 10 }}>
                             <Image source={Images.img_forest} style={{ width: 170, flex: 1, borderTopRightRadius: 10, borderTopLeftRadius: 10 }} />
                             <View style={{ justifyContent: 'center', padding: 10, alignItems: 'flex-start' }}>
@@ -62,7 +63,7 @@ const EmptySuggestion = (props) => {
                                 <Text style={{ fontWeight: 'bold', fontSize: 12, marginTop: 3 }}> B34/TM/GAWI INTI - 1 </Text>
                             </View>
                         </Card>
-                    </ScrollView>
+                    </ScrollView> */}
 
                     <View style={{
                         width: '100%',
