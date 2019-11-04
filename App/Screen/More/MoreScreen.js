@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Image, NetInfo, ScrollView, StyleSheet, Text, TouchableOpacity, View, ToastAndroid } from 'react-native';
 import { Thumbnail } from 'native-base';
+import RNFetchBlob from "rn-fetch-blob";
 import TaskServices from '../../Database/TaskServices'
 import { NavigationActions, StackActions } from 'react-navigation';
 import ModalConfirmation from '../../Component/ModalAlertConfirmation'
@@ -310,17 +311,17 @@ export default class MoreScreen extends Component {
   }
 
   /* Function Export Database */
-  async menuDatabase() {
-    RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
-
-    setTimeout(() => {
-      ToastAndroid.showWithGravity(
-        'Database berhasil di export',
-        ToastAndroid.LONG,
-        ToastAndroid.CENTER
-      );
-    }, 2000)
-  }
+  // async menuDatabase() {
+  //   RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
+  //
+  //   setTimeout(() => {
+  //     ToastAndroid.showWithGravity(
+  //       'Database berhasil di export',
+  //       ToastAndroid.LONG,
+  //       ToastAndroid.CENTER
+  //     );
+  //   }, 2000)
+  // }
 
   async sendFile(){
       //create zip file
@@ -332,7 +333,14 @@ export default class MoreScreen extends Component {
       this.zipFile(zipPath.toString(), zipDestination.toString())
           .then((response)=>{
               if(response.status){
-                  this.sendEmail(response.filePath, this.state.user.USERNAME, currentTime);
+                  let dirs = RNFetchBlob.fs.dirs;
+                  RNFetchBlob.fs.cp(response.filePath, dirs.SDCardDir+ "/" + "MobileInspection/" + `${this.state.user.USERNAME}_${currentTime}.zip`)
+                      .then((res)=>{
+                          this.sendEmail(response.filePath, this.state.user.USERNAME, currentTime);
+                      })
+                      .catch((err)=>{
+                          alert(err)
+                      })
               }
           })
   }

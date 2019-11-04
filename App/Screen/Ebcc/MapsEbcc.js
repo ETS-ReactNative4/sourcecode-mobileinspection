@@ -408,11 +408,7 @@ class MapsEbcc extends React.Component {
                         coordinate={{
                             latitude: this.state.latitude,
                             longitude: this.state.longitude,
-                        }}
-                        centerOffset={{ x: -42, y: -60 }}
-                        anchor={{ x: 0.84, y: 1 }}
-                    >
-                    </Marker>
+                        }}/>
 
                 </MapView>
                 <View style={{

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { ImageBackground, Linking, StatusBar, BackHandler } from 'react-native';
-import { Container } from 'native-base'
+import { View, ImageBackground, Linking, StatusBar, BackHandler } from 'react-native';
+import RNFetchBlob from 'rn-fetch-blob';
 import { NavigationActions, StackActions } from 'react-navigation';
 import { getPermission } from '../Lib/Utils'
 import { connect } from 'react-redux';
@@ -94,8 +94,9 @@ class SplashScreen extends Component {
     }
 
     makeFolder() {
-        //buat Folder DiExtrnal
-        RNFS.mkdir('file:///storage/emulated/0/MobileInspection');
+        //di pake untuk export database, copy semua file ke mobileinspection folder
+        let dirs = RNFetchBlob.fs.dirs;
+        RNFetchBlob.fs.mkdir(dirs.SDCardDir+ "/" + "MobileInspection");
         //buat folder internal
         RNFS.mkdir(dirDatabase);
         RNFS.mkdir(dirSummary);
@@ -188,7 +189,7 @@ class SplashScreen extends Component {
 
     render() {
         return (
-            <Container>
+            <View>
                 <ModalAlert
                     icon={this.state.modalUpdate.icon}
                     visible={this.state.modalUpdate.showModal}
@@ -209,7 +210,7 @@ class SplashScreen extends Component {
                 />
                 <ImageBackground source={require('../Images/splash.png')} style={{ flex: 1 }} />
 
-            </Container>
+            </View>
 
         )
     }
