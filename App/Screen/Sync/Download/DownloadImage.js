@@ -10,7 +10,7 @@ export async function downloadImageCategory(data) {
         var url = data.ICON_URL;
         const { config } = RNFetchBlob
         let options = {
-            fileCache: true,
+            fileCache: false,
             addAndroidDownloads: {
                 useDownloadManager: true,
                 notification: true,
@@ -33,7 +33,7 @@ export async function downloadImageFinding(data) {
         var url = data.IMAGE_URL;
         const { config } = RNFetchBlob
         let options = {
-            fileCache: true,
+            fileCache: false,
             addAndroidDownloads: {
                 useDownloadManager: true,
                 notification: true,

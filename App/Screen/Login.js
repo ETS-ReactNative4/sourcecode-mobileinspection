@@ -6,11 +6,10 @@ import {
     Keyboard,
     KeyboardAvoidingView,
     StatusBar,
-    StyleSheet,
-    Text,
-    View
+    StyleSheet
 } from 'react-native';
 
+import {fetchPostWithUrl} from '../Api/FetchingApi';
 
 import HandleBack from '../Component/Back'
 import Form from '../Component/Form';
@@ -233,19 +232,56 @@ class Login extends Component {
     onLogin(username, password, choosenServer) {
         Keyboard.dismiss();
         var imei = this.get_IMEI_Number();
-        this.setState({ fetching: true });
+        // this.setState({ fetching: true });
         this.postLogin(username, password, choosenServer, imei);
-        setTimeout(() => {
-            this.setState({ fetching: false });
-        }, 3000);
-
-        // this.props.authRequest({
-        //     username: username,
-        //     password: password,
-        //     imei: Imei
-        // });
     }
 
+    // fetchLogin(username, password, choosenServer, imei){
+    //     let loginHeader = {
+    //         headers: {
+    //             'Cache-Control': 'no-cache',
+    //             'Accept': 'application/json',
+    //             'Content-Type': 'application/json'
+    //         }
+    //     };
+    //
+    //     let loginModel = {
+    //         username: username,
+    //         password: password,
+    //         imei: imei
+    //     };
+    //
+    //     fetchPostWithUrl(ServerName[choosenServer].data + 'auth/login', loginModel, loginHeader)
+    //         .then((response)=>{
+    //             if (response !== undefined) {
+    //                 if (response.status) {
+    //                     // this.insertLink(data.data);
+    //                     // this.deleteConfig()
+    //                 } else {
+    //                     if (response.message === 'Request Timeout') {
+    //                         // timeout
+    //                         this.setState({
+    //                             ...AlertContent.proses_lambat,
+    //                             fetching: false
+    //                         })
+    //                     } else {
+    //                         // email/pass salah
+    //                         this.setState({
+    //                             ...AlertContent.email_pass_salah,
+    //                             fetching: false
+    //                         })
+    //                     }
+    //                 }
+    //             }
+    //             else{
+    //                 // no internet
+    //                 this.setState({
+    //                     ...AlertContent.no_internet,
+    //                     fetching: false
+    //                 });
+    //             }
+    //         })
+    // }
     postLogin(username, password, choosenServer, imei) {
         this.serverNameIndex = choosenServer;
         fetch(ServerName[this.serverNameIndex].data + 'auth/login', {

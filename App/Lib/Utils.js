@@ -11,7 +11,7 @@ import TaskServices from '../Database/TaskServices'
 export function downloadImage(url, path) {
 	const { config, fs } = RNFetchBlob
 	let options = {
-		fileCache: true,
+		fileCache: false,
 		addAndroidDownloads: {
 			useDownloadManager: true,
 			notification: true,

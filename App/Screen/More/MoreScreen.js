@@ -115,7 +115,6 @@ export default class MoreScreen extends Component {
 
   logout() {
     NetInfo.isConnected.fetch().then(isConnected => {
-      console.log('First, is ' + (isConnected ? 'online' : 'offline'));
       if (isConnected) {
         TaskServices.updateLogin('TR_LOGIN');
         this.setState({ showConfirm: false });

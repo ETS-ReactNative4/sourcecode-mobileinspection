@@ -33,8 +33,8 @@ class Form extends Component {
     constructor() {
         super();
         this.state = {
-            strEmail: '',
-            strPassword: '',
+            strEmail: 'james.tamba',
+            strPassword: 'bluezonesquad',
             selectedServer: "1",
             title: 'Title',
             message: 'Message',
@@ -55,7 +55,6 @@ class Form extends Component {
     onBtnClick(props) {
         Keyboard.dismiss();
         NetInfo.isConnected.fetch().then(isConnected => {
-            console.log('First, is ' + (isConnected ? 'online' : 'offline'));
             if (isConnected) {
                 switch (true) {
                     case this.state.strEmail === '':
