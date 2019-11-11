@@ -25,6 +25,7 @@ import {
 import RNFS from 'react-native-fs';
 import { retrieveData } from '../../Database/Resources';
 import WeeklySummary from '../../Component/WeeklySummary';
+import {downloadProfileImage} from "../Sync/Download/Image/Profile";
 
 export default class MoreScreen extends Component {
 
@@ -53,14 +54,6 @@ export default class MoreScreen extends Component {
     }
   }
 
-  willFocus = this.props.navigation.addListener(
-    'willFocus',
-    () => {
-        RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
-      this.loadData();
-    }
-  )
-
   componentWillUnmount() {
     this.willFocus.remove()
   }
@@ -68,13 +61,25 @@ export default class MoreScreen extends Component {
   willFocus = this.props.navigation.addListener(
     'willFocus',
     () => {
+        this.getProfileImage();
+        RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
+        this.loadData();
+
       let getPath = TaskServices.findBy2("TR_IMAGE_PROFILE", "USER_AUTH_CODE", this.state.user.USER_AUTH_CODE);
       let pathPhoto = getPhoto(typeof getPath === 'undefined' ? null : getPath.IMAGE_PATH_LOCAL);
       this.setState({
         userPhoto: pathPhoto
       })
     }
-  )
+  );
+
+    getProfileImage(){
+        NetInfo.isConnected.fetch().then(isConnected => {
+            if (isConnected) {
+                downloadProfileImage(this.state.user.USER_AUTH_CODE);
+            }
+        });
+    }
 
   loadData() {
     let dataUser = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', this.state.user.USER_AUTH_CODE);
