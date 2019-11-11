@@ -151,6 +151,7 @@ export default class ListFinding extends Component {
         }
       }
       config(options).fetch('GET', url).then((res) => {
+          RNFetchBlob.android.actionViewIntent(res.path(), '/')
         // alert("Success Downloaded " + res);
       }).catch((error) => {
         console.log(error);

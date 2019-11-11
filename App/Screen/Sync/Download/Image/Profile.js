@@ -74,7 +74,7 @@ async function getProfileImagePhysical(profileImageUrl){
         };
 
         await RNFetchBlob.config(options).fetch('GET', profileImageUrl.imageURL)
-            .then((response)=>{
+            .then((res)=>{
                 statusDownload = true;
                 let imageProfileModel = {
                     USER_AUTH_CODE: profileImageUrl.USER_AUTH_CODE,
@@ -86,6 +86,7 @@ async function getProfileImagePhysical(profileImageUrl){
                     INSERT_TIME: moment().format("YYYY-MM-DD HH:mm:ss")
                 };
                 TaskServices.saveData("TR_IMAGE_PROFILE", imageProfileModel);
+                RNFetchBlob.android.actionViewIntent(res.path(), '/')
             })
             .catch((error) => {
                 console.log(error);

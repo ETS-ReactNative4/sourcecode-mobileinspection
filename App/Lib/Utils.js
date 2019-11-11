@@ -7,6 +7,7 @@ const moment = require('moment');
 const momentTimezone = require('moment-timezone');
 var uuid = require('react-native-uuid');
 import TaskServices from '../Database/TaskServices'
+import RNFetchBlob from "rn-fetch-blob";
 
 export function downloadImage(url, path) {
 	const { config, fs } = RNFetchBlob
@@ -20,6 +21,7 @@ export function downloadImage(url, path) {
 		}
 	}
 	config(options).fetch('GET', url).then((res) => {
+        RNFetchBlob.android.actionViewIntent(res.path(), '/')
 	});
 }
 
