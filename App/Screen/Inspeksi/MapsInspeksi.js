@@ -1,7 +1,7 @@
 import React from 'react';
 import {StatusBar, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
-import MapView, {Marker, Polygon, ProviderPropType, PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView, {Marker, Polygon, ProviderPropType, PROVIDER_GOOGLE, LocalTile} from 'react-native-maps';
 import Colors from '../../Constant/Colors'
 import {NavigationActions, StackActions} from 'react-navigation';
 import IconLoc from 'react-native-vector-icons/FontAwesome5';
@@ -12,6 +12,7 @@ import {removeData, retrieveData, storeData} from '../../Database/Resources';
 import {AlertContent, Images} from '../../Themes';
 
 import * as geolib from 'geolib';
+import {dirsRoot} from "../../Lib/dirStorage";
 
 let polyMap = false;
 let LATITUDE = -2.1890660;
@@ -353,6 +354,17 @@ class MapsInspeksi extends React.Component {
                     }}
                     onMapReady={() => {this.onMapReady()}}
                 >
+                    <LocalTile
+                        /**
+                         * The path template of the locally stored tiles. The patterns {x} {y} {z} will be replaced at runtime
+                         * For example, /storage/emulated/0/mytiles/{z}/{x}/{y}.png
+                         */
+                        pathTemplate={dirsRoot+"/gawi2/{z}/{x}/{y}.png"}
+                        /**
+                         * The size of provided local tiles (usually 256 or 512).
+                         */
+                        tileSize={256}
+                    />
                     {this.state.poligons.length > 0 && this.state.poligons.map((poly, index) => (
                         <View key={index}>
                             <Polygon

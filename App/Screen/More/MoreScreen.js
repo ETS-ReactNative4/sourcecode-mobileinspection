@@ -64,19 +64,20 @@ export default class MoreScreen extends Component {
         this.getProfileImage();
         RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
         this.loadData();
-
-      let getPath = TaskServices.findBy2("TR_IMAGE_PROFILE", "USER_AUTH_CODE", this.state.user.USER_AUTH_CODE);
-      let pathPhoto = getPhoto(typeof getPath === 'undefined' ? null : getPath.IMAGE_PATH_LOCAL);
-      this.setState({
-        userPhoto: pathPhoto
-      })
     }
   );
 
     getProfileImage(){
         NetInfo.isConnected.fetch().then(isConnected => {
             if (isConnected) {
-                downloadProfileImage(this.state.user.USER_AUTH_CODE);
+                downloadProfileImage(this.state.user.USER_AUTH_CODE)
+                    .then(()=>{
+                        let getPath = TaskServices.findBy2("TR_IMAGE_PROFILE", "USER_AUTH_CODE", this.state.user.USER_AUTH_CODE);
+                        let pathPhoto = getPhoto(typeof getPath === 'undefined' ? null : getPath.IMAGE_PATH_LOCAL);
+                        this.setState({
+                            userPhoto: pathPhoto
+                        })
+                    });
             }
         });
     }
