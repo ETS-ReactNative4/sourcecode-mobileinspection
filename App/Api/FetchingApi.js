@@ -21,7 +21,7 @@ export function fetchPostWithUrl(URL, fetchBody, fetchHeaders) {
                 INSERT_TIME: momentTime,
                 MESSAGE: JSON.stringify(response),
                 DEV_NOTE: `response status !== 200`,
-                FROM: `GET - fetchGet - ${URL}`,
+                FROM: `POST - fetchPostWithUrl - ${URL}`,
             };
             TaskServices.saveData('TR_LOG', LogModel);
             return undefined;
@@ -34,7 +34,7 @@ export function fetchPostWithUrl(URL, fetchBody, fetchHeaders) {
                 INSERT_TIME: momentTime,
                 MESSAGE: data.message,
                 DEV_NOTE: `response status false`,
-                FROM: `POST - fetchPost - ${URL}`,
+                FROM: `POST - fetchPostWithUrl - ${URL}`,
             };
             TaskServices.saveData('TR_LOG', LogModel);
         }
@@ -46,7 +46,7 @@ export function fetchPostWithUrl(URL, fetchBody, fetchHeaders) {
             INSERT_TIME: momentTime,
             MESSAGE: JSON.stringify(err),
             DEV_NOTE: `fetch error catch`,
-            FROM: `POST - fetchPost - ${URL}`,
+            FROM: `POST - fetchPostWithUrl - ${URL}`,
         };
         TaskServices.saveData('TR_LOG', LogModel);
         return undefined;
@@ -90,7 +90,7 @@ export function fetchPost(serviceName, fetchBody, fetchHeaders) {
                 INSERT_TIME: momentTime,
                 MESSAGE: JSON.stringify(response),
                 DEV_NOTE: `response status !== 200`,
-                FROM: `GET - fetchGet - ${serviceDetail.API_URL}`,
+                FROM: `POST - fetchPost - ${serviceDetail.API_URL}`,
             };
             TaskServices.saveData('TR_LOG', LogModel);
             return undefined;
