@@ -59,11 +59,9 @@ export async function uploadFindingComment() {
 async function postFindingComment(model) {
     let fetchStatus = false;
 
-    console.log('Param Comment : ', model)
-
     await syncFetchPost("FINDING-COMMENT-INSERT", model, null)
-        .then(((data) => {
-            if (data !== null) {
+        .then(((response) => {
+            if (response !== null) {
                 TaskServices.updateByPrimaryKey('TR_FINDING_COMMENT', {
                     "FINDING_COMMENT_ID": model.FINDING_COMMENT_ID,
                     "STATUS_SYNC": "Y"

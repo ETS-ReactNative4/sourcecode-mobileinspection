@@ -55,7 +55,6 @@ class Form extends Component {
     onBtnClick(props) {
         Keyboard.dismiss();
         NetInfo.isConnected.fetch().then(isConnected => {
-            console.log('First, is ' + (isConnected ? 'online' : 'offline'));
             if (isConnected) {
                 switch (true) {
                     case this.state.strEmail === '':

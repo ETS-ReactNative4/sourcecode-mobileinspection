@@ -6,7 +6,7 @@ import imgNextPhoto from '../../Images/icon/ic_next_photo.png';
 import {RNCamera as Camera} from 'react-native-camera';
 import {getTodayDate} from '../../Lib/Utils'
 import ImageResizer from 'react-native-image-resizer';
-import {dirPhotoInspeksiBaris} from '../../Lib/dirStorage'
+import {dirPhotoEbccSelfie, dirPhotoInspeksiBaris} from '../../Lib/dirStorage'
 import R from 'ramda';
 import MapView from 'react-native-maps';
 import TaskService from '../../Database/TaskServices';
@@ -128,10 +128,18 @@ class TakePhotoBaris extends Component {
           skipProcessing: false,
           fixOrientation: true
         };
-        const data = await this.camera.takePictureAsync(takeCameraOptions);
-        this.setState({ path: data.uri, pathImg: dirPhotoInspeksiBaris, hasPhoto: true });
-        RNFS.copyFile(data.uri, `${dirPhotoInspeksiBaris}/${this.state.dataModel.IMAGE_NAME}`);
-        this.resize(`${dirPhotoInspeksiBaris}/${this.state.dataModel.IMAGE_NAME}`)
+          const data = await this.camera.takePictureAsync(takeCameraOptions);
+          var imgPath = `${dirPhotoInspeksiBaris}/${this.state.dataModel.IMAGE_NAME}`;
+
+          RNFS.copyFile(data.uri, imgPath);
+          this.setState(
+              {
+                  path: imgPath,
+                  pathImg: dirPhotoEbccSelfie,
+                  hasPhoto: true
+              },()=>{
+                  this.resize(imgPath)
+              });
       }
 
     } catch (err) {
@@ -145,7 +153,7 @@ class TakePhotoBaris extends Component {
       // response.path is the path of the new image
       // response.name is the name of the new image with the extension
       // response.size is the size of the new image
-      RNFS.copyFile(response.path, `${dirPhotoInspeksiBaris}/${this.state.dataModel.IMAGE_NAME}`);
+      RNFS.copyFile(response.path, this.state.path);
       this.setState({
         path: response.uri,
         pathCache: response.path

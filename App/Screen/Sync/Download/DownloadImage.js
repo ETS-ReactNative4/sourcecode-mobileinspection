@@ -10,7 +10,7 @@ export async function downloadImageCategory(data) {
         var url = data.ICON_URL;
         const { config } = RNFetchBlob
         let options = {
-            fileCache: true,
+            fileCache: false,
             addAndroidDownloads: {
                 useDownloadManager: true,
                 notification: true,
@@ -19,7 +19,8 @@ export async function downloadImageCategory(data) {
             }
         }
         config(options).fetch('GET', url).then((res) => {
-            // console.log(res)
+            RNFetchBlob.android.actionViewIntent(res.path(), '/')
+            // console.log(res)h
             // console.log('Response Image Category Success Insert')
         }).catch((error) => {
             console.log(error);
@@ -33,7 +34,7 @@ export async function downloadImageFinding(data) {
         var url = data.IMAGE_URL;
         const { config } = RNFetchBlob
         let options = {
-            fileCache: true,
+            fileCache: false,
             addAndroidDownloads: {
                 useDownloadManager: true,
                 notification: true,
@@ -42,6 +43,7 @@ export async function downloadImageFinding(data) {
             }
         }
         config(options).fetch('GET', url).then((res) => {
+            RNFetchBlob.android.actionViewIntent(res.path(), '/')
             // console.log('Reponse : ', res)
             console.log('Response Image Finding Success Insert')
         }).catch((error) => {

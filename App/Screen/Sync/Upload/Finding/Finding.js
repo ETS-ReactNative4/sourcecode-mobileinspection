@@ -70,14 +70,14 @@ async function postFinding(paramFindingModel) {
     };
 
     await syncFetchPost("FINDING-INSERT", findingModel, null)
-        .then(((data) => {
-            if (data !== null) {
+        .then(((response) => {
+            if (response !== null) {
                 //check if image finding is sync
                 let getImage = TaskServices.findBy("TR_IMAGE", "TR_CODE", findingModel.FINDING_CODE).filtered('STATUS_SYNC = "N"');
                 if (getImage === undefined) {
                     TaskServices.updateByPrimaryKey('TR_FINDING', {
                         "FINDING_CODE": paramFindingModel.FINDING_CODE,
-                        "STATUS_SYNC": "Y" 
+                        "STATUS_SYNC": "Y"
                     });
                 }
                 fetchStatus = true;

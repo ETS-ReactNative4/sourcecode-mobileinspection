@@ -34,7 +34,6 @@ class MapsInspeksi extends React.Component {
       title: 'Sabar Ya..',
       message: 'Sedang mencari lokasi kamu nih.',
       icon: '',
-
         modalAlert:{
             showModal: false,
             title: "",
@@ -42,7 +41,7 @@ class MapsInspeksi extends React.Component {
             icon: null
         },
         modalLoading:{
-            showModal: false,
+            showModal: true,
             title: "Sabar Ya..",
             message: "Sedang mencari lokasi kamu nih"
         },
@@ -77,7 +76,7 @@ class MapsInspeksi extends React.Component {
   }
 
   componentDidMount() {
-    BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
     this.props.navigation.setParams({ searchLocation: this.searchLocation });
   }
 
@@ -247,6 +246,15 @@ class MapsInspeksi extends React.Component {
     );
   }
 
+    onMapReady(){
+        this.setState({
+            modalLoading:{
+                ...this.state.modalLoading,
+                showModal: false
+            }
+        })
+    }
+
   validateType() {
     retrieveData('typeApp').then(data => {
       if (data != null) {
@@ -314,6 +322,7 @@ class MapsInspeksi extends React.Component {
               }
             });
           }}
+            onMapReady={() => {this.onMapReady()}}
         >
           {this.state.poligons.length > 0 && this.state.poligons.map((poly, index) => (
             <View key={index}>

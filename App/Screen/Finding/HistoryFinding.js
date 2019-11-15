@@ -121,7 +121,7 @@ export default class HistoryFinding extends Component {
       var url = data.IMAGE_URL;
       const { config, fs } = RNFetchBlob
       let options = {
-        fileCache: true,
+        fileCache: false,
         addAndroidDownloads: {
           useDownloadManager: true,
           notification: true,
@@ -130,6 +130,7 @@ export default class HistoryFinding extends Component {
         }
       }
       config(options).fetch('GET', url).then((res) => {
+          RNFetchBlob.android.actionViewIntent(res.path(), '/')
         // alert("Success Downloaded " + res);
       }).catch((error) => {
         alert(error);
