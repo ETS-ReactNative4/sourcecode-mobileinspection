@@ -66,8 +66,8 @@ async function postEbccHeader(paramEbccModel){
     }
 
     await syncFetchPost("EBCC-VALIDATION-HEADER-INSERT", ebccModel, null)
-        .then(((data) => {
-            if (data !== null) {
+        .then(((response) => {
+            if (response !== null) {
                 TaskServices.updateByPrimaryKey('TR_H_EBCC_VALIDATION', {
                     "EBCC_VALIDATION_CODE": ebccModel.EBCC_VALIDATION_CODE,
                     "STATUS_SYNC": "Y"
@@ -133,8 +133,8 @@ async function postEbccDetail(paramEbccModel){
     };
 
     await syncFetchPost("EBCC-VALIDATION-DETAIL-INSERT", ebccModel, null)
-        .then(((data) => {
-            if (data !== null) {
+        .then(((response) => {
+            if (response !== null) {
                     TaskServices.updateByPrimaryKey('TR_D_EBCC_VALIDATION', {
                         "EBCC_VALIDATION_CODE_D": paramEbccModel.EBCC_VALIDATION_CODE_D,
                         "STATUS_SYNC": "Y"

@@ -70,8 +70,8 @@ async function postInspectionHeader(headerModel){
     };
 
     await syncFetchPost("INSPECTION-HEADER-INSERT", inspectionHeaderModel, null)
-        .then(((data) => {
-            if (data !== null) {
+        .then(((response) => {
+            if (response !== null) {
                 TaskServices.updateByPrimaryKey('TR_BLOCK_INSPECTION_H', {
                     "BLOCK_INSPECTION_CODE": inspectionHeaderModel.BLOCK_INSPECTION_CODE,
                     "STATUS_SYNC": "Y"
@@ -144,8 +144,8 @@ async function postInspectionDetail(detailModel){
     };
 
     await syncFetchPost("INSPECTION-DETAIL-INSERT", inspectionDetailModel, null)
-        .then(((data) => {
-            if (data !== null) {
+        .then(((response) => {
+            if (response !== null) {
                 TaskServices.updateByPrimaryKey('TR_BLOCK_INSPECTION_D', {
                     "BLOCK_INSPECTION_CODE_D": inspectionDetailModel.BLOCK_INSPECTION_CODE_D,
                     "STATUS_SYNC": "Y"
@@ -215,8 +215,8 @@ async function postInspectionTrack(trackingModel){
     };
 
     await syncFetchPost("INSPECTION-TRACKING-INSERT", inspectionTrackingModel, null)
-        .then(((data) => {
-            if (data !== null) {
+        .then(((response) => {
+            if (response !== null) {
                 TaskServices.updateByPrimaryKey('TM_INSPECTION_TRACK', {
                     "TRACK_INSPECTION_CODE": inspectionTrackingModel.TRACK_INSPECTION_CODE,
                     "STATUS_SYNC": "Y"
@@ -349,8 +349,8 @@ async function postGenba(genbaModel) {
     };
 
     await syncFetchPost("INSPECTION-GENBA-INSERT", inspectionGenbaModel, null)
-        .then(((data) => {
-            if (data !== null) {
+        .then(((response) => {
+            if (response !== null) {
                     TaskServices.updateByPrimaryKey('TR_GENBA_INSPECTION', {
                         "BLOCK_INSPECTION_CODE": inspectionGenbaModel.BLOCK_INSPECTION_CODE,
                         "STATUS_SYNC": "Y"

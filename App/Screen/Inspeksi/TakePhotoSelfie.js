@@ -6,7 +6,7 @@ import imgTakePhoto from '../../Images/icon/ic_take_photo.png';
 import imgNextPhoto from '../../Images/icon/ic_next_photo.png';
 import R from 'ramda';
 import {getTodayDate} from '../../Lib/Utils'
-import {dirPhotoInspeksiSelfie} from '../../Lib/dirStorage'
+import {dirPhotoEbccSelfie, dirPhotoInspeksiBaris, dirPhotoInspeksiSelfie} from '../../Lib/dirStorage'
 import ImageResizer from 'react-native-image-resizer';
 
 const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
@@ -120,10 +120,19 @@ class TakePhotoSelfie extends Component {
           skipProcessing: false,
           fixOrientation: true
         };
-        const data = await this.camera.takePictureAsync(takeCameraOptions);
-        this.setState({ path: data.uri, pathImg: dirPhotoInspeksiSelfie, hasPhoto: true });
-        RNFS.copyFile(data.uri, `${dirPhotoInspeksiSelfie}/${this.state.dataModel.IMAGE_NAME}`);
-        this.resize(`${dirPhotoInspeksiSelfie}/${this.state.dataModel.IMAGE_NAME}`)
+
+          const data = await this.camera.takePictureAsync(takeCameraOptions);
+          var imgPath = `${dirPhotoInspeksiSelfie}/${this.state.dataModel.IMAGE_NAME}`;
+
+          RNFS.copyFile(data.uri, imgPath);
+          this.setState(
+              {
+                  path: imgPath,
+                  pathImg: dirPhotoEbccSelfie,
+                  hasPhoto: true
+              },()=>{
+                  this.resize(imgPath)
+              });
       }
 
     } catch (err) {
@@ -137,7 +146,7 @@ class TakePhotoSelfie extends Component {
       // response.path is the path of the new image
       // response.name is the name of the new image with the extension
       // response.size is the size of the new image
-      RNFS.copyFile(response.path, `${dirPhotoInspeksiSelfie}/${this.state.dataModel.IMAGE_NAME}`);
+      RNFS.copyFile(response.path, this.state.path);
       this.setState({
         path: response.uri,
         pathCache: response.path

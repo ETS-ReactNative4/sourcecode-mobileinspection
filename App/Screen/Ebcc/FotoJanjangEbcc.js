@@ -243,10 +243,19 @@ class FotoJanjang extends Component {
           skipProcessing: false,
           fixOrientation: true
         };
-        const data = await this.camera.takePictureAsync(takeCameraOptions);
-        this.setState({ path: data.uri, pathImg: dirPhotoEbccJanjang, hasPhoto: true });
-        RNFS.copyFile(data.uri, `${dirPhotoEbccJanjang}/${this.state.dataModel.IMAGE_NAME}`);
-        this.resize(`${dirPhotoEbccJanjang}/${this.state.dataModel.IMAGE_NAME}`)
+
+          const data = await this.camera.takePictureAsync(takeCameraOptions);
+          var imgPath = `${dirPhotoEbccJanjang}/${this.state.dataModel.IMAGE_NAME}`;
+
+          RNFS.copyFile(data.uri, imgPath);
+          this.setState(
+              {
+                  path: imgPath,
+                  pathImg: dirPhotoEbccSelfie,
+                  hasPhoto: true
+              },()=>{
+                  this.resize(imgPath)
+              });
       }
 
     } catch (err) {
@@ -260,7 +269,7 @@ class FotoJanjang extends Component {
       // response.path is the path of the new image
       // response.name is the name of the new image with the extension
       // response.size is the size of the new image
-      RNFS.copyFile(response.path, `${dirPhotoEbccJanjang}/${this.state.dataModel.IMAGE_NAME}`);
+      RNFS.copyFile(response.path, this.state.path);
       this.setState({
         path: response.uri,
         pathCache: response.path

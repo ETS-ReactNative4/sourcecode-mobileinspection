@@ -820,7 +820,7 @@ class HomeScreen extends React.Component {
       let url = data.IMAGE_URL;
       const { config, fs } = RNFetchBlob
       let options = {
-        fileCache: true,
+        fileCache: false,
         addAndroidDownloads: {
           useDownloadManager: true,
           notification: true,
@@ -829,6 +829,7 @@ class HomeScreen extends React.Component {
         }
       }
       config(options).fetch('GET', url).then((res) => {
+          RNFetchBlob.android.actionViewIntent(res.path(), '/')
         // alert("Success Downloaded " + res);
       }).catch((error) => {
         console.log("error Downloaded " + error);

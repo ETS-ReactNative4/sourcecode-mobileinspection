@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View, BackHandler } from 'react-native'
+import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View, BackHandler, NetInfo} from 'react-native'
 import { Card, Container, Content } from 'native-base'
 import Colors from '../../Constant/Colors'
 import FastImage from 'react-native-fast-image'
@@ -17,6 +17,7 @@ import { AlertContent, Images } from '../../Themes';
 import { getColor, getIconProgress, getRating, getStatusImage, getStatusTemuan } from '../../Themes/Resources';
 import { getBlokName, getContactName, getEstateName, getStatusBlok } from '../../Database/Resources';
 import {dirPhotoTemuan} from "../../Lib/dirStorage";
+import { downloadProfileImage } from '../Sync/Download/Image/Profile';
 
 const IconRating = (props) => {
     const styImage = {
@@ -43,12 +44,12 @@ class DetailFindingScreenRedesign extends Component {
 
         var ID = this.props.navigation.state.params.ID
         var data = TaskServices.findBy2('TR_FINDING', 'FINDING_CODE', ID);
-        let imageFilePath = TaskServices.getImagePath(data.INSERT_USER);
 
         this.state = {
             user: TaskServices.getAllData('TR_LOGIN')[0],
             id: ID,
-            imageFilePath: imageFilePath,
+            imageFilePath: null,
+            imageFilePathCommentator: null,
             images: [],
             totalImages: TaskServices.query('TR_IMAGE', `TR_CODE='${ID}' AND STATUS_IMAGE='SEBELUM'`),
             totalImagesSesudah: TaskServices.query('TR_IMAGE', `TR_CODE='${ID}' AND STATUS_IMAGE='SESUDAH'`),
@@ -95,7 +96,6 @@ class DetailFindingScreenRedesign extends Component {
     };
 
     componentWillMount() {
-
         this.state.totalImages.map(item => {
             this.state.images.push(item);
         });
@@ -117,7 +117,37 @@ class DetailFindingScreenRedesign extends Component {
         return true;
     }
 
-    componentDidMount() {
+    getProfileImage(){
+        let getComment = TaskServices.findBy("TR_FINDING_COMMENT", "FINDING_CODE", this.state.data.FINDING_CODE).sorted('INSERT_TIME', true);
+        NetInfo.isConnected.fetch().then(isConnected => {
+            if (isConnected) {
+                downloadProfileImage(this.state.data.INSERT_USER)
+                    .then(()=>{
+                        //update value after fetch profile image
+                        this.setState({
+                            imageFilePath: TaskServices.getImagePath(this.state.data.INSERT_USER)
+                        });
+                    });
+                downloadProfileImage(getComment[0].USER_AUTH_CODE)
+                    .then(()=>{
+                        //update value after fetch profile image
+                        this.setState({
+                            imageFilePathCommentator: TaskServices.getImagePath(getComment[0].USER_AUTH_CODE)
+                        });
+                    });
+            }
+            else {
+                //initial value
+                this.setState({
+                    imageFilePath: TaskServices.getImagePath(this.state.data.INSERT_USER),
+                    imageFilePathCommentator: TaskServices.getImagePath(getComment[0].USER_AUTH_CODE)
+                });
+            }
+        });
+    }
+    async componentDidMount() {
+        this.getProfileImage();
+
         let isSameUser = this.state.data.ASSIGN_TO == this.state.user.USER_AUTH_CODE ? true : false
         if (!isSameUser) {
             this.setState({ disabledProgress: true });
@@ -132,7 +162,6 @@ class DetailFindingScreenRedesign extends Component {
         let contact = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', this.state.data.INSERT_USER);
         let werkAfdBlokCode = `${this.state.data.WERKS}${this.state.data.AFD_CODE}${this.state.data.BLOCK_CODE}`;
         let lokasiBlok = `${getBlokName(werkAfdBlokCode)}/${getStatusBlok(werkAfdBlokCode)}/${getEstateName(this.state.data.WERKS)}`;
-
         this.setState({ insertTime, fullName: contact.FULLNAME, lokasiBlok })
     }
 
@@ -626,37 +655,43 @@ class DetailFindingScreenRedesign extends Component {
                 }}>
                     Komentar Terakhir ({commentCount})
                 </Text>
-                <Text style={{
-                    marginTop: 10
-                }}>
-                    <Text style={{
-                        fontSize: 14,
-                        fontWeight: 'bold'
-                    }}>
-                        {getComment[0].USERNAME}{" "}
-                    </Text>
-                    <Text
-                        style={{
-                            fontSize: 14
-                        }}
-                        onPress={() => {
+                <View style={{flexDirection: 'row', marginTop: 10}}>
+                    <Image
+                        style={{ marginRight: 16, width: 40, height: 40, borderRadius: 20 }}
+                        source={this.state.imageFilePathCommentator}
+                    />
+                    <View>
+                        <Text>
+                            <Text style={{
+                                fontSize: 14,
+                                fontWeight: 'bold'
+                            }}>
+                                {getComment[0].USERNAME}{" "}
+                            </Text>
+                            <Text
+                                style={{
+                                    fontSize: 14
+                                }}
+                                onPress={() => {
+                                    this.props.navigation.navigate("HomeScreenComment", { findingCode: this.state.data.FINDING_CODE })
+                                }}
+                            >
+                                {commentMessage}
+                            </Text>
+                        </Text>
+                        <TouchableOpacity onPress={() => {
                             this.props.navigation.navigate("HomeScreenComment", { findingCode: this.state.data.FINDING_CODE })
-                        }}
-                    >
-                        {commentMessage}
-                    </Text>
-                </Text>
-                <TouchableOpacity onPress={() => {
-                    this.props.navigation.navigate("HomeScreenComment", { findingCode: this.state.data.FINDING_CODE })
-                }}>
-                    <Text style={{
-                        fontSize: 12,
-                        paddingVertical: 5,
-                        color: "rgba(202,194,194, 1)"
-                    }}>
-                        Lihat {commentCount} Komentar
-                    </Text>
-                </TouchableOpacity>
+                        }}>
+                            <Text style={{
+                                fontSize: 12,
+                                paddingVertical: 5,
+                                color: "rgba(202,194,194, 1)"
+                            }}>
+                                Lihat {commentCount} Komentar
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
             </View>
         }
     }

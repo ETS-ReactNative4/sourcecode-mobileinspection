@@ -78,6 +78,14 @@ export async function getFindingComment() {
                     ...downloadLabels
                 }
             }
+
+            /* UPDATE TM_MOBILE_SYNC */
+            const param = {
+                TGL_MOBILE_SYNC: moment().format('YYYY-MM-DD kk:mm:ss'),
+                TABEL_UPDATE: 'finding-comment'
+            };
+            postMobileSync(param, 'TR_IMAGE FINDING');
+
         } catch (error) {
             console.log('CATCH FINDING COMMENT : ', error)
         }

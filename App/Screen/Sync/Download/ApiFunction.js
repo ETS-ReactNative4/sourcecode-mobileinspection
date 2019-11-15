@@ -6,10 +6,6 @@ export async function getAPIFunction(apiName) {
         .then(((response) => {
             if (response !== undefined) {
 
-                // if (apiName == 'AUTH-SYNC-FINDING') {
-                //     console.log(`Response Status Download ${apiName} : `, response)
-                // }
-
                 if (response.status) {
                     return dataAPI = response.data
                 } else {

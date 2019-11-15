@@ -11,7 +11,7 @@ import TaskServices from '../../Database/TaskServices';
 import { getCalculateTime, getTodayDate } from '../../Lib/Utils'
 import { NavigationActions, StackActions } from 'react-navigation';
 import R from 'ramda';
-import geolib from 'geolib';
+import * as geolib from 'geolib';
 import { ProgressDialog } from 'react-native-simple-dialogs';
 import ModalAlert from '../../Component/ModalAlert';
 import ModalAlertConfirmation from '../../Component/ModalAlertConfirmation';
@@ -180,18 +180,18 @@ class KondisiBarisAkhir extends Component {
         let totalDistance = 0;
         let getTrack = TaskServices.findBy("TM_INSPECTION_TRACK", "BLOCK_INSPECTION_CODE", this.state.inspeksiHeader.BLOCK_INSPECTION_CODE);
         if (getTrack.length > 0) {
-            for (let count = 0; count < getTrack.length - 2; count++) {
-                let getTrackDistance = geolib.getDistance({ latitude: parseFloat(getTrack[count].LAT_TRACK), longitude: parseFloat(getTrack[count].LONG_TRACK) }, { latitude: parseFloat(getTrack[count + 1].LAT_TRACK), longitude: parseFloat(getTrack[count + 1].LONG_TRACK) });
-                totalDistance = totalDistance + getTrackDistance;
+            if(getTrack.length >= 2){
+                for (let count = 0; count < getTrack.length - 2; count++) {
+                    let getTrackDistance = geolib.getDistance(
+                        { latitude: parseFloat(getTrack[count].LAT_TRACK), longitude: parseFloat(getTrack[count].LONG_TRACK) },
+                        { latitude: parseFloat(getTrack[count + 1].LAT_TRACK), longitude: parseFloat(getTrack[count + 1].LONG_TRACK)
+                        });
+                    // let getTrackDistance = geolib.getDistance({ latitude: parseFloat(getTrack[count].LAT_TRACK), longitude: parseFloat(getTrack[count].LONG_TRACK) }, { latitude: parseFloat(getTrack[count + 1].LAT_TRACK), longitude: parseFloat(getTrack[count + 1].LONG_TRACK) });
+                    totalDistance = totalDistance + getTrackDistance;
+                }
             }
-            console.log("TOTAL DISTANCE", totalDistance);
         }
         return totalDistance;
-    }
-
-    searchLocation = () => {
-        this.setState({ fetchLocation: true })
-        this.getLocation();
     }
 
     getLocation() {

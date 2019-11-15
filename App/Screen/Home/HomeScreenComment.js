@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
-import {FlatList, Image, Keyboard, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {FlatList, Image, Keyboard, NetInfo, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import Colors from "../../Constant/Colors";
 import Icon from "react-native-vector-icons/Ionicons";
 import Icon1 from '../../Component/Icon1'
 import TaskServices from "../../Database/TaskServices";
 import moment from 'moment'
+import {downloadProfileImage} from "../Sync/Download/Image/Profile";
 
 let ic_org_placeholder = require('../../Images/ic-orang.png');
 
@@ -51,6 +52,18 @@ export default class HomeScreenComment extends Component {
     componentDidMount() {
         this.getComment();
         this.getListUser();
+        this.getProfileImage();
+    }
+
+    getProfileImage(){
+        let commentData = TaskServices.findBy("TR_FINDING_COMMENT", "FINDING_CODE", this.state.FINDING_CODE);
+        commentData.map((commentModel)=>{
+            NetInfo.isConnected.fetch().then(isConnected => {
+                if (isConnected) {
+                    downloadProfileImage(commentModel.USER_AUTH_CODE);
+                }
+            });
+        })
     }
 
     getListUser() {

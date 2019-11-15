@@ -7,11 +7,12 @@ const moment = require('moment');
 const momentTimezone = require('moment-timezone');
 var uuid = require('react-native-uuid');
 import TaskServices from '../Database/TaskServices'
+import RNFetchBlob from "rn-fetch-blob";
 
 export function downloadImage(url, path) {
 	const { config, fs } = RNFetchBlob
 	let options = {
-		fileCache: true,
+		fileCache: false,
 		addAndroidDownloads: {
 			useDownloadManager: true,
 			notification: true,
@@ -20,6 +21,7 @@ export function downloadImage(url, path) {
 		}
 	}
 	config(options).fetch('GET', url).then((res) => {
+        RNFetchBlob.android.actionViewIntent(res.path(), '/')
 	});
 }
 
@@ -170,15 +172,15 @@ export async function getPermission() {
 				'message': 'ReactNativeCode App needs access to your personal data. '
 			}
 		);
-		// const storageWrite =  await PermissionsAndroid.request(
-		// 	PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE ,
-		// 	{
-		// 	  'title': 'ReactNativeCode wants to WRITE_EXTERNAL_STORAGE',
-		// 	  'message': 'ReactNativeCode App needs access to your personal data. '
-		// 	}
-		// );
+		const storageWrite =  await PermissionsAndroid.request(
+			PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE ,
+			{
+			  'title': 'ReactNativeCode wants to WRITE_EXTERNAL_STORAGE',
+			  'message': 'ReactNativeCode App needs access to your personal data. '
+			}
+		);
 		if (phone === PermissionsAndroid.RESULTS.GRANTED && camera === PermissionsAndroid.RESULTS.GRANTED &&
-			storage === PermissionsAndroid.RESULTS.GRANTED && location === PermissionsAndroid.RESULTS.GRANTED) {
+			storage === PermissionsAndroid.RESULTS.GRANTED && location === PermissionsAndroid.RESULTS.GRANTED && storageWrite) {
 			return true;
 		}
 	} catch (e) {

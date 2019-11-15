@@ -48,7 +48,7 @@ class MapsEbcc extends React.Component {
                 icon: null
             },
             modalLoading:{
-                showModal: false,
+                showModal: true,
                 title: "Sabar Ya..",
                 message: "Sedang mencari lokasi kamu nih"
             },
@@ -118,6 +118,15 @@ class MapsEbcc extends React.Component {
             },
             { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
         );
+    }
+
+    onMapReady(){
+        this.setState({
+            modalLoading:{
+                ...this.state.modalLoading,
+                showModal: false
+            }
+        })
     }
 
     validateType(type) {
@@ -369,6 +378,7 @@ class MapsEbcc extends React.Component {
                             }
                         });
                     }}
+                    onMapReady={() => {this.onMapReady()}}
                 >
                     {this.state.poligons.length > 0 && this.state.poligons.map((poly, index) => (
                         <View key={index}>
@@ -398,11 +408,7 @@ class MapsEbcc extends React.Component {
                         coordinate={{
                             latitude: this.state.latitude,
                             longitude: this.state.longitude,
-                        }}
-                        centerOffset={{ x: -42, y: -60 }}
-                        anchor={{ x: 0.84, y: 1 }}
-                    >
-                    </Marker>
+                        }}/>
 
                 </MapView>
                 <View style={{

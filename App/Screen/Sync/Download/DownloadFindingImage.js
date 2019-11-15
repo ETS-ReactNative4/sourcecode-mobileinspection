@@ -40,7 +40,7 @@ export async function getFindingImage() {
                 /* UPDATE TM_MOBILE_SYNC */
                 const param = {
                     TGL_MOBILE_SYNC: moment().format('YYYY-MM-DD kk:mm:ss'),
-                    TABEL_UPDATE: 'finding'
+                    TABEL_UPDATE: 'finding-image'
                 }
 
                 postMobileSync(param, 'TR_IMAGE FINDING');

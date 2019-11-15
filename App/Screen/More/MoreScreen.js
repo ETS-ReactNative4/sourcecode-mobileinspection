@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Image, NetInfo, ScrollView, StyleSheet, Text, TouchableOpacity, View, ToastAndroid } from 'react-native';
 import { Thumbnail } from 'native-base';
+import RNFetchBlob from "rn-fetch-blob";
 import TaskServices from '../../Database/TaskServices'
 import { NavigationActions, StackActions } from 'react-navigation';
 import ModalConfirmation from '../../Component/ModalAlertConfirmation'
@@ -24,6 +25,7 @@ import {
 import RNFS from 'react-native-fs';
 import { retrieveData } from '../../Database/Resources';
 import WeeklySummary from '../../Component/WeeklySummary';
+import {downloadProfileImage} from "../Sync/Download/Image/Profile";
 
 export default class MoreScreen extends Component {
 
@@ -52,13 +54,6 @@ export default class MoreScreen extends Component {
     }
   }
 
-  willFocus = this.props.navigation.addListener(
-    'willFocus',
-    () => {
-      this.loadData()
-    }
-  )
-
   componentWillUnmount() {
     this.willFocus.remove()
   }
@@ -66,13 +61,26 @@ export default class MoreScreen extends Component {
   willFocus = this.props.navigation.addListener(
     'willFocus',
     () => {
-      let getPath = TaskServices.findBy2("TR_IMAGE_PROFILE", "USER_AUTH_CODE", this.state.user.USER_AUTH_CODE);
-      let pathPhoto = getPhoto(typeof getPath === 'undefined' ? null : getPath.IMAGE_PATH_LOCAL);
-      this.setState({
-        userPhoto: pathPhoto
-      })
+        this.getProfileImage();
+        RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
+        this.loadData();
     }
-  )
+  );
+
+    getProfileImage(){
+        NetInfo.isConnected.fetch().then(isConnected => {
+            if (isConnected) {
+                downloadProfileImage(this.state.user.USER_AUTH_CODE)
+                    .then(()=>{
+                        let getPath = TaskServices.findBy2("TR_IMAGE_PROFILE", "USER_AUTH_CODE", this.state.user.USER_AUTH_CODE);
+                        let pathPhoto = getPhoto(typeof getPath === 'undefined' ? null : getPath.IMAGE_PATH_LOCAL);
+                        this.setState({
+                            userPhoto: pathPhoto
+                        })
+                    });
+            }
+        });
+    }
 
   loadData() {
     let dataUser = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', this.state.user.USER_AUTH_CODE);
@@ -113,7 +121,6 @@ export default class MoreScreen extends Component {
 
   logout() {
     NetInfo.isConnected.fetch().then(isConnected => {
-      console.log('First, is ' + (isConnected ? 'online' : 'offline'));
       if (isConnected) {
         TaskServices.updateLogin('TR_LOGIN');
         this.setState({ showConfirm: false });
@@ -309,17 +316,17 @@ export default class MoreScreen extends Component {
   }
 
   /* Function Export Database */
-  async menuDatabase() {
-    RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
-
-    setTimeout(() => {
-      ToastAndroid.showWithGravity(
-        'Database berhasil di export',
-        ToastAndroid.LONG,
-        ToastAndroid.CENTER
-      );
-    }, 2000)
-  }
+  // async menuDatabase() {
+  //   RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
+  //
+  //   setTimeout(() => {
+  //     ToastAndroid.showWithGravity(
+  //       'Database berhasil di export',
+  //       ToastAndroid.LONG,
+  //       ToastAndroid.CENTER
+  //     );
+  //   }, 2000)
+  // }
 
   async sendFile(){
       //create zip file
@@ -331,7 +338,14 @@ export default class MoreScreen extends Component {
       this.zipFile(zipPath.toString(), zipDestination.toString())
           .then((response)=>{
               if(response.status){
-                  this.sendEmail(response.filePath, this.state.user.USERNAME, currentTime);
+                  let dirs = RNFetchBlob.fs.dirs;
+                  RNFetchBlob.fs.cp(response.filePath, dirs.SDCardDir+ "/" + "MobileInspection/" + `${this.state.user.USERNAME}_${currentTime}.zip`)
+                      .then((res)=>{
+                          this.sendEmail(response.filePath, this.state.user.USERNAME, currentTime);
+                      })
+                      .catch((err)=>{
+                          alert(err)
+                      })
               }
           })
   }
