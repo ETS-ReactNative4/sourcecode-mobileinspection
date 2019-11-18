@@ -24,7 +24,7 @@ import CustomHeader from '../../Component/CustomHeader'
 import ServerName from '../../Constant/ServerName'
 import Moment from 'moment';
 import RNFetchBlob from 'rn-fetch-blob'
-import { changeFormatDate, dateDisplayMobile, isNotUserMill, syncDays, notifInbox } from '../../Lib/Utils';
+import { changeFormatDate, dateDisplayMobile, isNotUserMill, syncDays, notifInbox, getTodayDate } from '../../Lib/Utils';
 import FastImage from 'react-native-fast-image'
 import SwiperSlider from 'react-native-swiper'
 import {
@@ -33,6 +33,7 @@ import {
   dirPhotoEbccSelfie,
   dirPhotoInspeksiBaris,
   dirPhotoInspeksiSelfie,
+  dirPhotoInspeksiSuggestion,
   dirPhotoKategori,
   dirPhotoTemuan,
   dirDatabase
@@ -43,6 +44,7 @@ import { clipString } from '../../Constant/Function';
 import { Images } from '../../Themes';
 import { changeBgFilter, changeIconFilter, getColor, getIconProgress, getStatusImage } from '../../Themes/Resources';
 import { getBlokName, getCategoryName, getEstateName, getStatusBlok, retrieveData, removeData, storeData } from '../../Database/Resources';
+import moment from 'moment'
 
 import RNFS from 'react-native-fs'
 
@@ -124,6 +126,8 @@ class HomeScreen extends React.Component {
     'willFocus',
     () => {
 
+      this._createDataSuggestion()
+      this._deleteDataSuggestion()
       this.showWeeklySummary()
 
       if (this.state.loadAll) {
@@ -148,11 +152,50 @@ class HomeScreen extends React.Component {
     }
   )
 
+  /** CREATE DATA SUGGESTION */
+  _createDataSuggestion() {
+    retrieveData('SUGGESTION').then((result) => {
+      if (result == null) {
+        storeData('SUGGESTION', [])
+      }
+    });
+  }
+
+  /** DELETE DATA SUGGESTION */
+  _deleteDataSuggestion() {
+    // let data = TaskServices.getAllData('TM_SUGGESTION_INSPECTION');
+
+    // if (data.length > 0) {
+    //   data.map(item => {
+    //     let insertTime = item.INSERT_TIME;
+    //     if (insertTime != undefined) {
+    //       let today = getTodayDate('YYYYMMDD').toString();
+
+    //       if (insertTime !== today) {
+    //         TaskServices.deleteAllData('TM_SUGGESTION_INSPECTION');
+    //         console.log('Delete Berhasil')
+    //       }
+    //     }
+
+    //   })
+    // }
+    retrieveData('SUGGESTION_DATE').then((result) => {
+      if (result != null) {
+        let today = getTodayDate('YYYYYMMDD')
+        if (today > result) {
+          console.log('Delete Data Suggestion Berhasil')
+          removeData('SUGGESTION');
+        }
+      }
+    });
+  }
+
   componentDidMount() {
     RNFS.mkdir(dirDatabase);
     RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
     RNFS.mkdir(dirPhotoInspeksiBaris);
     RNFS.mkdir(dirPhotoInspeksiSelfie);
+    RNFS.mkdir(dirPhotoInspeksiSuggestion);
     RNFS.mkdir(dirPhotoTemuan);
     RNFS.mkdir(dirPhotoKategori);
     RNFS.mkdir(dirPhotoEbccJanjang);
@@ -462,10 +505,10 @@ class HomeScreen extends React.Component {
             <Text style={{ fontSize: 10, marginBottom: 5, color: 'white' }}>{getStatusImage(item.STATUS_IMAGE)}</Text>
           </View>}
 
-          {/*<Image*/}
-          {/*    style={{width: 50, height: 50}}*/}
-          {/*    source={{uri: item.IMAGE_URL}}*/}
-          {/*/>*/}
+        {/*<Image*/}
+        {/*    style={{width: 50, height: 50}}*/}
+        {/*    source={{uri: item.IMAGE_URL}}*/}
+        {/*/>*/}
         <FastImage style={{ height: 300 }}
           source={{
             uri: uri,

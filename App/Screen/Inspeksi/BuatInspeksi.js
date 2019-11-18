@@ -1,14 +1,14 @@
-import React, {Component} from 'react';
-import {BackHandler, Dimensions, Keyboard, StatusBar, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import {Card} from 'native-base';
+import React, { Component } from 'react';
+import { BackHandler, Dimensions, Keyboard, StatusBar, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Card } from 'native-base';
 import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {getTodayDate} from '../../Lib/Utils'
+import { getTodayDate } from '../../Lib/Utils'
 import TaskService from '../../Database/TaskServices';
-import {ProgressDialog} from 'react-native-simple-dialogs';
+import { ProgressDialog } from 'react-native-simple-dialogs';
 import R from 'ramda'
-import {NavigationActions, StackActions} from 'react-navigation';
+import { NavigationActions, StackActions } from 'react-navigation';
 import ModalAlert from '../../Component/ModalAlert';
 import ModalAlertConfirmation from "../../Component/ModalAlertConfirmation";
 
@@ -32,23 +32,23 @@ class BuatInspeksiRedesign extends Component {
     static navigationOptions = ({ navigation }) => {
         const { params = {} } = navigation.state;
         return {
-          headerStyle: {
-            backgroundColor: Colors.tintColorPrimary
-          },
-          title: 'Buat Inspeksi',
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            textAlign: "left",
-            flex: 1,
-            fontSize: 18,
-            fontWeight: '400',
-            marginHorizontal: 12
-        },
-        // headerRight: (
-        //       <TouchableOpacity style= {{marginRight: 20}} onPress={()=>{params.searchLocation()}}>
-        //           <IconLoc style={{marginLeft: 12}} name={'location-arrow'} size={24} color={'white'} />
-        //       </TouchableOpacity>
-        //   )
+            headerStyle: {
+                backgroundColor: Colors.tintColorPrimary
+            },
+            title: 'Buat Inspeksi',
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+                textAlign: "left",
+                flex: 1,
+                fontSize: 18,
+                fontWeight: '400',
+                marginHorizontal: 12
+            },
+            // headerRight: (
+            //       <TouchableOpacity style= {{marginRight: 20}} onPress={()=>{params.searchLocation()}}>
+            //           <IconLoc style={{marginLeft: 12}} name={'location-arrow'} size={24} color={'white'} />
+            //       </TouchableOpacity>
+            //   )
         };
     }
 
@@ -58,6 +58,9 @@ class BuatInspeksiRedesign extends Component {
 
         let params = props.navigation.state.params;
         let werkAfdBlockCode = R.clone(params.werkAfdBlockCode);
+
+        console.log('Werks Afd Block Code : ', werkAfdBlockCode);
+
         let latitude = R.clone(params.latitude);
         let longitude = R.clone(params.longitude);
 
@@ -78,7 +81,7 @@ class BuatInspeksiRedesign extends Component {
             fetchLocation: false,
             showBaris: true,
             query: '',
-            person:[],
+            person: [],
             werksAfdBlokCode: '',
             afdCode: '',
             werks: '',
@@ -95,16 +98,16 @@ class BuatInspeksiRedesign extends Component {
             icon: '',
             inspectionType: props.navigation.getParam('inspectionType', 'normal')
         };
-		// this.initBlokInspeksiCode(dataLogin[0].USER_AUTH_CODE);
+        // this.initBlokInspeksiCode(dataLogin[0].USER_AUTH_CODE);
     }
 
     // initBlokInspeksiCode(authCode){
-	// 	let today = getTodayDate('YYMMDDHHmmss');
+    // 	let today = getTodayDate('YYMMDDHHmmss');
     //     let blokInspeksiCode = `I${authCode}${today}`;
-	// 	this.setState({
-	// 		blokInspeksiCode : blokInspeksiCode
-	// 	})
-	// }
+    // 	this.setState({
+    // 		blokInspeksiCode : blokInspeksiCode
+    // 	})
+    // }
 
     // findPerson(query){
     //     if (query === '') {
@@ -116,12 +119,12 @@ class BuatInspeksiRedesign extends Component {
     //
     // }
 
-    componentWillMount () {
-        this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', ()=>{this.setState({showBtn:false})});
-        this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', ()=>{this.setState({showBtn:true})});
+    componentWillMount() {
+        this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => { this.setState({ showBtn: false }) });
+        this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => { this.setState({ showBtn: true }) });
     }
 
-    componentWillUnmount () {
+    componentWillUnmount() {
         BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
         this.keyboardDidShowListener.remove();
         this.keyboardDidHideListener.remove();
@@ -135,14 +138,14 @@ class BuatInspeksiRedesign extends Component {
 
     }
 
-    selesai=()=>{
+    selesai = () => {
         const navigation = this.props.navigation;
         let routeName = 'MainMenu';
         Promise.all([
             navigation.dispatch(
                 StackActions.reset({
-                    index:0,
-                    actions:[NavigationActions.navigate({ routeName : routeName})]
+                    index: 0,
+                    actions: [NavigationActions.navigate({ routeName: routeName })]
                 })
             )]).then(() => navigation.navigate('Inspection')).then(() => navigation.navigate('DaftarInspeksi'))
     }
@@ -156,15 +159,15 @@ class BuatInspeksiRedesign extends Component {
         return true;
     }
 
-    searchLocation =() =>{
-        this.setState({fetchLocation: true})
+    searchLocation = () => {
+        this.setState({ fetchLocation: true })
         this.getLocation();
     }
 
-    loadData(){
+    loadData() {
         let data = TaskService.getAllData('TM_BLOCK');
-        data.map(item=>{
-            let statusBlok= this.getStatusBlok(item.WERKS_AFD_BLOCK_CODE);
+        data.map(item => {
+            let statusBlok = this.getStatusBlok(item.WERKS_AFD_BLOCK_CODE);
             let estateName = this.getEstateName(item.WERKS);
             this.state.person.push({
                 blokCode: item.BLOCK_CODE,
@@ -180,10 +183,10 @@ class BuatInspeksiRedesign extends Component {
         });
     }
 
-    loadDataBlock(werkAfdBlockCode){
+    loadDataBlock(werkAfdBlockCode) {
         let data = TaskService.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', werkAfdBlockCode);
-        if(data !== undefined){
-            let statusBlok= this.getStatusBlok(data.WERKS_AFD_BLOCK_CODE);
+        if (data !== undefined) {
+            let statusBlok = this.getStatusBlok(data.WERKS_AFD_BLOCK_CODE);
             let estateName = this.getEstateName(data.WERKS);
             this.setState({
                 blok: data.BLOCK_CODE,
@@ -197,7 +200,7 @@ class BuatInspeksiRedesign extends Component {
                 compCode: data.COMP_CODE,
                 allShow: `${data.BLOCK_NAME}/${statusBlok}/${estateName}`
             })
-        }else{
+        } else {
             // alert('Kamu tidak bisa inspeksi');
             // this.selesai();
             this.setState({ showModal2: true, title: 'Salah Blok', message: 'Kamu ga bisa buat inspeksi di blok ini', icon: require('../../Images/ic-blm-input-lokasi.png') });
@@ -240,7 +243,7 @@ class BuatInspeksiRedesign extends Component {
                 var lat = parseFloat(position.coords.latitude);
                 var lon = parseFloat(position.coords.longitude);
                 // const timestamp = convertTimestampToDate(position.timestamp, 'DD/MM/YYYY HH:mm:ss')//moment(position.timestamp).format('DD/MM/YYYY HH:mm:ss');
-                this.setState({latitude:lat, longitude:lon, fetchLocation: false});
+                this.setState({ latitude: lat, longitude: lon, fetchLocation: false });
             },
             (error) => {
                 // this.setState({ error: error.message, fetchingLocation: false })
@@ -261,7 +264,7 @@ class BuatInspeksiRedesign extends Component {
     async validation() {
         let statusBlok = this.getStatusBlok(this.state.werksAfdBlokCode);
         var message = 'Kamu harus pilih lokasi dan isi baris dulu yaa :D'
-        if(statusBlok === ''){
+        if (statusBlok === '') {
             this.setState({ showModal: true, title: 'Pilih Lokasi', message: message, icon: require('../../Images/ic-blm-input-lokasi.png') });
         } else if (this.state.werks === '') {
             this.setState({ showModal: true, title: 'Pilih Lokasi', message: message, icon: require('../../Images/ic-blm-input-lokasi.png') });
@@ -269,9 +272,9 @@ class BuatInspeksiRedesign extends Component {
             this.setState({ showModal: true, title: 'Pilih Lokasi', message: message, icon: require('../../Images/ic-blm-input-lokasi.png') });
         } else if (this.state.baris === '') {
             this.setState({ showModal: true, title: 'Pilih Lokasi', message: message, icon: require('../../Images/ic-blm-input-lokasi.png') });
-        } else if(this.checkSameBaris()){
+        } else if (this.checkSameBaris()) {
             this.setState({ showModal: true, title: 'Baris sama', message: 'Opps, baris tidak boleh sama dengan sebelumnya ya', icon: require('../../Images/ic-blm-input-lokasi.png') });
-        } else if(this.checkJarakBaris()){
+        } else if (this.checkJarakBaris()) {
             this.setState({ showModal: true, title: 'Baris terlalu dekat', message: 'Opps, minimum jarak barisnya lebih dari 5 dari baris terakhir ya !', icon: require('../../Images/ic-blm-input-lokasi.png') });
         }
         // else if(this.state.latitude === 0.0 && this.state.longitude === 0.0){
@@ -286,15 +289,15 @@ class BuatInspeksiRedesign extends Component {
         }
     }
 
-    checkSameBaris(){
+    checkSameBaris() {
         let today = getTodayDate('YYMMDD');
         let idInspection = `B${this.state.dataLogin[0].USER_AUTH_CODE}${today}${this.state.werkAfdBlockCode}`
         let data = TaskService.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', idInspection)
-        if(data !== undefined){
+        if (data !== undefined) {
             let header = TaskService.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', idInspection)
-            if(header !== undefined){
-                for(var i=0; i<header.length; i++){
-                    if(this.state.baris == header[i].AREAL){
+            if (header !== undefined) {
+                for (var i = 0; i < header.length; i++) {
+                    if (this.state.baris == header[i].AREAL) {
                         return true
                     }
                 }
@@ -303,18 +306,18 @@ class BuatInspeksiRedesign extends Component {
         return false
     }
 
-    checkJarakBaris(){
+    checkJarakBaris() {
         let today = getTodayDate('YYMMDD');
         let idInspection = `B${this.state.dataLogin[0].USER_AUTH_CODE}${today}${this.state.werkAfdBlockCode}`
         let data = TaskService.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', idInspection)
         //cek baris inspection udh ada ato blom
-        if(data !== undefined){
+        if (data !== undefined) {
             let header = TaskService.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', idInspection)
             //cek di TR_BLOCK_INSPECTION_H udh ad apa belum
-            if(header !== undefined && header.length > 0){
-                let rangeMin = parseInt(this.state.baris) <= 5 ? 1 : parseInt(this.state.baris)-4;
-                let rangeMax = parseInt(this.state.baris)+4;
-                let validation = header.some((val)=>{
+            if (header !== undefined && header.length > 0) {
+                let rangeMin = parseInt(this.state.baris) <= 5 ? 1 : parseInt(this.state.baris) - 4;
+                let rangeMax = parseInt(this.state.baris) + 4;
+                let validation = header.some((val) => {
                     return (val.AREAL <= rangeMax && val.AREAL >= rangeMin)
                 });
                 return validation;
@@ -333,7 +336,7 @@ class BuatInspeksiRedesign extends Component {
     //
     // }
 
-    getStatusBlok(werk_afd_blok_code){
+    getStatusBlok(werk_afd_blok_code) {
         try {
             let data = TaskService.findBy2('TM_LAND_USE', 'WERKS_AFD_BLOCK_CODE', werk_afd_blok_code);
             return data.MATURITY_STATUS;
@@ -342,7 +345,7 @@ class BuatInspeksiRedesign extends Component {
         }
     }
 
-    getEstateName(werks){
+    getEstateName(werks) {
         try {
             let data = TaskService.findBy2('TM_EST', 'WERKS', werks);
             return data.EST_NAME;
@@ -352,9 +355,9 @@ class BuatInspeksiRedesign extends Component {
 
     }
 
-    potong(param){
+    potong(param) {
         let brs = param;
-        if(brs.charAt(0) == '0'){
+        if (brs.charAt(0) == '0') {
             brs = brs.substring(1);
 
         }
@@ -365,7 +368,7 @@ class BuatInspeksiRedesign extends Component {
 
         let inspectionDate = getTodayDate('YYYY-MM-DD HH:mm:ss');
         // let idInspection = `B${this.state.dataLogin[0].USER_AUTH_CODE}${getTodayDate('YYMMDDHHmmss')}`
-		let today = getTodayDate('YYMMDD');
+        let today = getTodayDate('YYMMDD');
         let idInspection = `B${this.state.dataLogin[0].USER_AUTH_CODE}${today}${this.state.werkAfdBlockCode}`
 
         let modelInspeksiH = {
@@ -400,7 +403,7 @@ class BuatInspeksiRedesign extends Component {
             BLOCK_INSPECTION_CODE: this.state.blokInspeksiCode
         }
 
-        let model =  {
+        let model = {
             ID_INSPECTION: idInspection,
             BLOCK_INSPECTION_CODE: this.state.blokInspeksiCode,
             EST_NAME: this.getEstateName(this.state.werks),
@@ -413,15 +416,15 @@ class BuatInspeksiRedesign extends Component {
             INSPECTION_RESULT: '',
             INSPECTION_SCORE: '',
             FULFILL_BARIS: 'N',
-            TR_FINDING_CODES:[]
+            TR_FINDING_CODES: []
         }
 
 
         //for track
         let time = TaskService.getAllData('TM_TIME_TRACK')[0];
         let duration = 10000
-        if(time !== undefined){
-             duration = parseFloat(time.DESC);
+        if (time !== undefined) {
+            duration = parseFloat(time.DESC);
         }
         let id = 0;//setInterval(()=> this.getLocation2(this.state.blokInspeksiCode), duration);
 
@@ -432,7 +435,7 @@ class BuatInspeksiRedesign extends Component {
             waktu: getTodayDate('YYYY-MM-DD  HH:mm:ss'),
             intervalId: id,
             dataInspeksi: model,
-            inspectionType  : this.state.inspectionType === 'genba' ? 'genba' : 'normal'
+            inspectionType: this.state.inspectionType === 'genba' ? 'genba' : 'normal'
         });
     }
 
@@ -482,7 +485,7 @@ class BuatInspeksiRedesign extends Component {
                 <ModalAlert
                     icon={this.state.icon}
                     visible={this.state.showModal2}
-                    onPressCancel={() => {this.setState({ showModal2: false }); this.selesai()}}
+                    onPressCancel={() => { this.setState({ showModal2: false }); this.selesai() }}
                     title={this.state.title}
                     message={this.state.message} />
 
@@ -535,7 +538,7 @@ class BuatInspeksiRedesign extends Component {
                 {/*INPUT*/}
                 <View style={{ height: 200, marginLeft: 20, marginRight: 20 }}>
                     <Card style={[styles.cardContainer]}>
-                        <View style={{flex:1, margin:10}}>
+                        <View style={{ flex: 1, margin: 10 }}>
                             <Text style={{ color: '#696969' }}>Blok</Text>
                             {/* <Autocomplete
                                 autoCapitalize="none"
@@ -569,19 +572,19 @@ class BuatInspeksiRedesign extends Component {
                                 underlineColorAndroid={'transparent'}
                                 style={[styles.searchInput]}
                                 value={this.state.allShow}
-                                />
+                            />
                         </View>
                         {this.state.showBaris &&
-                        <View style={{ flex: 1, margin:10 }}>
-                            <Text style={{ color: '#696969' }}>Baris</Text>
-                            <TextInput
-                                underlineColorAndroid={'transparent'}
-                                style={[styles.searchInput]}
-                                keyboardType={'numeric'}
-                                maxLength={3}
-                                value={this.state.baris}
-                                onChangeText={(text) => { text = text.replace(/[^0-9]/g, ''); this.potong(text);  }} />
-                        </View>}
+                            <View style={{ flex: 1, margin: 10 }}>
+                                <Text style={{ color: '#696969' }}>Baris</Text>
+                                <TextInput
+                                    underlineColorAndroid={'transparent'}
+                                    style={[styles.searchInput]}
+                                    keyboardType={'numeric'}
+                                    maxLength={3}
+                                    value={this.state.baris}
+                                    onChangeText={(text) => { text = text.replace(/[^0-9]/g, ''); this.potong(text); }} />
+                            </View>}
                     </Card>
                 </View>
 
@@ -619,16 +622,16 @@ class BuatInspeksiRedesign extends Component {
                         style={{ alignSelf: 'flex-end', marginBottom:130, marginRight: 10}}/>}  */}
 
                     {this.state.showBtn && <View style={styles.buttonContainer}>
-                        <TouchableOpacity style={[styles.bubble, styles.button] } onPress={()=>{this.validation()}}>
+                        <TouchableOpacity style={[styles.bubble, styles.button]} onPress={() => { this.validation() }}>
                             <Text style={styles.buttonText}>Mulai Inspeksi</Text>
                         </TouchableOpacity>
                     </View>}
                 </View>
 
                 {<ProgressDialog
-                        visible={this.state.fetchLocation}
-                        activityIndicatorSize="large"
-                        message="Mencari Lokasi..."
+                    visible={this.state.fetchLocation}
+                    activityIndicatorSize="large"
+                    message="Mencari Lokasi..."
                 />}
             </View>
         )
@@ -659,7 +662,7 @@ const styles = {
     stepperNext: { alignSelf: 'flex-end', paddingRight: 4 },
     cardContainer: {
         flex: 1,
-        padding:10,
+        padding: 10,
         borderRadius: 10,
         borderWidth: 1,
         borderColor: '#fff'
@@ -686,7 +689,7 @@ const styles = {
         [Fonts.style.caption, { color: Colors.brand, textAlign: 'center', fontSize: 16, marginTop: 10, marginRight: 20, marginLeft: 20 }]
     ,
     containerMap: {
-        flex:1,
+        flex: 1,
         justifyContent: 'flex-end',
         alignItems: 'center',
         marginTop: 10

@@ -1,6 +1,6 @@
 import RNFetchBlob from 'rn-fetch-blob';
 var RNFS = require('react-native-fs');
-import { dirPhotoKategori, dirPhotoTemuan } from '../../../Lib/dirStorage';
+import { dirPhotoKategori, dirPhotoTemuan, dirPhotoInspeksiSuggestion } from '../../../Lib/dirStorage';
 import TaskServices from '../../../Database/TaskServices';
 import ServerName from '../../../Constant/ServerName'
 
@@ -46,6 +46,32 @@ export async function downloadImageFinding(data) {
             RNFetchBlob.android.actionViewIntent(res.path(), '/')
             // console.log('Reponse : ', res)
             console.log('Response Image Finding Success Insert')
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+}
+
+export async function downloadImageSuggestion(data) {
+
+    let imageName = data.IMAGE_NAME;
+
+    let isExist = await RNFS.exists(`${dirPhotoInspeksiSuggestion}/${imageName}`)
+    if (!isExist) {
+        var url = data.IMAGE;
+        const { config } = RNFetchBlob
+        let options = {
+            fileCache: true,
+            addAndroidDownloads: {
+                useDownloadManager: true,
+                notification: true,
+                path: `${dirPhotoInspeksiSuggestion}/${imageName}`,
+                description: 'Image'
+            }
+        }
+        config(options).fetch('GET', url).then((res) => {
+            // console.log('Reponse : ', res)
+            console.log('Response Image Suggestion Success Insert')
         }).catch((error) => {
             console.log(error);
         });

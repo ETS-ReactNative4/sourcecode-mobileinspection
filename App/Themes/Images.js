@@ -33,6 +33,7 @@ const images = {
   ic_add_image: require('../Images/icon/icon_add_img.png'),
   ic_sync_berhasil: require('../Images/ic-sync-berhasil.png'),
   ic_sync_gagal: require('../Images/ic-sync-gagal.png'),
+  ic_no_wifi: require('../Images/ic_nowifi.png'),
 
   //Icon Inbox
   ic_wait_rating: require('../Images/icon/icon_menunggu_rating.png'),
@@ -46,6 +47,7 @@ const images = {
   ic_lainnya_peta: require('../Images/icon/icon_lainnya_maps.png'),
   ic_lainnya_database: require('../Images/icon/icon_lainnya_database.png'),
   ic_lainnya_dashboard: require('../Images/icon/icon_lainnya_weekly_summary.png'),
+  ic_lainnya_dashboard_kebun: require('../Images/icon/ic_dashboard_kebun.png'),
 
   //Rating Icon
   ic_rating_bad: require('../Images/icon/ic-rating-bad.png'),
@@ -76,6 +78,7 @@ const images = {
   ic_suggestion_panen: require('../Images/suggestion/suggestion_panen.png'),
   ic_suggestion_inspeksi: require('../Images/suggestion/suggestion_inspeksi.png'),
   ic_suggestion_rawat: require('../Images/suggestion/suggestion_rawat.png'),
+  ic_suggestion_temuan: require('../Images/suggestion/suggestion_temuan.png'),
 }
 
 export default images

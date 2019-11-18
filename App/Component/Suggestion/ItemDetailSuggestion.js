@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Image, Text, StyleSheet } from 'react-native';
 import { Card } from 'native-base';
 import { Colors, Images } from '../../Themes';
+import { dateDisplayMobileWithoutHours } from '../../Lib/Utils';
 
 const styles = StyleSheet.create({
     textLabel: {
@@ -26,12 +27,16 @@ const styles = StyleSheet.create({
 const ItemDetailSuggestion = (props) => {
 
     let img;
-    if (props.item.type == 'inspeksi') {
+    let desc;
+    if (props.type == 'inspeksi') {
         img = Images.ic_suggestion_inspeksi;
-    } else if (props.item.type == 'panen') {
+        desc = 'Inpeksi oleh ' + props.desc;
+    } else if (props.type == 'panen') {
         img = Images.ic_suggestion_panen;
+        desc = props.desc;
     } else {
         img = Images.ic_suggestion_rawat;
+        desc = props.desc;
     }
 
     return (
@@ -59,66 +64,72 @@ const ItemDetailSuggestion = (props) => {
                 <View style={{ flex: 1 }}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                         <View>
-                            <Text style={{ color: Colors.colorPrimary, fontWeight: '500' }}> {props.item.tanggal}</Text>
-                            <Text style={{ color: Colors.black, fontWeight: '500' }}> {props.item.title}</Text>
+                            <Text style={{ color: Colors.colorPrimary, fontWeight: '500' }}> {dateDisplayMobileWithoutHours(props.tanggal)}</Text>
+                            <Text style={{ color: Colors.black, fontWeight: '500' }}> {desc}</Text>
                         </View>
 
-                        {props.type == 'inspeksi' && <Text style={{ color: Colors.darkgrey, marginTop: 15, fontWeight: '500' }}> {"(" + "baris" + " " + props.item.data_item.jumlah_baris + ")"}</Text>}
+                        {props.type == 'inspeksi' && <Text style={{ color: Colors.darkgrey, marginTop: 15, fontWeight: '500', marginRight: 6 }}>{props.data.INS_BARIS_1 != null || props.data.INS_BARIS_1 != '' ? '-' : "(" + "baris" + " " + props.data.INS_BARIS_1 + ")"}</Text>}
                     </View>
 
-                    {props.item.type == 'inspeksi' && <Card style={{ padding: 14, borderRadius: 10, backgroundColor: Colors.white, marginTop: 10, marginBottom: 20 }}>
+                    {props.type == 'inspeksi' && <Card style={{ padding: 14, borderRadius: 10, backgroundColor: Colors.white, marginTop: 10, marginBottom: 20 }}>
                         <View>
-                            <Text style={styles.textLabelBold}>Kepala Kebun</Text>
-                            <Text style={styles.textLabelBold}>-</Text>
-                            <View style={styles.textLine} />
-                        </View>
-                        <View style={{ marginTop: 5 }}>
-                            <Text style={styles.textLabelBold}>EM</Text>
+                            <Text style={styles.textLabelBold}>{props.data.INS_ROLE_2}</Text>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                <Text style={styles.textLabel}>{props.item.data_item.tgl_inspeksi_terakhir}</Text>
-                                <Text style={styles.textLabel}>{"(" + "baris" + " " + props.item.data_item.jumlah_baris + ")"}</Text>
+                                <Text style={styles.textLabel}>{props.data.INS_DATE_2 == null || props.data.INS_DATE_2 == '' ? '-' : props.data.INS_DATE_2}</Text>
+                                <Text style={styles.textLabel}>{props.data.INS_BARIS_2 != '' && "(" + "baris" + " " + props.data.INS_BARIS_2 + ")"}</Text>
                             </View>
                             <View style={styles.textLine} />
                         </View>
                         <View style={{ marginTop: 5 }}>
-                            <Text style={styles.textLabelBold}>SEM / GM</Text>
-                            <Text style={styles.textLabelBold}>-</Text>
+                            <Text style={styles.textLabelBold}>{props.data.INS_ROLE_3}</Text>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <Text style={styles.textLabel}>{props.data.INS_DATE_3 == null || props.data.INS_DATE_3 == '' ? '-' : props.data.INS_DATE_3}</Text>
+                                <Text style={styles.textLabel}>{props.data.INS_BARIS_3 != '' && "(" + "baris" + " " + props.data.INS_BARIS_3 + ")"}</Text>
+                            </View>
+                            <View style={styles.textLine} />
+                        </View>
+                        <View style={{ marginTop: 5 }}>
+                            <Text style={styles.textLabelBold}>{props.data.INS_ROLE_4}</Text>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <Text style={styles.textLabel}>{props.data.INS_DATE_4 == null || props.data.INS_DATE_4 == '' ? '-' : props.data.INS_DATE_4}</Text>
+                                <Text style={styles.textLabel}>{props.data.INS_BARIS_4 != '' && "(" + "baris" + " " + props.data.INS_BARIS_4 + ")"}</Text>
+                            </View>
                             <View style={styles.textLine} />
                         </View>
                     </Card>}
 
-                    {props.item.type == 'panen' && <Card style={{ padding: 14, borderRadius: 10, backgroundColor: Colors.white, marginTop: 10, marginBottom: 20 }}>
+                    {props.type == 'panen' && <Card style={{ padding: 14, borderRadius: 10, backgroundColor: Colors.white, marginTop: 10, marginBottom: 20 }}>
 
                         <View style={{ marginTop: 5 }}>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <Text style={styles.textLabelBold}>Total Janjang Panen</Text>
-                                <Text style={styles.textLabel}>{props.item.data_item.total_janjang_panen} Janjang</Text>
+                                <Text style={styles.textLabel}>{props.data.TOTAL_JANJANG_PANEN} Janjang</Text>
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 4 }}>
                                 <Text style={styles.textLabelBold}>BJR bulan lalu</Text>
-                                <Text style={styles.textLabel}>{props.item.data_item.bjr_bulan_lalu} kg</Text>
+                                <Text style={styles.textLabel}>{props.data.BJR_BULAN_LALU} kg</Text>
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 4 }}>
                                 <Text style={styles.textLabelBold}>Total Restan TPH</Text>
-                                <Text style={styles.textLabel}>{props.item.data_item.total_restan_tph} Janjang</Text>
+                                <Text style={styles.textLabel}>{props.data.TOTAL_RESTAN_TPH} Janjang</Text>
                             </View>
                         </View>
                     </Card>}
 
-                    {props.item.type == 'rawat' && <Card style={{ padding: 14, borderRadius: 10, backgroundColor: Colors.white, marginTop: 10, marginBottom: 20 }}>
+                    {props.type == 'rawat' && <Card style={{ padding: 14, borderRadius: 10, backgroundColor: Colors.white, marginTop: 10, marginBottom: 20 }}>
 
                         <View style={{ marginTop: 5 }}>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <Text style={styles.textLabelBold}>CPT SPRAYING</Text>
-                                <Text style={styles.textLabel}>{props.item.data_item.cpt_spraying}</Text>
+                                <Text style={styles.textLabel}>{props.data.CPT_SPRAYING.charAt(0) == '-' ? '-' : props.data.CPT_SPRAYING}</Text>
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 4 }}>
                                 <Text style={styles.textLabelBold}>SPOT SPRAYING</Text>
-                                <Text style={styles.textLabel}>{props.item.data_item.spot_spraying}</Text>
+                                <Text style={styles.textLabel}>{props.data.SPOT_SPRAYING.charAt(0) == '-' ? '-' : props.data.SPOT_SPRAYING}</Text>
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 4 }}>
                                 <Text style={styles.textLabelBold}>LALANG CTRL</Text>
-                                <Text style={styles.textLabel}>{props.item.data_item.lalang_ctrl}</Text>
+                                <Text style={styles.textLabel}>{props.data.LALANG_CTRL.charAt(0) == '-' ? '-' : props.data.LALANG_CTRL}</Text>
                             </View>
                         </View>
                     </Card>}

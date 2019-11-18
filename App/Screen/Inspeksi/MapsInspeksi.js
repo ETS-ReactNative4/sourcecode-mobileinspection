@@ -1,15 +1,15 @@
 import React from 'react';
-import {StatusBar, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import { StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import MapView, {Marker, Polygon, ProviderPropType, PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView, { Marker, Polygon, ProviderPropType, PROVIDER_GOOGLE } from 'react-native-maps';
 import Colors from '../../Constant/Colors'
-import {NavigationActions, StackActions} from 'react-navigation';
+import { NavigationActions, StackActions } from 'react-navigation';
 import IconLoc from 'react-native-vector-icons/FontAwesome5';
 import ModalLoading from '../../Component/ModalLoading'
 import ModalAlert from '../../Component/ModalAlert';
 import TaskServices from '../../Database/TaskServices';
-import {removeData, retrieveData, storeData} from '../../Database/Resources';
-import {AlertContent, Images} from '../../Themes';
+import { removeData, retrieveData, storeData } from '../../Database/Resources';
+import { AlertContent, Images } from '../../Themes';
 
 import * as geolib from 'geolib';
 
@@ -34,18 +34,18 @@ class MapsInspeksi extends React.Component {
             },
             poligons: [],
             inspectionType: props.navigation.getParam('inspectionType', 'normal'),
-            modalAlert:{
+            modalAlert: {
                 showModal: false,
                 title: "",
                 message: "",
                 icon: null
             },
-            modalLoading:{
-                showModal: true,
+            modalLoading: {
+                showModal: false,
                 title: "Sabar Ya..",
                 message: "Sedang mencari lokasi kamu nih"
             },
-            modalGps:{
+            modalGps: {
                 showModal: false,
                 title: 'Gps tidak di temukan',
                 message: 'Signal gps tidak di temukan, coba lagi!',
@@ -79,6 +79,8 @@ class MapsInspeksi extends React.Component {
     componentDidMount() {
         removeData('PoligonsInspeksi');
         this.props.navigation.setParams({ searchLocation: this.searchLocation })
+
+
     }
 
     /* DETECT FAKE GPS */
@@ -92,7 +94,7 @@ class MapsInspeksi extends React.Component {
                 }
             },
             (error) => {
-                this.setState({modalLoading:{...this.state.modalLoading, showModal: false}});
+                this.setState({ modalLoading: { ...this.state.modalLoading, showModal: false } });
             },
             { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
         );
@@ -112,8 +114,8 @@ class MapsInspeksi extends React.Component {
             if (data != null) {
                 if (data == 'PROD') {
                     this.setState({
-                        modalLoading: {...this.state.modalLoading, showModal: false},
-                        modalAlert: {...AlertContent.mock_location}
+                        modalLoading: { ...this.state.modalLoading, showModal: false },
+                        modalAlert: { ...AlertContent.mock_location }
                     })
                 } else {
                     this.getLocation();
@@ -125,14 +127,14 @@ class MapsInspeksi extends React.Component {
     }
 
     searchLocation = () => {
-        if(this.state.longitude !== 0.0 || this.state.latitude !== 0.0){
-            this.setState({modalLoading:{...this.state.modalLoading, showModal: true}});
+        if (this.state.longitude !== 0.0 || this.state.latitude !== 0.0) {
+            this.setState({ modalLoading: { ...this.state.modalLoading, showModal: true } });
             this.map.animateToRegion(this.state.region, 1);
             this.detectFakeGPS()
         }
         else {
             this.setState({
-                modalGps:{
+                modalGps: {
                     ...this.state.modalGps,
                     showModal: true
                 }
@@ -161,8 +163,8 @@ class MapsInspeksi extends React.Component {
             else {
                 //belum download map
                 this.setState({
-                    modalLoading: {...this.state.modalLoading, showModal: false},
-                    modalAlert:{
+                    modalLoading: { ...this.state.modalLoading, showModal: false },
+                    modalAlert: {
                         title: 'Tidak ada data',
                         message: "Kamu belum download data map",
                         icon: require('../../Images/ic-blm-input-lokasi.png')
@@ -195,8 +197,8 @@ class MapsInspeksi extends React.Component {
     getPolygons() {
         if (!polyMap) {
             this.setState({
-                modalLoading: {...this.state.modalLoading, showModal: false},
-                modalAlert: {...AlertContent.no_data_map}
+                modalLoading: { ...this.state.modalLoading, showModal: false },
+                modalAlert: { ...AlertContent.no_data_map }
             });
             return;
         }
@@ -204,17 +206,17 @@ class MapsInspeksi extends React.Component {
         let poligons = [];
         for (var i = 0; i < data.length; i++) {
             let coords = data[i];
-            if(
-                geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude+0.006 }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude-0.006 }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.latitude+0.0025, longitude: this.state.longitude }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.latitude-0.0025, longitude: this.state.longitude }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.latitude-0.0025, longitude: this.state.longitude-0.006 }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.latitude-0.0025, longitude: this.state.longitude+0.006 }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.latitude+0.0025, longitude: this.state.longitude-0.006 }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.latitude+0.0025, longitude: this.state.longitude+0.006 }, coords.coords) ||
+            if (
+                geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude + 0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude - 0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude + 0.0025, longitude: this.state.longitude }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude - 0.0025, longitude: this.state.longitude }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude - 0.0025, longitude: this.state.longitude - 0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude - 0.0025, longitude: this.state.longitude + 0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude + 0.0025, longitude: this.state.longitude - 0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude + 0.0025, longitude: this.state.longitude + 0.006 }, coords.coords) ||
                 geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude }, coords.coords)
-            ){
+            ) {
                 poligons.push(coords);
             }
             // poligons.push(coords);
@@ -225,8 +227,8 @@ class MapsInspeksi extends React.Component {
     getLocation() {
         if (this.state.latitude && this.state.longitude) {
             let poligons = this.getPolygons();
-            if(poligons.length > 0){
-                this.setState({modalLoading: {...this.state.modalLoading, showModal: false}},()=>{
+            if (poligons.length > 0) {
+                this.setState({ modalLoading: { ...this.state.modalLoading, showModal: false } }, () => {
                     this.setState({
                         poligons
                     });
@@ -234,8 +236,8 @@ class MapsInspeksi extends React.Component {
             }
             else {
                 this.setState({
-                    modalLoading: {...this.state.modalLoading, showModal: false},
-                    modalAlert: {...AlertContent.no_polygon}
+                    modalLoading: { ...this.state.modalLoading, showModal: false },
+                    modalAlert: { ...AlertContent.no_polygon }
                 })
             }
         }
@@ -274,6 +276,30 @@ class MapsInspeksi extends React.Component {
     }
 
     navigateScreen(screenName, werkAfdBlockCode) {
+        var werksAfdBlock = this.props.navigation.state.params.werksAfdBlock;
+
+        if (werksAfdBlock != undefined) {
+            if (werksAfdBlock == werkAfdBlockCode) {
+                this._checkValidate(screenName, werkAfdBlockCode);
+            } else {
+                let dataBlok = TaskServices.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', werkAfdBlockCode)
+                var blockName = dataBlok.BLOCK_NAME
+
+                this.setState({
+                    modalAlert: {
+                        showModal: true,
+                        title: 'Blok tidak match',
+                        message: "Kamu tidak berada di Blok " + blockName,
+                        icon: require('../../Images/ic-blm-input-lokasi.png')
+                    }
+                });
+            }
+        } else {
+            this._checkValidate(screenName, werkAfdBlockCode);
+        }
+    }
+
+    _checkValidate(screenName, werkAfdBlockCode) {
         if (this.checkAutorisasi(werkAfdBlockCode)) {
             const navigation = this.props.navigation;
             const resetAction = StackActions.reset({
@@ -290,8 +316,8 @@ class MapsInspeksi extends React.Component {
             navigation.dispatch(resetAction);
         } else {
             this.setState({
-                modalLoading: {...this.state.modalLoading, showModal: false},
-                modalAlert:{
+                modalLoading: { ...this.state.modalLoading, showModal: false },
+                modalAlert: {
                     title: 'Tidak ada data',
                     message: "Kamu belum download data map",
                     icon: require('../../Images/ic-blm-input-lokasi.png')
@@ -317,14 +343,14 @@ class MapsInspeksi extends React.Component {
                 <ModalAlert
                     icon={this.state.modalAlert.icon}
                     visible={this.state.modalAlert.showModal}
-                    onPressCancel={() => this.setState({ modalAlert:{...this.state.modalAlert, showModal: false} })}
+                    onPressCancel={() => this.setState({ modalAlert: { ...this.state.modalAlert, showModal: false } })}
                     title={this.state.modalAlert.title}
                     message={this.state.modalAlert.message} />
 
                 <ModalAlert
                     icon={this.state.modalGps.icon}
                     visible={this.state.modalGps.showModal}
-                    onPressCancel={() => this.setState({ modalGps:{...this.state.modalGps, showModal: false} })}
+                    onPressCancel={() => this.setState({ modalGps: { ...this.state.modalGps, showModal: false } })}
                     title={this.state.modalGps.title}
                     message={this.state.modalGps.message} />
 
@@ -363,17 +389,17 @@ class MapsInspeksi extends React.Component {
                                 tappable={true}
                                 onPress={() => this.navigateScreen('BuatInspeksi', poly.werks_afd_block_code)}
                             />
-                                <Marker
-                                    ref={ref => poly.marker = ref}
-                                    coordinate={this.centerCoordinate(poly.coords)}
-                                    onPress={() => this.navigateScreen('BuatInspeksi', poly.werks_afd_block_code)}
-                                >
-                                    <View style={{ flexDirection: 'column', alignSelf: 'flex-start' }}>
-                                        <View style={styles.marker}>
-                                            <Text style={{ color: 'rgba(255,255,255,1)', fontSize: 25, fontWeight:'900' }}>{poly.blokname}</Text>
-                                        </View>
+                            <Marker
+                                ref={ref => poly.marker = ref}
+                                coordinate={this.centerCoordinate(poly.coords)}
+                                onPress={() => this.navigateScreen('BuatInspeksi', poly.werks_afd_block_code)}
+                            >
+                                <View style={{ flexDirection: 'column', alignSelf: 'flex-start' }}>
+                                    <View style={styles.marker}>
+                                        <Text style={{ color: 'rgba(255,255,255,1)', fontSize: 25, fontWeight: '900' }}>{poly.blokname}</Text>
                                     </View>
-                                </Marker>
+                                </View>
+                            </Marker>
                         </View>
                     ))}
 
@@ -381,7 +407,7 @@ class MapsInspeksi extends React.Component {
                         coordinate={{
                             latitude: this.state.latitude,
                             longitude: this.state.longitude,
-                        }}/>
+                        }} />
 
                 </MapView>
 
@@ -400,14 +426,14 @@ class MapsInspeksi extends React.Component {
                     }}>
                         <View style={{
                             flexDirection: "row",
-                            alignItems:"center"
+                            alignItems: "center"
                         }}>
-                            <Text style={{color:"white"}}>
+                            <Text style={{ color: "white" }}>
                                 Latitude : {this.state.latitude}
                             </Text>
                         </View>
                         <View>
-                            <Text style={{color:"white"}}>
+                            <Text style={{ color: "white" }}>
                                 Longitude : {this.state.longitude}
                             </Text>
                         </View>

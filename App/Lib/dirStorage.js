@@ -19,6 +19,7 @@ export const dirPhotoTemuan = `${dirHome}/Local/Photo/Temuan`;
 export const dirPhotoKategori = `${dirHome}/Local/Photo/Temuan/Kategori`;
 export const dirPhotoInspeksiBaris = `${dirHome}/Local/Photo/Inspeksi/Baris`;
 export const dirPhotoInspeksiSelfie = `${dirHome}/Local/Photo/Inspeksi/Selfie`;
+export const dirPhotoInspeksiSuggestion = `${dirHome}/Local/Photo/Inspeksi/Suggestion`;
 export const dirPhotoEbccJanjang = `${dirHome}/Local/Photo/Ebcc/Janjang`;
 export const dirPhotoEbccSelfie = `${dirHome}/Local/Photo/Ebcc/Selfie`;
 export const dirPhotoUser = `${dirHome}/Local/Photo/User`;

@@ -1,12 +1,12 @@
-import React, {Component} from 'react';
-import {BackHandler, Dimensions, Image, Platform, StatusBar, StyleSheet, TouchableOpacity, View} from 'react-native';
+import React, { Component } from 'react';
+import { BackHandler, Dimensions, Image, Platform, StatusBar, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Colors from '../../Constant/Colors';
-import {RNCamera as Camera} from 'react-native-camera';
+import { RNCamera as Camera } from 'react-native-camera';
 import imgTakePhoto from '../../Images/icon/ic_take_photo.png';
 import imgNextPhoto from '../../Images/icon/ic_next_photo.png';
 import R from 'ramda';
-import {getTodayDate} from '../../Lib/Utils'
-import {dirPhotoEbccSelfie, dirPhotoInspeksiBaris, dirPhotoInspeksiSelfie} from '../../Lib/dirStorage'
+import { getTodayDate } from '../../Lib/Utils'
+import { dirPhotoInspeksiSelfie } from '../../Lib/dirStorage'
 import ImageResizer from 'react-native-image-resizer';
 
 const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
@@ -121,18 +121,18 @@ class TakePhotoSelfie extends Component {
           fixOrientation: true
         };
 
-          const data = await this.camera.takePictureAsync(takeCameraOptions);
-          var imgPath = `${dirPhotoInspeksiSelfie}/${this.state.dataModel.IMAGE_NAME}`;
+        const data = await this.camera.takePictureAsync(takeCameraOptions);
+        var imgPath = `${dirPhotoInspeksiSelfie}/${this.state.dataModel.IMAGE_NAME}`;
 
-          RNFS.copyFile(data.uri, imgPath);
-          this.setState(
-              {
-                  path: imgPath,
-                  pathImg: dirPhotoEbccSelfie,
-                  hasPhoto: true
-              },()=>{
-                  this.resize(imgPath)
-              });
+        RNFS.copyFile(data.uri, imgPath);
+        this.setState(
+          {
+            path: imgPath,
+            pathImg: dirPhotoEbccSelfie,
+            hasPhoto: true
+          }, () => {
+            this.resize(imgPath)
+          });
       }
 
     } catch (err) {

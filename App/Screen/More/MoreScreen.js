@@ -8,7 +8,7 @@ import ModalConfirmation from '../../Component/ModalAlertConfirmation'
 import ModalAlert from '../../Component/ModalAlert'
 import ServerName from '../../Constant/ServerName';
 import DeviceInfo from 'react-native-device-info';
-import {zip} from 'react-native-zip-archive';
+import { zip } from 'react-native-zip-archive';
 import Mailer from 'react-native-mail';
 import moment from 'moment';
 
@@ -18,14 +18,14 @@ import FeatureLainnya from '../../Component/FeatureLainnya'
 import { getPhoto, getThumnail, syncDays, notifInbox, isNotUserMill } from '../../Lib/Utils';
 import { Images } from '../../Themes'
 import {
-    dirDatabase,
-    dirSummary,
-    dirLocal
+  dirDatabase,
+  dirSummary,
+  dirLocal
 } from '../../Lib/dirStorage';
 import RNFS from 'react-native-fs';
 import { retrieveData } from '../../Database/Resources';
 import WeeklySummary from '../../Component/WeeklySummary';
-import {downloadProfileImage} from "../Sync/Download/Image/Profile";
+import { downloadProfileImage } from "../Sync/Download/Image/Profile";
 
 export default class MoreScreen extends Component {
 
@@ -61,26 +61,26 @@ export default class MoreScreen extends Component {
   willFocus = this.props.navigation.addListener(
     'willFocus',
     () => {
-        this.getProfileImage();
-        RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
-        this.loadData();
+      this.getProfileImage();
+      RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
+      this.loadData();
     }
   );
 
-    getProfileImage(){
-        NetInfo.isConnected.fetch().then(isConnected => {
-            if (isConnected) {
-                downloadProfileImage(this.state.user.USER_AUTH_CODE)
-                    .then(()=>{
-                        let getPath = TaskServices.findBy2("TR_IMAGE_PROFILE", "USER_AUTH_CODE", this.state.user.USER_AUTH_CODE);
-                        let pathPhoto = getPhoto(typeof getPath === 'undefined' ? null : getPath.IMAGE_PATH_LOCAL);
-                        this.setState({
-                            userPhoto: pathPhoto
-                        })
-                    });
-            }
-        });
-    }
+  getProfileImage() {
+    NetInfo.isConnected.fetch().then(isConnected => {
+      if (isConnected) {
+        downloadProfileImage(this.state.user.USER_AUTH_CODE)
+          .then(() => {
+            let getPath = TaskServices.findBy2("TR_IMAGE_PROFILE", "USER_AUTH_CODE", this.state.user.USER_AUTH_CODE);
+            let pathPhoto = getPhoto(typeof getPath === 'undefined' ? null : getPath.IMAGE_PATH_LOCAL);
+            this.setState({
+              userPhoto: pathPhoto
+            })
+          });
+      }
+    });
+  }
 
   loadData() {
     let dataUser = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', this.state.user.USER_AUTH_CODE);
@@ -227,6 +227,14 @@ export default class MoreScreen extends Component {
               icon={Images.ic_lainnya_peta}
               onPressDefault={() => this.onPressMenu('Maps')} />
 
+            {/* Menu Dashboard Kebun */}
+            <FeatureLainnya
+              sizeIcon={20}
+              title={'Dashboard Kebun'}
+              icon={Images.ic_lainnya_dashboard_kebun}
+              isDownload={true}
+              onPressDefault={() => this.onPressMenu('DashboardKebun')} />
+
             {/* Menu Dashboard Mingguan */}
             <FeatureLainnya
               sizeIcon={20}
@@ -266,6 +274,8 @@ export default class MoreScreen extends Component {
     switch (menu) {
       case 'Maps':
         return this.menuMaps()
+      case 'DashboardKebun':
+        return this.menuDashboardKebun()
       case 'Dashboard':
         return this.menuDashboard()
       case 'Database':
@@ -315,6 +325,18 @@ export default class MoreScreen extends Component {
 
   }
 
+  /* Function Dashboard Kebun */
+  menuDashboardKebun = async () => {
+
+    const checkBlock = TaskServices.getAllData('TM_BLOCK');
+    if (checkBlock.length > 0) {
+      this.props.navigation.navigate('DashboardKebun')
+    } else {
+      this.props.navigation.navigate('Sync')
+    }
+
+  }
+
   /* Function Export Database */
   // async menuDatabase() {
   //   RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
@@ -328,73 +350,73 @@ export default class MoreScreen extends Component {
   //   }, 2000)
   // }
 
-  async sendFile(){
-      //create zip file
-      RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
+  async sendFile() {
+    //create zip file
+    RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
 
-      let currentTime = moment().format("YYYYMMDDHHmmss");
-      let zipPath = `${dirLocal}`;
-      let zipDestination = `${dirSummary}/${this.state.user.USERNAME}_${currentTime}.zip`;
-      this.zipFile(zipPath.toString(), zipDestination.toString())
-          .then((response)=>{
-              if(response.status){
-                  let dirs = RNFetchBlob.fs.dirs;
-                  RNFetchBlob.fs.cp(response.filePath, dirs.SDCardDir+ "/" + "MobileInspection/" + `${this.state.user.USERNAME}_${currentTime}.zip`)
-                      .then((res)=>{
-                          this.sendEmail(response.filePath, this.state.user.USERNAME, currentTime);
-                      })
-                      .catch((err)=>{
-                          alert(err)
-                      })
-              }
-          })
+    let currentTime = moment().format("YYYYMMDDHHmmss");
+    let zipPath = `${dirLocal}`;
+    let zipDestination = `${dirSummary}/${this.state.user.USERNAME}_${currentTime}.zip`;
+    this.zipFile(zipPath.toString(), zipDestination.toString())
+      .then((response) => {
+        if (response.status) {
+          let dirs = RNFetchBlob.fs.dirs;
+          RNFetchBlob.fs.cp(response.filePath, dirs.SDCardDir + "/" + "MobileInspection/" + `${this.state.user.USERNAME}_${currentTime}.zip`)
+            .then((res) => {
+              this.sendEmail(response.filePath, this.state.user.USERNAME, currentTime);
+            })
+            .catch((err) => {
+              alert(err)
+            })
+        }
+      })
   }
 
-    async zipFile(zipPath, zipDestination){
-      let zipStatus={
-          status: false,
-          filePath: null
-      };
-
-      await zip(zipPath.toString(), zipDestination.toString())
-          .then((path) => {
-              zipStatus={
-                  status: true,
-                  filePath: path
-              };
-          })
-          .catch((error) => {
-              console.log("ZIP ERR:",error)
-          });
-
-
-      return zipStatus;
-    }
-
-    sendEmail(filePath, Username, FileTime){
-        let formatDate = moment(FileTime, "YYYYMMDDHHmmss").format("DD MMM YY, HH:mm");
-        try {
-            Mailer.mail({
-                subject: `Database - ${Username} - ${formatDate}`,
-                recipients: ['TAP.callcenter.helpdesk@tap-agri.com'],
-                ccRecipients: [''],
-                bccRecipients: [''],
-                body: `Berikut terlampir database Aplikasi Mobile Inspection saya ${Username} per ${formatDate}.`,
-                isHTML: false,
-                attachment: {
-                    path: filePath,  // The absolute path of the file from which to read data.
-                    type: 'zip',   // Mime Type: jpg, png, doc, ppt, html, pdf, csv
-                    name: null   // Optional: Custom filename for attachment
-                }
-            }, (error, event) => {
-                return false
-            });
-            return true
-        }
-        catch (e) {
-            return false
-        }
+  async zipFile(zipPath, zipDestination) {
+    let zipStatus = {
+      status: false,
+      filePath: null
     };
+
+    await zip(zipPath.toString(), zipDestination.toString())
+      .then((path) => {
+        zipStatus = {
+          status: true,
+          filePath: path
+        };
+      })
+      .catch((error) => {
+        console.log("ZIP ERR:", error)
+      });
+
+
+    return zipStatus;
+  }
+
+  sendEmail(filePath, Username, FileTime) {
+    let formatDate = moment(FileTime, "YYYYMMDDHHmmss").format("DD MMM YY, HH:mm");
+    try {
+      Mailer.mail({
+        subject: `Database - ${Username} - ${formatDate}`,
+        recipients: ['TAP.callcenter.helpdesk@tap-agri.com'],
+        ccRecipients: [''],
+        bccRecipients: [''],
+        body: `Berikut terlampir database Aplikasi Mobile Inspection saya ${Username} per ${formatDate}.`,
+        isHTML: false,
+        attachment: {
+          path: filePath,  // The absolute path of the file from which to read data.
+          type: 'zip',   // Mime Type: jpg, png, doc, ppt, html, pdf, csv
+          name: null   // Optional: Custom filename for attachment
+        }
+      }, (error, event) => {
+        return false
+      });
+      return true
+    }
+    catch (e) {
+      return false
+    }
+  };
 }
 
 const styles = StyleSheet.create({

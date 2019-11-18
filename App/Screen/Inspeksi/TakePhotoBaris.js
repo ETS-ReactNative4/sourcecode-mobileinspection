@@ -1,12 +1,12 @@
-import React, {Component} from 'react';
-import {BackHandler, Dimensions, Image, Platform, StatusBar, StyleSheet, TouchableOpacity, View} from 'react-native';
+import React, { Component } from 'react';
+import { BackHandler, Dimensions, Image, Platform, StatusBar, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Colors from '../../Constant/Colors';
 import imgTakePhoto from '../../Images/icon/ic_take_photo.png';
 import imgNextPhoto from '../../Images/icon/ic_next_photo.png';
-import {RNCamera as Camera} from 'react-native-camera';
-import {getTodayDate} from '../../Lib/Utils'
+import { RNCamera as Camera } from 'react-native-camera';
+import { getTodayDate } from '../../Lib/Utils'
 import ImageResizer from 'react-native-image-resizer';
-import {dirPhotoEbccSelfie, dirPhotoInspeksiBaris} from '../../Lib/dirStorage'
+import { dirPhotoInspeksiBaris } from '../../Lib/dirStorage'
 import R from 'ramda';
 import MapView from 'react-native-maps';
 import TaskService from '../../Database/TaskServices';
@@ -128,18 +128,18 @@ class TakePhotoBaris extends Component {
           skipProcessing: false,
           fixOrientation: true
         };
-          const data = await this.camera.takePictureAsync(takeCameraOptions);
-          var imgPath = `${dirPhotoInspeksiBaris}/${this.state.dataModel.IMAGE_NAME}`;
+        const data = await this.camera.takePictureAsync(takeCameraOptions);
+        var imgPath = `${dirPhotoInspeksiBaris}/${this.state.dataModel.IMAGE_NAME}`;
 
-          RNFS.copyFile(data.uri, imgPath);
-          this.setState(
-              {
-                  path: imgPath,
-                  pathImg: dirPhotoEbccSelfie,
-                  hasPhoto: true
-              },()=>{
-                  this.resize(imgPath)
-              });
+        RNFS.copyFile(data.uri, imgPath);
+        this.setState(
+          {
+            path: imgPath,
+            pathImg: dirPhotoEbccSelfie,
+            hasPhoto: true
+          }, () => {
+            this.resize(imgPath)
+          });
       }
 
     } catch (err) {
@@ -148,7 +148,13 @@ class TakePhotoBaris extends Component {
   };
 
   resize(data) {
+
+    console.log('Cropped : ', data)
+
     ImageResizer.createResizedImage(data, 640, 480, 'JPEG', 80, 0, dirPhotoInspeksiBaris).then((response) => {
+
+
+      console.log('Response Cropped : ', response);
       // response.uri is the URI of the new image that can now be displayed, uploaded...
       // response.path is the path of the new image
       // response.name is the name of the new image with the extension
@@ -294,7 +300,7 @@ class TakePhotoBaris extends Component {
           }}
         >
         </MapView >
-        <View style={{ flex: 2}}>
+        <View style={{ flex: 2 }}>
           {this.state.path ? this.renderImage() : this.renderCamera()}
         </View>
         <View style={{ flex: 0.5, alignItems: 'center', justifyContent: 'center' }}>

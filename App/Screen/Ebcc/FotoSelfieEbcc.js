@@ -6,7 +6,7 @@ import imgNextPhoto from '../../Images/icon/ic_next_photo.png';
 import { RNCamera as Camera } from 'react-native-camera';
 import { getTodayDate } from '../../Lib/Utils'
 import ImageResizer from 'react-native-image-resizer';
-import {dirPhotoEbccJanjang, dirPhotoEbccSelfie} from '../../Lib/dirStorage'
+import { dirPhotoEbccJanjang, dirPhotoEbccSelfie } from '../../Lib/dirStorage'
 import R from 'ramda';
 import moment from 'moment'
 import ModalAlertBack from '../../Component/ModalAlert';
@@ -143,18 +143,18 @@ class FotoSelfieEbcc extends Component {
           fixOrientation: true
         };
 
-          const data = await this.camera.takePictureAsync(takeCameraOptions);
-          var imgPath = `${dirPhotoEbccSelfie}/${this.state.dataModel.IMAGE_NAME}`;
+        const data = await this.camera.takePictureAsync(takeCameraOptions);
+        var imgPath = `${dirPhotoEbccSelfie}/${this.state.dataModel.IMAGE_NAME}`;
 
-          RNFS.copyFile(data.uri, imgPath);
-          this.setState(
-              {
-                  path: imgPath,
-                  pathImg: dirPhotoEbccSelfie,
-                  hasPhoto: true
-              },()=>{
-                  this.resize(imgPath)
-              });
+        RNFS.copyFile(data.uri, imgPath);
+        this.setState(
+          {
+            path: imgPath,
+            pathImg: dirPhotoEbccSelfie,
+            hasPhoto: true
+          }, () => {
+            this.resize(imgPath)
+          });
       }
 
     } catch (err) {

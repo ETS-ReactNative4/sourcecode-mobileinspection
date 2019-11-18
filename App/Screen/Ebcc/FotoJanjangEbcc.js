@@ -1,17 +1,17 @@
-import React, {Component} from 'react';
-import {BackHandler, Dimensions, Image, Platform, StatusBar, StyleSheet, TouchableOpacity, View} from 'react-native';
+import React, { Component } from 'react';
+import { BackHandler, Dimensions, Image, Platform, StatusBar, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Colors from '../../Constant/Colors';
 import imgTakePhoto from '../../Images/icon/ic_take_photo.png';
 import imgNextPhoto from '../../Images/icon/ic_next_photo.png';
 import MapView from 'react-native-maps';
-import {RNCamera as Camera} from 'react-native-camera';
-import {getTodayDate} from '../../Lib/Utils'
+import { RNCamera as Camera } from 'react-native-camera';
+import { getTodayDate } from '../../Lib/Utils'
 import ImageResizer from 'react-native-image-resizer';
-import {dirMaps, dirPhotoEbccJanjang, dirPhotoEbccSelfie} from '../../Lib/dirStorage'
+import { dirMaps, dirPhotoEbccJanjang, dirPhotoEbccSelfie } from '../../Lib/dirStorage'
 import TaskService from '../../Database/TaskServices'
 import R from 'ramda';
 import Icon2 from 'react-native-vector-icons/Ionicons';
-import {NavigationActions, StackActions} from 'react-navigation';
+import { NavigationActions, StackActions } from 'react-navigation';
 
 import ModalAlertConfirmation from '../../Component/ModalAlertConfirmation';
 import ModalAlert from '../../Component/ModalAlert';
@@ -244,18 +244,18 @@ class FotoJanjang extends Component {
           fixOrientation: true
         };
 
-          const data = await this.camera.takePictureAsync(takeCameraOptions);
-          var imgPath = `${dirPhotoEbccJanjang}/${this.state.dataModel.IMAGE_NAME}`;
+        const data = await this.camera.takePictureAsync(takeCameraOptions);
+        var imgPath = `${dirPhotoEbccJanjang}/${this.state.dataModel.IMAGE_NAME}`;
 
-          RNFS.copyFile(data.uri, imgPath);
-          this.setState(
-              {
-                  path: imgPath,
-                  pathImg: dirPhotoEbccSelfie,
-                  hasPhoto: true
-              },()=>{
-                  this.resize(imgPath)
-              });
+        RNFS.copyFile(data.uri, imgPath);
+        this.setState(
+          {
+            path: imgPath,
+            pathImg: dirPhotoEbccSelfie,
+            hasPhoto: true
+          }, () => {
+            this.resize(imgPath)
+          });
       }
 
     } catch (err) {

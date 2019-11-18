@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
     AsyncStorage,
     FlatList,
@@ -12,7 +12,7 @@ import {
     View
 } from 'react-native';
 
-import {NavigationActions} from 'react-navigation';
+import { NavigationActions } from 'react-navigation';
 import Icon1 from '../../Component/Icon1';
 
 import TaskServices from "../../Database/TaskServices";
@@ -20,17 +20,17 @@ import ModalAlert from "../../Component/ModalAlert";
 import moment from 'moment';
 
 export default class Genba extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.state = {
-            listGenbaUser      : [],
-            dataSelected    : [],
-            showFilter      : false,
-            total_selected  : null,
+            listGenbaUser: [],
+            dataSelected: [],
+            showFilter: false,
+            total_selected: null,
             listSelectedUserCode: [],
 
-            inspectionType  : this.props.navigation.getParam('inspectionType', 'normal'),
+            inspectionType: this.props.navigation.getParam('inspectionType', 'normal'),
 
             //modal
             icon: "",
@@ -42,13 +42,18 @@ export default class Genba extends Component {
         this.loadContact();
     }
 
-    startInspection(){
-        if(this.state.dataSelected.length > 0){
+    startInspection() {
+
+        var werksAfdBlock = this.props.navigation.state.params.werksAfdBlock;
+
+        if (this.state.dataSelected.length > 0) {
             this.props.navigation.dispatch(NavigationActions.navigate({
                 routeName: 'MapsInspeksi',
-                params:{
-                    inspectionType: this.state.inspectionType === 'genba'? 'genba' : 'normal'
-                }}
+                params: {
+                    inspectionType: this.state.inspectionType === 'genba' ? 'genba' : 'normal',
+                    werksAfdBlock: werksAfdBlock
+                }
+            }
             ));
         }
         else {
@@ -61,11 +66,11 @@ export default class Genba extends Component {
         }
     }
 
-    filterList(value){
-        if(value === ""){
+    filterList(value) {
+        if (value === "") {
             this.loadContact();
         }
-        else{
+        else {
             let listGenbaUser = this.state.listGenbaUser;
             let dataFiltered = this.filterData(listGenbaUser, value);
             this.setState({
@@ -74,42 +79,42 @@ export default class Genba extends Component {
         }
     }
 
-    filterData(data, name){
-        let search_name = name.toLowerCase() ;
-        let data_filtered = data.filter(function(key){
+    filterData(data, name) {
+        let search_name = name.toLowerCase();
+        let data_filtered = data.filter(function (key) {
             let name = key.FULLNAME;
             return !(name.toLowerCase().indexOf(search_name) === -1)
         });
         return data_filtered;
     }
 
-    loadContact(){
+    loadContact() {
         let contactGenba = TaskServices.getAllData("TR_CONTACT").sorted('FULLNAME', false);
         let selectedGenba = TaskServices.getAllData("TR_GENBA_SELECTED");
 
         //ambil smua userauthcode, buat check ui icon check
         let listSelectedUserCode = [];
-        if(selectedGenba.length > 0){
-            selectedGenba.map((data)=>{
+        if (selectedGenba.length > 0) {
+            selectedGenba.map((data) => {
                 listSelectedUserCode.push(data.USER_AUTH_CODE);
             })
         }
 
         let filteredContactGenba = [];
         let currentUser = TaskServices.getAllData('TR_LOGIN')[0];
-        contactGenba.map((contactModel)=>{
-            if(
+        contactGenba.map((contactModel) => {
+            if (
                 currentUser.REFFERENCE_ROLE === "NATIONAL" || currentUser.USER_ROLE === "CEO" || currentUser.USER_ROLE === "ADMIN" ||
                 contactModel.REF_ROLE === "NATIONAL" || contactModel.USER_ROLE === "CEO" || contactModel.USER_ROLE === "ADMIN"
-            ){
+            ) {
                 filteredContactGenba.push(contactModel);
             }
-            else if(this.rankChecker(contactModel, currentUser) && this.BAChecker(contactModel, currentUser)){
+            else if (this.rankChecker(contactModel, currentUser) && this.BAChecker(contactModel, currentUser)) {
                 filteredContactGenba.push(contactModel);
             }
         });
 
-        if(filteredContactGenba.length > 0)  {
+        if (filteredContactGenba.length > 0) {
             this.setState({
                 listSelectedUserCode: listSelectedUserCode,
                 listGenbaUser: filteredContactGenba,
@@ -117,13 +122,13 @@ export default class Genba extends Component {
         }
     }
 
-    deleteSelected(data_auth_code){
+    deleteSelected(data_auth_code) {
         TaskServices.deleteRecordByPK('TR_GENBA_SELECTED', 'USER_AUTH_CODE', data_auth_code);
         this.getSelectedCount();
         this.loadContact();
     };
 
-    deleteSelectedAll(){
+    deleteSelectedAll() {
         TaskServices.deleteAllData("TR_GENBA_SELECTED");
         this.getSelectedCount();
         this.loadContact();
@@ -132,9 +137,9 @@ export default class Genba extends Component {
     selectUser(data_auth_code) {
         //check if user already exist in genba selected
         let isUserSelected = TaskServices.findBy2("TR_GENBA_SELECTED", "USER_AUTH_CODE", data_auth_code);
-        if(isUserSelected === undefined){
+        if (isUserSelected === undefined) {
             let selectedUser = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', data_auth_code);
-            if(selectedUser !== undefined){
+            if (selectedUser !== undefined) {
                 TaskServices.saveData('TR_GENBA_SELECTED', selectedUser);
                 this.getSelectedCount();
                 this.loadContact();
@@ -145,23 +150,23 @@ export default class Genba extends Component {
         }
     };
 
-    rankChecker(contactModel, currentUser){
+    rankChecker(contactModel, currentUser) {
         //low->high
         let genbaRanking = ['KEPALA_KEBUN', 'EM', 'SEM_GM', 'CEO_REG'];
         return genbaRanking.indexOf(currentUser.USER_ROLE) >= genbaRanking.indexOf(contactModel.USER_ROLE)
     }
 
-    BAChecker(contactModel, currentUser){
+    BAChecker(contactModel, currentUser) {
         let sameBAStatus = false;
 
         let selectedUserBA = contactModel.LOCATION_CODE.split(",");
         let currentUserBA = currentUser.LOCATION_CODE.split(",");
 
-        if(currentUser.REFFERENCE_ROLE === "REGION_CODE"){
+        if (currentUser.REFFERENCE_ROLE === "REGION_CODE") {
             //if selectedUser region_code && region_code sama kyk current user return true
-            if(contactModel.REF_ROLE === "REGION_CODE"){
+            if (contactModel.REF_ROLE === "REGION_CODE") {
                 selectedUserBA = contactModel.LOCATION_CODE;
-                sameBAStatus = currentUserBA.some((userBA)=>{
+                sameBAStatus = currentUserBA.some((userBA) => {
                     return selectedUserBA.includes(userBA)
                 })
             }
@@ -171,19 +176,19 @@ export default class Genba extends Component {
                 let listCompCode = [];
                 let tmCOMP = TaskServices.getAllData('TM_COMP');
 
-                tmCOMP.map((tmComp)=>{
-                    if(currentUser.LOCATION_CODE.includes(tmComp.REGION_CODE)){
+                tmCOMP.map((tmComp) => {
+                    if (currentUser.LOCATION_CODE.includes(tmComp.REGION_CODE)) {
                         listCompCode.push(tmComp.COMP_CODE);
                     }
                 });
                 // sameBAStatus = listCompCode.some((compCode)=>{return selectedUserBA.includes(compCode)})
 
                 let listEST = listCompCode.join(",");
-                selectedUserBA.map((userBA)=>{
+                selectedUserBA.map((userBA) => {
                     let tempUserBA = userBA.slice(0, 2);
                     console.log("SELECTED USER", tempUserBA)
                     console.log("current USER", listEST);
-                    if(listEST.includes(tempUserBA)){
+                    if (listEST.includes(tempUserBA)) {
                         sameBAStatus = true
                     }
                 })
@@ -191,14 +196,14 @@ export default class Genba extends Component {
 
         }
 
-        else{
+        else {
             //REF_ROLE COMP_CODE FILTER BEDA
-            if(contactModel.REF_ROLE === "COMP_CODE"){
+            if (contactModel.REF_ROLE === "COMP_CODE") {
                 let tmComp = TaskServices.getAllData('TM_COMP');
-                if(tmComp !== undefined && tmComp.length > 0){
-                    tmComp.map((tmComp)=>{
-                        selectedUserBA.map((selectedUserBA)=>{
-                            if(selectedUserBA === tmComp.COMP_CODE){
+                if (tmComp !== undefined && tmComp.length > 0) {
+                    tmComp.map((tmComp) => {
+                        selectedUserBA.map((selectedUserBA) => {
+                            if (selectedUserBA === tmComp.COMP_CODE) {
                                 sameBAStatus = true;
                             }
                         })
@@ -207,32 +212,32 @@ export default class Genba extends Component {
             }
             else {
                 const intersection = currentUserBA.filter(element => contactModel.LOCATION_CODE.includes(element));
-                if(intersection.length > 0){
+                if (intersection.length > 0) {
                     sameBAStatus = true;
                 }
             }
         }
 
-        if(!sameBAStatus){
-            console.log("BA FALSE",contactModel)
+        if (!sameBAStatus) {
+            console.log("BA FALSE", contactModel)
         }
         return sameBAStatus;
     }
 
-    getSelectedCount(){
+    getSelectedCount() {
         let totalSelected = 0;
-        let selectedUser  = TaskServices.getAllData('TR_GENBA_SELECTED');
-        if(selectedUser.length === 0){
+        let selectedUser = TaskServices.getAllData('TR_GENBA_SELECTED');
+        if (selectedUser.length === 0) {
             this.setState({
-                dataSelected    : [],
-                total_selected  : "( " +  totalSelected + " )",
+                dataSelected: [],
+                total_selected: "( " + totalSelected + " )",
             });
         }
-        else{
+        else {
             totalSelected = selectedUser.length;
             this.setState({
-                total_selected  : "( " +  totalSelected + " )",
-                dataSelected : selectedUser
+                total_selected: "( " + totalSelected + " )",
+                dataSelected: selectedUser
             })
         }
     }
@@ -241,10 +246,10 @@ export default class Genba extends Component {
     componentWillMount(): void {
         this.loadContact();
         this.getTimeLastAccess()
-            .then((value)=>{
-                if(value){
+            .then((value) => {
+                if (value) {
                     let currentDate = moment().format("YYYY-MM-DD");
-                    if(moment(value, "YYYY-MM-DD").isSame(currentDate)){
+                    if (moment(value, "YYYY-MM-DD").isSame(currentDate)) {
                         this.getSelectedCount();
                         this.loadContact();
                     }
@@ -252,7 +257,7 @@ export default class Genba extends Component {
                         this.deleteSelectedAll()
                     }
                 }
-                else{
+                else {
                     this.setTimeLastAccess();
                     this.getSelectedCount();
                     this.loadContact();
@@ -260,8 +265,8 @@ export default class Genba extends Component {
             })
     }
 
-    componentDidMount(){
-        if(this.state.listGenbaUser.length < 1){
+    componentDidMount() {
+        if (this.state.listGenbaUser.length < 1) {
             this.setState({
                 icon: require('../../Images/icon/ic_inbox.png'),
                 title: "Peserta Genba Kosong",
@@ -271,18 +276,18 @@ export default class Genba extends Component {
         }
     }
 
-    setTimeLastAccess(){
+    setTimeLastAccess() {
         let currentDate = moment().format("YYYY-MM-DD");
         try {
             AsyncStorage.setItem('LastGenbaAccessTime', currentDate.toString());
             return true
         } catch (error) {
-            alert("ASYNC SET GENBA:"+error);
+            alert("ASYNC SET GENBA:" + error);
             return false;
         }
     }
 
-    async getTimeLastAccess(){
+    async getTimeLastAccess() {
         try {
             let value = await AsyncStorage.getItem('LastGenbaAccessTime');
             if (value !== null) {
@@ -295,33 +300,33 @@ export default class Genba extends Component {
     }
 
 
-    render(){
-        return(
+    render() {
+        return (
             <KeyboardAvoidingView
                 style={{
-                    flex : 1,
+                    flex: 1,
                     paddingHorizontal: 15,
-                    backgroundColor : '#ffff'
+                    backgroundColor: '#ffff'
                 }}
                 behavior="padding"
-                keyboardVerticalOffset={Platform.OS === "ios"? 0 : -550}
+                keyboardVerticalOffset={Platform.OS === "ios" ? 0 : -550}
             >
                 <ScrollView style={{
-                    flex:1,
-                    marginTop:10
+                    flex: 1,
+                    marginTop: 10
                 }}>
                     <View style={{
                         width: "100%",
-                        flexDirection:'row',
+                        flexDirection: 'row',
                         marginVertical: 10,
-                        alignItems:"center",
-                        justifyContent:"center"
+                        alignItems: "center",
+                        justifyContent: "center"
                     }}>
-                        <ScrollView style={{flex: 1, maxHeight: 100}}>
+                        <ScrollView style={{ flex: 1, maxHeight: 100 }}>
                             {this.renderSelectedUser()}
                         </ScrollView>
                         <TouchableOpacity
-                            onPress={()=>{
+                            onPress={() => {
                                 this.deleteSelectedAll()
                             }}
                         >
@@ -335,24 +340,24 @@ export default class Genba extends Component {
                         </TouchableOpacity>
                     </View>
 
-                    <View style={{flex:1}}>
+                    <View style={{ flex: 1 }}>
                         <View style={{
                             paddingVertical: 5,
                             flexDirection: 'row',
                             justifyContent: "space-between",
-                            alignItems:"center"
+                            alignItems: "center"
                         }}>
                             <Text style={{
-                                fontSize:25,
-                                fontWeight:'600',
-                                marginBottom:10,
-                                marginTop:5
-                            }}>Terpilih {"("+this.state.dataSelected.length+")"}</Text>
+                                fontSize: 25,
+                                fontWeight: '600',
+                                marginBottom: 10,
+                                marginTop: 5
+                            }}>Terpilih {"(" + this.state.dataSelected.length + ")"}</Text>
 
                             <View style={{
                                 width: "50%",
                                 height: 35,
-                                flexDirection:'row',
+                                flexDirection: 'row',
                                 borderWidth: 1,
                                 borderColor: '#008BAC',
                                 borderRadius: 10
@@ -372,10 +377,10 @@ export default class Genba extends Component {
                                         fontSize: 11
                                     }}
                                     value={this.state.filterValue}
-                                    onChangeText={(value)=>{
+                                    onChangeText={(value) => {
                                         this.setState({
                                             filterValue: value
-                                        },()=>{
+                                        }, () => {
                                             this.filterList(this.state.filterValue)
                                         })
                                     }}
@@ -386,10 +391,10 @@ export default class Genba extends Component {
                                         paddingHorizontal: 5,
                                         alignSelf: "center"
                                     }}
-                                    onPress={()=>{
+                                    onPress={() => {
                                         this.setState({
                                             filterValue: ""
-                                        },()=>{
+                                        }, () => {
                                             this.filterList(this.state.filterValue)
                                         })
                                     }}
@@ -412,21 +417,21 @@ export default class Genba extends Component {
                 }}>
                     <TouchableOpacity
                         style={{
-                            alignItems:"center",
-                            justifyContent:"center",
-                            height:40,
-                            borderRadius:20,
+                            alignItems: "center",
+                            justifyContent: "center",
+                            height: 40,
+                            borderRadius: 20,
                             paddingHorizontal: 15,
                             marginVertical: 10,
-                            backgroundColor:'#64DD17',
-                            borderColor:'transparent',
+                            backgroundColor: '#64DD17',
+                            borderColor: 'transparent',
                         }}
-                        onPress={()=>this.startInspection()}
+                        onPress={() => this.startInspection()}
                     >
                         <Text style={{
-                            color:'#fff',
-                            textAlign:'center',
-                            fontSize:15
+                            color: '#fff',
+                            textAlign: 'center',
+                            fontSize: 15
                         }}>
                             Mulai Inspeksi
                         </Text>
@@ -442,38 +447,38 @@ export default class Genba extends Component {
         );
     }
 
-    renderListUser(){
-        return(
+    renderListUser() {
+        return (
             <FlatList
-                data = { this.state.listGenbaUser }
-                style={{flex: 1}}
-                showsVerticalScrollIndicator = { false }
+                data={this.state.listGenbaUser}
+                style={{ flex: 1 }}
+                showsVerticalScrollIndicator={false}
                 extraData={this.state}
                 removeClippedSubviews={true}
                 keyExtractor={(item, index) => index.toString()}
-                renderItem = { ( { item } ) => {
+                renderItem={({ item }) => {
                     let selectStatus = this.state.listSelectedUserCode.includes(item.USER_AUTH_CODE);
                     return (
                         <TouchableOpacity
                             style={{
-                                flex:1,
+                                flex: 1,
                                 paddingBottom: 10
                             }}
-                            onPress={()=>{
+                            onPress={() => {
                                 this.selectUser(item.USER_AUTH_CODE)
                             }}>
                             <View style={{
-                                flex:1,
-                                flexDirection:'row'
+                                flex: 1,
+                                flexDirection: 'row'
                             }}>
                                 <View>
                                     <Image
-                                        style={{width : 40, height:40, borderRadius: 20, marginRight: 15}}
-                                        source={TaskServices.getImagePath(item.USER_AUTH_CODE)}/>
+                                        style={{ width: 40, height: 40, borderRadius: 20, marginRight: 15 }}
+                                        source={TaskServices.getImagePath(item.USER_AUTH_CODE)} />
                                 </View>
-                                <View style={{flex:1, justifyContent:'center'}}>
-                                    <Text style={{fontSize:14, fontWeight:'600', color: selectStatus ? '#008BAC' : 'black'}}>{item.FULLNAME}</Text>
-                                    <Text style={{fontSize:11, color: selectStatus ? '#1EA6C6' : '#bdbdbd', marginTop:4}}>{item.USER_ROLE.replace(/_/g," ")}</Text>
+                                <View style={{ flex: 1, justifyContent: 'center' }}>
+                                    <Text style={{ fontSize: 14, fontWeight: '600', color: selectStatus ? '#008BAC' : 'black' }}>{item.FULLNAME}</Text>
+                                    <Text style={{ fontSize: 11, color: selectStatus ? '#1EA6C6' : '#bdbdbd', marginTop: 4 }}>{item.USER_ROLE.replace(/_/g, " ")}</Text>
                                 </View>
                                 {
                                     selectStatus &&
@@ -494,28 +499,28 @@ export default class Genba extends Component {
         )
     }
 
-    renderSelectedUser(){
-        return(
+    renderSelectedUser() {
+        return (
             <View style={{
                 flexWrap: 'wrap',
-                flexDirection:'row',
+                flexDirection: 'row',
             }}>
                 {
-                    this.state.dataSelected.map((data)=>{
-                        return(
+                    this.state.dataSelected.map((data) => {
+                        return (
                             <View style={{
-                                borderColor:'#E0E0E0',
-                                backgroundColor:'white',
-                                borderWidth:1,
-                                borderRadius:5,
+                                borderColor: '#E0E0E0',
+                                backgroundColor: 'white',
+                                borderWidth: 1,
+                                borderRadius: 5,
                                 padding: 5,
                                 margin: 3
                             }}>
                                 <TouchableOpacity
                                     onPress={this.deleteSelected.bind(this, data.USER_AUTH_CODE)}>
                                     <Text style={{
-                                        fontSize:12,
-                                        color:'black'
+                                        fontSize: 12,
+                                        color: 'black'
                                     }}>
                                         {data.FULLNAME}
                                     </Text>

@@ -41,7 +41,8 @@ let realmSchema = new Realm({
         ModelTables.TR_GENBA_INSPECTION,
         ModelTables.TR_RATING,
         ModelTables.TR_SUMMARY,
-        ModelTables.TR_LOG
+        ModelTables.TR_LOG,
+        ModelTables.TM_SUGGESTION_INSPECTION,
     ],
 	schemaVersion: ModelTables.SCHEMA_VERSION
 });

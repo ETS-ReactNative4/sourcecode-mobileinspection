@@ -1,5 +1,5 @@
 import React from 'react';
-import {createStackNavigator} from 'react-navigation'
+import { createStackNavigator } from 'react-navigation'
 import SplashScreen from '../Screen/SplashScreen'
 import Login from '../Screen/Login'
 import MainMenu from '../Screen/Home/MainTabNavigator'
@@ -56,6 +56,7 @@ import PemberiTugas from '../Screen/PemberiTugas';
 import FotoUser from '../Screen/More/FotoUser';
 
 import PilihPeta from '../Screen/Maps/PilihPeta'
+import DashboardKebun from '../Screen/More/DashboardKebun'
 
 import Colors from '../Constant/Colors'
 // import FormInspectionNavigator from '../Screen/Inspeksi/Navigation/FormInspectionNavigator';
@@ -151,22 +152,25 @@ const main = createStackNavigator({
     // OpenGl: { screen: OpenGl },
 
     PilihPeta: { screen: PilihPeta },
-    Genba: { screen: Genba,
-        navigationOptions : {
-            title : "Peserta Genba",
+    Genba: {
+        screen: Genba,
+        navigationOptions: {
+            title: "Peserta Genba",
             headerTintColor: '#fff',
-        }},
+        }
+    },
+    DashboardKebun: { screen: DashboardKebun },
 
 }, {
-        headerMode: 'screen',
-        initialRouteName: 'SplashScreen',
-        //initialRouteName: 'Genba',
-        navigationOptions: {
-            headerStyle: {
-                backgroundColor: Colors.tintColorPrimary
-            },
+    headerMode: 'screen',
+    initialRouteName: 'SplashScreen',
+    //initialRouteName: 'Genba',
+    navigationOptions: {
+        headerStyle: {
+            backgroundColor: Colors.tintColorPrimary
         },
-        transitionConfig: () => ({ screenInterpolator: () => null }),
-    });
+    },
+    transitionConfig: () => ({ screenInterpolator: () => null }),
+});
 
 export default main;

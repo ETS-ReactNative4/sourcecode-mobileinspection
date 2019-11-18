@@ -578,16 +578,62 @@ const TR_SUMMARY = {
 };
 
 const TR_LOG = {
-  name: 'TR_LOG',
-  primaryKey: 'ID_LOG',
-  properties: {
-    ID_LOG: {type:'string', optional: false},
-      PARAM: {type:'string', optional: true},
-    INSERT_TIME: {type:'string', optional: false},
-    MESSAGE: {type:'string', optional: false},
-    DEV_NOTE: {type:'string', optional: true},
-    FROM: {type:'string', optional: false},
-  }
+    name: 'TR_LOG',
+    primaryKey: 'ID_LOG',
+    properties: {
+        ID_LOG: { type: 'string', optional: false },
+        PARAM: { type: 'string', optional: true },
+        INSERT_TIME: { type: 'string', optional: false },
+        MESSAGE: { type: 'string', optional: false },
+        DEV_NOTE: { type: 'string', optional: true },
+        FROM: { type: 'string', optional: false },
+    }
+};
+
+const TM_SUGGESTION_INSPECTION = {
+    name: 'TM_SUGGESTION_INSPECTION',
+    primaryKey: 'LOCATION_CODE',
+    properties: {
+        INSERT_TIME: 'string',
+        LOCATION_CODE: 'string',
+        IMAGE: 'string',
+
+        /** INSPEKSI */
+        TYPE_INSPECTION: 'string',
+        DATE_INSPECTION_ASLAP: 'string',
+        DESC_INSPECTION_ASLAP: 'string',
+        JUMLAH_BARIS_ASLAP: 'string',
+
+        DATE_INSPECTION_KABUN: 'string',
+        DESC_INSPECTION_KABUN: 'string',
+        JUMLAH_BARIS_KABUN: 'string',
+
+        DATE_INSPECTION_EM: 'string',
+        DESC_INSPECTION_EM: 'string',
+        JUMLAH_BARIS_EM: 'string',
+
+        DATE_INSPECTION_SEM_GM: 'string',
+        DESC_INSPECTION_SEM_GM: 'string',
+        JUMLAH_BARIS_SEM_GM: 'string',
+
+        /** INSPEKSI PANEN*/
+        TYPE_PANEN: 'string',
+        DATE_PANEN: 'string',
+        DESC_PANEN: 'string',
+        TOTAL_JANJANG_PANEN: 'string',
+        BJR_BULAN_LALU: 'string',
+        TOTAL_RESTAN_TPH: 'string',
+
+        /** INSPEKSI RAWAT*/
+        TYPE_RAWAT: 'string',
+        DATE_RAWAT: 'string',
+        DESC_RAWAT: 'string',
+        CPT_SPRAYING: 'string',
+        SPOT_SPRAYING: 'string',
+        LALANG_CTRL: 'string',
+
+        ISFAVORITE: { type: 'bool', optional: true },
+    }
 };
 
 export default {
@@ -616,6 +662,7 @@ export default {
     TM_CONTENT_LABEL,
     TM_INSPECTION_TRACK,
     TM_TIME_TRACK,
+    TM_SUGGESTION_INSPECTION,
 
     TM_KUALITAS,
     TR_H_EBCC_VALIDATION,
@@ -631,6 +678,7 @@ export default {
     TR_RATING,
     TR_SUMMARY,
     TR_LOG,
+
 
     SCHEMA_VERSION
 }
