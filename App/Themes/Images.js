@@ -47,7 +47,7 @@ const images = {
   ic_lainnya_peta: require('../Images/icon/icon_lainnya_maps.png'),
   ic_lainnya_database: require('../Images/icon/icon_lainnya_database.png'),
   ic_lainnya_dashboard: require('../Images/icon/icon_lainnya_weekly_summary.png'),
-  ic_lainnya_dashboard_kebun: require('../Images/icon/ic_dashboard_kebun.png'),
+  ic_lainnya_dashboard_kebun: require('../Images/icon/menu/ic_dashboard_kebun.png'),
 
   //Rating Icon
   ic_rating_bad: require('../Images/icon/ic-rating-bad.png'),
