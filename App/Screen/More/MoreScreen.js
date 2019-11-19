@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Image, NetInfo, ScrollView, StyleSheet, Text, TouchableOpacity, View, ToastAndroid } from 'react-native';
+import { Image, NetInfo, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Thumbnail } from 'native-base';
 import RNFetchBlob from "rn-fetch-blob";
 import TaskServices from '../../Database/TaskServices'

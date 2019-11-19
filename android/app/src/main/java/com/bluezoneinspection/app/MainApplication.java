@@ -3,13 +3,14 @@ package com.bluezoneinspection.app;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.dylanvann.fastimage.FastImageViewPackage;
+import io.invertase.firebase.RNFirebasePackage;
 import com.chirag.RNMail.RNMail;
 import com.rnziparchive.RNZipArchivePackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import fr.bamlab.rnimageresizer.ImageResizerPackage;
 import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import com.airbnb.android.react.maps.MapsPackage;
-import com.dylanvann.fastimage.FastImageViewPackage;
 import com.imagepicker.ImagePickerPackage;
 import com.rnfs.RNFSPackage;
 import io.realm.react.RealmReactPackage;
@@ -42,13 +43,14 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new FastImageViewPackage(),
+            new RNFirebasePackage(),
             new RNMail(),
             new RNZipArchivePackage(),
             new RNFetchBlobPackage(),
             new ImageResizerPackage(),
             new PickerPackage(),
             new MapsPackage(),
-            new FastImageViewPackage(),
             new ImagePickerPackage(),
             new RNFSPackage(),
             new RealmReactPackage(),

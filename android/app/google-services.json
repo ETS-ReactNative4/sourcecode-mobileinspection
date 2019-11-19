@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1029999579925",
+    "firebase_url": "https://mobile-inspection-257403.firebaseio.com",
+    "project_id": "mobile-inspection-257403",
+    "storage_bucket": "mobile-inspection-257403.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1029999579925:android:b77917a9c4b5ad4360cf1c",
+        "android_client_info": {
+          "package_name": "com.bluezoneinspection.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1029999579925-8ncpq484em31tvk3bad9daestg83tlml.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bluezoneinspection.app",
+            "certificate_hash": "5759e4a059ae6824326259549b3b2b933fa3f529"
+          }
+        },
+        {
+          "client_id": "1029999579925-5bthfprkrg91ivne89q7fl389tjk7mgp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXX96q_IKnRzYsouXvrRyA9n5Vo24bY3Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1029999579925-5bthfprkrg91ivne89q7fl389tjk7mgp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

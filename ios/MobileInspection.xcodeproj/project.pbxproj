@@ -79,13 +79,15 @@
 		BADB040407F34DC1A1F802D8 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3CB80154F92C4F838A43E828 /* Zocial.ttf */; };
 		4965CDE2938E4A5D8389EF69 /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4831F4AD69A945DE84FD6522 /* libRNFS.a */; };
 		EE1198C89E7F4565B2F163E7 /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C5F7DB7102641A5AB68D981 /* libRNImagePicker.a */; };
-		9CBD0267E1BE413AB9139676 /* libFastImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E41796A6596149EFA76E1B5C /* libFastImage.a */; };
 		39D6B862FC2A42749C8FA30A /* libAirMaps.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 95A3F9DCD99C4B6A82284FE3 /* libAirMaps.a */; };
 		3AE7F9C2945B4F72B4916370 /* libimageCropPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 69678E82D44B45C28F5C79E2 /* libimageCropPicker.a */; };
 		6F2A415CC94F47768CBCAE73 /* libRCTImageResizer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AF0ABB0A3224F459181A15A /* libRCTImageResizer.a */; };
 		6F65BAFA1B37467EA9EF2F79 /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 326311160A2449D884F60DB0 /* libRNFetchBlob.a */; };
 		5DABA108037A4B0A9C07D54D /* libRNZipArchive.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FA53915702284E898443F316 /* libRNZipArchive.a */; };
 		30DF03723D3B483EAFE3F983 /* libRNMail.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D768AE1C0CE74A029039DD72 /* libRNMail.a */; };
+		F6125466B417442EA6A2AE6A /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A595B19EE99C4E629210F633 /* libRNFirebase.a */; };
+		26B48DF39DFA4740B217D330 /* libFastImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B53EF969E137463E98C346C6 /* libFastImage.a */; };
+		64DBDF6D9AEF4963980A0CDA /* libFastImage-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CDFB90E5F79D44348D32B762 /* libFastImage-tvOS.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -440,8 +442,6 @@
 		4831F4AD69A945DE84FD6522 /* libRNFS.a */ = {isa = PBXFileReference; name = "libRNFS.a"; path = "libRNFS.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		2430E0B94DBE4EA184CC2FA0 /* RNImagePicker.xcodeproj */ = {isa = PBXFileReference; name = "RNImagePicker.xcodeproj"; path = "../node_modules/react-native-image-picker/ios/RNImagePicker.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		3C5F7DB7102641A5AB68D981 /* libRNImagePicker.a */ = {isa = PBXFileReference; name = "libRNImagePicker.a"; path = "libRNImagePicker.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
-		2EA576ED319A467CAA6AB466 /* FastImage.xcodeproj */ = {isa = PBXFileReference; name = "FastImage.xcodeproj"; path = "../node_modules/react-native-fast-image/ios/FastImage.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
-		E41796A6596149EFA76E1B5C /* libFastImage.a */ = {isa = PBXFileReference; name = "libFastImage.a"; path = "libFastImage.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		1C490F6ED9A64928B36C4624 /* AirMaps.xcodeproj */ = {isa = PBXFileReference; name = "AirMaps.xcodeproj"; path = "../node_modules/react-native-maps/lib/ios/AirMaps.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		95A3F9DCD99C4B6A82284FE3 /* libAirMaps.a */ = {isa = PBXFileReference; name = "libAirMaps.a"; path = "libAirMaps.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		6E66BA0C13734E7392AAE19B /* imageCropPicker.xcodeproj */ = {isa = PBXFileReference; name = "imageCropPicker.xcodeproj"; path = "../node_modules/react-native-image-crop-picker/ios/imageCropPicker.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
@@ -454,6 +454,11 @@
 		FA53915702284E898443F316 /* libRNZipArchive.a */ = {isa = PBXFileReference; name = "libRNZipArchive.a"; path = "libRNZipArchive.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		DE0893F86B134BDF83A8CA11 /* RNMail.xcodeproj */ = {isa = PBXFileReference; name = "RNMail.xcodeproj"; path = "../node_modules/react-native-mail/RNMail.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		D768AE1C0CE74A029039DD72 /* libRNMail.a */ = {isa = PBXFileReference; name = "libRNMail.a"; path = "libRNMail.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		BAB5570CBF0E4254BC08B1E6 /* RNFirebase.xcodeproj */ = {isa = PBXFileReference; name = "RNFirebase.xcodeproj"; path = "../node_modules/react-native-firebase/ios/RNFirebase.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		A595B19EE99C4E629210F633 /* libRNFirebase.a */ = {isa = PBXFileReference; name = "libRNFirebase.a"; path = "libRNFirebase.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		E2E373B29840442D9EF6769E /* FastImage.xcodeproj */ = {isa = PBXFileReference; name = "FastImage.xcodeproj"; path = "../node_modules/react-native-fast-image/ios/FastImage.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		B53EF969E137463E98C346C6 /* libFastImage.a */ = {isa = PBXFileReference; name = "libFastImage.a"; path = "libFastImage.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		CDFB90E5F79D44348D32B762 /* libFastImage-tvOS.a */ = {isa = PBXFileReference; name = "libFastImage-tvOS.a"; path = "libFastImage-tvOS.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -491,13 +496,14 @@
 				DC9E0BAE17164581826AF898 /* libRNDeviceInfo.a in Frameworks */,
 				4965CDE2938E4A5D8389EF69 /* libRNFS.a in Frameworks */,
 				EE1198C89E7F4565B2F163E7 /* libRNImagePicker.a in Frameworks */,
-				9CBD0267E1BE413AB9139676 /* libFastImage.a in Frameworks */,
 				39D6B862FC2A42749C8FA30A /* libAirMaps.a in Frameworks */,
 				3AE7F9C2945B4F72B4916370 /* libimageCropPicker.a in Frameworks */,
 				6F2A415CC94F47768CBCAE73 /* libRCTImageResizer.a in Frameworks */,
 				6F65BAFA1B37467EA9EF2F79 /* libRNFetchBlob.a in Frameworks */,
 				5DABA108037A4B0A9C07D54D /* libRNZipArchive.a in Frameworks */,
 				30DF03723D3B483EAFE3F983 /* libRNMail.a in Frameworks */,
+				F6125466B417442EA6A2AE6A /* libRNFirebase.a in Frameworks */,
+				26B48DF39DFA4740B217D330 /* libFastImage.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -516,6 +522,7 @@
 				2D02E4C81E0B4AEC006451C7 /* libRCTWebSocket-tvOS.a in Frameworks */,
 				28842B6B0ABB4518AB51E8C8 /* libRNVectorIcons-tvOS.a in Frameworks */,
 				DC1168F67AD1419F94FC34F9 /* libRNDeviceInfo-tvOS.a in Frameworks */,
+				64DBDF6D9AEF4963980A0CDA /* libFastImage-tvOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -698,13 +705,14 @@
 				11ED913A491A4C2B9DF89701 /* RNDeviceInfo.xcodeproj */,
 				AC50866694B54FA09DCDFB08 /* RNFS.xcodeproj */,
 				2430E0B94DBE4EA184CC2FA0 /* RNImagePicker.xcodeproj */,
-				2EA576ED319A467CAA6AB466 /* FastImage.xcodeproj */,
 				1C490F6ED9A64928B36C4624 /* AirMaps.xcodeproj */,
 				6E66BA0C13734E7392AAE19B /* imageCropPicker.xcodeproj */,
 				DC1B6CCB02A84AB0863F25EF /* RCTImageResizer.xcodeproj */,
 				CAE75982603D4C6BA2A3671D /* RNFetchBlob.xcodeproj */,
 				50E3D089D26E4A5398141360 /* RNZipArchive.xcodeproj */,
 				DE0893F86B134BDF83A8CA11 /* RNMail.xcodeproj */,
+				BAB5570CBF0E4254BC08B1E6 /* RNFirebase.xcodeproj */,
+				E2E373B29840442D9EF6769E /* FastImage.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1401,12 +1409,6 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1424,6 +1426,8 @@
 					"$(SRCROOT)/../node_modules/rn-fetch-blob/ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-zip-archive\ios",
 					"$(SRCROOT)\..\node_modules\react-native-mail\RNMail",
+					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
+					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage",
 				);
 			};
 			name = Debug;
@@ -1447,12 +1451,6 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1470,6 +1468,8 @@
 					"$(SRCROOT)/../node_modules/rn-fetch-blob/ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-zip-archive\ios",
 					"$(SRCROOT)\..\node_modules\react-native-mail\RNMail",
+					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
+					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage",
 				);
 			};
 			name = Release;
@@ -1506,6 +1506,8 @@
 					"$(SRCROOT)/../node_modules/rn-fetch-blob/ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-zip-archive\ios",
 					"$(SRCROOT)\..\node_modules\react-native-mail\RNMail",
+					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
+					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage",
 				);
 			};
 			name = Debug;
@@ -1541,6 +1543,8 @@
 					"$(SRCROOT)/../node_modules/rn-fetch-blob/ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-zip-archive\ios",
 					"$(SRCROOT)\..\node_modules\react-native-mail\RNMail",
+					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
+					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage",
 				);
 			};
 			name = Release;
@@ -1572,12 +1576,6 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1595,6 +1593,8 @@
 					"$(SRCROOT)/../node_modules/rn-fetch-blob/ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-zip-archive\ios",
 					"$(SRCROOT)\..\node_modules\react-native-mail\RNMail",
+					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
+					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage",
 				);
 			};
 			name = Debug;
@@ -1626,12 +1626,6 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1649,6 +1643,8 @@
 					"$(SRCROOT)/../node_modules/rn-fetch-blob/ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-zip-archive\ios",
 					"$(SRCROOT)\..\node_modules\react-native-mail\RNMail",
+					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
+					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage",
 				);
 			};
 			name = Release;
@@ -1679,12 +1675,6 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1702,6 +1692,8 @@
 					"$(SRCROOT)/../node_modules/rn-fetch-blob/ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-zip-archive\ios",
 					"$(SRCROOT)\..\node_modules\react-native-mail\RNMail",
+					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
+					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage",
 				);
 			};
 			name = Debug;
@@ -1732,12 +1724,6 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1755,6 +1741,8 @@
 					"$(SRCROOT)/../node_modules/rn-fetch-blob/ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-zip-archive\ios",
 					"$(SRCROOT)\..\node_modules\react-native-mail\RNMail",
+					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
+					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage",
 				);
 			};
 			name = Release;

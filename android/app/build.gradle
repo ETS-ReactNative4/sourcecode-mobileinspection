@@ -73,9 +73,9 @@ import com.android.build.OutputFile
  */
 
 project.ext.react = [
-    entryFile: "index.js",
-    bundleInDebug: true,
-    bundleInRelease: true,
+        entryFile      : "index.js",
+        bundleInDebug  : true,
+        bundleInRelease: true,
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
@@ -110,7 +110,7 @@ android {
         versionCode 24
         versionName "3.03"
         multiDexEnabled true
-		missingDimensionStrategy 'react-native-camera', 'general'
+        missingDimensionStrategy 'react-native-camera', 'general'
     }
     splits {
         abi {
@@ -145,7 +145,7 @@ android {
         variant.outputs.each { output ->
             // For each separate APK per architecture, set a unique version code as described here:
             // http://tools.android.com/tech-docs/new-build-system/user-guide/apk-splits
-            def versionCodes = ["armeabi-v7a":1, "x86":2, "arm64-v8a": 3, "x86_64": 4]
+            def versionCodes = ["armeabi-v7a": 1, "x86": 2, "arm64-v8a": 3, "x86_64": 4]
             def abi = output.getFilter(OutputFile.ABI)
             if (abi != null) {  // null for the universal-debug, universal-release variants
                 output.versionCodeOverride =
@@ -156,20 +156,14 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-fast-image')
+    implementation project(':react-native-firebase')
     implementation project(':react-native-mail')
     implementation project(':react-native-zip-archive')
     implementation project(':rn-fetch-blob')
     implementation project(':react-native-image-resizer')
     implementation project(':react-native-image-crop-picker')
-//     implementation(project(':react-native-maps')){
-//        exclude group: 'com.google.android.gms', module: 'play-services-base'
-//        exclude group: 'com.google.android.gms', module: 'play-services-maps'
-//    }
-//    implementation 'com.google.android.gms:play-services-base:10.0.1'
-//    implementation 'com.google.android.gms:play-services-maps:10.0.1'
-
     implementation project(':react-native-maps')
-    implementation project(':react-native-fast-image')
     implementation project(':react-native-image-picker')
     implementation project(':react-native-fs')
     implementation project(':realm')
@@ -179,13 +173,26 @@ dependencies {
     implementation project(':react-native-cardview')
     implementation project(':react-native-camera')
     implementation project(':react-native-imei')
-    compile 'com.facebook.fresco:animated-gif:1.10.0'
+    implementation 'com.facebook.fresco:animated-gif:1.10.0'
     implementation project(':react-native-cardview')
     implementation project(':realm')
     implementation project(':react-native-vector-icons')
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
-    implementation "com.facebook.react:react-native:+"  // From node_modules
+
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation "com.facebook.react:react-native:0.20.1" // From node_modules
+
+    // Firebase dependencies
+    implementation "com.google.android.gms:play-services-base:16.1.0"
+    implementation 'com.google.android.gms:play-services-maps:16.1.0'
+    implementation "com.google.firebase:firebase-core:16.0.9"
+    implementation 'androidx.multidex:multidex:2.0.0'
+
+    implementation(project(':react-native-maps')) {
+        exclude group: 'com.google.android.gms', module: 'play-services-base'
+        exclude group: 'com.google.android.gms', module: 'play-services-maps'
+    }
 }
 
 // Run this once to be able to run the application with BUCK
@@ -194,3 +201,5 @@ task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.implementation
     into 'libs'
 }
+
+apply plugin: 'com.google.gms.google-services'
