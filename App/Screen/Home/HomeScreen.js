@@ -28,15 +28,8 @@ import { changeFormatDate, dateDisplayMobile, isNotUserMill, syncDays, notifInbo
 import FastImage from 'react-native-fast-image'
 import SwiperSlider from 'react-native-swiper'
 import {
-  dirMaps,
-  dirPhotoEbccJanjang,
-  dirPhotoEbccSelfie,
-  dirPhotoInspeksiBaris,
-  dirPhotoInspeksiSelfie,
-  dirPhotoInspeksiSuggestion,
-  dirPhotoKategori,
-  dirPhotoTemuan,
-  dirDatabase
+    dirPhotoTemuan,
+    dirDatabase
 } from '../../Lib/dirStorage';
 
 import WeeklySummary from "../../Component/WeeklySummary";
@@ -44,9 +37,12 @@ import { clipString } from '../../Constant/Function';
 import { Images } from '../../Themes';
 import { changeBgFilter, changeIconFilter, getColor, getIconProgress, getStatusImage } from '../../Themes/Resources';
 import { getBlokName, getCategoryName, getEstateName, getStatusBlok, retrieveData, removeData, storeData } from '../../Database/Resources';
-import moment from 'moment'
 
 import RNFS from 'react-native-fs'
+
+import firebase from 'react-native-firebase';
+import type { Notification, NotificationOpen } from 'react-native-firebase';
+
 
 let { width } = Dimensions.get('window')
 
@@ -118,7 +114,10 @@ class HomeScreen extends React.Component {
   }
 
   componentWillUnmount() {
-    this.willFocus.remove()
+      this.willFocus.remove();
+      this.removeNotificationDisplayedListener();
+      this.removeNotificationListener();
+      this.removeNotificationOpenedListener();
   }
 
 
@@ -163,22 +162,6 @@ class HomeScreen extends React.Component {
 
   /** DELETE DATA SUGGESTION */
   _deleteDataSuggestion() {
-    // let data = TaskServices.getAllData('TM_SUGGESTION_INSPECTION');
-
-    // if (data.length > 0) {
-    //   data.map(item => {
-    //     let insertTime = item.INSERT_TIME;
-    //     if (insertTime != undefined) {
-    //       let today = getTodayDate('YYYYMMDD').toString();
-
-    //       if (insertTime !== today) {
-    //         TaskServices.deleteAllData('TM_SUGGESTION_INSPECTION');
-    //         console.log('Delete Berhasil')
-    //       }
-    //     }
-
-    //   })
-    // }
     retrieveData('SUGGESTION_DATE').then((result) => {
       if (result != null) {
         let today = getTodayDate('YYYYYMMDD')
@@ -191,17 +174,64 @@ class HomeScreen extends React.Component {
   }
 
   componentDidMount() {
-    RNFS.mkdir(dirDatabase);
     RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
-    RNFS.mkdir(dirPhotoInspeksiBaris);
-    RNFS.mkdir(dirPhotoInspeksiSelfie);
-    RNFS.mkdir(dirPhotoInspeksiSuggestion);
-    RNFS.mkdir(dirPhotoTemuan);
-    RNFS.mkdir(dirPhotoKategori);
-    RNFS.mkdir(dirPhotoEbccJanjang);
-    RNFS.mkdir(dirPhotoEbccSelfie);
-    RNFS.mkdir(dirMaps);
+    this.fcmSetup();
   }
+
+  fcmSetup(){
+      this.fcmToken()
+          .then((response)=>{
+              if(response !== null){
+                  console.log("FCM TOKEN:", response);
+              }
+          });
+      this.fcmListenerHandler();
+  }
+
+    async fcmToken(){
+        const fcmToken = await firebase.messaging().getToken();
+        if (fcmToken) {
+            return fcmToken;
+        }
+
+        return null;
+    }
+
+    fcmListenerHandler(){
+        this.removeNotificationDisplayedListener = firebase.notifications().onNotificationDisplayed((notification: Notification) => {
+            console.log("XDXDonNotificationDisplayed:",  notification);
+            // Process your notification as required
+            // ANDROID: Remote notifications do not contain the channel ID. You will have to specify this manually if you'd like to re-display the notification.
+        });
+        this.removeNotificationListener = firebase.notifications().onNotification((notification: Notification) => {
+            console.log("XDXDonNotification:",  notification);
+            // Process your notification as required
+        });
+        this.removeNotificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
+            console.log("XDXDonNotificationOpened:",  notificationOpen);
+            // // Get the action triggered by the notification being opened
+            // const action = notificationOpen.action;
+            // // Get information about the notification that was opened
+            // const notification: Notification = notificationOpen.notification;
+        });
+
+        firebase.notifications().getInitialNotification()
+            .then((notificationOpen: NotificationOpen) => {
+                // if (notificationOpen) {
+                //     // App was opened by a notification
+                //     // Get the action triggered by the notification being opened
+                //     const action = notificationOpen.action;
+                //     // Get information about the notification that was opened
+                    switch (notificationOpen.notification._data.DEEPLINK) {
+                        case "RESTAN":
+                            this.props.navigation.navigate("Restan");
+                            break;
+                        default:
+                            break;
+                    }
+                // }
+            });
+    }
 
   _changeFilterList = data => {
     if (data != undefined) {

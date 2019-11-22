@@ -79,7 +79,7 @@ export default class DashboardKebun extends React.Component {
                     flexDirection: 'row', justifyContent: 'space-evenly', marginHorizontal: 16
                 }}>
                     <ItemMenuDashboardKebun
-                        onPress={() => console.log('Titik Restan')}
+                        onPress={() => {this.props.navigation.navigate('Restan')}}
                         icon={Images.img_no_internet}
                         title={'Titik Restan'} />
                     <View style={{ width: 12 }} />

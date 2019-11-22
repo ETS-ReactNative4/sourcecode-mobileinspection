@@ -184,6 +184,8 @@ dependencies {
     implementation "com.facebook.react:react-native:0.20.1" // From node_modules
 
     // Firebase dependencies
+    implementation "com.google.firebase:firebase-messaging:18.0.0"
+    implementation 'me.leolin:ShortcutBadger:1.1.21@aar'
     implementation "com.google.android.gms:play-services-base:16.1.0"
     implementation 'com.google.android.gms:play-services-maps:16.1.0'
     implementation "com.google.firebase:firebase-core:16.0.9"

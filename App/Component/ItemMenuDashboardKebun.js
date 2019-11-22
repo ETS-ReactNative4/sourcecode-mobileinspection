@@ -6,6 +6,7 @@ import colors from '../Themes/Colors';
 const ItemMenuDashboardKebun = (props) => {
     return (
         <TouchableOpacity
+            onPress={props.onPress}
             disabled={props.isActive}
             activeOpacity={0.8}
             style={{ flex: 1 }}>
