@@ -71,6 +71,7 @@ const TaskServices = {
     getAllData: function (table) {
         return RealmSchemas.objects(table);
     },
+
     getService: function (serviceName) {
         let service = RealmSchemas.objects("TM_SERVICE");
         return service.filtered('API_NAME == "' + serviceName + '\" ')[0];

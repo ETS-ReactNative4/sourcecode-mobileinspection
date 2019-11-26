@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 
 import { NavigationActions } from 'react-navigation';
-import Icon1 from '../../Component/Icon1';
+import Icon1 from '../../Component/VectorIcon';
 
 import TaskServices from "../../Database/TaskServices";
 import ModalAlert from "../../Component/ModalAlert";

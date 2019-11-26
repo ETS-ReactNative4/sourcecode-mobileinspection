@@ -6,14 +6,14 @@ import IonicIcon from 'react-native-vector-icons/Ionicons';
 
 const iconSource = ['material','fontawesome','ionic'];
 
-RNIcon.defaultProps = {
+VectorIcon.defaultProps = {
     iconColor: 'grey',
     iconName: "",
     iconSize: null,
     style: {},
     iconType: "material",
 };
-RNIcon.propTypes = {
+VectorIcon.propTypes = {
     iconColor: PropTypes.any,
     iconName: PropTypes.any,
     iconSize: PropTypes.any,
@@ -21,7 +21,7 @@ RNIcon.propTypes = {
     iconType: PropTypes.oneOf(iconSource),
 };
 
-export default function RNIcon(props) {
+export default function VectorIcon(props) {
     const {
         iconColor,
         iconName,

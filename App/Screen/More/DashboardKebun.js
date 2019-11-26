@@ -5,6 +5,7 @@ import Icon2 from 'react-native-vector-icons/AntDesign'
 import colors from '../../Themes/Colors';
 import ItemMenuDashboardKebun from '../../Component/ItemMenuDashboardKebun';
 import { Images } from '../../Themes';
+import TaskServices from "../../Database/TaskServices";
 
 export default class DashboardKebun extends React.Component {
 
@@ -29,7 +30,10 @@ export default class DashboardKebun extends React.Component {
 
     constructor(props) {
         super(props);
+
+        let currentUser = TaskServices.getAllData('TR_LOGIN');
         this.state = {
+            currentUser: currentUser[0],
             location: 'GAWI INTI-2',
             tanggal: '25 Nov 2019',
         }
@@ -79,20 +83,21 @@ export default class DashboardKebun extends React.Component {
                     flexDirection: 'row', justifyContent: 'space-evenly', marginHorizontal: 16
                 }}>
                     <ItemMenuDashboardKebun
-                        onPress={() => console.log('Titik Restan')}
                         icon={Images.ic_titik_restan}
+                        isDisabled={this.state.currentUser.USER_ROLE !== "ASISTEN_LAPANGAN"}
+                        onPress={() => {this.props.navigation.navigate('Restan')}}
                         title={'Titik Restan'} />
                     <View style={{ width: 12 }} />
 
                     <ItemMenuDashboardKebun
-                        isActive={true}
+                        isDisabled={true}
                         onPress={() => console.log('Titik Panas')}
                         icon={Images.ic_titik_api}
                         title={'Titik Panas'} />
                     <View style={{ width: 12 }} />
 
                     <ItemMenuDashboardKebun
-                        isActive={true}
+                        isDisabled={true}
                         onPress={() => console.log('Titik Inspeksi')}
                         icon={Images.ic_titik_inspeksi}
                         title={'Titik Inspeksi'} />

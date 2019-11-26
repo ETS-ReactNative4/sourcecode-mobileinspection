@@ -47,6 +47,7 @@ import { getTimeServer } from './Sync/Download/DownloadTimeServer';
 import { getResetToken } from './Sync/Download/DownloadResetToken';
 import { AlertContent } from '../Themes';
 import { postWeeklySummary } from './Sync/Upload/UploadWeeklySummary';
+import { getTitikRestan } from './Sync/Download/Restan/TitikRestan';
 
 export default class SyncScreen extends React.Component {
 
@@ -121,6 +122,7 @@ export default class SyncScreen extends React.Component {
             progressFindingCommentDownload: 0,
             progressParamInspection: 0,
             progressKualitas: 0,
+            progressTitikRestan: 0,
 
             //labelDownload
             downloadApa: 'Download sedang dalam proses',
@@ -156,6 +158,9 @@ export default class SyncScreen extends React.Component {
             totalParamInspection: '0',
             valueKualitas: '0',
             totalKualitas: '0',
+            valueTitikRestan: 0,
+            totalTitikRestan: 0,
+
 
             indeterminate: false,
             downloadInspeksiParam: false,
@@ -338,6 +343,16 @@ export default class SyncScreen extends React.Component {
                 progressKualitas: 1,
                 valueKualitas: data.downloadCount,
                 totalKualitas: data.totalCount
+            })
+        })
+
+        /* DOWNLOAD PARAM KUALITAS */
+        await getTitikRestan().then((data) => {
+            console.log('Data Callback Kualitas : ', data);
+            this.setState({
+                progressTitikRestan: 1,
+                valueTitikRestan: data.downloadCount,
+                totalTitikRestan: data.totalCount
             })
         })
 
@@ -1286,6 +1301,13 @@ export default class SyncScreen extends React.Component {
                             value={this.state.valueKualitas}
                             total={this.state.totalKualitas}
                             progress={this.state.progressKualitas} />
+
+                        <ProgressSync
+                            title={'TM TITIK RESTAN'}
+                            color={Colors.brand}
+                            value={this.state.valueTitikRestan}
+                            total={this.state.totalTitikRestan}
+                            progress={this.state.progressTitikRestan} />
 
                         <ProgressDialog
                             visible={this.state.fetchLocation}

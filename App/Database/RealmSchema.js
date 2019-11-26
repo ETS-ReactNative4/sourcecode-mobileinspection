@@ -36,6 +36,7 @@ let realmSchema = new Realm({
         ModelTables.TR_NOTIFICATION,
         ModelTables.TM_SERVICE,
         ModelTables.TR_COORD,
+        ModelTables.TR_TITIK_RESTAN,
         ModelTables.TR_POLYGON,
         ModelTables.TR_SYNC_LOG,
         ModelTables.TR_GENBA_INSPECTION,

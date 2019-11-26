@@ -107,8 +107,8 @@ android {
         applicationId "com.bluezoneinspection.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 24
-        versionName "3.03"
+        versionCode 25
+        versionName "4.00"
         multiDexEnabled true
         missingDimensionStrategy 'react-native-camera', 'general'
     }
@@ -189,6 +189,7 @@ dependencies {
     implementation "com.google.firebase:firebase-core:17.2.1"
     implementation "com.google.firebase:firebase-messaging:20.0.1"
     implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'me.leolin:ShortcutBadger:1.1.21@aar'
 
     implementation(project(':react-native-maps')) {
         exclude group: 'com.google.android.gms', module: 'play-services-base'

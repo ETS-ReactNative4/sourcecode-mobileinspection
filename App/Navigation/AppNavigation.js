@@ -44,7 +44,6 @@ import ManualInputTPH from '../Screen/Ebcc/ManualInputTPH'
 import DetailEbcc from '../Screen/Ebcc/DetailEbcc'
 import MapsEbcc from '../Screen/Ebcc/MapsEbcc'
 
-//import SyncScreen from '../Screen/SyncTest';
 import SyncScreen from '../Screen/Sync';
 import InboxScreen from '../Screen/Inbox';
 import FilterScreen from '../Screen/FilterScreen';
@@ -55,8 +54,10 @@ import PemberiTugas from '../Screen/PemberiTugas';
 // import OpenGl from '../Screen/OpenGl';
 import FotoUser from '../Screen/More/FotoUser';
 
+//morescreen
 import PilihPeta from '../Screen/Maps/PilihPeta'
 import DashboardKebun from '../Screen/More/DashboardKebun'
+import Restan from '../Screen/More/Restan'
 
 import Colors from '../Constant/Colors'
 // import FormInspectionNavigator from '../Screen/Inspeksi/Navigation/FormInspectionNavigator';
@@ -159,7 +160,10 @@ const main = createStackNavigator({
             headerTintColor: '#fff',
         }
     },
+
+    //MoreScreen
     DashboardKebun: { screen: DashboardKebun },
+    Restan: { screen: Restan },
 
 }, {
     headerMode: 'screen',
