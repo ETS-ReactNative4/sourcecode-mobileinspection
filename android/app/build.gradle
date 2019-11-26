@@ -184,10 +184,11 @@ dependencies {
     implementation "com.facebook.react:react-native:0.20.1" // From node_modules
 
     // Firebase dependencies
-    implementation "com.google.android.gms:play-services-base:16.1.0"
-    implementation 'com.google.android.gms:play-services-maps:16.1.0'
-    implementation "com.google.firebase:firebase-core:16.0.9"
-    implementation 'androidx.multidex:multidex:2.0.0'
+    implementation "com.google.android.gms:play-services-base:17.1.0"
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation "com.google.firebase:firebase-core:17.2.1"
+    implementation "com.google.firebase:firebase-messaging:20.0.1"
+    implementation 'androidx.multidex:multidex:2.0.1'
 
     implementation(project(':react-native-maps')) {
         exclude group: 'com.google.android.gms', module: 'play-services-base'

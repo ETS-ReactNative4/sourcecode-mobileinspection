@@ -80,21 +80,21 @@ export default class DashboardKebun extends React.Component {
                 }}>
                     <ItemMenuDashboardKebun
                         onPress={() => console.log('Titik Restan')}
-                        icon={Images.img_no_internet}
+                        icon={Images.ic_titik_restan}
                         title={'Titik Restan'} />
                     <View style={{ width: 12 }} />
 
                     <ItemMenuDashboardKebun
                         isActive={true}
                         onPress={() => console.log('Titik Panas')}
-                        icon={Images.img_no_internet}
+                        icon={Images.ic_titik_api}
                         title={'Titik Panas'} />
                     <View style={{ width: 12 }} />
 
                     <ItemMenuDashboardKebun
                         isActive={true}
                         onPress={() => console.log('Titik Inspeksi')}
-                        icon={Images.img_no_internet}
+                        icon={Images.ic_titik_inspeksi}
                         title={'Titik Inspeksi'} />
                 </View>
 

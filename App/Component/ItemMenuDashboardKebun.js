@@ -18,7 +18,7 @@ const ItemMenuDashboardKebun = (props) => {
                         borderRadius: 10,
                         backgroundColor: props.isActive ? '#F5F5F5' : colors.white
                     }}>
-                    <Image source={props.icon} style={{ height: 64, width: '100%' }} />
+                    <Image source={props.icon} style={{ height: 62, width: '100%', resizeMode: 'contain' }} />
                     <Text style={{ marginTop: 8, color: colors.black, fontSize: 13, fontWeight: '500' }}>{props.title}</Text>
                 </Card>
             </View>

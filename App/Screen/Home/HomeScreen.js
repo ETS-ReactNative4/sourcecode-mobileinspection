@@ -20,7 +20,6 @@ import TaskServices from '../../Database/TaskServices'
 import CategoryAction from '../../Redux/CategoryRedux'
 import ContactAction from '../../Redux/ContactRedux'
 import RegionAction from '../../Redux/RegionRedux'
-import CustomHeader from '../../Component/CustomHeader'
 import ServerName from '../../Constant/ServerName'
 import Moment from 'moment';
 import RNFetchBlob from 'rn-fetch-blob'
@@ -51,6 +50,7 @@ import RNFS from 'react-native-fs'
 let { width } = Dimensions.get('window')
 
 import Header from '../../Component/Header'
+import { displayNotificationTemuan, displayNotificationSync } from '../../Notification/NotificationListener';
 
 class HomeScreen extends React.Component {
 
@@ -191,6 +191,11 @@ class HomeScreen extends React.Component {
   }
 
   componentDidMount() {
+
+    /** NOTIFICATION LOCAL */
+    displayNotificationSync();
+    displayNotificationTemuan();
+
     RNFS.mkdir(dirDatabase);
     RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
     RNFS.mkdir(dirPhotoInspeksiBaris);
@@ -872,7 +877,7 @@ class HomeScreen extends React.Component {
         }
       }
       config(options).fetch('GET', url).then((res) => {
-          RNFetchBlob.android.actionViewIntent(res.path(), '/')
+        RNFetchBlob.android.actionViewIntent(res.path(), '/')
         // alert("Success Downloaded " + res);
       }).catch((error) => {
         console.log("error Downloaded " + error);

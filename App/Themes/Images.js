@@ -48,6 +48,12 @@ const images = {
   ic_lainnya_database: require('../Images/icon/icon_lainnya_database.png'),
   ic_lainnya_dashboard: require('../Images/icon/icon_lainnya_weekly_summary.png'),
   ic_lainnya_dashboard_kebun: require('../Images/icon/menu/ic_dashboard_kebun.png'),
+  ic_lainnya_peta: require('../Images/icon/icon_lainnya_maps.png'),
+
+  //Icon Dashboard
+  ic_titik_api: require('../Images/icon/menu/icon_titik_api.png'),
+  ic_titik_inspeksi: require('../Images/icon/menu/icon_titik_inspeksi.png'),
+  ic_titik_restan: require('../Images/icon/menu/icon_titik_restan.png'),
 
   //Rating Icon
   ic_rating_bad: require('../Images/icon/ic-rating-bad.png'),

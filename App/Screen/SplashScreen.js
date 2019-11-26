@@ -22,6 +22,7 @@ import {
 import ModalAlert from "../Component/ModalAlert";
 import { retrieveData } from '../Database/Resources';
 import { Images } from '../Themes';
+import { createNotificationChannel } from '../Notification/NotificationListener';
 
 var RNFS = require('react-native-fs');
 const skm = require('../Data/MegaKuningan.json');
@@ -96,7 +97,7 @@ class SplashScreen extends Component {
     makeFolder() {
         //di pake untuk export database, copy semua file ke mobileinspection folder
         let dirs = RNFetchBlob.fs.dirs;
-        RNFetchBlob.fs.mkdir(dirs.SDCardDir+ "/" + "MobileInspection");
+        RNFetchBlob.fs.mkdir(dirs.SDCardDir + "/" + "MobileInspection");
         //buat folder internal
         RNFS.mkdir(dirDatabase);
         RNFS.mkdir(dirSummary);
@@ -151,11 +152,14 @@ class SplashScreen extends Component {
 
 
     async componentDidMount() {
+
         var isAllGrandted = await getPermission();
         if (isAllGrandted === true) {
 
             this.checkUpdate();
             this.detectFakeGPS();
+
+            createNotificationChannel();
 
             this.makeFolder()
             setTimeout(() => {

@@ -17,6 +17,7 @@ import { getBlokName, getEstateName } from '../../Database/Resources';
 import FeatureDaftarTemuan from '../../Component/FeatureDaftarTemuan'
 import TemplateNoData from '../../Component/TemplateNoData';
 import { Images } from '../../Themes';
+import { displayNotificationTemuan } from '../../Notification/NotificationListener';
 
 export default class ListFinding extends Component {
 
@@ -85,6 +86,8 @@ export default class ListFinding extends Component {
     var dataSelesai = TaskServices.query('TR_FINDING', `PROGRESS = 100 AND ASSIGN_TO = "${user_auth}"`);
 
     this.setState({ dataFinding: data, dataLewat, data7Hari, dataMore7Hari, dataNoDate, dataSelesai })
+
+    displayNotificationTemuan();
   }
 
   actionButtonClick() {
@@ -151,7 +154,7 @@ export default class ListFinding extends Component {
         }
       }
       config(options).fetch('GET', url).then((res) => {
-          RNFetchBlob.android.actionViewIntent(res.path(), '/')
+        RNFetchBlob.android.actionViewIntent(res.path(), '/')
         // alert("Success Downloaded " + res);
       }).catch((error) => {
         console.log(error);
