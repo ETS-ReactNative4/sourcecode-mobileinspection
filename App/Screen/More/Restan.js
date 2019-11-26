@@ -221,8 +221,11 @@ export default class Restan extends React.Component {
     getTitikRestan(){
         let titikRestan = TaskServices.getAllData('TR_TITIK_RESTAN');
         let tempCoordinateRestan = [];
-
+        let tempHighlightBlock = [];
         for (let counter = 0; counter < titikRestan.length; counter++){
+            if(!tempHighlightBlock.includes(titikRestan[counter].BLOCK_NAME)){
+                tempHighlightBlock.push(titikRestan[counter].BLOCK_NAME);
+            }
             let tempModelRestan = {
                 ...titikRestan[counter],
                 LATITUDE:parseFloat(titikRestan[counter].LATITUDE),
@@ -232,6 +235,7 @@ export default class Restan extends React.Component {
         }
 
         this.setState({
+            highlightBlock: tempHighlightBlock,
             coordinateRestan: tempCoordinateRestan
         })
     }
@@ -323,7 +327,7 @@ export default class Restan extends React.Component {
                         <View key={index}>
                             <Polygon
                                 coordinates={poly.coords}
-                                fillColor="rgba(0, 200, 0, 0.5)"
+                                fillColor={this.state.highlightBlock.includes(poly.blokname) ? "rgba(0, 200, 0, 0.5)" : "rgba(0, 0, 0, 0)"}
                                 strokeColor="rgba(255,255,255,1)"
                                 strokeWidth={2}
                             />
