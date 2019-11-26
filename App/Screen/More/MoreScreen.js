@@ -20,7 +20,8 @@ import { Images } from '../../Themes'
 import {
   dirDatabase,
   dirSummary,
-  dirLocal
+  dirLocal,
+    dirsHome
 } from '../../Lib/dirStorage';
 import RNFS from 'react-native-fs';
 import { retrieveData } from '../../Database/Resources';
@@ -279,7 +280,7 @@ export default class MoreScreen extends Component {
       case 'Dashboard':
         return this.menuDashboard()
       case 'Database':
-        return this.sendFile()
+        return this.exportDatabase();
       default:
         break;
     }
@@ -350,7 +351,8 @@ export default class MoreScreen extends Component {
   //   }, 2000)
   // }
 
-  async sendFile() {
+  async exportDatabase() {
+    await this.realmToJson();
     //create zip file
     RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
 
@@ -370,6 +372,32 @@ export default class MoreScreen extends Component {
             })
         }
       })
+  }
+
+  async realmToJson(){
+      let TR_H_EBCC_VALIDATION = TaskServices.getAllData("TR_H_EBCC_VALIDATION");
+      let TR_D_EBCC_VALIDATION = TaskServices.getAllData("TR_D_EBCC_VALIDATION");
+      let TR_BLOCK_INSPECTION_H = TaskServices.getAllData("TR_BLOCK_INSPECTION_H");
+      let TR_BLOCK_INSPECTION_D = TaskServices.getAllData("TR_BLOCK_INSPECTION_D");
+      let TM_INSPECTION_TRACK = TaskServices.getAllData("TM_INSPECTION_TRACK");
+      let TR_GENBA_INSPECTION = TaskServices.getAllData("TR_GENBA_INSPECTION");
+      let TR_FINDING = TaskServices.getAllData("TR_FINDING");
+      let TR_IMAGE = TaskServices.getAllData("TR_IMAGE");
+      let TR_LOG = TaskServices.getAllData("TR_LOG");
+
+      let finalString = [
+            {"TABLE_NAME": "TR_H_EBCC_VALIDATION", "DATA": TR_H_EBCC_VALIDATION},
+            {"TABLE_NAME": "TR_D_EBCC_VALIDATION", "DATA": TR_D_EBCC_VALIDATION},
+            {"TABLE_NAME": "TR_BLOCK_INSPECTION_H", "DATA": TR_BLOCK_INSPECTION_H},
+            {"TABLE_NAME": "TR_BLOCK_INSPECTION_D", "DATA": TR_BLOCK_INSPECTION_D},
+            {"TABLE_NAME": "TM_INSPECTION_TRACK", "DATA": TM_INSPECTION_TRACK},
+            {"TABLE_NAME": "TR_GENBA_INSPECTION", "DATA": TR_GENBA_INSPECTION},
+            {"TABLE_NAME": "TR_FINDING", "DATA": TR_FINDING},
+            {"TABLE_NAME": "TR_IMAGE", "DATA": TR_IMAGE},
+            {"TABLE_NAME": "TR_LOG", "DATA": TR_LOG},
+      ];
+      let path = dirDatabase + "/realmdatabase.json";
+      await RNFS.writeFile(path, JSON.stringify(finalString), 'utf8')
   }
 
   async zipFile(zipPath, zipDestination) {

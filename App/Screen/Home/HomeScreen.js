@@ -57,13 +57,17 @@ class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
 
+    let currentUser = TaskServices.getAllData('TR_LOGIN');
+
     this.extraFilter = "";
     this.extraFilterTime = {
       startTime: null,
       endTime: null,
       filter: false
-    }
+    };
+
     this.state = {
+      currentUser: currentUser[0],
       data: [],
       thumnailImage: '',
       loadAll: true,
@@ -175,7 +179,9 @@ class HomeScreen extends React.Component {
 
   componentDidMount() {
     RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
-    this.fcmSetup();
+    if(this.state.currentUser.USER_ROLE === "ASISTEN_LAPANGAN"){
+        this.fcmSetup();
+    }
   }
 
   fcmSetup(){

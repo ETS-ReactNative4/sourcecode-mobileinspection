@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types'
 import Colors from '../../Constant/Colors';
+import VectorIcon from "../VectorIcon";
 
 export const HeaderWithButton = (props) => {
     return (
@@ -23,12 +24,23 @@ export const HeaderWithButton = (props) => {
                     marginLeft: 12
                 }}
                 onPress={props.onPressLeft}>
-                <Image
-                    style={{
-                        height: 28,
-                        width: 28
-                    }}
-                   source={props.iconLeft} />
+                {
+                    props.leftVectorIcon ?
+                    <VectorIcon
+                        style={{
+                            height: 28,
+                            width: 28
+                        }}
+                        iconName={props.iconLeft}
+                    />
+                    :
+                    <Image
+                        style={{
+                            height: 28,
+                            width: 28
+                        }}
+                        source={props.iconLeft} />
+                }
             </TouchableOpacity>
 
             {/* TITLE HEADER */}
@@ -54,13 +66,27 @@ export const HeaderWithButton = (props) => {
                     marginRight: 12
                 }}
                 onPress={props.onPressRight}>
-                <Image
-                    style={{
-                        height: 28,
-                        width: 28,
-                    }}
-                    source={props.iconRight}
-                />
+                {
+                    props.rightVectorIcon ?
+                        <VectorIcon
+                            style={{
+                                height: 28,
+                                width: 28,
+                                alignSelf:"center"
+                            }}
+                            iconSize={30}
+                            iconColor={"white"}
+                            iconName={props.iconRight}
+                            iconType={"fontawesome"}
+                        />
+                        :
+                        <Image
+                            style={{
+                                height: 28,
+                                width: 28
+                            }}
+                            source={props.iconRight} />
+                }
             </TouchableOpacity>
         </View>
     )
@@ -72,6 +98,8 @@ HeaderWithButton.defaultProps = {
     iconRight: null,
     onPressLeft: ()=>{},
     onPressRight: ()=>{},
+    leftVectorIcon: false,
+    rightVectorIcon: false
 };
 
 HeaderWithButton.propTypes = {
@@ -80,4 +108,6 @@ HeaderWithButton.propTypes = {
     iconRight: PropTypes.oneOf([String, null]),
     onPressLeft: PropTypes.func,
     onPressRight: PropTypes.func,
+    leftVectorIcon: PropTypes.bool,
+    rightVectorIcon: PropTypes.bool
 };

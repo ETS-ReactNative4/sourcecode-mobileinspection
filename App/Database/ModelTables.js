@@ -1,4 +1,4 @@
-const SCHEMA_VERSION = 24;
+const SCHEMA_VERSION = 25;
 
 const TR_CONFIG = {
     name: 'TR_CONFIG',
@@ -552,6 +552,27 @@ const TR_POLYGON = {
     }
 }
 
+const TR_TITIK_RESTAN = {
+    name: 'TR_TITIK_RESTAN',
+    primaryKey: 'BCC',
+    properties: {
+        OPH: { type: 'string', optional: false },
+        BCC: { type: 'string', optional: false },
+        TPH_RESTANT_DAY: { type: 'string', optional: false },
+        LATITUDE: { type: 'string', optional: false },
+        LONGITUDE: { type: 'string', optional: false },
+        JML_JANJANG: { type: 'double', optional: false },
+        JML_BRONDOLAN: { type: 'double', optional: false },
+        KG_TAKSASI: { type: 'double', optional: false },
+        TGL_REPORT: { type: 'double', optional: false },
+        WERKS: { type: 'string', optional: false },
+        EST_NAME: { type: 'string', optional: false },
+        AFD_CODE: { type: 'string', optional: false },
+        BLOCK_CODE: { type: 'string', optional: false },
+        BLOCK_NAME: { type: 'string', optional: false }
+    }
+};
+
 const TR_SUMMARY = {
     name: 'TR_SUMMARY',
     primaryKey: 'SUMMARY_CODE',
@@ -589,7 +610,7 @@ const TR_LOG = {
         FROM: { type: 'string', optional: false },
     }
 };
-
+``
 const TM_SUGGESTION_INSPECTION = {
     name: 'TM_SUGGESTION_INSPECTION',
     primaryKey: 'LOCATION_CODE',
@@ -663,17 +684,17 @@ export default {
     TM_INSPECTION_TRACK,
     TM_TIME_TRACK,
     TM_SUGGESTION_INSPECTION,
-
+    TM_SERVICE,
     TM_KUALITAS,
+
     TR_H_EBCC_VALIDATION,
     TR_D_EBCC_VALIDATION,
-
     TR_SYNC_LOG,
     TR_NOTIFICATION,
-    TM_SERVICE,
     TR_GENBA_SELECTED,
     TR_COORD,
     TR_POLYGON,
+    TR_TITIK_RESTAN,
     TR_GENBA_INSPECTION,
     TR_RATING,
     TR_SUMMARY,

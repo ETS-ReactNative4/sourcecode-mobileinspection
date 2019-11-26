@@ -64,9 +64,7 @@ class SplashScreen extends Component {
         retrieveData('expiredToken').then((token) => {
             if (token != null) {
                 const dateToday = new Date();
-                console.log('dateToday : ', dateToday)
-                const dateExpired = new Date(token.tanggal)
-                console.log('dateExpired : ', dateExpired)
+                const dateExpired = new Date(token.tanggal);
                 let data = TaskServices.getAllData('TR_LOGIN')
 
                 if (dateToday > dateExpired) {

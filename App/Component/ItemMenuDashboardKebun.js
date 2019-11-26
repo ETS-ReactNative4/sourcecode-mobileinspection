@@ -7,7 +7,7 @@ const ItemMenuDashboardKebun = (props) => {
     return (
         <TouchableOpacity
             onPress={props.onPress}
-            disabled={props.isActive}
+            disabled={props.isDisabled}
             activeOpacity={0.8}
             style={{ flex: 1 }}>
             <View>

@@ -1,19 +1,18 @@
 import React from 'react';
-import {StatusBar, StyleSheet, Text, Image, View} from 'react-native';
+import {StatusBar, StyleSheet, Text, Image, View, Modal, TouchableOpacity} from 'react-native';
 
 import MapView, {Marker, Polygon, PROVIDER_GOOGLE, ProviderPropType} from 'react-native-maps';
 import Colors from '../../Constant/Colors'
 import {NavigationActions, StackActions} from 'react-navigation';
-import IconLoc from 'react-native-vector-icons/FontAwesome5';
 import ModalLoading from '../../Component/ModalLoading'
 import ModalAlert from '../../Component/ModalAlert';
 import TaskServices from '../../Database/TaskServices';
 import {retrieveData} from '../../Database/Resources';
 import {AlertContent} from '../../Themes';
-import * as geolib from 'geolib';
 import { HeaderWithButton } from "../../Component/Header/HeaderWithButton";
+import Fonts from "../../Constant/Fonts";
 
-let polyMap = false;
+let polyMap = null;
 let LATITUDE = -2.1890660;
 let LONGITUDE = 111.3609873;
 
@@ -35,11 +34,17 @@ export default class Restan extends React.Component {
                 longitudeDelta: 0.00721
             },
             poligons: [],
-            coordinateRestan: [
-                {longitude: 112.3648889, latitude: -2.9640591},
-                {longitude: 112.3748889, latitude: -2.9740591}
-            ],
+            coordinateRestan: [],
             inspectionType: props.navigation.getParam('inspectionType', 'normal'),
+            modalRestainDetail: false,
+            restanData: {
+                block_name: "",
+                TPH: "",
+                hari: "",
+                janjang: "",
+                brondolan: "",
+                taksasi: ""
+            },
             modalAlert: {
                 showModal: false,
                 title: "",
@@ -64,28 +69,6 @@ export default class Restan extends React.Component {
         header: null
     });
 
-    // static navigationOptions = ({ navigation }) => {
-    //     const { params = {} } = navigation.state;
-    //     return {
-    //         headerStyle: {
-    //             backgroundColor: Colors.tintColorPrimary
-    //         },
-    //         title: 'Pilih Blok',
-    //         headerTintColor: '#fff',
-    //         headerTitleStyle: {
-    //             flex: 1,
-    //             fontSize: 18,
-    //             fontWeight: '400'
-    //         },
-    //
-    //         headerRight: (
-    //             <TouchableOpacity style={{ marginRight: 20 }} onPress={() => { params.searchLocation() }}>
-    //                 <IconLoc style={{ marginLeft: 12 }} name={'location-arrow'} size={24} color={'white'} />
-    //             </TouchableOpacity>
-    //         )
-    //     };
-    // }
-
     componentDidMount() {
         this.loadMap();
     }
@@ -97,6 +80,7 @@ export default class Restan extends React.Component {
                 if (position.mocked) {
                     this.validateType()
                 } else {
+                    this.getTitikRestan();
                     this.getLocation();
                 }
             },
@@ -118,16 +102,13 @@ export default class Restan extends React.Component {
 
     validateType() {
         retrieveData('typeApp').then(data => {
-            if (data != null) {
-                if (data == 'PROD') {
-                    this.setState({
-                        modalLoading: { ...this.state.modalLoading, showModal: false },
-                        modalAlert: { ...AlertContent.mock_location }
-                    })
-                } else {
-                    this.getLocation();
-                }
+            if (data !== null && data === 'PROD') {
+                this.setState({
+                    modalLoading: { ...this.state.modalLoading, showModal: false },
+                    modalAlert: { ...AlertContent.mock_location }
+                })
             } else {
+                this.getTitikRestan();
                 this.getLocation();
             }
         })
@@ -160,9 +141,8 @@ export default class Restan extends React.Component {
                     queryString = queryString + `afd_code='${userLocationCode[afdCounter].charAt(userLocationCode[afdCounter].length-1)}'`;
                 }
                 else {
-                    queryString = queryString + ` OR afd_code='${userLocationCode[afdCounter].charAt(userLocationCode[afdCounter].length-1)}'`;
+                    queryString = queryString + `OR afd_code='${userLocationCode[afdCounter].charAt(userLocationCode[afdCounter].length-1)}'`;
                 }
-                console.log(queryString);
             }
             let polygons = TaskServices.query('TR_POLYGON', queryString);
             polygons = this.convertGeoJson(polygons);
@@ -217,37 +197,16 @@ export default class Restan extends React.Component {
             return null;
         }
         let data = polyMap.data.polygons;
-        // let poligons = [];
-        // for (var i = 0; i < data.length; i++) {
-        //     let coords = data[i];
-        //     if (
-        //         geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude + 0.006 }, coords.coords) ||
-        //         geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude - 0.006 }, coords.coords) ||
-        //         geolib.isPointInPolygon({ latitude: this.state.latitude + 0.0025, longitude: this.state.longitude }, coords.coords) ||
-        //         geolib.isPointInPolygon({ latitude: this.state.latitude - 0.0025, longitude: this.state.longitude }, coords.coords) ||
-        //         geolib.isPointInPolygon({ latitude: this.state.latitude - 0.0025, longitude: this.state.longitude - 0.006 }, coords.coords) ||
-        //         geolib.isPointInPolygon({ latitude: this.state.latitude - 0.0025, longitude: this.state.longitude + 0.006 }, coords.coords) ||
-        //         geolib.isPointInPolygon({ latitude: this.state.latitude + 0.0025, longitude: this.state.longitude - 0.006 }, coords.coords) ||
-        //         geolib.isPointInPolygon({ latitude: this.state.latitude + 0.0025, longitude: this.state.longitude + 0.006 }, coords.coords) ||
-        //         geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude }, coords.coords)
-        //     ) {
-        //         poligons.push(coords);
-        //     }
-        //     // poligons.push(coords);
-        // }
         return data;
     }
 
     getLocation() {
         if (this.state.latitude && this.state.longitude) {
             let poligons = this.getPolygons();
-            if (poligons.length > 0) {
+            if (poligons !== null) {
                 this.setState({
-                    modalLoading: { ...this.state.modalLoading, showModal: false } },
-                    () => {
-                    this.setState({
-                        poligons
-                    });
+                    modalLoading: { ...this.state.modalLoading, showModal: false },
+                    poligons
                 });
             }
             else {
@@ -257,6 +216,24 @@ export default class Restan extends React.Component {
                 })
             }
         }
+    }
+
+    getTitikRestan(){
+        let titikRestan = TaskServices.getAllData('TR_TITIK_RESTAN');
+        let tempCoordinateRestan = [];
+
+        for (let counter = 0; counter < titikRestan.length; counter++){
+            let tempModelRestan = {
+                ...titikRestan[counter],
+                LATITUDE:parseFloat(titikRestan[counter].LATITUDE),
+                LONGITUDE:parseFloat(titikRestan[counter].LONGITUDE)
+            };
+            tempCoordinateRestan.push(tempModelRestan);
+        }
+
+        this.setState({
+            coordinateRestan: tempCoordinateRestan
+        })
     }
 
     centerCoordinate(coordinates) {
@@ -275,73 +252,6 @@ export default class Restan extends React.Component {
         }
     }
 
-    checkAutorisasi(werkAfdBlockCode) {
-        let datLogin = TaskServices.getAllData('TR_LOGIN')[0]
-        let refCode = datLogin.REFFERENCE_ROLE;
-        if (refCode == 'AFD_CODE') {
-            let dataBlok = TaskServices.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', werkAfdBlockCode)
-            if (dataBlok !== undefined) {
-                let blockInAfd = TaskServices.getBlockInAFD()
-                if (blockInAfd.includes(dataBlok.BLOCK_NAME)) {
-                    return true
-                }
-            }
-            return false
-        }
-        return true
-    }
-
-    navigateScreen(screenName, werkAfdBlockCode) {
-        var werksAfdBlock = this.props.navigation.state.params.werksAfdBlock;
-
-        if (werksAfdBlock != undefined) {
-            if (werksAfdBlock == werkAfdBlockCode) {
-                this._checkValidate(screenName, werkAfdBlockCode);
-            } else {
-                let dataBlok = TaskServices.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', werkAfdBlockCode)
-                var blockName = dataBlok.BLOCK_NAME
-
-                this.setState({
-                    modalAlert: {
-                        showModal: true,
-                        title: 'Blok tidak match',
-                        message: "Kamu tidak berada di Blok " + blockName,
-                        icon: require('../../Images/ic-blm-input-lokasi.png')
-                    }
-                });
-            }
-        } else {
-            this._checkValidate(screenName, werkAfdBlockCode);
-        }
-    }
-
-    _checkValidate(screenName, werkAfdBlockCode) {
-        if (this.checkAutorisasi(werkAfdBlockCode)) {
-            const navigation = this.props.navigation;
-            const resetAction = StackActions.reset({
-                index: 0,
-                actions: [NavigationActions.navigate({
-                    routeName: screenName, params: {
-                        werkAfdBlockCode: werkAfdBlockCode,
-                        latitude: this.state.latitude,
-                        longitude: this.state.longitude,
-                        inspectionType: this.state.inspectionType === 'genba' ? 'genba' : 'normal'
-                    }
-                })]
-            });
-            navigation.dispatch(resetAction);
-        } else {
-            this.setState({
-                modalLoading: { ...this.state.modalLoading, showModal: false },
-                modalAlert: {
-                    title: 'Tidak ada data',
-                    message: "Kamu belum download data map",
-                    icon: require('../../Images/ic-blm-input-lokasi.png')
-                }
-            });
-        }
-    }
-
     render() {
         return (
             <View
@@ -351,9 +261,10 @@ export default class Restan extends React.Component {
                 <HeaderWithButton
                     title={"Titik Restan"}
                     iconLeft={require("../../Images/icon/ic_arrow_left.png")}
-                    iconRight={require("../../Images/icon/ic_arrow_left.png")}
+                    rightVectorIcon={true}
+                    iconRight={"location-arrow"}
                     onPressLeft={()=>{this.props.navigation.pop()}}
-                    onPressRight={()=>{this.getLocation()}}
+                    onPressRight={()=>{this.searchLocation()}}
                 />
 
                 <StatusBar
@@ -412,7 +323,7 @@ export default class Restan extends React.Component {
                         <View key={index}>
                             <Polygon
                                 coordinates={poly.coords}
-                                // fillColor="rgba(0, 200, 0, 0.5)"
+                                fillColor="rgba(0, 200, 0, 0.5)"
                                 strokeColor="rgba(255,255,255,1)"
                                 strokeWidth={2}
                             />
@@ -428,11 +339,23 @@ export default class Restan extends React.Component {
                         this.state.coordinateRestan.map((coordinate)=>{
                             return(
                                 <Marker
-                                    title={"Titik Api TAP"}
-                                    description={`hello world uhskjfhskejf ekjfhskejfhskjefsee kjefhksjehfskjehf sefhskejfh`}
+                                    onPress={()=>{
+                                        // console.log(coordinate.OPH);
+                                        this.setState({
+                                            modalRestainDetail: true,
+                                            restanData:{
+                                                block_name: coordinate.BLOCK_NAME,
+                                                TPH: coordinate.OPH,
+                                                hari: coordinate.TPH_RESTANT_DAY,
+                                                janjang: coordinate.JML_JANJANG,
+                                                brondolan: coordinate.JML_BRONDOLAN,
+                                                taksasi: coordinate.KG_TAKSASI
+                                            }
+                                        })
+                                    }}
                                     coordinate={{
-                                        latitude: coordinate.latitude,
-                                        longitude: coordinate.longitude
+                                        latitude: coordinate.LATITUDE,
+                                        longitude: coordinate.LONGITUDE
                                     }}>
                                     <Image
                                         style={{width: 20, height: 20}}
@@ -472,7 +395,79 @@ export default class Restan extends React.Component {
                         </View>
                     </View>
                 </View>
+                {this.showRestanDetail()}
             </View>
+        );
+    }
+
+    showRestanDetail() {
+        return (
+            <Modal
+                visible={this.state.modalRestainDetail}
+                transparent={true}
+            >
+                <TouchableOpacity
+                    style={{
+                        flex: 1,
+                        alignItems:'center',
+                        justifyContent: 'center',
+                        backgroundColor: Colors.shade,
+                        paddingLeft: 24,
+                        paddingRight: 24,
+                    }}
+                    onPress={()=>{
+                        this.setState({
+                            modalRestainDetail: false,
+                        })
+                    }}
+                >
+                    <View style={{
+                        width: "75%",
+                        backgroundColor: Colors.background,
+                        padding: 15,
+                        borderRadius: 4
+                    }}>
+                        <View style={{
+                            alignItems:"center",
+                            justifyContent:"center",
+                            paddingVertical: 10
+                        }}>
+                            <Text>{`${this.state.restanData.block_name}`}</Text>
+                            <Text>{`TPH ${this.state.restanData.TPH}`}</Text>
+                        </View>
+                        <View style={{
+                            paddingHorizontal: 10,
+                            justifyContent:"space-between",
+                            flexDirection: "row"
+                        }}>
+                            <View style={{
+                                flex: 1,
+                                marginRight: 10,
+                                backgroundColor:'yellow',
+                                borderRadius: 5,
+                                alignItems:'center',
+                                justifyContent:'center'
+                            }}>
+                                <Text>{this.state.restanData.hari}</Text>
+                                <Text>Hari</Text>
+                            </View>
+                            <View
+                                style={{
+                                    flex: 2,
+                                    justifyContent:'space-evenly'
+                                }}
+                            >
+                                <View>
+                                    <Text>Janjang:</Text>
+                                    <Text>{`Janjang: ${this.state.restanData.janjang}`}</Text>
+                                </View>
+                                <Text>{`Brondolan(KG): ${this.state.restanData.brondolan}`}</Text>
+                                <Text>{`Taksasi(KG): ${this.state.restanData.taksasi}`}</Text>
+                            </View>
+                        </View>
+                    </View>
+                </TouchableOpacity>
+            </Modal>
         );
     }
 }

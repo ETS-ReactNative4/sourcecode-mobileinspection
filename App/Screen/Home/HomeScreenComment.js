@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {FlatList, Image, Keyboard, NetInfo, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import Colors from "../../Constant/Colors";
 import Icon from "react-native-vector-icons/Ionicons";
-import Icon1 from '../../Component/Icon1'
+import Icon1 from '../../Component/VectorIcon'
 import TaskServices from "../../Database/TaskServices";
 import moment from 'moment'
 import {downloadProfileImage} from "../Sync/Download/Image/Profile";
