@@ -16,29 +16,20 @@ import com.dylanvann.fastimage.FastImageViewPackage;
 import com.chirag.RNMail.RNMail;
 import com.rnziparchive.RNZipArchivePackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
-
 import fr.bamlab.rnimageresizer.ImageResizerPackage;
-
 import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.imagepicker.ImagePickerPackage;
 import com.rnfs.RNFSPackage;
-
 import io.realm.react.RealmReactPackage;
-
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.kishanjvaghela.cardview.RNCardViewPackage;
-
 import org.reactnative.camera.RNCameraPackage;
-
 import codes.simen.IMEI.IMEI;
-
 import com.kishanjvaghela.cardview.RNCardViewPackage;
-
 import io.realm.react.RealmReactPackage;
-
 import com.oblador.vectoricons.VectorIconsPackage;
 
 import java.util.Arrays;
@@ -58,8 +49,8 @@ public class MainApplication extends Application implements ReactApplication {
                     new MainReactPackage(),
                     new FastImageViewPackage(),
                     new RNFirebasePackage(),
-                    new RNFirebaseNotificationsPackage(),
                     new RNFirebaseMessagingPackage(),
+                    new RNFirebaseNotificationsPackage(),
                     new RNMail(),
                     new RNZipArchivePackage(),
                     new RNFetchBlobPackage(),
@@ -85,29 +76,8 @@ public class MainApplication extends Application implements ReactApplication {
     };
 
     @Override
-    protected List<ReactPackage> getPackages() {
-      return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
-            new FastImageViewPackage(),
-            new RNFirebasePackage(),
-            new RNFirebaseMessagingPackage(),
-            new RNFirebaseNotificationsPackage(),
-            new RNMail(),
-            new RNZipArchivePackage(),
-            new RNFetchBlobPackage(),
-            new ImageResizerPackage(),
-            new PickerPackage(),
-            new MapsPackage(),
-            new ImagePickerPackage(),
-            new RNFSPackage(),
-            new RealmReactPackage(),
-            new VectorIconsPackage(),
-            new RNDeviceInfo(),
-            new ReactNativeConfigPackage(),
-            new RNCardViewPackage(),
-            new RNCameraPackage(),
-            new IMEI()
-      );
+    public ReactNativeHost getReactNativeHost() {
+        return mReactNativeHost;
     }
 
     @Override
