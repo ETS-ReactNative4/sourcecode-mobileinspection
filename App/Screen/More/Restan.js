@@ -434,7 +434,7 @@ export default class Restan extends React.Component {
                         <View style={{
                             alignItems:"center",
                             justifyContent:"center",
-                            paddingVertical: 10
+                            paddingVertical: 5
                         }}>
                             <Text>{`${this.state.restanData.block_name}`}</Text>
                             <Text>{`TPH ${this.state.restanData.TPH}`}</Text>
@@ -461,10 +461,7 @@ export default class Restan extends React.Component {
                                     justifyContent:'space-evenly'
                                 }}
                             >
-                                <View>
-                                    <Text>Janjang:</Text>
-                                    <Text>{`Janjang: ${this.state.restanData.janjang}`}</Text>
-                                </View>
+                                <Text>{`Janjang: ${this.state.restanData.janjang}`}</Text>
                                 <Text>{`Brondolan(KG): ${this.state.restanData.brondolan}`}</Text>
                                 <Text>{`Taksasi(KG): ${this.state.restanData.taksasi}`}</Text>
                             </View>
