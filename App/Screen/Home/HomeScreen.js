@@ -46,7 +46,7 @@ import type { Notification, NotificationOpen } from 'react-native-firebase';
 let { width } = Dimensions.get('window')
 
 import Header from '../../Component/Header'
-import { displayNotificationTemuan, displayNotificationSync } from '../../Notification/NotificationListener';
+import { displayNotificationTemuan, displayNotificationSync, notificationDeeplinkSetup } from '../../Notification/NotificationListener';
 
 class HomeScreen extends React.Component {
 
@@ -119,9 +119,6 @@ class HomeScreen extends React.Component {
 
   componentWillUnmount() {
       this.willFocus.remove();
-      this.removeNotificationDisplayedListener();
-      this.removeNotificationListener();
-      this.removeNotificationOpenedListener();
   }
 
 
@@ -182,68 +179,11 @@ class HomeScreen extends React.Component {
     /** NOTIFICATION LOCAL */
     displayNotificationSync();
     displayNotificationTemuan();
+    notificationDeeplinkSetup(this.props);
 
     RNFS.mkdir(dirDatabase);
     RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
-    if(this.state.currentUser.USER_ROLE === "ASISTEN_LAPANGAN"){
-        this.fcmSetup();
-    }
   }
-
-  fcmSetup(){
-      this.fcmToken()
-          .then((response)=>{
-              if(response !== null){
-                  console.log("FCM TOKEN:", response);
-              }
-          });
-      this.fcmListenerHandler();
-  }
-
-    async fcmToken(){
-        const fcmToken = await firebase.messaging().getToken();
-        if (fcmToken) {
-            return fcmToken;
-        }
-
-        return null;
-    }
-
-    fcmListenerHandler(){
-        this.removeNotificationDisplayedListener = firebase.notifications().onNotificationDisplayed((notification: Notification) => {
-            console.log("XDXDonNotificationDisplayed:",  notification);
-            // Process your notification as required
-            // ANDROID: Remote notifications do not contain the channel ID. You will have to specify this manually if you'd like to re-display the notification.
-        });
-        this.removeNotificationListener = firebase.notifications().onNotification((notification: Notification) => {
-            console.log("XDXDonNotification:",  notification);
-            // Process your notification as required
-        });
-        this.removeNotificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
-            console.log("XDXDonNotificationOpened:",  notificationOpen);
-            // // Get the action triggered by the notification being opened
-            // const action = notificationOpen.action;
-            // // Get information about the notification that was opened
-            // const notification: Notification = notificationOpen.notification;
-        });
-
-        firebase.notifications().getInitialNotification()
-            .then((notificationOpen: NotificationOpen) => {
-                // if (notificationOpen) {
-                //     // App was opened by a notification
-                //     // Get the action triggered by the notification being opened
-                //     const action = notificationOpen.action;
-                //     // Get information about the notification that was opened
-                    switch (notificationOpen.notification._data.DEEPLINK) {
-                        case "RESTAN":
-                            this.props.navigation.navigate("Restan");
-                            break;
-                        default:
-                            break;
-                    }
-                // }
-            });
-    }
 
   _changeFilterList = data => {
     if (data != undefined) {

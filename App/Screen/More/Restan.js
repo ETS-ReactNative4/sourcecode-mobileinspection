@@ -220,24 +220,26 @@ export default class Restan extends React.Component {
 
     getTitikRestan(){
         let titikRestan = TaskServices.getAllData('TR_TITIK_RESTAN');
-        let tempCoordinateRestan = [];
-        let tempHighlightBlock = [];
-        for (let counter = 0; counter < titikRestan.length; counter++){
-            if(!tempHighlightBlock.includes(titikRestan[counter].BLOCK_NAME)){
-                tempHighlightBlock.push(titikRestan[counter].BLOCK_NAME);
+        if(titikRestan !== undefined && titikRestan.length > 0){
+            let tempCoordinateRestan = [];
+            let tempHighlightBlock = [];
+            for (let counter = 0; counter < titikRestan.length; counter++){
+                if(!tempHighlightBlock.includes(titikRestan[counter].BLOCK_NAME)){
+                    tempHighlightBlock.push(titikRestan[counter].BLOCK_NAME);
+                }
+                let tempModelRestan = {
+                    ...titikRestan[counter],
+                    LATITUDE:parseFloat(titikRestan[counter].LATITUDE),
+                    LONGITUDE:parseFloat(titikRestan[counter].LONGITUDE)
+                };
+                tempCoordinateRestan.push(tempModelRestan);
             }
-            let tempModelRestan = {
-                ...titikRestan[counter],
-                LATITUDE:parseFloat(titikRestan[counter].LATITUDE),
-                LONGITUDE:parseFloat(titikRestan[counter].LONGITUDE)
-            };
-            tempCoordinateRestan.push(tempModelRestan);
-        }
 
-        this.setState({
-            highlightBlock: tempHighlightBlock,
-            coordinateRestan: tempCoordinateRestan
-        })
+            this.setState({
+                highlightBlock: tempHighlightBlock,
+                coordinateRestan: tempCoordinateRestan
+            })
+        }
     }
 
     centerCoordinate(coordinates) {

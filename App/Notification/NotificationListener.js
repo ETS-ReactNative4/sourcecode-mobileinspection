@@ -12,8 +12,43 @@ export const createNotificationChannel = () => {
 
     // Create the channel
     firebase.notifications().android.createChannel(channel);
+    subscribeTopic("testKeps");
+};
+
+async function getFCMToken(){
+    const fcmToken = await firebase.messaging().getToken();
+    if (fcmToken) {
+        return fcmToken;
+    }
+    return null;
 }
 
+function subscribeTopic(topicName :string){
+    firebase.messaging().subscribeToTopic(topicName);
+}
+
+function unsubscribeTopic(topicName :string){
+    firebase.messaging().unsubscribeFromTopic(topicName);
+}
+
+//deeplink setup
+export function notificationDeeplinkSetup(props){
+    let currentUser = TaskServices.getAllData('TR_LOGIN');
+    if(currentUser[0].USER_ROLE === "ASISTEN_LAPANGAN"){
+        firebase.notifications().getInitialNotification()
+            .then((notificationOpen: NotificationOpen) => {
+                switch (notificationOpen.notification._data.DEEPLINK) {
+                    case "RESTAN":
+                        props.navigation.navigate("Restan");
+                        break;
+                    default:
+                        break;
+                }
+            });
+    }
+}
+
+//LOCAL NOTIFICATION
 export function displayNotificationTemuan() {
 
     const login = TaskServices.getAllData('TR_LOGIN');
@@ -87,23 +122,25 @@ export function displayNotificationSync() {
         const userauth = login[0].USER_AUTH_CODE;
         const username = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', userauth);
 
-        var body = username.FULLNAME + ' , kamu belum melakukan sync data selama ' + syncdays + ' hari. Segera lakukan sync data ya..'
+        if(username !== undefined){
+            let body = username.FULLNAME + ' , kamu belum melakukan sync data selama ' + syncdays + ' hari. Segera lakukan sync data ya..';
 
-        const notification = new firebase.notifications.Notification()
-            .setNotificationId(getTodayDate('YYYYMMDDHHmmss'))
-            .setTitle('Belum Sync')
-            .setSubtitle('Sync')
-            .setBody(body)
-            .setData({ key1: 'value1', key2: 'value2', })
-            .setSound('default')
+            const notification = new firebase.notifications.Notification()
+                .setNotificationId(getTodayDate('YYYYMMDDHHmmss'))
+                .setTitle('Belum Sync')
+                .setSubtitle('Sync')
+                .setBody(body)
+                .setData({ key1: 'value1', key2: 'value2', })
+                .setSound('default')
 
-        if (Platform.OS === "android") {
-            notification.android.setChannelId('mobile-inspection-channel');
-            notification.android.setBadgeIconType(firebase.notifications.Android.BadgeIconType.Small);
-            notification.android.setBigText(body);
+            if (Platform.OS === "android") {
+                notification.android.setChannelId('mobile-inspection-channel');
+                notification.android.setBadgeIconType(firebase.notifications.Android.BadgeIconType.Small);
+                notification.android.setBigText(body);
+            }
+
+            // Display the notification
+            firebase.notifications().displayNotification(notification);
         }
-
-        // Display the notification
-        firebase.notifications().displayNotification(notification);
     }
 }
