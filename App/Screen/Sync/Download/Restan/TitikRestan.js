@@ -11,7 +11,6 @@ export async function getTitikRestan() {
     };
 
     await getAPIFunction('REPORT-TITIK-RESTAN').then((restanModel) => {
-        console.log(restanModel);
         try {
             if (restanModel !== null) {
                 Promise.all(

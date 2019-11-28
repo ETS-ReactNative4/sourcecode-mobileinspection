@@ -5,6 +5,5 @@ export default {
 	ezLogin: false,
 	yellowBox: false,
 	reduxLogging: __DEV__,
-	includeExamples: __DEV__,
-	useReactotron: __DEV__
+	includeExamples: __DEV__
 };

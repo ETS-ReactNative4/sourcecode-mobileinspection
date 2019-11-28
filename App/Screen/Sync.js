@@ -558,6 +558,10 @@ export default class SyncScreen extends React.Component {
         TaskServices.deleteAllData("TR_LOG");
     }
 
+    _deleteTitikRestan(){
+        TaskServices.deleteAllData("TR_TITIK_RESTAN");
+    }
+
     _deleteFinding() {
         this._deleteInspeksiHeader();
         var data = TaskServices.query('TR_FINDING', `PROGRESS = '100' AND STATUS_SYNC = 'Y'`);
@@ -694,6 +698,7 @@ export default class SyncScreen extends React.Component {
         this._deleteFinding();
         this.deleteEbccHeader();
         this.deleteEbccDetail();
+        this._deleteTitikRestan();
         // this.deleteGenbaSelected();
         // this.deleteGenbaInspection();
 
