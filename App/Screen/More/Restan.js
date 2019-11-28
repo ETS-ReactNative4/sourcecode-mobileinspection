@@ -220,24 +220,26 @@ export default class Restan extends React.Component {
 
     getTitikRestan(){
         let titikRestan = TaskServices.getAllData('TR_TITIK_RESTAN');
-        let tempCoordinateRestan = [];
-        let tempHighlightBlock = [];
-        for (let counter = 0; counter < titikRestan.length; counter++){
-            if(!tempHighlightBlock.includes(titikRestan[counter].BLOCK_NAME)){
-                tempHighlightBlock.push(titikRestan[counter].BLOCK_NAME);
+        if(titikRestan !== undefined && titikRestan.length > 0){
+            let tempCoordinateRestan = [];
+            let tempHighlightBlock = [];
+            for (let counter = 0; counter < titikRestan.length; counter++){
+                if(!tempHighlightBlock.includes(titikRestan[counter].BLOCK_NAME)){
+                    tempHighlightBlock.push(titikRestan[counter].BLOCK_NAME);
+                }
+                let tempModelRestan = {
+                    ...titikRestan[counter],
+                    LATITUDE:parseFloat(titikRestan[counter].LATITUDE),
+                    LONGITUDE:parseFloat(titikRestan[counter].LONGITUDE)
+                };
+                tempCoordinateRestan.push(tempModelRestan);
             }
-            let tempModelRestan = {
-                ...titikRestan[counter],
-                LATITUDE:parseFloat(titikRestan[counter].LATITUDE),
-                LONGITUDE:parseFloat(titikRestan[counter].LONGITUDE)
-            };
-            tempCoordinateRestan.push(tempModelRestan);
-        }
 
-        this.setState({
-            highlightBlock: tempHighlightBlock,
-            coordinateRestan: tempCoordinateRestan
-        })
+            this.setState({
+                highlightBlock: tempHighlightBlock,
+                coordinateRestan: tempCoordinateRestan
+            })
+        }
     }
 
     centerCoordinate(coordinates) {
@@ -434,7 +436,7 @@ export default class Restan extends React.Component {
                         <View style={{
                             alignItems:"center",
                             justifyContent:"center",
-                            paddingVertical: 10
+                            paddingVertical: 5
                         }}>
                             <Text>{`${this.state.restanData.block_name}`}</Text>
                             <Text>{`TPH ${this.state.restanData.TPH}`}</Text>
@@ -461,10 +463,7 @@ export default class Restan extends React.Component {
                                     justifyContent:'space-evenly'
                                 }}
                             >
-                                <View>
-                                    <Text>Janjang:</Text>
-                                    <Text>{`Janjang: ${this.state.restanData.janjang}`}</Text>
-                                </View>
+                                <Text>{`Janjang: ${this.state.restanData.janjang}`}</Text>
                                 <Text>{`Brondolan(KG): ${this.state.restanData.brondolan}`}</Text>
                                 <Text>{`Taksasi(KG): ${this.state.restanData.taksasi}`}</Text>
                             </View>

@@ -13,27 +13,29 @@ import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
 import com.chirag.RNMail.RNMail;
 import com.rnziparchive.RNZipArchivePackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
-
 import fr.bamlab.rnimageresizer.ImageResizerPackage;
-
 import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.imagepicker.ImagePickerPackage;
 import com.rnfs.RNFSPackage;
-
 import io.realm.react.RealmReactPackage;
-
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.kishanjvaghela.cardview.RNCardViewPackage;
-
 import org.reactnative.camera.RNCameraPackage;
+<<<<<<< HEAD
 
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+=======
+import codes.simen.IMEI.IMEI;
+import com.kishanjvaghela.cardview.RNCardViewPackage;
+import io.realm.react.RealmReactPackage;
+import com.oblador.vectoricons.VectorIconsPackage;
+>>>>>>> c9b30a38d5af0307e54df444d4d6490fcdc81339
 
 import java.util.Arrays;
 import java.util.List;
@@ -52,8 +54,8 @@ public class MainApplication extends Application implements ReactApplication {
                     new MainReactPackage(),
                     new FastImageViewPackage(),
                     new RNFirebasePackage(),
-                    new RNFirebaseNotificationsPackage(),
                     new RNFirebaseMessagingPackage(),
+                    new RNFirebaseNotificationsPackage(),
                     new RNMail(),
                     new RNZipArchivePackage(),
                     new RNFetchBlobPackage(),

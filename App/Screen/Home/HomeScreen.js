@@ -42,7 +42,11 @@ import type { Notification, NotificationOpen } from 'react-native-firebase';
 let { width } = Dimensions.get('window')
 
 import Header from '../../Component/Header'
+<<<<<<< HEAD
 import { displayNotificationTemuan, displayNotificationSync, notificationOpenedListener } from '../../Notification/NotificationListener';
+=======
+import { displayNotificationTemuan, displayNotificationSync, notificationDeeplinkSetup } from '../../Notification/NotificationListener';
+>>>>>>> c9b30a38d5af0307e54df444d4d6490fcdc81339
 
 class HomeScreen extends React.Component {
 
@@ -114,10 +118,14 @@ class HomeScreen extends React.Component {
   }
 
   componentWillUnmount() {
+<<<<<<< HEAD
     this.willFocus.remove();
     this.removeNotificationDisplayedListener();
     this.removeNotificationListener();
     this.removeNotificationOpenedListener();
+=======
+      this.willFocus.remove();
+>>>>>>> c9b30a38d5af0307e54df444d4d6490fcdc81339
   }
 
 
@@ -178,6 +186,7 @@ class HomeScreen extends React.Component {
     /** NOTIFICATION LOCAL */
     displayNotificationSync();
     displayNotificationTemuan();
+<<<<<<< HEAD
     notificationOpenedListener(this.props);
 
     RNFS.mkdir(dirDatabase);
@@ -240,6 +249,12 @@ class HomeScreen extends React.Component {
         }
         // }
       });
+=======
+    notificationDeeplinkSetup(this.props);
+
+    RNFS.mkdir(dirDatabase);
+    RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
+>>>>>>> c9b30a38d5af0307e54df444d4d6490fcdc81339
   }
 
   _changeFilterList = data => {
