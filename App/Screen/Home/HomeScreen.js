@@ -13,13 +13,9 @@ import {
   View
 } from 'react-native';
 import { Text, Thumbnail } from 'native-base';
-import { connect } from 'react-redux'
 import Entypo from 'react-native-vector-icons/Entypo'
 import Colors from '../../Constant/Colors'
 import TaskServices from '../../Database/TaskServices'
-import CategoryAction from '../../Redux/CategoryRedux'
-import ContactAction from '../../Redux/ContactRedux'
-import RegionAction from '../../Redux/RegionRedux'
 import ServerName from '../../Constant/ServerName'
 import Moment from 'moment';
 import RNFetchBlob from 'rn-fetch-blob'
@@ -27,8 +23,8 @@ import { changeFormatDate, dateDisplayMobile, isNotUserMill, syncDays, notifInbo
 import FastImage from 'react-native-fast-image'
 import SwiperSlider from 'react-native-swiper'
 import {
-    dirPhotoTemuan,
-    dirDatabase
+  dirPhotoTemuan,
+  dirDatabase
 } from '../../Lib/dirStorage';
 
 import WeeklySummary from "../../Component/WeeklySummary";
@@ -39,14 +35,13 @@ import { getBlokName, getCategoryName, getEstateName, getStatusBlok, retrieveDat
 
 import RNFS from 'react-native-fs'
 
-import firebase from 'react-native-firebase';
-import type { Notification, NotificationOpen } from 'react-native-firebase';
+import {notificationDeeplinkSetup} from '../../Notification/NotificationListener';
 
 
 let { width } = Dimensions.get('window')
 
 import Header from '../../Component/Header'
-import { displayNotificationTemuan, displayNotificationSync, notificationDeeplinkSetup } from '../../Notification/NotificationListener';
+import { displayNotificationTemuan, displayNotificationSync, notificationOpenedListener } from '../../Notification/NotificationListener';
 
 class HomeScreen extends React.Component {
 
@@ -995,17 +990,6 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = state => {
-  return {};
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    categoryRequest: () => dispatch(CategoryAction.categoryRequest()),
-    contactRequest: () => dispatch(ContactAction.contactRequest()),
-    regionRequest: () => dispatch(RegionAction.regionRequest())
-  };
-};
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
+export default HomeScreen;

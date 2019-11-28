@@ -3,16 +3,13 @@ package com.bluezoneinspection.app;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.facebook.react.ReactNativeHost;
-import com.facebook.react.ReactPackage;
-import com.facebook.react.shell.MainReactPackage;
-import com.facebook.soloader.SoLoader;
+import codes.simen.IMEI.IMEI;
+import com.dylanvann.fastimage.FastImageViewPackage;
 
 import io.invertase.firebase.RNFirebasePackage;
-import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
 import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
+import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
 
-import com.dylanvann.fastimage.FastImageViewPackage;
 import com.chirag.RNMail.RNMail;
 import com.rnziparchive.RNZipArchivePackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
@@ -27,10 +24,11 @@ import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.kishanjvaghela.cardview.RNCardViewPackage;
 import org.reactnative.camera.RNCameraPackage;
-import codes.simen.IMEI.IMEI;
-import com.kishanjvaghela.cardview.RNCardViewPackage;
-import io.realm.react.RealmReactPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
+
+import com.facebook.react.ReactNativeHost;
+import com.facebook.react.ReactPackage;
+import com.facebook.react.shell.MainReactPackage;
+import com.facebook.soloader.SoLoader;
 
 import java.util.Arrays;
 import java.util.List;

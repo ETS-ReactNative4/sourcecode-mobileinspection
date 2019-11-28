@@ -177,4 +177,6 @@ const main = createStackNavigator({
     transitionConfig: () => ({ screenInterpolator: () => null }),
 });
 
+
+
 export default main;
