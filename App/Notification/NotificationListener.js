@@ -49,7 +49,6 @@ export function notificationDeeplinkSetup(props){
 }
 
 export const displayNotificationTemuan = () => {
-
     const login = TaskServices.getAllData('TR_LOGIN');
     const user_auth = login[0].USER_AUTH_CODE;
 
@@ -142,7 +141,6 @@ export function displayNotificationSync() {
         firebase.notifications().displayNotification(notification);
     }
 }
-<<<<<<< HEAD
 
 export const notificationOpenedListener = (props) => {
 
@@ -173,5 +171,3 @@ export const notificationOpenedListener = (props) => {
     })
 
 }
-=======
->>>>>>> c9b30a38d5af0307e54df444d4d6490fcdc81339

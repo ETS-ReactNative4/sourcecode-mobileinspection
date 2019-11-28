@@ -24,18 +24,11 @@ import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.kishanjvaghela.cardview.RNCardViewPackage;
 import org.reactnative.camera.RNCameraPackage;
-<<<<<<< HEAD
 
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
-=======
-import codes.simen.IMEI.IMEI;
-import com.kishanjvaghela.cardview.RNCardViewPackage;
-import io.realm.react.RealmReactPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
->>>>>>> c9b30a38d5af0307e54df444d4d6490fcdc81339
 
 import java.util.Arrays;
 import java.util.List;

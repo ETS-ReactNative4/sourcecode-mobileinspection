@@ -42,11 +42,7 @@ import type { Notification, NotificationOpen } from 'react-native-firebase';
 let { width } = Dimensions.get('window')
 
 import Header from '../../Component/Header'
-<<<<<<< HEAD
 import { displayNotificationTemuan, displayNotificationSync, notificationOpenedListener } from '../../Notification/NotificationListener';
-=======
-import { displayNotificationTemuan, displayNotificationSync, notificationDeeplinkSetup } from '../../Notification/NotificationListener';
->>>>>>> c9b30a38d5af0307e54df444d4d6490fcdc81339
 
 class HomeScreen extends React.Component {
 
