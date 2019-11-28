@@ -14,7 +14,7 @@ export const createNotificationChannel = () => {
     firebase.notifications().android.createChannel(channel);
 }
 
-export function displayNotificationTemuan() {
+export const displayNotificationTemuan = () => {
 
     const login = TaskServices.getAllData('TR_LOGIN');
     const user_auth = login[0].USER_AUTH_CODE;
@@ -52,28 +52,29 @@ export function displayNotificationTemuan() {
                 .setTitle('Temuan Overdue')
                 .setSubtitle('Temuan')
                 .setBody(body)
-                .setData({ key1: 'value1', key2: 'value2', })
+                .setData({ key: 'DetailFinding', findingCode: item.FINDING_CODE })
                 .setSound('default')
 
             if (Platform.OS === "android") {
                 notification.android.setChannelId('mobile-inspection-channel');
                 notification.android.setBigPicture(showPicNotification);
                 notification.android.setBadgeIconType(firebase.notifications.Android.BadgeIconType.Small);
-                // notification.android.setBigText(body);
+                notification.android.setPriority(firebase.notifications.Android.Priority.High);
+                notification.android.setAutoCancel(true);
             }
 
             // Schedule the notification base on due date in the future
             console.log('DUE DATE : ', item.DUE_DATE);
 
-            var startdate = moment(item.DUE_DATE + ' 06:00:00');
+            var startdate = moment(item.DUE_DATE + ' 15:05:00');
             startdate = startdate.subtract(1, "days");
 
             console.log('Notification Set');
 
             // Display the notification
             firebase.notifications().scheduleNotification(notification, {
-                fireDate: startdate.valueOf(),
-            })
+                fireDate: startdate.valueOf()
+            });
         })
     }, 1000)
 }
@@ -82,7 +83,7 @@ export function displayNotificationSync() {
 
     const syncdays = syncDays();
 
-    if (syncdays == 0) {
+    if (syncdays > 0) {
         const login = TaskServices.getAllData('TR_LOGIN');
         const userauth = login[0].USER_AUTH_CODE;
         const username = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', userauth);
@@ -106,4 +107,34 @@ export function displayNotificationSync() {
         // Display the notification
         firebase.notifications().displayNotification(notification);
     }
+}
+
+export const notificationOpenedListener = (props) => {
+
+    // firebase.notifications().getInitialNotification()
+    //     .then((notificationOpen) => {
+    //         if (notificationOpen) {
+    //             // App was opened by a notification
+    //             // Get the action triggered by the notification being opened
+    //             const action = notificationOpen.action;
+    //             // Get information about the notification that was opened
+    //             console.log(action)
+    //             const notification = notificationOpen.notification;
+    //             firebase.notifications().removeDeliveredNotification(notification.notificationId);
+    //             if (notification._data.key === 'DetailFinding') {
+    //                 props.navigation.navigate('DetailFinding', { ID: notification._data.findingCode });
+    //             }
+    //         }
+    //     });
+
+    // app in background
+    firebase.notifications().onNotificationOpened((notificationOpen) => {
+        console.log('Notification Open : ', notificationOpen)
+        const { notification } = notificationOpen;
+        firebase.notifications().removeDeliveredNotification(notification.notificationId);
+        if (notification._data.key === 'DetailFinding') {
+            props.navigation.navigate('DetailFinding', { ID: notification._data.findingCode });
+        }
+    })
+
 }

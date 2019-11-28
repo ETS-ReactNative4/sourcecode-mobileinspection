@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {BackHandler, Image, Platform, ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import {Card, Container, Content,} from 'native-base';
-import {connect} from 'react-redux'
 import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
 import Icon2 from 'react-native-vector-icons/Ionicons';
@@ -218,17 +217,7 @@ class FormStep1 extends Component {
     }
 }
 
-const mapStateToProps = state => {
-    return {};
-};
-
-const mapDispatchToProps = dispatch => {
-    return {
-
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(FormStep1);
+export default FormStep1;
 
 const style = {
     stepperContainer: {

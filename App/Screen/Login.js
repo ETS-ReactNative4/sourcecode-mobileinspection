@@ -9,12 +9,8 @@ import {
     StyleSheet
 } from 'react-native';
 
-import {fetchPostWithUrl} from '../Api/FetchingApi';
-
 import HandleBack from '../Component/Back'
 import Form from '../Component/Form';
-import { connect } from 'react-redux';
-import AuthAction from '../Redux/AuthRedux';
 import { ProgressDialog } from 'react-native-simple-dialogs';
 import { NavigationActions, StackActions } from 'react-navigation';
 import TaskServices from '../Database/TaskServices';
@@ -29,10 +25,11 @@ import {
 } from '../Lib/dirStorage';
 import ModalAlert from '../Component/ModalAlert'
 import ServerName from '../Constant/ServerName'
-import IMEI from 'react-native-imei'
+import IMEI from 'react-native-device-info'
 import { AlertContent } from '../Themes';
 import { storeData, removeData } from '../Database/Resources';
 import moment from 'moment'
+
 
 class Login extends Component {
 
@@ -58,7 +55,7 @@ class Login extends Component {
     }
 
     get_IMEI_Number() {
-        var IMEI_2 = IMEI.getImei();
+        var IMEI_2 = IMEI.getDeviceId;
         this.setState({ imei: IMEI_2 });
         return IMEI_2;
     }
@@ -232,7 +229,8 @@ class Login extends Component {
     onLogin(username, password, choosenServer) {
         Keyboard.dismiss();
         var imei = this.get_IMEI_Number();
-        // this.setState({ fetching: true });
+
+
         this.postLogin(username, password, choosenServer, imei);
     }
 
@@ -283,6 +281,11 @@ class Login extends Component {
     //         })
     // }
     postLogin(username, password, choosenServer, imei) {
+
+        console.log('username', username);
+        console.log('password', password);
+        console.log('imei', imei);
+
         this.serverNameIndex = choosenServer;
         fetch(ServerName[this.serverNameIndex].data + 'auth/login', {
             method: 'POST',
@@ -297,6 +300,8 @@ class Login extends Component {
                 return response.json();
             })
             .then((data) => {
+                console.log('Data : ', data);
+                console.log('Data Message : ', data.message)
                 this.setState({ fetching: false });
                 if (data.status == true) {
                     this.insertLink(data.data);
@@ -368,19 +373,7 @@ class Login extends Component {
     }
 }
 
-const mapStateToProps = state => {
-    return {
-        auth: state.auth
-    };
-};
-
-const mapDispatchToProps = dispatch => {
-    return {
-        authRequest: obj => dispatch(AuthAction.authRequest(obj))
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default Login;
 
 const styles = StyleSheet.create({
     container: {

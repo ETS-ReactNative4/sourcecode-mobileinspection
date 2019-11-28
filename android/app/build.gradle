@@ -73,9 +73,7 @@ import com.android.build.OutputFile
  */
 
 project.ext.react = [
-        entryFile      : "index.js",
-        bundleInDebug  : true,
-        bundleInRelease: true,
+        entryFile      : "index.js"
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
@@ -156,6 +154,7 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-imei')
     implementation project(':react-native-fast-image')
     implementation project(':react-native-firebase')
     implementation project(':react-native-mail')
@@ -172,10 +171,8 @@ dependencies {
     implementation project(':react-native-config')
     implementation project(':react-native-cardview')
     implementation project(':react-native-camera')
-    implementation project(':react-native-imei')
     implementation 'com.facebook.fresco:animated-gif:1.10.0'
     implementation project(':react-native-cardview')
-    implementation project(':realm')
     implementation project(':react-native-vector-icons')
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
@@ -189,7 +186,6 @@ dependencies {
     implementation "com.google.firebase:firebase-core:17.2.1"
     implementation "com.google.firebase:firebase-messaging:20.0.1"
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'me.leolin:ShortcutBadger:1.1.21@aar'
 
     implementation(project(':react-native-maps')) {
         exclude group: 'com.google.android.gms', module: 'play-services-base'

@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
 import InspectionTabNavigator from './InspectionTabNavigator'
-import { connect } from 'react-redux';
-import InspeksiAction from '../../Redux/InspeksiRedux';
 
 import { isNotUserMill, syncDays, notifInbox } from '../../Lib/Utils';
 import Header from '../../Component/Header'
@@ -46,8 +44,8 @@ class InspectionScreen extends Component {
     return (
       <View style={styles.container}>
 
-          {/* HEADER */}
-          <Header
+        {/* HEADER */}
+        <Header
           notif={this.state.notifCount}
           divDays={this.state.divDays}
           onPressLeft={() => this.props.navigation.navigate('Sync')}
@@ -67,14 +65,8 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    postInspeksi: obj => dispatch(InspeksiAction.postInspeksi(obj)),
-    postInspeksiDtl: obj => dispatch(InspeksiAction.postInspeksiDtl(obj))
-  };
-};
 
-export default connect(mapStateToProps, mapDispatchToProps)(InspectionScreen);
+export default InspectionScreen;
 
 const styles = StyleSheet.create({
   container: {

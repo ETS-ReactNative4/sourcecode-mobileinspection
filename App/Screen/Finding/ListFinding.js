@@ -87,7 +87,7 @@ export default class ListFinding extends Component {
 
     this.setState({ dataFinding: data, dataLewat, data7Hari, dataMore7Hari, dataNoDate, dataSelesai })
 
-    displayNotificationTemuan();
+    // displayNotificationTemuan();
   }
 
   actionButtonClick() {

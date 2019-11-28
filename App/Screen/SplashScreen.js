@@ -3,11 +3,7 @@ import { View, ImageBackground, Linking, StatusBar, BackHandler } from 'react-na
 import RNFetchBlob from 'rn-fetch-blob';
 import { NavigationActions, StackActions } from 'react-navigation';
 import { getPermission } from '../Lib/Utils'
-import { connect } from 'react-redux';
 import TaskServices from '../Database/TaskServices'
-import CategoryAction from '../Redux/CategoryRedux'
-import ContactAction from '../Redux/ContactRedux'
-import RegionAction from '../Redux/RegionRedux'
 import {
     dirSummary,
     dirMaps,
@@ -218,16 +214,4 @@ class SplashScreen extends Component {
     }
 }
 
-const mapStateToProps = state => {
-    return {};
-};
-
-const mapDispatchToProps = dispatch => {
-    return {
-        categoryRequest: () => dispatch(CategoryAction.categoryRequest()),
-        contactRequest: () => dispatch(ContactAction.contactRequest()),
-        regionRequest: () => dispatch(RegionAction.regionRequest())
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(SplashScreen);
+export default SplashScreen;
