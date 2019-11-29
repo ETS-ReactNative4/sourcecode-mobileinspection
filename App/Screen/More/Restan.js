@@ -280,6 +280,28 @@ export default class Restan extends React.Component {
         }
     }
 
+    titikRestanSelector(TPH_RESTANT_DAY){
+        switch (parseFloat(TPH_RESTANT_DAY)) {
+            case 1:
+                return require('../../Images/icon/restan_1_hari.png');
+            case 2:
+                return require('../../Images/icon/restan_2_hari.png');
+            default:
+                return require('../../Images/icon/restan_3_hari.png');
+        }
+    }
+
+    styleColorChooser(TPH_RESTANT_DAY){
+        switch (parseFloat(TPH_RESTANT_DAY)) {
+            case 1:
+                return "rgba(208,2,27,1)";
+            case 2:
+                return "rgba(255,179,0,1)";
+            default:
+                return "rgba(255,247,0,1)";
+        }
+    }
+
     render() {
         return (
             <View
@@ -408,8 +430,8 @@ export default class Restan extends React.Component {
                                         longitude: coordinate.LONGITUDE
                                     }}>
                                     <Image
-                                        style={{width: 20, height: 20}}
-                                        source={require('../../Images/icon/ic_restan.png')}
+                                        style={{width: 20, height: 20}}c
+                                        source={this.titikRestanSelector(coordinate.TPH_RESTANT_DAY)}
                                     />
                                 </Marker>
                             )
@@ -493,23 +515,34 @@ export default class Restan extends React.Component {
                             <View style={{
                                 flex: 1,
                                 marginRight: 10,
-                                backgroundColor:'yellow',
+                                backgroundColor:this.styleColorChooser(this.state.restanData.hari),
                                 borderRadius: 5,
                                 alignItems:'center',
                                 justifyContent:'center'
                             }}>
-                                <Text>{this.state.restanData.hari}</Text>
-                                <Text>Hari</Text>
+                                <Text>{this.state.restanData.taksasi}</Text>
+                                <Text>KG</Text>
                             </View>
                             <View
                                 style={{
                                     flex: 2,
                                     justifyContent:'space-evenly'
-                                }}
-                            >
-                                <Text>{`Janjang: ${this.state.restanData.janjang}`}</Text>
-                                <Text>{`Brondolan(KG): ${this.state.restanData.brondolan}`}</Text>
-                                <Text>{`Taksasi(KG): ${this.state.restanData.taksasi}`}</Text>
+                                }}>
+                                <Text>{`Restan ${this.state.restanData.hari} Hari`}</Text>
+                                <View style={{
+                                    flexDirection: 'row',
+                                    justifyContent:'space-between'
+                                }}>
+                                    <Text style={{paddingRight: 5}}>{`Janjang:`}</Text>
+                                    <Text>{this.state.restanData.janjang}</Text>
+                                </View>
+                                <View style={{
+                                    flexDirection: 'row',
+                                    justifyContent:'space-between'
+                                }}>
+                                    <Text style={{paddingRight: 5}}>{`Brondolan(KG):`}</Text>
+                                    <Text>{this.state.restanData.brondolan}</Text>
+                                </View>
                             </View>
                         </View>
                     </View>
