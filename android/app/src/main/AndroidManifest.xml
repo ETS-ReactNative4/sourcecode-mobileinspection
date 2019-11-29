@@ -37,7 +37,7 @@
 
         <meta-data
                 android:name="com.google.firebase.messaging.default_notification_icon"
-                android:resource="@mipmap/ic_launcher_v2" />
+                android:resource="@mipmap/ic_launcher_notification" />
 
         <meta-data
                 android:name="com.google.firebase.messaging.default_notification_channel_id"
