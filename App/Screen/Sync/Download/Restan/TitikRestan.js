@@ -7,12 +7,15 @@ export async function getTitikRestan() {
 
     let downloadLabels = {
         downloadCount: 0,
-        totalCount: dbLocal.length
+        totalCount: dbLocal.length,
+        downloadStatus: true
     };
 
     await getAPIFunction('REPORT-TITIK-RESTAN').then((restanModel) => {
         try {
             if (restanModel !== null) {
+                TaskServices.deleteAllData("TR_TITIK_RESTAN");
+
                 Promise.all(
                     restanModel.map(item => {
                         TaskServices.saveData('TR_TITIK_RESTAN', item);
@@ -23,9 +26,18 @@ export async function getTitikRestan() {
                     })
                 )
             }
+            else {
+                downloadLabels = {
+                    ...downloadLabels,
+                    downloadStatus: false
+                };
+            }
         }
         catch (error) {
-            console.log('CATCH REGION : ', error)
+            downloadLabels = {
+                ...downloadLabels,
+                downloadStatus: false
+            };
         }
     });
 

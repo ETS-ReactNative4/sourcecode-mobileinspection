@@ -35,13 +35,14 @@ import { getBlokName, getCategoryName, getEstateName, getStatusBlok, retrieveDat
 
 import RNFS from 'react-native-fs'
 
-import {notificationDeeplinkSetup} from '../../Notification/NotificationListener';
+import {getFCMToken, notificationDeeplinkSetup} from '../../Notification/NotificationListener';
 
 
 let { width } = Dimensions.get('window')
 
 import Header from '../../Component/Header'
 import { displayNotificationTemuan, displayNotificationSync, notificationOpenedListener } from '../../Notification/NotificationListener';
+import {fetchPut} from "../../Api/FetchingApi";
 
 class HomeScreen extends React.Component {
 
@@ -169,16 +170,31 @@ class HomeScreen extends React.Component {
     });
   }
 
-  componentDidMount() {
+  async componentDidMount() {
 
     /** NOTIFICATION LOCAL */
     displayNotificationSync();
     displayNotificationTemuan();
     notificationDeeplinkSetup(this.props);
+    await this.putFCMConfig();
 
     RNFS.mkdir(dirDatabase);
     RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
   }
+
+    async putFCMConfig(){
+        let fcmTokenRequest = null;
+        await getFCMToken()
+            .then((fcmToken)=>{
+                if(fcmToken !== null){
+                    fcmTokenRequest = {
+                        FIREBASE_TOKEN: fcmToken
+                    }
+                }
+            });
+
+        await fetchPut("FIREBASE-TOKEN", fcmTokenRequest, null);
+    };
 
   _changeFilterList = data => {
     if (data != undefined) {

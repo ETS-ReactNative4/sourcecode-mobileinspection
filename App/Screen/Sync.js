@@ -48,6 +48,8 @@ import { getResetToken } from './Sync/Download/DownloadResetToken';
 import { AlertContent } from '../Themes';
 import { postWeeklySummary } from './Sync/Upload/UploadWeeklySummary';
 import { getTitikRestan } from './Sync/Download/Restan/TitikRestan';
+import {getFCMToken} from "../Notification/NotificationListener";
+import {fetchPut} from "../Api/FetchingApi";
 
 export default class SyncScreen extends React.Component {
 
@@ -348,7 +350,6 @@ export default class SyncScreen extends React.Component {
 
         /* DOWNLOAD PARAM KUALITAS */
         await getTitikRestan().then((data) => {
-            console.log('Data Callback Kualitas : ', data);
             this.setState({
                 progressTitikRestan: 1,
                 valueTitikRestan: data.downloadCount,
@@ -558,10 +559,6 @@ export default class SyncScreen extends React.Component {
         TaskServices.deleteAllData("TR_LOG");
     }
 
-    _deleteTitikRestan(){
-        TaskServices.deleteAllData("TR_TITIK_RESTAN");
-    }
-
     _deleteFinding() {
         this._deleteInspeksiHeader();
         var data = TaskServices.query('TR_FINDING', `PROGRESS = '100' AND STATUS_SYNC = 'Y'`);
@@ -692,13 +689,29 @@ export default class SyncScreen extends React.Component {
         await postWeeklySummary('EBCC-SUMMARY')
     }
 
+    async putFCMConfig(){
+        let fcmTokenRequest = null;
+        await getFCMToken()
+            .then((fcmToken)=>{
+                if(fcmToken !== null){
+                    fcmTokenRequest = {
+                        FIREBASE_TOKEN: fcmToken
+                    }
+                }
+            });
+
+        await fetchPut("FIREBASE-TOKEN", fcmTokenRequest, null);
+    };
+
     async _onSync() {
         console.log("#################### SYNC START ####################");
+
+        this.putFCMConfig();
+
         this._deleteTRLog();
         this._deleteFinding();
         this.deleteEbccHeader();
         this.deleteEbccDetail();
-        this._deleteTitikRestan();
         // this.deleteGenbaSelected();
         // this.deleteGenbaInspection();
 

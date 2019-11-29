@@ -1,16 +1,15 @@
 import React from 'react';
-import {StatusBar, StyleSheet, Text, Image, View, Modal, TouchableOpacity} from 'react-native';
+import {StatusBar, StyleSheet, Text, Image, View, Modal, TouchableOpacity, NetInfo} from 'react-native';
 
 import MapView, {Marker, Polygon, PROVIDER_GOOGLE, ProviderPropType} from 'react-native-maps';
 import Colors from '../../Constant/Colors'
-import {NavigationActions, StackActions} from 'react-navigation';
 import ModalLoading from '../../Component/ModalLoading'
 import ModalAlert from '../../Component/ModalAlert';
 import TaskServices from '../../Database/TaskServices';
 import {retrieveData} from '../../Database/Resources';
 import {AlertContent} from '../../Themes';
 import { HeaderWithButton } from "../../Component/Header/HeaderWithButton";
-import Fonts from "../../Constant/Fonts";
+import { getTitikRestan } from '../Sync/Download/Restan/TitikRestan';
 
 let polyMap = null;
 let LATITUDE = -2.1890660;
@@ -25,6 +24,7 @@ export default class Restan extends React.Component {
 
         this.state = {
             userData: user,
+            internetExist: true,
             latitude: 0.0,
             longitude: 0.0,
             region: {
@@ -35,6 +35,7 @@ export default class Restan extends React.Component {
             },
             poligons: [],
             coordinateRestan: [],
+            highlightBlock: [],
             inspectionType: props.navigation.getParam('inspectionType', 'normal'),
             modalRestainDetail: false,
             restanData: {
@@ -114,9 +115,30 @@ export default class Restan extends React.Component {
         })
     }
 
+    async fetchRestanCoordinate(){
+        let fetchStatus = false;
+
+        await NetInfo.isConnected.fetch()
+            .then(async (isConnected) => {
+            if (isConnected) {
+                await getTitikRestan()
+                    .then(async (response) => {
+                        fetchStatus = response.downloadStatus
+                    })
+            }
+            else {
+                fetchStatus = false;
+                this.setState({
+                    internetExist: false
+                });
+            }
+        });
+
+        return fetchStatus;
+    }
+
     searchLocation(){
         if (this.state.longitude !== 0.0 || this.state.latitude !== 0.0) {
-            this.setState({ modalLoading: { ...this.state.modalLoading, showModal: true } });
             this.map.animateToRegion(this.state.region, 1);
             this.detectFakeGPS()
         }
@@ -270,8 +292,30 @@ export default class Restan extends React.Component {
                     rightVectorIcon={true}
                     iconRight={"location-arrow"}
                     onPressLeft={()=>{this.props.navigation.pop()}}
-                    onPressRight={()=>{this.searchLocation()}}
+                    onPressRight={()=>{
+                        this.setState({
+                            modalLoading: {
+                                ...this.state.modalLoading,
+                                showModal: true
+                            }},()=>{
+                                this.fetchRestanCoordinate()
+                                    .then((response)=>{
+                                        this.searchLocation()
+                                    })
+                            }
+                        );
+                    }}
                 />
+
+                {!this.state.internetExist &&
+                <View style={{
+                    padding: 10,
+                    backgroundColor: 'red',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}>
+                    <Text style={{ color: Colors.colorWhite, fontSize: 12 }}>Koneksi internet tidak di temukan!</Text>
+                </View>}
 
                 <StatusBar
                     hidden={false}

@@ -18,7 +18,7 @@ import {
 import ModalAlert from "../Component/ModalAlert";
 import { retrieveData } from '../Database/Resources';
 import { Images } from '../Themes';
-import { createNotificationChannel } from '../Notification/NotificationListener';
+import { createNotificationChannel, getFCMToken } from '../Notification/NotificationListener';
 
 var RNFS = require('react-native-fs');
 const skm = require('../Data/MegaKuningan.json');
@@ -154,6 +154,10 @@ class SplashScreen extends Component {
             this.detectFakeGPS();
 
             createNotificationChannel();
+            await getFCMToken()
+                .then((token)=>{
+                    console.log("token",token);
+                });
 
             this.makeFolder()
             setTimeout(() => {

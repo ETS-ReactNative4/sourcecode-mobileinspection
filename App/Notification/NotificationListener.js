@@ -15,7 +15,7 @@ export const createNotificationChannel = () => {
     subscribeTopic("testKeps");
 };
 
-async function getFCMToken(){
+export async function getFCMToken(){
     const fcmToken = await firebase.messaging().getToken();
     if (fcmToken) {
         return fcmToken;

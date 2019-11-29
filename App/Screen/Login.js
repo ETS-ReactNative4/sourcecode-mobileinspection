@@ -29,6 +29,8 @@ import IMEI from 'react-native-device-info'
 import { AlertContent } from '../Themes';
 import { storeData, removeData } from '../Database/Resources';
 import moment from 'moment'
+import {getFCMToken} from '../Notification/NotificationListener';
+import {fetchPut} from '../Api/FetchingApi';
 
 
 class Login extends Component {
@@ -282,10 +284,6 @@ class Login extends Component {
     // }
     postLogin(username, password, choosenServer, imei) {
 
-        console.log('username', username);
-        console.log('password', password);
-        console.log('imei', imei);
-
         this.serverNameIndex = choosenServer;
         fetch(ServerName[this.serverNameIndex].data + 'auth/login', {
             method: 'POST',
@@ -299,13 +297,11 @@ class Login extends Component {
             .then((response) => {
                 return response.json();
             })
-            .then((data) => {
-                console.log('Data : ', data);
-                console.log('Data Message : ', data.message)
+            .then(async (data) => {
                 this.setState({ fetching: false });
                 if (data.status == true) {
-                    this.insertLink(data.data);
                     this.deleteConfig();
+                    this.insertLink(data.data);
                 } else {
                     if (data.message == 'Request Timeout') {
                         this.setState(AlertContent.proses_lambat)
