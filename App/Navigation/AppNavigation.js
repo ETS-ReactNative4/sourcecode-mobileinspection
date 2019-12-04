@@ -168,7 +168,6 @@ const main = createStackNavigator({
 }, {
     headerMode: 'screen',
     initialRouteName: 'SplashScreen',
-    //initialRouteName: 'Genba',
     navigationOptions: {
         headerStyle: {
             backgroundColor: Colors.tintColorPrimary

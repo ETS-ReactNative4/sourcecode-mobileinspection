@@ -1,5 +1,16 @@
 import React from 'react';
-import {StatusBar, StyleSheet, Text, Image, View, Modal, TouchableOpacity, NetInfo} from 'react-native';
+import {
+    StatusBar,
+    StyleSheet,
+    Text,
+    // Image,
+    View,
+    // Modal,
+    // TouchableOpacity,
+    NetInfo,
+    ScrollView,
+    Dimensions
+} from 'react-native';
 
 import MapView, {Marker, Polygon, PROVIDER_GOOGLE, ProviderPropType} from 'react-native-maps';
 import Colors from '../../Constant/Colors'
@@ -14,6 +25,7 @@ import { getTitikRestan } from '../Sync/Download/Restan/TitikRestan';
 let polyMap = null;
 let LATITUDE = -2.1890660;
 let LONGITUDE = 111.3609873;
+const screenWidth = Math.round(Dimensions.get('window').width);
 
 export default class Restan extends React.Component {
 
@@ -37,7 +49,7 @@ export default class Restan extends React.Component {
             coordinateRestan: [],
             highlightBlock: [],
             inspectionType: props.navigation.getParam('inspectionType', 'normal'),
-            modalRestainDetail: false,
+            // modalRestainDetail: false,
             restanData: {
                 block_name: "",
                 TPH: "",
@@ -139,7 +151,7 @@ export default class Restan extends React.Component {
 
     searchLocation(){
         if (this.state.longitude !== 0.0 || this.state.latitude !== 0.0) {
-            this.map.animateToRegion(this.state.region, 1);
+            // this.map.animateToRegion(this.state.region, 1);
             this.detectFakeGPS()
         }
         else {
@@ -257,6 +269,13 @@ export default class Restan extends React.Component {
                 tempCoordinateRestan.push(tempModelRestan);
             }
 
+            this.map.animateToRegion({
+                latitude: tempCoordinateRestan[0].LATITUDE,
+                longitude: tempCoordinateRestan[0].LONGITUDE,
+                latitudeDelta: 0.00500,
+                longitudeDelta: 0.00500
+            }, 1);
+
             this.setState({
                 highlightBlock: tempHighlightBlock,
                 coordinateRestan: tempCoordinateRestan
@@ -280,16 +299,16 @@ export default class Restan extends React.Component {
         }
     }
 
-    titikRestanSelector(TPH_RESTANT_DAY){
-        switch (parseFloat(TPH_RESTANT_DAY)) {
-            case 1:
-                return require('../../Images/icon/restan_1_hari.png');
-            case 2:
-                return require('../../Images/icon/restan_2_hari.png');
-            default:
-                return require('../../Images/icon/restan_3_hari.png');
-        }
-    }
+    // titikRestanSelector(TPH_RESTANT_DAY){
+    //     switch (parseFloat(TPH_RESTANT_DAY)) {
+    //         case 1:
+    //             return require('../../Images/icon/restan_1_hari.png');
+    //         case 2:
+    //             return require('../../Images/icon/restan_2_hari.png');
+    //         default:
+    //             return require('../../Images/icon/restan_3_hari.png');
+    //     }
+    // }
 
     styleColorChooser(TPH_RESTANT_DAY){
         switch (parseFloat(TPH_RESTANT_DAY)) {
@@ -408,31 +427,39 @@ export default class Restan extends React.Component {
                     ))}
 
                     {
-                        this.state.coordinateRestan.map((coordinate)=>{
+                        this.state.coordinateRestan.map((coordinate, index)=>{
                             return(
                                 <Marker
+                                    key={index}
                                     onPress={()=>{
+                                        if(index !== 0){
+                                            this.restanScrollView.scrollTo({ x: (index*screenWidth), animated: true });
+                                        }
+                                        else {
+                                            this.restanScrollView.scrollTo({ x: screenWidth, animated: true });
+                                        }
                                         // console.log(coordinate.OPH);
-                                        this.setState({
-                                            modalRestainDetail: true,
-                                            restanData:{
-                                                block_name: coordinate.BLOCK_NAME,
-                                                TPH: coordinate.OPH,
-                                                hari: coordinate.TPH_RESTANT_DAY,
-                                                janjang: coordinate.JML_JANJANG,
-                                                brondolan: coordinate.JML_BRONDOLAN,
-                                                taksasi: coordinate.KG_TAKSASI
-                                            }
-                                        })
+                                        // this.setState({
+                                        //     modalRestainDetail: true,
+                                        //     restanData:{
+                                        //         block_name: coordinate.BLOCK_NAME,
+                                        //         TPH: coordinate.OPH,
+                                        //         hari: coordinate.TPH_RESTANT_DAY,
+                                        //         janjang: coordinate.JML_JANJANG,
+                                        //         brondolan: coordinate.JML_BRONDOLAN,
+                                        //         taksasi: coordinate.KG_TAKSASI
+                                        //     }
+                                        // })
                                     }}
                                     coordinate={{
                                         latitude: coordinate.LATITUDE,
                                         longitude: coordinate.LONGITUDE
-                                    }}>
-                                    <Image
-                                        style={{width: 20, height: 20}}c
-                                        source={this.titikRestanSelector(coordinate.TPH_RESTANT_DAY)}
-                                    />
+                                    }}
+                                    tracksViewChanges={false}
+                                >
+                                    <View style={{padding: 5, borderRadius: 2, backgroundColor: this.styleColorChooser(coordinate.TPH_RESTANT_DAY)}}>
+                                        <Text>{`${coordinate.KG_TAKSASI} KG`}</Text>
+                                    </View>
                                 </Marker>
                             )
                         })
@@ -466,90 +493,193 @@ export default class Restan extends React.Component {
                             </Text>
                         </View>
                     </View>
+                    {
+                        this.state.coordinateRestan.length > 0 &&
+                        <View style={{
+                            height: "18.5%"
+                        }}>
+                            <ScrollView
+                                ref={(restanScrollView)=>{this.restanScrollView = restanScrollView}}
+                                contentContainerStyle={{
+                                    backgroundColor:"transparent"
+                                }}
+                                decelerationRate={0}
+                                snapToInterval={screenWidth} //your element width
+                                snapToAlignment={"center"}
+                                horizontal={true}
+                                onMomentumScrollEnd={event => {
+                                    let index = this.scrollViewIndex(event.nativeEvent.contentOffset.x);
+                                    if(index !== null){
+                                        let selectedCoordinateRestan = this.state.coordinateRestan[index];
+                                        let region = {
+                                            latitude: selectedCoordinateRestan.LATITUDE,
+                                            longitude: selectedCoordinateRestan.LONGITUDE,
+                                            latitudeDelta: 0.00500,
+                                            longitudeDelta: 0.00500
+                                        };
+                                        this.map.animateToRegion(region, 1);
+                                    }
+                                }}>
+                                {
+                                    this.state.coordinateRestan.map((coordinateRestanData, index)=>{
+                                        return(
+                                            <View
+                                                key={index}
+                                                style={{
+                                                    backgroundColor: "white",
+                                                    borderRadius: 5,
+                                                    width: screenWidth - 20,
+                                                    margin: 10,
+                                                    alignItems:'center',
+                                                    justifyContent:'center'
+                                                }}
+                                            >
+                                                <View style={{
+                                                    paddingHorizontal: 10,
+                                                    justifyContent:"space-between",
+                                                    flexDirection: "row"
+                                                }}>
+                                                    <View style={{
+                                                        flex: 1,
+                                                        marginRight: 15,
+                                                        backgroundColor:this.styleColorChooser(coordinateRestanData.TPH_RESTANT_DAY),
+                                                        borderRadius: 5,
+                                                        alignItems:'center',
+                                                        justifyContent:'center'
+                                                    }}>
+                                                        <Text>{coordinateRestanData.KG_TAKSASI}</Text>
+                                                        <Text>KG</Text>
+                                                    </View>
+                                                    <View
+                                                        style={{
+                                                            flex: 2,
+                                                            justifyContent:'space-evenly'
+                                                        }}>
+                                                        <View style={{
+                                                            flexDirection:"row",
+                                                            alignItems:"center",
+                                                            justifyContent:"center",
+                                                            paddingBottom: 5
+                                                        }}>
+                                                            <Text>{`${coordinateRestanData.BLOCK_NAME} / TPH ${coordinateRestanData.OPH}`}</Text>
+                                                        </View>
+                                                        <Text>{`Restan ${coordinateRestanData.TPH_RESTANT_DAY} Hari`}</Text>
+                                                        <View style={{
+                                                            flexDirection: 'row',
+                                                            justifyContent:'space-between'
+                                                        }}>
+                                                            <Text style={{paddingRight: 5}}>{`Janjang:`}</Text>
+                                                            <Text>{coordinateRestanData.JML_JANJANG}</Text>
+                                                        </View>
+                                                        <View style={{
+                                                            flexDirection: 'row',
+                                                            justifyContent:'space-between'
+                                                        }}>
+                                                            <Text style={{paddingRight: 5}}>{`Brondolan(KG):`}</Text>
+                                                            <Text>{coordinateRestanData.JML_BRONDOLAN}</Text>
+                                                        </View>
+                                                    </View>
+                                                </View>
+                                            </View>
+                                        )
+                                    })
+                                }
+                            </ScrollView>
+                        </View>
+                    }
                 </View>
-                {this.showRestanDetail()}
+                {/*{this.showRestanDetail()}*/}
             </View>
         );
     }
 
-    showRestanDetail() {
-        return (
-            <Modal
-                visible={this.state.modalRestainDetail}
-                transparent={true}
-            >
-                <TouchableOpacity
-                    style={{
-                        flex: 1,
-                        alignItems:'center',
-                        justifyContent: 'center',
-                        backgroundColor: Colors.shade,
-                        paddingLeft: 24,
-                        paddingRight: 24,
-                    }}
-                    onPress={()=>{
-                        this.setState({
-                            modalRestainDetail: false,
-                        })
-                    }}
-                >
-                    <View style={{
-                        width: "75%",
-                        backgroundColor: Colors.background,
-                        padding: 15,
-                        borderRadius: 4
-                    }}>
-                        <View style={{
-                            alignItems:"center",
-                            justifyContent:"center",
-                            paddingVertical: 5
-                        }}>
-                            <Text>{`${this.state.restanData.block_name}`}</Text>
-                            <Text>{`TPH ${this.state.restanData.TPH}`}</Text>
-                        </View>
-                        <View style={{
-                            paddingHorizontal: 10,
-                            justifyContent:"space-between",
-                            flexDirection: "row"
-                        }}>
-                            <View style={{
-                                flex: 1,
-                                marginRight: 10,
-                                backgroundColor:this.styleColorChooser(this.state.restanData.hari),
-                                borderRadius: 5,
-                                alignItems:'center',
-                                justifyContent:'center'
-                            }}>
-                                <Text>{this.state.restanData.taksasi}</Text>
-                                <Text>KG</Text>
-                            </View>
-                            <View
-                                style={{
-                                    flex: 2,
-                                    justifyContent:'space-evenly'
-                                }}>
-                                <Text>{`Restan ${this.state.restanData.hari} Hari`}</Text>
-                                <View style={{
-                                    flexDirection: 'row',
-                                    justifyContent:'space-between'
-                                }}>
-                                    <Text style={{paddingRight: 5}}>{`Janjang:`}</Text>
-                                    <Text>{this.state.restanData.janjang}</Text>
-                                </View>
-                                <View style={{
-                                    flexDirection: 'row',
-                                    justifyContent:'space-between'
-                                }}>
-                                    <Text style={{paddingRight: 5}}>{`Brondolan(KG):`}</Text>
-                                    <Text>{this.state.restanData.brondolan}</Text>
-                                </View>
-                            </View>
-                        </View>
-                    </View>
-                </TouchableOpacity>
-            </Modal>
-        );
+    //used to determine which index selected
+    scrollViewIndex(xPosition){
+        let index = xPosition/screenWidth;
+        if(Number.isInteger(index)){
+            return index
+        }
+        return null;
     }
+
+    // showRestanDetail() {
+    //     return (
+    //         <Modal
+    //             visible={this.state.modalRestainDetail}
+    //             transparent={true}
+    //         >
+    //             <TouchableOpacity
+    //                 style={{
+    //                     flex: 1,
+    //                     alignItems:'center',
+    //                     justifyContent: 'center',
+    //                     backgroundColor: Colors.shade,
+    //                     paddingLeft: 24,
+    //                     paddingRight: 24,
+    //                 }}
+    //                 onPress={()=>{
+    //                     this.setState({
+    //                         modalRestainDetail: false,
+    //                     })
+    //                 }}
+    //             >
+    //                 <View style={{
+    //                     width: "75%",
+    //                     backgroundColor: Colors.background,
+    //                     padding: 15,
+    //                     borderRadius: 4
+    //                 }}>
+    //                     <View style={{
+    //                         alignItems:"center",
+    //                         justifyContent:"center",
+    //                         paddingVertical: 5
+    //                     }}>
+    //                         <Text>{`${this.state.restanData.block_name}`}</Text>
+    //                         <Text>{`TPH ${this.state.restanData.TPH}`}</Text>
+    //                     </View>
+    //                     <View style={{
+    //                         paddingHorizontal: 10,
+    //                         justifyContent:"space-between",
+    //                         flexDirection: "row"
+    //                     }}>
+    //                         <View style={{
+    //                             flex: 1,
+    //                             marginRight: 10,
+    //                             backgroundColor:this.styleColorChooser(this.state.restanData.hari),
+    //                             borderRadius: 5,
+    //                             alignItems:'center',
+    //                             justifyContent:'center'
+    //                         }}>
+    //                             <Text>{this.state.restanData.taksasi}</Text>
+    //                             <Text>KG</Text>
+    //                         </View>
+    //                         <View
+    //                             style={{
+    //                                 flex: 2,
+    //                                 justifyContent:'space-evenly'
+    //                             }}>
+    //                             <Text>{`Restan ${this.state.restanData.hari} Hari`}</Text>
+    //                             <View style={{
+    //                                 flexDirection: 'row',
+    //                                 justifyContent:'space-between'
+    //                             }}>
+    //                                 <Text style={{paddingRight: 5}}>{`Janjang:`}</Text>
+    //                                 <Text>{this.state.restanData.janjang}</Text>
+    //                             </View>
+    //                             <View style={{
+    //                                 flexDirection: 'row',
+    //                                 justifyContent:'space-between'
+    //                             }}>
+    //                                 <Text style={{paddingRight: 5}}>{`Brondolan(KG):`}</Text>
+    //                                 <Text>{this.state.restanData.brondolan}</Text>
+    //                             </View>
+    //                         </View>
+    //                     </View>
+    //                 </View>
+    //             </TouchableOpacity>
+    //         </Modal>
+    //     );
+    // }
 }
 
 Restan.propTypes = {
