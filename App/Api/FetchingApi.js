@@ -16,23 +16,23 @@ export function fetchPostWithUrl(URL, fetchBody, fetchHeaders) {
         else {
             let momentTime = moment().format("YYYYMMDDHHmmss").toString();
             let LogModel = {
-                ID_LOG: `fetchPost${momentTime}`,
+                ID_LOG: `fetchPostWithUrl${momentTime}`,
                 PARAM: JSON.stringify(fetchBody),
                 INSERT_TIME: momentTime,
-                MESSAGE: JSON.stringify(response),
+                MESSAGE: response.message,
                 DEV_NOTE: `response status !== 200`,
                 FROM: `POST - fetchPostWithUrl - ${serviceName}:${URL}`,
             };
             TaskServices.saveData('TR_LOG', LogModel);
             return undefined;
         }
-    }).then((data) => {
+    }).then((response) => {
         if(data.status === false){
             let momentTime = moment().format("YYYYMMDDHHmmss").toString();
             let LogModel = {
-                ID_LOG: `fetchPost${momentTime}`,
+                ID_LOG: `fetchPostWithUrl${momentTime}`,
                 INSERT_TIME: momentTime,
-                MESSAGE: data.message,
+                MESSAGE: response.message,
                 DEV_NOTE: `response status false`,
                 FROM: `POST - fetchPostWithUrl - ${serviceName}:${URL}`,
             };
@@ -42,7 +42,7 @@ export function fetchPostWithUrl(URL, fetchBody, fetchHeaders) {
     }).catch((err) => {
         let momentTime = moment().format("YYYYMMDDHHmmss").toString();
         let LogModel = {
-            ID_LOG: `fetchGet${momentTime}`,
+            ID_LOG: `fetchPostWithUrl${momentTime}`,
             INSERT_TIME: momentTime,
             MESSAGE: JSON.stringify(err),
             DEV_NOTE: `fetch error catch`,
@@ -85,23 +85,23 @@ export function fetchPut(serviceName, fetchBody, fetchHeaders){
         else {
             let momentTime = moment().format("YYYYMMDDHHmmss").toString();
             let LogModel = {
-                ID_LOG: `fetchPost${momentTime}`,
+                ID_LOG: `fetchPut${momentTime}`,
                 PARAM: JSON.stringify(fetchBody),
                 INSERT_TIME: momentTime,
-                MESSAGE: JSON.stringify(response),
+                MESSAGE: response.message,
                 DEV_NOTE: `response status !== 200`,
                 FROM: `PUT - fetchPut - ${serviceName}:${serviceDetail.API_URL}`,
             };
             TaskServices.saveData('TR_LOG', LogModel);
             return undefined;
         }
-    }).then((data) => {
+    }).then((response) => {
         if(data.status === false){
             let momentTime = moment().format("YYYYMMDDHHmmss").toString();
             let LogModel = {
-                ID_LOG: `fetchPost${momentTime}`,
+                ID_LOG: `fetchPut${momentTime}`,
                 INSERT_TIME: momentTime,
-                MESSAGE: data.message,
+                MESSAGE: response.message,
                 DEV_NOTE: `response status false`,
                 FROM: `PUT - fetchPut - ${serviceName}:${serviceDetail.API_URL}`,
             };
@@ -111,7 +111,7 @@ export function fetchPut(serviceName, fetchBody, fetchHeaders){
     }).catch((err) => {
         let momentTime = moment().format("YYYYMMDDHHmmss").toString();
         let LogModel = {
-            ID_LOG: `fetchGet${momentTime}`,
+            ID_LOG: `fetchPut${momentTime}`,
             INSERT_TIME: momentTime,
             MESSAGE: JSON.stringify(err),
             DEV_NOTE: `fetch error catch`,
@@ -157,20 +157,20 @@ export function fetchPost(serviceName, fetchBody, fetchHeaders) {
                 ID_LOG: `fetchPost${momentTime}`,
                 PARAM: JSON.stringify(fetchBody),
                 INSERT_TIME: momentTime,
-                MESSAGE: JSON.stringify(response),
+                MESSAGE: response.message,
                 DEV_NOTE: `response status !== 200`,
                 FROM: `POST - fetchPost - ${serviceName}:${serviceDetail.API_URL}`,
             };
             TaskServices.saveData('TR_LOG', LogModel);
             return undefined;
         }
-    }).then((data) => {
+    }).then((response) => {
         if(data.status === false){
           let momentTime = moment().format("YYYYMMDDHHmmss").toString();
           let LogModel = {
             ID_LOG: `fetchPost${momentTime}`,
             INSERT_TIME: momentTime,
-            MESSAGE: data.message,
+            MESSAGE: response.message,
             DEV_NOTE: `response status false`,
             FROM: `POST - fetchPost - ${serviceName}:${serviceDetail.API_URL}`,
           };
@@ -180,7 +180,7 @@ export function fetchPost(serviceName, fetchBody, fetchHeaders) {
     }).catch((err) => {
         let momentTime = moment().format("YYYYMMDDHHmmss").toString();
         let LogModel = {
-            ID_LOG: `fetchGet${momentTime}`,
+            ID_LOG: `fetchPost${momentTime}`,
             INSERT_TIME: momentTime,
             MESSAGE: JSON.stringify(err),
             DEV_NOTE: `fetch error catch`,
@@ -227,20 +227,20 @@ export function fetchPostForm(serviceName, fetchBody, fetchHeaders) {
                 ID_LOG: `fetchPostForm${momentTime}`,
                 PARAM: JSON.stringify(fetchBody),
                 INSERT_TIME: momentTime,
-                MESSAGE: JSON.stringify(response),
+                MESSAGE: response.message,
                 DEV_NOTE: `response status !== 200`,
                 FROM: `POST - fetchPostForm - ${serviceName}:${serviceDetail.API_URL}`,
             };
             TaskServices.saveData('TR_LOG', LogModel);
             return undefined;
         }
-    }).then((data) => {
+    }).then((response) => {
         if(data.status === false){
           let momentTime = moment().format("YYYYMMDDHHmmss").toString();
           let LogModel = {
             ID_LOG: `fetchPostForm${momentTime}`,
             INSERT_TIME: momentTime,
-            MESSAGE: data.message,
+            MESSAGE: response.message,
             DEV_NOTE: `response status false`,
             FROM: `POST - fetchPostForm - ${serviceName}:${serviceDetail.API_URL}`,
           };
@@ -286,20 +286,20 @@ export function fetchGet(serviceName) {
             let LogModel = {
                 ID_LOG: `fetchGet${momentTime}`,
                 INSERT_TIME: momentTime,
-                MESSAGE: JSON.stringify(response),
+                MESSAGE: response.message,
                 DEV_NOTE: `response status !== 200`,
                 FROM: `GET - fetchGet - ${serviceName}:${serviceDetail.API_URL}`,
             };
             TaskServices.saveData('TR_LOG', LogModel);
             return undefined;
         }
-    }).then((data) => {
+    }).then((response) => {
         if(data.status === false){
           let momentTime = moment().format("YYYYMMDDHHmmss").toString();
           let LogModel = {
             ID_LOG: `fetchGet${momentTime}`,
             INSERT_TIME: momentTime,
-            MESSAGE: data.message,
+            MESSAGE: response.message,
             DEV_NOTE: `response status false`,
             FROM: `GET - fetchGet - ${serviceName}:${serviceDetail.API_URL}`,
           };

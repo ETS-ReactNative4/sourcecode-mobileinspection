@@ -87,22 +87,22 @@ export default class Restan extends React.Component {
     }
 
     /* DETECT FAKE GPS */
-    detectFakeGPS() {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                if (position.mocked) {
-                    this.validateType()
-                } else {
-                    this.getTitikRestan();
-                    this.getLocation();
-                }
-            },
-            (error) => {
-                this.setState({ modalLoading: { ...this.state.modalLoading, showModal: false } });
-            },
-            { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
-        );
-    }
+    // detectFakeGPS() {
+    //     navigator.geolocation.getCurrentPosition(
+    //         (position) => {
+    //             if (position.mocked) {
+    //                 this.validateType()
+    //             } else {
+    //                 this.getTitikRestan();
+    //                 this.getLocation();
+    //             }
+    //         },
+    //         (error) => {
+    //             this.setState({ modalLoading: { ...this.state.modalLoading, showModal: false } });
+    //         },
+    //         { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
+    //     );
+    // }
 
     onMapReady(){
         this.setState({
@@ -113,19 +113,19 @@ export default class Restan extends React.Component {
         })
     }
 
-    validateType() {
-        retrieveData('typeApp').then(data => {
-            if (data !== null && data === 'PROD') {
-                this.setState({
-                    modalLoading: { ...this.state.modalLoading, showModal: false },
-                    modalAlert: { ...AlertContent.mock_location }
-                })
-            } else {
-                this.getTitikRestan();
-                this.getLocation();
-            }
-        })
-    }
+    // validateType() {
+    //     retrieveData('typeApp').then(data => {
+    //         if (data !== null && data === 'PROD') {
+    //             this.setState({
+    //                 modalLoading: { ...this.state.modalLoading, showModal: false },
+    //                 modalAlert: { ...AlertContent.mock_location }
+    //             })
+    //         } else {
+    //             this.getTitikRestan();
+    //             this.getLocation();
+    //         }
+    //     })
+    // }
 
     async fetchRestanCoordinate(){
         let fetchStatus = false;
@@ -151,8 +151,8 @@ export default class Restan extends React.Component {
 
     searchLocation(){
         if (this.state.longitude !== 0.0 || this.state.latitude !== 0.0) {
-            // this.map.animateToRegion(this.state.region, 1);
-            this.detectFakeGPS()
+            this.getTitikRestan();
+            this.getLocation();
         }
         else {
             this.setState({
