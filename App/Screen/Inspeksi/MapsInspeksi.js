@@ -100,9 +100,9 @@ class MapsInspeksi extends React.Component {
         );
     }
 
-    onMapReady(){
+    onMapReady() {
         this.setState({
-            modalLoading:{
+            modalLoading: {
                 ...this.state.modalLoading,
                 showModal: false
             }
@@ -277,14 +277,12 @@ class MapsInspeksi extends React.Component {
 
     navigateScreen(screenName, werkAfdBlockCode) {
         var werksAfdBlock = this.props.navigation.state.params.werksAfdBlock;
+        var blockName = this.props.navigation.state.params.blockName;
 
-        if (werksAfdBlock != undefined) {
+        if (werksAfdBlock != undefined && blockName != undefined) {
             if (werksAfdBlock == werkAfdBlockCode) {
                 this._checkValidate(screenName, werkAfdBlockCode);
             } else {
-                let dataBlok = TaskServices.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', werkAfdBlockCode)
-                var blockName = dataBlok.BLOCK_NAME
-
                 this.setState({
                     modalAlert: {
                         showModal: true,
@@ -377,7 +375,7 @@ class MapsInspeksi extends React.Component {
                             }
                         });
                     }}
-                    onMapReady={() => {this.onMapReady()}}
+                    onMapReady={() => { this.onMapReady() }}
                 >
                     {this.state.poligons.length > 0 && this.state.poligons.map((poly, index) => (
                         <View key={index}>

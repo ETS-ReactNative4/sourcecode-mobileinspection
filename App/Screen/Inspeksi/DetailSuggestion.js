@@ -270,14 +270,16 @@ export default class DetailSuggestion extends Component {
                 routeName: 'Genba',
                 params: {
                     inspectionType: 'genba',
-                    werksAfdBlock: dataDetail.WERKS + dataDetail.AFD_CODE + dataDetail.BLOCK_CODE
+                    werksAfdBlock: dataDetail.WERKS + dataDetail.AFD_CODE + dataDetail.BLOCK_CODE,
+                    blockName : dataDetail.BLOCK_NAME
                 }
             }));
         } else if (routeName == 'inspeksi') {
             this.props.navigation.dispatch(NavigationActions.navigate({
                 routeName: 'MapsInspeksi',
                 params: {
-                    werksAfdBlock: dataDetail.WERKS + dataDetail.AFD_CODE + dataDetail.BLOCK_CODE
+                    werksAfdBlock: dataDetail.WERKS + dataDetail.AFD_CODE + dataDetail.BLOCK_CODE,
+                    blockName : dataDetail.BLOCK_NAME
                 }
             }))
         }
