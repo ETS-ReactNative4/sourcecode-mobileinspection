@@ -33,7 +33,7 @@ class Form extends Component {
     constructor() {
         super();
         this.state = {
-            strEmail: 'james.tamba',
+            strEmail: '',
             strPassword: 'bluezonesquad',
             selectedServer: "1",
             title: 'Title',
