@@ -207,6 +207,15 @@ export default class ListInspection extends Component {
           pagingEnabled={false}>
           {
             dataSuggestions.map((item, idx) => {
+
+              console.log(DATA_ARRAY[0].DATE);
+              let date;
+              if (item.DATA_ARRAY[0].DATE.charAt(0) == '9' || item.DATA_ARRAY[0].DATE.charAt(0) == '1') {
+                date = '-'
+              } else {
+                date = dateDisplayMobileWithoutHours(item.DATA_ARRAY[0].DATE);
+              }
+
               return (
                 <View style={{ paddingHorizontal: 16 }}>
                   <Card key={idx} style={styles.containerFeature}>
@@ -219,7 +228,7 @@ export default class ListInspection extends Component {
                     </View>
                     <View style={styles.bottomContainer}>
                       <Text style={{ fontSize: 14, fontWeight: '500' }}> {item.LOCATION_CODE}</Text>
-                      <Text style={{ fontSize: 12, fontWeight: '400' }}> {'Dikarenakan ' + item.DATA_ARRAY[0].DESC + ' Terakhir : ' + dateDisplayMobileWithoutHours(item.DATA_ARRAY[0].DATE)}</Text>
+                      <Text style={{ fontSize: 12, fontWeight: '400' }}> {'Dikarenakan ' + item.DATA_ARRAY[0].DESC + ' Terakhir : ' + date}</Text>
                       <ButtonSuggestion title={'Lihat Info Blok'}
                         onPress={() => this.props.navigation.navigate('DetailSuggestion', {
                           arrData: item,
@@ -323,6 +332,13 @@ const DataLocalSuggetion = (props) => {
     uri = Images.img_thumbnail
   }
 
+  let date;
+  if (props.item.DATA_ARRAY[0].DATE.charAt(0) == '9' || props.item.DATA_ARRAY[0].DATE.charAt(0) == '1') {
+    date = '-'
+  } else {
+    date = dateDisplayMobileWithoutHours(props.item.DATA_ARRAY[0].DATE);
+  }
+
   return (
     <View style={{ paddingHorizontal: 16 }}>
       <Card key={props.idx} style={styles.containerFeature}>
@@ -345,7 +361,7 @@ const DataLocalSuggetion = (props) => {
         </View>
         <View style={styles.bottomContainer}>
           <Text style={{ fontSize: 14, fontWeight: '500' }}>{props.item.LOCATION_CODE}</Text>
-          <Text style={{ fontSize: 12, fontWeight: '400' }}>{'Dikarenakan ' + props.item.DATA_ARRAY[0].DESC + ' Terakhir : ' + dateDisplayMobileWithoutHours(props.item.DATA_ARRAY[0].DATE)}</Text>
+          <Text style={{ fontSize: 12, fontWeight: '400' }}>{'Dikarenakan ' + props.item.DATA_ARRAY[0].DESC + ' Terakhir : ' + date}</Text>
           <ButtonSuggestion title={'Lihat Info Blok'}
             onPress={props.onPress} />
         </View>

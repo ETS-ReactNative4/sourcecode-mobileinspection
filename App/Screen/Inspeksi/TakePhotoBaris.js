@@ -135,7 +135,7 @@ class TakePhotoBaris extends Component {
         this.setState(
           {
             path: imgPath,
-            pathImg: dirPhotoEbccSelfie,
+            pathImg: dirPhotoInspeksiBaris,
             hasPhoto: true
           }, () => {
             this.resize(imgPath)

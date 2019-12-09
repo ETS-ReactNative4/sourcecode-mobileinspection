@@ -28,6 +28,7 @@ const ItemDetailSuggestion = (props) => {
 
     let img;
     let desc;
+    let date;
     if (props.TYPE == 'inspeksi') {
         img = Images.ic_suggestion_inspeksi;
         desc = 'Inspeksi oleh ' + props.DESC;
@@ -37,6 +38,12 @@ const ItemDetailSuggestion = (props) => {
     } else {
         img = Images.ic_suggestion_rawat;
         desc = props.DESC;
+    }
+
+    if (props.DATE.charAt(0) == '9' || props.DATE.charAt(0) == '1') {
+        date = '-'
+    } else {
+        date = dateDisplayMobileWithoutHours(props.DATE);
     }
 
     return (
@@ -64,7 +71,7 @@ const ItemDetailSuggestion = (props) => {
                 <View style={{ flex: 1 }}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                         <View>
-                            <Text style={{ color: Colors.colorPrimary, fontWeight: '500', fontSize: 12 }}> {dateDisplayMobileWithoutHours(props.DATE)}</Text>
+                            <Text style={{ color: Colors.colorPrimary, fontWeight: '500', fontSize: 12 }}> {date}</Text>
                             <Text style={{ color: Colors.black, fontWeight: '500', fontSize: 12 }}> {desc}</Text>
                         </View>
 
