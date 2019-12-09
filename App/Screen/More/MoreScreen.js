@@ -230,7 +230,8 @@ export default class MoreScreen extends Component {
               onPressDefault={() => this.onPressMenu('Maps')} />
 
             {/* Menu Dashboard Kebun */}
-            {this.state.jabatan == 'ASISTEN LAPANGAN' && <FeatureLainnya
+            {this.state.jabatan == 'ASISTEN LAPANGAN' &&
+            <FeatureLainnya
               sizeIcon={20}
               title={'Dashboard Kebun'}
               icon={Images.ic_lainnya_dashboard_kebun}
@@ -260,7 +261,7 @@ export default class MoreScreen extends Component {
 
 
             <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: 10 }}>
-              <Text>Versi: {DeviceInfo.getVersion()} (A01)</Text>
+              <Text>Versi: {DeviceInfo.getVersion()}</Text>
             </View>
           </View>
 

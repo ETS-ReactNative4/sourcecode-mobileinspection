@@ -49,7 +49,7 @@ import { AlertContent } from '../Themes';
 import { postWeeklySummary } from './Sync/Upload/UploadWeeklySummary';
 import { getTitikRestan } from './Sync/Download/Restan/TitikRestan';
 import {getFCMToken} from "../Notification/NotificationListener";
-import {fetchPut} from "../Api/FetchingApi";
+import {fetchGet, fetchPost, fetchPut} from "../Api/FetchingApi";
 
 export default class SyncScreen extends React.Component {
 
@@ -687,8 +687,9 @@ export default class SyncScreen extends React.Component {
         await postWeeklySummary('INSPECTION-SUMMARY')
         await postWeeklySummary('FINDING-SUMMARY')
         await postWeeklySummary('EBCC-SUMMARY')
-    }
+    };
 
+    //upload fcm token to server
     async putFCMConfig(){
         let fcmTokenRequest = null;
         await getFCMToken()
@@ -702,6 +703,24 @@ export default class SyncScreen extends React.Component {
 
         await fetchPut("FIREBASE-TOKEN", fcmTokenRequest, null);
     };
+
+    //refresh MOBILE INSPECTION token
+    async _refreshToken(){
+        let refreshStatus = false;
+        if (this.state.user !== undefined && this.state.user !== null) {
+            await fetchGet("AUTH-GENERATE-TOKEN", null)
+                .then((response)=>{
+                    if (response !== undefined) {
+                        if(response.status !== false){
+                            let currentUser = {...this.state.user, ACCESS_TOKEN: response.data};
+                            TaskServices.updateByPrimaryKey('TR_LOGIN', currentUser);
+                            refreshStatus = true;
+                        }
+                    }
+                });
+        }
+        return refreshStatus;
+    }
 
     async _onSync() {
         console.log("#################### SYNC START ####################");
@@ -1140,8 +1159,31 @@ export default class SyncScreen extends React.Component {
                             <TouchableOpacity
                                 style={styles.button}
                                 disabled={this.state.isBtnEnable}
-                                onPress={() => {
-                                    this.setState({ showButton: false }); this.insertLink()
+                                onPress={()=>{
+                                    this.setState(
+                                        {
+                                            showButton: false
+                                        },
+                                        ()=>{
+                                            this._refreshToken()
+                                                .then((response)=>{
+                                                    //if new token generated, continue sync
+                                                    if(response){
+                                                        //refresh tm services
+                                                        this.insertLink()
+                                                    }
+                                                    else {
+                                                        this.setState({
+                                                            showButton: true,
+                                                            showModal: true,
+                                                            title: 'Refresh token gagal!',
+                                                            message: 'Gagal mendapatkan token baru!',
+                                                            icon: require('../Images/ic-sync-gagal.png')
+                                                        })
+                                                    }
+                                                });
+                                        }
+                                    );
                                 }}>
                                 <Text style={styles.buttonText}>Sync</Text>
                             </TouchableOpacity>

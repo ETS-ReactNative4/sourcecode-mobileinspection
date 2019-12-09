@@ -59,11 +59,10 @@ export function fetchPut(serviceName, fetchBody, fetchHeaders){
     let headers = null;
 
     if (fetchHeaders !== undefined && fetchHeaders !== null) {
-        let tempHeaders = {
+        headers = {
             ...fetchHeaders,
             'Authorization': 'Bearer ' + user.ACCESS_TOKEN
         };
-        headers = tempHeaders
     }
     else {
         headers = {
@@ -131,11 +130,10 @@ export function fetchPost(serviceName, fetchBody, fetchHeaders) {
     let headers = null;
 
     if (fetchHeaders !== undefined && fetchHeaders !== null) {
-        let tempHeaders = {
+        headers = {
             ...fetchHeaders,
             'Authorization': 'Bearer ' + user.ACCESS_TOKEN
         };
-        headers = tempHeaders
     }
     else {
         headers = {
@@ -203,11 +201,10 @@ export function fetchPostForm(serviceName, fetchBody, fetchHeaders) {
     let headers = null;
 
     if (fetchHeaders !== undefined && fetchHeaders !== null) {
-        let tempHeaders = {
+        headers = {
             ...fetchHeaders,
             'Authorization': 'Bearer ' + user.ACCESS_TOKEN
         };
-        headers = tempHeaders
     }
     else {
         headers = {
@@ -272,15 +269,25 @@ export function fetchPostForm(serviceName, fetchBody, fetchHeaders) {
 
 // ========================================================================
 
-export function fetchGet(serviceName) {
+export function fetchGet(serviceName, fetchHeaders) {
     let serviceDetail = TaskServices.getService(serviceName);
     let user = TaskServices.getAllData('TR_LOGIN')[0];
 
-    let headers = {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + user.ACCESS_TOKEN
-    };
+    let headers = null;
+
+    if (fetchHeaders !== undefined && fetchHeaders !== null) {
+        headers = {
+            ...fetchHeaders,
+            'Authorization': 'Bearer ' + user.ACCESS_TOKEN
+        }
+    }
+    else {
+        headers = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + user.ACCESS_TOKEN
+        }
+    }
 
     return fetch(serviceDetail.API_URL, {
         method: 'GET',

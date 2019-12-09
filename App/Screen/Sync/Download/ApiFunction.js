@@ -2,7 +2,7 @@ import { fetchGet } from "../../../Api/FetchingApi";
 
 export async function getAPIFunction(apiName) {
     let dataAPI = null;
-    await fetchGet(apiName)
+    await fetchGet(apiName, null)
         .then(((response) => {
             if (response !== undefined) {
 

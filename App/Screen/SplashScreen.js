@@ -156,7 +156,7 @@ class SplashScreen extends Component {
             createNotificationChannel();
             await getFCMToken()
                 .then((token)=>{
-                    console.log("token",token);
+                    console.log("FCMtoken",token);
                 });
 
             this.makeFolder()

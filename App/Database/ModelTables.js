@@ -25,7 +25,7 @@ const TR_LOGIN = {
         SERVER_NAME_INDEX: 'string',
         STATUS: 'string'
     }
-}
+};
 
 const TR_BLOCK_INSPECTION_H = {
     name: 'TR_BLOCK_INSPECTION_H',
