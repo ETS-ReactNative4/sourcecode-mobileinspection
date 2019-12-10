@@ -45,13 +45,6 @@ class Form extends Component {
         }
     }
 
-    makeAlert(msg) {
-        Alert.alert('Peringatan', msg, [
-            {
-                text: 'OK'
-            }], { cancelable: false })
-    }
-
     onBtnClick(props) {
         Keyboard.dismiss();
         NetInfo.isConnected.fetch().then(isConnected => {
