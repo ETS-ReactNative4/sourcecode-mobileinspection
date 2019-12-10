@@ -207,8 +207,6 @@ export default class ListInspection extends Component {
           pagingEnabled={false}>
           {
             dataSuggestions.map((item, idx) => {
-
-              console.log(DATA_ARRAY[0].DATE);
               let date;
               if (item.DATA_ARRAY[0].DATE.charAt(0) == '9' || item.DATA_ARRAY[0].DATE.charAt(0) == '1') {
                 date = '-'
