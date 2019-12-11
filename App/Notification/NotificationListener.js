@@ -12,7 +12,6 @@ export const createNotificationChannel = () => {
 
     // Create the channel
     firebase.notifications().android.createChannel(channel);
-    subscribeTopic("testKeps");
 };
 
 export async function getFCMToken(){
