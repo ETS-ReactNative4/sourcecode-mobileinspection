@@ -254,7 +254,7 @@ export default class Restan extends React.Component {
     }
 
     getTitikRestan(){
-        let titikRestan = TaskServices.getSortedData('TR_TITIK_RESTAN', [['OPH', true], ['BLOCK_CODE', true], ["BLOCK_NAME", true]]);
+        let titikRestan = TaskServices.getSortedData('TR_TITIK_RESTAN', 'SORT_SWIPE', false);
         if(titikRestan !== undefined && titikRestan.length > 0){
             let tempCoordinateRestan = [];
             let tempHighlightBlock = [];

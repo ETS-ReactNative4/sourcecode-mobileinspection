@@ -72,8 +72,13 @@ const TaskServices = {
         return RealmSchemas.objects(table);
     },
 
+    getSortedData: function (table, field, descending){
+        let dbObjects = RealmSchemas.objects(table);
+        return dbObjects.sorted(field, descending);
+    },
+
     //example array [['price', true], ['miles', false]]
-    getSortedData: function (table, fields: Array){
+    getMultipleSortedData: function (table, fields: Array){
         let dbObjects = RealmSchemas.objects(table);
         return dbObjects.sorted(fields);
     },
