@@ -34,6 +34,7 @@ function unsubscribeTopic(topicName :string){
 export function notificationDeeplinkSetup(props){
     let currentUser = TaskServices.getAllData('TR_LOGIN');
     if(currentUser[0].USER_ROLE === "ASISTEN_LAPANGAN"){
+        //deeplink (kalo appny belum kebuka)
         firebase.notifications().getInitialNotification()
             .then((notificationOpen: NotificationOpen) => {
                 switch (notificationOpen.notification._data.DEEPLINK) {
@@ -44,6 +45,17 @@ export function notificationDeeplinkSetup(props){
                         break;
                 }
             });
+
+        //setup kalo appny di background
+        this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
+            switch (notificationOpen.notification._data.DEEPLINK) {
+                case "RESTAN":
+                    props.navigation.navigate("Restan");
+                    break;
+                default:
+                    break;
+            }
+        });
     }
 }
 

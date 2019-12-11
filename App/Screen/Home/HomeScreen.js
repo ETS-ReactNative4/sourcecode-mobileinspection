@@ -122,10 +122,9 @@ class HomeScreen extends React.Component {
     'willFocus',
     () => {
 
-        notificationDeeplinkSetup(this.props);
-      this._createDataSuggestion();
-      this._deleteDataSuggestion();
-      this.showWeeklySummary();
+      this._createDataSuggestion()
+      this._deleteDataSuggestion()
+      this.showWeeklySummary()
 
       if (this.state.loadAll) {
         //this._initData()
@@ -176,7 +175,7 @@ class HomeScreen extends React.Component {
     /** NOTIFICATION LOCAL */
     displayNotificationSync();
     displayNotificationTemuan();
-    // notificationDeeplinkSetup(this.props);
+    notificationDeeplinkSetup(this.props);
     await this.putFCMConfig();
 
     RNFS.mkdir(dirDatabase);
