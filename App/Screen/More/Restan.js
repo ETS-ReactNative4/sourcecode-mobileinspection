@@ -48,6 +48,7 @@ export default class Restan extends React.Component {
             },
             poligons: [],
             coordinateRestan: [],
+            coordinateRestanFetch: true,
             highlightBlock: [],
             inspectionType: props.navigation.getParam('inspectionType', 'normal'),
             // modalRestainDetail: false,
@@ -152,8 +153,12 @@ export default class Restan extends React.Component {
 
     searchLocation(){
         if (this.state.longitude !== 0.0 || this.state.latitude !== 0.0) {
-            this.getTitikRestan();
-            this.getLocation();
+            this.getLocation()
+                .then((response)=>{
+                    if(response){
+                        this.getTitikRestan();
+                    }
+                })
         }
         else {
             this.setState({
@@ -235,22 +240,25 @@ export default class Restan extends React.Component {
         return data;
     }
 
-    getLocation() {
+    async getLocation() {
         if (this.state.latitude && this.state.longitude) {
             let poligons = this.getPolygons();
             if (poligons !== null) {
-                this.setState({
+                await this.setState({
                     modalLoading: { ...this.state.modalLoading, showModal: false },
                     poligons
                 });
+                return true;
             }
             else {
-                this.setState({
+                await this.setState({
                     modalLoading: { ...this.state.modalLoading, showModal: false },
                     modalAlert: { ...AlertContent.no_polygon }
-                })
+                });
+                return false;
             }
         }
+        return false;
     }
 
     getTitikRestan(){
@@ -279,8 +287,9 @@ export default class Restan extends React.Component {
 
             this.setState({
                 highlightBlock: tempHighlightBlock,
-                coordinateRestan: tempCoordinateRestan
-            })
+                coordinateRestan: tempCoordinateRestan,
+                coordinateRestanFetch: true
+            });
         }
     }
 
@@ -301,10 +310,10 @@ export default class Restan extends React.Component {
     }
 
     titikRestanSelector(TPH_RESTANT_DAY){
-        switch (parseFloat(TPH_RESTANT_DAY)) {
-            case 1:
+        switch (TPH_RESTANT_DAY) {
+            case "1":
                 return require('../../Images/icon/ic_restan_1.png');
-            case 2:
+            case "2":
                 return require('../../Images/icon/ic_restan_2.png');
             default:
                 return require('../../Images/icon/ic_restan_3.png');
@@ -456,20 +465,26 @@ export default class Restan extends React.Component {
                                         latitude: coordinate.LATITUDE,
                                         longitude: coordinate.LONGITUDE
                                     }}
-                                    tracksViewChanges={false}
+                                    onLoad={() => {
+                                        //di pakai ke trackViewChanges to false abis selesai render
+                                        //kalo gak ada ini, pas initial pertama kali image gk ke load.
+                                         if(index === this.state.coordinateRestan.length -1){
+                                             this.setState({
+                                                 coordinateRestanFetch: false
+                                             })
+                                         }
+                                    }}
+                                    tracksViewChanges={this.state.coordinateRestanFetch}
                                 >
                                     <View
                                         style={{
-                                            width: 50,
-                                            height: 50,
                                             justifyContent:"center"
                                         }}
                                     >
                                         <Image
                                             style={{
-                                                flex: 1,
-                                                width: undefined,
-                                                height: undefined
+                                                width: 50,
+                                                height: 50
                                             }}
                                             source={this.titikRestanSelector(coordinate.TPH_RESTANT_DAY)}
                                         />
