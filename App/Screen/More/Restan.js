@@ -47,24 +47,7 @@ export default class Restan extends React.Component {
                 longitudeDelta: 0.00721
             },
             poligons: [],
-            coordinateRestan: [
-                {
-                    BCC:"19112403301047092721",
-                    OPH: "017",
-                    TPH_RESTANT_DAY: "3",
-                    LATITUDE: 1.2664307188,
-                    LONGITUDE: 117.8429638781,
-                    JML_JANJANG: 151,
-                    JML_BRONDOLAN : 45,
-                    KG_TAKSASI: 1414,
-                    TGL_REPORT: 20191124,
-                    WERKS: "5121",
-                    EST_NAME: "EBL ESTATE",
-                    AFD_CODE : "A",
-                    BLOCK_CODE : "354",
-                    BLOCK_NAME: "E09"
-                }
-            ],
+            coordinateRestan: [],
             highlightBlock: [],
             inspectionType: props.navigation.getParam('inspectionType', 'normal'),
             // modalRestainDetail: false,

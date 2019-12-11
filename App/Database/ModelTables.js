@@ -569,7 +569,8 @@ const TR_TITIK_RESTAN = {
         EST_NAME: { type: 'string', optional: false },
         AFD_CODE: { type: 'string', optional: false },
         BLOCK_CODE: { type: 'string', optional: false },
-        BLOCK_NAME: { type: 'string', optional: false }
+        BLOCK_NAME: { type: 'string', optional: false },
+        SORT_SWIPE: { type: 'string', optional: false }
     }
 };
 
