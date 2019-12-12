@@ -55,7 +55,7 @@ export default class DetailSuggestion extends Component {
 
     componentWillUnmount() {
         this.willFocus.remove();
-        this.props.navigation.state.params._getDataLocal()
+        this.props.navigation.state.params._getDataLocal();
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
     }
 
@@ -68,6 +68,7 @@ export default class DetailSuggestion extends Component {
 
         var arrData = this.props.navigation.state.params.arrData
         var type = this.props.navigation.state.params.type
+        var isGenba = this.props.navigation.state.params.isGenba
 
         if (arrData != null) {
 
@@ -80,7 +81,7 @@ export default class DetailSuggestion extends Component {
                 this.setState({ isFav: true })
             }
 
-            this.setState({ dataTemuan, locationCode: arrData.LOCATION_CODE })
+            this.setState({ dataTemuan, locationCode: arrData.LOCATION_CODE, isGenba })
         }
     }
 
@@ -147,6 +148,7 @@ export default class DetailSuggestion extends Component {
 
                 {/* BUTTON FOOTER */}
                 <ButtonInspeksi
+                    isGenba={this.state.isGenba}
                     isFav={this.state.isFav}
                     onPressInspeksi={() => this.redirectNextScreen('inspeksi')}
                     onPressGenba={() => this.redirectNextScreen('genba')}
@@ -217,47 +219,6 @@ export default class DetailSuggestion extends Component {
                 }
             }
         })
-
-        // var data = {
-        //     INSERT_TIME: getTodayDate('YYYYMMDD').toString(),
-        //     LOCATION_CODE: dataDetail.LOCATION_CODE == null ? '' : dataDetail.LOCATION_CODE,
-        //     IMAGE: dataDetail.IMAGE_NAME == null || dataDetail.IMAGE_NAME == '' ? '' : dataDetail.IMAGE_NAME,
-
-        //     TYPE_INSPECTION: dataDetail.TYPE_INSPECTION == null ? '' : dataDetail.TYPE_INSPECTION,
-        //     DATE_INSPECTION_ASLAP: dataDetail.DATE_INSPECTION_ASLAP == null ? '' : dataDetail.DATE_INSPECTION_ASLAP,
-        //     DESC_INSPECTION_ASLAP: dataDetail.DESC_INSPECTION_ASLAP == null ? '' : dataDetail.DESC_INSPECTION_ASLAP,
-        //     JUMLAH_BARIS_ASLAP: dataDetail.JUMLAH_BARIS_ASLAP == null ? '' : dataDetail.JUMLAH_BARIS_ASLAP,
-
-        //     DATE_INSPECTION_KABUN: dataDetail.DATE_INSPECTION_KABUN == null ? '' : dataDetail.DATE_INSPECTION_KABUN,
-        //     DESC_INSPECTION_KABUN: dataDetail.DESC_INSPECTION_KABUN == null ? '' : dataDetail.DESC_INSPECTION_KABUN,
-        //     JUMLAH_BARIS_KABUN: dataDetail.JUMLAH_BARIS_KABUN == null ? '' : dataDetail.JUMLAH_BARIS_KABUN,
-
-        //     DATE_INSPECTION_EM: dataDetail.DATE_INSPECTION_EM == null ? '' : dataDetail.DATE_INSPECTION_EM,
-        //     DESC_INSPECTION_EM: dataDetail.DESC_INSPECTION_EM == null ? '' : dataDetail.DESC_INSPECTION_EM,
-        //     JUMLAH_BARIS_EM: dataDetail.JUMLAH_BARIS_EM == null ? '' : dataDetail.JUMLAH_BARIS_EM,
-
-        //     DATE_INSPECTION_SEM_GM: dataDetail.DATE_INSPECTION_SEM_GM == null ? '' : dataDetail.DATE_INSPECTION_SEM_GM,
-        //     DESC_INSPECTION_SEM_GM: dataDetail.DESC_INSPECTION_SEM_GM == null ? '' : dataDetail.DESC_INSPECTION_SEM_GM,
-        //     JUMLAH_BARIS_SEM_GM: dataDetail.JUMLAH_BARIS_SEM_GM == null ? '' : dataDetail.JUMLAH_BARIS_SEM_GM,
-
-        //     TYPE_PANEN: dataDetail.TYPE_PANEN == null ? '' : dataDetail.TYPE_PANEN,
-        //     DATE_PANEN: dataDetail.DATE_PANEN == null ? '' : dataDetail.DATE_PANEN,
-        //     DESC_PANEN: dataDetail.DESC_PANEN == null ? '' : dataDetail.DESC_PANEN,
-        //     TOTAL_JANJANG_PANEN: dataDetail.TOTAL_JANJANG_PANEN == null ? '' : dataDetail.TOTAL_JANJANG_PANEN.toString(),
-        //     BJR_BULAN_LALU: dataDetail.BJR_BULAN_LALU == null ? '' : dataDetail.BJR_BULAN_LALU.toString(),
-        //     TOTAL_RESTAN_TPH: dataDetail.TOTAL_RESTAN_TPH == null ? '' : dataDetail.TOTAL_RESTAN_TPH.toString(),
-
-        //     TYPE_RAWAT: dataDetail.TYPE_RAWAT == null ? '' : dataDetail.TYPE_RAWAT,
-        //     DATE_RAWAT: dataDetail.DATE_RAWAT == null ? '' : dataDetail.DATE_RAWAT,
-        //     DESC_RAWAT: dataDetail.DESC_RAWAT == null ? '' : dataDetail.DESC_RAWAT,
-        //     CPT_SPRAYING: dataDetail.CPT_SPRAYING == null ? '' : dataDetail.CPT_SPRAYING,
-        //     SPOT_SPRAYING: dataDetail.SPOT_SPRAYING == null ? '' : dataDetail.SPOT_SPRAYING,
-        //     LALANG_CTRL: dataDetail.LALANG_CTRL == null ? '' : dataDetail.LALANG_CTRL,
-
-        //     ISFAVORITE: true,
-        // }
-
-        // await TaskServices.saveData('TM_SUGGESTION_INSPECTION', data);
     }
 
     // REDIRECT TO GENBA/INSPEKSI PAGE

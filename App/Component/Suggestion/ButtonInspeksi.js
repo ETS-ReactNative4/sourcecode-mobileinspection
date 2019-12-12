@@ -49,11 +49,11 @@ const ButtonInspeksi = (props) => {
                     <Text style={styles.text}>Mulai Inspeksi</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity
+                {props.isGenba && <TouchableOpacity
                     onPress={props.onPressGenba}
                     style={[styles.button, { backgroundColor: colors.orange, marginRight: 16 }]}>
                     <Text style={styles.text}>Mulai Genba</Text>
-                </TouchableOpacity>
+                </TouchableOpacity>}
             </View>
 
         </View>

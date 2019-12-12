@@ -95,14 +95,17 @@ export default class ListInspection extends Component {
     NetInfo.isConnected.fetch().then(isConnected => {
       if (isConnected) {
         retrieveData('isFirstHit').then(isFirst => {
-          console.log('Masuk Sini');
-          console.log('isFirstHit', isFirst);
           if (isFirst == null) {
             this._getApiSuggestionFromAsync();
           } else {
-            this.setState({
-              isLoading: false
-            })
+            retrieveData('SUGGESTION_TEMP').then(result => {
+              if (result != null) {
+                this.setState({
+                  dataSuggestions: result,
+                  isLoading: false
+                })
+              }
+            });
           }
         })
       } else {
@@ -154,6 +157,7 @@ export default class ListInspection extends Component {
           dataSuggestions: data.data,
           isLoading: false
         })
+        storeData('SUGGESTION_TEMP', data.data);
         storeData('isFirstHit', true)
       }
     })
@@ -183,12 +187,11 @@ export default class ListInspection extends Component {
     var array = this.state.dataSuggestions; // make a separate copy of the array
     var index = array.pop
 
-    console.log('Index : ', index)
-
     this.setState({ dataSuggestions: array });
     if (index !== -1) {
       array.splice(index, 1);
       this.setState({ dataSuggestions: array });
+      storeData('SUGGESTION_TEMP', array);
     }
   }
 
@@ -230,7 +233,8 @@ export default class ListInspection extends Component {
                       <ButtonSuggestion title={'Lihat Info Blok'}
                         onPress={() => this.props.navigation.navigate('DetailSuggestion', {
                           arrData: item,
-                          _getDataLocal: () => this._getDataLocal()
+                          _getDataLocal: () => this._getDataLocal(),
+                          isGenba: this.state.genbaGranted
                         })} />
                     </View>
                   </Card>

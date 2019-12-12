@@ -14,7 +14,7 @@ export const createNotificationChannel = () => {
     firebase.notifications().android.createChannel(channel);
 };
 
-export async function getFCMToken(){
+export async function getFCMToken() {
     const fcmToken = await firebase.messaging().getToken();
     if (fcmToken) {
         return fcmToken;
@@ -22,18 +22,18 @@ export async function getFCMToken(){
     return null;
 }
 
-function subscribeTopic(topicName :string){
+function subscribeTopic(topicName: string) {
     firebase.messaging().subscribeToTopic(topicName);
 }
 
-function unsubscribeTopic(topicName :string){
+function unsubscribeTopic(topicName: string) {
     firebase.messaging().unsubscribeFromTopic(topicName);
 }
 
 //deeplink setup
-export function notificationDeeplinkSetup(props){
+export function notificationDeeplinkSetup(props) {
     let currentUser = TaskServices.getAllData('TR_LOGIN');
-    if(currentUser[0].USER_ROLE === "ASISTEN_LAPANGAN"){
+    if (currentUser[0].USER_ROLE === "ASISTEN_LAPANGAN") {
         //deeplink (kalo appny belum kebuka)
         firebase.notifications().getInitialNotification()
             .then((notificationOpen: NotificationOpen) => {
@@ -88,8 +88,14 @@ export const displayNotificationTemuan = () => {
                     showPicNotification = pathImage;
             }
 
-            var body = 'Temuan dari ' + FULLNAME + ' akan melewati batas waktu pada ' + dateDisplayMobileWithoutHours(item.DUE_DATE)
-                + '. Selesaikan temuan ini yuk!';
+            let body = '';
+            if (item.INSERT_USER == item.ASSGIN_TO) {
+                body = 'Temuan yang kamu akan melewati batas waktu pada ' + dateDisplayMobileWithoutHours(item.DUE_DATE)
+                    + '. Selesaikan temuan ini yuk!';
+            } else {
+                body = 'Temuan dari ' + FULLNAME + ' akan melewati batas waktu pada ' + dateDisplayMobileWithoutHours(item.DUE_DATE)
+                    + '. Selesaikan temuan ini yuk!';
+            }
 
             const notification = new firebase.notifications.Notification()
                 .setNotificationId(item.FINDING_CODE + getTodayDate('YYYYMMDDHHmmss'))
@@ -101,8 +107,8 @@ export const displayNotificationTemuan = () => {
 
             if (Platform.OS === "android") {
                 notification.android.setChannelId('mobile-inspection-channel');
+                notification.android.setBigText(body)
                 notification.android.setBigPicture(showPicNotification);
-                notification.android.setBadgeIconType(firebase.notifications.Android.BadgeIconType.Small);
                 notification.android.setPriority(firebase.notifications.Android.Priority.High);
                 notification.android.setAutoCancel(true);
             }
@@ -110,7 +116,7 @@ export const displayNotificationTemuan = () => {
             // Schedule the notification base on due date in the future
             console.log('DUE DATE : ', item.DUE_DATE);
 
-            var startdate = moment(item.DUE_DATE + ' 15:05:00');
+            var startdate = moment(item.DUE_DATE + ' 11:30:00');
             startdate = startdate.subtract(1, "days");
 
             console.log('Notification Set');
