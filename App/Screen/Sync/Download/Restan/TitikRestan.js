@@ -1,3 +1,5 @@
+import { AsyncStorage } from 'react-native';
+import moment from 'moment';
 import TaskServices from '../../../../Database/TaskServices'
 import { getAPIFunction } from ".././ApiFunction";
 
@@ -14,6 +16,11 @@ export async function getTitikRestan() {
     await getAPIFunction('REPORT-TITIK-RESTAN').then((restanModel) => {
         try {
             if (restanModel !== null) {
+
+                AsyncStorage.setItem('titikRestan', JSON.stringify({
+                    latestSyncTime: moment().format("DD MMM YYYY")
+                }));
+
                 TaskServices.deleteAllData("TR_TITIK_RESTAN");
 
                 Promise.all(

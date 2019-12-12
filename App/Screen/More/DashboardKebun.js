@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, Text, BackHandler } from "react-native";
+import {View, Text, BackHandler, AsyncStorage} from "react-native";
 import Colors from '../../Constant/Colors'
 import Icon2 from 'react-native-vector-icons/AntDesign'
 import colors from '../../Themes/Colors';
 import ItemMenuDashboardKebun from '../../Component/ItemMenuDashboardKebun';
 import { Images } from '../../Themes';
 import TaskServices from "../../Database/TaskServices";
+import {notifInbox, syncDays} from "../../Lib/Utils";
 
 export default class DashboardKebun extends React.Component {
 
@@ -35,7 +36,7 @@ export default class DashboardKebun extends React.Component {
         this.state = {
             currentUser: currentUser[0],
             location: 'GAWI INTI-2',
-            tanggal: '25 Nov 2019',
+            tanggal: '',
         }
 
         this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
@@ -50,9 +51,27 @@ export default class DashboardKebun extends React.Component {
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
     }
 
+    willFocus = this.props.navigation.addListener(
+        'willFocus',
+        () => {
+            this.getRestanSyncTime();
+        }
+    );
+
     componentWillUnmount() {
+        this.willFocus.remove()
         BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
-    }
+    };
+
+    getRestanSyncTime(){
+        AsyncStorage.getItem('titikRestan')
+            .then((restanSyncTime)=>{
+                let data = JSON.parse(restanSyncTime);
+                this.setState({
+                    tanggal: data.latestSyncTime !== null ? data.latestSyncTime.toString() : "Belum Sync"
+                })
+            })
+    };
 
     //Func Handle Back Press (Aminju)
     handleBackButtonClick() {

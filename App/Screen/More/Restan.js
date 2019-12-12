@@ -108,11 +108,19 @@ export default class Restan extends React.Component {
 
     onMapReady(){
         this.setState({
-            modalLoading:{
-                ...this.state.modalLoading,
-                showModal: false
+                modalLoading: {
+                    ...this.state.modalLoading,
+                    showModal: true
+                }},()=>{
+                    //set timeout untuk ngasih waktu cari signal gps
+                    setTimeout(()=>{
+                        this.fetchRestanCoordinate()
+                            .then((response)=>{
+                                this.searchLocation()
+                            })
+                    }, 2000)
             }
-        })
+        );
     }
 
     // validateType() {
@@ -152,22 +160,12 @@ export default class Restan extends React.Component {
     }
 
     searchLocation(){
-        if (this.state.longitude !== 0.0 || this.state.latitude !== 0.0) {
-            this.getLocation()
-                .then((response)=>{
-                    if(response){
-                        this.getTitikRestan();
-                    }
-                })
-        }
-        else {
-            this.setState({
-                modalGps: {
-                    ...this.state.modalGps,
-                    showModal: true
+        this.getLocation()
+            .then((response)=>{
+                if(response){
+                    this.getTitikRestan();
                 }
             })
-        }
     };
 
     loadMap() {
@@ -258,6 +256,17 @@ export default class Restan extends React.Component {
                 return false;
             }
         }
+
+        this.setState({
+            modalGps: {
+                ...this.state.modalGps,
+                showModal: true
+            },
+            modalLoading: {
+                ...this.state.modalLoading,
+                showModal: false
+            }
+        });
         return false;
     }
 
