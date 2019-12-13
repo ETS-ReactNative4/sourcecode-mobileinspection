@@ -59,18 +59,20 @@ export function notificationDeeplinkSetup(props) {
     }
 }
 
-export const displayNotificationTemuan = () => {
+export function displayNotificationTemuan(props) {
     const login = TaskServices.getAllData('TR_LOGIN');
     const user_auth = login[0].USER_AUTH_CODE;
 
-    var data = TaskServices.query('TR_FINDING', `PROGRESS < 100 AND ASSIGN_TO = "${user_auth}"`);
+    // var data = TaskServices.query('TR_FINDING', `PROGRESS < 100 AND ASSIGN_TO = "${user_auth}"`);
+    var data = TaskServices.query('TR_FINDING', `ASSIGN_TO = "${user_auth}"`);
 
     var reminderData = []
 
     data.map(item => {
-        if (item.DUE_DATE != undefined) {
-            reminderData.push(item);
-        }
+        // if (item.DUE_DATE != undefined) {
+        //     reminderData.push(item);
+        // }
+        reminderData.push(item);
     })
 
     setTimeout(() => {
@@ -110,26 +112,36 @@ export const displayNotificationTemuan = () => {
                 notification.android.setBigText(body)
                 notification.android.setBigPicture(showPicNotification);
                 notification.android.setPriority(firebase.notifications.Android.Priority.High);
+                notification.android.setBadgeIconType(firebase.notifications.Android.BadgeIconType.Small);
                 notification.android.setAutoCancel(true);
             }
 
             // Schedule the notification base on due date in the future
-            console.log('DUE DATE : ', item.DUE_DATE);
 
-            var startdate = moment(item.DUE_DATE + ' 11:30:00');
-            startdate = startdate.subtract(1, "days");
+            var startdate = moment("2019-13-12 14:30:00");
+            // startdate = startdate.subtract(1, "days");
 
-            console.log('Notification Set');
+            // console.log('DUE DATE : ', item.DUE_DATE);
+
+            // console.log('Notification Set');
 
             // Display the notification
             firebase.notifications().scheduleNotification(notification, {
                 fireDate: startdate.valueOf()
             });
+
+            this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
+                firebase.notifications().removeDeliveredNotification(notificationOpen.notification.notificationId);
+                if (notificationOpen.notification._data.key === 'DetailFinding') {
+                    props.navigation.navigate('DetailFinding', { ID: notification._data.findingCode });
+                }
+
+            });
         })
     }, 1000)
 }
 
-export function displayNotificationSync() {
+export function displayNotificationSync(props) {
 
     const syncdays = syncDays();
 
@@ -139,52 +151,65 @@ export function displayNotificationSync() {
         const username = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', userauth);
 
         let body = username.FULLNAME + ' , kamu belum melakukan sync data selama ' + syncdays + ' hari. Segera lakukan sync data ya..';
-
-        const notification = new firebase.notifications.Notification()
+     
+        const notification = new firebase.notifications.Notification({
+            sound: 'default',
+            show_in_foreground: true,
+            show_in_background: true,
+            largeIcon: "ic_launcher_v2",
+            smallIcon: "ic_launcher_v2",
+        })
             .setNotificationId(getTodayDate('YYYYMMDDHHmmss'))
             .setTitle('Belum Sync')
             .setSubtitle('Sync')
             .setBody(body)
-            .setData({ key1: 'value1', key2: 'value2', })
+            .setData({ key: 'Sync' })
             .setSound('default')
 
         if (Platform.OS === "android") {
             notification.android.setChannelId('mobile-inspection-channel');
-            notification.android.setBadgeIconType(firebase.notifications.Android.BadgeIconType.Small);
             notification.android.setBigText(body);
+            notification.android.setSmallIcon('notification_image')
         }
 
         // Display the notification
         firebase.notifications().displayNotification(notification);
+
+        this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
+            firebase.notifications().removeDeliveredNotification(notificationOpen.notification.notificationId);
+            if (notificationOpen.notification._data.key === 'Sync') {
+                props.navigation.navigate('Sync');
+            }
+        });
     }
 }
 
-export const notificationOpenedListener = (props) => {
+// export function notificationOpenedListener(props) {
 
-    // firebase.notifications().getInitialNotification()
-    //     .then((notificationOpen) => {
-    //         if (notificationOpen) {
-    //             // App was opened by a notification
-    //             // Get the action triggered by the notification being opened
-    //             const action = notificationOpen.action;
-    //             // Get information about the notification that was opened
-    //             console.log(action)
-    //             const notification = notificationOpen.notification;
-    //             firebase.notifications().removeDeliveredNotification(notification.notificationId);
-    //             if (notification._data.key === 'DetailFinding') {
-    //                 props.navigation.navigate('DetailFinding', { ID: notification._data.findingCode });
-    //             }
-    //         }
-    //     });
+//     // firebase.notifications().getInitialNotification()
+//     //     .then((notificationOpen) => {
+//     //         if (notificationOpen) {
+//     //             // App was opened by a notification
+//     //             // Get the action triggered by the notification being opened
+//     //             const action = notificationOpen.action;
+//     //             // Get information about the notification that was opened
+//     //             console.log(action)
+//     //             const notification = notificationOpen.notification;
+//     //             firebase.notifications().removeDeliveredNotification(notification.notificationId);
+//     //             if (notification._data.key === 'DetailFinding') {
+//     //                 props.navigation.navigate('DetailFinding', { ID: notification._data.findingCode });
+//     //             }
+//     //         }
+//     //     });
 
-    // app in background
-    firebase.notifications().onNotificationOpened((notificationOpen) => {
-        console.log('Notification Open : ', notificationOpen)
-        const { notification } = notificationOpen;
-        firebase.notifications().removeDeliveredNotification(notification.notificationId);
-        if (notification._data.key === 'DetailFinding') {
-            props.navigation.navigate('DetailFinding', { ID: notification._data.findingCode });
-        }
-    })
+//     this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
+//         console.log('Notification Open : ', notificationOpen);
+//         const { notification } = notificationOpen;
+//         firebase.notifications().removeDeliveredNotification(notification.notificationId);
+//         if (notification._data.key === 'DetailFinding') {
+//             props.navigation.navigate('DetailFinding', { ID: notification._data.findingCode });
+//         }
+//     });
 
-}
+
+// }

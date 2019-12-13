@@ -173,10 +173,10 @@ class HomeScreen extends React.Component {
   async componentDidMount() {
 
     /** NOTIFICATION LOCAL */
-    displayNotificationSync();
-    displayNotificationTemuan();
-    notificationDeeplinkSetup(this.props);
+    // notificationDeeplinkSetup(this.props);
     await this.putFCMConfig();
+    displayNotificationSync(this.props);
+    displayNotificationTemuan(this.props);
 
     RNFS.mkdir(dirDatabase);
     RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
