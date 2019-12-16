@@ -63,16 +63,14 @@ export function displayNotificationTemuan(props) {
     const login = TaskServices.getAllData('TR_LOGIN');
     const user_auth = login[0].USER_AUTH_CODE;
 
-    // var data = TaskServices.query('TR_FINDING', `PROGRESS < 100 AND ASSIGN_TO = "${user_auth}"`);
-    var data = TaskServices.query('TR_FINDING', `ASSIGN_TO = "${user_auth}"`);
+    var data = TaskServices.query('TR_FINDING', `PROGRESS < 100 AND ASSIGN_TO = "${user_auth}"`);
 
     var reminderData = []
 
     data.map(item => {
-        // if (item.DUE_DATE != undefined) {
-        //     reminderData.push(item);
-        // }
-        reminderData.push(item);
+        if (item.DUE_DATE != undefined) {
+            reminderData.push(item);
+        }
     })
 
     setTimeout(() => {
@@ -103,27 +101,21 @@ export function displayNotificationTemuan(props) {
                 .setNotificationId(item.FINDING_CODE + getTodayDate('YYYYMMDDHHmmss'))
                 .setTitle('Temuan Overdue')
                 .setSubtitle('Temuan')
-                .setBody(body)
                 .setData({ key: 'DetailFinding', findingCode: item.FINDING_CODE })
                 .setSound('default')
 
             if (Platform.OS === "android") {
                 notification.android.setChannelId('mobile-inspection-channel');
                 notification.android.setBigText(body)
-                notification.android.setBigPicture(showPicNotification);
                 notification.android.setPriority(firebase.notifications.Android.Priority.High);
                 notification.android.setBadgeIconType(firebase.notifications.Android.BadgeIconType.Small);
                 notification.android.setAutoCancel(true);
+                notification.android.setSmallIcon('notification_image');
             }
 
             // Schedule the notification base on due date in the future
-
-            var startdate = moment("2019-13-12 14:30:00");
-            // startdate = startdate.subtract(1, "days");
-
-            // console.log('DUE DATE : ', item.DUE_DATE);
-
-            // console.log('Notification Set');
+            var startdate = moment(item.DUE_DATE + " 06:00:00");
+            startdate = startdate.subtract(1, "days");
 
             // Display the notification
             firebase.notifications().scheduleNotification(notification, {
@@ -135,7 +127,6 @@ export function displayNotificationTemuan(props) {
                 if (notificationOpen.notification._data.key === 'DetailFinding') {
                     props.navigation.navigate('DetailFinding', { ID: notification._data.findingCode });
                 }
-
             });
         })
     }, 1000)
@@ -151,7 +142,7 @@ export function displayNotificationSync(props) {
         const username = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', userauth);
 
         let body = username.FULLNAME + ' , kamu belum melakukan sync data selama ' + syncdays + ' hari. Segera lakukan sync data ya..';
-     
+
         const notification = new firebase.notifications.Notification({
             sound: 'default',
             show_in_foreground: true,

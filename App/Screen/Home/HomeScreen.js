@@ -173,8 +173,8 @@ class HomeScreen extends React.Component {
   async componentDidMount() {
 
     /** NOTIFICATION LOCAL */
-    // notificationDeeplinkSetup(this.props);
     await this.putFCMConfig();
+    notificationDeeplinkSetup(this.props);
     displayNotificationSync(this.props);
     displayNotificationTemuan(this.props);
 
