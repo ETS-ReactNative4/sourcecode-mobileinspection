@@ -47,6 +47,7 @@ export default class Restan extends React.Component {
                 longitudeDelta: 0.00721
             },
             poligons: [],
+            currentRestanIndex: 0,
             coordinateRestan: [],
             coordinateRestanFetch: true,
             highlightBlock: [],
@@ -318,14 +319,26 @@ export default class Restan extends React.Component {
         }
     }
 
-    titikRestanSelector(TPH_RESTANT_DAY){
-        switch (TPH_RESTANT_DAY) {
-            case "1":
-                return require('../../Images/icon/ic_restan_1.png');
-            case "2":
-                return require('../../Images/icon/ic_restan_2.png');
-            default:
-                return require('../../Images/icon/ic_restan_3.png');
+    imageRestanTooltip(TPH_RESTANT_DAY, focus){
+        if(focus){
+            switch (TPH_RESTANT_DAY) {
+                case "1":
+                    return require('../../Images/icon/TitikRestan/popup-red-focus.png');
+                case "2":
+                    return require('../../Images/icon/TitikRestan/popup-orange-focus.png');
+                default:
+                    return require('../../Images/icon/TitikRestan/popup-yellow-focus.png');
+            }
+        }
+        else {
+            switch (TPH_RESTANT_DAY) {
+                case "1":
+                    return require('../../Images/icon/TitikRestan/popup-red.png');
+                case "2":
+                    return require('../../Images/icon/TitikRestan/popup-orange.png');
+                default:
+                    return require('../../Images/icon/TitikRestan/popup-yellow.png');
+            }
         }
     }
 
@@ -457,18 +470,6 @@ export default class Restan extends React.Component {
                                         else {
                                             this.restanScrollView.scrollTo({ x: screenWidth, animated: true });
                                         }
-                                        // console.log(coordinate.OPH);
-                                        // this.setState({
-                                        //     modalRestainDetail: true,
-                                        //     restanData:{
-                                        //         block_name: coordinate.BLOCK_NAME,
-                                        //         TPH: coordinate.OPH,
-                                        //         hari: coordinate.TPH_RESTANT_DAY,
-                                        //         janjang: coordinate.JML_JANJANG,
-                                        //         brondolan: coordinate.JML_BRONDOLAN,
-                                        //         taksasi: coordinate.KG_TAKSASI
-                                        //     }
-                                        // })
                                     }}
                                     coordinate={{
                                         latitude: coordinate.LATITUDE,
@@ -485,20 +486,39 @@ export default class Restan extends React.Component {
                                     }}
                                     tracksViewChanges={this.state.coordinateRestanFetch}
                                 >
-                                    <View
-                                        style={{
-                                            justifyContent:"center"
-                                        }}
-                                    >
-                                        <Image
-                                            style={{
-                                                width: 50,
-                                                height: 50
-                                            }}
-                                            source={this.titikRestanSelector(coordinate.TPH_RESTANT_DAY)}
-                                        />
-                                        <Text style={{fontSize: 11, position:"absolute", alignSelf:"center", paddingBottom: 10}}>{`${coordinate.KG_TAKSASI} KG`}</Text>
-                                    </View>
+                                    {
+                                        this.state.currentRestanIndex === index ?
+                                            <View
+                                                style={{
+                                                    justifyContent:"center"
+                                                }}
+                                            >
+                                                <Image
+                                                    style={{
+                                                        width: 120
+                                                    }}
+                                                    source={this.imageRestanTooltip(coordinate.TPH_RESTANT_DAY, true)}
+                                                    resizeMode={"contain"}
+                                                />
+                                                <Text style={{fontSize: 15, position:"absolute", alignSelf:"flex-end", paddingBottom: 10, paddingRight: 10, color: this.styleColorChooser(coordinate.TPH_RESTANT_DAY)}}>{`${coordinate.KG_TAKSASI} `}<Text style={{fontSize: 10, alignItems:"center"}}>kg</Text></Text>
+                                            </View>
+                                            :
+                                            <View
+                                                style={{
+                                                    justifyContent:"center"
+                                                }}
+                                            >
+                                                <Image
+                                                    style={{
+                                                        width: 70,
+                                                        height: 50
+                                                    }}
+                                                    source={this.imageRestanTooltip(coordinate.TPH_RESTANT_DAY, false)}
+                                                    resizeMode={"center"}
+                                                />
+                                                <Text style={{fontSize: 11, position:"absolute", alignSelf:"center", paddingBottom: 10, color: Colors.colorWhite}}>{`${coordinate.KG_TAKSASI} `}<Text style={{fontSize: 9, alignItems:"center"}}>kg</Text></Text>
+                                            </View>
+                                    }
                                 </Marker>
                             )
                         })
@@ -557,6 +577,9 @@ export default class Restan extends React.Component {
                                             longitudeDelta: 0.00500
                                         };
                                         this.map.animateToRegion(region, 1);
+                                        this.setState({
+                                            currentRestanIndex: index
+                                        })
                                     }
                                 }}>
                                 {
@@ -565,64 +588,41 @@ export default class Restan extends React.Component {
                                             <View
                                                 key={index}
                                                 style={{
+                                                    flexDirection: "row",
                                                     backgroundColor: "white",
                                                     borderRadius: 5,
                                                     width: screenWidth - 20,
                                                     margin: 10,
-                                                    alignItems:'center',
                                                     justifyContent:'center'
                                                 }}
                                             >
                                                 <View style={{
-                                                    paddingHorizontal: 10,
-                                                    justifyContent:"space-between",
-                                                    flexDirection: "row"
+                                                    flex: 1,
+                                                    marginRight: 15,
+                                                    paddingVertical: 5,
+                                                    backgroundColor:this.styleColorChooser(coordinateRestanData.TPH_RESTANT_DAY),
+                                                    borderTopLeftRadius: 5,
+                                                    borderBottomLeftRadius: 5,
+                                                    alignItems:'center',
+                                                    justifyContent:'center'
                                                 }}>
-                                                    <View style={{
-                                                        flex: 1,
-                                                        marginRight: 15,
-                                                        paddingVertical: 5,
-                                                        backgroundColor:this.styleColorChooser(coordinateRestanData.TPH_RESTANT_DAY),
-                                                        borderRadius: 5,
-                                                        alignItems:'center',
+                                                    <Text style={{color: Colors.colorWhite}}>Restan</Text>
+                                                    <Text style={{
+                                                        fontSize: 30,
+                                                        color: Colors.colorWhite
+                                                    }}>
+                                                        {coordinateRestanData.TPH_RESTANT_DAY}
+                                                    </Text>
+                                                    <Text style={{color: Colors.colorWhite}}>Hari</Text>
+                                                </View>
+                                                <View
+                                                    style={{
+                                                        flex: 2,
                                                         justifyContent:'center'
                                                     }}>
-                                                        <Text style={{
-                                                            fontSize: 30
-                                                        }}>
-                                                            {numberSeperator(coordinateRestanData.KG_TAKSASI, ",")}
-                                                        </Text>
-                                                        <Text>KG</Text>
-                                                    </View>
-                                                    <View
-                                                        style={{
-                                                            flex: 2,
-                                                            justifyContent:'space-evenly'
-                                                        }}>
-                                                        <View style={{
-                                                            flexDirection:"row",
-                                                            alignItems:"center",
-                                                            justifyContent:"space-between",
-                                                            paddingBottom: 5
-                                                        }}>
-                                                            <Text style={{fontSize: 15, fontWeight: 'bold'}}>{`Restan ${coordinateRestanData.TPH_RESTANT_DAY} Hari`}</Text>
-                                                            <Text style={{fontSize: 10}}>{`${coordinateRestanData.BLOCK_NAME} / TPH ${coordinateRestanData.OPH}`}</Text>
-                                                        </View>
-                                                        <View style={{
-                                                            flexDirection: 'row',
-                                                            justifyContent:'space-between'
-                                                        }}>
-                                                            <Text style={{paddingRight: 5}}>{`Janjang:`}</Text>
-                                                            <Text>{coordinateRestanData.JML_JANJANG}</Text>
-                                                        </View>
-                                                        <View style={{
-                                                            flexDirection: 'row',
-                                                            justifyContent:'space-between'
-                                                        }}>
-                                                            <Text style={{paddingRight: 5}}>{`Brondolan(KG):`}</Text>
-                                                            <Text>{coordinateRestanData.JML_BRONDOLAN}</Text>
-                                                        </View>
-                                                    </View>
+                                                    <Text style={{fontSize: 15, fontWeight: 'bold', color: this.styleColorChooser(coordinateRestanData.TPH_RESTANT_DAY)}}>{`${numberSeperator(coordinateRestanData.KG_TAKSASI, ",")} kg`}</Text>
+                                                    <Text style={{paddingVertical: 5}}>{`${coordinateRestanData.JML_JANJANG} Janjang / ${coordinateRestanData.JML_BRONDOLAN} kg Brondolan`}</Text>
+                                                    <Text style={{fontWeight: 'bold'}}>{`${coordinateRestanData.BLOCK_NAME} / TPH ${coordinateRestanData.OPH}`}</Text>
                                                 </View>
                                             </View>
                                         )
