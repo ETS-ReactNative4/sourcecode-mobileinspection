@@ -128,7 +128,7 @@ class TakePhotoSelfie extends Component {
         this.setState(
           {
             path: imgPath,
-            pathImg: dirPhotoEbccSelfie,
+            pathImg: dirPhotoInspeksiSelfie,
             hasPhoto: true
           }, () => {
             this.resize(imgPath)
