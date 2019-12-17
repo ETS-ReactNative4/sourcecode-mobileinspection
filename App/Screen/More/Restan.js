@@ -9,7 +9,7 @@ import {
     // TouchableOpacity,
     NetInfo,
     ScrollView,
-    Dimensions
+    Dimensions, AsyncStorage
 } from 'react-native';
 
 import MapView, {Marker, Polygon, PROVIDER_GOOGLE, ProviderPropType} from 'react-native-maps';
@@ -50,6 +50,7 @@ export default class Restan extends React.Component {
             currentRestanIndex: 0,
             coordinateRestan: [],
             coordinateRestanFetch: true,
+            latestSyncTime: "",
             highlightBlock: [],
             inspectionType: props.navigation.getParam('inspectionType', 'normal'),
             // modalRestainDetail: false,
@@ -89,6 +90,16 @@ export default class Restan extends React.Component {
         this.loadMap();
     }
 
+    getRestanSyncTime(){
+        AsyncStorage.getItem('titikRestan')
+            .then((restanSyncTime)=>{
+                let data = JSON.parse(restanSyncTime);
+                this.setState({
+                    latestSyncTime: data.latestSyncTime !== null ? data.latestSyncTime.toString() : "Belum Sync"
+                })
+            })
+    };
+
     /* DETECT FAKE GPS */
     // detectFakeGPS() {
     //     navigator.geolocation.getCurrentPosition(
@@ -117,7 +128,8 @@ export default class Restan extends React.Component {
                     setTimeout(()=>{
                         this.fetchRestanCoordinate()
                             .then((response)=>{
-                                this.searchLocation()
+                                this.searchLocation();
+                                this.getRestanSyncTime();
                             })
                     }, 2000)
             }
@@ -380,15 +392,24 @@ export default class Restan extends React.Component {
                     }}
                 />
 
-                {!this.state.internetExist &&
+                {/*{!this.state.internetExist &&*/}
+                {/*<View style={{*/}
+                {/*    padding: 10,*/}
+                {/*    backgroundColor: 'red',*/}
+                {/*    justifyContent: 'center',*/}
+                {/*    alignItems: 'center'*/}
+                {/*}}>*/}
+                {/*    <Text style={{ color: Colors.colorWhite, fontSize: 12 }}>Koneksi internet tidak di temukan!</Text>*/}
+                {/*</View>}*/}
+
                 <View style={{
                     padding: 10,
-                    backgroundColor: 'red',
+                    backgroundColor: 'rgba(221,226,218,1)',
                     justifyContent: 'center',
                     alignItems: 'center'
                 }}>
-                    <Text style={{ color: Colors.colorWhite, fontSize: 12 }}>Koneksi internet tidak di temukan!</Text>
-                </View>}
+                    <Text style={{ color: Colors.text, fontSize: 12 }}>{`Data per tanggal : ${this.state.latestSyncTime}`}</Text>
+                </View>
 
                 <StatusBar
                     hidden={false}

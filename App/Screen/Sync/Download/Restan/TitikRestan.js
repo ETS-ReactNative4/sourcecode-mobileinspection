@@ -16,7 +16,6 @@ export async function getTitikRestan() {
     await getAPIFunction('REPORT-TITIK-RESTAN').then((restanModel) => {
         try {
             if (restanModel !== null) {
-                console.log("RESTAN", restanModel);
                 AsyncStorage.setItem('titikRestan', JSON.stringify({
                     latestSyncTime: moment().format("DD MMM YYYY")
                 }));
