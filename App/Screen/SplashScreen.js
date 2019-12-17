@@ -147,6 +147,8 @@ class SplashScreen extends Component {
 
     async componentDidMount() {
 
+        console.disableYellowBox = true;
+
         var isAllGrandted = await getPermission();
         if (isAllGrandted === true) {
 

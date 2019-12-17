@@ -6,6 +6,7 @@ import Taskservice from '../../Database/TaskServices'
 import TaskServices from '../../Database/TaskServices'
 import { dateDisplayMobile } from '../../Lib/Utils'
 import { getEstateName, getStatusBlok } from '../../Database/Resources';
+import moment from "moment";
 
 export default class HistoryEbcc extends Component {
 
@@ -32,11 +33,36 @@ export default class HistoryEbcc extends Component {
     this.renderAll();
   }
 
-  componentDidMount() {
-    this.renderAll();
+  renderAll() {
+    this.deleteDataEbcc();
+    this.setDataEbcc();
   }
 
-  renderAll = () => {
+  /** 
+   * DELETE DATA EBCC MELEBIHI 7 HARI DAN STATUS SYCNC = 'Y'
+   * ADD BY AMINJU 2019/12/17
+   */
+  deleteDataEbcc() {
+    var data = TaskServices.query('TR_H_EBCC_VALIDATION', `STATUS_SYNC = "Y" AND syncImage = "Y" AND syncDetail = "Y"`);
+    var now = moment(new Date())
+    data.map(item => {
+      let insertTime = item.INSERT_TIME.substring(0, 10);
+      var diff = moment(new Date(insertTime)).diff(now, 'day');
+
+      if (diff > 7) {
+        TaskServices.deleteRecordByPK('TR_H_EBCC_VALIDATION', 'EBCC_VALIDATION_CODE', item.EBCC_VALIDATION_CODE)
+        console.log('Delete Berhasil Data Ebcc')
+      } else {
+        console.log('Diff Range Hari : ', diff)
+      }
+    })
+  }
+
+  /** 
+   * SET DATA EBCC
+   * ADD BY AMINJU 2019/12/17
+   */
+  setDataEbcc() {
     var dataSorted = TaskServices.getAllData('TR_H_EBCC_VALIDATION');
     dataSorted = dataSorted.sorted('INSERT_TIME', true);
     let data = []
@@ -48,6 +74,7 @@ export default class HistoryEbcc extends Component {
     this.setState({ data })
   }
 
+  /** RENDER DATA EBCC */
   renderList = (data, index) => {
     let status = '', colorStatus = '';
     if (data.STATUS_SYNC === 'N' || data.syncImage === 'N' || data.syncDetail === 'N') {

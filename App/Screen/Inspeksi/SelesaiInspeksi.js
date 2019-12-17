@@ -1,14 +1,15 @@
 import React from 'react';
-import {BackHandler, Image, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import { BackHandler, Image, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import Icon from 'react-native-vector-icons/AntDesign'
 import Size from '../../Constant/sizes'
 import Colors from '../../Constant/Colors'
 import Taskservices from '../../Database/TaskServices'
 import R from 'ramda';
-import {NavigationActions, StackActions} from 'react-navigation';
-import {getSticker} from '../../Lib/Utils'
+import { NavigationActions, StackActions } from 'react-navigation';
+import { getSticker } from '../../Lib/Utils'
 import ModalAlertBack from '../../Component/ModalAlert';
+import { retrieveData, storeData } from '../../Database/Resources';
 
 class SelesaiInspeksi extends React.Component {
 
@@ -48,7 +49,8 @@ class SelesaiInspeksi extends React.Component {
             showGwg: false,
             showPrun: false,
             arrTemuan: [],
-            inspectionType
+            inspectionType,
+            dataSuggestions: []
         };
         this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     }
@@ -69,6 +71,7 @@ class SelesaiInspeksi extends React.Component {
     };
 
     componentDidMount() {
+        this.getDataSuggestion();
         this.loadData()
         this.props.navigation.setParams({ handleBack: this.handleBackButtonClick });
     }
@@ -87,6 +90,13 @@ class SelesaiInspeksi extends React.Component {
         return true;
     }
 
+    getDataSuggestion() {
+        retrieveData('SUGGESTION_TEMP').then(result => {
+            if (result != null) {
+                this.setState({ dataSuggestions: result })
+            }
+        });
+    }
 
     getEstateName(werks) {
         try {
@@ -97,7 +107,7 @@ class SelesaiInspeksi extends React.Component {
         }
     }
 
-    loadTemuan(){
+    loadTemuan() {
         let data = Taskservices.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION)
         if (data !== undefined) {
             let tempInspeksiTemuan = [];
@@ -492,7 +502,24 @@ class SelesaiInspeksi extends React.Component {
         )
     }
 
+    /**
+     * DELETE DATA SUGGESTION, KONDISI INSPEKSI SELESAI
+     */
+
+    updateDataSuggestion() {
+        var array = this.state.dataSuggestions; // make a separate copy of the array
+
+        if (array.length > 0) {
+            var index = array.pop
+            if (index !== -1) {
+                array.splice(index, 1);
+                storeData('SUGGESTION_TEMP', array);
+            }
+        }
+    }
+
     selesai = () => {
+
         const navigation = this.props.navigation;
         let routeName = 'MainMenu';
         Promise.all([
@@ -503,6 +530,8 @@ class SelesaiInspeksi extends React.Component {
                 })
             )]).then(() => navigation.navigate('Inspection')).then(() => navigation.navigate('Riwayat'))
         this.setState({ showModalBack: false })
+        this.updateDataSuggestion();
+
     }
 
     colorTextScore(param) {
