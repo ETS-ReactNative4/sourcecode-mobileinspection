@@ -93,16 +93,16 @@ export function displayNotificationTemuan() {
             const INSERT_USER = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', item.INSERT_USER);
             let FULLNAME = INSERT_USER == undefined ? 'User belum terdaftar. Hubungi Admin.' : INSERT_USER.FULLNAME;
 
-            let picNotification = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', item.FINDING_CODE)
+            // let picNotification = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', item.FINDING_CODE)
 
-            let showPicNotification;
-            let pathImage = `file://${dirPhotoTemuan}/${picNotification.IMAGE_NAME}`;
-            if (picNotification != undefined) {
-                if (picNotification.IMAGE_NAME != undefined)
-                    showPicNotification = pathImage;
-            }
+            // let showPicNotification;
+            // let pathImage = `file://${dirPhotoTemuan}/${picNotification.IMAGE_NAME}`;
+            // if (picNotification != undefined) {
+            //     if (picNotification.IMAGE_NAME != undefined)
+            //         showPicNotification = pathImage;
+            // }
 
-            console.log("Insert User : " + item.INSERT_USER + item.ASSIGN_TO);
+            // console.log("Insert User : " + item.INSERT_USER + item.ASSIGN_TO);
 
             let body = '';
             if (item.INSERT_USER === item.ASSIGN_TO) {

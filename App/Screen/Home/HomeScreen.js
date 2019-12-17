@@ -23,8 +23,16 @@ import { changeFormatDate, dateDisplayMobile, isNotUserMill, syncDays, notifInbo
 import FastImage from 'react-native-fast-image'
 import SwiperSlider from 'react-native-swiper'
 import {
+  dirDatabase,
+  dirSummary,
+  dirPhotoInspeksiBaris,
+  dirPhotoInspeksiSelfie,
   dirPhotoTemuan,
-  dirDatabase
+  dirPhotoKategori,
+  dirPhotoEbccJanjang,
+  dirPhotoEbccSelfie,
+  dirPhotoUser,
+  dirMaps
 } from '../../Lib/dirStorage';
 
 import WeeklySummary from "../../Component/WeeklySummary";
@@ -35,14 +43,13 @@ import { getBlokName, getCategoryName, getEstateName, getStatusBlok, retrieveDat
 
 import RNFS from 'react-native-fs'
 
-import {getFCMToken, notificationDeeplinkSetup} from '../../Notification/NotificationListener';
+import { getFCMToken, notificationDeeplinkSetup, displayNotificationSync, displayNotificationTemuan } from '../../Notification/NotificationListener';
 
 
 let { width } = Dimensions.get('window')
 
 import Header from '../../Component/Header'
-import { displayNotificationTemuan, displayNotificationSync, notificationOpenedListener } from '../../Notification/NotificationListener';
-import {fetchPut} from "../../Api/FetchingApi";
+import { fetchPut } from "../../Api/FetchingApi";
 
 class HomeScreen extends React.Component {
 
@@ -114,7 +121,7 @@ class HomeScreen extends React.Component {
   }
 
   componentWillUnmount() {
-      this.willFocus.remove();
+    this.willFocus.remove();
   }
 
 
@@ -179,22 +186,32 @@ class HomeScreen extends React.Component {
     notificationDeeplinkSetup(this.props);
 
     RNFS.mkdir(dirDatabase);
+    RNFS.mkdir(dirSummary);
+    RNFS.mkdir(dirPhotoInspeksiBaris);
+    RNFS.mkdir(dirPhotoInspeksiSelfie);
+    RNFS.mkdir(dirPhotoTemuan);
+    RNFS.mkdir(dirPhotoKategori);
+    RNFS.mkdir(dirPhotoEbccJanjang);
+    RNFS.mkdir(dirPhotoEbccSelfie);
+    RNFS.mkdir(dirPhotoUser);
+    RNFS.mkdir(dirMaps);
+
     RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
   }
 
-    async putFCMConfig(){
-        let fcmTokenRequest = null;
-        await getFCMToken()
-            .then((fcmToken)=>{
-                if(fcmToken !== null){
-                    fcmTokenRequest = {
-                        FIREBASE_TOKEN: fcmToken
-                    }
-                }
-            });
+  async putFCMConfig() {
+    let fcmTokenRequest = null;
+    await getFCMToken()
+      .then((fcmToken) => {
+        if (fcmToken !== null) {
+          fcmTokenRequest = {
+            FIREBASE_TOKEN: fcmToken
+          }
+        }
+      });
 
-        await fetchPut("FIREBASE-TOKEN", fcmTokenRequest, null);
-    };
+    await fetchPut("FIREBASE-TOKEN", fcmTokenRequest, null);
+  };
 
   _changeFilterList = data => {
     if (data != undefined) {
