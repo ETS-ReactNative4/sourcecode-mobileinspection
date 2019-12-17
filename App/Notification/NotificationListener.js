@@ -37,9 +37,16 @@ export function notificationDeeplinkSetup(props) {
         //deeplink (kalo appny belum kebuka)
         firebase.notifications().getInitialNotification()
             .then((notificationOpen: NotificationOpen) => {
+                firebase.notifications().removeDeliveredNotification(notificationOpen.notification.notificationId);
                 switch (notificationOpen.notification._data.DEEPLINK) {
                     case "RESTAN":
                         props.navigation.navigate("Restan");
+                        break;
+                    case "DETAIL_FINDING":
+                        props.navigation.navigate("DetailFinding", { ID: notificationOpen.notification._data.FINDING_CODE });
+                        break;
+                    case "SYNC":
+                        props.navigation.navigate("Sync");
                         break;
                     default:
                         break;
@@ -48,9 +55,16 @@ export function notificationDeeplinkSetup(props) {
 
         //setup kalo appny di background
         this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
+            firebase.notifications().removeDeliveredNotification(notificationOpen.notification.notificationId);
             switch (notificationOpen.notification._data.DEEPLINK) {
                 case "RESTAN":
                     props.navigation.navigate("Restan");
+                    break;
+                case "DETAIL_FINDING":
+                    props.navigation.navigate("DetailFinding", { ID: notificationOpen.notification._data.findingCode });
+                    break;
+                case "SYNC":
+                    props.navigation.navigate("Sync");
                     break;
                 default:
                     break;
@@ -59,7 +73,7 @@ export function notificationDeeplinkSetup(props) {
     }
 }
 
-export function displayNotificationTemuan(props) {
+export function displayNotificationTemuan() {
     const login = TaskServices.getAllData('TR_LOGIN');
     const user_auth = login[0].USER_AUTH_CODE;
 
@@ -88,8 +102,10 @@ export function displayNotificationTemuan(props) {
                     showPicNotification = pathImage;
             }
 
+            console.log("Insert User : " + item.INSERT_USER + item.ASSIGN_TO);
+
             let body = '';
-            if (item.INSERT_USER == item.ASSGIN_TO) {
+            if (item.INSERT_USER === item.ASSIGN_TO) {
                 body = 'Temuan yang kamu akan melewati batas waktu pada ' + dateDisplayMobileWithoutHours(item.DUE_DATE)
                     + '. Selesaikan temuan ini yuk!';
             } else {
@@ -101,7 +117,7 @@ export function displayNotificationTemuan(props) {
                 .setNotificationId(item.FINDING_CODE + getTodayDate('YYYYMMDDHHmmss'))
                 .setTitle('Temuan Overdue')
                 .setSubtitle('Temuan')
-                .setData({ key: 'DetailFinding', findingCode: item.FINDING_CODE })
+                .setData({ DEEPLINK: 'DETAIL_FINDING', FINDING_CODE: item.FINDING_CODE })
                 .setSound('default')
 
             if (Platform.OS === "android") {
@@ -121,18 +137,11 @@ export function displayNotificationTemuan(props) {
             firebase.notifications().scheduleNotification(notification, {
                 fireDate: startdate.valueOf()
             });
-
-            this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
-                firebase.notifications().removeDeliveredNotification(notificationOpen.notification.notificationId);
-                if (notificationOpen.notification._data.key === 'DetailFinding') {
-                    props.navigation.navigate('DetailFinding', { ID: notification._data.findingCode });
-                }
-            });
         })
     }, 1000)
 }
 
-export function displayNotificationSync(props) {
+export function displayNotificationSync() {
 
     const syncdays = syncDays();
 
@@ -154,7 +163,7 @@ export function displayNotificationSync(props) {
             .setTitle('Belum Sync')
             .setSubtitle('Sync')
             .setBody(body)
-            .setData({ key: 'Sync' })
+            .setData({ DEEPLINK: 'SYNC' })
             .setSound('default')
 
         if (Platform.OS === "android") {
@@ -165,42 +174,5 @@ export function displayNotificationSync(props) {
 
         // Display the notification
         firebase.notifications().displayNotification(notification);
-
-        this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
-            firebase.notifications().removeDeliveredNotification(notificationOpen.notification.notificationId);
-            if (notificationOpen.notification._data.key === 'Sync') {
-                props.navigation.navigate('Sync');
-            }
-        });
     }
 }
-
-// export function notificationOpenedListener(props) {
-
-//     // firebase.notifications().getInitialNotification()
-//     //     .then((notificationOpen) => {
-//     //         if (notificationOpen) {
-//     //             // App was opened by a notification
-//     //             // Get the action triggered by the notification being opened
-//     //             const action = notificationOpen.action;
-//     //             // Get information about the notification that was opened
-//     //             console.log(action)
-//     //             const notification = notificationOpen.notification;
-//     //             firebase.notifications().removeDeliveredNotification(notification.notificationId);
-//     //             if (notification._data.key === 'DetailFinding') {
-//     //                 props.navigation.navigate('DetailFinding', { ID: notification._data.findingCode });
-//     //             }
-//     //         }
-//     //     });
-
-//     this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
-//         console.log('Notification Open : ', notificationOpen);
-//         const { notification } = notificationOpen;
-//         firebase.notifications().removeDeliveredNotification(notification.notificationId);
-//         if (notification._data.key === 'DetailFinding') {
-//             props.navigation.navigate('DetailFinding', { ID: notification._data.findingCode });
-//         }
-//     });
-
-
-// }
