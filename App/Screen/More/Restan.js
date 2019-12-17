@@ -464,12 +464,16 @@ export default class Restan extends React.Component {
                                 <Marker
                                     key={index}
                                     onPress={()=>{
-                                        if(index !== 0){
-                                            this.restanScrollView.scrollTo({ x: (index*screenWidth), animated: true });
-                                        }
-                                        else {
-                                            this.restanScrollView.scrollTo({ x: screenWidth, animated: true });
-                                        }
+                                        this.setState({
+                                            currentRestanIndex: index
+                                        },()=>{
+                                            if(index !== 0){
+                                                this.restanScrollView.scrollTo({ x: (index*screenWidth), animated: true });
+                                            }
+                                            else {
+                                                this.restanScrollView.scrollTo({ x: screenWidth, animated: true });
+                                            }
+                                        })
                                     }}
                                     coordinate={{
                                         latitude: coordinate.LATITUDE,
