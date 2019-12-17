@@ -347,9 +347,9 @@ export default class Restan extends React.Component {
             case 1:
                 return "rgba(208,2,27,1)";
             case 2:
-                return "rgba(255,179,0,1)";
+                return "rgba(242,101,34,1)";
             default:
-                return "rgba(255,247,0,1)";
+                return "rgba(226,170,3,1)";
         }
     }
 
