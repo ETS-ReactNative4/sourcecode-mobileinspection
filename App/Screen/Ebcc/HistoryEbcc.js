@@ -66,7 +66,7 @@ export default class HistoryEbcc extends Component {
       let insertTime = item.INSERT_TIME.substring(0, 10);
       var diff = moment(new Date(insertTime)).diff(now, 'day');
 
-      if (diff == 0) {
+      if (diff > 7) {
         this.querySelectImagePath(item.EBCC_VALIDATION_CODE);
       } else {
         console.log('Diff Range Hari : ', diff)
