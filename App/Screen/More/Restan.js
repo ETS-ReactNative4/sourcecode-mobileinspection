@@ -72,12 +72,6 @@ export default class Restan extends React.Component {
                 showModal: false,
                 title: "Sabar Ya..",
                 message: "Sedang mencari lokasi kamu nih"
-            },
-            modalGps: {
-                showModal: false,
-                title: 'Gps tidak di temukan',
-                message: 'Signal gps tidak di temukan, coba lagi!',
-                icon: require('../../Images/ic-no-gps.png')
             }
         };
     }
@@ -252,35 +246,21 @@ export default class Restan extends React.Component {
     }
 
     async getLocation() {
-        if (this.state.latitude && this.state.longitude) {
-            let poligons = this.getPolygons();
-            if (poligons !== null) {
-                await this.setState({
-                    modalLoading: { ...this.state.modalLoading, showModal: false },
-                    poligons
-                });
-                return true;
-            }
-            else {
-                await this.setState({
-                    modalLoading: { ...this.state.modalLoading, showModal: false },
-                    modalAlert: { ...AlertContent.no_polygon }
-                });
-                return false;
-            }
+        let poligons = this.getPolygons();
+        if (poligons !== null) {
+            await this.setState({
+                modalLoading: { ...this.state.modalLoading, showModal: false },
+                poligons
+            });
+            return true;
         }
-
-        this.setState({
-            modalGps: {
-                ...this.state.modalGps,
-                showModal: true
-            },
-            modalLoading: {
-                ...this.state.modalLoading,
-                showModal: false
-            }
-        });
-        return false;
+        else {
+            await this.setState({
+                modalLoading: { ...this.state.modalLoading, showModal: false },
+                modalAlert: { ...AlertContent.no_polygon }
+            });
+            return false;
+        }
     }
 
     getTitikRestan(){
@@ -428,13 +408,6 @@ export default class Restan extends React.Component {
                     onPressCancel={() => this.setState({ modalAlert: { ...this.state.modalAlert, showModal: false } })}
                     title={this.state.modalAlert.title}
                     message={this.state.modalAlert.message} />
-
-                <ModalAlert
-                    icon={this.state.modalGps.icon}
-                    visible={this.state.modalGps.showModal}
-                    onPressCancel={() => this.setState({ modalGps: { ...this.state.modalGps, showModal: false } })}
-                    title={this.state.modalGps.title}
-                    message={this.state.modalGps.message} />
 
                 <MapView
                     ref={map => this.map = map}
