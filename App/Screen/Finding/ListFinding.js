@@ -17,7 +17,6 @@ import { getBlokName, getEstateName } from '../../Database/Resources';
 import FeatureDaftarTemuan from '../../Component/FeatureDaftarTemuan'
 import TemplateNoData from '../../Component/TemplateNoData';
 import { Images } from '../../Themes';
-import { displayNotificationTemuan } from '../../Notification/NotificationListener';
 
 export default class ListFinding extends Component {
 
@@ -42,10 +41,6 @@ export default class ListFinding extends Component {
       this._initData()
     }
   )
-
-  componentWillMount() {
-  }
-
   componentWillUnmount() {
     this.willFocus.remove()
   }
