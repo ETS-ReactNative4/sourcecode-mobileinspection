@@ -56,7 +56,7 @@ export default class HistoryEbcc extends Component {
   }
 
   /** 
-   * DELETE DATA EBCC MELEBIHI 7 HARI DAN STATUS SYCNC = 'Y'
+   * DELETE DATA EBCC MELEBIHI 7 HARI DAN STATUS SYNC = 'Y'
    * ADD BY AMINJU 2019/12/17
    */
   deleteDataEbcc() {
