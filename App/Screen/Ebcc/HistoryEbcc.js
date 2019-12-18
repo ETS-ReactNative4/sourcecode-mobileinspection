@@ -7,6 +7,7 @@ import TaskServices from '../../Database/TaskServices'
 import { dateDisplayMobile } from '../../Lib/Utils'
 import { getEstateName, getStatusBlok } from '../../Database/Resources';
 import moment from "moment";
+import RNFS from 'react-native-fs';
 
 export default class HistoryEbcc extends Component {
 
@@ -39,26 +40,6 @@ export default class HistoryEbcc extends Component {
   }
 
   /** 
-   * DELETE DATA EBCC MELEBIHI 7 HARI DAN STATUS SYCNC = 'Y'
-   * ADD BY AMINJU 2019/12/17
-   */
-  deleteDataEbcc() {
-    var data = TaskServices.query('TR_H_EBCC_VALIDATION', `STATUS_SYNC = "Y" AND syncImage = "Y" AND syncDetail = "Y"`);
-    var now = moment(new Date())
-    data.map(item => {
-      let insertTime = item.INSERT_TIME.substring(0, 10);
-      var diff = moment(new Date(insertTime)).diff(now, 'day');
-
-      if (diff > 7) {
-        TaskServices.deleteRecordByPK('TR_H_EBCC_VALIDATION', 'EBCC_VALIDATION_CODE', item.EBCC_VALIDATION_CODE)
-        console.log('Delete Berhasil Data Ebcc')
-      } else {
-        console.log('Diff Range Hari : ', diff)
-      }
-    })
-  }
-
-  /** 
    * SET DATA EBCC
    * ADD BY AMINJU 2019/12/17
    */
@@ -72,6 +53,64 @@ export default class HistoryEbcc extends Component {
       });
     }
     this.setState({ data })
+  }
+
+  /** 
+   * DELETE DATA EBCC MELEBIHI 7 HARI DAN STATUS SYCNC = 'Y'
+   * ADD BY AMINJU 2019/12/17
+   */
+  deleteDataEbcc() {
+    var data = TaskServices.query('TR_H_EBCC_VALIDATION', `STATUS_SYNC = "Y" AND syncImage = "Y" AND syncDetail = "Y"`);
+    var now = moment(new Date())
+    data.map(item => {
+      let insertTime = item.INSERT_TIME.substring(0, 10);
+      var diff = moment(new Date(insertTime)).diff(now, 'day');
+
+      if (diff == 0) {
+        this.querySelectImagePath(item.EBCC_VALIDATION_CODE);
+      } else {
+        console.log('Diff Range Hari : ', diff)
+      }
+    })
+  }
+
+  /** 
+   * QUERY SELECT IMAGE EBCC YANG AKAN DI DELETE
+   * ADD BY AMINJU 2019/12/18
+   */
+  querySelectImagePath(trCode) {
+    let dataImage = TaskServices.query('TR_IMAGE', `STATUS_SYNC = "Y" AND TR_CODE = "${trCode}"`);
+
+    console.log('Tabel Image Ebcc : ', dataImage);
+
+    if (dataImage != undefined) {
+      dataImage.map(item => {
+        this.deleteImageFileEbcc(item.IMAGE_PATH_LOCAL, trCode)
+      })
+    }
+  }
+
+
+  /** 
+   * DELETE IMAGE EBCC MELEBIHI 7 HARI DAN STATUS SYCNC = 'Y'
+   * ADD BY AMINJU 2019/12/18
+   */
+  async deleteImageFileEbcc(path, primaryKey) {
+    RNFS.exists(path)
+      .then((result) => {
+        if (result) {
+          RNFS.unlink(path)
+            .then(() => {
+              console.log(`${path} DELETED`);
+              TaskServices.deleteRecordByPK('TR_H_EBCC_VALIDATION', 'EBCC_VALIDATION_CODE', primaryKey);
+            });
+        } else {
+          TaskServices.deleteRecordByPK('TR_H_EBCC_VALIDATION', 'EBCC_VALIDATION_CODE', primaryKey)
+        }
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
   }
 
   /** RENDER DATA EBCC */
