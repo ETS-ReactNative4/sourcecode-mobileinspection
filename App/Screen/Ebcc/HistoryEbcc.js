@@ -56,7 +56,7 @@ export default class HistoryEbcc extends Component {
   }
 
   /** 
-   * DELETE DATA EBCC MELEBIHI 7 HARI DAN STATUS SYCNC = 'Y'
+   * DELETE DATA EBCC MELEBIHI 7 HARI DAN STATUS SYNC = 'Y'
    * ADD BY AMINJU 2019/12/17
    */
   deleteDataEbcc() {
@@ -66,7 +66,7 @@ export default class HistoryEbcc extends Component {
       let insertTime = item.INSERT_TIME.substring(0, 10);
       var diff = moment(new Date(insertTime)).diff(now, 'day');
 
-      if (diff == 0) {
+      if (diff < -7) {
         this.querySelectImagePath(item.EBCC_VALIDATION_CODE);
       } else {
         console.log('Diff Range Hari : ', diff)
@@ -80,9 +80,6 @@ export default class HistoryEbcc extends Component {
    */
   querySelectImagePath(trCode) {
     let dataImage = TaskServices.query('TR_IMAGE', `STATUS_SYNC = "Y" AND TR_CODE = "${trCode}"`);
-
-    console.log('Tabel Image Ebcc : ', dataImage);
-
     if (dataImage != undefined) {
       dataImage.map(item => {
         this.deleteImageFileEbcc(item.IMAGE_PATH_LOCAL, trCode)
@@ -166,23 +163,6 @@ export default class HistoryEbcc extends Component {
         </Card>
       </TouchableOpacity>
     );
-  }
-
-  getColor(param) {
-    switch (param) {
-      case 'A':
-        return Colors.brand;
-      case 'B':
-        return '#feb236';
-      case 'C':
-        return '#ff7b25';
-      case 'F':
-        return 'red';
-      case 'string':
-        return '#C8C8C8'
-      default:
-        return '#C8C8C8';
-    }
   }
 
   actionButtonClick(data) {

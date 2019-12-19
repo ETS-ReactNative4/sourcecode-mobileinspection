@@ -729,8 +729,8 @@ export default class SyncScreen extends React.Component {
 
         this._deleteTRLog();
         this._deleteFinding();
-        this.deleteEbccHeader();
-        this.deleteEbccDetail();
+        // this.deleteEbccHeader();
+        // this.deleteEbccDetail();
         // this.deleteGenbaSelected();
         // this.deleteGenbaInspection();
 
