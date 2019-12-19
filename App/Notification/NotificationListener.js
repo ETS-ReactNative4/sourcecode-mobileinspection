@@ -34,16 +34,39 @@ function unsubscribeTopic(topicName: string) {
 export function notificationDeeplinkSetup(props) {
     let currentUser = TaskServices.getAllData('TR_LOGIN');
     if (currentUser[0].USER_ROLE === "ASISTEN_LAPANGAN") {
+
         //deeplink (kalo appny belum kebuka)
         firebase.notifications().getInitialNotification()
             .then((notificationOpen: NotificationOpen) => {
+                if (notificationOpen) {
+                    firebase.notifications().removeDeliveredNotification(notificationOpen.notification.notificationId);
+                    switch (notificationOpen.notification._data.DEEPLINK) {
+                        case "RESTAN":
+                            props.navigation.navigate("Restan");
+                            break;
+                        case "DETAIL_FINDING":
+                            props.navigation.navigate("DetailFinding", { ID: notificationOpen.notification._data.FINDING_CODE });
+                            break;
+                        case "SYNC":
+                            props.navigation.navigate("Sync");
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+            });
+
+        //setup kalo appny di background
+        this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
+            if (notificationOpen) {
                 firebase.notifications().removeDeliveredNotification(notificationOpen.notification.notificationId);
                 switch (notificationOpen.notification._data.DEEPLINK) {
                     case "RESTAN":
                         props.navigation.navigate("Restan");
                         break;
                     case "DETAIL_FINDING":
-                        props.navigation.navigate("DetailFinding", { ID: notificationOpen.notification._data.FINDING_CODE });
+                        props.navigation.navigate("DetailFinding", { ID: notificationOpen.notification._data.FINDING_CODE  });
                         break;
                     case "SYNC":
                         props.navigation.navigate("Sync");
@@ -51,94 +74,80 @@ export function notificationDeeplinkSetup(props) {
                     default:
                         break;
                 }
-            });
-
-        //setup kalo appny di background
-        this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
-            firebase.notifications().removeDeliveredNotification(notificationOpen.notification.notificationId);
-            switch (notificationOpen.notification._data.DEEPLINK) {
-                case "RESTAN":
-                    props.navigation.navigate("Restan");
-                    break;
-                case "DETAIL_FINDING":
-                    props.navigation.navigate("DetailFinding", { ID: notificationOpen.notification._data.findingCode });
-                    break;
-                case "SYNC":
-                    props.navigation.navigate("Sync");
-                    break;
-                default:
-                    break;
             }
         });
     }
 }
 
-export function displayNotificationTemuan() {
+export async function displayNotificationTemuan() {
     const login = TaskServices.getAllData('TR_LOGIN');
     const user_auth = login[0].USER_AUTH_CODE;
 
     var data = TaskServices.query('TR_FINDING', `PROGRESS < 100 AND ASSIGN_TO = "${user_auth}"`);
 
-    var reminderData = []
+    await Promise.all(
+        data.map(async (item) => {
+            var now = moment(new Date());
+            if (item.DUE_DATE != undefined) {
+                const dueDate = item.DUE_DATE.substring(0, 10);
+                var diff = moment(new Date(dueDate)).diff(now, 'day');
+                if (diff > 0) {
+                    const INSERT_USER = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', item.INSERT_USER);
+                    let FULLNAME = INSERT_USER == undefined ? 'User belum terdaftar. Hubungi Admin.' : INSERT_USER.FULLNAME;
 
-    data.map(item => {
-        if (item.DUE_DATE != undefined) {
-            reminderData.push(item);
-        }
-    })
+                    let body = '';
+                    if (item.INSERT_USER === item.ASSIGN_TO) {
+                        body = 'Temuan yang kamu akan melewati batas waktu pada ' + dateDisplayMobileWithoutHours(item.DUE_DATE)
+                            + '. Selesaikan temuan ini yuk!';
+                    } else {
+                        body = 'Temuan dari ' + FULLNAME + ' akan melewati batas waktu pada ' + dateDisplayMobileWithoutHours(item.DUE_DATE)
+                            + '. Selesaikan temuan ini yuk!';
+                    }
 
-    setTimeout(() => {
-        reminderData.map(item => {
+                    const notification = new firebase.notifications.Notification()
+                        .setNotificationId(item.FINDING_CODE + getTodayDate('YYYYMMDDHHmmss'))
+                        .setTitle('Temuan Overdue')
+                        .setSubtitle('Temuan')
+                        .setData({ DEEPLINK: 'DETAIL_FINDING', FINDING_CODE: item.FINDING_CODE })
+                        .setSound('default')
 
-            const INSERT_USER = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', item.INSERT_USER);
-            let FULLNAME = INSERT_USER == undefined ? 'User belum terdaftar. Hubungi Admin.' : INSERT_USER.FULLNAME;
+                    if (Platform.OS === "android") {
+                        notification.android.setChannelId('mobile-inspection-channel');
+                        notification.android.setBigText(body)
+                        notification.android.setPriority(firebase.notifications.Android.Priority.High);
+                        notification.android.setBadgeIconType(firebase.notifications.Android.BadgeIconType.Small);
+                        notification.android.setAutoCancel(true);
+                        notification.android.setSmallIcon('notification_image');
+                    }
 
-            // let picNotification = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', item.FINDING_CODE)
+                    var duedate = item.DUE_DATE.substring(0, 10);
 
-            // let showPicNotification;
-            // let pathImage = `file://${dirPhotoTemuan}/${picNotification.IMAGE_NAME}`;
-            // if (picNotification != undefined) {
-            //     if (picNotification.IMAGE_NAME != undefined)
-            //         showPicNotification = pathImage;
-            // }
+                    // Schedule the notification base on due date in the future
+                    var formatDate = moment(duedate).subtract(1, "days").format('YYYY-MM-DD' + " 06:00:00");
+                    var scheduleDate = moment(formatDate);
 
-            // console.log("Insert User : " + item.INSERT_USER + item.ASSIGN_TO);
+                    // Display the notification
+                    await firebase.notifications().scheduleNotification(notification, {
+                        fireDate: scheduleDate.valueOf()
+                    });
 
-            let body = '';
-            if (item.INSERT_USER === item.ASSIGN_TO) {
-                body = 'Temuan yang kamu akan melewati batas waktu pada ' + dateDisplayMobileWithoutHours(item.DUE_DATE)
-                    + '. Selesaikan temuan ini yuk!';
-            } else {
-                body = 'Temuan dari ' + FULLNAME + ' akan melewati batas waktu pada ' + dateDisplayMobileWithoutHours(item.DUE_DATE)
-                    + '. Selesaikan temuan ini yuk!';
+                    // Display the notification
+                    // firebase.notifications().displayNotification(notification);
+
+                    // let picNotification = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', item.FINDING_CODE)
+
+                    // let showPicNotification;
+                    // let pathImage = `file://${dirPhotoTemuan}/${picNotification.IMAGE_NAME}`;
+                    // if (picNotification != undefined) {
+                    //     if (picNotification.IMAGE_NAME != undefined)
+                    //         showPicNotification = pathImage;
+                    // }
+
+                    // console.log("Insert User : " + item.INSERT_USER + item.ASSIGN_TO);
+                }
             }
-
-            const notification = new firebase.notifications.Notification()
-                .setNotificationId(item.FINDING_CODE + getTodayDate('YYYYMMDDHHmmss'))
-                .setTitle('Temuan Overdue')
-                .setSubtitle('Temuan')
-                .setData({ DEEPLINK: 'DETAIL_FINDING', FINDING_CODE: item.FINDING_CODE })
-                .setSound('default')
-
-            if (Platform.OS === "android") {
-                notification.android.setChannelId('mobile-inspection-channel');
-                notification.android.setBigText(body)
-                notification.android.setPriority(firebase.notifications.Android.Priority.High);
-                notification.android.setBadgeIconType(firebase.notifications.Android.BadgeIconType.Small);
-                notification.android.setAutoCancel(true);
-                notification.android.setSmallIcon('notification_image');
-            }
-
-            // Schedule the notification base on due date in the future
-            var startdate = moment(item.DUE_DATE + " 06:00:00");
-            startdate = startdate.subtract(1, "days");
-
-            // Display the notification
-            firebase.notifications().scheduleNotification(notification, {
-                fireDate: startdate.valueOf()
-            });
         })
-    }, 1000)
+    )
 }
 
 export function displayNotificationSync() {
