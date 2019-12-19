@@ -618,7 +618,7 @@ export default class Restan extends React.Component {
                                                         flex: 2,
                                                         justifyContent:'center'
                                                     }}>
-                                                    <Text style={{fontSize: 15, fontWeight: 'bold', color: this.styleColorChooser(coordinateRestanData.TPH_RESTANT_DAY)}}>{`${numberSeperator(coordinateRestanData.KG_TAKSASI, ",")} kg`}</Text>
+                                                    <Text style={{fontSize: 20, fontWeight: 'bold', color: this.styleColorChooser(coordinateRestanData.TPH_RESTANT_DAY)}}>{`${numberSeperator(coordinateRestanData.KG_TAKSASI, ",")} kg`}</Text>
                                                     <Text style={{paddingVertical: 5}}>{`${coordinateRestanData.JML_JANJANG} Janjang / ${coordinateRestanData.JML_BRONDOLAN} kg Brondolan`}</Text>
                                                     <Text style={{fontWeight: 'bold'}}>{`${coordinateRestanData.BLOCK_NAME} / TPH ${coordinateRestanData.OPH}`}</Text>
                                                 </View>
