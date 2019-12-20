@@ -75,7 +75,7 @@ class Login extends Component {
             SERVER_NAME_INDEX: this.serverNameIndex,
             STATUS: 'LOGIN'
         };
-        var new_date = moment().add(7, 'days');
+        var new_date = moment().add(15, 'days');
         const date = { tanggal: new_date }
 
         /* SET EXPIRED TOKEN DATE */
