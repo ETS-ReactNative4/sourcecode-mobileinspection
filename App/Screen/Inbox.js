@@ -63,22 +63,17 @@ export default class Inbox extends React.Component {
 		}
 	}
 	_renderItem = (item, index) => {
+
+
+
 		let title;
 		let sources;
 		let desc;
 		let notifColor;
 		let notifCreateDate = item.FINDING_UPDATE_TIME;
-		// let today = new Date();
-		// if (notifCreateDate.getDate() == today.getDate()
-		// 	&& notifCreateDate.getMonth() == today.getMonth()
-		// 	&& notifCreateDate.getFullYear() == today.getFullYear()) {
-		// 	notifCreateDate = "Hari ini," + notifCreateDate.getHours() + ":" + notifCreateDate.getMinutes();
-		// }
-		// else {
-		// 	notifCreateDate = notifCreateDate.getDate() + "-" + (notifCreateDate.getMonth() + 1) + "-" + notifCreateDate.getFullYear()
-		// 		+ "," + notifCreateDate.getHours() + ":" + notifCreateDate.getMinutes();
-		// }
+
 		let findingData = TaskServices.findBy2('TR_FINDING', 'FINDING_CODE', item.FINDING_CODE);
+		console.log(findingData.ASSIGN_TO)
 		let contactAsign = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', findingData.ASSIGN_TO);
 		let createTime = moment(findingData.INSERT_TIME, "YYYYMMDDHHmmss");
 		let creator = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', findingData.INSERT_USER);
