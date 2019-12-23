@@ -48,7 +48,136 @@ export default class Restan extends React.Component {
             },
             poligons: [],
             currentRestanIndex: 0,
-            coordinateRestan: [],
+            coordinateRestan: [
+                {
+                    BCC:"19112403301047092721",
+                    OPH: "017",
+                    TPH_RESTANT_DAY: "3",
+                    LATITUDE: 1.2664307188,
+                    LONGITUDE: 117.8429638781,
+                    JML_JANJANG: 151,
+                    JML_BRONDOLAN : 45,
+                    KG_TAKSASI: 1414,
+                    TGL_REPORT: 20191124,
+                    WERKS: "5121",
+                    EST_NAME: "EBL ESTATE",
+                    AFD_CODE : "A",
+                    BLOCK_CODE : "354",
+                    BLOCK_NAME: "E09"
+                },
+                {
+                    BCC:"19112403301047092721",
+                    OPH: "017",
+                    TPH_RESTANT_DAY: "3",
+                    LATITUDE: 1.2664307188,
+                    LONGITUDE: 117.8429638781,
+                    JML_JANJANG: 151,
+                    JML_BRONDOLAN : 45,
+                    KG_TAKSASI: 1414,
+                    TGL_REPORT: 20191124,
+                    WERKS: "5121",
+                    EST_NAME: "EBL ESTATE",
+                    AFD_CODE : "A",
+                    BLOCK_CODE : "354",
+                    BLOCK_NAME: "E09"
+                },
+                {
+                    BCC:"19112403301047092721",
+                    OPH: "017",
+                    TPH_RESTANT_DAY: "3",
+                    LATITUDE: 1.2664307188,
+                    LONGITUDE: 117.8429638781,
+                    JML_JANJANG: 151,
+                    JML_BRONDOLAN : 45,
+                    KG_TAKSASI: 1414,
+                    TGL_REPORT: 20191124,
+                    WERKS: "5121",
+                    EST_NAME: "EBL ESTATE",
+                    AFD_CODE : "A",
+                    BLOCK_CODE : "354",
+                    BLOCK_NAME: "E09"
+                },
+                {
+                    BCC:"19112403301047092721",
+                    OPH: "017",
+                    TPH_RESTANT_DAY: "3",
+                    LATITUDE: 1.2664307188,
+                    LONGITUDE: 117.8429638781,
+                    JML_JANJANG: 151,
+                    JML_BRONDOLAN : 45,
+                    KG_TAKSASI: 1414,
+                    TGL_REPORT: 20191124,
+                    WERKS: "5121",
+                    EST_NAME: "EBL ESTATE",
+                    AFD_CODE : "A",
+                    BLOCK_CODE : "354",
+                    BLOCK_NAME: "E09"
+                },
+                {
+                    BCC:"19112403301047092721",
+                    OPH: "017",
+                    TPH_RESTANT_DAY: "3",
+                    LATITUDE: 1.2664307188,
+                    LONGITUDE: 117.8429638781,
+                    JML_JANJANG: 151,
+                    JML_BRONDOLAN : 45,
+                    KG_TAKSASI: 1414,
+                    TGL_REPORT: 20191124,
+                    WERKS: "5121",
+                    EST_NAME: "EBL ESTATE",
+                    AFD_CODE : "A",
+                    BLOCK_CODE : "354",
+                    BLOCK_NAME: "E09"
+                },
+                {
+                    BCC:"19112403301047092721",
+                    OPH: "017",
+                    TPH_RESTANT_DAY: "3",
+                    LATITUDE: 1.2664307188,
+                    LONGITUDE: 117.8429638781,
+                    JML_JANJANG: 151,
+                    JML_BRONDOLAN : 45,
+                    KG_TAKSASI: 1414,
+                    TGL_REPORT: 20191124,
+                    WERKS: "5121",
+                    EST_NAME: "EBL ESTATE",
+                    AFD_CODE : "A",
+                    BLOCK_CODE : "354",
+                    BLOCK_NAME: "E09"
+                },
+                {
+                    BCC:"19112403301047092721",
+                    OPH: "017",
+                    TPH_RESTANT_DAY: "3",
+                    LATITUDE: 1.2664307188,
+                    LONGITUDE: 117.8429638781,
+                    JML_JANJANG: 151,
+                    JML_BRONDOLAN : 45,
+                    KG_TAKSASI: 1414,
+                    TGL_REPORT: 20191124,
+                    WERKS: "5121",
+                    EST_NAME: "EBL ESTATE",
+                    AFD_CODE : "A",
+                    BLOCK_CODE : "354",
+                    BLOCK_NAME: "E09"
+                },
+                {
+                    BCC:"19112403301047092721",
+                    OPH: "017",
+                    TPH_RESTANT_DAY: "3",
+                    LATITUDE: 1.2664307188,
+                    LONGITUDE: 117.8429638781,
+                    JML_JANJANG: 151,
+                    JML_BRONDOLAN : 45,
+                    KG_TAKSASI: 1414,
+                    TGL_REPORT: 20191124,
+                    WERKS: "5121",
+                    EST_NAME: "EBL ESTATE",
+                    AFD_CODE : "A",
+                    BLOCK_CODE : "354",
+                    BLOCK_NAME: "E09"
+                }
+            ],
             coordinateRestanFetch: true,
             latestSyncTime: "",
             highlightBlock: [],
@@ -434,7 +563,7 @@ export default class Restan extends React.Component {
                             }
                         });
                     }}
-                    onMapReady={() => {this.onMapReady()}}
+                    // onMapReady={() => {this.onMapReady()}}
                 >
                     {this.state.poligons.length > 0 && this.state.poligons.map((poly, index) => (
                         <View key={index}>
@@ -558,14 +687,17 @@ export default class Restan extends React.Component {
                             <ScrollView
                                 ref={(restanScrollView)=>{this.restanScrollView = restanScrollView}}
                                 contentContainerStyle={{
+                                    // paddingHorizontal: screenWidth*0.025,
                                     backgroundColor:"transparent"
                                 }}
                                 decelerationRate={0}
-                                snapToInterval={screenWidth} //your element width
+                                // snapToInterval={this.state.currentRestanIndex % 2 === 0 ? (screenWidth*0.8 + screenWidth*0.05) - (screenWidth*0.8 + screenWidth*0.05)*0.05 : screenWidth*0.8 + screenWidth*0.05} //your element width
+                                snapToInterval={screenWidth*0.8 + screenWidth*0.05} //your element width
                                 snapToAlignment={"center"}
                                 horizontal={true}
                                 onMomentumScrollEnd={event => {
                                     let index = this.scrollViewIndex(event.nativeEvent.contentOffset.x);
+                                    console.log(index);
                                     if(index !== null){
                                         let selectedCoordinateRestan = this.state.coordinateRestan[index];
                                         let region = {
@@ -589,8 +721,8 @@ export default class Restan extends React.Component {
                                                     flexDirection: "row",
                                                     backgroundColor: "white",
                                                     borderRadius: 5,
-                                                    width: screenWidth - 20,
-                                                    margin: 10,
+                                                    width: screenWidth * 0.8,
+                                                    margin: screenWidth * 0.025,
                                                     justifyContent:'center'
                                                 }}
                                             >
@@ -637,7 +769,7 @@ export default class Restan extends React.Component {
 
     //used to determine which index selected
     scrollViewIndex(xPosition){
-        let index = xPosition/screenWidth;
+        let index = xPosition/(screenWidth*0.8 + screenWidth*0.05);
         if(Number.isInteger(index)){
             return index
         }
