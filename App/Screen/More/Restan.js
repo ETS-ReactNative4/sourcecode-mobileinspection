@@ -563,7 +563,7 @@ export default class Restan extends React.Component {
                             }
                         });
                     }}
-                    // onMapReady={() => {this.onMapReady()}}
+                    onMapReady={() => {this.onMapReady()}}
                 >
                     {this.state.poligons.length > 0 && this.state.poligons.map((poly, index) => (
                         <View key={index}>
