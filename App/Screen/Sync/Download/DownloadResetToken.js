@@ -35,7 +35,7 @@ export async function getResetToken(isSync) {
                         /* COPY DATABASE TO FOLDER MOBILE INSPECTION  */
                         RNFS.copyFile(TaskServices.getPath(), 'file:///storage/emulated/0/MobileInspection/data.realm');
 
-                        /* UPDATE TOKEN +7 Hari  */
+                        /* UPDATE TOKEN +15 Hari  */
                         tokenExpired();
 
                         /* SAVE LOG SYNC */
@@ -68,7 +68,7 @@ export async function getResetToken(isSync) {
 }
 
 function tokenExpired() {
-    const newDate = moment().add(7, 'days');
+    const newDate = moment().add(15, 'days');
     const date = { tanggal: newDate }
     storeData('expiredToken', date);
 }

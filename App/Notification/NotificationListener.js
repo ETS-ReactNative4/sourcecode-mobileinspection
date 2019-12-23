@@ -97,7 +97,7 @@ export async function displayNotificationTemuan() {
 
                     let body = '';
                     if (item.INSERT_USER === item.ASSIGN_TO) {
-                        body = 'Temuan yang kamu akan melewati batas waktu pada ' + dateDisplayMobileWithoutHours(item.DUE_DATE)
+                        body = 'Temuan yang kamu buat akan melewati batas waktu pada ' + dateDisplayMobileWithoutHours(item.DUE_DATE)
                             + '. Selesaikan temuan ini yuk!';
                     } else {
                         body = 'Temuan dari ' + FULLNAME + ' akan melewati batas waktu pada ' + dateDisplayMobileWithoutHours(item.DUE_DATE)

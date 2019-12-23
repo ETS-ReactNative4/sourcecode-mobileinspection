@@ -1,8 +1,6 @@
 'use strict';
 import React, { Component } from 'react'
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { isEmpty } from 'ramda'
-import moment from 'moment'
 import ActionButton from 'react-native-action-button'
 import Colors from '../../Constant/Colors'
 import TaskServices from '../../Database/TaskServices'
@@ -17,6 +15,8 @@ import { getBlokName, getEstateName } from '../../Database/Resources';
 import FeatureDaftarTemuan from '../../Component/FeatureDaftarTemuan'
 import TemplateNoData from '../../Component/TemplateNoData';
 import { Images } from '../../Themes';
+import { getListFinding } from '../../Database/DatabaseServices';
+import { getImageBaseOnFindingCode } from '../Sync/Download/DownloadImage';
 
 export default class ListFinding extends Component {
 
@@ -46,43 +46,14 @@ export default class ListFinding extends Component {
   }
 
   _initData() {
-
-    const login = TaskServices.getAllData('TR_LOGIN');
-    const user_auth = login[0].USER_AUTH_CODE;
-
-    var data = TaskServices.query('TR_FINDING', `PROGRESS < 100 AND ASSIGN_TO = "${user_auth}"`);
-
-    var dataLewat = []
-    var data7Hari = []
-    var dataMore7Hari = []
-    var dataNoDate = []
-
-    var now = moment(new Date())
-
-    data.map(item => {
-      if (isEmpty(item.DUE_DATE)) {
-        dataNoDate.push(item)
-      } else {
-        let dueDate = item.DUE_DATE;
-        if (dueDate.includes(' ')) {
-          dueDate = dueDate.substring(0, dueDate.indexOf(' '))
-        }
-        var diff = moment(new Date(dueDate)).diff(now, 'day');
-        if (diff < 0) {
-          dataLewat.push(item)
-        } else if (diff < 7) {
-          data7Hari.push(item)
-        } else {
-          dataMore7Hari.push(item)
-        }
-      }
-    })
-
-    var dataSelesai = TaskServices.query('TR_FINDING', `PROGRESS = 100 AND ASSIGN_TO = "${user_auth}"`);
-
-    this.setState({ dataFinding: data, dataLewat, data7Hari, dataMore7Hari, dataNoDate, dataSelesai })
-
-    // displayNotificationTemuan();
+    this.setState({
+      dataFinding: getListFinding(0),
+      dataLewat: getListFinding(1),
+      data7Hari: getListFinding(2),
+      dataMore7Hari: getListFinding(3),
+      dataNoDate: getListFinding(4),
+      dataSelesai: getListFinding(5),
+    });
   }
 
   actionButtonClick() {
@@ -94,75 +65,12 @@ export default class ListFinding extends Component {
     }
   }
 
-  getImageBaseOnFindingCode(findingCode) {
-    const user = TaskServices.getAllData('TR_LOGIN')[0];
-    const url = "http://149.129.245.230:3012/images/" + findingCode;
-    let serv = TaskServices.getAllData("TM_SERVICE")
-      .filtered('API_NAME="IMAGES-GET-BY-ID" AND MOBILE_VERSION="' + ServerName.verAPK + '"')[0];
-    fetch(serv.API_URL + "" + findingCode, {
-      method: serv.METHOD,
-      headers: {
-        'Cache-Control': 'no-cache',
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${user.ACCESS_TOKEN}`,
-      }
-    })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        if (responseJson.status) {
-          if (responseJson.data.length > 0) {
-            for (var i = 0; i < responseJson.data.length; i++) {
-              let dataImage = responseJson.data[i];
-              TaskServices.saveData('TR_IMAGE', dataImage);
-              this._downloadImageFinding(dataImage)
-            }
-          } else {
-            // alert(`Image ${findingCode} kosong`);
-            console.log(`Image ${findingCode} kosong`);
-          }
-        } else {
-          // alert(`gagal download image untuk ${findingCode}`)
-          console.log(`Image ${findingCode} kosong`);
-        }
-
-
-      }).catch((error) => {
-        console.error(error);
-        // alert(error);
-      });
-
-  }
-
-  async _downloadImageFinding(data) {
-    let isExist = await RNFS.exists(`${dirPhotoTemuan}/${data.IMAGE_NAME}`)
-    if (!isExist) {
-      var url = data.IMAGE_URL;
-      const { config, fs } = RNFetchBlob
-      let options = {
-        fileCache: false,
-        addAndroidDownloads: {
-          useDownloadManager: true,
-          notification: true,
-          path: `${dirPhotoTemuan}/${data.IMAGE_NAME}`,
-          description: 'Image'
-        }
-      }
-      config(options).fetch('GET', url).then((res) => {
-        RNFetchBlob.android.actionViewIntent(res.path(), '/')
-        // alert("Success Downloaded " + res);
-      }).catch((error) => {
-        console.log(error);
-      });
-    }
-  }
-
   onClickItem = (id) => {
     var images = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', id);
     if (images !== undefined) {
       this.props.navigation.navigate('DetailFinding', { ID: id })
     } else {
-      this.getImageBaseOnFindingCode(id)
+      getImageBaseOnFindingCode(id);
       setTimeout(() => {
         this.props.navigation.navigate('DetailFinding', { ID: id })
       }, 3000);
