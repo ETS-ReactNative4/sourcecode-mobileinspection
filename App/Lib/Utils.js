@@ -21,7 +21,7 @@ export function downloadImage(url, path) {
 		}
 	}
 	config(options).fetch('GET', url).then((res) => {
-        RNFetchBlob.android.actionViewIntent(res.path(), '/')
+		RNFetchBlob.android.actionViewIntent(res.path(), '/')
 	});
 }
 
@@ -172,11 +172,11 @@ export async function getPermission() {
 				'message': 'ReactNativeCode App needs access to your personal data. '
 			}
 		);
-		const storageWrite =  await PermissionsAndroid.request(
-			PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE ,
+		const storageWrite = await PermissionsAndroid.request(
+			PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
 			{
-			  'title': 'ReactNativeCode wants to WRITE_EXTERNAL_STORAGE',
-			  'message': 'ReactNativeCode App needs access to your personal data. '
+				'title': 'ReactNativeCode wants to WRITE_EXTERNAL_STORAGE',
+				'message': 'ReactNativeCode App needs access to your personal data. '
 			}
 		);
 		if (phone === PermissionsAndroid.RESULTS.GRANTED && camera === PermissionsAndroid.RESULTS.GRANTED &&
@@ -512,7 +512,7 @@ export function syncDays() {
 }
 
 export function notifInbox() {
-	let notifCount = TaskServices.getAllData('TR_NOTIFICATION').filtered('NOTIFICATION_STATUS=0').length;
+	let notifCount = TaskServices.getAllData('TR_NOTIFICATION').filtered('NOTIFICATION_STATUS = 0').length;
 
 	if (notifCount > 99) {
 		notifCount = 99
@@ -522,12 +522,12 @@ export function notifInbox() {
 }
 
 export function isNotUserMill() {
-    const data = TaskServices.getAllData('TR_LOGIN')
-    if (data != undefined) {
-      if (data[0].USER_ROLE == 'FFB_GRADING_MILL') {
-        return false
-      } else {
-        return true
-      }
-    }
-  }
+	const data = TaskServices.getAllData('TR_LOGIN')
+	if (data != undefined) {
+		if (data[0].USER_ROLE == 'FFB_GRADING_MILL') {
+			return false
+		} else {
+			return true
+		}
+	}
+}

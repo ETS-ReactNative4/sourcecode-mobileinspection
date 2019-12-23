@@ -55,8 +55,8 @@ export default class HistoryFinding extends Component {
 
     data.map(item => {
 
-      let dueDate = item.DUE_DATE.substring(0, 10);
-      var diff = moment(new Date(dueDate)).diff(now, 'day');
+      let endTime = item.END_TIME.substring(0, 10);
+      var diff = moment(new Date(endTime)).diff(now, 'day');
 
       if (diff < -7) {
         this.querySelectImagePath(item.FINDING_CODE);
