@@ -72,13 +72,13 @@ const TaskServices = {
         return RealmSchemas.objects(table);
     },
 
-    getSortedData: function (table, field, descending){
+    getSortedData: function (table, field, descending) {
         let dbObjects = RealmSchemas.objects(table);
         return dbObjects.sorted(field, descending);
     },
 
     //example array [['price', true], ['miles', false]]
-    getMultipleSortedData: function (table, fields: Array){
+    getMultipleSortedData: function (table, fields: Array) {
         let dbObjects = RealmSchemas.objects(table);
         return dbObjects.sorted(fields);
     },
@@ -151,10 +151,10 @@ const TaskServices = {
         });
     },
 
-    updateLogin: function () {
+    updateLogin: function (type) {
         let data = RealmSchemas.objects('TR_LOGIN')[0];
         RealmSchemas.write(() => {
-            data.STATUS = 'LOGOUT';
+            data.STATUS = type;
         });
     },
 

@@ -29,9 +29,7 @@ import IMEI from 'react-native-device-info'
 import { AlertContent } from '../Themes';
 import { storeData, removeData } from '../Database/Resources';
 import moment from 'moment'
-import {getFCMToken} from '../Notification/NotificationListener';
-import {fetchPut} from '../Api/FetchingApi';
-
+import { getCurrentUser } from '../Database/DatabaseServices';
 
 class Login extends Component {
 
@@ -236,52 +234,6 @@ class Login extends Component {
         this.postLogin(username, password, choosenServer, imei);
     }
 
-    // fetchLogin(username, password, choosenServer, imei){
-    //     let loginHeader = {
-    //         headers: {
-    //             'Cache-Control': 'no-cache',
-    //             'Accept': 'application/json',
-    //             'Content-Type': 'application/json'
-    //         }
-    //     };
-    //
-    //     let loginModel = {
-    //         username: username,
-    //         password: password,
-    //         imei: imei
-    //     };
-    //
-    //     fetchPostWithUrl(ServerName[choosenServer].data + 'auth/login', loginModel, loginHeader)
-    //         .then((response)=>{
-    //             if (response !== undefined) {
-    //                 if (response.status) {
-    //                     // this.insertLink(data.data);
-    //                     // this.deleteConfig()
-    //                 } else {
-    //                     if (response.message === 'Request Timeout') {
-    //                         // timeout
-    //                         this.setState({
-    //                             ...AlertContent.proses_lambat,
-    //                             fetching: false
-    //                         })
-    //                     } else {
-    //                         // email/pass salah
-    //                         this.setState({
-    //                             ...AlertContent.email_pass_salah,
-    //                             fetching: false
-    //                         })
-    //                     }
-    //                 }
-    //             }
-    //             else{
-    //                 // no internet
-    //                 this.setState({
-    //                     ...AlertContent.no_internet,
-    //                     fetching: false
-    //                 });
-    //             }
-    //         })
-    // }
     postLogin(username, password, choosenServer, imei) {
 
         this.serverNameIndex = choosenServer;
@@ -297,16 +249,30 @@ class Login extends Component {
             .then((response) => {
                 return response.json();
             })
-            .then(async (data) => {
+            .then(async (response) => {
                 this.setState({ fetching: false });
-                if (data.status == true) {
-                    this.deleteConfig();
-                    this.insertLink(data.data);
+                console.log('Response Data Login : ', response)
+                if (response.status == true) {
+                    if (getCurrentUser() !== undefined) {
+                        if (response.data.USER_AUTH_CODE == getCurrentUser().USER_AUTH_CODE) {
+                            if (response.data.USER_ROLE != "FFB_GRADING_MILL") {
+                                this._resetMobileSync('MainMenu', getCurrentUser().ACCESS_TOKEN);
+                            } else {
+                                this._resetMobileSync('MainMenuMil', getCurrentUser().ACCESS_TOKEN);
+                            }
+                        } else {
+                            this.deleteConfig();
+                            this.insertLink(response.data);
+                        }
+                    } else {
+                        this.deleteConfig();
+                        this.insertLink(response.data);
+                    }
                 } else {
-                    if (data.message == 'Request Timeout') {
+                    if (response.data.message == 'Request Timeout') {
                         this.setState(AlertContent.proses_lambat)
                     } else {
-                        if (data.message == 'Request Timeout') {
+                        if (response.data.message == 'Request Timeout') {
                             this.setState(AlertContent.proses_lambat)
                         } else {
                             this.setState(AlertContent.email_pass_salah)
@@ -314,6 +280,40 @@ class Login extends Component {
                     }
                 }
             });
+    }
+
+    _resetMobileSync(routeName, token) {
+        let serviceReset = TaskServices.getAllData('TM_SERVICE')
+            .filtered('API_NAME="AUTH-SYNC-RESET" AND MOBILE_VERSION="' + ServerName.verAPK + '"');
+
+        if (serviceReset.length > 0) {
+            serviceReset = serviceReset[0];
+            fetch(serviceReset.API_URL, {
+                method: serviceReset.METHOD,
+                headers: {
+                    'Cache-Control': 'no-cache',
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ "RESET_SYNC": 1 })
+            })
+                .then((response) => {
+                    return response.json();
+                })
+                .then((data) => {
+                    console.log('Response Reset Mobile Sync : ', data);
+                    if (data.status == true) {
+                        TaskServices.updateLogin('LOGIN');
+                        this.navigateScreen(routeName);
+                    } else {
+                        console.log(data.message);
+                    }
+                })
+                .catch((err) => {
+                    console.log("error AUTH-SYNC-RESET", err.message);
+                });
+        }
     }
 
     deleteConfig() {
