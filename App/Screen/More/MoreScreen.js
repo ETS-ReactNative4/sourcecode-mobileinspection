@@ -356,7 +356,7 @@ export default class MoreScreen extends Component {
   async exportDatabase() {
     await this.realmToJson();
     //create zip file
-    RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
+    await RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
 
     let currentTime = moment().format("YYYYMMDDHHmmss");
     let zipPath = `${dirLocal}`;
