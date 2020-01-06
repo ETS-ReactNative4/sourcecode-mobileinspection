@@ -276,11 +276,11 @@ export default class MoreScreen extends Component {
   onPressMenu(menu) {
     switch (menu) {
       case 'Maps':
-        return this.menuMaps()
+        return this.menuMaps();
       case 'DashboardKebun':
-        return this.menuDashboardKebun()
+        return this.menuDashboardKebun();
       case 'Dashboard':
-        return this.menuDashboard()
+        return this.menuDashboard();
       case 'Database':
         return this.exportDatabase();
       default:

@@ -31,6 +31,8 @@ import { storeData, removeData } from '../Database/Resources';
 import moment from 'moment'
 import { getCurrentUser } from '../Database/DatabaseServices';
 
+import {fetchPostWithUrl} from '../Api/FetchingApi';
+
 class Login extends Component {
 
     constructor(props) {
@@ -121,8 +123,9 @@ class Login extends Component {
 
     componentDidMount() {
         const { navigation } = this.props;
-        const itemId = navigation.getParam('exit');
-        this.state.logOut = itemId;
+        //data dari morescreen logout
+        const logoutStatus = navigation.getParam('exit');
+        this.state.logOut = logoutStatus;
 
         removeData('typeApp')
     }
@@ -234,25 +237,66 @@ class Login extends Component {
         this.postLogin(username, password, choosenServer, imei);
     }
 
+    // postLogin(username, password, choosenServer, imei) {
+    //     this.serverNameIndex = choosenServer;
+    //     fetch(ServerName[this.serverNameIndex].data + 'auth/login', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Cache-Control': 'no-cache',
+    //             Accept: 'application/json',
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify({ username, password, imei })
+    //     })
+    //         .then((response) => {
+    //             return response.json();
+    //         })
+    //         .then(async (response) => {
+    //             this.setState({ fetching: false });
+    //             console.log('Response Data Login : ', response)
+    //             if (response.status == true) {
+    //                 if (getCurrentUser() !== undefined) {
+    //                     if (response.data.USER_AUTH_CODE == getCurrentUser().USER_AUTH_CODE) {
+    //                         if (response.data.USER_ROLE != "FFB_GRADING_MILL") {
+    //                             this._resetMobileSync('MainMenu', getCurrentUser().ACCESS_TOKEN);
+    //                         } else {
+    //                             this._resetMobileSync('MainMenuMil', getCurrentUser().ACCESS_TOKEN);
+    //                         }
+    //                     } else {
+    //                         this.deleteConfig();
+    //                         this.insertLink(response.data);
+    //                     }
+    //                 } else {
+    //                     this.deleteConfig();
+    //                     this.insertLink(response.data);
+    //                 }
+    //             } else {
+    //                 if (response.data.message === 'Request Timeout') {
+    //                     this.setState(AlertContent.proses_lambat)
+    //                 } else {
+    //                     this.setState(AlertContent.email_pass_salah)
+    //                 }
+    //             }
+    //         });
+    // }
+
     postLogin(username, password, choosenServer, imei) {
+        let header = {
+            'Cache-Control': 'no-cache',
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+        };
+
+        let request = {
+            username,
+            password,
+            imei
+        };
 
         this.serverNameIndex = choosenServer;
-        fetch(ServerName[this.serverNameIndex].data + 'auth/login', {
-            method: 'POST',
-            headers: {
-                'Cache-Control': 'no-cache',
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ username, password, imei })
-        })
-            .then((response) => {
-                return response.json();
-            })
-            .then(async (response) => {
-                this.setState({ fetching: false });
-                console.log('Response Data Login : ', response)
-                if (response.status == true) {
+        fetchPostWithUrl(ServerName[this.serverNameIndex].data + 'auth/login', request, header)
+            .then((response)=>{
+                if(response){
                     if (getCurrentUser() !== undefined) {
                         if (response.data.USER_AUTH_CODE == getCurrentUser().USER_AUTH_CODE) {
                             if (response.data.USER_ROLE != "FFB_GRADING_MILL") {
@@ -264,20 +308,14 @@ class Login extends Component {
                             this.deleteConfig();
                             this.insertLink(response.data);
                         }
-                    } else {
+                    }
+                    else {
                         this.deleteConfig();
                         this.insertLink(response.data);
                     }
-                } else {
-                    if (response.data.message == 'Request Timeout') {
-                        this.setState(AlertContent.proses_lambat)
-                    } else {
-                        if (response.data.message == 'Request Timeout') {
-                            this.setState(AlertContent.proses_lambat)
-                        } else {
-                            this.setState(AlertContent.email_pass_salah)
-                        }
-                    }
+                }
+                else {
+                    this.setState({...AlertContent.server_no_response})
                 }
             });
     }

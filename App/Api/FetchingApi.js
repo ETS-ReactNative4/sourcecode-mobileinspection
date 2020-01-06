@@ -1,8 +1,7 @@
 import TaskServices from "../Database/TaskServices";
 import moment from 'moment';
 
-// ======================================================================
-
+//di pakai untuk ngefetch specific URL
 export function fetchPostWithUrl(URL, fetchBody, fetchHeaders) {
     return fetch(URL, {
         method: 'POST',
@@ -52,6 +51,7 @@ export function fetchPostWithUrl(URL, fetchBody, fetchHeaders) {
     });
 }
 
+//fetch PUT
 export function fetchPut(serviceName, fetchBody, fetchHeaders){
     let serviceDetail = TaskServices.getService(serviceName);
     let user = TaskServices.getAllData('TR_LOGIN')[0];
@@ -123,6 +123,7 @@ export function fetchPut(serviceName, fetchBody, fetchHeaders){
     return undefined;
 }
 
+//fetch POST
 export function fetchPost(serviceName, fetchBody, fetchHeaders) {
     let serviceDetail = TaskServices.getService(serviceName);
     let user = TaskServices.getAllData('TR_LOGIN')[0];
@@ -194,6 +195,7 @@ export function fetchPost(serviceName, fetchBody, fetchHeaders) {
     return undefined;
 }
 
+//fetch POST form (image)
 export function fetchPostForm(serviceName, fetchBody, fetchHeaders) {
     let serviceDetail = TaskServices.getService(serviceName);
     let user = TaskServices.getAllData('TR_LOGIN')[0];
@@ -267,8 +269,7 @@ export function fetchPostForm(serviceName, fetchBody, fetchHeaders) {
     return undefined;
 }
 
-// ========================================================================
-
+//fetch GET
 export function fetchGet(serviceName, fetchHeaders) {
     let serviceDetail = TaskServices.getService(serviceName);
     let user = TaskServices.getAllData('TR_LOGIN')[0];
