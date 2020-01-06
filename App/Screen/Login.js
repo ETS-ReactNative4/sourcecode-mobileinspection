@@ -16,12 +16,13 @@ import { NavigationActions, StackActions } from 'react-navigation';
 import TaskServices from '../Database/TaskServices';
 import RNFetchBlob from 'rn-fetch-blob'
 import {
+    dirDatabase, dirMaps,
     dirPhotoEbccJanjang,
     dirPhotoEbccSelfie,
     dirPhotoInspeksiBaris,
     dirPhotoInspeksiSelfie,
     dirPhotoKategori,
-    dirPhotoTemuan
+    dirPhotoTemuan, dirPhotoUser, dirSummary
 } from '../Lib/dirStorage';
 import ModalAlert from '../Component/ModalAlert'
 import ServerName from '../Constant/ServerName'
@@ -32,6 +33,7 @@ import moment from 'moment'
 import { getCurrentUser } from '../Database/DatabaseServices';
 
 import {fetchPostWithUrl} from '../Api/FetchingApi';
+import RNFS from 'react-native-fs';
 
 class Login extends Component {
 
@@ -84,7 +86,7 @@ class Login extends Component {
         TaskServices.saveData('TR_LOGIN', data);
     }
 
-    insertLink(param) {
+    insertLink(routeName, param) {
         fetch(ServerName[this.serverNameIndex].service, {
             method: 'GET',
             headers: {
@@ -99,7 +101,6 @@ class Login extends Component {
             })
             .then((data) => {
                 if (data.status) {
-                    TaskServices.deleteAllData('TM_SERVICE');
                     let index = 0;
                     for (let i in data.data) {
                         let newService = {
@@ -113,12 +114,36 @@ class Login extends Component {
                         TaskServices.saveData('TM_SERVICE', newService);
                         index++;
                     }
-                    this.checkUser(param);
+                    this.insertUser(param);
+                    this._resetMobileSync(routeName, param.ACCESS_TOKEN);
+                    // this.checkUser(param);
                 }
                 else {
                     this.setState(AlertContent.versionName_salah)
                 }
             });
+    }
+
+    insertUser(user) {
+        var data = {
+            NIK: user.NIK,
+            ACCESS_TOKEN: user.ACCESS_TOKEN,
+            JOB_CODE: user.JOB_CODE,
+            LOCATION_CODE: user.LOCATION_CODE,
+            REFFERENCE_ROLE: user.REFFERENCE_ROLE,
+            USERNAME: user.USERNAME,
+            USER_AUTH_CODE: user.USER_AUTH_CODE,
+            USER_ROLE: user.USER_ROLE,
+            SERVER_NAME_INDEX: this.serverNameIndex,
+            STATUS: 'LOGIN'
+        };
+        var new_date = moment().add(15, 'days');
+        const date = { tanggal: new_date };
+
+        /* SET EXPIRED TOKEN DATE */
+        storeData('expiredToken', date);
+
+        TaskServices.saveData('TR_LOGIN', data);
     }
 
     componentDidMount() {
@@ -130,94 +155,102 @@ class Login extends Component {
         removeData('typeApp')
     }
 
-    checkUser(param) {
-        if (TaskServices.getTotalData('TR_LOGIN') > 0) {
-            let data = TaskServices.getAllData('TR_LOGIN')[0];
-            if (param.USER_AUTH_CODE !== data.USER_AUTH_CODE) {
-                this.resetMobileSync(param, data.ACCESS_TOKEN)
-            } else {
-                TaskServices.deleteAllData('TR_LOGIN');
-                this.insertUser(param);
+    async clearData() {
+        await this.clearRealm();
+        await this.deleteFolders()
+    }
 
-                if (data.USER_ROLE != "FFB_GRADING_MILL") {
-                    this.navigateScreen('MainMenu')
-                } else {
-                    this.navigateScreen('MainMenuMil')
+    async clearRealm(){
+        await TaskServices.deleteAllData('TR_LOGIN');
+        await TaskServices.deleteAllData('TR_BLOCK_INSPECTION_H');
+        await TaskServices.deleteAllData('TR_BLOCK_INSPECTION_D');
+        await TaskServices.deleteAllData('TR_BARIS_INSPECTION');
+        await TaskServices.deleteAllData('TR_IMAGE');
+        await TaskServices.deleteAllData('TM_REGION');
+        await TaskServices.deleteAllData('TM_COMP');
+        await TaskServices.deleteAllData('TM_EST');
+        await TaskServices.deleteAllData('TM_AFD');
+        await TaskServices.deleteAllData('TM_BLOCK');
+        await TaskServices.deleteAllData('TR_CATEGORY');
+        await TaskServices.deleteAllData('TR_CONTACT');
+        await TaskServices.deleteAllData('TR_FINDING');
+        await TaskServices.deleteAllData('TM_KRITERIA');
+        await TaskServices.deleteAllData('TM_LAND_USE');
+        await TaskServices.deleteAllData('TM_CONTENT');
+        await TaskServices.deleteAllData('TM_CONTENT_LABEL');
+        await TaskServices.deleteAllData('TM_INSPECTION_TRACK');
+        await TaskServices.deleteAllData('TM_TIME_TRACK');
+        await TaskServices.deleteAllData('TR_H_EBCC_VALIDATION');
+        await TaskServices.deleteAllData('TR_D_EBCC_VALIDATION');
+        await TaskServices.deleteAllData('TR_SYNC_LOG');
+        await TaskServices.deleteAllData('TR_NOTIFICATION');
+        await TaskServices.deleteAllData('TR_GENBA_SELECTED');
+        await TaskServices.deleteAllData('TR_GENBA_INSPECTION');
+    }
+
+    async deleteFolders(){
+        // let dirs = RNFetchBlob.fs.dirs;
+        // await RNFetchBlob.fs.unlink(dirs.SDCardDir + "/" + "MobileInspection");
+        await RNFS.exists(dirDatabase)
+            .then((response)=>{
+                if(response){
+                    RNFS.unlink(dirDatabase);
                 }
-            }
-        } else {
-            this.resetMobileSync(param, param.ACCESS_TOKEN)
-        }
-    }
-
-    resetMobileSync(param, token) {
-        let serviceReset = TaskServices.getAllData('TM_SERVICE')
-            .filtered('API_NAME="AUTH-SYNC-RESET" AND MOBILE_VERSION="' + ServerName.verAPK + '"');
-        if (serviceReset.length > 0) {
-            serviceReset = serviceReset[0];
-            fetch(serviceReset.API_URL, {
-                method: serviceReset.METHOD,
-                headers: {
-                    'Cache-Control': 'no-cache',
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ "RESET_SYNC": 1 })
-            })
-                .then((response) => {
-                    return response.json();
-                })
-                .then((data) => {
-                    this.deleteAllTableAndFolder(param)
-                })
-                .catch((err) => {
-                    console.log("error AUTH-SYNC-RESET", err.message);
-                });
-        }
-    }
-
-    deleteAllTableAndFolder(param) {
-        TaskServices.deleteAllData('TR_LOGIN');
-        TaskServices.deleteAllData('TR_BLOCK_INSPECTION_H');
-        TaskServices.deleteAllData('TR_BLOCK_INSPECTION_D');
-        TaskServices.deleteAllData('TR_BARIS_INSPECTION');
-        TaskServices.deleteAllData('TR_IMAGE');
-        TaskServices.deleteAllData('TM_REGION');
-        TaskServices.deleteAllData('TM_COMP');
-        TaskServices.deleteAllData('TM_EST');
-        TaskServices.deleteAllData('TM_AFD');
-        TaskServices.deleteAllData('TM_BLOCK');
-        TaskServices.deleteAllData('TR_CATEGORY');
-        TaskServices.deleteAllData('TR_CONTACT');
-        TaskServices.deleteAllData('TR_FINDING');
-        TaskServices.deleteAllData('TM_KRITERIA');
-        TaskServices.deleteAllData('TM_LAND_USE');
-        TaskServices.deleteAllData('TM_CONTENT');
-        TaskServices.deleteAllData('TM_CONTENT_LABEL');
-        TaskServices.deleteAllData('TM_INSPECTION_TRACK');
-        TaskServices.deleteAllData('TM_TIME_TRACK');
-        TaskServices.deleteAllData('TR_H_EBCC_VALIDATION');
-        TaskServices.deleteAllData('TR_D_EBCC_VALIDATION');
-        TaskServices.deleteAllData('TR_SYNC_LOG');
-        TaskServices.deleteAllData('TR_NOTIFICATION');
-        TaskServices.deleteAllData('TR_GENBA_SELECTED');
-        TaskServices.deleteAllData('TR_GENBA_INSPECTION');
-
-        RNFetchBlob.fs.unlink(`file://${dirPhotoTemuan}`)
-        RNFetchBlob.fs.unlink(`file://${dirPhotoInspeksiBaris}`)
-        RNFetchBlob.fs.unlink(`file://${dirPhotoInspeksiSelfie}`)
-        RNFetchBlob.fs.unlink(`file://${dirPhotoKategori}`)
-        RNFetchBlob.fs.unlink(`file://${dirPhotoEbccJanjang}`)
-        RNFetchBlob.fs.unlink(`file://${dirPhotoEbccSelfie}`)
-
-
-        this.insertUser(param);
-        if (param.USER_ROLE != "FFB_GRADING_MILL") {
-            this.navigateScreen('MainMenu')
-        } else {
-            this.navigateScreen('MainMenuMil')
-        }
+            });
+        await RNFS.exists(dirSummary)
+            .then((response)=>{
+                if(response){
+                    RNFS.unlink(dirSummary);
+                }
+            });
+        await RNFS.exists(dirPhotoInspeksiBaris)
+            .then((response)=>{
+                if(response){
+                    RNFS.unlink(dirPhotoInspeksiBaris);
+                }
+            });
+        await RNFS.exists(dirPhotoInspeksiSelfie)
+            .then((response)=>{
+                if(response){
+                    RNFS.unlink(dirPhotoInspeksiSelfie);
+                }
+            });
+        await RNFS.exists(dirPhotoTemuan)
+            .then((response)=>{
+                if(response){
+                    RNFS.unlink(dirPhotoTemuan);
+                }
+            });
+        await RNFS.exists(dirPhotoKategori)
+            .then((response)=>{
+                if(response){
+                    RNFS.unlink(dirPhotoKategori);
+                }
+            });
+        await RNFS.exists(dirPhotoEbccJanjang)
+            .then((response)=>{
+                if(response){
+                    RNFS.unlink(dirPhotoEbccJanjang);
+                }
+            });
+        await RNFS.exists(dirPhotoEbccSelfie)
+            .then((response)=>{
+                if(response){
+                    RNFS.unlink(dirPhotoEbccSelfie);
+                }
+            });
+        await RNFS.exists(dirPhotoUser)
+            .then((response)=>{
+                if(response){
+                    RNFS.unlink(dirPhotoUser);
+                }
+            });
+        await RNFS.exists(dirMaps)
+            .then((response)=>{
+                if(response){
+                    RNFS.unlink(dirMaps);
+                }
+            });
     }
 
     navigateScreen(screenName) {
@@ -237,49 +270,6 @@ class Login extends Component {
         this.postLogin(username, password, choosenServer, imei);
     }
 
-    // postLogin(username, password, choosenServer, imei) {
-    //     this.serverNameIndex = choosenServer;
-    //     fetch(ServerName[this.serverNameIndex].data + 'auth/login', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Cache-Control': 'no-cache',
-    //             Accept: 'application/json',
-    //             'Content-Type': 'application/json'
-    //         },
-    //         body: JSON.stringify({ username, password, imei })
-    //     })
-    //         .then((response) => {
-    //             return response.json();
-    //         })
-    //         .then(async (response) => {
-    //             this.setState({ fetching: false });
-    //             console.log('Response Data Login : ', response)
-    //             if (response.status == true) {
-    //                 if (getCurrentUser() !== undefined) {
-    //                     if (response.data.USER_AUTH_CODE == getCurrentUser().USER_AUTH_CODE) {
-    //                         if (response.data.USER_ROLE != "FFB_GRADING_MILL") {
-    //                             this._resetMobileSync('MainMenu', getCurrentUser().ACCESS_TOKEN);
-    //                         } else {
-    //                             this._resetMobileSync('MainMenuMil', getCurrentUser().ACCESS_TOKEN);
-    //                         }
-    //                     } else {
-    //                         this.deleteConfig();
-    //                         this.insertLink(response.data);
-    //                     }
-    //                 } else {
-    //                     this.deleteConfig();
-    //                     this.insertLink(response.data);
-    //                 }
-    //             } else {
-    //                 if (response.data.message === 'Request Timeout') {
-    //                     this.setState(AlertContent.proses_lambat)
-    //                 } else {
-    //                     this.setState(AlertContent.email_pass_salah)
-    //                 }
-    //             }
-    //         });
-    // }
-
     postLogin(username, password, choosenServer, imei) {
         let header = {
             'Cache-Control': 'no-cache',
@@ -297,21 +287,22 @@ class Login extends Component {
         fetchPostWithUrl(ServerName[this.serverNameIndex].data + 'auth/login', request, header)
             .then((response)=>{
                 if(response){
+                    let routeName = response.data.USER_ROLE !== "FFB_GRADING_MILL" ? 'MainMenu' : 'MainMenuMil';
                     if (getCurrentUser() !== undefined) {
-                        if (response.data.USER_AUTH_CODE == getCurrentUser().USER_AUTH_CODE) {
-                            if (response.data.USER_ROLE != "FFB_GRADING_MILL") {
-                                this._resetMobileSync('MainMenu', getCurrentUser().ACCESS_TOKEN);
-                            } else {
-                                this._resetMobileSync('MainMenuMil', getCurrentUser().ACCESS_TOKEN);
-                            }
+                        if (response.data.USER_AUTH_CODE === getCurrentUser().USER_AUTH_CODE) {
+                            this._resetMobileSync(routeName, getCurrentUser().ACCESS_TOKEN);
                         } else {
-                            this.deleteConfig();
-                            this.insertLink(response.data);
+                            this.clearData()
+                                .then(()=>{
+                                    this.insertLink(routeName, response.data);
+                                });
                         }
                     }
                     else {
-                        this.deleteConfig();
-                        this.insertLink(response.data);
+                        this.clearData()
+                            .then(()=>{
+                                this.insertLink(routeName, response.data);
+                            });
                     }
                 }
                 else {
@@ -352,10 +343,6 @@ class Login extends Component {
                     console.log("error AUTH-SYNC-RESET", err.message);
                 });
         }
-    }
-
-    deleteConfig() {
-        TaskServices.deleteAllData('TR_CONFIG');
     }
 
     //Add By Aminju 20/01/2019 15:45
