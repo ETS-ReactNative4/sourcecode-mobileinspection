@@ -45,46 +45,18 @@ class Login extends Component {
             user_id: '',
             user_name: '',
             token: '',
-            imei: '',
             exit: '',
             title: 'Title',
             message: 'Message',
             showModal: false,
-            icon: ''
+            icon: '',
+            logOut: props.navigation.getParam('exit'),
         }
     }
 
     static navigationOptions = {
         header: null,
-    }
-
-    get_IMEI_Number() {
-        var IMEI_2 = IMEI.getUniqueID;
-        this.setState({ imei: IMEI_2 });
-        return IMEI_2;
-    }
-
-    insertUser(user) {
-        var data = {
-            NIK: user.NIK,
-            ACCESS_TOKEN: user.ACCESS_TOKEN,
-            JOB_CODE: user.JOB_CODE,
-            LOCATION_CODE: user.LOCATION_CODE,
-            REFFERENCE_ROLE: user.REFFERENCE_ROLE,
-            USERNAME: user.USERNAME,
-            USER_AUTH_CODE: user.USER_AUTH_CODE,
-            USER_ROLE: user.USER_ROLE,
-            SERVER_NAME_INDEX: this.serverNameIndex,
-            STATUS: 'LOGIN'
-        };
-        var new_date = moment().add(15, 'days');
-        const date = { tanggal: new_date }
-
-        /* SET EXPIRED TOKEN DATE */
-        storeData('expiredToken', date);
-
-        TaskServices.saveData('TR_LOGIN', data);
-    }
+    };
 
     insertLink(routeName, param) {
         fetch(ServerName[this.serverNameIndex].service, {
@@ -147,11 +119,6 @@ class Login extends Component {
     }
 
     componentDidMount() {
-        const { navigation } = this.props;
-        //data dari morescreen logout
-        const logoutStatus = navigation.getParam('exit');
-        this.state.logOut = logoutStatus;
-
         removeData('typeApp')
     }
 
@@ -189,8 +156,12 @@ class Login extends Component {
     }
 
     async deleteFolders(){
-        // let dirs = RNFetchBlob.fs.dirs;
-        // await RNFetchBlob.fs.unlink(dirs.SDCardDir + "/" + "MobileInspection");
+        let dirs = RNFetchBlob.fs.dirs;
+        await RNFetchBlob.fs.exists(dirs.SDCardDir + "/" + "MobileInspection")
+            .then((exist) => {
+                RNFetchBlob.fs.unlink(dirs.SDCardDir + "/" + "MobileInspection");
+            });
+
         await RNFS.exists(dirDatabase)
             .then((response)=>{
                 if(response){
@@ -264,10 +235,7 @@ class Login extends Component {
 
     onLogin(username, password, choosenServer) {
         Keyboard.dismiss();
-        var imei = this.get_IMEI_Number();
-
-
-        this.postLogin(username, password, choosenServer, imei);
+        this.postLogin(username, password, choosenServer, IMEI.getUniqueID);
     }
 
     postLogin(username, password, choosenServer, imei) {
@@ -346,10 +314,6 @@ class Login extends Component {
     }
 
     //Add By Aminju 20/01/2019 15:45
-    state = {
-        logOut: false,
-    };
-
     onBack = () => {
         if (this.state.logOut) {
             BackHandler.exitApp();
