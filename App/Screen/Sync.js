@@ -387,63 +387,40 @@ export default class SyncScreen extends React.Component {
     }
 
     insertLink() {
-        // FuntionCRUD.DELETE_FINDING();
-        NetInfo.isConnected.fetch().then(isConnected => {
-            if (isConnected) {
-                fetch(ServerName[this.state.user.SERVER_NAME_INDEX].service, {
-                    method: 'GET',
-                    headers: {
-                        'Cache-Control': 'no-cache',
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${this.state.user.ACCESS_TOKEN}`
-                    }
-                })
-                    .then((response) => {
-                        return response.json();
-                    })
-                    .then((data) => {
-                        if (data.status) {
-                            TaskServices.deleteAllData('TM_SERVICE');
-                            let index = 0;
-                            for (let i in data.data) {
-                                let newService = {
-                                    SERVICE_ID: parseInt(i),
-                                    MOBILE_VERSION: data.data[i].MOBILE_VERSION,
-                                    API_NAME: data.data[i].API_NAME,
-                                    KETERANGAN: data.data[i].KETERANGAN,
-                                    BODY: data.data[i].BODY ? JSON.stringify(data.data[i].BODY) : '',
-                                    METHOD: data.data[i].METHOD,
-                                    API_URL: data.data[i].API_URL
-                                }
-                                TaskServices.saveData('TM_SERVICE', newService);
-                                index++;
-                            }
-                        }
-
-                        // this.downloadWeeklySummary();
-                        this._onSync()
-                    });
-            } else {
-                this.setState({
-                    showButton: true,
-                    showModal: true,
-                    title: 'Tidak Ada Jaringan',
-                    message: 'Untuk bisa sync, kamu harus terhubung ke Internet',
-                    icon: require('../Images/ic-no-internet.png')
-                });
+        fetch(ServerName[this.state.user.SERVER_NAME_INDEX].service, {
+            method: 'GET',
+            headers: {
+                'Cache-Control': 'no-cache',
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${this.state.user.ACCESS_TOKEN}`
             }
-        });
-        function handleFirstConnectivityChange(isConnected) {
-            NetInfo.isConnected.removeEventListener(
-                'connectionChange',
-                handleFirstConnectivityChange
-            );
-        }
-        NetInfo.isConnected.addEventListener(
-            'connectionChange',
-            handleFirstConnectivityChange
-        );
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                if (data.status) {
+                    TaskServices.deleteAllData('TM_SERVICE');
+                    let index = 0;
+                    for (let i in data.data) {
+                        let newService = {
+                            SERVICE_ID: parseInt(i),
+                            MOBILE_VERSION: data.data[i].MOBILE_VERSION,
+                            API_NAME: data.data[i].API_NAME,
+                            KETERANGAN: data.data[i].KETERANGAN,
+                            BODY: data.data[i].BODY ? JSON.stringify(data.data[i].BODY) : '',
+                            METHOD: data.data[i].METHOD,
+                            API_URL: data.data[i].API_URL
+                        };
+                        TaskServices.saveData('TM_SERVICE', newService);
+                        index++;
+                    }
+                }
+
+                // this.downloadWeeklySummary();
+                this._onSync()
+            });
     }
 
     /* obsolete data ebcc by akbar */
@@ -1165,23 +1142,37 @@ export default class SyncScreen extends React.Component {
                                             showButton: false
                                         },
                                         ()=>{
-                                            this._refreshToken()
-                                                .then((response)=>{
-                                                    //if new token generated, continue sync
-                                                    if(response){
-                                                        //refresh tm services
-                                                        this.insertLink()
-                                                    }
-                                                    else {
-                                                        this.setState({
-                                                            showButton: true,
-                                                            showModal: true,
-                                                            title: 'Refresh token gagal!',
-                                                            message: 'Gagal mendapatkan token baru!',
-                                                            icon: require('../Images/ic-sync-gagal.png')
-                                                        })
-                                                    }
-                                                });
+
+                                            NetInfo.isConnected.fetch().then(isConnected => {
+                                                if (isConnected) {
+                                                    this._refreshToken()
+                                                        .then((response)=>{
+                                                            //if new token generated, continue sync
+                                                            if(response){
+                                                                //refresh tm services
+                                                                this.insertLink()
+                                                            }
+                                                            else {
+                                                                this.setState({
+                                                                    showButton: true,
+                                                                    showModal: true,
+                                                                    title: 'Refresh token gagal!',
+                                                                    message: 'Gagal mendapatkan token baru!',
+                                                                    icon: require('../Images/ic-sync-gagal.png')
+                                                                })
+                                                            }
+                                                        });
+                                                }
+                                                else {
+                                                    this.setState({
+                                                        showButton: true,
+                                                        showModal: true,
+                                                        title: 'Tidak Ada Jaringan',
+                                                        message: 'Untuk bisa sync, kamu harus terhubung ke Internet',
+                                                        icon: require('../Images/ic-no-internet.png')
+                                                    });
+                                                }
+                                            });
                                         }
                                     );
                                 }}>

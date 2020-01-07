@@ -185,6 +185,9 @@ class HomeScreen extends React.Component {
     displayNotificationTemuan();
     notificationDeeplinkSetup(this.props);
 
+    let dirs = RNFetchBlob.fs.dirs;
+    RNFetchBlob.fs.mkdir(dirs.SDCardDir + "/" + "MobileInspection");
+
     RNFS.mkdir(dirDatabase);
     RNFS.mkdir(dirSummary);
     RNFS.mkdir(dirPhotoInspeksiBaris);
