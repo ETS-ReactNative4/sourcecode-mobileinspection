@@ -36,7 +36,7 @@ import {
 } from '../../Lib/dirStorage';
 
 import WeeklySummary from "../../Component/WeeklySummary";
-import { clipString } from '../../Constant/Function';
+import { clipString } from '../../Constant/Functions/StringManipulator';
 import { Images } from '../../Themes';
 import { changeBgFilter, changeIconFilter, getColor, getIconProgress, getStatusImage } from '../../Themes/Resources';
 import { getBlokName, getCategoryName, getEstateName, getStatusBlok, retrieveData, removeData, storeData } from '../../Database/Resources';

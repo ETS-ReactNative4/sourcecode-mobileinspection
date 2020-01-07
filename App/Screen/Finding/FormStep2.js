@@ -18,7 +18,7 @@ import ModalAlert from '../../Component/ModalAlert';
 import ModalAlertBack from '../../Component/ModalAlert';
 import ModalAlertConfirmation from '../../Component/ModalAlertConfirmation'
 import { AlertContent } from '../../Themes';
-import { removeEmojis } from '../../Constant/Function';
+import { removeEmojis } from '../../Constant/Functions/StringManipulator';
 
 var RNFS = require('react-native-fs');
 

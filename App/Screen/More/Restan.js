@@ -21,7 +21,7 @@ import {retrieveData} from '../../Database/Resources';
 import {AlertContent} from '../../Themes';
 import { HeaderWithButton } from "../../Component/Header/HeaderWithButton";
 import { getTitikRestan } from '../Sync/Download/Restan/TitikRestan';
-import {numberSeperator} from "../../Constant/Function";
+import {numberSeperator} from "../../Constant/Functions/StringManipulator";
 
 let polyMap = null;
 let LATITUDE = -2.1890660;

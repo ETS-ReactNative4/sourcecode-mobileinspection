@@ -1,4 +1,4 @@
-//String manipulator
+
 //return "contoh text" -> "contoh text ..."
 export function clipString(text, maxLength){
     if(text.length <= maxLength){
@@ -14,6 +14,7 @@ export function removeEmojis(string){
     return string.replace(regex, '')
 }
 
+//10000 -> 10.000 (delimiter berdasarkan param seperator)
 export function numberSeperator(number, seperator){
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, seperator);
 }
