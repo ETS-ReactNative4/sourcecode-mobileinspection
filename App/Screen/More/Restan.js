@@ -49,7 +49,6 @@ export default class Restan extends React.Component {
             poligons: [],
             currentRestanIndex: 0,
             coordinateRestan: [],
-            coordinateRestanFetch: true,
             latestSyncTime: "",
             highlightBlock: [],
             inspectionType: props.navigation.getParam('inspectionType', 'normal'),
@@ -289,8 +288,7 @@ export default class Restan extends React.Component {
 
             this.setState({
                 highlightBlock: tempHighlightBlock,
-                coordinateRestan: tempCoordinateRestan,
-                coordinateRestanFetch: true
+                coordinateRestan: tempCoordinateRestan
             });
         }
     }
@@ -462,7 +460,7 @@ export default class Restan extends React.Component {
                                             currentRestanIndex: index
                                         },()=>{
                                             if(index !== 0){
-                                                this.restanScrollView.scrollTo({ x: (index*screenWidth), animated: true });
+                                                this.restanScrollView.scrollTo({ x: (index*(screenWidth*0.8 + screenWidth*0.05)), animated: true });
                                             }
                                             else {
                                                 this.restanScrollView.scrollTo({ x: screenWidth, animated: true });
@@ -473,48 +471,28 @@ export default class Restan extends React.Component {
                                         latitude: coordinate.LATITUDE,
                                         longitude: coordinate.LONGITUDE
                                     }}
-                                    onLoad={() => {
-                                        //di pakai ke trackViewChanges to false abis selesai render
-                                        //kalo gak ada ini, pas initial pertama kali image gk ke load.
-                                         if(index === this.state.coordinateRestan.length -1){
-                                             this.setState({
-                                                 coordinateRestanFetch: false
-                                             })
-                                         }
-                                    }}
-                                    tracksViewChanges={this.state.coordinateRestanFetch}
+                                    tracksViewChanges={false}
                                 >
                                     {
                                         this.state.currentRestanIndex === index ?
                                             <View
                                                 style={{
-                                                    justifyContent:"center"
+                                                    justifyContent:"center",
+                                                    backgroundColor: "rgba(222,222,222,1)",
+                                                    paddingHorizontal: 10,
+                                                    paddingVertical: 5
                                                 }}
                                             >
-                                                <Image
-                                                    style={{
-                                                        width: 120
-                                                    }}
-                                                    source={this.imageRestanTooltip(coordinate.TPH_RESTANT_DAY, true)}
-                                                    resizeMode={"contain"}
-                                                />
-                                                <Text style={{fontSize: 15, position:"absolute", alignSelf:"flex-end", paddingBottom: 10, paddingRight: 10, color: this.styleColorChooser(coordinate.TPH_RESTANT_DAY)}}>{`${coordinate.KG_TAKSASI} `}<Text style={{fontSize: 10, alignItems:"center"}}>kg</Text></Text>
+                                                <Text style={{fontSize: 20, color: this.styleColorChooser(coordinate.TPH_RESTANT_DAY)}}>{`${coordinate.KG_TAKSASI} `}<Text style={{fontSize: 15, alignItems:"center"}}>kg</Text></Text>
                                             </View>
                                             :
                                             <View
                                                 style={{
-                                                    justifyContent:"center"
+                                                    justifyContent:"center",
+                                                    backgroundColor: this.styleColorChooser(coordinate.TPH_RESTANT_DAY)
                                                 }}
                                             >
-                                                <Image
-                                                    style={{
-                                                        width: 70,
-                                                        height: 50
-                                                    }}
-                                                    source={this.imageRestanTooltip(coordinate.TPH_RESTANT_DAY, false)}
-                                                    resizeMode={"center"}
-                                                />
-                                                <Text style={{fontSize: 11, position:"absolute", alignSelf:"center", paddingBottom: 10, color: Colors.colorWhite}}>{`${coordinate.KG_TAKSASI} `}<Text style={{fontSize: 9, alignItems:"center"}}>kg</Text></Text>
+                                                <Text style={{fontSize: 11, color: Colors.colorWhite}}>{`${coordinate.KG_TAKSASI} `}<Text style={{fontSize: 9, alignItems:"center"}}>kg</Text></Text>
                                             </View>
                                     }
                                 </Marker>
