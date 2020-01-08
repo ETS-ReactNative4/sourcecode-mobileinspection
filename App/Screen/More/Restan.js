@@ -3,10 +3,7 @@ import {
     StatusBar,
     StyleSheet,
     Text,
-    Image,
     View,
-    // Modal,
-    // TouchableOpacity,
     NetInfo,
     ScrollView,
     Dimensions, AsyncStorage
@@ -18,7 +15,6 @@ import Colors from '../../Constant/Colors'
 import ModalLoading from '../../Component/ModalLoading'
 import ModalAlert from '../../Component/ModalAlert';
 import TaskServices from '../../Database/TaskServices';
-import {retrieveData} from '../../Database/Resources';
 import {AlertContent} from '../../Themes';
 import { HeaderWithButton } from "../../Component/Header/HeaderWithButton";
 import { getTitikRestan } from '../Sync/Download/Restan/TitikRestan';
@@ -94,24 +90,6 @@ export default class Restan extends React.Component {
             })
     };
 
-    /* DETECT FAKE GPS */
-    // detectFakeGPS() {
-    //     navigator.geolocation.getCurrentPosition(
-    //         (position) => {
-    //             if (position.mocked) {
-    //                 this.validateType()
-    //             } else {
-    //                 this.getTitikRestan();
-    //                 this.getLocation();
-    //             }
-    //         },
-    //         (error) => {
-    //             this.setState({ modalLoading: { ...this.state.modalLoading, showModal: false } });
-    //         },
-    //         { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
-    //     );
-    // }
-
     onMapReady(){
         this.setState({
                 modalLoading: {
@@ -129,20 +107,6 @@ export default class Restan extends React.Component {
             }
         );
     }
-
-    // validateType() {
-    //     retrieveData('typeApp').then(data => {
-    //         if (data !== null && data === 'PROD') {
-    //             this.setState({
-    //                 modalLoading: { ...this.state.modalLoading, showModal: false },
-    //                 modalAlert: { ...AlertContent.mock_location }
-    //             })
-    //         } else {
-    //             this.getTitikRestan();
-    //             this.getLocation();
-    //         }
-    //     })
-    // }
 
     async fetchRestanCoordinate(){
         let fetchStatus = false;
@@ -310,29 +274,6 @@ export default class Restan extends React.Component {
         }
     }
 
-    imageRestanTooltip(TPH_RESTANT_DAY, focus){
-        if(focus){
-            switch (TPH_RESTANT_DAY) {
-                case "1":
-                    return require('../../Images/icon/TitikRestan/popup-red-focus.png');
-                case "2":
-                    return require('../../Images/icon/TitikRestan/popup-orange-focus.png');
-                default:
-                    return require('../../Images/icon/TitikRestan/popup-yellow-focus.png');
-            }
-        }
-        else {
-            switch (TPH_RESTANT_DAY) {
-                case "1":
-                    return require('../../Images/icon/TitikRestan/popup-red.png');
-                case "2":
-                    return require('../../Images/icon/TitikRestan/popup-orange.png');
-                default:
-                    return require('../../Images/icon/TitikRestan/popup-yellow.png');
-            }
-        }
-    }
-
     styleColorChooser(TPH_RESTANT_DAY){
         switch (parseFloat(TPH_RESTANT_DAY)) {
             case 1:
@@ -455,6 +396,7 @@ export default class Restan extends React.Component {
                         this.state.coordinateRestan.map((coordinate, index)=>{
                             return(
                                 <Marker
+                                    style={{zIndex: this.state.currentRestanIndex === index ? 5 : 0}}
                                     key={index}
                                     onPress={()=>{
                                         this.setState({
@@ -636,124 +578,8 @@ export default class Restan extends React.Component {
         }
         return null;
     }
-
-    // showRestanDetail() {
-    //     return (
-    //         <Modal
-    //             visible={this.state.modalRestainDetail}
-    //             transparent={true}
-    //         >
-    //             <TouchableOpacity
-    //                 style={{
-    //                     flex: 1,
-    //                     alignItems:'center',
-    //                     justifyContent: 'center',
-    //                     backgroundColor: Colors.shade,
-    //                     paddingLeft: 24,
-    //                     paddingRight: 24,
-    //                 }}
-    //                 onPress={()=>{
-    //                     this.setState({
-    //                         modalRestainDetail: false,
-    //                     })
-    //                 }}
-    //             >
-    //                 <View style={{
-    //                     width: "75%",
-    //                     backgroundColor: Colors.background,
-    //                     padding: 15,
-    //                     borderRadius: 4
-    //                 }}>
-    //                     <View style={{
-    //                         alignItems:"center",
-    //                         justifyContent:"center",
-    //                         paddingVertical: 5
-    //                     }}>
-    //                         <Text>{`${this.state.restanData.block_name}`}</Text>
-    //                         <Text>{`TPH ${this.state.restanData.TPH}`}</Text>
-    //                     </View>
-    //                     <View style={{
-    //                         paddingHorizontal: 10,
-    //                         justifyContent:"space-between",
-    //                         flexDirection: "row"
-    //                     }}>
-    //                         <View style={{
-    //                             flex: 1,
-    //                             marginRight: 10,
-    //                             backgroundColor:this.styleColorChooser(this.state.restanData.hari),
-    //                             borderRadius: 5,
-    //                             alignItems:'center',
-    //                             justifyContent:'center'
-    //                         }}>
-    //                             <Text>{this.state.restanData.taksasi}</Text>
-    //                             <Text>KG</Text>
-    //                         </View>
-    //                         <View
-    //                             style={{
-    //                                 flex: 2,
-    //                                 justifyContent:'space-evenly'
-    //                             }}>
-    //                             <Text>{`Restan ${this.state.restanData.hari} Hari`}</Text>
-    //                             <View style={{
-    //                                 flexDirection: 'row',
-    //                                 justifyContent:'space-between'
-    //                             }}>
-    //                                 <Text style={{paddingRight: 5}}>{`Janjang:`}</Text>
-    //                                 <Text>{this.state.restanData.janjang}</Text>
-    //                             </View>
-    //                             <View style={{
-    //                                 flexDirection: 'row',
-    //                                 justifyContent:'space-between'
-    //                             }}>
-    //                                 <Text style={{paddingRight: 5}}>{`Brondolan(KG):`}</Text>
-    //                                 <Text>{this.state.restanData.brondolan}</Text>
-    //                             </View>
-    //                         </View>
-    //                     </View>
-    //                 </View>
-    //             </TouchableOpacity>
-    //         </Modal>
-    //     );
-    // }
 }
 
 Restan.propTypes = {
     provider: ProviderPropType,
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1
-    },
-    map: {
-        ...StyleSheet.absoluteFillObject,
-    },
-    bubble: {
-        flex: 1,
-        backgroundColor: 'rgba(255,255,255,0.7)',
-        paddingHorizontal: 18,
-        paddingVertical: 12,
-        borderRadius: 20,
-    },
-    marker: {
-        flex: 0,
-        flexDirection: 'row',
-        alignSelf: 'flex-start',
-        padding: 5
-    },
-    latlng: {
-        width: 200,
-        alignItems: 'stretch',
-    },
-    button: {
-        width: 80,
-        paddingHorizontal: 12,
-        alignItems: 'center',
-        marginHorizontal: 10,
-    },
-    buttonContainer: {
-        flexDirection: 'row',
-        marginVertical: 20,
-        backgroundColor: 'transparent',
-    },
-});
