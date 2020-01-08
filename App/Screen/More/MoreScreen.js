@@ -27,7 +27,6 @@ import RNFS from 'react-native-fs';
 import { retrieveData } from '../../Database/Resources';
 import WeeklySummary from '../../Component/WeeklySummary';
 import { downloadProfileImage } from "../Sync/Download/Image/Profile";
-import {realmToArrayObject} from "../../Constant/Functions/Realm";
 
 export default class MoreScreen extends Component {
 
@@ -378,15 +377,15 @@ export default class MoreScreen extends Component {
   }
 
   async realmToJson() {
-    let TR_H_EBCC_VALIDATION = await realmToArrayObject("TR_H_EBCC_VALIDATION");
-    let TR_D_EBCC_VALIDATION = await realmToArrayObject("TR_D_EBCC_VALIDATION");
-    let TR_BLOCK_INSPECTION_H = await realmToArrayObject("TR_BLOCK_INSPECTION_H");
-    let TR_BLOCK_INSPECTION_D = await realmToArrayObject("TR_BLOCK_INSPECTION_D");
-    let TM_INSPECTION_TRACK = await realmToArrayObject("TM_INSPECTION_TRACK");
-    let TR_GENBA_INSPECTION = await realmToArrayObject("TR_GENBA_INSPECTION");
-    let TR_FINDING = await realmToArrayObject("TR_FINDING");
-    let TR_IMAGE = await realmToArrayObject("TR_IMAGE");
-    let TR_LOG = await realmToArrayObject("TR_LOG");
+    let TR_H_EBCC_VALIDATION = TaskServices.getAllData("TR_H_EBCC_VALIDATION");
+    let TR_D_EBCC_VALIDATION = TaskServices.getAllData("TR_D_EBCC_VALIDATION");
+    let TR_BLOCK_INSPECTION_H = TaskServices.getAllData("TR_BLOCK_INSPECTION_H");
+    let TR_BLOCK_INSPECTION_D = TaskServices.getAllData("TR_BLOCK_INSPECTION_D");
+    let TM_INSPECTION_TRACK = TaskServices.getAllData("TM_INSPECTION_TRACK");
+    let TR_GENBA_INSPECTION = TaskServices.getAllData("TR_GENBA_INSPECTION");
+    let TR_FINDING = TaskServices.getAllData("TR_FINDING");
+    let TR_IMAGE = TaskServices.getAllData("TR_IMAGE");
+    let TR_LOG = TaskServices.getAllData("TR_LOG");
 
     let finalString = [
       { "TABLE_NAME": "TR_H_EBCC_VALIDATION", "DATA": TR_H_EBCC_VALIDATION },
