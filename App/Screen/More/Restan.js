@@ -11,6 +11,7 @@ import {
     ScrollView,
     Dimensions, AsyncStorage
 } from 'react-native';
+import IonicIcon from 'react-native-vector-icons/Ionicons';
 
 import MapView, {Marker, Polygon, PROVIDER_GOOGLE, ProviderPropType} from 'react-native-maps';
 import Colors from '../../Constant/Colors'
@@ -475,24 +476,35 @@ export default class Restan extends React.Component {
                                 >
                                     {
                                         this.state.currentRestanIndex === index ?
-                                            <View
-                                                style={{
-                                                    justifyContent:"center",
-                                                    backgroundColor: "rgba(222,222,222,1)",
-                                                    paddingHorizontal: 10,
-                                                    paddingVertical: 5
-                                                }}
-                                            >
-                                                <Text style={{fontSize: 20, color: this.styleColorChooser(coordinate.TPH_RESTANT_DAY)}}>{`${coordinate.KG_TAKSASI} `}<Text style={{fontSize: 15, alignItems:"center"}}>kg</Text></Text>
+                                            <View>
+                                                <View
+                                                    style={{
+                                                        flex: 1,
+                                                        flexDirection: "row",
+                                                        backgroundColor: Colors.colorWhite,
+                                                        padding: 5,
+                                                        borderRadius: 5
+                                                    }}>
+                                                    <IonicIcon style={{ paddingHorizontal: 5 }} name={'ios-information-circle'} size={25} color={this.styleColorChooser(coordinate.TPH_RESTANT_DAY)} />
+                                                    <Text style={{fontSize: 20, paddingHorizontal:10, color: this.styleColorChooser(coordinate.TPH_RESTANT_DAY)}}>{`${coordinate.KG_TAKSASI} `}<Text style={{fontSize: 15, alignItems:"center"}}>kg</Text></Text>
+                                                </View>
+                                                <IonicIcon style={{marginTop: -15, alignSelf:"center"}} name={'md-arrow-dropdown'} size={40} color={Colors.colorWhite} />
                                             </View>
                                             :
-                                            <View
-                                                style={{
-                                                    justifyContent:"center",
-                                                    backgroundColor: this.styleColorChooser(coordinate.TPH_RESTANT_DAY)
-                                                }}
-                                            >
-                                                <Text style={{fontSize: 11, color: Colors.colorWhite}}>{`${coordinate.KG_TAKSASI} `}<Text style={{fontSize: 9, alignItems:"center"}}>kg</Text></Text>
+                                            <View>
+                                                <View
+                                                    style={{
+                                                        paddingHorizontal: 10,
+                                                        paddingVertical: 5,
+                                                        borderRadius: 5,
+                                                        alignItems:"center",
+                                                        justifyContent:"center",
+                                                        backgroundColor: this.styleColorChooser(coordinate.TPH_RESTANT_DAY)
+                                                    }}
+                                                >
+                                                    <Text style={{fontSize: 11, color: Colors.colorWhite}}>{`${coordinate.KG_TAKSASI} `}<Text style={{fontSize: 9, alignItems:"center"}}>kg</Text></Text>
+                                                </View>
+                                                <IonicIcon style={{marginTop: -15, alignSelf:"center"}} name={'md-arrow-dropdown'} size={40} color={this.styleColorChooser(coordinate.TPH_RESTANT_DAY)} />
                                             </View>
                                     }
                                 </Marker>
