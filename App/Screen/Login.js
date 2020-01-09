@@ -25,6 +25,7 @@ import {
     dirPhotoTemuan, dirPhotoUser, dirSummary
 } from '../Lib/dirStorage';
 import ModalAlert from '../Component/ModalAlert'
+import ModalLoading from '../Component/ModalLoading';
 import ServerName from '../Constant/ServerName'
 import IMEI from 'react-native-device-info'
 import { AlertContent } from '../Themes';
@@ -51,6 +52,12 @@ class Login extends Component {
             showModal: false,
             icon: '',
             logOut: props.navigation.getParam('exit'),
+
+            modalLoading: {
+                showModal: false,
+                title: "Loading",
+                message: "Cek Status Login..."
+            }
         }
     }
 
@@ -91,7 +98,10 @@ class Login extends Component {
                     // this.checkUser(param);
                 }
                 else {
-                    this.setState(AlertContent.versionName_salah)
+                    this.setState({
+                        modalLoading: { ...this.state.modalLoading, showModal: false },
+                        ...AlertContent.versionName_salah
+                    });
                 }
             });
     }
@@ -236,8 +246,14 @@ class Login extends Component {
     }
 
     onLogin(username, password, choosenServer) {
-        Keyboard.dismiss();
-        this.postLogin(username, password, choosenServer, IMEI.getUniqueID);
+        this.setState({
+            modalLoading: {
+                ...this.state.modalLoading,
+                showModal: true
+            }},()=>{
+            Keyboard.dismiss();
+            this.postLogin(username, password, choosenServer, IMEI.getUniqueID);
+        });
     }
 
     postLogin(username, password, choosenServer, imei) {
@@ -256,7 +272,6 @@ class Login extends Component {
         this.serverNameIndex = choosenServer;
         fetchPostWithUrl(ServerName[this.serverNameIndex].data + 'auth/login', request, header)
             .then((response)=>{
-                console.log("TE",response);
                 if(response.status){
                     let routeName = response.data.USER_ROLE !== "FFB_GRADING_MILL" ? 'MainMenu' : 'MainMenuMil';
                     if (getCurrentUser() !== undefined) {
@@ -276,11 +291,19 @@ class Login extends Component {
                             });
                     }
                 }
-                else if(response.status === false) {
-                    this.setState({...AlertContent.email_pass_salah})
-                }
-                else {
-                    this.setState({...AlertContent.server_no_response})
+                else{
+                    if(response.status === false){
+                        this.setState({
+                            modalLoading: { ...this.state.modalLoading, showModal: false },
+                            ...AlertContent.email_pass_salah
+                        });
+                    }
+                    else {
+                        this.setState({
+                            modalLoading: { ...this.state.modalLoading, showModal: false },
+                            ...AlertContent.server_no_response
+                        });
+                    }
                 }
             });
     }
@@ -305,12 +328,13 @@ class Login extends Component {
                     return response.json();
                 })
                 .then((data) => {
-                    console.log('Response Reset Mobile Sync : ', data);
-                    if (data.status == true) {
-                        TaskServices.updateLogin('LOGIN');
-                        this.navigateScreen(routeName);
-                    } else {
-                        console.log(data.message);
+                    if (data.status) {
+                        this.setState({
+                            modalLoading: { ...this.state.modalLoading, showModal: false }
+                        }, ()=>{
+                            TaskServices.updateLogin('LOGIN');
+                            this.navigateScreen(routeName);
+                        });
                     }
                 })
                 .catch((err) => {
@@ -359,6 +383,10 @@ class Login extends Component {
                         />
                     </KeyboardAvoidingView>
                 </ImageBackground>
+                <ModalLoading
+                    visible={this.state.modalLoading.showModal}
+                    title={this.state.modalLoading.title}
+                    message={this.state.modalLoading.message} />
             </HandleBack>
         );
     }
