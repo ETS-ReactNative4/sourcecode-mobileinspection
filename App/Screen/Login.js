@@ -159,66 +159,68 @@ class Login extends Component {
         let dirs = RNFetchBlob.fs.dirs;
         await RNFetchBlob.fs.exists(dirs.SDCardDir + "/" + "MobileInspection")
             .then((exist) => {
-                RNFetchBlob.fs.unlink(dirs.SDCardDir + "/" + "MobileInspection");
+                if(exist){
+                    RNFetchBlob.fs.unlink(dirs.SDCardDir + "/" + "MobileInspection");
+                }
             });
 
         await RNFS.exists(dirDatabase)
-            .then((response)=>{
-                if(response){
+            .then((exist)=>{
+                if(exist){
                     RNFS.unlink(dirDatabase);
                 }
             });
         await RNFS.exists(dirSummary)
-            .then((response)=>{
-                if(response){
+            .then((exist)=>{
+                if(exist){
                     RNFS.unlink(dirSummary);
                 }
             });
         await RNFS.exists(dirPhotoInspeksiBaris)
-            .then((response)=>{
-                if(response){
+            .then((exist)=>{
+                if(exist){
                     RNFS.unlink(dirPhotoInspeksiBaris);
                 }
             });
         await RNFS.exists(dirPhotoInspeksiSelfie)
-            .then((response)=>{
-                if(response){
+            .then((exist)=>{
+                if(exist){
                     RNFS.unlink(dirPhotoInspeksiSelfie);
                 }
             });
         await RNFS.exists(dirPhotoTemuan)
-            .then((response)=>{
-                if(response){
+            .then((exist)=>{
+                if(exist){
                     RNFS.unlink(dirPhotoTemuan);
                 }
             });
         await RNFS.exists(dirPhotoKategori)
-            .then((response)=>{
-                if(response){
+            .then((exist)=>{
+                if(exist){
                     RNFS.unlink(dirPhotoKategori);
                 }
             });
         await RNFS.exists(dirPhotoEbccJanjang)
-            .then((response)=>{
-                if(response){
+            .then((exist)=>{
+                if(exist){
                     RNFS.unlink(dirPhotoEbccJanjang);
                 }
             });
         await RNFS.exists(dirPhotoEbccSelfie)
-            .then((response)=>{
-                if(response){
+            .then((exist)=>{
+                if(exist){
                     RNFS.unlink(dirPhotoEbccSelfie);
                 }
             });
         await RNFS.exists(dirPhotoUser)
-            .then((response)=>{
-                if(response){
+            .then((exist)=>{
+                if(exist){
                     RNFS.unlink(dirPhotoUser);
                 }
             });
         await RNFS.exists(dirMaps)
-            .then((response)=>{
-                if(response){
+            .then((exist)=>{
+                if(exist){
                     RNFS.unlink(dirMaps);
                 }
             });
@@ -254,7 +256,8 @@ class Login extends Component {
         this.serverNameIndex = choosenServer;
         fetchPostWithUrl(ServerName[this.serverNameIndex].data + 'auth/login', request, header)
             .then((response)=>{
-                if(response){
+                console.log("TE",response);
+                if(response.status){
                     let routeName = response.data.USER_ROLE !== "FFB_GRADING_MILL" ? 'MainMenu' : 'MainMenuMil';
                     if (getCurrentUser() !== undefined) {
                         if (response.data.USER_AUTH_CODE === getCurrentUser().USER_AUTH_CODE) {
@@ -272,6 +275,9 @@ class Login extends Component {
                                 this.insertLink(routeName, response.data);
                             });
                     }
+                }
+                else if(response.status === false) {
+                    this.setState({...AlertContent.email_pass_salah})
                 }
                 else {
                     this.setState({...AlertContent.server_no_response})
