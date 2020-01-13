@@ -29,10 +29,6 @@ import {HeaderWithButton} from "../../Component/Header/HeaderWithButton";
 
 export default class MoreScreen extends Component {
 
-  static navigationOptions = () => ({
-    header: null
-  });
-
   constructor(props) {
     super(props);
     let user = TaskServices.getAllData('TR_LOGIN')[0];

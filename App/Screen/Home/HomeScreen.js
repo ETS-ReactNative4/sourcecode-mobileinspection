@@ -980,13 +980,15 @@ class HomeScreen extends React.Component {
       let dataUser = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', this.state.currentUser.USER_AUTH_CODE);
 
       return(
-          <View>
+          <View style={{
+              backgroundColor: 'rgba(247,247,247,1)',
+              paddingBottom: 10
+          }}>
               <View style={{
                   flexDirection: 'row',
                   paddingVertical: 10,
                   justifyContent: 'center',
                   alignItems: 'center',
-                  backgroundColor: 'rgba(247,247,247,1)'
               }}>
                   {/* <Image source={require('../../Images/icon/ic_walking.png')} style={styles.icon} /> */}
                   <TouchableOpacity onPress={() => {
@@ -1020,14 +1022,14 @@ class HomeScreen extends React.Component {
                       <Text style={{ fontSize: 18, fontWeight: '500' }}>{`Hai, ${dataUser.FULLNAME}`}</Text>
                       <View style={{flex: 1, alignItems:"center", justifyContent:"center"}}>
                           <View style={{ flexDirection: "row", backgroundColor:"white", borderRadius: 15, alignSelf: 'baseline', alignItems:'center', paddingHorizontal: 10, paddingVertical: 5}}>
-                              <Image style={{ width: 22, height: 22}} source={changeIconFilter(this.state.isFilter)} />
-                              <Text style={{ fontSize: 12, paddingHorizontal: 5 }}>100 Point</Text>
-                              <Image style={{ width: 22, height: 22}} source={changeIconFilter(this.state.isFilter)} />
+                              <Image style={{ width: 15, height: 15}} source={require('../../Images/icon/HomeScreen/icon_points_black.png')} />
+                              <Text style={{ fontSize: 12, paddingHorizontal: 10 }}>100000 Point</Text>
+                              <Image style={{ width: 15, height: 15}} source={require('../../Images/icon/HomeScreen/icon_right.png')} />
                           </View>
                       </View>
                   </View>
               </View>
-              <View style={{flexDirection:"row", justifyContent:'space-between', padding: 15}}>
+              <View style={{backgroundColor:"white", flexDirection:"row", justifyContent:'space-between', padding: 15}}>
                   <TouchableOpacity
                     onPress={()=>{
                         alert("Belum di implentasikan!")

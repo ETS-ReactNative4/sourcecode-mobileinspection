@@ -72,10 +72,6 @@ export default class Restan extends React.Component {
         };
     }
 
-    static navigationOptions = () => ({
-        header: null
-    });
-
     componentDidMount() {
         this.loadMap();
     }
