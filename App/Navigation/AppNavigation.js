@@ -59,6 +59,8 @@ import PilihPeta from '../Screen/Maps/PilihPeta'
 import DashboardKebun from '../Screen/More/DashboardKebun'
 import Restan from '../Screen/More/Restan'
 
+import MoreScreen from '../Screen/More/MoreScreen';
+
 import Colors from '../Constant/Colors'
 // import FormInspectionNavigator from '../Screen/Inspeksi/Navigation/FormInspectionNavigator';
 
@@ -164,7 +166,7 @@ const main = createStackNavigator({
     //MoreScreen
     DashboardKebun: { screen: DashboardKebun },
     Restan: { screen: Restan },
-
+    MoreScreen: {screen: MoreScreen}
 }, {
     headerMode: 'screen',
     initialRouteName: 'SplashScreen',

@@ -25,8 +25,7 @@ import {
 } from '../../Lib/dirStorage';
 import RNFS from 'react-native-fs';
 import { retrieveData } from '../../Database/Resources';
-import WeeklySummary from '../../Component/WeeklySummary';
-import { downloadProfileImage } from "../Sync/Download/Image/Profile";
+import {HeaderWithButton} from "../../Component/Header/HeaderWithButton";
 
 export default class MoreScreen extends Component {
 
@@ -62,55 +61,9 @@ export default class MoreScreen extends Component {
   willFocus = this.props.navigation.addListener(
     'willFocus',
     () => {
-      this.getProfileImage();
       RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
-      this.loadData();
     }
   );
-
-  getProfileImage() {
-    NetInfo.isConnected.fetch().then(isConnected => {
-      if (isConnected) {
-        downloadProfileImage(this.state.user.USER_AUTH_CODE)
-          .then(() => {
-            let getPath = TaskServices.findBy2("TR_IMAGE_PROFILE", "USER_AUTH_CODE", this.state.user.USER_AUTH_CODE);
-            let pathPhoto = getPhoto(typeof getPath === 'undefined' ? null : getPath.IMAGE_PATH_LOCAL);
-            this.setState({
-              userPhoto: pathPhoto
-            })
-          });
-      }
-    });
-  }
-
-  loadData() {
-    let dataUser = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', this.state.user.USER_AUTH_CODE);
-    if (dataUser !== undefined) {
-      let name = dataUser.FULLNAME;
-      let jabatan = dataUser.USER_ROLE.replace(/_/g, " ");
-      console.log('Jabatan : ', jabatan);
-      let estate = TaskServices.getEstateName();
-      this.setState({ name, jabatan, estate })
-    }
-
-    this.setState({
-      /* SET JUMLAH HARI BELUM SYNC */
-      divDays: syncDays(),
-
-      /* SET JUMLAH NOTIF  */
-      notifCount: notifInbox()
-    })
-
-  }
-
-  getEstateName(werks) {
-    try {
-      let data = TaskServices.findBy2('TM_EST', 'WERKS', werks);
-      return data.EST_NAME;
-    } catch (error) {
-      return '';
-    }
-  }
 
   navigateScreen(screenName) {
     const navigation = this.props.navigation;
@@ -146,13 +99,14 @@ export default class MoreScreen extends Component {
       <View style={styles.container}>
 
         {/* HEADER */}
-        <Header
-          notif={this.state.notifCount}
-          divDays={this.state.divDays}
-          onPressLeft={() => this.props.navigation.navigate('Sync')}
-          onPressRight={() => this.props.navigation.navigate('Inbox')}
-          title={'Lainnya'}
-          isNotUserMill={isNotUserMill()} />
+          <HeaderWithButton
+              title={"Menu Lainnya"}
+              iconLeft={require("../../Images/icon/ic_arrow_left.png")}
+              rightVectorIcon={true}
+              iconRight={null}
+              onPressLeft={()=>{this.props.navigation.pop()}}
+              onPressRight={null}
+          />
 
         <ScrollView style={styles.container}>
           <ModalConfirmation
@@ -167,15 +121,6 @@ export default class MoreScreen extends Component {
             message={`Yakin nih mau keluar dari aplikasi ini? Untuk login lagi, kamu harus terhubung ke WIFI dulu ya`}
           />
 
-          <WeeklySummary
-            dataInspeksi={this.state.dataInspectionSummary}
-            dataEbcc={this.state.dataEbccSummary}
-            dataTemuan={this.state.dataFindingSummary}
-            visible={this.state.isVisibleSummary}
-            onPressClose={() => {
-              this.setState({ isVisibleSummary: false })
-            }} />
-
           <ModalAlert
             visible={this.state.showModal}
             icon={this.state.icon}
@@ -185,42 +130,6 @@ export default class MoreScreen extends Component {
 
           <View>
 
-            <View style={[styles.containerProfile, { marginTop: 5 }]}>
-              {/* <Image source={require('../../Images/icon/ic_walking.png')} style={styles.icon} /> */}
-              <TouchableOpacity onPress={() => {
-                if (this.state.name !== "") {
-                  this.props.navigation.navigate('FotoUser', {
-                    setPhoto: (photoPath) => {
-                      this.setState({ userPhoto: photoPath })
-                      this.forceUpdate();
-                    }
-                  });
-
-                }
-                else {
-                  this.setState({
-                    showConfirm: false,
-                    showModal: true,
-                    title: 'Data kosong!',
-                    message: 'Data tidak di temukan, Tolong sync terlebih dahulu sebulum merubah foto!',
-                    icon: require('../../Images/ic-no-internet.png')
-                  })
-                }
-              }}>
-                <Thumbnail
-                  style={{ borderColor: '#AAAAAA', height: 72, width: 72, marginLeft: 5, borderWidth: 2, borderRadius: 100 }}
-                  source={this.state.userPhoto === null ? getThumnail() : { uri: this.state.userPhoto + '?' + new Date() }} />
-                <View style={{ position: 'absolute', right: 0, bottom: 0 }}>
-                  <Image source={Images.ic_add_image} style={{ height: 24, width: 24 }} />
-                </View>
-              </TouchableOpacity>
-              <View style={{ flex: 1, marginLeft: 12 }}>
-                <Text style={{ fontSize: 14, fontWeight: '500' }}>{this.state.name}</Text>
-                <Text style={{ fontSize: 12, color: 'grey', marginTop: 5 }}>{this.state.jabatan}</Text>
-                {/*<Text style={{ fontSize: 12, color: 'grey' }}>{this.state.estate}</Text>*/}
-              </View>
-            </View>
-
             {/* Menu Peta Lokasi  */}
             <FeatureLainnya
               lineTop={true}
@@ -228,22 +137,6 @@ export default class MoreScreen extends Component {
               title={'Peta Lokasi'}
               icon={Images.ic_lainnya_peta}
               onPressDefault={() => this.onPressMenu('Maps')} />
-
-            {/* Menu Dashboard Kebun */}
-            {this.state.jabatan == 'ASISTEN LAPANGAN' &&
-            <FeatureLainnya
-              sizeIcon={20}
-              title={'Dashboard Kebun'}
-              icon={Images.ic_lainnya_dashboard_kebun}
-              isDownload={true}
-              onPressDefault={() => this.onPressMenu('DashboardKebun')} />}
-
-            {/* Menu Dashboard Mingguan */}
-            <FeatureLainnya
-              sizeIcon={20}
-              title={'Dashboard Mingguan'}
-              icon={Images.ic_lainnya_dashboard}
-              onPressDefault={() => this.onPressMenu('Dashboard')} />
 
             {/* Menu Export Database */}
             <FeatureLainnya
@@ -339,19 +232,6 @@ export default class MoreScreen extends Component {
     }
 
   }
-
-  /* Function Export Database */
-  // async menuDatabase() {
-  //   RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
-  //
-  //   setTimeout(() => {
-  //     ToastAndroid.showWithGravity(
-  //       'Database berhasil di export',
-  //       ToastAndroid.LONG,
-  //       ToastAndroid.CENTER
-  //     );
-  //   }, 2000)
-  // }
 
   async exportDatabase() {
     await this.realmToJson();

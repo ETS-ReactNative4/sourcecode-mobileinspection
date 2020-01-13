@@ -4,8 +4,6 @@ import HomeScreen from './HomeScreen';
 import FindingScreen from '../Finding/FindingScreen';
 import InspectionScreen from '../Inspeksi/InspectionScreen';
 import EbccValidationScreen from '../Ebcc/EbccValidationScreen';
-import MoreScreen from '../More/MoreScreen';
-
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -35,14 +33,6 @@ InspectionStack.navigationOptions = {
   tabBarLabel: 'Inspeksi',
 };
 
-const MoreStack = createStackNavigator({
-  More: MoreScreen,
-});
-
-MoreStack.navigationOptions = {
-  tabBarLabel: 'Lainnya',
-};
-
 const EbccValidationStack = createStackNavigator({
   EbccValidation: EbccValidationScreen,
 });
@@ -56,8 +46,7 @@ export default (
     HomeStack,
     FindingStack,
     InspectionStack,
-    EbccValidationStack,
-    MoreStack
+    EbccValidationStack
   }, {
       navigationOptions: ({ navigation }) => ({
         tabBarIcon: ({ focused, horizontal, tintColor }) => {
@@ -75,11 +64,6 @@ export default (
           } else if (routeName === 'EbccValidationStack') {
             iconName = `check-circle`;
             return <FontAwesome name={iconName} size={horizontal ? 20 : 20} color={tintColor} />;
-          } else if (routeName === 'MoreStack') {
-            iconName = `more-horiz`;
-            // You can return any component that you like here! We usually use an
-            // icon component from react-native-vector-icons
-            return <MaterialIcons name={iconName} size={horizontal ? 20 : 20} color={tintColor} />;
           }
         },
       }),

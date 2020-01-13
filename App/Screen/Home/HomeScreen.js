@@ -1,16 +1,16 @@
 "use strict";
 import React from 'react';
 import {
-  ActivityIndicator,
-  Dimensions,
-  Image,
-  ImageBackground,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  TouchableNativeFeedback,
-  TouchableOpacity,
-  View
+    ActivityIndicator,
+    Dimensions,
+    Image,
+    ImageBackground, NetInfo,
+    ScrollView,
+    StatusBar,
+    StyleSheet,
+    TouchableNativeFeedback,
+    TouchableOpacity,
+    View
 } from 'react-native';
 import { Text, Thumbnail } from 'native-base';
 import Entypo from 'react-native-vector-icons/Entypo'
@@ -19,7 +19,15 @@ import TaskServices from '../../Database/TaskServices'
 import ServerName from '../../Constant/ServerName'
 import Moment from 'moment';
 import RNFetchBlob from 'rn-fetch-blob'
-import { changeFormatDate, dateDisplayMobile, isNotUserMill, syncDays, notifInbox, getTodayDate } from '../../Lib/Utils';
+import {
+    changeFormatDate,
+    dateDisplayMobile,
+    isNotUserMill,
+    syncDays,
+    notifInbox,
+    getTodayDate,
+    getThumnail, getPhoto
+} from '../../Lib/Utils';
 import FastImage from 'react-native-fast-image'
 import SwiperSlider from 'react-native-swiper'
 import {
@@ -50,6 +58,7 @@ let { width } = Dimensions.get('window')
 
 import Header from '../../Component/Header'
 import { fetchPut } from "../../Api/FetchingApi";
+import {downloadProfileImage} from "../Sync/Download/Image/Profile";
 
 class HomeScreen extends React.Component {
 
@@ -73,6 +82,7 @@ class HomeScreen extends React.Component {
       currentUser: currentUser[0],
       data: [],
       thumnailImage: '',
+      userPhoto: null,
       loadAll: true,
 
       //Add Modal Alert by Aminju
@@ -87,37 +97,47 @@ class HomeScreen extends React.Component {
     }
   }
 
-  showWeeklySummary = async () => {
+  showWeeklySummary = async (forceShow) => {
 
     await retrieveData('FindingSummary').then((result) => {
       if (result != null) {
         this.setState({ dataFindingSummary: result })
       }
-    })
+    });
 
     await retrieveData('EbccSummary').then((result) => {
       if (result != null) {
         this.setState({ dataEbccSummary: result })
       }
-    })
+    });
 
     await retrieveData('InspectionSummary').then((result) => {
       if (result != null) {
         this.setState({ dataInspectionSummary: result })
       }
-    })
+    });
 
-    await retrieveData('FirstShow').then((result) => {
-      if (result != null) {
-        this.setState({ isVisibleSummary: false });
-      } else {
-        retrieveData('FindingSummary').then((result) => {
-          if (result != null) {
-            this.setState({ isVisibleSummary: true });
-          }
-        })
+      if(!forceShow){
+          await retrieveData('FirstShow').then((result) => {
+              if (result != null) {
+                  this.setState({ isVisibleSummary: false });
+              } else {
+                  retrieveData('FindingSummary').then((result) => {
+                      if (result != null) {
+                          this.setState({ isVisibleSummary: true });
+                      }
+                  })
+              }
+          })
       }
-    })
+      else {
+          const checkBlock = TaskServices.getAllData('TM_BLOCK');
+          if (checkBlock.length > 0) {
+              this.setState({ isVisibleSummary: true });
+          } else {
+              this.props.navigation.navigate('Sync')
+          }
+      }
   }
 
   componentWillUnmount() {
@@ -128,10 +148,10 @@ class HomeScreen extends React.Component {
   willFocus = this.props.navigation.addListener(
     'willFocus',
     () => {
-
-      this._createDataSuggestion()
-      this._deleteDataSuggestion()
-      this.showWeeklySummary()
+      this.getProfileImage();
+      this._createDataSuggestion();
+      this._deleteDataSuggestion();
+      this.showWeeklySummary(false);
 
       if (this.state.loadAll) {
         //this._initData()
@@ -941,6 +961,174 @@ class HomeScreen extends React.Component {
     }, 2000);
   }
 
+    getProfileImage() {
+        NetInfo.isConnected.fetch().then(isConnected => {
+            if (isConnected) {
+                downloadProfileImage(this.state.currentUser.USER_AUTH_CODE)
+                    .then(() => {
+                        let getPath = TaskServices.findBy2("TR_IMAGE_PROFILE", "USER_AUTH_CODE", this.state.currentUser.USER_AUTH_CODE);
+                        let pathPhoto = getPhoto(typeof getPath === 'undefined' ? null : getPath.IMAGE_PATH_LOCAL);
+                        this.setState({
+                            userPhoto: pathPhoto
+                        })
+                    });
+            }
+        });
+    }
+
+  renderMenuHeader(){
+      let dataUser = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', this.state.currentUser.USER_AUTH_CODE);
+
+      return(
+          <View>
+              <View style={{
+                  flexDirection: 'row',
+                  paddingVertical: 10,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  backgroundColor: 'rgba(247,247,247,1)'
+              }}>
+                  {/* <Image source={require('../../Images/icon/ic_walking.png')} style={styles.icon} /> */}
+                  <TouchableOpacity onPress={() => {
+                      if (this.state.currentUser.USERNAME !== "") {
+                          this.props.navigation.navigate('FotoUser', {
+                              setPhoto: (photoPath) => {
+                                  this.setState({ userPhoto: photoPath })
+                                  this.forceUpdate();
+                              }
+                          });
+
+                      }
+                      else {
+                          this.setState({
+                              showConfirm: false,
+                              showModal: true,
+                              title: 'Data kosong!',
+                              message: 'Data tidak di temukan, Tolong sync terlebih dahulu sebulum merubah foto!',
+                              icon: require('../../Images/ic-no-internet.png')
+                          })
+                      }
+                  }}>
+                      <Thumbnail
+                          style={{ borderColor: '#AAAAAA', height: 72, width: 72, marginLeft: 5, borderWidth: 2, borderRadius: 100 }}
+                          source={this.state.userPhoto === null ? getThumnail() : { uri: this.state.userPhoto + '?' + new Date() }} />
+                      <View style={{ position: 'absolute', right: 0, bottom: 0 }}>
+                          <Image source={Images.ic_add_image} style={{ height: 24, width: 24 }} />
+                      </View>
+                  </TouchableOpacity>
+                  <View style={{ flex: 1, marginLeft: 12 }}>
+                      <Text style={{ fontSize: 18, fontWeight: '500' }}>{`Hai, ${dataUser.FULLNAME}`}</Text>
+                      <View style={{flex: 1, alignItems:"center", justifyContent:"center"}}>
+                          <View style={{ flexDirection: "row", backgroundColor:"white", borderRadius: 15, alignSelf: 'baseline', alignItems:'center', paddingHorizontal: 10, paddingVertical: 5}}>
+                              <Image style={{ width: 22, height: 22}} source={changeIconFilter(this.state.isFilter)} />
+                              <Text style={{ fontSize: 12, paddingHorizontal: 5 }}>100 Point</Text>
+                              <Image style={{ width: 22, height: 22}} source={changeIconFilter(this.state.isFilter)} />
+                          </View>
+                      </View>
+                  </View>
+              </View>
+              <View style={{flexDirection:"row", justifyContent:'space-between', padding: 15}}>
+                  <TouchableOpacity
+                    onPress={()=>{
+                        alert("Belum di implentasikan!")
+                    }}>
+                      <View style={{
+                          alignItems:"center",
+                          justifyContent:"center"
+                      }}>
+                          <View style={{width: 50, height: 50, borderRadius: 25, padding: 10, backgroundColor:"rgba(53,184,113,1)"}}>
+                              <Image style={{ flex: 1, width: undefined, height:undefined }}
+                                     resizeMode={"contain"}
+                                     source={require('../../Images/icon/HomeScreen/icon_panen.png')}
+                              />
+                          </View>
+                          <Text style={{
+                              fontSize: 12,
+                              textAlign: "center"
+                          }}>{`Peta\nPanen`}</Text>
+                      </View>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                      onPress={()=>{
+                          this.props.navigation.navigate('Restan')
+                      }}>
+                      <View style={{
+                          alignItems:"center",
+                          justifyContent:"center"
+                      }}>
+                          <View style={{width: 50, height: 50, borderRadius: 25, padding: 10, backgroundColor:"rgba(217,52,72,1)"}}>
+                              <Image style={{ flex: 1, width: undefined, height:undefined }}
+                                 resizeMode={"contain"}
+                                 source={require('../../Images/icon/HomeScreen/icon_titik_restan.png')}
+                              />
+                          </View>
+                          <Text style={{
+                              fontSize: 12,
+                              textAlign: "center"
+                          }}>{`Peta\nRestan`}</Text>
+                      </View>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={()=>this.showWeeklySummary(true)}
+                  >
+                      <View style={{
+                          alignItems:"center",
+                          justifyContent:"center"
+                      }}>
+                          <View style={{width: 50, height: 50, borderRadius: 25, padding: 10, backgroundColor:"rgba(255,194,50,1)"}}>
+                              <Image style={{ flex: 1, width: undefined, height:undefined }}
+                                     resizeMode={"contain"}
+                                     source={require('../../Images/icon/HomeScreen/icon_dashboard_kebun.png')}
+                              />
+                          </View>
+                          <Text style={{
+                              fontSize: 12,
+                              textAlign: "center"
+                          }}>{`Dashboard\nMingguan`}</Text>
+                      </View>
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                      <View style={{
+                          alignItems:"center",
+                          justifyContent:"center"
+                      }}>
+                          <View style={{width: 50, height: 50, borderRadius: 25, padding: 10, backgroundColor:"rgba(52,162,188,1)"}}>
+                              <Image style={{ flex: 1, width: undefined, height:undefined }}
+                                     resizeMode={"contain"}
+                                     source={require('../../Images/icon/HomeScreen/icon_rank.png')}
+                              />
+                          </View>
+                          <Text style={{
+                              fontSize: 12,
+                              textAlign: "center"
+                          }}>{`Peringkat\nAssisten`}</Text>
+                      </View>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                      onPress={()=>{
+                          this.props.navigation.navigate('MoreScreen')
+                      }}>
+                      <View style={{
+                          alignItems:"center",
+                          justifyContent:"center"
+                      }}>
+                          <View style={{width: 50, height: 50, borderRadius: 25, padding: 10, backgroundColor:"rgba(234,234,234,1)"}}>
+                              <Image style={{ flex: 1, width: undefined, height:undefined }}
+                                     resizeMode={"contain"}
+                                     source={require('../../Images/icon/HomeScreen/icon_lainnya.png')}
+                              />
+                          </View>
+                          <Text style={{
+                              fontSize: 12,
+                              textAlign: "center"
+                          }}>{`Menu\nLainnya`}</Text>
+                      </View>
+                  </TouchableOpacity>
+              </View>
+          </View>
+      )
+  }
+
   render() {
     let show;
     if (this.state.data.length > 0) {
@@ -971,6 +1159,7 @@ class HomeScreen extends React.Component {
           }} />
 
         <StatusBar hidden={false} backgroundColor={Colors.tintColor} barStyle="light-content" />
+        {this.renderMenuHeader()}
         <View style={styles.sectionTimeline}>
           <Text style={styles.textTimeline}>Temuan di Wilayahmu</Text>
           <View style={styles.rightSection}>

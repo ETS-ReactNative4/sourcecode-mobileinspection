@@ -31,6 +31,7 @@ export const HeaderWithButton = (props) => {
                             height: 28,
                             width: 28
                         }}
+                        iconSize={25}
                         iconName={props.iconLeft}
                     />
                     :
@@ -74,7 +75,7 @@ export const HeaderWithButton = (props) => {
                                 width: 28,
                                 alignSelf:"center"
                             }}
-                            iconSize={30}
+                            iconSize={25}
                             iconColor={"white"}
                             iconName={props.iconRight}
                             iconType={"fontawesome"}
