@@ -187,7 +187,7 @@ const main = createStackNavigator({
     }
 }, {
     headerMode: 'screen',
-    initialRouteName: 'Leaderboard',
+    initialRouteName: 'SplashScreen',
     navigationOptions: {
         headerStyle: {
             backgroundColor: Colors.tintColorPrimary

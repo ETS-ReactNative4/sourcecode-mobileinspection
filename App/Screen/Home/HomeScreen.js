@@ -1023,7 +1023,7 @@ class HomeScreen extends React.Component {
                       <View style={{flex: 1, alignItems:"center", justifyContent:"center"}}>
                           <View style={{ flexDirection: "row", backgroundColor:"white", borderRadius: 15, alignSelf: 'baseline', alignItems:'center', paddingHorizontal: 10, paddingVertical: 5}}>
                               <Image style={{ width: 15, height: 15}} source={require('../../Images/icon/HomeScreen/icon_points_black.png')} />
-                              <Text style={{ fontSize: 12, paddingHorizontal: 10 }}>100000 Point</Text>
+                              <Text style={{ fontSize: 12, paddingHorizontal: 10 }}>100000 points</Text>
                               <Image style={{ width: 15, height: 15}} source={require('../../Images/icon/HomeScreen/icon_right.png')} />
                           </View>
                       </View>
@@ -1089,7 +1089,9 @@ class HomeScreen extends React.Component {
                           }}>{`Dashboard\nMingguan`}</Text>
                       </View>
                   </TouchableOpacity>
-                  <TouchableOpacity>
+                  <TouchableOpacity
+                      onPress={()=>{this.props.navigation.navigate('Leaderboard')}}
+                  >
                       <View style={{
                           alignItems:"center",
                           justifyContent:"center"
