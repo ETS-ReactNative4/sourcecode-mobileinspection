@@ -223,17 +223,23 @@ class HomeScreen extends React.Component {
   }
 
   async putFCMConfig() {
-    let fcmTokenRequest = null;
-    await getFCMToken()
-      .then((fcmToken) => {
-        if (fcmToken !== null) {
-          fcmTokenRequest = {
-            FIREBASE_TOKEN: fcmToken
-          }
-        }
-      });
+      let fcmTokenRequest = {
+          FIREBASE_TOKEN: ""
+      };
 
-    await fetchPut("FIREBASE-TOKEN", fcmTokenRequest, null);
+      if(this.state.currentUser.USER_ROLE === "ASISTEN_LAPANGAN"){
+          await getFCMToken()
+              .then((fcmToken) => {
+                  if (fcmToken !== null) {
+                      fcmTokenRequest = {
+                          FIREBASE_TOKEN: fcmToken
+                      }
+                  }
+              });
+      }
+
+      //kalo user role bukan aslap, timpa fcm token ke kosong (harus di pake kalo gak user bukan aslap tetep dapet notif)
+      await fetchPut("FIREBASE-TOKEN", fcmTokenRequest, null);
   };
 
   _changeFilterList = data => {
