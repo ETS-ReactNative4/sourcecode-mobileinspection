@@ -1018,9 +1018,9 @@ class HomeScreen extends React.Component {
                               <Image source={Images.ic_add_image} style={{ height: 24, width: 24 }} />
                           </View>
                       </TouchableOpacity>
-                      <View style={{ flex: 1, marginLeft: 12 }}>
-                          <Text style={{ fontSize: 18, fontWeight: '500' }}>{`Hai, ${dataUser.FULLNAME}`}</Text>
-                          <View style={{flex: 1, alignItems:"center", justifyContent:"center"}}>
+                      <View style={{ flex: 1, marginLeft: 12, justifyContent:"center" }}>
+                          <Text style={{ fontSize: 14, fontWeight: '500' }}>{`Hai, ${dataUser.FULLNAME}`}</Text>
+                          <View>
                               <View style={{ flexDirection: "row", backgroundColor:"white", borderRadius: 15, alignSelf: 'baseline', alignItems:'center', paddingHorizontal: 10, paddingVertical: 5}}>
                                   <Image style={{ width: 15, height: 15}} source={require('../../Images/icon/HomeScreen/icon_points_black.png')} />
                                   <Text style={{ fontSize: 12, paddingHorizontal: 10 }}>100000 points</Text>

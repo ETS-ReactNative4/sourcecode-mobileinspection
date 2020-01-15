@@ -38,7 +38,7 @@ const EbccValidationStack = createStackNavigator({
 });
 
 EbccValidationStack.navigationOptions = {
-  tabBarLabel: 'Sampling EBCC',
+  tabBarLabel: 'Sampling',
 };
 
 export default (
