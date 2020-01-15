@@ -978,159 +978,161 @@ class HomeScreen extends React.Component {
 
   renderMenuHeader(){
       let dataUser = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', this.state.currentUser.USER_AUTH_CODE);
-
-      return(
-          <View style={{
-              backgroundColor: 'rgba(247,247,247,1)',
-              paddingBottom: 10
-          }}>
+      if(dataUser !== undefined){
+          return(
               <View style={{
-                  flexDirection: 'row',
-                  paddingVertical: 10,
-                  justifyContent: 'center',
-                  alignItems: 'center',
+                  backgroundColor: 'rgba(247,247,247,1)',
+                  paddingBottom: 10
               }}>
-                  {/* <Image source={require('../../Images/icon/ic_walking.png')} style={styles.icon} /> */}
-                  <TouchableOpacity onPress={() => {
-                      if (this.state.currentUser.USERNAME !== "") {
-                          this.props.navigation.navigate('FotoUser', {
-                              setPhoto: (photoPath) => {
-                                  this.setState({ userPhoto: photoPath })
-                                  this.forceUpdate();
-                              }
-                          });
-
-                      }
-                      else {
-                          this.setState({
-                              showConfirm: false,
-                              showModal: true,
-                              title: 'Data kosong!',
-                              message: 'Data tidak di temukan, Tolong sync terlebih dahulu sebulum merubah foto!',
-                              icon: require('../../Images/ic-no-internet.png')
-                          })
-                      }
+                  <View style={{
+                      flexDirection: 'row',
+                      paddingVertical: 10,
+                      justifyContent: 'center',
+                      alignItems: 'center',
                   }}>
-                      <Thumbnail
-                          style={{ borderColor: '#AAAAAA', height: 72, width: 72, marginLeft: 5, borderWidth: 2, borderRadius: 100 }}
-                          source={this.state.userPhoto === null ? getThumnail() : { uri: this.state.userPhoto + '?' + new Date() }} />
-                      <View style={{ position: 'absolute', right: 0, bottom: 0 }}>
-                          <Image source={Images.ic_add_image} style={{ height: 24, width: 24 }} />
-                      </View>
-                  </TouchableOpacity>
-                  <View style={{ flex: 1, marginLeft: 12 }}>
-                      <Text style={{ fontSize: 18, fontWeight: '500' }}>{`Hai, ${dataUser.FULLNAME}`}</Text>
-                      <View style={{flex: 1, alignItems:"center", justifyContent:"center"}}>
-                          <View style={{ flexDirection: "row", backgroundColor:"white", borderRadius: 15, alignSelf: 'baseline', alignItems:'center', paddingHorizontal: 10, paddingVertical: 5}}>
-                              <Image style={{ width: 15, height: 15}} source={require('../../Images/icon/HomeScreen/icon_points_black.png')} />
-                              <Text style={{ fontSize: 12, paddingHorizontal: 10 }}>100000 points</Text>
-                              <Image style={{ width: 15, height: 15}} source={require('../../Images/icon/HomeScreen/icon_right.png')} />
+                      {/* <Image source={require('../../Images/icon/ic_walking.png')} style={styles.icon} /> */}
+                      <TouchableOpacity onPress={() => {
+                          if (this.state.currentUser.USERNAME !== "") {
+                              this.props.navigation.navigate('FotoUser', {
+                                  setPhoto: (photoPath) => {
+                                      this.setState({ userPhoto: photoPath })
+                                      this.forceUpdate();
+                                  }
+                              });
+
+                          }
+                          else {
+                              this.setState({
+                                  showConfirm: false,
+                                  showModal: true,
+                                  title: 'Data kosong!',
+                                  message: 'Data tidak di temukan, Tolong sync terlebih dahulu sebulum merubah foto!',
+                                  icon: require('../../Images/ic-no-internet.png')
+                              })
+                          }
+                      }}>
+                          <Thumbnail
+                              style={{ borderColor: '#AAAAAA', height: 72, width: 72, marginLeft: 5, borderWidth: 2, borderRadius: 100 }}
+                              source={this.state.userPhoto === null ? getThumnail() : { uri: this.state.userPhoto + '?' + new Date() }} />
+                          <View style={{ position: 'absolute', right: 0, bottom: 0 }}>
+                              <Image source={Images.ic_add_image} style={{ height: 24, width: 24 }} />
+                          </View>
+                      </TouchableOpacity>
+                      <View style={{ flex: 1, marginLeft: 12 }}>
+                          <Text style={{ fontSize: 18, fontWeight: '500' }}>{`Hai, ${dataUser.FULLNAME}`}</Text>
+                          <View style={{flex: 1, alignItems:"center", justifyContent:"center"}}>
+                              <View style={{ flexDirection: "row", backgroundColor:"white", borderRadius: 15, alignSelf: 'baseline', alignItems:'center', paddingHorizontal: 10, paddingVertical: 5}}>
+                                  <Image style={{ width: 15, height: 15}} source={require('../../Images/icon/HomeScreen/icon_points_black.png')} />
+                                  <Text style={{ fontSize: 12, paddingHorizontal: 10 }}>100000 points</Text>
+                                  <Image style={{ width: 15, height: 15}} source={require('../../Images/icon/HomeScreen/icon_right.png')} />
+                              </View>
                           </View>
                       </View>
                   </View>
+                  <View style={{backgroundColor:"white", flexDirection:"row", justifyContent:'space-between', padding: 15}}>
+                      <TouchableOpacity
+                          onPress={()=>{
+                              alert("Belum di implentasikan!")
+                          }}>
+                          <View style={{
+                              alignItems:"center",
+                              justifyContent:"center"
+                          }}>
+                              <View style={{width: 50, height: 50, borderRadius: 25, padding: 10, backgroundColor:"rgba(53,184,113,1)"}}>
+                                  <Image style={{ flex: 1, width: undefined, height:undefined }}
+                                         resizeMode={"contain"}
+                                         source={require('../../Images/icon/HomeScreen/icon_panen.png')}
+                                  />
+                              </View>
+                              <Text style={{
+                                  fontSize: 12,
+                                  textAlign: "center"
+                              }}>{`Peta\nPanen`}</Text>
+                          </View>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                          onPress={()=>{
+                              this.props.navigation.navigate('Restan')
+                          }}>
+                          <View style={{
+                              alignItems:"center",
+                              justifyContent:"center"
+                          }}>
+                              <View style={{width: 50, height: 50, borderRadius: 25, padding: 10, backgroundColor:"rgba(217,52,72,1)"}}>
+                                  <Image style={{ flex: 1, width: undefined, height:undefined }}
+                                         resizeMode={"contain"}
+                                         source={require('../../Images/icon/HomeScreen/icon_titik_restan.png')}
+                                  />
+                              </View>
+                              <Text style={{
+                                  fontSize: 12,
+                                  textAlign: "center"
+                              }}>{`Peta\nRestan`}</Text>
+                          </View>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                          onPress={()=>this.showWeeklySummary(true)}
+                      >
+                          <View style={{
+                              alignItems:"center",
+                              justifyContent:"center"
+                          }}>
+                              <View style={{width: 50, height: 50, borderRadius: 25, padding: 10, backgroundColor:"rgba(255,194,50,1)"}}>
+                                  <Image style={{ flex: 1, width: undefined, height:undefined }}
+                                         resizeMode={"contain"}
+                                         source={require('../../Images/icon/HomeScreen/icon_dashboard_kebun.png')}
+                                  />
+                              </View>
+                              <Text style={{
+                                  fontSize: 12,
+                                  textAlign: "center"
+                              }}>{`Dashboard\nMingguan`}</Text>
+                          </View>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                          onPress={()=>{this.props.navigation.navigate('Leaderboard')}}
+                      >
+                          <View style={{
+                              alignItems:"center",
+                              justifyContent:"center"
+                          }}>
+                              <View style={{width: 50, height: 50, borderRadius: 25, padding: 10, backgroundColor:"rgba(52,162,188,1)"}}>
+                                  <Image style={{ flex: 1, width: undefined, height:undefined }}
+                                         resizeMode={"contain"}
+                                         source={require('../../Images/icon/HomeScreen/icon_rank.png')}
+                                  />
+                              </View>
+                              <Text style={{
+                                  fontSize: 12,
+                                  textAlign: "center"
+                              }}>{`Peringkat\nAssisten`}</Text>
+                          </View>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                          onPress={()=>{
+                              this.props.navigation.navigate('MoreScreen')
+                          }}>
+                          <View style={{
+                              alignItems:"center",
+                              justifyContent:"center"
+                          }}>
+                              <View style={{width: 50, height: 50, borderRadius: 25, padding: 10, backgroundColor:"rgba(234,234,234,1)"}}>
+                                  <Image style={{ flex: 1, width: undefined, height:undefined }}
+                                         resizeMode={"contain"}
+                                         source={require('../../Images/icon/HomeScreen/icon_lainnya.png')}
+                                  />
+                              </View>
+                              <Text style={{
+                                  fontSize: 12,
+                                  textAlign: "center"
+                              }}>{`Menu\nLainnya`}</Text>
+                          </View>
+                      </TouchableOpacity>
+                  </View>
               </View>
-              <View style={{backgroundColor:"white", flexDirection:"row", justifyContent:'space-between', padding: 15}}>
-                  <TouchableOpacity
-                    onPress={()=>{
-                        alert("Belum di implentasikan!")
-                    }}>
-                      <View style={{
-                          alignItems:"center",
-                          justifyContent:"center"
-                      }}>
-                          <View style={{width: 50, height: 50, borderRadius: 25, padding: 10, backgroundColor:"rgba(53,184,113,1)"}}>
-                              <Image style={{ flex: 1, width: undefined, height:undefined }}
-                                     resizeMode={"contain"}
-                                     source={require('../../Images/icon/HomeScreen/icon_panen.png')}
-                              />
-                          </View>
-                          <Text style={{
-                              fontSize: 12,
-                              textAlign: "center"
-                          }}>{`Peta\nPanen`}</Text>
-                      </View>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                      onPress={()=>{
-                          this.props.navigation.navigate('Restan')
-                      }}>
-                      <View style={{
-                          alignItems:"center",
-                          justifyContent:"center"
-                      }}>
-                          <View style={{width: 50, height: 50, borderRadius: 25, padding: 10, backgroundColor:"rgba(217,52,72,1)"}}>
-                              <Image style={{ flex: 1, width: undefined, height:undefined }}
-                                 resizeMode={"contain"}
-                                 source={require('../../Images/icon/HomeScreen/icon_titik_restan.png')}
-                              />
-                          </View>
-                          <Text style={{
-                              fontSize: 12,
-                              textAlign: "center"
-                          }}>{`Peta\nRestan`}</Text>
-                      </View>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={()=>this.showWeeklySummary(true)}
-                  >
-                      <View style={{
-                          alignItems:"center",
-                          justifyContent:"center"
-                      }}>
-                          <View style={{width: 50, height: 50, borderRadius: 25, padding: 10, backgroundColor:"rgba(255,194,50,1)"}}>
-                              <Image style={{ flex: 1, width: undefined, height:undefined }}
-                                     resizeMode={"contain"}
-                                     source={require('../../Images/icon/HomeScreen/icon_dashboard_kebun.png')}
-                              />
-                          </View>
-                          <Text style={{
-                              fontSize: 12,
-                              textAlign: "center"
-                          }}>{`Dashboard\nMingguan`}</Text>
-                      </View>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                      onPress={()=>{this.props.navigation.navigate('Leaderboard')}}
-                  >
-                      <View style={{
-                          alignItems:"center",
-                          justifyContent:"center"
-                      }}>
-                          <View style={{width: 50, height: 50, borderRadius: 25, padding: 10, backgroundColor:"rgba(52,162,188,1)"}}>
-                              <Image style={{ flex: 1, width: undefined, height:undefined }}
-                                     resizeMode={"contain"}
-                                     source={require('../../Images/icon/HomeScreen/icon_rank.png')}
-                              />
-                          </View>
-                          <Text style={{
-                              fontSize: 12,
-                              textAlign: "center"
-                          }}>{`Peringkat\nAssisten`}</Text>
-                      </View>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                      onPress={()=>{
-                          this.props.navigation.navigate('MoreScreen')
-                      }}>
-                      <View style={{
-                          alignItems:"center",
-                          justifyContent:"center"
-                      }}>
-                          <View style={{width: 50, height: 50, borderRadius: 25, padding: 10, backgroundColor:"rgba(234,234,234,1)"}}>
-                              <Image style={{ flex: 1, width: undefined, height:undefined }}
-                                     resizeMode={"contain"}
-                                     source={require('../../Images/icon/HomeScreen/icon_lainnya.png')}
-                              />
-                          </View>
-                          <Text style={{
-                              fontSize: 12,
-                              textAlign: "center"
-                          }}>{`Menu\nLainnya`}</Text>
-                      </View>
-                  </TouchableOpacity>
-              </View>
-          </View>
-      )
+          )
+      }
+      return null
   }
 
   render() {
