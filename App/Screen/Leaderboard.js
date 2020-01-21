@@ -1,9 +1,48 @@
-import React, {Component} from 'react';
-import {ScrollView, Text, View, TouchableOpacity, Image} from 'react-native';
-import {HeaderWithButton} from "../Component/Header/HeaderWithButton";
+import React, { Component } from 'react';
+import { ScrollView, Text, View, TouchableOpacity, Image, ImageBackground } from 'react-native';
+import { HeaderWithButton } from "../Component/Header/HeaderWithButton";
 import Colors from "../Constant/Colors";
-import {clipString} from '../Constant/Functions/StringManipulator';
+import { clipString } from '../Constant/Functions/StringManipulator';
 import TaskServices from "../Database/TaskServices";
+import images from '../Themes/Images';
+import { colors } from 'react-select/src/theme';
+
+
+const LeaderboardRank = (userData, index) => {
+    return (
+        <View style={{
+            width: 230,
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: "flex-end"
+        }}>
+            <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+                <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'white', textAlign: "center", width: 67 }}>Rizki P.</Text>
+                <Image source={images.ic_orang} style={{ marginTop: 5, height: 67, width: 67, borderRadius: 50, borderWidth: 2, borderColor: Colors.colorWhite }} />
+                <View style={{ height: 67, width: 67, marginTop: 6, justifyContent: 'flex-end', padding: 4 }}>
+                    <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'white', textAlign: "center" }}>1,300</Text>
+                </View>
+            </View>
+            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'white', textAlign: "center", width: 67 }}>Mega B .</Text>
+                <Image source={images.ic_orang} style={{ marginTop: 5, height: 85, width: 85, borderRadius: 50, borderWidth: 2, borderColor: Colors.colorWhite }} />
+
+                <View style={{ height: 85, width: 90, marginTop: 5, justifyContent: 'flex-end', padding: 4 }}>
+                    <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'white', textAlign: "center" }}>1,401</Text>
+                </View>
+            </View>
+            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'white', textAlign: "center", width: 67 }}>Sentot S.</Text>
+                <Image source={images.ic_orang} style={{ marginTop: 5, height: 67, width: 67, borderRadius: 50, borderWidth: 2, borderColor: Colors.colorWhite }} />
+
+                <View style={{ height: 67, width: 67, marginTop: 6, justifyContent: 'flex-end', padding: 4 }}>
+                    <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'white', textAlign: "center" }}>1,180</Text>
+                </View>
+            </View>
+        </View>
+
+    )
+}
 
 export default class Leaderboard extends Component {
     constructor(props) {
@@ -19,7 +58,8 @@ export default class Leaderboard extends Component {
                     LOCATION_CODE: "123",
                     REF_ROLE: 'string',
                     JOB: 'string',
-                    FULLNAME: 'ERzxasd AJUzxasdUUzxasd.'
+                    FULLNAME: 'ERzxasd AJUzxasdUUzxasd.',
+                    POINT: '503'
                 },
                 {
                     USER_AUTH_CODE: '2',
@@ -28,7 +68,8 @@ export default class Leaderboard extends Component {
                     LOCATION_CODE: "123",
                     REF_ROLE: 'string',
                     JOB: 'string',
-                    FULLNAME: 'zxasd HUTAJULUUERVAN HUTAJULUU'
+                    FULLNAME: 'zxasd HUTAJULUUERVAN HUTAJULUU',
+                    POINT: '503'
                 },
                 {
                     USER_AUTH_CODE: '3',
@@ -37,16 +78,18 @@ export default class Leaderboard extends Component {
                     LOCATION_CODE: "123",
                     REF_ROLE: 'string',
                     JOB: 'string',
-                    FULLNAME: 'ERVAN HUTAJULUU...'
+                    FULLNAME: 'ERVAN HUTAJULUU...',
+                    POINT: '503'
                 },
                 {
-                    USER_AUTH_CODE: '0126',
+                    USER_AUTH_CODE: '4',
                     EMPLOYEE_NIK: '345',
                     USER_ROLE: 'haha',
                     LOCATION_CODE: "123",
                     REF_ROLE: 'string',
                     JOB: 'string',
-                    FULLNAME: 'ERVAN HUTAJULUU...'
+                    FULLNAME: 'DONI ROMDONI',
+                    POINT: '503'
                 },
                 {
                     USER_AUTH_CODE: '5',
@@ -55,7 +98,8 @@ export default class Leaderboard extends Component {
                     LOCATION_CODE: "123",
                     REF_ROLE: 'string',
                     JOB: 'string',
-                    FULLNAME: 'ERVAN HUTAJULUU...'
+                    FULLNAME: 'RIZKY OCTARINA PUSPITASARI',
+                    POINT: '208'
                 },
                 {
                     USER_AUTH_CODE: '6',
@@ -64,115 +108,134 @@ export default class Leaderboard extends Component {
                     LOCATION_CODE: "123",
                     REF_ROLE: 'string',
                     JOB: 'string',
-                    FULLNAME: 'ERVAN HUTAJULUU...'
+                    FULLNAME: 'ADAM RAHMAT',
+                    POINT: '102'
                 }
             ],
-            refRole: "BA",
+            refRole: "BA"
         }
     }
 
-    renderRefRoleSelector(){
-        return(
-            <View style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "center",
-                paddingVertical: 20
-            }}>
-                <TouchableOpacity
-                    style={{
-                        minWidth: "20%",
-                        alignItems: "center",
-                        borderTopLeftRadius: 15,
-                        borderBottomLeftRadius: 15,
-                        backgroundColor: this.state.refRole === "BA" ? "rgba(255,179,0,1)" : "white",
-                        borderWidth: 1,
-                        borderColor: Colors.tintColorPrimary
-                    }}
-                    onPress={()=>{
-                        this.setState({
-                            refRole: "BA"
-                        })
+    renderRefRoleSelector() {
+        return (
+            <ImageBackground resizeMode={'stretch'} source={images.img_background_leaderboard} style={{ flex: 6 }}>
+                {/* <Image source={images.img_background_leaderboard} style={{ resizeMode: 'stretch', width: '100%', height: "100%", position: 'absolute', opacity: 1 }} /> */}
+
+                <View style={{
+                    flex: 6,
+                    padding: 16
+                }}>
+                    <View style={{
+                        alignItems: 'center',
+                        justifyContent: "center",
+                        flex: 1
                     }}>
-                    <Text style={{
-                        paddingVertical: 5,
-                        color: this.state.refRole === "BA" ? "white" : "rgba(195,187,187,1)"
-                    }}>BA</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{
-                    minWidth: "20%",
-                    alignItems: "center",
-                    backgroundColor: this.state.refRole === "PT" ? "rgba(255,179,0,1)" : "white",
-                    borderTopWidth: 1,
-                    borderBottomWidth: 1,
-                    borderColor: Colors.tintColorPrimary
-                }}
-                                  onPress={()=>{
-                                      this.setState({
-                                          refRole: "PT"
-                                      })
-                                  }}>
-                    <Text style={{
-                        paddingVertical: 5,
-                        color: this.state.refRole === "PT" ? "white" : "rgba(195,187,187,1)"
-                    }}>PT</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={{
-                        minWidth: "20%",
-                        alignItems: "center",
-                        borderTopRightRadius: 15,
-                        borderBottomRightRadius: 15,
-                        backgroundColor: this.state.refRole === "NATIONAL" ? "rgba(255,179,0,1)" : "white",
-                        borderWidth: 1,
-                        borderColor: Colors.tintColorPrimary
-                    }}
-                    onPress={()=>{
-                        this.setState({
-                            refRole: "NATIONAL"
-                        })
-                    }}>
-                    <Text style={{
-                        paddingVertical: 5,
-                        color: this.state.refRole === "NATIONAL" ? "white" : "rgba(195,187,187,1)"
-                    }}>National</Text>
-                </TouchableOpacity>
-            </View>
+                        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                            <View style={{
+                                flexDirection: "row",
+                                justifyContent: "center",
+                            }}>
+                                <TouchableOpacity
+                                    style={{
+                                        minWidth: "20%",
+                                        alignItems: "center",
+                                        borderTopLeftRadius: 15,
+                                        borderBottomLeftRadius: 15,
+                                        backgroundColor: this.state.refRole === "BA" ? "rgba(255,179,0,1)" : "white",
+                                        borderWidth: 1,
+                                        borderColor: "rgba(255,179,0,1)"
+                                    }}
+                                    onPress={() => {
+                                        this.setState({
+                                            refRole: "BA"
+                                        })
+                                    }}>
+                                    <Text style={{
+                                        fontWeight: '500',
+                                        paddingVertical: 5,
+                                        color: this.state.refRole === "BA" ? "white" : "rgba(255,179,0,1)"
+                                    }}>BA</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={{
+                                    minWidth: "20%",
+                                    alignItems: "center",
+                                    backgroundColor: this.state.refRole === "PT" ? "rgba(255,179,0,1)" : "white",
+                                    borderTopWidth: 1,
+                                    borderBottomWidth: 1,
+                                    borderColor: "rgba(255,179,0,1)"
+                                }}
+                                    onPress={() => {
+                                        this.setState({
+                                            refRole: "PT"
+                                        })
+                                    }}>
+                                    <Text style={{
+                                        fontWeight: '500',
+                                        paddingVertical: 5,
+                                        color: this.state.refRole === "PT" ? "white" : "rgba(255,179,0,1)"
+                                    }}>PT</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={{
+                                        minWidth: "20%",
+                                        alignItems: "center",
+                                        borderTopRightRadius: 15,
+                                        borderBottomRightRadius: 15,
+                                        backgroundColor: this.state.refRole === "NATIONAL" ? "rgba(255,179,0,1)" : "white",
+                                        borderWidth: 1,
+                                        borderColor: "rgba(255,179,0,1)"
+                                    }}
+                                    onPress={() => {
+                                        this.setState({
+                                            refRole: "NATIONAL"
+                                        })
+                                    }}>
+                                    <Text style={{
+                                        fontWeight: '500',
+                                        paddingVertical: 5,
+                                        color: this.state.refRole === "NATIONAL" ? "white" : "rgba(255,179,0,1)"
+                                    }}>National</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+
+                    <View style={{ flex: 9, alignItems: "center", justifyContent: "center" }}>
+                        <LeaderboardRank />
+                    </View>
+                </View >
+            </ImageBackground>
+
         )
     }
-    renderRank(){
+    renderRank() {
         let currentUserAuthCode = this.state.currentUser.USER_AUTH_CODE;
-        function colorSelector(currentUserAuthCode, userAuthCode){
-            if(currentUserAuthCode.toString() ===  userAuthCode.toString()){
+        function colorSelector(currentUserAuthCode, userAuthCode) {
+            if (currentUserAuthCode.toString() === userAuthCode.toString()) {
                 return "rgba(255,179,0,1)"
             }
             else {
                 return "rgba(195,187,187,1)"
             }
         }
-        function iconSelector(currentUserAuthCode, userAuthCode){
-            if(currentUserAuthCode.toString() ===  userAuthCode.toString()){
+        function iconSelector(currentUserAuthCode, userAuthCode) {
+            if ('5' === userAuthCode.toString()) {
                 return require('../Images/icon/Leaderboard/icon_points-orange.png')
             }
             else {
                 return require('../Images/icon/Leaderboard/icon_points.png')
             }
         }
-        function rankIcon(index){
+
+        function rankIcon(index) {
             switch (index) {
-                case 0:
-                    return require(`../Images/icon/rank1.png`);
-                case 1:
-                    return require(`../Images/icon/rank2.png`);
-                case 2:
-                    return require(`../Images/icon/rank3.png`);
                 default:
                     return (index + 1).toString();
             }
         }
 
-        function firstRank(userData, index){
-            return(
+        function firstRank(userData, index) {
+            return (
                 <View
                     key={index}
                     style={{
@@ -186,7 +249,7 @@ export default class Leaderboard extends Component {
                         flexDirection: "row"
                     }}>
                         <Image
-                            style={{ flex: 1 , maxWidth: 36, maxHeight: 36, borderRadius: 36/2, marginTop: 36/2 }}
+                            style={{ flex: 1, maxWidth: 36, maxHeight: 36, borderRadius: 36 / 2, marginTop: 36 / 2 }}
                             resizeMode={"contain"}
                             source={rankIcon(index)}
                         />
@@ -194,30 +257,35 @@ export default class Leaderboard extends Component {
                     <View
                         style={{
                             flex: 4,
-                            alignItems:"center"
+                            alignItems: "center"
                         }}>
                         <Image
-                            style={{ width: 72, height: 72, borderRadius: 72/2}}
+                            style={{ width: 72, height: 72, borderRadius: 72 / 2 }}
                             resizeMode={"contain"}
                             source={require('../Images/icon/ic-orang-1.png')}
                         />
-                        <Text style={{paddingVertical: 10, fontSize: 20, color: colorSelector(currentUserAuthCode, userData.USER_AUTH_CODE)}}>{userData.FULLNAME}</Text>
-                        <View style={{ flexDirection: "row", alignItems:'center', alignSelf:"center", paddingHorizontal: 10, paddingVertical: 5}}>
-                            <Image style={{ width: 15, height: 15}} source={iconSelector(currentUserAuthCode, userData.USER_AUTH_CODE)} />
-                            <Text style={{ fontSize: 12, paddingHorizontal: 10, color: colorSelector(currentUserAuthCode, userData.USER_AUTH_CODE) }}>100000 points</Text>
+                        <Text style={{ paddingVertical: 10, fontSize: 20, color: colorSelector(currentUserAuthCode, userData.USER_AUTH_CODE) }}>{userData.FULLNAME}</Text>
+                        <View style={{ flexDirection: "row", alignItems: 'center', alignSelf: "center", paddingHorizontal: 10, paddingVertical: 5 }}>
+                            <Image style={{ width: 15, height: 15 }} source={iconSelector(currentUserAuthCode, userData.USER_AUTH_CODE)} />
+                            <Text style={{ fontSize: 12, paddingHorizontal: 10, color: colorSelector(currentUserAuthCode, userData.USER_AUTH_CODE) }}>{userData.POINT} points</Text>
                         </View>
                     </View>
-                    <View style={{flex: 1}}/>
+                    <View style={{ flex: 1 }} />
                 </View>
             )
         }
-        function otherRank(userData, index){
-            return(
+        function otherRank(userData, index) {
+
+            let user = "5" !== userData.USER_AUTH_CODE ? userData.FULLNAME : "Peringkat Kamu";
+            let color = "5" !== userData.USER_AUTH_CODE ? "rgba(195,187,187,1)" : "rgba(255,179,0,1)"
+
+            return (
+                index > 2 &&
                 <View
                     key={index}
                     style={{
                         //index 5 last, kalo last ilangin border bwh
-                        borderBottomWidth: index === 5? 0 : 1,
+                        borderBottomWidth: index === 5 ? 0 : 0.5,
                         borderColor: "rgba(195,187,187,1)",
                         paddingVertical: 10,
                         flexDirection: "row"
@@ -228,31 +296,22 @@ export default class Leaderboard extends Component {
                             flexDirection: "row"
                         }}>
                         {
-                            index < 3 ?
-                                <Image
-                                    style={{
-                                        flex: 1,
-                                        width: 30,
-                                        height: 30,
-                                        borderRadius: 30 / 2,
-                                        marginRight: 10,
-                                        alignSelf: 'center'
-                                    }}
-                                    resizeMode={"contain"}
-                                    source={rankIcon(index)}
-                                />
-                                :
-                                <View
-                                    style={{
-                                        flex: 1,
-                                        alignItems:'center',
-                                        justifyContent:'center'
-                                    }}>
-                                    <Text style={{color: colorSelector(currentUserAuthCode, userData.USER_AUTH_CODE)}} alignText={"center"}>{rankIcon(index)}</Text>
-                                </View>
+                            <View
+                                style={{
+                                    flex: 1,
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}>
+                                <Text style={{
+                                    fontSize: 18,
+                                    fontWeight: '500',
+                                    color: color
+                                }}
+                                    alignText={"center"}>{rankIcon(index)}</Text>
+                            </View>
                         }
                         <Image
-                            style={{ flex: 1 , maxWidth: 50, maxHeight: 50, borderRadius: 50/2 }}
+                            style={{ flex: 1, maxWidth: 50, maxHeight: 50, borderRadius: 50 / 2 }}
                             resizeMode={"contain"}
                             source={require('../Images/icon/ic-orang-1.png')}
                         />
@@ -261,20 +320,22 @@ export default class Leaderboard extends Component {
                         style={{
                             flex: 3.5
                         }}>
-                        <Text style={{paddingHorizontal: 10, paddingBottom: 5, fontSize: 16, color: colorSelector(currentUserAuthCode, userData.USER_AUTH_CODE)}}>{userData.FULLNAME}</Text>
-                        <View style={{ flexDirection: "row", backgroundColor:"white", borderRadius: 15, alignItems:'center', alignSelf:"baseline", paddingHorizontal: 10, paddingVertical: 5, marginLeft: 5}}>
-                            <Image style={{ width: 15, height: 15}} source={iconSelector(currentUserAuthCode, userData.USER_AUTH_CODE)} />
-                            <Text style={{ fontSize: 12, paddingHorizontal: 5, color: colorSelector(currentUserAuthCode, userData.USER_AUTH_CODE) }}>100000 Point</Text>
+                        <Text style={{ paddingHorizontal: 10, paddingBottom: 5, fontSize: 18, color: color, fontWeight: '500' }}>{user}</Text>
+                        <View style={{ flexDirection: "row", backgroundColor: "white", borderRadius: 15, alignItems: 'center', alignSelf: "baseline", paddingHorizontal: 10, paddingVertical: 5, marginLeft: 5 }}>
+                            <Image style={{ width: 15, height: 15 }} source={iconSelector(currentUserAuthCode, userData.USER_AUTH_CODE)} />
+                            <Text style={{ fontSize: 12, paddingHorizontal: 5, color: color, fontWeight: '500' }}>{userData.POINT} points</Text>
                         </View>
                     </View>
                 </View>
             )
         }
-        return(
-            this.state.rankData.map((userData, index)=>{
+
+        return (
+            this.state.rankData.map((userData, index) => {
                 userData.FULLNAME = clipString(userData.FULLNAME, 15);
-                if(index === 0){
-                    return firstRank(userData, index)
+                if (index === 0) {
+                    // return firstRank(userData, index)
+                    return null
                 }
                 else {
                     return otherRank(userData, index)
@@ -285,10 +346,10 @@ export default class Leaderboard extends Component {
 
     render() {
         return (
-
-            <View style={{flex: 1, backgroundColor:"white"}}>
+            <View style={{ flex: 1, backgroundColor: "white" }}>
                 {/* HEADER */}
                 <HeaderWithButton
+                    titlePosition={'left'}
                     title={"Peringkat Asisten"}
                     iconLeft={require("../Images/icon/ic_arrow_left.png")}
                     rightVectorIcon={true}
@@ -299,14 +360,14 @@ export default class Leaderboard extends Component {
                     onPressRight={null}
                 />
                 {this.renderRefRoleSelector()}
-                <View
-                    style={{
-                        flex: 1,
-                        justifyContent:"space-between",
-                        paddingVertical: 15,
-                        paddingHorizontal: 15,
-                    }}>
-                    {this.renderRank()}
+                <View style={{ flex: 4 }}>
+                    <ScrollView
+                        style={{
+                            paddingVertical: 15,
+                            paddingHorizontal: 15,
+                        }}>
+                        {this.renderRank()}
+                    </ScrollView>
                 </View>
             </View>
 

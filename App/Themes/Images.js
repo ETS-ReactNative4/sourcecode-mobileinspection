@@ -74,6 +74,7 @@ const images = {
   img_dummy: require('../Images/dummy_image.png'),
   img_forest: require('../Images/forest.jpg'),
   img_thumbnail: require('../Images/ic-default-thumbnail.png'),
+  img_background_leaderboard: require('../Images/background_leaderboard.png'),
 
   //Alert Images
   img_input_tidak_lengkap: require('../Images/ic-inputan-tidak-lengkap.png'),
