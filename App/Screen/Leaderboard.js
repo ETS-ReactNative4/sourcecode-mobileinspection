@@ -5,38 +5,64 @@ import Colors from "../Constant/Colors";
 import { clipString } from '../Constant/Functions/StringManipulator';
 import TaskServices from "../Database/TaskServices";
 import images from '../Themes/Images';
-import { colors } from 'react-select/src/theme';
 
 
 const LeaderboardRank = (userData, index) => {
     return (
         <View style={{
-            width: 230,
-            flexDirection: 'row',
             justifyContent: 'center',
-            alignItems: "flex-end"
+            flexDirection: 'row',
+            flex: 1
         }}>
-            <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-                <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'white', textAlign: "center", width: 67 }}>Rizki P.</Text>
-                <Image source={images.ic_orang} style={{ marginTop: 5, height: 67, width: 67, borderRadius: 50, borderWidth: 2, borderColor: Colors.colorWhite }} />
-                <View style={{ height: 67, width: 67, marginTop: 6, justifyContent: 'flex-end', padding: 4 }}>
-                    <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'white', textAlign: "center" }}>1,300</Text>
+            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+
+                <View style={{ flex: 1, justifyContent: 'flex-end', marginBottom: 10 }}>
+                    <Text
+                        style={{
+                            fontSize: 18,
+                            fontWeight: 'bold',
+                            color: 'white',
+                            textAlign: "center",
+                            width: 72,
+                        }}>Rizki P.</Text>
+                    <Image source={images.ic_orang} style={{ marginTop: 5, height: 72, width: 72, borderRadius: 50, borderWidth: 2, borderColor: Colors.colorWhite }} />
+                </View>
+
+
+                <View style={{ height: 150, width: 72, justifyContent: 'flex-start' }}>
+                    <ImageBackground resizeMode={'stretch'} source={images.img_background_rank_2} style={{ height: 90, backgroundColor: 'orange', justifyContent: 'flex-end', paddingVertical: 12 }}>
+                        <Text style={{ fontSize: 48, fontWeight: '800', color: 'white', textAlign: "center", marginTop: 10 }}>2</Text>
+                        <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'white', textAlign: "center" }}>1,180</Text>
+                    </ImageBackground>
                 </View>
             </View>
-            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'white', textAlign: "center", width: 67 }}>Mega B .</Text>
-                <Image source={images.ic_orang} style={{ marginTop: 5, height: 85, width: 85, borderRadius: 50, borderWidth: 2, borderColor: Colors.colorWhite }} />
 
-                <View style={{ height: 85, width: 90, marginTop: 5, justifyContent: 'flex-end', padding: 4 }}>
-                    <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'white', textAlign: "center" }}>1,401</Text>
+
+            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                <View style={{ flex: 1, justifyContent: 'flex-end', marginBottom: 10 }}>
+                    <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'white', textAlign: "center", width: 90 }}>Mega B.</Text>
+                    <Image source={images.ic_orang} style={{ marginTop: 5, height: 90, width: 90, borderRadius: 50, borderWidth: 2, borderColor: Colors.colorWhite }} />
+                </View>
+
+                <View style={{ height: 170, width: 90, justifyContent: 'flex-start' }}>
+                    <View style={{ height: 110, backgroundColor: '#fb9214', justifyContent: 'flex-end', paddingVertical: 14 }}>
+                        <Text style={{ fontSize: 54, fontWeight: '900', color: 'white', textAlign: "center" }}>1</Text>
+                        <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'white', textAlign: "center" }}>1,401</Text>
+                    </View>
                 </View>
             </View>
-            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'white', textAlign: "center", width: 67 }}>Sentot S.</Text>
-                <Image source={images.ic_orang} style={{ marginTop: 5, height: 67, width: 67, borderRadius: 50, borderWidth: 2, borderColor: Colors.colorWhite }} />
 
-                <View style={{ height: 67, width: 67, marginTop: 6, justifyContent: 'flex-end', padding: 4 }}>
-                    <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'white', textAlign: "center" }}>1,180</Text>
+            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                <View style={{ flex: 1, justifyContent: 'flex-end', marginBottom: 10 }}>
+                    <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'white', textAlign: "center", width: 67 }}>Sentot S.</Text>
+                    <Image source={images.ic_orang} style={{ marginTop: 5, height: 72, width: 72, borderRadius: 50, borderWidth: 2, borderColor: Colors.colorWhite }} />
+                </View>
+
+                <View style={{ height: 150, width: 72, justifyContent: 'flex-start' }}>
+                    <ImageBackground resizeMode={'stretch'} source={images.img_background_rank_3} style={{ height: 90, backgroundColor: 'orange', justifyContent: 'flex-end', paddingVertical: 12 }}>
+                        <Text style={{ fontSize: 48, fontWeight: '900', color: 'white', textAlign: "center", marginTop: 10 }}>3</Text>
+                        <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'white', textAlign: "center" }}>1,180</Text>
+                    </ImageBackground>
                 </View>
             </View>
         </View>
@@ -118,7 +144,7 @@ export default class Leaderboard extends Component {
 
     renderRefRoleSelector() {
         return (
-            <ImageBackground resizeMode={'stretch'} source={images.img_background_leaderboard} style={{ flex: 6 }}>
+            <ImageBackground resizeMode={'stretch'} source={images.img_background_leaderboard_1} style={{ flex: 6 }}>
                 {/* <Image source={images.img_background_leaderboard} style={{ resizeMode: 'stretch', width: '100%', height: "100%", position: 'absolute', opacity: 1 }} /> */}
 
                 <View style={{
@@ -191,7 +217,7 @@ export default class Leaderboard extends Component {
                                         })
                                     }}>
                                     <Text style={{
-                                        fontWeight: '500',
+                                        fontWeight: 'bold',
                                         paddingVertical: 5,
                                         color: this.state.refRole === "NATIONAL" ? "white" : "rgba(255,179,0,1)"
                                     }}>National</Text>
