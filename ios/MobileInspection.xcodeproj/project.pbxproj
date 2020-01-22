@@ -88,6 +88,8 @@
 		F6125466B417442EA6A2AE6A /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A595B19EE99C4E629210F633 /* libRNFirebase.a */; };
 		26B48DF39DFA4740B217D330 /* libFastImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B53EF969E137463E98C346C6 /* libFastImage.a */; };
 		64DBDF6D9AEF4963980A0CDA /* libFastImage-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CDFB90E5F79D44348D32B762 /* libFastImage-tvOS.a */; };
+		9915B03DCA484351815CBE71 /* libRNSVG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EC6B843A354B49009DDE1FA7 /* libRNSVG.a */; };
+		736930D26B304A54ABBDEEBE /* libRNSVG-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E1AF52D74694EBDA0F2A8AE /* libRNSVG-tvOS.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -459,6 +461,9 @@
 		E2E373B29840442D9EF6769E /* FastImage.xcodeproj */ = {isa = PBXFileReference; name = "FastImage.xcodeproj"; path = "../node_modules/react-native-fast-image/ios/FastImage.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		B53EF969E137463E98C346C6 /* libFastImage.a */ = {isa = PBXFileReference; name = "libFastImage.a"; path = "libFastImage.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		CDFB90E5F79D44348D32B762 /* libFastImage-tvOS.a */ = {isa = PBXFileReference; name = "libFastImage-tvOS.a"; path = "libFastImage-tvOS.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		959161947D1A408E842924D5 /* RNSVG.xcodeproj */ = {isa = PBXFileReference; name = "RNSVG.xcodeproj"; path = "../node_modules/react-native-svg/ios/RNSVG.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		EC6B843A354B49009DDE1FA7 /* libRNSVG.a */ = {isa = PBXFileReference; name = "libRNSVG.a"; path = "libRNSVG.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		7E1AF52D74694EBDA0F2A8AE /* libRNSVG-tvOS.a */ = {isa = PBXFileReference; name = "libRNSVG-tvOS.a"; path = "libRNSVG-tvOS.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -504,6 +509,7 @@
 				30DF03723D3B483EAFE3F983 /* libRNMail.a in Frameworks */,
 				F6125466B417442EA6A2AE6A /* libRNFirebase.a in Frameworks */,
 				26B48DF39DFA4740B217D330 /* libFastImage.a in Frameworks */,
+				9915B03DCA484351815CBE71 /* libRNSVG.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -523,6 +529,7 @@
 				28842B6B0ABB4518AB51E8C8 /* libRNVectorIcons-tvOS.a in Frameworks */,
 				DC1168F67AD1419F94FC34F9 /* libRNDeviceInfo-tvOS.a in Frameworks */,
 				64DBDF6D9AEF4963980A0CDA /* libFastImage-tvOS.a in Frameworks */,
+				736930D26B304A54ABBDEEBE /* libRNSVG-tvOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -713,6 +720,7 @@
 				DE0893F86B134BDF83A8CA11 /* RNMail.xcodeproj */,
 				BAB5570CBF0E4254BC08B1E6 /* RNFirebase.xcodeproj */,
 				E2E373B29840442D9EF6769E /* FastImage.xcodeproj */,
+				959161947D1A408E842924D5 /* RNSVG.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1409,6 +1417,8 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1428,6 +1438,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-mail\RNMail",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage",
+					"$(SRCROOT)\..\node_modules\react-native-svg\ios/**",
 				);
 			};
 			name = Debug;
@@ -1451,6 +1462,8 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1470,6 +1483,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-mail\RNMail",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage",
+					"$(SRCROOT)\..\node_modules\react-native-svg\ios/**",
 				);
 			};
 			name = Release;
@@ -1508,6 +1522,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-mail\RNMail",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage",
+					"$(SRCROOT)\..\node_modules\react-native-svg\ios/**",
 				);
 			};
 			name = Debug;
@@ -1545,6 +1560,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-mail\RNMail",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage",
+					"$(SRCROOT)\..\node_modules\react-native-svg\ios/**",
 				);
 			};
 			name = Release;
@@ -1576,6 +1592,8 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1595,6 +1613,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-mail\RNMail",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage",
+					"$(SRCROOT)\..\node_modules\react-native-svg\ios/**",
 				);
 			};
 			name = Debug;
@@ -1626,6 +1645,8 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1645,6 +1666,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-mail\RNMail",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage",
+					"$(SRCROOT)\..\node_modules\react-native-svg\ios/**",
 				);
 			};
 			name = Release;
@@ -1675,6 +1697,8 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1694,6 +1718,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-mail\RNMail",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage",
+					"$(SRCROOT)\..\node_modules\react-native-svg\ios/**",
 				);
 			};
 			name = Debug;
@@ -1724,6 +1749,8 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1743,6 +1770,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-mail\RNMail",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage",
+					"$(SRCROOT)\..\node_modules\react-native-svg\ios/**",
 				);
 			};
 			name = Release;

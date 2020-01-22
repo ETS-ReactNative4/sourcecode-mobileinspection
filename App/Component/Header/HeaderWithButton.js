@@ -31,14 +31,14 @@ export const HeaderWithButton = (props) => {
                             height: 28,
                             width: 28
                         }}
-                        iconSize={25}
+                        iconSize={props.iconLeftSize}
                         iconName={props.iconLeft}
                     />
                     :
                     <Image
                         style={{
-                            height: 28,
-                            width: 28
+                            height: props.iconLeftSize,
+                            width: props.iconLeftSize
                         }}
                         source={props.iconLeft} />
                 }
@@ -71,11 +71,11 @@ export const HeaderWithButton = (props) => {
                     props.rightVectorIcon ?
                         <VectorIcon
                             style={{
-                                height: 28,
-                                width: 28,
+                                height: props.iconRightSize,
+                                width: props.iconRightSize,
                                 alignSelf:"center"
                             }}
-                            iconSize={25}
+                            iconSize={props.iconRightSize}
                             iconColor={"white"}
                             iconName={props.iconRight}
                             iconType={"fontawesome"}
@@ -83,8 +83,8 @@ export const HeaderWithButton = (props) => {
                         :
                         <Image
                             style={{
-                                height: 28,
-                                width: 28
+                                height: props.iconRightSize,
+                                width: props.iconRightSize
                             }}
                             source={props.iconRight} />
                 }
@@ -96,7 +96,9 @@ export const HeaderWithButton = (props) => {
 HeaderWithButton.defaultProps = {
     title: "Title",
     iconLeft: null,
+    iconLeftSize: 15,
     iconRight: null,
+    iconRightSize: 15,
     onPressLeft: ()=>{},
     onPressRight: ()=>{},
     leftVectorIcon: false,
@@ -106,7 +108,9 @@ HeaderWithButton.defaultProps = {
 HeaderWithButton.propTypes = {
     title: PropTypes.string,
     iconLeft: PropTypes.oneOf([String, null]),
+    iconLeftSize: PropTypes.oneOf([String, null]),
     iconRight: PropTypes.oneOf([String, null]),
+    iconRightSize: PropTypes.oneOf([String, null]),
     onPressLeft: PropTypes.func,
     onPressRight: PropTypes.func,
     leftVectorIcon: PropTypes.bool,

@@ -1038,7 +1038,7 @@ class HomeScreen extends React.Component {
                   <View style={{backgroundColor:"white", flexDirection:"row", justifyContent:'space-between', padding: 15}}>
                       <TouchableOpacity
                           onPress={()=>{
-                              alert("Belum di implentasikan!")
+                              this.props.navigation.navigate("PetaPanen")
                           }}>
                           <View style={{
                               alignItems:"center",

@@ -10,3 +10,13 @@ export async function realmToArrayObject(tableName){
     );
     return tempArray;
 }
+
+export async function realmObjectToArray(realmObject){
+    let tempArray = [];
+    await Promise.all(
+        realmObject.map((data)=>{
+            tempArray.push(data);
+        })
+    );
+    return tempArray;
+}

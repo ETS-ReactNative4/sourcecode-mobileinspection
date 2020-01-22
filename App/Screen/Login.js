@@ -293,10 +293,18 @@ class Login extends Component {
                 }
                 else{
                     if(response.status === false){
-                        this.setState({
-                            modalLoading: { ...this.state.modalLoading, showModal: false },
-                            ...AlertContent.email_pass_salah
-                        });
+                        if(response.message === "Request Timeout"){
+                            this.setState({
+                                modalLoading: { ...this.state.modalLoading, showModal: false },
+                                ...AlertContent.proses_lambat
+                            });
+                        }
+                        else {
+                            this.setState({
+                                modalLoading: { ...this.state.modalLoading, showModal: false },
+                                ...AlertContent.email_pass_salah
+                            });
+                        }
                     }
                     else {
                         this.setState({
@@ -305,6 +313,12 @@ class Login extends Component {
                         });
                     }
                 }
+            })
+            .catch((err)=>{
+                this.setState({
+                    modalLoading: { ...this.state.modalLoading, showModal: false },
+                    ...AlertContent.server_no_response
+                });
             });
     }
 

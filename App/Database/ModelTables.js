@@ -611,7 +611,7 @@ const TR_LOG = {
         FROM: { type: 'string', optional: false },
     }
 };
-``
+
 const TM_SUGGESTION_INSPECTION = {
     name: 'TM_SUGGESTION_INSPECTION',
     primaryKey: 'LOCATION_CODE',
@@ -658,6 +658,72 @@ const TM_SUGGESTION_INSPECTION = {
     }
 };
 
+const TR_PETAPANEN_HEADER = {
+    name: 'TR_PETAPANEN_HEADER',
+    properties: {
+        "REGION_CODE": { type: 'string', default: null, optional: true },
+        "COMP_CODE": { type: 'string', default: null, optional: true },
+        "EST_CODE": { type: 'string', default: null, optional: true },
+        "WERKS": { type: 'string', default: null, optional: true },
+        "AFD_CODE": { type: 'string', default: null, optional: true },
+        "AFD_NAME": { type: 'string', default: null, optional: true },
+        "PER_TANGGAL": { type: 'string', default: null, optional: true },
+        "TON_PRODUKTIVITAS": { type: 'double', default: null, optional: true },
+        "LUAS_PANEN": { type: 'double', default: null, optional: true },
+        "PEMANEN": { type: 'double', default: null, optional: true },
+        "BBC": { type: 'double', default: null, optional: true },
+        "TARGET": { type: 'double', default: null, optional: true },
+        "PERCENT_BBC": { type: 'double', default: null, optional: true },
+        "PERCENT_TARGET": { type: 'double', default: null, optional: true },
+        "INTER": { type: 'double', default: null, optional: true },
+        "D_1": { type: 'double', default: null, optional: true },
+        "D_2": { type: 'double', default: null, optional: true },
+        "D_3": { type: 'double', default: null, optional: true },
+        "D_4": { type: 'double', default: null, optional: true },
+        "D_5": { type: 'double', default: null, optional: true },
+        "D_6": { type: 'double', default: null, optional: true },
+        "D_7": { type: 'double', default: null, optional: true },
+        "D_8": { type: 'double', default: null, optional: true },
+        "BBC_TON_LAGI": { type: 'double', default: null, optional: true },
+        "TARGET_TON_LAGI": { type: 'double', default: null, optional: true }
+    }
+};
+
+const TR_PETAPANEN_DETAIL = {
+    name: 'TR_PETAPANEN_DETAIL',
+    properties: {
+        "REGION_CODE": { type: 'string', default: null, optional: true },
+        "COMP_CODE": { type: 'string', default: null, optional: true },
+        "EST_CODE": { type: 'string', default: null, optional: true },
+        "WERKS": { type: 'string', default: null, optional: true },
+        "AFD_CODE": { type: 'string', default: null, optional: true },
+        "AFD_NAME": { type: 'string', default: null, optional: true },
+        "BLOCK_CODE": { type: 'string', default: null, optional: true },
+        "BLOCK_NAME": { type: 'string', default: null, optional: true },
+        "TGL": { type: 'string', default: null, optional: true },
+        "KG_ACTUAL": { type: 'double', default: null, optional: true },
+        "KG_TARGET_MTD": { type: 'double', default: null, optional: true },
+        "ACT_TAR": { type: 'double', default: null, optional: true },
+        "COLOR": { type: 'string', default: null, optional: true },
+        "STATUS": { type: 'string', default: null, optional: true },
+        "LUAS": { type: 'double', default: null, optional: true },
+        "POKOK": { type: 'double', default: null, optional: true },
+        "SPH": { type: 'double', default: null, optional: true },
+        "TON": { type: 'double', default: null, optional: true },
+        "LUASAN_PANEN": { type: 'double', default: null, optional: true },
+        "PERCENT_BCC": { type: 'double', default: null, optional: true },
+        "BBC_TON": { type: 'double', default: null, optional: true },
+        "BBC_TON_LAGI": { type: 'double', default: null, optional: true },
+        "PERCENT_TARGET": { type: 'double', default: null, optional: true },
+        "TARGET_TON": { type: 'double', default: null, optional: true },
+        "TARGET_TON_LAGI": { type: 'double', default: null, optional: true },
+        "INTER": { type: 'double', default: null, optional: true },
+        "ROTASI": { type: 'double', default: null, optional: true },
+        "HK_MTD": { type: 'double', default: null, optional: true },
+        "HK_MON": { type: 'double', default: null, optional: true }
+    }
+};
+
 export default {
     TR_LOGIN,
     TR_CONFIG,
@@ -700,6 +766,8 @@ export default {
     TR_RATING,
     TR_SUMMARY,
     TR_LOG,
+    TR_PETAPANEN_HEADER,
+    TR_PETAPANEN_DETAIL,
 
 
     SCHEMA_VERSION

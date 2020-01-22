@@ -290,7 +290,8 @@ export function fetchGet(serviceName, fetchHeaders) {
         }
     }
 
-    return fetch(serviceDetail.API_URL, {
+    let tempURL = serviceName === "INTERNAL-PETA-PANEN-HEADER" ? "http://msadev.tap-agri.com:4015/api/v1.0/peta-panen/header" : serviceDetail.API_URL;
+    return fetch(tempURL, {
         method: 'GET',
         headers: headers
     }).then((response) => {

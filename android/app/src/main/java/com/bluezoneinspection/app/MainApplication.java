@@ -3,6 +3,7 @@ package com.bluezoneinspection.app;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.horcrux.svg.SvgPackage;
 import codes.simen.IMEI.IMEI;
 import com.dylanvann.fastimage.FastImageViewPackage;
 
@@ -45,6 +46,7 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(
                     new MainReactPackage(),
+            new SvgPackage(),
                     new FastImageViewPackage(),
                     new RNFirebasePackage(),
                     new RNFirebaseMessagingPackage(),

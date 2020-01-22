@@ -57,5 +57,16 @@ export default {
   colorProgress: '#D5D5D5',
 
   //Color Default
-  colorWhite: '#FFF'
+  colorWhite: '#FFF',
+
+    //Main Color
+    BLACK: "rgba(0,0,0,1)",
+    WHITE: "rgba(255,255,255,1)",
+
+
+    //PetaPanen
+    greenGauge: "rgba(0,166,81,1)",
+    orangeTextCircle: "rgba(255,179,0,1)",
+    greyText: "rgba(112,112,112,1)",
+    redishText: "rgba(208,2,27,1)"
 };

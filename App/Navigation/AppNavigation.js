@@ -61,6 +61,7 @@ import Restan from '../Screen/More/Restan'
 import MoreScreen from '../Screen/More/MoreScreen';
 
 import Leaderboard from '../Screen/Leaderboard';
+import PetaPanen from '../Screen/PetaPanen';
 
 import Colors from '../Constant/Colors'
 // import FormInspectionNavigator from '../Screen/Inspeksi/Navigation/FormInspectionNavigator';
@@ -181,6 +182,12 @@ const main = createStackNavigator({
 
     Leaderboard: {
         screen: Leaderboard,
+        navigationOptions:{
+            header: null
+        }
+    },
+    PetaPanen: {
+        screen: PetaPanen,
         navigationOptions:{
             header: null
         }

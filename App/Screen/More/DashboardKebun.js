@@ -64,7 +64,7 @@ export default class DashboardKebun extends React.Component {
     };
 
     getRestanSyncTime(){
-        AsyncStorage.getItem('titikRestan')
+        AsyncStorage.getItem('SYNCTIME-titikRestan')
             .then((restanSyncTime)=>{
                 let data = JSON.parse(restanSyncTime);
                 this.setState({

@@ -142,7 +142,7 @@ export default class ListInspection extends Component {
       'Authorization': 'Bearer ' + user.ACCESS_TOKEN
     }
 
-    fetch('http://tap-ldapdev.tap-agri.com/mobile-inspection/inspection/data/suggestion', {
+    fetch('http://msadev.tap-agri.com:4015/api/v1.0/suggestion', {
       method: 'GET',
       headers: headers
     }).then((response) => {

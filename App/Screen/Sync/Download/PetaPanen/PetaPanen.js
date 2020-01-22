@@ -3,28 +3,28 @@ import moment from 'moment';
 import TaskServices from '../../../../Database/TaskServices'
 import { getAPIFunction } from ".././ApiFunction";
 
-export async function getTitikRestan() {
+export async function getPetaPanenHeader() {
 
-    let titikRestan = TaskServices.getAllData('TR_TITIK_RESTAN');
+    let petaPanen = TaskServices.getAllData('TR_PETAPANEN_HEADER');
 
     let downloadLabels = {
         downloadCount: 0,
-        totalCount: titikRestan.length,
+        totalCount: petaPanen.length,
         downloadStatus: true
     };
 
-    await getAPIFunction('INTERNAL-TITIK-RESTAN').then((restanModel) => {
+    await getAPIFunction('INTERNAL-PETA-PANEN-HEADER').then((petapanenHeaderModel) => {
         try {
-            if (restanModel !== null) {
-                AsyncStorage.setItem('SYNCTIME-titikRestan', JSON.stringify({
+            if (petapanenHeaderModel !== null) {
+                AsyncStorage.setItem('SYNCTIME-PetaPanenHeader', JSON.stringify({
                     latestSyncTime: moment().format("DD MMM YYYY")
                 }));
 
-                TaskServices.deleteAllData("TR_TITIK_RESTAN");
+                TaskServices.deleteAllData("TR_PETAPANEN_HEADER");
 
                 Promise.all(
-                    restanModel.map(item => {
-                        TaskServices.saveData('TR_TITIK_RESTAN', item);
+                    petapanenHeaderModel.map(item => {
+                        TaskServices.saveData('TR_PETAPANEN_HEADER', item);
                         downloadLabels = {
                             ...downloadLabels,
                             downloadCount: downloadLabels.downloadCount + 1
@@ -49,3 +49,4 @@ export async function getTitikRestan() {
 
     return downloadLabels;
 }
+

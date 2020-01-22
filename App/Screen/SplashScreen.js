@@ -153,7 +153,7 @@ class SplashScreen extends Component {
         if (isAllGrandted === true) {
 
             this.checkUpdate();
-            this.detectFakeGPS();
+            // this.detectFakeGPS();
 
             createNotificationChannel();
 

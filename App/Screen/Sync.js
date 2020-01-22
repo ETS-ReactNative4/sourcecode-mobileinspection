@@ -50,6 +50,7 @@ import { postWeeklySummary } from './Sync/Upload/UploadWeeklySummary';
 import { getTitikRestan } from './Sync/Download/Restan/TitikRestan';
 import {getFCMToken} from "../Notification/NotificationListener";
 import {fetchGet, fetchPost, fetchPut} from "../Api/FetchingApi";
+import {getPetaPanenHeader} from "./Sync/Download/PetaPanen/PetaPanen";
 
 export default class SyncScreen extends React.Component {
 
@@ -107,7 +108,7 @@ export default class SyncScreen extends React.Component {
             valueGenbaInspection: '0',
             totalGenbaInspection: '0',
 
-            //downlaod
+            //download
             progress: 0,
             progressAfd: 0,
             progressRegion: 0,
@@ -125,6 +126,7 @@ export default class SyncScreen extends React.Component {
             progressParamInspection: 0,
             progressKualitas: 0,
             progressTitikRestan: 0,
+            progressPetaPanenHeader: 0,
 
             //labelDownload
             downloadApa: 'Download sedang dalam proses',
@@ -162,6 +164,8 @@ export default class SyncScreen extends React.Component {
             totalKualitas: '0',
             valueTitikRestan: 0,
             totalTitikRestan: 0,
+            valuePetaPanenHeader: 0,
+            totalPetaPanenHeader: 0,
 
 
             indeterminate: false,
@@ -348,12 +352,21 @@ export default class SyncScreen extends React.Component {
             })
         })
 
-        /* DOWNLOAD PARAM KUALITAS */
+        /* DOWNLOAD TITIK RESTAN */
         await getTitikRestan().then((data) => {
             this.setState({
                 progressTitikRestan: 1,
                 valueTitikRestan: data.downloadCount,
                 totalTitikRestan: data.totalCount
+            })
+        })
+
+        /* DOWNLOAD PETA PANEN HEADER */
+        await getPetaPanenHeader().then((data) => {
+            this.setState({
+                progressPetaPanenHeader: 1,
+                valuePetaPanenHeader: data.downloadCount,
+                totalPetaPanenHeader: data.totalCount
             })
         })
 
@@ -1354,11 +1367,18 @@ export default class SyncScreen extends React.Component {
                             progress={this.state.progressKualitas} />
 
                         <ProgressSync
-                            title={'TM TITIK RESTAN'}
+                            title={'TITIK RESTAN'}
                             color={Colors.brand}
                             value={this.state.valueTitikRestan}
                             total={this.state.totalTitikRestan}
                             progress={this.state.progressTitikRestan} />
+
+                        <ProgressSync
+                            title={'PETA PANEN HEADER'}
+                            color={Colors.brand}
+                            value={this.state.valuePetaPanenHeader}
+                            total={this.state.totalPetaPanenHeader}
+                            progress={this.state.progressPetaPanenHeader} />
 
                         <ProgressDialog
                             visible={this.state.fetchLocation}
