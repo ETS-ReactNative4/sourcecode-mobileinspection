@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
-import {Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {AsyncStorage, Image, NetInfo, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import MapView, { Marker, Polygon, ProviderPropType, PROVIDER_GOOGLE } from 'react-native-maps';
 import {VictoryArea, VictoryAxis, VictoryChart, VictoryScatter} from "victory-native";
 import Svg, {G, Circle, Text as TextSVG, TSpan, Defs, LinearGradient, Stop} from "react-native-svg";
+import moment from 'moment';
 
 import {HeaderWithButton} from "../Component/Header/HeaderWithButton";
 import GaugeChart from '../Component/SVG/GaugeBar';
@@ -10,6 +11,7 @@ import Colors from "../Constant/Colors";
 import imgSrc from "../Images/Module/PetaPanen";
 
 import TaskServices from "../Database/TaskServices";
+import {getPetaPanenDetail, getPetaPanenHeader} from "./Sync/Download/PetaPanen/PetaPanen";
 
 export default class PetaPanen extends Component {
     constructor(props) {
@@ -43,17 +45,71 @@ export default class PetaPanen extends Component {
                     { x: 0, y: 0, y0: 0 }
                 ],
                 maxValue: 0
-            }
+            },
+            lastSyncTime: null
         }
     }
 
-    async componentWillMount(){
+    // async componentWillMount(){
+    //     await this.getSyncTime();
+    //     await this.getAvailableBlock();
+    //     this.getPanenHeader(this.state.blockSelection.selectedBlock);
+    // }
+
+    async componentDidMount(){
         await this.getAvailableBlock();
         this.getPanenHeader(this.state.blockSelection.selectedBlock);
     }
 
-    onMapReady(){
+    async onMapReady(){
+        await this.getSyncTime();
         this.getCoordinate(this.state.blockSelection.selectedBlock);
+    }
+
+    async getSyncTime(){
+        let panenHeaderSyncTime = null;
+        let panenDetailSyncTime = null;
+
+        await AsyncStorage.getItem('SYNCTIME-PetaPanenHeader')
+            .then((SyncTime)=>{
+                if(SyncTime){
+                    let data = JSON.parse(SyncTime);
+                    panenHeaderSyncTime = data.latestSyncTime;
+                }
+            });
+
+        await AsyncStorage.getItem('SYNCTIME-PetaPanenDetail')
+            .then((SyncTime)=>{
+                if(SyncTime){
+                    let data = JSON.parse(SyncTime);
+                    panenDetailSyncTime = data.latestSyncTime;
+                }
+            });
+
+        let today = moment().format("DD MMM YYYY");
+
+        if(!moment(today).isSame(panenHeaderSyncTime) || !moment(today).isSame(panenDetailSyncTime)){
+            await this.updatePetaPanen();
+        }
+
+        this.setState({
+            latestSyncTime: panenHeaderSyncTime === panenDetailSyncTime ? panenDetailSyncTime.toString() : "Belum Sync"
+        })
+    };
+
+    async updatePetaPanen(){
+        await NetInfo.isConnected.fetch()
+            .then(async (isConnected) => {
+                if (isConnected) {
+                    await getPetaPanenHeader();
+                    await getPetaPanenDetail();
+                }
+                else {
+                    this.setState({
+                        internetExist: false
+                    });
+                }
+            });
     }
 
     async getAvailableBlock(){
@@ -643,6 +699,14 @@ export default class PetaPanen extends Component {
                     }}
                     onPressRight={null}
                 />
+                <View style={{
+                    padding: 10,
+                    backgroundColor: 'rgba(221,226,218,1)',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}>
+                    <Text style={{ color: Colors.text, fontSize: 12 }}>{`Data per tanggal : ${this.state.latestSyncTime}`}</Text>
+                </View>
                 <ScrollView style={{flex: 1}} contentContainerStyle={{backgroundColor:"white"}}>
                     {this.renderHeader(this)}
                     {this.renderAreaChart()}
