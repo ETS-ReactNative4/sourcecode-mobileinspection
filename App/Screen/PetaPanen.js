@@ -7,6 +7,7 @@ import moment from 'moment';
 
 import {HeaderWithButton} from "../Component/Header/HeaderWithButton";
 import GaugeChart from '../Component/SVG/GaugeBar';
+import ModalLoading from "../Component/ModalLoading";
 import Colors from "../Constant/Colors";
 import imgSrc from "../Images/Module/PetaPanen";
 
@@ -46,27 +47,31 @@ export default class PetaPanen extends Component {
                 ],
                 maxValue: 0
             },
-            lastSyncTime: null
+            lastSyncTime: null,
+            modalLoading: {
+                showModal: true,
+                title: "Sabar Ya..",
+                message: "Sedang Melakukan sync data!"
+            }
         }
     }
 
-    // async componentWillMount(){
-    //     await this.getSyncTime();
-    //     await this.getAvailableBlock();
-    //     this.getPanenHeader(this.state.blockSelection.selectedBlock);
-    // }
+    // async componentWillMount(){}
 
     async componentDidMount(){
         await this.getAvailableBlock();
-        this.getPanenHeader(this.state.blockSelection.selectedBlock);
     }
 
-    async onMapReady(){
-        await this.getSyncTime();
-        this.getCoordinate(this.state.blockSelection.selectedBlock);
+    onMapReady(){
+        this.getSyncTime()
+            .then(()=>{
+                this.getPanenHeader(this.state.blockSelection.selectedBlock);
+                this.getCoordinate(this.state.blockSelection.selectedBlock);
+            });
     }
 
     async getSyncTime(){
+        let syncStatus = "Belum Sync";
         let panenHeaderSyncTime = null;
         let panenDetailSyncTime = null;
 
@@ -75,6 +80,7 @@ export default class PetaPanen extends Component {
                 if(SyncTime){
                     let data = JSON.parse(SyncTime);
                     panenHeaderSyncTime = data.latestSyncTime;
+                    syncStatus = data.latestSyncTime;
                 }
             });
 
@@ -89,27 +95,50 @@ export default class PetaPanen extends Component {
         let today = moment().format("DD MMM YYYY");
 
         if(!moment(today).isSame(panenHeaderSyncTime) || !moment(today).isSame(panenDetailSyncTime)){
-            await this.updatePetaPanen();
+            await this.updatePetaPanen()
+                .then((response)=>{
+                    if (response){
+                        syncStatus = today
+                    }
+                })
         }
 
         this.setState({
-            latestSyncTime: panenHeaderSyncTime === panenDetailSyncTime ? panenDetailSyncTime.toString() : "Belum Sync"
+            latestSyncTime: syncStatus,
+            modalLoading:{
+                ...this.state.modalLoading,
+                showModal: false
+            }
         })
     };
 
     async updatePetaPanen(){
+        let fetchStatus = true;
         await NetInfo.isConnected.fetch()
             .then(async (isConnected) => {
                 if (isConnected) {
-                    await getPetaPanenHeader();
-                    await getPetaPanenDetail();
+                    await getPetaPanenHeader()
+                        .then((response)=>{
+                            if (!response.downloadStatus){
+                                fetchStatus = false
+                            }
+                        });
+                    await getPetaPanenDetail()
+                        .then((response)=>{
+                            if (!response.downloadStatus){
+                                fetchStatus = false
+                            }
+                        })
                 }
                 else {
+                    fetchStatus = false;
                     this.setState({
                         internetExist: false
                     });
                 }
             });
+
+        return fetchStatus;
     }
 
     async getAvailableBlock(){
@@ -689,6 +718,10 @@ export default class PetaPanen extends Component {
     render() {
         return (
             <View style={{flex: 1}}>
+                <ModalLoading
+                    visible={this.state.modalLoading.showModal}
+                    title={this.state.modalLoading.title}
+                    message={this.state.modalLoading.message} />
                 <HeaderWithButton
                     title={"Peta Panen"}
                     iconLeft={require("../Images/icon/ic_arrow_left.png")}

@@ -72,9 +72,9 @@ export const HeaderWithButton = (props) => {
                     props.rightVectorIcon ?
                         <VectorIcon
                             style={{
-                                height: 28,
-                                width: 28,
-                                alignSelf: "center"
+                                height: props.iconRightSize,
+                                width: props.iconRightSize,
+                                alignSelf:"center"
                             }}
                             iconSize={props.iconRightSize}
                             iconColor={"white"}
