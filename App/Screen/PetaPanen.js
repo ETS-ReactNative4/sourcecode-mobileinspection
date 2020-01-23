@@ -13,6 +13,7 @@ import imgSrc from "../Images/Module/PetaPanen";
 
 import TaskServices from "../Database/TaskServices";
 import {getPetaPanenDetail, getPetaPanenHeader} from "./Sync/Download/PetaPanen/PetaPanen";
+import {Images} from "../Themes";
 
 export default class PetaPanen extends Component {
     constructor(props) {
@@ -782,6 +783,86 @@ export default class PetaPanen extends Component {
                                 })
                             }
                         </MapView>
+                        <View style={{
+                            width: "100%",
+                            height: "100%",
+                            position: "absolute",
+                            alignItems:"flex-end",
+                            right: 10,
+                            top: 10
+                        }}>
+                            <TouchableOpacity
+                                style={{
+                                    flexDirection:"row",
+                                    backgroundColor:"white",
+                                    paddingVertical: 5,
+                                    paddingHorizontal: 10,
+                                    borderRadius: 20,
+                                    alignItems:"center",
+                                    justifyContent:'center'
+                                }}>
+                                <Text>Aktual vs Target</Text>
+                                <Image source={require('../Images/icon/ic-orang-1.png')} style={{width: 25, height:25, marginLeft: 5}} resizeMode={"contain"} />
+                            </TouchableOpacity>
+                        </View>
+                        <View style={{
+                            width: "100%",
+                            height: "100%",
+                            position: "absolute",
+                            justifyContent:"flex-end",
+                            alignItems:"center",
+                            bottom: 20
+                        }}>
+                            <View style={{
+                                flexDirection:"row",
+                                backgroundColor:"rgba(230,230,230,1)",
+                                padding: 10,
+                                borderRadius: 5
+                            }}>
+                                <View style={{
+                                    flexDirection:"row",
+                                    alignItems:"center",
+                                    justifyContent:"center",
+                                }}>
+                                    <View
+                                        style={{width: 20, height: 20, borderRadius:10, backgroundColor:Colors.polygonGreen, marginRight: 5}}
+                                    />
+                                    <Text style={{paddingVertical: 5}}>{`>95%`}</Text>
+                                </View>
+                                <View style={{
+                                    flexDirection:"row",
+                                    alignItems:"center",
+                                    justifyContent:"center",
+                                    paddingHorizontal: 5
+                                }}>
+                                    <View
+                                        style={{width: 20, height: 20, borderRadius:10, backgroundColor:Colors.polygonYellow, marginRight: 5}}
+                                    />
+                                    <Text style={{paddingVertical: 5}}>{`85% - 95%`}</Text>
+                                </View>
+                                <View style={{
+                                    flexDirection:"row",
+                                    alignItems:"center",
+                                    justifyContent:"center",
+                                    paddingHorizontal: 5
+                                }}>
+                                    <View
+                                        style={{width: 20, height: 20, borderRadius:10, backgroundColor:Colors.polygonRed, marginRight: 5}}
+                                    />
+                                    <Text style={{paddingVertical: 5}}>{`1% - 75%`}</Text>
+                                </View>
+                                <View style={{
+                                    flexDirection:"row",
+                                    alignItems:"center",
+                                    justifyContent:"center"
+                                }}>
+                                    <View
+                                        style={{width: 20, height: 20, borderRadius:10, backgroundColor:Colors.polygonWhite, marginRight: 5}}
+                                    />
+                                    <Text style={{paddingVertical: 5}}>{`0%`}</Text>
+                                </View>
+                            </View>
+                        </View>
                     </View>
                     {this.renderDetails(this)}
                 </ScrollView>
