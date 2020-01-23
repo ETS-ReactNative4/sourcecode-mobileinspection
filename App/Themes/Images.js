@@ -74,6 +74,11 @@ const images = {
   img_dummy: require('../Images/dummy_image.png'),
   img_forest: require('../Images/forest.jpg'),
   img_thumbnail: require('../Images/ic-default-thumbnail.png'),
+  img_background_leaderboard: require('../Images/background_leaderboard.png'),
+  img_background_leaderboard_1: require('../Images/background_leaderboard_1.png'),
+  img_background_rank: require('../Images/img_bg_rank.png'),
+  img_background_rank_2: require('../Images/img_bg_rank.png'),
+  img_background_rank_3: require('../Images/img_bg_rank_3.png'),
 
   //Alert Images
   img_input_tidak_lengkap: require('../Images/ic-inputan-tidak-lengkap.png'),

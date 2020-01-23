@@ -26,28 +26,29 @@ export const HeaderWithButton = (props) => {
                 onPress={props.onPressLeft}>
                 {
                     props.leftVectorIcon ?
-                    <VectorIcon
-                        style={{
-                            height: 28,
-                            width: 28
-                        }}
-                        iconSize={props.iconLeftSize}
-                        iconName={props.iconLeft}
-                    />
-                    :
-                    <Image
-                        style={{
-                            height: props.iconLeftSize,
-                            width: props.iconLeftSize
-                        }}
-                        source={props.iconLeft} />
+                        <VectorIcon
+                            style={{
+                                height: 28,
+                                width: 28
+                            }}
+                            iconSize={25}
+                            iconName={props.iconLeft}
+                        />
+                        :
+                        <Image
+                            style={{
+                                height: 16,
+                                width: 16,
+                                marginRight: props.titlePosition == 'left' ? 16 : 0
+                            }}
+                            source={props.iconLeft} />
                 }
             </TouchableOpacity>
 
             {/* TITLE HEADER */}
             <View style={{
                 flex: 1,
-                alignItems: 'center',
+                alignItems: props.titlePosition == 'left' ? 'flex-start' : 'center',
                 justifyContent: 'center'
             }}>
                 <Text style={{
@@ -71,9 +72,9 @@ export const HeaderWithButton = (props) => {
                     props.rightVectorIcon ?
                         <VectorIcon
                             style={{
-                                height: props.iconRightSize,
-                                width: props.iconRightSize,
-                                alignSelf:"center"
+                                height: 28,
+                                width: 28,
+                                alignSelf: "center"
                             }}
                             iconSize={props.iconRightSize}
                             iconColor={"white"}
@@ -95,18 +96,19 @@ export const HeaderWithButton = (props) => {
 
 HeaderWithButton.defaultProps = {
     title: "Title",
+    titlePosition: "center",
     iconLeft: null,
     iconLeftSize: 15,
     iconRight: null,
-    iconRightSize: 15,
-    onPressLeft: ()=>{},
-    onPressRight: ()=>{},
+    onPressLeft: () => { },
+    onPressRight: () => { },
     leftVectorIcon: false,
     rightVectorIcon: false
 };
 
 HeaderWithButton.propTypes = {
     title: PropTypes.string,
+    titlePosition: PropTypes.string,
     iconLeft: PropTypes.oneOf([String, null]),
     iconLeftSize: PropTypes.oneOf([String, null]),
     iconRight: PropTypes.oneOf([String, null]),
