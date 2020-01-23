@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import MapView, { Marker, Polygon, ProviderPropType, PROVIDER_GOOGLE } from 'react-native-maps';
 import {VictoryArea, VictoryAxis, VictoryChart, VictoryScatter} from "victory-native";
-import Svg, {G, Circle, Text as TextSVG, TSpan} from "react-native-svg";
+import Svg, {G, Circle, Text as TextSVG, TSpan, Defs, LinearGradient, Stop} from "react-native-svg";
 
 import {HeaderWithButton} from "../Component/Header/HeaderWithButton";
 import GaugeChart from '../Component/SVG/GaugeBar';
@@ -11,14 +11,19 @@ import imgSrc from "../Images/Module/PetaPanen";
 
 import TaskServices from "../Database/TaskServices";
 
-export default class Leaderboard extends Component {
+export default class PetaPanen extends Component {
     constructor(props) {
         super(props);
         let currentUser = TaskServices.getAllData('TR_LOGIN')[0];
         this.state = {
             currentUser: currentUser,
-            listBlock: [],
-            mapData:{
+            blockSelection: {
+                listAvailableBlock: [],
+                selectedBlock: {}
+            },
+            panenHeader: {},
+            panenDetail: {},
+            mapData: {
                 selectedBlock: null,
                 initialRegion: {
                     latitude: -2.1890660,
@@ -28,36 +33,31 @@ export default class Leaderboard extends Component {
                 },
                 polygons:[]
             },
-            chartData:{
-                area:[
-                    { x: 1, y: 5, y0: 0 },
-                    { x: 2, y: 2, y0: 0 },
-                    { x: 3, y: 3, y0: 0 },
-                    { x: 4, y: 5, y0: 0 },
-                    { x: 5, y: 8, y0: 0 },
-                    { x: 6, y: 4, y0: 0 }
+            chartData: {
+                area: [
+                    { x: 0, y: 0, y0: 0 },
+                    { x: 0, y: 0, y0: 0 }
                 ],
-                scatter:[
-                    { x: 2, y: 2, y0: 0 },
-                    { x: 3, y: 3, y0: 0 },
-                    { x: 4, y: 5, y0: 0 },
-                    { x: 5, y: 8, y0: 0 },
-                ]
+                scatter: [
+                    { x: 0, y: 0, y0: 0 },
+                    { x: 0, y: 0, y0: 0 }
+                ],
+                maxValue: 0
             }
         }
     }
 
-    async componentDidMount(){
+    async componentWillMount(){
         await this.getAvailableBlock();
+        this.getPanenHeader(this.state.blockSelection.selectedBlock);
     }
 
     onMapReady(){
-        this.getCoordinate(this.state.listBlock[0]);
+        this.getCoordinate(this.state.blockSelection.selectedBlock);
     }
 
     async getAvailableBlock(){
         let listUserLocation = this.state.currentUser.LOCATION_CODE.split(",");
-        alert(JSON.stringify(listUserLocation));
         let locationArray = [];
         await Promise.all(
             listUserLocation.map((location)=>{
@@ -67,10 +67,103 @@ export default class Leaderboard extends Component {
                 })
             })
         );
-
-        this.setState({
-            listBlock: locationArray
+        await this.setState({
+            blockSelection:{
+                ...this.state.blockSelection,
+                listAvailableBlock:locationArray,
+                selectedBlock: locationArray[0],
+                index: 0
+            }
         });
+    }
+
+    //param ("+") OR ("-") according to which button arrow pressed.
+    selectDifferentBlock(arithmeticOperator){
+        function decreaseIndex(currentIndex, maxIndexLength){
+            if(currentIndex === 0){
+                return maxIndexLength;
+            }
+            return currentIndex - 1;
+        }
+        function increaseIndex(currentIndex, maxIndexLength){
+            if(currentIndex === maxIndexLength){
+                return 0;
+            }
+            return currentIndex + 1;
+        }
+
+        let maxIndexLength = this.state.blockSelection.listAvailableBlock.length - 1;
+        if(maxIndexLength > 0){
+            let finalIndex = null;
+            let currentIndex = this.state.blockSelection.index;
+            if(arithmeticOperator === "+"){
+                finalIndex = increaseIndex(currentIndex, maxIndexLength);
+            }
+            else if(arithmeticOperator === "-"){
+                finalIndex = decreaseIndex(currentIndex, maxIndexLength);
+            }
+
+            let selectedBlock = this.state.blockSelection.listAvailableBlock[finalIndex];
+            this.setState({
+                blockSelection:{
+                    ...this.state.blockSelection,
+                    selectedBlock: selectedBlock,
+                    index: finalIndex
+                }
+            },()=>{
+                //refresh data
+                this.getCoordinate(this.state.blockSelection.selectedBlock);
+                this.getPanenHeader(this.state.blockSelection.selectedBlock);
+            })
+        }
+    }
+
+    getPanenHeader(werksAfd){
+        let panenHeaderData = TaskServices.query("TR_PETAPANEN_HEADER", `WERKS = "${werksAfd.WERKS}" AND AFD_CODE = "${werksAfd.AFD_CODE}"`);
+
+        let lineChartData = [
+            { x: 1, y: panenHeaderData[0].D_8, y0: -20 },
+            { x: 2, y: panenHeaderData[0].D_7, y0: -20 },
+            { x: 3, y: panenHeaderData[0].D_6, y0: -20 },
+            { x: 4, y: panenHeaderData[0].D_5, y0: -20 },
+            { x: 5, y: panenHeaderData[0].D_4, y0: -20 },
+            { x: 6, y: panenHeaderData[0].D_3, y0: -20 },
+            { x: 7, y: panenHeaderData[0].D_2, y0: -20 },
+            { x: 8, y: panenHeaderData[0].D_1, y0: -20 },
+            { x: 9, y: panenHeaderData[0].D_1, y0: -20 }
+        ];
+
+        let lineScatterData = [
+            { x: 2, y: panenHeaderData[0].D_7, y0: 0 },
+            { x: 3, y: panenHeaderData[0].D_6, y0: 0 },
+            { x: 4, y: panenHeaderData[0].D_5, y0: 0 },
+            { x: 5, y: panenHeaderData[0].D_4, y0: 0 },
+            { x: 6, y: panenHeaderData[0].D_3, y0: 0 },
+            { x: 7, y: panenHeaderData[0].D_2, y0: 0 },
+            { x: 8, y: panenHeaderData[0].D_1, y0: 0 }
+        ];
+
+
+        if(panenHeaderData.length > 0){
+            this.setState({
+                panenHeader: panenHeaderData[0],
+                chartData: {
+                    ...this.state.chartData,
+                    area: lineChartData,
+                    scatter: lineScatterData,
+                    maxValue: panenHeaderData[0].MAX_D + 25
+                }
+            });
+        }
+    }
+
+    getPanenDetail(werksAfd){
+        let panenDetailData = TaskServices.query("TR_PETAPANEN_DETAIL", `WERKS = "${werksAfd.WERKS}" AND AFD_CODE = "${werksAfd.afd_code}" AND BLOCK_NAME = "${werksAfd.blokname}"`);
+        if(panenDetailData.length > 0){
+            this.setState({
+                panenDetail: panenDetailData[0]
+            });
+        }
     }
 
     getCoordinate(werksAfdLocation) {
@@ -92,9 +185,7 @@ export default class Leaderboard extends Component {
 
         let currentUser = this.state.currentUser;
         if (currentUser.CURR_WERKS) {
-            // let polygons = TaskServices.findBy('TR_POLYGON', 'WERKS', currentUser.CURR_WERKS);
             let polygons = TaskServices.query('TR_POLYGON', `WERKS = "${werksAfdLocation.WERKS}" AND afd_code = "${werksAfdLocation.AFD_CODE}"`);
-            // let polygonsTempArray = Array.from(polygons);
             let polygonsArray = [];
             for(let index = 0; index < polygons.length; index++){
                 let polygonTemp = polygons[index];
@@ -112,6 +203,14 @@ export default class Leaderboard extends Component {
                     ...this.state.mapData,
                     polygons: polygonsArray
                 }
+            }, ()=>{
+                this.map.animateToRegion({
+                    latitude: polygonsArray[0].coords[0].latitude,
+                    longitude: polygonsArray[0].coords[0].longitude,
+                    latitudeDelta: 0.025,
+                    longitudeDelta: 0.025
+                }, 1);
+                this.getPanenDetail(polygonsArray[0])
             });
         }
         else {
@@ -126,21 +225,44 @@ export default class Leaderboard extends Component {
         return null;
     }
 
+    getPolygonColor(werks, afd, blockName){
+        let petaPanenDetail = TaskServices.query("TR_PETAPANEN_DETAIL", `WERKS = "${werks}" AND AFD_CODE = "${afd}" AND BLOCK_NAME = "${blockName}"`);
+        if(petaPanenDetail[0]){
+            switch (petaPanenDetail[0].COLOR) {
+                case "RED":
+                    return Colors.polygonRed;
+                case "YELLOW":
+                    return Colors.polygonYellow;
+                case "GREEN":
+                    return Colors.polygonGreen;
+                case "WHITE":
+                    return Colors.polygonWhite;
+                default:
+                    return Colors.abu1;
+            }
+        }
+    }
+
     //================ RENDER
 
-    renderHeader(){
-        function renderAfdeling(){
+    renderHeader(PetaPanen){
+        //render header pilih afdeling
+        function renderAfdeling(PetaPanen){
             return(
                 <View style={{flexDirection: "row", justifyContent:"space-between", alignItems:"center", paddingVertical: 10, paddingHorizontal: 25}}>
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={()=>{PetaPanen.selectDifferentBlock("-")}}
+                    >
                         <Image
                             style={{ width: 24, height: 24 }}
                             resizeMode={"contain"}
                             source={imgSrc.arrowLeft}
                         />
                     </TouchableOpacity>
-                    <Text style={{fontSize: 25, fontWeight: 'bold'}}>Afdeling - A</Text>
-                    <TouchableOpacity>
+                    <Text style={{fontSize: 25, fontWeight: 'bold'}}>{PetaPanen.state.panenHeader.AFD_NAME}</Text>
+                    <TouchableOpacity
+                        onPress={()=>{PetaPanen.selectDifferentBlock("+")}}
+                    >
                         <Image
                             style={{ width: 24, height: 24 }}
                             resizeMode={"contain"}
@@ -151,12 +273,13 @@ export default class Leaderboard extends Component {
             )
         }
 
-        function renderHeaderDetail(){
+        //render header detail (angka2 di bwh afdeling picker)
+        function renderHeaderDetail(PetaPanen){
             return(
                 <View style={{flexDirection:"row", margin: 10, height: 125}}>
                     <View style={styles.HeaderCard}>
                         <Text>
-                            <Text style={{fontSize: 26, color:"rgba(60,179,1,1)"}}>{`1.31`}</Text>
+                            <Text style={{fontSize: 26, color:"rgba(60,179,1,1)"}}>{`${PetaPanen.state.panenHeader.TON_PRODUKTIVITAS}`}</Text>
                             <Text style={{fontSize: 11, color:"rgba(60,179,1,1)"}}>TON</Text>
                         </Text>
                         <Text>Produktivitas</Text>
@@ -168,11 +291,11 @@ export default class Leaderboard extends Component {
                         }}>
                             <View style={styles.HeaderCard}>
                                 <Text>Luas Panen</Text>
-                                <Text style={{color:"rgba(60,179,1,1)"}}>100.32 HA</Text>
+                                <Text style={{color:"rgba(60,179,1,1)"}}>{`${PetaPanen.state.panenHeader.LUAS_PANEN} HA`}</Text>
                             </View>
                             <View style={styles.HeaderCard}>
                                 <Text>Pemanen</Text>
-                                <Text style={{color:"rgba(60,179,1,1)"}}>100.32 HA</Text>
+                                <Text style={{color:"rgba(60,179,1,1)"}}>{`${PetaPanen.state.panenHeader.PEMANEN} HK`}</Text>
                             </View>
                         </View>
                         <View style={{
@@ -181,11 +304,11 @@ export default class Leaderboard extends Component {
                         }}>
                             <View style={styles.HeaderCard}>
                                 <Text>BBC</Text>
-                                <Text style={{color:"rgba(255,179,0,1)"}}>100.32 HA</Text>
+                                <Text style={{color:"rgba(255,179,0,1)"}}>{`${PetaPanen.state.panenHeader.BBC} TON`}</Text>
                             </View>
                             <View style={styles.HeaderCard}>
                                 <Text>Target</Text>
-                                <Text style={{color:"rgba(255,179,0,1)"}}>100.32 HA</Text>
+                                <Text style={{color:"rgba(255,179,0,1)"}}>{`${PetaPanen.state.panenHeader.TARGET} TON`}</Text>
                             </View>
                         </View>
                     </View>
@@ -195,8 +318,8 @@ export default class Leaderboard extends Component {
 
         return (
             <View>
-               {renderAfdeling()}
-               {renderHeaderDetail()}
+               {renderAfdeling(PetaPanen)}
+               {renderHeaderDetail(PetaPanen)}
             </View>
         )
     }
@@ -204,17 +327,27 @@ export default class Leaderboard extends Component {
     renderAreaChart(){
         return(
             <VictoryChart
-                maxDomain={{y:10}}
-                minDomain={{y:1}}
-                padding={{top: 20}}
+                maxDomain={{y:this.state.chartData.maxValue}}
+                minDomain={{y:-30}}
+                padding={{top: -20}}
                 // width={400}
-                height={200}
-                style={{ display: "block" }}
+                height={150}
                 // animate={{
                 //     duration: 2000,
                 //     onLoad: { duration: 1000 }
                 // }}
             >
+                <Defs>
+                    <LinearGradient id="gradientStroke"
+                                    x1="0%"
+                                    x2="0%"
+                                    y1="0%"
+                                    y2="100%"
+                    >
+                        <Stop offset="100%" stopColor="rgba(198,254,170,1)" stopOpacity="0" />
+                        <Stop offset="50%" stopColor="rgba(198,254,170,1)" stopOpacity="1" />
+                    </LinearGradient>
+                </Defs>
                 <VictoryAxis
                     style={{
                         axis: { display: "none" },
@@ -223,7 +356,10 @@ export default class Leaderboard extends Component {
                     }}
                 />
                 <VictoryArea
-                    style={{ data: { fill: "rgba(255,255,0,1)" } }}
+                    style={{ data: {
+                            fill: "url(#gradientStroke)",
+                            stroke: "rgba(105,198,59,1)",
+                        } }}
                     data={this.state.chartData.area}
                     // labelComponent={<Text>Y</Text>}
                     labels={({ data, index }) => {
@@ -232,8 +368,15 @@ export default class Leaderboard extends Component {
                 />
                 <VictoryScatter
                     data={this.state.chartData.scatter}
-                    size={7.5}
-                    style={{ data: { fill: "#c43a31" } }}
+                    // size={7.5}
+                    size={({ datum }) => datum.x === 8 ? 7.5 : 5}
+                    style={{
+                        data: {
+                            fill: ({ datum }) => datum.x === 8 ? "rgba(0,166,81,1)" : "rgba(230,230,230,1)",
+                            strokeWidth: 1,
+                            stroke: ({ datum }) => datum.x === 8 ? "transparent" : "rgba(192,192,192,1)",
+                        }}
+                    }
                     // IMPORTANT NOTE : untuk trigger events, harus di bungkus dengan Svg(REACT-NATIVE-SVG)
                     // events={[
                     //     {
@@ -248,7 +391,7 @@ export default class Leaderboard extends Component {
         )
     }
 
-    renderCircleTarget(){
+    renderCircleTarget(PetaPanen){
         return(
             <View>
                 <Text style={{textAlign:"center", paddingVertical: 10, fontSize: 20, color:Colors.BLACK, fontWeight:"bold"}}>Sampai Hari Ini</Text>
@@ -259,15 +402,15 @@ export default class Leaderboard extends Component {
                         <GaugeChart
                             textStyle={styles.GaugeText}
                             size={125}
-                            currentValue={100}
+                            currentValue={PetaPanen.state.panenHeader.PERCENT_BBC}
                             progressColor={Colors.greenGauge}
                             dialColor={"rgba(221,221,221,1)"}
                             progressRoundedEdge
                         />
                         <View style={{alignItems:'center', justifyContent:'center', marginTop: -25}}>
-                            <Text style={{fontSize: 12, color:Colors.greyText}}>TARGET</Text>
-                            <Text style={{fontSize: 14, color:"rgba(0,0,0,1)", fontWeight:"bold"}}>{`${462} TON`}</Text>
-                            <Text style={{fontSize: 12, color:Colors.redishText}}>{`${206} TON LAGI`}</Text>
+                            <Text style={{fontSize: 12, color:Colors.greyText}}>BBC</Text>
+                            <Text style={{fontSize: 14, color:"rgba(0,0,0,1)", fontWeight:"bold"}}>{`${PetaPanen.state.panenHeader.BBC} TON`}</Text>
+                            <Text style={{fontSize: 12, color:Colors.redishText}}>{`${PetaPanen.state.panenHeader.BBC_TON_LAGI} TON LAGI`}</Text>
                         </View>
                     </View>
                     <View style={{flex: 1}}>
@@ -293,7 +436,7 @@ export default class Leaderboard extends Component {
                                         fontSize="18"
                                         x="62.5"
                                         y="55">
-                                        7
+                                        {PetaPanen.state.panenHeader.INTER}
                                     </TSpan>
                                     <TSpan
                                         fontSize='14'
@@ -313,15 +456,15 @@ export default class Leaderboard extends Component {
                         <GaugeChart
                             textStyle={styles.GaugeText}
                             size={125}
-                            currentValue={100}
+                            currentValue={PetaPanen.state.panenHeader.PERCENT_TARGET}
                             progressColor={Colors.greenGauge}
                             dialColor={"rgba(221,221,221,1)"}
                             progressRoundedEdge
                         />
                         <View style={{alignItems:'center', justifyContent:'center', marginTop: -25}}>
                             <Text style={{fontSize: 12, color:Colors.greyText}}>TARGET</Text>
-                            <Text style={{fontSize: 14, color:"rgba(0,0,0,1)", fontWeight:"bold"}}>{`${462} TON`}</Text>
-                            <Text style={{fontSize: 12, color:Colors.redishText}}>{`${206} TON LAGI`}</Text>
+                            <Text style={{fontSize: 14, color:"rgba(0,0,0,1)", fontWeight:"bold"}}>{`${PetaPanen.state.panenHeader.TARGET} TON`}</Text>
+                            <Text style={{fontSize: 12, color:Colors.redishText}}>{`${PetaPanen.state.panenHeader.TARGET_TON_LAGI} TON LAGI`}</Text>
                         </View>
                     </View>
                 </View>
@@ -329,8 +472,8 @@ export default class Leaderboard extends Component {
         )
     }
 
-    renderDetails(){
-        function headerDetails(){
+    renderDetails(PetaPanen){
+        function headerDetails(PetaPanen){
             return(
                 <View>
                     <Text
@@ -338,26 +481,25 @@ export default class Leaderboard extends Component {
                             fontSize: 24,
                             color:"rgba(0,0,0,1)",
                             fontWeight: "bold"
-                        }}
-                    >
-                        Blok E38
+                        }}>
+                        {`Block ${PetaPanen.state.panenDetail.BLOCK_NAME}`}
                     </Text>
                     <View style={{flexDirection: "row", justifyContent:"space-between"}}>
                         <View style={{alignItems:'center'}}>
                             <Text>Status</Text>
-                            <Text style={{color:"rgba(60,179,1,1)"}}>${"TM-6"}</Text>
+                            <Text style={{color:"rgba(60,179,1,1)"}}>{PetaPanen.state.panenDetail.STATUS}</Text>
                         </View>
                         <View style={{alignItems:'center'}}>
-                            <Text>Status</Text>
-                            <Text style={{color:"rgba(60,179,1,1)"}}>${"TM-6"}</Text>
+                            <Text>Luas</Text>
+                            <Text style={{color:"rgba(60,179,1,1)"}}>{PetaPanen.state.panenDetail.LUAS}</Text>
                         </View>
                         <View style={{alignItems:'center'}}>
-                            <Text>Status</Text>
-                            <Text style={{color:"rgba(60,179,1,1)"}}>${"TM-6"}</Text>
+                            <Text>Pokok</Text>
+                            <Text style={{color:"rgba(60,179,1,1)"}}>{PetaPanen.state.panenDetail.POKOK}</Text>
                         </View>
                         <View style={{alignItems:'center'}}>
-                            <Text>Status</Text>
-                            <Text style={{color:"rgba(60,179,1,1)"}}>${"TM-6"}</Text>
+                            <Text>SPH</Text>
+                            <Text style={{color:"rgba(60,179,1,1)"}}>{PetaPanen.state.panenDetail.SPH}</Text>
                         </View>
                     </View>
                 </View>
@@ -365,44 +507,50 @@ export default class Leaderboard extends Component {
         }
         return(
             <View style={{padding: 15}}>
-                {headerDetails()}
+                {headerDetails(PetaPanen)}
                 <View style={{paddingVertical: 10}}>
-                    <Text style={{fontSize: 32, fontWeight:"bold", color:"rgba(60,179,1,1)"}}>1.31 <Text style={{fontSize: 11, color:"rgba(60,179,1,1)"}}>TON</Text></Text>
-                    <Text>Hasil Produksi Sampai Hari Ini</Text>
+                    <Text style={{fontSize: 32, fontWeight:"bold", color:"rgba(60,179,1,1)"}}>
+                        {PetaPanen.state.panenDetail.TON}
+                        <Text style={{fontSize: 11, color:"rgba(60,179,1,1)"}}>TON</Text>
+                    </Text>
+                    <Text style={{paddingLeft: 5}}>Hasil Produksi Sampai Hari Ini</Text>
                 </View>
                 <View style={{paddingVertical: 10}}>
-                    <Text style={{fontSize: 32, fontWeight:"bold", color:"rgba(60,179,1,1)"}}>1.31 <Text style={{fontSize: 11, color:"rgba(60,179,1,1)"}}>HA</Text></Text>
-                    <Text>Luasan Panen Sampai Hari Ini</Text>
+                    <Text style={{fontSize: 32, fontWeight:"bold", color:"rgba(60,179,1,1)"}}>
+                        {PetaPanen.state.panenDetail.LUASAN_PANEN}
+                        <Text style={{fontSize: 11, color:"rgba(60,179,1,1)"}}>HA</Text>
+                    </Text>
+                    <Text style={{paddingLeft: 5}}>Luasan Panen Sampai Hari Ini</Text>
                 </View>
                 <View style={{flexDirection:"row"}}>
                     <View style={{flex: 1, alignItems:'center'}}>
                         <GaugeChart
                             textStyle={styles.GaugeText}
                             size={125}
-                            currentValue={100}
+                            currentValue={PetaPanen.state.panenDetail.PERCENT_BCC}
                             progressColor={Colors.greenGauge}
                             dialColor={"rgba(221,221,221,1)"}
                             progressRoundedEdge
                         />
                         <View style={{alignItems:'center', justifyContent:'center', marginTop: -25}}>
                             <Text style={{fontSize: 12, color:Colors.greyText}}>TARGET</Text>
-                            <Text style={{fontSize: 14, color:"rgba(0,0,0,1)", fontWeight:"bold"}}>{`${462} TON`}</Text>
-                            <Text style={{fontSize: 12, color:Colors.redishText}}>{`${206} TON LAGI`}</Text>
+                            <Text style={{fontSize: 14, color:"rgba(0,0,0,1)", fontWeight:"bold"}}>{`${PetaPanen.state.panenDetail.BBC_TON} TON`}</Text>
+                            <Text style={{fontSize: 12, color:Colors.redishText}}>{`${PetaPanen.state.panenDetail.BBC_TON_LAGI} TON LAGI`}</Text>
                         </View>
                     </View>
                     <View style={{flex: 1, alignItems:'center'}}>
                         <GaugeChart
                             textStyle={styles.GaugeText}
                             size={125}
-                            currentValue={100}
+                            currentValue={PetaPanen.state.panenDetail.PERCENT_TARGET}
                             progressColor={Colors.greenGauge}
                             dialColor={"rgba(221,221,221,1)"}
                             progressRoundedEdge
                         />
                         <View style={{alignItems:'center', justifyContent:'center', marginTop: -25}}>
                             <Text style={{fontSize: 12, color:Colors.greyText}}>TARGET</Text>
-                            <Text style={{fontSize: 14, color:"rgba(0,0,0,1)", fontWeight:"bold"}}>{`462 TON`}</Text>
-                            <Text style={{fontSize: 12, color:Colors.redishText}}>{`${206} TON LAGI`}</Text>
+                            <Text style={{fontSize: 14, color:"rgba(0,0,0,1)", fontWeight:"bold"}}>{`${PetaPanen.state.panenDetail.TARGET_TON} TON`}</Text>
+                            <Text style={{fontSize: 12, color:Colors.redishText}}>{`${PetaPanen.state.panenDetail.TARGET_TON_LAGI} TON LAGI`}</Text>
                         </View>
                     </View>
                 </View>
@@ -430,7 +578,7 @@ export default class Leaderboard extends Component {
                                         fontSize="18"
                                         x="62.5"
                                         y="55">
-                                        7
+                                        {PetaPanen.state.panenDetail.INTER}
                                     </TSpan>
                                     <TSpan
                                         fontSize='14'
@@ -465,7 +613,7 @@ export default class Leaderboard extends Component {
                                         fontSize="18"
                                         x="62.5"
                                         y="55">
-                                        7
+                                        {PetaPanen.state.panenDetail.ROTASI}
                                     </TSpan>
                                     <TSpan
                                         fontSize='14'
@@ -496,9 +644,9 @@ export default class Leaderboard extends Component {
                     onPressRight={null}
                 />
                 <ScrollView style={{flex: 1}} contentContainerStyle={{backgroundColor:"white"}}>
-                    {this.renderHeader()}
+                    {this.renderHeader(this)}
                     {this.renderAreaChart()}
-                    {this.renderCircleTarget()}
+                    {this.renderCircleTarget(this)}
                     <View style={{height: 300, marginVertical: 15, backgroundColor:"red"}}>
                         <MapView
                             ref={map => this.map = map}
@@ -516,16 +664,16 @@ export default class Leaderboard extends Component {
                                         <View key={index}>
                                             <Polygon
                                                 coordinates={polygon.coords}
-                                                fillColor="rgba(0, 200, 0, 0.5)"
+                                                fillColor={this.getPolygonColor(polygon.WERKS, polygon.afd_code, polygon.blokname)}
                                                 strokeColor="rgba(255,255,255,1)"
                                                 strokeWidth={3}
                                                 tappable={true}
-                                                onPress={() => alert("Ha")}
+                                                onPress={() => {this.getPanenDetail(polygon)}}
                                             />
                                             <Marker
                                                 coordinate={polygon.markerPosition}
                                                 tracksViewChanges={false}
-                                                onPress={() => alert("Ha")}>
+                                                onPress={() => {this.getPanenDetail(polygon)}}>
                                                 <View style={{ flexDirection: 'column', alignSelf: 'flex-start' }}>
                                                     <View style={styles.marker}>
                                                         <Text style={{ color: 'rgba(255,255,255,1)', fontSize: 25, fontWeight:'900'}}>{polygon.blokname}</Text>
@@ -538,7 +686,7 @@ export default class Leaderboard extends Component {
                             }
                         </MapView>
                     </View>
-                    {this.renderDetails()}
+                    {this.renderDetails(this)}
                 </ScrollView>
             </View>
         )

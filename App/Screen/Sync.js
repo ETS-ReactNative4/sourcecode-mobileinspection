@@ -50,7 +50,7 @@ import { postWeeklySummary } from './Sync/Upload/UploadWeeklySummary';
 import { getTitikRestan } from './Sync/Download/Restan/TitikRestan';
 import {getFCMToken} from "../Notification/NotificationListener";
 import {fetchGet, fetchPost, fetchPut} from "../Api/FetchingApi";
-import {getPetaPanenHeader} from "./Sync/Download/PetaPanen/PetaPanen";
+import {getPetaPanenDetail, getPetaPanenHeader} from "./Sync/Download/PetaPanen/PetaPanen";
 
 export default class SyncScreen extends React.Component {
 
@@ -127,6 +127,7 @@ export default class SyncScreen extends React.Component {
             progressKualitas: 0,
             progressTitikRestan: 0,
             progressPetaPanenHeader: 0,
+            progressPetaPanenDetail: 0,
 
             //labelDownload
             downloadApa: 'Download sedang dalam proses',
@@ -166,6 +167,8 @@ export default class SyncScreen extends React.Component {
             totalTitikRestan: 0,
             valuePetaPanenHeader: 0,
             totalPetaPanenHeader: 0,
+            valuePetaPanenDetail: 0,
+            totalPetaPanenDetail: 0,
 
 
             indeterminate: false,
@@ -367,6 +370,15 @@ export default class SyncScreen extends React.Component {
                 progressPetaPanenHeader: 1,
                 valuePetaPanenHeader: data.downloadCount,
                 totalPetaPanenHeader: data.totalCount
+            })
+        })
+
+        /* DOWNLOAD PETA PANEN DETAIL */
+        await getPetaPanenDetail().then((data) => {
+            this.setState({
+                progressPetaPanenDetail: 1,
+                valuePetaPanenDetail: data.downloadCount,
+                totalPetaPanenDetail: data.totalCount
             })
         })
 
@@ -1379,6 +1391,13 @@ export default class SyncScreen extends React.Component {
                             value={this.state.valuePetaPanenHeader}
                             total={this.state.totalPetaPanenHeader}
                             progress={this.state.progressPetaPanenHeader} />
+
+                        <ProgressSync
+                            title={'PETA PANEN DETAIL'}
+                            color={Colors.brand}
+                            value={this.state.valuePetaPanenDetail}
+                            total={this.state.totalPetaPanenDetail}
+                            progress={this.state.progressPetaPanenDetail} />
 
                         <ProgressDialog
                             visible={this.state.fetchLocation}

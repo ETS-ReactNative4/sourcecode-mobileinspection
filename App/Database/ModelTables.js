@@ -684,6 +684,8 @@ const TR_PETAPANEN_HEADER = {
         "D_6": { type: 'double', default: null, optional: true },
         "D_7": { type: 'double', default: null, optional: true },
         "D_8": { type: 'double', default: null, optional: true },
+        "MAX_D": { type: 'double', default: null, optional: true },
+        "MIN_D": { type: 'double', default: null, optional: true },
         "BBC_TON_LAGI": { type: 'double', default: null, optional: true },
         "TARGET_TON_LAGI": { type: 'double', default: null, optional: true }
     }

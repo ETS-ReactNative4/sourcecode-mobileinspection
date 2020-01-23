@@ -44,7 +44,7 @@ import {
 } from '../../Lib/dirStorage';
 
 import WeeklySummary from "../../Component/WeeklySummary";
-import { clipString } from '../../Constant/Functions/StringManipulator';
+import { clipString, numberSeperator } from '../../Constant/Functions/StringManipulator';
 import { Images } from '../../Themes';
 import { changeBgFilter, changeIconFilter, getColor, getIconProgress, getStatusImage } from '../../Themes/Resources';
 import { getBlokName, getCategoryName, getEstateName, getStatusBlok, retrieveData, removeData, storeData } from '../../Database/Resources';
@@ -1029,7 +1029,7 @@ class HomeScreen extends React.Component {
                           <View>
                               <View style={{ flexDirection: "row", backgroundColor:"white", borderRadius: 15, alignSelf: 'baseline', alignItems:'center', paddingHorizontal: 10, paddingVertical: 5}}>
                                   <Image style={{ width: 15, height: 15}} source={require('../../Images/icon/HomeScreen/icon_points_black.png')} />
-                                  <Text style={{ fontSize: 12, paddingHorizontal: 10 }}>100000 points</Text>
+                                  <Text style={{ fontSize: 12, paddingHorizontal: 10 }}>{`${numberSeperator(100000, ",")} points`}</Text>
                                   <Image style={{ width: 15, height: 15}} source={require('../../Images/icon/HomeScreen/icon_right.png')} />
                               </View>
                           </View>

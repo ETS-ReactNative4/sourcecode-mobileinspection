@@ -290,8 +290,20 @@ export function fetchGet(serviceName, fetchHeaders) {
         }
     }
 
-    let tempURL = serviceName === "INTERNAL-PETA-PANEN-HEADER" ? "http://msadev.tap-agri.com:4015/api/v1.0/peta-panen/header" : serviceDetail.API_URL;
-    return fetch(tempURL, {
+    // let tempURL = null;
+    // switch (serviceName) {
+    //     case "INTERNAL-PETA-PANEN-HEADER":
+    //         tempURL = "http://msadev.tap-agri.com:4015/api/v1.0/peta-panen/header";
+    //         break;
+    //     case "INTERNAL-PETA-PANEN-DETAIL":
+    //         tempURL = "http://msadev.tap-agri.com:4015/api/v1.0/peta-panen/detail";
+    //         break;
+    //     default:
+    //         tempURL = serviceDetail.API_URL;
+    //         break;
+    // }
+
+    return fetch(serviceDetail.API_URL, {
         method: 'GET',
         headers: headers
     }).then((response) => {

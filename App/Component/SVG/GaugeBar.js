@@ -28,7 +28,8 @@ export default class Gauge extends Component {
 
     renderProgress = opts => {
         // let offset = opts.circumference * (1 - opts.currentValue / 100);
-        let offset = opts.circumference * (1 - opts.currentValue / 100);
+        let currentValue = opts.currentValue > 100 ? 100 : opts.currentValue;
+        let offset = opts.circumference * (1 - (currentValue * 0.75) / 100);
         return (
             <Circle
                 cx={opts.cX}
@@ -37,8 +38,8 @@ export default class Gauge extends Component {
                 fill="none"
                 stroke={opts.progressColor}
                 strokeWidth={opts.progressWidth}
-                strokeDasharray={opts.circumference * 0.75}
-                strokeDashoffset={offset * 0.75}
+                strokeDasharray={opts.circumference}
+                strokeDashoffset={offset}
                 strokeLinecap={opts.progressRoundedEdge ? "round" : "butt"}
             />
         );

@@ -68,5 +68,9 @@ export default {
     greenGauge: "rgba(0,166,81,1)",
     orangeTextCircle: "rgba(255,179,0,1)",
     greyText: "rgba(112,112,112,1)",
-    redishText: "rgba(208,2,27,1)"
+    redishText: "rgba(208,2,27,1)",
+    polygonRed: "rgba(255,51,51,0.5)",
+    polygonYellow: "rgba(250,189,45,0.5)",
+    polygonGreen: "rgba(51,191,115,0.5)",
+    polygonWhite: this.WHITE,
 };
