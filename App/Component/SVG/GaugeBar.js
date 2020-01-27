@@ -98,7 +98,7 @@ Gauge.defaultProps = {
     dialColor: "#eee",
 
     maximumValue: 100,
-    currentValue: 25,
+    currentValue: 0,
     progressWidth: 10,
     progressColor: "#3d3d3d",
     progressRoundedEdge: false,
@@ -110,7 +110,7 @@ Gauge.defaultProps = {
 Gauge.propTypes = {
     size: 200,
     maximumValue: 100,
-    currentValue: 25,
+    currentValue: 0,
     dialWidth: 15,
     dialColor: "#eee",
     progressWidth: 10,

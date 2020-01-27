@@ -28,10 +28,11 @@ export const HeaderWithButton = (props) => {
                     props.leftVectorIcon ?
                         <VectorIcon
                             style={{
-                                height: 28,
-                                width: 28
+                                height: props.iconLeftSize,
+                                width: props.iconLeftSize,
+                                alignSelf:"center"
                             }}
-                            iconSize={25}
+                            iconSize={props.iconLeftSize}
                             iconName={props.iconLeft}
                         />
                         :
@@ -98,8 +99,9 @@ HeaderWithButton.defaultProps = {
     title: "Title",
     titlePosition: "center",
     iconLeft: null,
-    iconLeftSize: 15,
+    iconLeftSize: 25,
     iconRight: null,
+    iconRightSize: 25,
     onPressLeft: () => { },
     onPressRight: () => { },
     leftVectorIcon: false,

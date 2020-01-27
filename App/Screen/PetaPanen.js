@@ -46,7 +46,9 @@ export default class PetaPanen extends Component {
                     { x: 0, y: 0, y0: 0 },
                     { x: 0, y: 0, y0: 0 }
                 ],
-                maxValue: 0
+                maxValue: 0,
+                chartLastValue: 0,
+                dateLabel:[]
             },
             lastSyncTime: null,
             modalLoading: {
@@ -229,6 +231,10 @@ export default class PetaPanen extends Component {
             { x: 8, y: panenHeaderData[0].D_1, y0: 0 }
         ];
 
+        let chartDate = [];
+        for(let counter = 7; counter > 0; counter--) {
+            chartDate.push(moment(this.state.latestSyncTime).subtract(counter, "days").format("DD"));
+        }
 
         if(panenHeaderData.length > 0){
             this.setState({
@@ -237,7 +243,9 @@ export default class PetaPanen extends Component {
                     ...this.state.chartData,
                     area: lineChartData,
                     scatter: lineScatterData,
-                    maxValue: panenHeaderData[0].MAX_D + 25
+                    maxValue: panenHeaderData[0].MAX_D + 25,
+                    chartLastValue: panenHeaderData[0].D_1,
+                    dateLabel: chartDate
                 }
             });
         }
@@ -412,68 +420,82 @@ export default class PetaPanen extends Component {
 
     renderAreaChart(){
         return(
-            <VictoryChart
-                maxDomain={{y:this.state.chartData.maxValue}}
-                minDomain={{y:-30}}
-                padding={{top: -20}}
-                // width={400}
-                height={150}
-                // animate={{
-                //     duration: 2000,
-                //     onLoad: { duration: 1000 }
-                // }}
-            >
-                <Defs>
-                    <LinearGradient id="gradientStroke"
-                                    x1="0%"
-                                    x2="0%"
-                                    y1="0%"
-                                    y2="100%"
-                    >
-                        <Stop offset="100%" stopColor="rgba(198,254,170,1)" stopOpacity="0" />
-                        <Stop offset="50%" stopColor="rgba(198,254,170,1)" stopOpacity="1" />
-                    </LinearGradient>
-                </Defs>
-                <VictoryAxis
-                    style={{
-                        axis: { display: "none" },
-                        ticks: { display: "none" },
-                        tickLabels: { display: "none" }
-                    }}
-                />
-                <VictoryArea
-                    style={{ data: {
-                            fill: "url(#gradientStroke)",
-                            stroke: "rgba(105,198,59,1)",
-                        } }}
-                    data={this.state.chartData.area}
-                    // labelComponent={<Text>Y</Text>}
-                    labels={({ data, index }) => {
-                        return (index == 0) || (index == this.state.chartData.area.length-1) ? null : data[index].y
-                    } }
-                />
-                <VictoryScatter
-                    data={this.state.chartData.scatter}
-                    // size={7.5}
-                    size={({ datum }) => datum.x === 8 ? 7.5 : 5}
-                    style={{
-                        data: {
-                            fill: ({ datum }) => datum.x === 8 ? "rgba(0,166,81,1)" : "rgba(230,230,230,1)",
-                            strokeWidth: 1,
-                            stroke: ({ datum }) => datum.x === 8 ? "transparent" : "rgba(192,192,192,1)",
+            <View>
+                <VictoryChart
+                    maxDomain={{y:this.state.chartData.maxValue}}
+                    minDomain={{y:-20}}
+                    padding={{top: -20}}
+                    // width={400}
+                    height={175}
+                    // animate={{
+                    //     duration: 2000,
+                    //     onLoad: { duration: 1000 }
+                    // }}
+                >
+                    <Defs>
+                        <LinearGradient id="gradientStroke"
+                                        x1="0%"
+                                        x2="0%"
+                                        y1="0%"
+                                        y2="100%"
+                        >
+                            <Stop offset="100%" stopColor="rgba(198,254,170,1)" stopOpacity="0" />
+                            <Stop offset="50%" stopColor="rgba(198,254,170,1)" stopOpacity="1" />
+                        </LinearGradient>
+                    </Defs>
+                    <VictoryAxis
+                        style={{
+                            axis: { display: "none" },
+                            ticks: { display: "none" },
+                            tickLabels: { display: "none" }
                         }}
-                    }
-                    // IMPORTANT NOTE : untuk trigger events, harus di bungkus dengan Svg(REACT-NATIVE-SVG)
-                    // events={[
-                    //     {
-                    //         target: 'data',
-                    //         eventHandlers: {
-                    //             onPress: props => alert('boom'),
-                    //         },
-                    //     },
-                    // ]}
-                />
-            </VictoryChart>
+                    />
+                    <VictoryArea
+                        style={{ data: {
+                                fill: "url(#gradientStroke)",
+                                stroke: "rgba(105,198,59,1)",
+                            } }}
+                        data={this.state.chartData.area}
+                        // labelComponent={<Text>Y</Text>}
+                        labels={({ data, index }) => {
+                            return (index == 0) || (index == this.state.chartData.area.length-1) ? null : this.state.chartData.dateLabel[index-1]
+                        } }
+                    />
+                    <VictoryScatter
+                        data={this.state.chartData.scatter}
+                        // size={7.5}
+                        size={({ datum }) => datum.x === 8 ? 7.5 : 5}
+                        style={{
+                            data: {
+                                fill: ({ datum }) => datum.x === 8 ? "rgba(0,166,81,1)" : "rgba(230,230,230,1)",
+                                strokeWidth: 1,
+                                stroke: ({ datum }) => datum.x === 8 ? "transparent" : "rgba(192,192,192,1)",
+                            }}
+                        }
+                        // IMPORTANT NOTE : untuk trigger events, harus di bungkus dengan Svg(REACT-NATIVE-SVG)
+                        // events={[
+                        //     {
+                        //         target: 'data',
+                        //         eventHandlers: {
+                        //             onPress: props => alert('boom'),
+                        //         },
+                        //     },
+                        // ]}
+                    />
+                </VictoryChart>
+                <View style={{
+                    position: "absolute",
+                    justifySelf: "flex-end",
+                    alignItems: "flex-end",
+                    right: 10,
+                    bottom: 10
+                }}>
+                    <Text>
+                        <Text style={{fontSize: 25, color:"black", fontWeight: "bold"}}>{`${this.state.chartData.chartLastValue} `}</Text>
+                        <Text style={{fontSize: 12.5, color:"black"}}>TON</Text>
+                    </Text>
+                </View>
+            </View>
         )
     }
 
@@ -494,9 +516,9 @@ export default class PetaPanen extends Component {
                             progressRoundedEdge
                         />
                         <View style={{alignItems:'center', justifyContent:'center', marginTop: -25}}>
-                            <Text style={{fontSize: 12, color:Colors.greyText}}>BBC</Text>
-                            <Text style={{fontSize: 14, color:"rgba(0,0,0,1)", fontWeight:"bold"}}>{`${PetaPanen.state.panenHeader.BBC} TON`}</Text>
-                            <Text style={{fontSize: 12, color:Colors.redishText}}>{`${PetaPanen.state.panenHeader.BBC_TON_LAGI} TON LAGI`}</Text>
+                            <Text style={styles.GaugeHeaderText}>BBC</Text>
+                            <Text style={styles.GaugeActualTonText}>{`${PetaPanen.state.panenHeader.BBC} TON`}</Text>
+                            <Text style={styles.GaugeTargetTonText}>{`${PetaPanen.state.panenHeader.BBC_TON_LAGI} TON LAGI`}</Text>
                         </View>
                     </View>
                     <View style={{flex: 1}}>
@@ -548,9 +570,9 @@ export default class PetaPanen extends Component {
                             progressRoundedEdge
                         />
                         <View style={{alignItems:'center', justifyContent:'center', marginTop: -25}}>
-                            <Text style={{fontSize: 12, color:Colors.greyText}}>TARGET</Text>
-                            <Text style={{fontSize: 14, color:"rgba(0,0,0,1)", fontWeight:"bold"}}>{`${PetaPanen.state.panenHeader.TARGET} TON`}</Text>
-                            <Text style={{fontSize: 12, color:Colors.redishText}}>{`${PetaPanen.state.panenHeader.TARGET_TON_LAGI} TON LAGI`}</Text>
+                            <Text style={styles.GaugeHeaderText}>TARGET</Text>
+                            <Text style={styles.GaugeActualTonText}>{`${PetaPanen.state.panenHeader.TARGET} TON`}</Text>
+                            <Text style={styles.GaugeTargetTonText}>{`${PetaPanen.state.panenHeader.TARGET_TON_LAGI} TON LAGI`}</Text>
                         </View>
                     </View>
                 </View>
@@ -619,9 +641,9 @@ export default class PetaPanen extends Component {
                             progressRoundedEdge
                         />
                         <View style={{alignItems:'center', justifyContent:'center', marginTop: -25}}>
-                            <Text style={{fontSize: 12, color:Colors.greyText}}>TARGET</Text>
-                            <Text style={{fontSize: 14, color:"rgba(0,0,0,1)", fontWeight:"bold"}}>{`${PetaPanen.state.panenDetail.BBC_TON} TON`}</Text>
-                            <Text style={{fontSize: 12, color:Colors.redishText}}>{`${PetaPanen.state.panenDetail.BBC_TON_LAGI} TON LAGI`}</Text>
+                            <Text style={styles.GaugeHeaderText}>TARGET</Text>
+                            <Text style={styles.GaugeActualTonText}>{`${PetaPanen.state.panenDetail.BBC_TON} TON`}</Text>
+                            <Text style={styles.GaugeTargetTonText}>{`${PetaPanen.state.panenDetail.BBC_TON_LAGI} TON LAGI`}</Text>
                         </View>
                     </View>
                     <View style={{flex: 1, alignItems:'center'}}>
@@ -634,9 +656,9 @@ export default class PetaPanen extends Component {
                             progressRoundedEdge
                         />
                         <View style={{alignItems:'center', justifyContent:'center', marginTop: -25}}>
-                            <Text style={{fontSize: 12, color:Colors.greyText}}>TARGET</Text>
-                            <Text style={{fontSize: 14, color:"rgba(0,0,0,1)", fontWeight:"bold"}}>{`${PetaPanen.state.panenDetail.TARGET_TON} TON`}</Text>
-                            <Text style={{fontSize: 12, color:Colors.redishText}}>{`${PetaPanen.state.panenDetail.TARGET_TON_LAGI} TON LAGI`}</Text>
+                            <Text style={styles.GaugeHeaderText}>TARGET</Text>
+                            <Text style={styles.GaugeActualTonText}>{`${PetaPanen.state.panenDetail.TARGET_TON} TON`}</Text>
+                            <Text style={styles.GaugeTargetTonText}>{`${PetaPanen.state.panenDetail.TARGET_TON_LAGI} TON LAGI`}</Text>
                         </View>
                     </View>
                 </View>
@@ -774,7 +796,7 @@ export default class PetaPanen extends Component {
                                                 onPress={() => {this.getPanenDetail(polygon)}}>
                                                 <View style={{ flexDirection: 'column', alignSelf: 'flex-start' }}>
                                                     <View style={styles.marker}>
-                                                        <Text style={{ color: 'rgba(255,255,255,1)', fontSize: 25, fontWeight:'900'}}>{polygon.blokname}</Text>
+                                                        <Text style={{ color: 'rgba(255,255,255,1)', fontSize: 25, fontWeight:'200'}}>{polygon.blokname}</Text>
                                                     </View>
                                                 </View>
                                             </Marker>
@@ -886,5 +908,17 @@ const styles = StyleSheet.create({
         color:"rgba(0,0,0,1)",
         fontSize: 20,
         fontWeight: "bold"
+    },
+    GaugeHeaderText:{
+        fontSize: 13,
+        color:Colors.greyText
+    },
+    GaugeActualTonText:{
+        fontSize: 15, color:"rgba(0,0,0,1)",
+        fontWeight:"bold"
+    },
+    GaugeTargetTonText:{
+        fontSize: 13,
+        color:Colors.redishText
     }
 });
