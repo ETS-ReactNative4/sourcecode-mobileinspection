@@ -824,7 +824,7 @@ export default class PetaPanen extends Component {
                                     justifyContent:'center'
                                 }}>
                                 <Text>Aktual vs Target</Text>
-                                <Image source={require('../Images/icon/ic-orang-1.png')} style={{width: 25, height:25, marginLeft: 5}} resizeMode={"contain"} />
+                                <Image source={imgSrc.switch} style={{width: 25, height:25, marginLeft: 5}} resizeMode={"contain"} />
                             </TouchableOpacity>
                         </View>
                         <View style={{

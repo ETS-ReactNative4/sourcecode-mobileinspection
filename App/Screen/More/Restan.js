@@ -19,6 +19,7 @@ import {AlertContent} from '../../Themes';
 import { HeaderWithButton } from "../../Component/Header/HeaderWithButton";
 import { getTitikRestan } from '../Sync/Download/Restan/TitikRestan';
 import {numberSeperator} from "../../Constant/Functions/StringManipulator";
+import {getSpecificSticker} from "../../Lib/Utils";
 
 let polyMap = null;
 let LATITUDE = -2.1890660;
@@ -62,7 +63,8 @@ export default class Restan extends React.Component {
                 showModal: false,
                 title: "",
                 message: "",
-                icon: null
+                icon: null,
+                action: () => this.setState({ modalAlert: { ...this.state.modalAlert, showModal: false } })
             },
             modalLoading: {
                 showModal: false,
@@ -104,6 +106,11 @@ export default class Restan extends React.Component {
         );
     }
 
+    getSticker(){
+        let image = getSpecificSticker("good");
+        return image
+    }
+
     async fetchRestanCoordinate(){
         let fetchStatus = false;
 
@@ -113,6 +120,23 @@ export default class Restan extends React.Component {
                 await getTitikRestan()
                     .then(async (response) => {
                         fetchStatus = response.downloadStatus
+                        if(response.totalCount === 0){
+                            this.setState({
+                                modalAlert: {
+                                    ...this.state.modalAlert,
+                                    showModal: true,
+                                    title: "Tidak ada restan",
+                                    message: `Yeaayy!! \nGak ada restan per hari ini..`,
+                                    icon: this.getSticker(),
+                                    action: ()=>{
+                                        this.setState({
+                                            modalAlert: { ...this.state.modalAlert, showModal: false }
+                                        }, ()=>{this.props.navigation.pop()})
+                                    }
+                                }
+                            })
+                        }
+                        console.log(JSON.stringify(response));
                     })
             }
             else {
@@ -164,6 +188,8 @@ export default class Restan extends React.Component {
                 this.setState({
                     modalLoading: { ...this.state.modalLoading, showModal: false },
                     modalAlert: {
+                        ...this.state.modalAlert,
+                        showModal: true,
                         title: 'Tidak ada data',
                         message: "Kamu belum download data map",
                         icon: require('../../Images/ic-blm-input-lokasi.png')
@@ -197,7 +223,10 @@ export default class Restan extends React.Component {
         if (!polyMap) {
             this.setState({
                 modalLoading: { ...this.state.modalLoading, showModal: false },
-                modalAlert: { ...AlertContent.no_data_map }
+                modalAlert: {
+                    ...this.state.modalAlert,
+                    ...AlertContent.no_data_map
+                }
             });
             return null;
         }
@@ -217,7 +246,10 @@ export default class Restan extends React.Component {
         else {
             await this.setState({
                 modalLoading: { ...this.state.modalLoading, showModal: false },
-                modalAlert: { ...AlertContent.no_polygon }
+                modalAlert: {
+                    ...this.state.modalAlert,
+                    ...AlertContent.no_polygon
+                }
             });
             return false;
         }
@@ -341,7 +373,7 @@ export default class Restan extends React.Component {
                 <ModalAlert
                     icon={this.state.modalAlert.icon}
                     visible={this.state.modalAlert.showModal}
-                    onPressCancel={() => this.setState({ modalAlert: { ...this.state.modalAlert, showModal: false } })}
+                    onPressCancel={this.state.modalAlert.action}
                     title={this.state.modalAlert.title}
                     message={this.state.modalAlert.message} />
 
