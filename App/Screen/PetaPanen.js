@@ -13,7 +13,7 @@ import imgSrc from "../Images/Module/PetaPanen";
 
 import TaskServices from "../Database/TaskServices";
 import {getPetaPanenDetail, getPetaPanenHeader} from "./Sync/Download/PetaPanen/PetaPanen";
-import {Images} from "../Themes";
+import VectorIcon from "../Component/VectorIcon";
 
 export default class PetaPanen extends Component {
     constructor(props) {
@@ -35,7 +35,9 @@ export default class PetaPanen extends Component {
                     latitudeDelta: 0.0075,
                     longitudeDelta: 0.00721
                 },
-                polygons:[]
+                polygons: [],
+                //target or bbc
+                compareWith: "target",
             },
             chartData: {
                 area: [
@@ -372,11 +374,9 @@ export default class PetaPanen extends Component {
             return(
                 <View style={{flexDirection:"row", margin: 10, height: 125}}>
                     <View style={styles.HeaderCard}>
-                        <Text>
-                            <Text style={{fontSize: 26, color:"rgba(60,179,1,1)"}}>{`${PetaPanen.state.panenHeader.TON_PRODUKTIVITAS}`}</Text>
-                            <Text style={{fontSize: 11, color:"rgba(60,179,1,1)"}}>TON</Text>
-                        </Text>
                         <Text>Produktivitas</Text>
+                        <Text style={{fontSize: 26, color:"rgba(60,179,1,1)"}}>{`${PetaPanen.state.panenHeader.TON_PRODUKTIVITAS}`}</Text>
+                        <Text style={{fontSize: 11, color:"rgba(60,179,1,1)"}}>Ton/HK</Text>
                     </View>
                     <View style={{flex: 2}}>
                         <View style={{
@@ -587,10 +587,11 @@ export default class PetaPanen extends Component {
                     <Text
                         style={{
                             fontSize: 24,
+                            paddingBottom: 5,
                             color:"rgba(0,0,0,1)",
                             fontWeight: "bold"
                         }}>
-                        {`Block ${PetaPanen.state.panenDetail.BLOCK_NAME}`}
+                        {`Block ${PetaPanen.state.panenDetail.BLOCK_NAME} / ${PetaPanen.state.panenDetail.BLOCK_CODE}`}
                     </Text>
                     <View style={{flexDirection: "row", justifyContent:"space-between"}}>
                         <View style={{alignItems:'center'}}>
@@ -621,7 +622,7 @@ export default class PetaPanen extends Component {
                         {PetaPanen.state.panenDetail.TON}
                         <Text style={{fontSize: 11, color:"rgba(60,179,1,1)"}}>TON</Text>
                     </Text>
-                    <Text style={{paddingLeft: 5}}>Hasil Produksi Sampai Hari Ini</Text>
+                    <Text style={{paddingLeft: 5}}>Produksi Sampai Hari Ini</Text>
                 </View>
                 <View style={{paddingVertical: 10}}>
                     <Text style={{fontSize: 32, fontWeight:"bold", color:"rgba(60,179,1,1)"}}>
@@ -641,7 +642,7 @@ export default class PetaPanen extends Component {
                             progressRoundedEdge
                         />
                         <View style={{alignItems:'center', justifyContent:'center', marginTop: -25}}>
-                            <Text style={styles.GaugeHeaderText}>TARGET</Text>
+                            <Text style={styles.GaugeHeaderText}>BBC</Text>
                             <Text style={styles.GaugeActualTonText}>{`${PetaPanen.state.panenDetail.BBC_TON} TON`}</Text>
                             <Text style={styles.GaugeTargetTonText}>{`${PetaPanen.state.panenDetail.BBC_TON_LAGI} TON LAGI`}</Text>
                         </View>
@@ -796,7 +797,7 @@ export default class PetaPanen extends Component {
                                                 onPress={() => {this.getPanenDetail(polygon)}}>
                                                 <View style={{ flexDirection: 'column', alignSelf: 'flex-start' }}>
                                                     <View style={styles.marker}>
-                                                        <Text style={{ color: 'rgba(255,255,255,1)', fontSize: 25, fontWeight:'200'}}>{polygon.blokname}</Text>
+                                                        <Text style={{ color: 'rgba(255,255,255,1)', fontSize: 15, fontWeight:'bold'}}>{polygon.blokname}</Text>
                                                     </View>
                                                 </View>
                                             </Marker>
@@ -809,11 +810,51 @@ export default class PetaPanen extends Component {
                             width: "100%",
                             height: "100%",
                             position: "absolute",
+                            alignItems:"flex-start",
+                            left: 10,
+                            top: 10
+                        }}>
+                            <TouchableOpacity
+                                onPress={()=>{
+                                    let getPolygon = TaskServices.query("TR_POLYGON", `afd_code = "${this.state.panenDetail.AFD_CODE}" AND blokname = "${this.state.panenDetail.BLOCK_NAME}" `);
+                                    this.map.animateToRegion({
+                                        latitude: getPolygon[0].coords[0].latitude,
+                                        longitude: getPolygon[0].coords[0].longitude,
+                                        latitudeDelta: 0.025,
+                                        longitudeDelta: 0.025
+                                    }, 1);
+                                }}
+                                style={{
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    backgroundColor: "white",
+                                    borderRadius: 15,
+                                    padding: 5
+                                }}>
+                                <VectorIcon
+                                    iconSize={25}
+                                    iconName={"gps-fixed"}
+                                />
+                                {/*<Image source={imgSrc.switch} style={{width: 25, height:25, marginLeft: 5}} resizeMode={"contain"} />*/}
+                            </TouchableOpacity>
+                        </View>
+                        <View style={{
+                            width: "100%",
+                            height: "100%",
+                            position: "absolute",
                             alignItems:"flex-end",
                             right: 10,
                             top: 10
                         }}>
                             <TouchableOpacity
+                                onPress={()=>{
+                                    this.setState({
+                                        mapData: {
+                                            ...this.state.mapData,
+                                            compareWith: this.state.mapData.compareWith === "target" ? "bbc" : "target"
+                                        }
+                                    })
+                                }}
                                 style={{
                                     flexDirection:"row",
                                     backgroundColor:"white",
@@ -823,7 +864,7 @@ export default class PetaPanen extends Component {
                                     alignItems:"center",
                                     justifyContent:'center'
                                 }}>
-                                <Text>Aktual vs Target</Text>
+                                <Text>{this.state.mapData.compareWith === "target" ? "Aktual vs Target" : "Aktual vs BBC"}</Text>
                                 <Image source={imgSrc.switch} style={{width: 25, height:25, marginLeft: 5}} resizeMode={"contain"} />
                             </TouchableOpacity>
                         </View>
@@ -833,12 +874,13 @@ export default class PetaPanen extends Component {
                             position: "absolute",
                             justifyContent:"flex-end",
                             alignItems:"center",
-                            bottom: 20
+                            bottom: 10
                         }}>
                             <View style={{
                                 flexDirection:"row",
                                 backgroundColor:"rgba(230,230,230,1)",
-                                padding: 10,
+                                paddingHorizontal: 10,
+                                paddingVertical: 5,
                                 borderRadius: 5
                             }}>
                                 <View style={{
