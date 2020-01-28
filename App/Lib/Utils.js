@@ -67,6 +67,17 @@ export function kirimImage(URL, Formdata) {
 		});
 }
 
+export function getSpecificSticker(status){
+    let imageGood = [require('../Images/stiker-A-1.png'), require('../Images/stiker-A-2.png'), require('../Images/stiker-A-3.png')];
+
+    switch (status) {
+        case "good":
+            return imageGood[Math.floor(Math.random() * imageGood.length)];
+        default:
+            return null;
+    }
+}
+
 export function getSticker(score) {
 	var arrA = [require('../Images/stiker-A-1.png'), require('../Images/stiker-A-2.png'), require('../Images/stiker-A-3.png')];
 	var arrB = [require('../Images/stiker-B-1.png'), require('../Images/stiker-B-2.png'), require('../Images/stiker-B-3.png')];
