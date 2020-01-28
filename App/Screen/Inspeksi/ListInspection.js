@@ -297,7 +297,7 @@ export default class ListInspection extends Component {
           <Text style={{ color: '#AAAAAA', fontSize: 14, marginBottom: 10, paddingLeft: 3 }}>Prioritas blok yang harus diinspeksi berdasarkan aktivitas inspeksi, panen, dan rawat.</Text>
         </View>
         {this.renderContent()}
-        {this.state.dataLocal.length > 0 &&
+        {this.state.dataSuggestions.length == 0 &&
           <AddInspection
             onPressGenba={() => this.redirectNextScreen('genba')}
             onPressInspeksi={() => this.redirectNextScreen('inspeksi')}

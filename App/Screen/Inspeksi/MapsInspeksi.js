@@ -144,6 +144,8 @@ class MapsInspeksi extends React.Component {
 
     loadMap() {
         let user = TaskServices.getAllData('TR_LOGIN')[0];
+        console.log('user : ', user);
+
         if (user.CURR_WERKS) {
             let est = TaskServices.findBy('TM_EST', 'WERKS', user.CURR_WERKS);
             if (est && est.length > 0 && est[0].LONGITUDE != 0 && est[0].LATITUDE != 0) {
@@ -204,6 +206,9 @@ class MapsInspeksi extends React.Component {
         }
         let data = polyMap.data.polygons;
         let poligons = [];
+
+        let blockInAfd = TaskServices.getBlockInAFD();
+        
         for (var i = 0; i < data.length; i++) {
             let coords = data[i];
             if (
@@ -217,9 +222,11 @@ class MapsInspeksi extends React.Component {
                 geolib.isPointInPolygon({ latitude: this.state.latitude + 0.0025, longitude: this.state.longitude + 0.006 }, coords.coords) ||
                 geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude }, coords.coords)
             ) {
-                poligons.push(coords);
+                if (blockInAfd.includes(coords.blokname)) {
+                    poligons.push(coords);
+                }
+                // poligons.push(coords);
             }
-            // poligons.push(coords);
         }
         return poligons;
     }
@@ -277,7 +284,10 @@ class MapsInspeksi extends React.Component {
 
     navigateScreen(screenName, werkAfdBlockCode) {
         var werksAfdBlock = this.props.navigation.state.params.werksAfdBlock;
+        console.log('werksAfdBlock : ', werksAfdBlock);
+
         var blockName = this.props.navigation.state.params.blockName;
+        console.log('blockName : ', blockName);
 
         if (werksAfdBlock != undefined && blockName != undefined) {
             if (werksAfdBlock == werkAfdBlockCode) {
@@ -298,6 +308,7 @@ class MapsInspeksi extends React.Component {
     }
 
     _checkValidate(screenName, werkAfdBlockCode) {
+
         if (this.checkAutorisasi(werkAfdBlockCode)) {
             const navigation = this.props.navigation;
             const resetAction = StackActions.reset({
