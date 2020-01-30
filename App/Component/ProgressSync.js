@@ -1,7 +1,8 @@
 import React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import Colors from '../Constant/Colors';
 import * as Progress from 'react-native-progress';
+import { Fonts } from '../Themes';
 
 const heightProgress = 5
 
@@ -45,6 +46,7 @@ const styles = StyleSheet.create({
         marginTop: 2
     },
     labelProgress: {
-        fontSize: 12
+        fontSize: 12,
+        fontFamily: Fonts.demi
     }
 });

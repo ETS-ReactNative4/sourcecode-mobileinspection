@@ -45,12 +45,12 @@ import { getFindingComment } from './Sync/Download/DownloadFindingComment';
 import { getFindingImage } from './Sync/Download/DownloadFindingImage';
 import { getTimeServer } from './Sync/Download/DownloadTimeServer';
 import { getResetToken } from './Sync/Download/DownloadResetToken';
-import { AlertContent } from '../Themes';
+import { AlertContent, Fonts } from '../Themes';
 import { postWeeklySummary } from './Sync/Upload/UploadWeeklySummary';
 import { getTitikRestan } from './Sync/Download/Restan/TitikRestan';
-import {getFCMToken} from "../Notification/NotificationListener";
-import {fetchGet, fetchPost, fetchPut} from "../Api/FetchingApi";
-import {getPetaPanenDetail, getPetaPanenHeader} from "./Sync/Download/PetaPanen/PetaPanen";
+import { getFCMToken } from "../Notification/NotificationListener";
+import { fetchGet, fetchPost, fetchPut } from "../Api/FetchingApi";
+import { getPetaPanenDetail, getPetaPanenHeader } from "./Sync/Download/PetaPanen/PetaPanen";
 
 export default class SyncScreen extends React.Component {
 
@@ -557,7 +557,7 @@ export default class SyncScreen extends React.Component {
             });
     }
 
-    _deleteTRLog(){
+    _deleteTRLog() {
         TaskServices.deleteAllData("TR_LOG");
     }
 
@@ -692,11 +692,11 @@ export default class SyncScreen extends React.Component {
     };
 
     //upload fcm token to server
-    async putFCMConfig(){
+    async putFCMConfig() {
         let fcmTokenRequest = null;
         await getFCMToken()
-            .then((fcmToken)=>{
-                if(fcmToken !== null){
+            .then((fcmToken) => {
+                if (fcmToken !== null) {
                     fcmTokenRequest = {
                         FIREBASE_TOKEN: fcmToken
                     }
@@ -707,14 +707,14 @@ export default class SyncScreen extends React.Component {
     };
 
     //refresh MOBILE INSPECTION token
-    async _refreshToken(){
+    async _refreshToken() {
         let refreshStatus = false;
         if (this.state.user !== undefined && this.state.user !== null) {
             await fetchGet("AUTH-GENERATE-TOKEN", null)
-                .then((response)=>{
+                .then((response) => {
                     if (response !== undefined) {
-                        if(response.status !== false){
-                            let currentUser = {...this.state.user, ACCESS_TOKEN: response.data};
+                        if (response.status !== false) {
+                            let currentUser = { ...this.state.user, ACCESS_TOKEN: response.data };
                             TaskServices.updateByPrimaryKey('TR_LOGIN', currentUser);
                             refreshStatus = true;
                         }
@@ -1130,7 +1130,7 @@ export default class SyncScreen extends React.Component {
                     justifyContent: 'center',
                     alignItems: 'center'
                 }}>
-                    <Text style={{ color: Colors.colorWhite, fontSize: 12 }}>Kamu belum pernah melakukan sync data</Text>
+                    <Text style={{ color: Colors.colorWhite, fontSize: 12, fontFamily: Fonts.medium }}>Kamu belum pernah melakukan sync data</Text>
                 </View>}
                 <Content>
                     <ModalAlert
@@ -1161,19 +1161,19 @@ export default class SyncScreen extends React.Component {
                             <TouchableOpacity
                                 style={styles.button}
                                 disabled={this.state.isBtnEnable}
-                                onPress={()=>{
+                                onPress={() => {
                                     this.setState(
                                         {
                                             showButton: false
                                         },
-                                        ()=>{
+                                        () => {
 
                                             NetInfo.isConnected.fetch().then(isConnected => {
                                                 if (isConnected) {
                                                     this._refreshToken()
-                                                        .then((response)=>{
+                                                        .then((response) => {
                                                             //if new token generated, continue sync
-                                                            if(response){
+                                                            if (response) {
                                                                 //refresh tm services
                                                                 this.insertLink()
                                                             }
@@ -1206,7 +1206,7 @@ export default class SyncScreen extends React.Component {
                         </View>}
 
                         {/* Section Upload by Aminju */}
-                        <Text style={{ fontSize: 14, color: 'blue', marginTop: 24 }}>UPLOAD</Text>
+                        <Text style={{ fontSize: 15, color: 'blue', marginTop: 24, fontFamily: Fonts.demi }}>UPLOAD</Text>
                         <View style={{ backgroundColor: 'grey', height: 0.5, flex: 1, flexDirection: 'row', marginTop: 3 }} />
 
                         <ProgressSync
@@ -1270,7 +1270,7 @@ export default class SyncScreen extends React.Component {
                             progress={this.state.progressGenbaInspection} />
 
                         {/* Section Download by Aminju */}
-                        <Text style={{ fontSize: 14, color: Colors.tintColor, marginTop: 16 }}>DOWNLOAD</Text>
+                        <Text style={{ fontSize: 14, color: Colors.tintColor, marginTop: 16, fontFamily: Fonts.demi }}>DOWNLOAD</Text>
                         <View style={{ backgroundColor: 'grey', height: 0.5, flex: 1, flexDirection: 'row', marginTop: 3 }} />
 
                         <ProgressSync

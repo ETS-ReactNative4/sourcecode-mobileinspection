@@ -2,6 +2,7 @@ import React from 'react'
 import { View, TouchableOpacity, StyleSheet, Text } from 'react-native'
 import colors from '../../Themes/Colors'
 import Icon from 'react-native-vector-icons/AntDesign'
+import { Fonts } from '../../Themes'
 
 
 const styles = StyleSheet.create({
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
     },
     text: {
         color: colors.white,
-        fontWeight: '500'
+        fontFamily: Fonts.bold 
     }
 })
 

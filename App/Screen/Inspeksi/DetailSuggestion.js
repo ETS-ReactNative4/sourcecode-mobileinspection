@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import { View, Text, Image, ScrollView, BackHandler } from 'react-native';
-import { Colors, Images } from '../../Themes';
+import { Colors, Images, Fonts } from '../../Themes';
 import TaskServices from '../../Database/TaskServices'
-import dataSuggestion from '../../Data/suggestion';
 import ItemTemuan from '../../Component/Suggestion/ItemTemuan';
 import ItemDetailSuggesstionDummy from '../../Component/Suggestion/ItemDetailSuggesstionDummy';
 import ButtonInspeksi from '../../Component/Suggestion/ButtonInspeksi';
 import { getImageBaseOnFindingCode, downloadImageSuggestion } from '../Sync/Download/DownloadImage';
 import { getTodayDate } from '../../Lib/Utils';
-import dataSuggestionDummy from '../../Data/suggesstionDummy';
 import { retrieveData, storeData } from '../../Database/Resources';
 
 // NAVIGATION
@@ -100,8 +98,8 @@ export default class DetailSuggestion extends Component {
                     {/* TITLE */}
                     <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
                         <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                            <Text style={{ textAlign: 'center', fontSize: 18, fontWeight: '500', color: Colors.black }}>RIWAYAT BLOK</Text>
-                            <Text style={{ textAlign: 'center', fontSize: 14, marginTop: 6, color: Colors.grey }}>{this.state.locationCode}</Text>
+                            <Text style={{ textAlign: 'center', fontSize: 18, fontFamily: Fonts.bold, color: Colors.black }}>RIWAYAT BLOK</Text>
+                            <Text style={{ textAlign: 'center', fontSize: 14, marginTop: 6, Family: Fonts.book, color: Colors.grey }}>{this.state.locationCode}</Text>
                             <View style={{ width: 50, height: 5, backgroundColor: Colors.colorPrimary, marginTop: 10 }} />
                         </View>
                     </View>
@@ -128,7 +126,7 @@ export default class DetailSuggestion extends Component {
                             <Text
                                 style={{
                                     color: Colors.black,
-                                    fontWeight: '500',
+                                    fontFamily: Fonts.demi,
                                     textAlign: 'center'
                                 }}> Temuan yang Harus Diselesaikan</Text>
                         </View>
@@ -232,7 +230,7 @@ export default class DetailSuggestion extends Component {
                 params: {
                     inspectionType: 'genba',
                     werksAfdBlock: dataDetail.WERKS + dataDetail.AFD_CODE + dataDetail.BLOCK_CODE,
-                    blockName : dataDetail.BLOCK_NAME
+                    blockName: dataDetail.BLOCK_NAME
                 }
             }));
         } else if (routeName == 'inspeksi') {
@@ -240,7 +238,7 @@ export default class DetailSuggestion extends Component {
                 routeName: 'MapsInspeksi',
                 params: {
                     werksAfdBlock: dataDetail.WERKS + dataDetail.AFD_CODE + dataDetail.BLOCK_CODE,
-                    blockName : dataDetail.BLOCK_NAME
+                    blockName: dataDetail.BLOCK_NAME
                 }
             }))
         }

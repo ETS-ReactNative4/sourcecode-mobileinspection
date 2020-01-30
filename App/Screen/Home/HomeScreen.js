@@ -1241,7 +1241,8 @@ const styles = StyleSheet.create({
   textTimeline: {
     marginLeft: 12,
     width: 300,
-    fontSize: 14
+    fontSize: 14,
+    fontFamily: 'AMERIKAA'
   },
   textFilter: {
     textAlign: 'center',

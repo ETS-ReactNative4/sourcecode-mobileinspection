@@ -2,7 +2,7 @@ import React from 'react'
 import { Image, StyleSheet, Text, View, ScrollView } from 'react-native'
 import { Card } from 'native-base'
 import ButtonSuggestion from './ButtonSuggestion'
-import { Images } from '../../Themes'
+import { Images, Fonts } from '../../Themes'
 
 const desc = 'Kamu menolak semua rekomendasi.\nTekan tombol di bawah untuk \nmulai aktivitas di lokasimu saat ini'
 const descNoConnection = 'Harus terhubung jaringan untuk\nlihat rekomandsi inspeksi'
@@ -21,9 +21,10 @@ const styles = StyleSheet.create({
     },
     text: {
         textAlign: 'center',
-        fontSize: 14,
+        fontSize: 15,
         marginTop: 20,
-        color: '#AAAAAA'
+        color: '#AAAAAA',
+        fontFamily: Fonts.medium
     }
 })
 

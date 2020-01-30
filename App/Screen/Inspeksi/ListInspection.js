@@ -13,7 +13,7 @@ import { Card } from 'native-base'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import ButtonSuggestion from '../../Component/Suggestion/ButtonSuggestion'
 import colors from '../../Themes/Colors';
-import { Images } from '../../Themes';
+import { Images, Fonts } from '../../Themes';
 import { dirPhotoInspeksiSuggestion } from '../../Lib/dirStorage'
 import { retrieveData, storeData } from '../../Database/Resources';
 import { dateDisplayMobileWithoutHours } from '../../Lib/Utils';
@@ -228,8 +228,8 @@ export default class ListInspection extends Component {
                       </TouchableOpacity>
                     </View>
                     <View style={styles.bottomContainer}>
-                      <Text style={{ fontSize: 14, fontWeight: '500' }}> {item.LOCATION_CODE}</Text>
-                      <Text style={{ fontSize: 12, fontWeight: '400' }}> {'Dikarenakan ' + item.DATA_ARRAY[0].DESC + ' Terakhir : ' + date}</Text>
+                      <Text style={{ fontSize: 14, fontWeight: '500', fontFamily: Fonts.bold }}> {item.LOCATION_CODE}</Text>
+                      <Text style={{ fontSize: 12, fontWeight: '400', fontFamily: Fonts.book }}> {'Dikarenakan ' + item.DATA_ARRAY[0].DESC + ' Terakhir : ' + date}</Text>
                       <ButtonSuggestion title={'Lihat Info Blok'}
                         onPress={() => this.props.navigation.navigate('DetailSuggestion', {
                           arrData: item,
@@ -293,8 +293,8 @@ export default class ListInspection extends Component {
     return (
       <View style={styles.container}>
         <View style={{ paddingHorizontal: 16, paddingTop: 16 }}>
-          <Text style={{ color: 'black', fontSize: 18, fontWeight: '500', paddingLeft: 3 }}>Rekomendasi Inspeksi</Text>
-          <Text style={{ color: '#AAAAAA', fontSize: 14, marginBottom: 10, paddingLeft: 3 }}>Prioritas blok yang harus diinspeksi berdasarkan aktivitas inspeksi, panen, dan rawat.</Text>
+          <Text style={{ color: 'black', fontSize: 16, fontFamily: Fonts.demi, paddingLeft: 3 }}>Rekomendasi Inspeksi</Text>
+          <Text style={{ color: '#AAAAAA', fontSize: 14, fontFamily: Fonts.book, marginBottom: 10, paddingLeft: 3 }}>Prioritas blok yang harus diinspeksi berdasarkan aktivitas inspeksi, panen, dan rawat.</Text>
         </View>
         {this.renderContent()}
         {this.state.dataSuggestions.length == 0 &&
@@ -362,8 +362,8 @@ const DataLocalSuggetion = (props) => {
           </View>
         </View>
         <View style={styles.bottomContainer}>
-          <Text style={{ fontSize: 14, fontWeight: '500' }}>{props.item.LOCATION_CODE}</Text>
-          <Text style={{ fontSize: 12, fontWeight: '400' }}>{'Dikarenakan ' + props.item.DATA_ARRAY[0].DESC + ' Terakhir : ' + date}</Text>
+          <Text style={{ fontSize: 14, fontWeight: '500', fontFamily: Fonts.bold }}>{props.item.LOCATION_CODE}</Text>
+          <Text style={{ fontSize: 12, fontWeight: '400', fontFamily: Fonts.book }}>{'Dikarenakan ' + props.item.DATA_ARRAY[0].DESC + ' Terakhir : ' + date}</Text>
           <ButtonSuggestion title={'Lihat Info Blok'}
             onPress={props.onPress} />
         </View>

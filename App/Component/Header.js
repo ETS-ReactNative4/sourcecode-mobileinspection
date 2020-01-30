@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import IconHeader from '../Component/IconHeader'
 import Colors from '../Constant/Colors';
-import { Images } from '../Themes'
+import { Images, Fonts } from '../Themes'
 
 const Header = (props) => {
     return (
@@ -45,7 +45,8 @@ const styles = StyleSheet.create({
         fontWeight: '400',
         alignItems: 'center',
         justifyContent: 'center',
-        color: 'white'
+        color: 'white',
+        fontFamily: Fonts.demi
     },
     notif: {
         textAlign: "center",

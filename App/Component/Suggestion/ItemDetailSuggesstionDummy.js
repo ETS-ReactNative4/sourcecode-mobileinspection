@@ -1,19 +1,19 @@
 import React from 'react';
 import { View, Image, Text, StyleSheet } from 'react-native';
 import { Card } from 'native-base';
-import { Colors, Images } from '../../Themes';
+import { Colors, Images, Fonts } from '../../Themes';
 import { dateDisplayMobileWithoutHours } from '../../Lib/Utils';
 
 const styles = StyleSheet.create({
     textLabel: {
         color: Colors.darkgrey,
         fontSize: 12,
-        fontWeight: '400'
+        fontFamily: Fonts.medium
     },
     textLabelBold: {
         color: Colors.black,
         fontSize: 12,
-        fontWeight: '500'
+        fontFamily: Fonts.demi
     },
     textLine: {
         height: 1,
@@ -71,8 +71,8 @@ const ItemDetailSuggestion = (props) => {
                 <View style={{ flex: 1 }}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                         <View>
-                            <Text style={{ color: Colors.colorPrimary, fontWeight: '500', fontSize: 12 }}> {date}</Text>
-                            <Text style={{ color: Colors.black, fontWeight: '500', fontSize: 12 }}> {desc}</Text>
+                            <Text style={{ color: Colors.colorPrimary, fontFamily: Fonts.demi , fontSize: 12 }}> {date}</Text>
+                            <Text style={{ color: Colors.black, fontFamily: Fonts.demi ,  fontSize: 12 }}> {desc}</Text>
                         </View>
 
                         {props.TYPE == 'inspeksi' && <Text style={{ color: Colors.darkgrey, marginTop: 15, fontWeight: '500', marginRight: 6, fontSize: 12 }}>{props.BARIS == null || props.BARIS == '' ? '-' : "(" + "baris" + " " + props.BARIS + ")"}</Text>}

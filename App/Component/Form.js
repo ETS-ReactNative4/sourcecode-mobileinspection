@@ -14,7 +14,7 @@ import {
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import ModalAlert from '../Component/ModalAlert'
 import PropTypes from 'prop-types';
-import { AlertContent, Images, Colors } from '../Themes'
+import { AlertContent, Images, Colors, Fonts } from '../Themes'
 import { storeData } from '../Database/Resources';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
@@ -155,12 +155,12 @@ class Form extends Component {
 
                 <TouchableOpacity style={[styles.button, { marginTop: 20 }]}
                     onPress={() => this.onBtnClick(props)}>
-                    <Text style={styles.buttonText}>Login</Text>
+                    <Text style={styles.buttonText}>LOGIN</Text>
                 </TouchableOpacity>
 
 
                 <View style={styles.footerView}>
-                    <Text style={styles.footerText}>{'\u00A9'} 2018 Copyrights PT Triputra Agro Persada</Text>
+                    <Text style={{ fontFamily: Fonts.demi }}>{'\u00A9'} 2018 Copyrights PT Triputra Agro Persada</Text>
                 </View>
             </View>
             // </KeyboardAvoidingView>
@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
         color: '#51a977',
         textAlign: "left",
         paddingVertical: 10,
-
+        fontFamily: Fonts.book
     },
     picker: {
         flex: 1,
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#51a977',
         textAlign: "left",
-
+        fontFamily: Fonts.thin
     },
     button: {
         justifyContent: 'center',
@@ -236,12 +236,12 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '500',
         color: '#ffffff',
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: Fonts.medium
     },
     footerView: {
         position: 'absolute',
+        right: 16,
         bottom: 20,
-
-
     }
 });
