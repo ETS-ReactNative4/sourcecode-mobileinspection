@@ -11,23 +11,34 @@ import TaskService from '../../Database/TaskServices'
 import ModalAlertBack from '../../Component/ModalAlert';
 import moment from 'moment';
 import ImagePicker from 'react-native-image-crop-picker'
+import Icon from 'react-native-vector-icons/AntDesign';
 
 let RNFS = require('react-native-fs');
 const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
 
 export default class FotoUser extends Component {
 
-    static navigationOptions = {
-        headerStyle: {
-            backgroundColor: Colors.tintColorPrimary
-        },
-        title: 'Foto Profile',
-        headerTintColor: '#fff',
-        headerTitleStyle: {
-            flex: 1,
-            fontSize: 18,
-            fontWeight: '400'
-        },
+    static navigationOptions = ({ navigation }) => {
+        return {
+            headerStyle: {
+                backgroundColor: Colors.tintColorPrimary
+            },
+            title: 'Foto Profile',
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+                flex: 1,
+                fontSize: 18,
+                fontWeight: '400'
+            },
+            headerRight: (
+                <Icon
+                    onPress={navigation.getParam('changePicture')}
+                    name={'edit'}
+                    size={20}
+                    color={'white'}
+                    style={{ marginRight: 20 }} />
+            ),
+        };
     };
 
     constructor(props) {
@@ -35,6 +46,7 @@ export default class FotoUser extends Component {
 
         this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
         this.state = {
+            isExist: false,
             hasPhoto: false,
             path: null,
             pathImg: null,
@@ -50,11 +62,20 @@ export default class FotoUser extends Component {
 
     componentDidMount() {
         this.setParameter()
+        this.props.navigation.setParams({ changePicture: this._changePicture });
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
     }
 
     componentWillUnmount() {
         BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+    }
+
+    _changePicture = () => {
+        this.setState({
+            isExist: false,
+            path: null,
+            hasPhoto: false
+        });
     }
 
     handleBackButtonClick() {
@@ -87,6 +108,15 @@ export default class FotoUser extends Component {
             STATUS_SYNC: 'N',
             INSERT_TIME: moment().format("YYYY-MM-DD HH:mm:ss")
         };
+
+        let path = `${FILE_PREFIX}${dirPhotoUser}/${imageName}`;
+
+        RNFS.exists(path).then(isExist => {
+            if (isExist) {
+                this.setState({ isExist, path: path + '?' + new Date() })
+            }
+        })
+
         this.setState({ dataModel: image });
 
     }
@@ -203,13 +233,15 @@ export default class FotoUser extends Component {
     renderIcon = () => {
         let imgSource = this.state.hasPhoto ? imgNextPhoto : imgTakePhoto;
         return (
-            <Image
-                style={{
-                    height: 64,
-                    width: 64
-                }}
-                source={imgSource}
-            />
+            <View>
+                {!this.state.isExist && <Image
+                    style={{
+                        height: 64,
+                        width: 64
+                    }}
+                    source={imgSource}
+                />}
+            </View>
         );
     }
 

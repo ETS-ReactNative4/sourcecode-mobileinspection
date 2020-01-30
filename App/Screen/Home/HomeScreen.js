@@ -69,6 +69,29 @@ const HEADER_MAX_HEIGHT = 260;
 const HEADER_MIN_HEIGHT = Platform.OS === 'ios' ? 60 : 48;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 
+const ItemMenuHome = (props) => {
+  return (
+    <TouchableOpacity
+      onPress={props.onPress}>
+      <View style={{
+        alignItems: "center",
+        justifyContent: "center"
+      }}>
+        <View style={{ width: 48, height: 48, borderRadius: 25, padding: 10, backgroundColor: props.backgroundColor }}>
+          <Image style={{ flex: 1, width: undefined, height: undefined }}
+            resizeMode={"contain"}
+            source={props.image} />
+        </View>
+        <Text style={{
+          marginTop: 6,
+          fontSize: 11,
+          textAlign: "center"
+        }}>{props.name}</Text>
+      </View>
+    </TouchableOpacity>
+  )
+}
+
 class HomeScreen extends React.Component {
 
   static navigationOptions = () => ({
@@ -1056,104 +1079,36 @@ class HomeScreen extends React.Component {
             </View>
           </View>
           <View style={{ backgroundColor: "white", flexDirection: "row", justifyContent: 'space-between', padding: 15 }}>
-            <TouchableOpacity
-              onPress={() => {
-                this.props.navigation.navigate("PetaPanen")
-              }}>
-              <View style={{
-                alignItems: "center",
-                justifyContent: "center"
-              }}>
-                <View style={{ width: 50, height: 50, borderRadius: 25, padding: 10, backgroundColor: "rgba(53,184,113,1)" }}>
-                  <Image style={{ flex: 1, width: undefined, height: undefined }}
-                    resizeMode={"contain"}
-                    source={require('../../Images/icon/HomeScreen/icon_panen.png')}
-                  />
-                </View>
-                <Text style={{
-                  fontSize: 12,
-                  textAlign: "center"
-                }}>{`Peta\nPanen`}</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                this.props.navigation.navigate('Restan')
-              }}>
-              <View style={{
-                alignItems: "center",
-                justifyContent: "center"
-              }}>
-                <View style={{ width: 50, height: 50, borderRadius: 25, padding: 10, backgroundColor: "rgba(217,52,72,1)" }}>
-                  <Image style={{ flex: 1, width: undefined, height: undefined }}
-                    resizeMode={"contain"}
-                    source={require('../../Images/icon/HomeScreen/icon_titik_restan.png')}
-                  />
-                </View>
-                <Text style={{
-                  fontSize: 12,
-                  textAlign: "center"
-                }}>{`Peta\nRestan`}</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
+
+            <ItemMenuHome
+              onPress={() => this.props.navigation.navigate("PetaPanen")}
+              name={"Peta\nPanen"}
+              image={require('../../Images/icon/HomeScreen/icon_panen.png')}
+              backgroundColor={"rgba(53,184,113,1)"} />
+
+            <ItemMenuHome
+              onPress={() => this.props.navigation.navigate("Restan")}
+              name={"Peta\nRestan"}
+              image={require('../../Images/icon/HomeScreen/icon_titik_restan.png')}
+              backgroundColor={"rgba(217,52,72,1)"} />
+
+            <ItemMenuHome
               onPress={() => this.showWeeklySummary(true)}
-            >
-              <View style={{
-                alignItems: "center",
-                justifyContent: "center"
-              }}>
-                <View style={{ width: 50, height: 50, borderRadius: 25, padding: 10, backgroundColor: "rgba(255,194,50,1)" }}>
-                  <Image style={{ flex: 1, width: undefined, height: undefined }}
-                    resizeMode={"contain"}
-                    source={require('../../Images/icon/HomeScreen/icon_dashboard_kebun.png')}
-                  />
-                </View>
-                <Text style={{
-                  fontSize: 12,
-                  textAlign: "center"
-                }}>{`Dashboard\nMingguan`}</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
+              name={"Dashboard\nMingguan"}
+              image={require('../../Images/icon/HomeScreen/icon_dashboard_kebun.png')}
+              backgroundColor={"rgba(255,194,50,1)"} />
+
+            <ItemMenuHome
               onPress={() => { this.props.navigation.navigate('Leaderboard') }}
-            >
-              <View style={{
-                alignItems: "center",
-                justifyContent: "center"
-              }}>
-                <View style={{ width: 50, height: 50, borderRadius: 25, padding: 10, backgroundColor: "rgba(52,162,188,1)" }}>
-                  <Image style={{ flex: 1, width: undefined, height: undefined }}
-                    resizeMode={"contain"}
-                    source={require('../../Images/icon/HomeScreen/icon_rank.png')}
-                  />
-                </View>
-                <Text style={{
-                  fontSize: 12,
-                  textAlign: "center"
-                }}>{`Peringkat\nAssisten`}</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                this.props.navigation.navigate('MoreScreen')
-              }}>
-              <View style={{
-                alignItems: "center",
-                justifyContent: "center"
-              }}>
-                <View style={{ width: 50, height: 50, borderRadius: 25, padding: 10, backgroundColor: "rgba(234,234,234,1)" }}>
-                  <Image style={{ flex: 1, width: undefined, height: undefined }}
-                    resizeMode={"contain"}
-                    source={require('../../Images/icon/HomeScreen/icon_lainnya.png')}
-                  />
-                </View>
-                <Text style={{
-                  fontSize: 12,
-                  textAlign: "center"
-                }}>{`Menu\nLainnya`}</Text>
-              </View>
-            </TouchableOpacity>
+              name={"Peringkat\nAssisten"}
+              image={require('../../Images/icon/HomeScreen/icon_rank.png')}
+              backgroundColor={"rgba(52,162,188,1)"} />
+
+            <ItemMenuHome
+              onPress={() => { this.props.navigation.navigate('MoreScreen') }}
+              name={"Menu\nLainnya"}
+              image={require('../../Images/icon/HomeScreen/icon_lainnya.png')}
+              backgroundColor={"rgba(234,234,234,1)"} />
           </View>
         </View>
       )
@@ -1230,6 +1185,7 @@ class HomeScreen extends React.Component {
             {this._renderData()}
           </Animated.ScrollView>
           <Animated.View
+
             style={[
               styles.header,
               { transform: [{ translateY: headerTranslate }] },
@@ -1319,10 +1275,12 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    backgroundColor: '#03A9F4',
+    backgroundColor: 'white',
     overflow: 'hidden',
     height: HEADER_MAX_HEIGHT,
-    marginTop: 54
+    marginTop: 54,
+    borderColor: 'grey',
+    borderBottomWidth: 0.5
   },
   backgroundImage: {
     position: 'absolute',
