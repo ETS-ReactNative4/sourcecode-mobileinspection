@@ -65,8 +65,8 @@ import { downloadProfileImage } from "../Sync/Download/Image/Profile";
 import images from '../../Themes/Images';
 
 
-const HEADER_MAX_HEIGHT = 320;
-const HEADER_MIN_HEIGHT = Platform.OS === 'ios' ? 60 : 54;
+const HEADER_MAX_HEIGHT = 260;
+const HEADER_MIN_HEIGHT = Platform.OS === 'ios' ? 60 : 48;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 
 class HomeScreen extends React.Component {
@@ -1236,16 +1236,8 @@ class HomeScreen extends React.Component {
             ]}
           >
 
-            {/* HEADER */}
-            <Header
-              notif={this.state.notifCount}
-              divDays={this.state.divDays}
-              onPressLeft={() => this.props.navigation.navigate('Sync')}
-              onPressRight={() => this.props.navigation.navigate('Inbox')}
-              title={'Beranda'}
-              isNotUserMill={isNotUserMill()} />
-            <StatusBar hidden={false} backgroundColor={Colors.tintColor} barStyle="light-content" />
             {this.renderMenuHeader()}
+
             <View style={styles.sectionTimeline}>
               <Text style={styles.textTimeline}>Temuan di Wilayahmu</Text>
               <View style={styles.rightSection}>
@@ -1254,30 +1246,19 @@ class HomeScreen extends React.Component {
                 </TouchableOpacity>
               </View>
             </View>
-            {/* <Animated.Image
-              style={[
-                styles.backgroundImage,
-                {
-                  opacity: imageOpacity,
-                  transform: [{ translateY: imageTranslate }],
-                },
-              ]}
-              source={images.img_background_leaderboard_1}
-            /> */}
           </Animated.View>
-          <Animated.View
-            style={[
-              styles.bar,
-              {
-                transform: [
-                  { scale: titleScale },
-                  { translateY: titleTranslate },
-                ],
-              },
-            ]}
-          >
-            {/* <Text style={styles.title}>Title</Text> */}
+
+          <Animated.View style={{ position: 'absolute', top: 0, left: 0, right: 0 }}>
+            <Header
+              notif={this.state.notifCount}
+              divDays={this.state.divDays}
+              onPressLeft={() => this.props.navigation.navigate('Sync')}
+              onPressRight={() => this.props.navigation.navigate('Inbox')}
+              title={'Beranda'}
+              isNotUserMill={isNotUserMill()} />
+            <StatusBar hidden={false} backgroundColor={Colors.tintColor} barStyle="light-content" />
           </Animated.View>
+
         </View>
       );
     }
@@ -1341,6 +1322,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#03A9F4',
     overflow: 'hidden',
     height: HEADER_MAX_HEIGHT,
+    marginTop: 54
   },
   backgroundImage: {
     position: 'absolute',
