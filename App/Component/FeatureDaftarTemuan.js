@@ -1,6 +1,7 @@
 import React from 'react'
-import {ScrollView, StyleSheet, Text, View} from 'react-native'
+import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import Dash from 'react-native-dash'
+import { Fonts } from '../Themes';
 
 const FeatureDaftarTemuan = (props) => {
     return (
@@ -28,7 +29,7 @@ const FeatureDaftarTemuan = (props) => {
 
 const styles = StyleSheet.create({
     title: {
-        fontSize: 16, fontWeight: 'bold', paddingHorizontal: 16
+        fontSize: 16, paddingHorizontal: 16, fontFamily: Fonts.demi
     },
     dash: {
         height: 1,

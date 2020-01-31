@@ -1,9 +1,9 @@
 import React from 'react';
-import {AsyncStorage, ListView, StatusBar, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import { AsyncStorage, ListView, StatusBar, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import Colors from '../Constant/Colors';
-import {Container, Content, Form, Icon, Picker, View} from 'native-base';
-import {changeFormatDate, dateDisplayMobileWithoutHours} from '../Lib/Utils';
-import {Calendar} from 'react-native-calendars'
+import { Container, Content, Form, Icon, Picker, View } from 'native-base';
+import { changeFormatDate, dateDisplayMobileWithoutHours } from '../Lib/Utils';
+import { Fonts } from '../Themes'
 import Moment from 'moment'
 
 var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
@@ -224,37 +224,37 @@ class FilterScreen extends React.Component {
                     barStyle="light-content" />
                 <Content style={{ padding: 16 }}>
                     <Form>
-                        <Text style={{ fontWeight: '400', marginLeft: 8, fontSize: 14, color: 'grey' }}>Bisnis Area</Text>
+                        <Text style={{ fontFamily: Fonts.book, marginLeft: 8, fontSize: 14, color: 'grey' }}>Bisnis Area</Text>
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('BisnisArea', { changeBa: this.changeBa })} >
-                            <Text style={{ color: 'black', marginLeft: 8, fontSize: 16, marginTop: 8 }}>{this.state.valBisnisArea}</Text>
+                            <Text style={{ fontFamily: Fonts.book, color: 'black', marginLeft: 8, fontSize: 16, marginTop: 8 }}>{this.state.valBisnisArea}</Text>
                             <View style={{ height: 0.5, flex: 1, flexDirection: 'row', backgroundColor: 'grey', marginTop: 8 }}></View>
                         </TouchableOpacity>
                         {this.state.valBisnisArea != 'Pilih Lokasi' &&
-                            <Text style={{ fontWeight: '400', marginLeft: 8, fontSize: 14, color: 'grey', marginTop: 16 }}>Afdeling</Text>
+                            <Text style={{ fontFamily: Fonts.book, marginLeft: 8, fontSize: 14, color: 'grey', marginTop: 16 }}>Afdeling</Text>
                         }
                         {this.state.valBisnisArea != 'Pilih Lokasi' &&
                             <TouchableOpacity onPress={() => this.props.navigation.navigate('Afdeling', {
                                 changeAfd: this.changeAfd,
                                 ba: this.state.valBisnisArea
                             })} >
-                                <Text style={{ color: 'black', marginLeft: 8, fontSize: 16, marginTop: 8 }}>{this.state.valAfdeling}</Text>
+                                <Text style={{ fontFamily: Fonts.book, color: 'black', marginLeft: 8, fontSize: 16, marginTop: 8 }}>{this.state.valAfdeling}</Text>
                                 <View style={{ height: 0.5, flex: 1, flexDirection: 'row', backgroundColor: 'grey', marginTop: 8 }}></View>
                             </TouchableOpacity>
                         }
 
-                        <Text style={{ fontWeight: '400', marginLeft: 8, fontSize: 14, marginTop: 16, color: 'grey' }}>Pemberi Tugas</Text>
+                        <Text style={{ fontFamily: Fonts.book, marginLeft: 8, fontSize: 14, marginTop: 16, color: 'grey' }}>Pemberi Tugas</Text>
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('PemberiTugas', { assignTo: this.assignTo })} >
-                            <Text style={{ color: 'black', marginLeft: 8, fontSize: 16, marginTop: 8 }}>{this.state.valAssignto}</Text>
+                            <Text style={{ fontFamily: Fonts.book, color: 'black', marginLeft: 8, fontSize: 16, marginTop: 8 }}>{this.state.valAssignto}</Text>
                             <View style={{ height: 0.5, flex: 1, flexDirection: 'row', backgroundColor: 'grey', marginTop: 8 }}></View>
                         </TouchableOpacity>
 
-                        <Text style={{ fontWeight: '400', marginLeft: 8, fontSize: 14, marginTop: 16, color: 'grey' }}>Tanggal Pembuatan</Text>
+                        <Text style={{ fontFamily: Fonts.book, marginLeft: 8, fontSize: 14, marginTop: 16, color: 'grey' }}>Tanggal Pembuatan</Text>
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('Calendar', { changeBatasWaktu: this.changeBatasWaktu })}  >
-                            <Text style={{ color: 'black', marginLeft: 8, fontSize: 16, marginTop: 8 }}>{this.state.valBatasWaktu}</Text>
+                            <Text style={{ fontFamily: Fonts.book, color: 'black', marginLeft: 8, fontSize: 16, marginTop: 8 }}>{this.state.valBatasWaktu}</Text>
                             <View style={{ height: 0.5, flex: 1, flexDirection: 'row', backgroundColor: 'grey', marginTop: 8 }}></View>
                         </TouchableOpacity>
 
-                        <Text style={{ fontWeight: '400', marginLeft: 8, fontSize: 14, marginTop: 16, color: 'grey' }}>Jenis Temuan</Text>
+                        <Text style={{ fontFamily: Fonts.book, marginLeft: 8, fontSize: 14, marginTop: 16, color: 'grey' }}>Jenis Temuan</Text>
                         <Picker
                             mode="dropdown"
                             iosHeader="Select your SIM"
@@ -262,13 +262,13 @@ class FilterScreen extends React.Component {
                             style={{ width: undefined }}
                             selectedValue={this.state.selectedJenis}
                             onValueChange={this.onValueChangeJenis.bind(this)}>
-                            <Picker.Item label="Pilih Jenis Temuan" value="key0" />
-                            <Picker.Item label="BLOK" value="key1" />
-                            <Picker.Item label="INFRA" value="key2" />
+                            <Picker.Item style={{ fontFamily: Fonts.book, }} label="Pilih Jenis Temuan" value="key0" />
+                            <Picker.Item style={{ fontFamily: Fonts.book, }} label="BLOK" value="key1" />
+                            <Picker.Item style={{ fontFamily: Fonts.book, }} label="INFRA" value="key2" />
                         </Picker>
                         <View style={{ height: 0.5, flex: 1, flexDirection: 'row', backgroundColor: 'grey' }}></View>
 
-                        <Text style={{ fontWeight: '400', marginLeft: 8, fontSize: 14, marginTop: 16, color: 'grey' }}>Status Temuan</Text>
+                        <Text style={{ fontFamily: Fonts.book, marginLeft: 8, fontSize: 14, marginTop: 16, color: 'grey' }}>Status Temuan</Text>
                         <Picker
                             mode="dropdown"
                             iosHeader="Select your SIM"
@@ -276,10 +276,10 @@ class FilterScreen extends React.Component {
                             style={{ width: undefined }}
                             selectedValue={this.state.selected}
                             onValueChange={this.onValueChange.bind(this)}>
-                            <Picker.Item label="Pilih Status" value="key0" />
-                            <Picker.Item label="BARU" value="key1" />
-                            <Picker.Item label="SEDANG DI PROSES" value="key2" />
-                            <Picker.Item label="SELESAI" value="key3" />
+                            <Picker.Item style={{ fontFamily: Fonts.book, }} label="Pilih Status" value="key0" />
+                            <Picker.Item style={{ fontFamily: Fonts.book, }} label="BARU" value="key1" />
+                            <Picker.Item style={{ fontFamily: Fonts.book, }} label="SEDANG DI PROSES" value="key2" />
+                            <Picker.Item style={{ fontFamily: Fonts.book, }} label="SELESAI" value="key3" />
                         </Picker>
                         <View style={{ height: 0.5, flex: 1, flexDirection: 'row', backgroundColor: 'grey' }}></View>
 
@@ -289,10 +289,10 @@ class FilterScreen extends React.Component {
                                 borderWidth: 1,
                                 borderColor: Colors.tintColor,
                             }]}>
-                                <Text style={[styles.buttonText, { color: Colors.tintColor, }]}>Reset</Text>
+                                <Text style={[styles.buttonText, { color: Colors.tintColor, fontFamily: Fonts.book }]}>Reset</Text>
                             </TouchableOpacity>
                             <TouchableOpacity onPress={() => { this._changeFilterList() }} style={[styles.button, { marginLeft: 3, backgroundColor: Colors.tintColor }]}>
-                                <Text style={[styles.buttonText, { color: 'white' }]}>Filter</Text>
+                                <Text style={[styles.buttonText, { color: 'white', fontFamily: Fonts.book, }]}>Filter</Text>
                             </TouchableOpacity>
                         </View>
                     </Form>

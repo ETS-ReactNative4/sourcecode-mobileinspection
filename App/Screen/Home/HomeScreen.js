@@ -48,7 +48,7 @@ import {
 
 import WeeklySummary from "../../Component/WeeklySummary";
 import { clipString, numberSeperator } from '../../Constant/Functions/StringManipulator';
-import { Images } from '../../Themes';
+import { Images, Fonts } from '../../Themes';
 import { changeBgFilter, changeIconFilter, getColor, getIconProgress, getStatusImage } from '../../Themes/Resources';
 import { getBlokName, getCategoryName, getEstateName, getStatusBlok, retrieveData, removeData, storeData } from '../../Database/Resources';
 
@@ -84,8 +84,9 @@ const ItemMenuHome = (props) => {
         </View>
         <Text style={{
           marginTop: 6,
-          fontSize: 11,
-          textAlign: "center"
+          fontSize: 12,
+          textAlign: "center",
+          fontFamily: Fonts.book
         }}>{props.name}</Text>
       </View>
     </TouchableOpacity>
@@ -600,7 +601,10 @@ class HomeScreen extends React.Component {
           }}>
             <View style={{ flex: 1, flexDirection: 'row' }}>
               <Image style={{ marginTop: 3, height: 28, width: 28 }} source={getIconProgress(status)}></Image>
-              <Text style={{ width: 200, marginLeft: 12, color: 'white', fontSize: 14, alignSelf: 'center', marginTop: 1 }}>{status}</Text>
+              <Text style={{
+                width: 200, marginLeft: 12, color: 'white', fontSize: 14, alignSelf: 'center', marginTop: 1,
+                fontFamily: Fonts.book
+              }}>{status}</Text>
             </View>
             <View style={{ position: 'absolute', right: 0, marginRight: 12, marginTop: 3 }}>
               <Entypo name={'chevron-right'} color={'white'} size={25} />
@@ -677,8 +681,8 @@ class HomeScreen extends React.Component {
           <View style={{ flexDirection: 'row', marginTop: 10 }}>
             <Thumbnail style={{ borderColor: 'grey', borderWidth: 0.5, height: 36, width: 36, marginRight: 10, marginLeft: 10 }} source={filePath} />
             <View>
-              <Text style={{ fontSize: 14 }}>{user}</Text>
-              <Text style={{ fontSize: 12, color: 'grey' }}>{dtInsertTime}</Text>
+              <Text style={{ fontSize: 14, fontFamily: Fonts.book }}>{user}</Text>
+              <Text style={{ fontSize: 12, color: 'grey', fontFamily: Fonts.book }}>{dtInsertTime}</Text>
             </View>
           </View>
           <View style={{ marginTop: 12 }} cardBody>
@@ -686,7 +690,7 @@ class HomeScreen extends React.Component {
               <TouchableOpacity onPress={() => { this.onClickItem(item.FINDING_CODE) }}>
                 <View style={{ alignContent: 'center', paddingTop: 2, paddingLeft: 18, flexDirection: 'row', height: 35, backgroundColor: getColor(item.STATUS) }} >
                   <Image style={{ marginTop: 2, height: 28, width: 28 }} source={getIconProgress(status)}></Image>
-                  <Text style={{ marginLeft: 12, color: 'white', fontSize: 14, marginTop: 5 }}>{item.STATUS}</Text>
+                  <Text style={{ marginLeft: 12, color: 'white', fontSize: 14, marginTop: 5, fontFamily: Fonts.book }}>{item.STATUS}</Text>
                   <View style={{ position: 'absolute', right: 0, marginRight: 12, marginTop: 3 }}>
                     <Entypo name={'chevron-right'} color={'white'} size={25} />
                   </View>
@@ -723,7 +727,7 @@ class HomeScreen extends React.Component {
             }}>
               <Text style={{
                 fontSize: 12,
-                fontWeight: 'bold'
+                fontFamily: Fonts.bold
               }}>
                 {lokasiBlok} - {getCategoryName(item.FINDING_CATEGORY)}
               </Text>
@@ -735,13 +739,14 @@ class HomeScreen extends React.Component {
               <Text>
                 <Text style={{
                   fontSize: 12,
-                  fontWeight: 'bold'
+                  fontFamily: Fonts.bold
                 }}>
                   {user}{" "}
                 </Text>
                 <Text
                   style={{
-                    fontSize: 12
+                    fontSize: 12,
+                    fontFamily: Fonts.book
                   }}
                 >
                   {
@@ -760,7 +765,8 @@ class HomeScreen extends React.Component {
                     }}
                     style={{
                       fontSize: 12,
-                      color: "rgba(202,194,194, 1)"
+                      color: "rgba(202,194,194, 1)",
+                      fontFamily: Fonts.book
                     }}
                   >
                     {" "}Selengkapnya
@@ -776,23 +782,27 @@ class HomeScreen extends React.Component {
                   }}>
                     <Text style={{
                       fontSize: 12,
-                      color: "rgba(202,194,194, 1)"
+                      color: "rgba(202,194,194, 1)",
+                      fontFamily: Fonts.book
                     }}>
                       Lihat {commentCount} Komentar
                     </Text>
                   </TouchableOpacity>
                   <Text style={{
-                    marginTop: 10
+                    marginTop: 10,
+                    fontFamily: Fonts.book
                   }}>
                     <Text style={{
                       fontSize: 12,
-                      fontWeight: 'bold'
+                      fontWeight: 'bold',
+                      fontFamily: Fonts.book
                     }}>
                       {latestComment.USERNAME}{" "}
                     </Text>
                     <Text
                       style={{
-                        fontSize: 12
+                        fontSize: 12,
+                        fontFamily: Fonts.book
                       }}
                       onPress={() => {
                         this.props.navigation.navigate("HomeScreenComment", { findingCode: item.FINDING_CODE })
@@ -812,7 +822,8 @@ class HomeScreen extends React.Component {
                         }}
                         style={{
                           fontSize: 12,
-                          color: "rgba(202,194,194, 1)"
+                          color: "rgba(202,194,194, 1)",
+                          fontFamily: Fonts.book
                         }}
                       >
                         {" "}Selengkapnya
@@ -829,7 +840,8 @@ class HomeScreen extends React.Component {
                   }}>
                     <Text style={{
                       fontSize: 12,
-                      color: "rgba(202,194,194, 1)"
+                      color: "rgba(202,194,194, 1)",
+                      fontFamily: Fonts.book
                     }}>
                       Tambah Komentar
                     </Text>
@@ -863,10 +875,16 @@ class HomeScreen extends React.Component {
       let finalText = <Text>{
         tempComment.map((data) => {
           if (data.charAt(0) === "@") {
-            return <Text style={{ color: Colors.taggedUser, fontSize: 12 }}>{data}</Text>
+            return <Text style={{
+              color: Colors.taggedUser, fontSize: 12,
+              fontFamily: Fonts.book
+            }}>{data}</Text>
           }
           else {
-            return <Text style={{ fontSize: 12 }}>{data}</Text>
+            return <Text style={{
+              fontSize: 12,
+              fontFamily: Fonts.book
+            }}>{data}</Text>
           }
         })
       }</Text>
@@ -990,7 +1008,7 @@ class HomeScreen extends React.Component {
               alignItems: 'center',
               borderRadius: 10
             }} onPress={this.onScrollHandler}>
-            {this.state.isLoading ? <ActivityIndicator color={'white'} /> : <Text style={{ textAlign: 'center', fontSize: 14, color: 'white' }}>Lebih Banyak</Text>}
+            {this.state.isLoading ? <ActivityIndicator color={'white'} /> : <Text style={{ textAlign: 'center', fontSize: 14, color: 'white', fontFamily: Fonts.medium }}>Lebih Banyak</Text>}
           </TouchableOpacity>
         </View>
       </View>
@@ -1068,7 +1086,7 @@ class HomeScreen extends React.Component {
               </View>
             </TouchableOpacity>
             <View style={{ flex: 1, marginLeft: 12, justifyContent: "center" }}>
-              <Text style={{ fontSize: 14, fontWeight: '500' }}>{`Hai, ${dataUser.FULLNAME}`}</Text>
+              <Text style={{ fontSize: 14, fontFamily: Fonts.bold }}>{`Hai, ${dataUser.FULLNAME}`}</Text>
               <View>
                 <View style={{ flexDirection: "row", backgroundColor: "white", borderRadius: 15, alignSelf: 'baseline', alignItems: 'center', paddingHorizontal: 10, paddingVertical: 5 }}>
                   <Image style={{ width: 15, height: 15 }} source={require('../../Images/icon/HomeScreen/icon_points_black.png')} />
@@ -1100,7 +1118,7 @@ class HomeScreen extends React.Component {
 
             <ItemMenuHome
               onPress={() => { this.props.navigation.navigate('Leaderboard') }}
-              name={"Peringkat\nAssisten"}
+              name={"Peringkat\nAsisten"}
               image={require('../../Images/icon/HomeScreen/icon_rank.png')}
               backgroundColor={"rgba(52,162,188,1)"} />
 
@@ -1242,7 +1260,7 @@ const styles = StyleSheet.create({
     marginLeft: 12,
     width: 300,
     fontSize: 14,
-    fontFamily: 'AMERIKAA'
+    fontFamily: Fonts.demi
   },
   textFilter: {
     textAlign: 'center',

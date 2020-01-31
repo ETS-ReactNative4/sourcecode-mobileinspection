@@ -1,12 +1,13 @@
 
 'use strict';
 
-import React, {Component} from 'react';
-import {BackHandler, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, { Component } from 'react';
+import { BackHandler, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import TaskService from '../../Database/TaskServices';
 import FastImage from 'react-native-fast-image'
-import {dirPhotoKategori} from '../../Lib/dirStorage';
+import { dirPhotoKategori } from '../../Lib/dirStorage';
 import Colors from '../../Constant/Colors';
+import { Fonts } from '../../Themes'
 
 class PilihKategori extends Component {
 
@@ -57,7 +58,7 @@ class PilihKategori extends Component {
           ></View>
         </View>
 
-        <Text style={{ marginBottom: 12, fontSize: 16, fontWeight: 'bold', alignSelf: 'center' }}>Pilih Kategori</Text>
+        <Text style={{ marginBottom: 12, fontSize: 16, fontFamily: Fonts.demi, alignSelf: 'center' }}>Pilih Kategori</Text>
 
         <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginBottom: 8 }}>
 
@@ -91,9 +92,9 @@ class PilihKategori extends Component {
     if (this.state.activeIndex === 0) {
       return (
         <FlatList
-            extraData={this.state}
+          extraData={this.state}
           data={this.state.categoriesBlock}
-          keyExtractor={(item , index) => "Block"+item.id+index}
+          keyExtractor={(item, index) => "Block" + item.id + index}
           numColumns={4}
           renderItem={({ item }) => {
             return <ItemCategory onPress={() => this.onSelect(item)} icon={item.ICON} catergoryName={item.CATEGORY_NAME} />
@@ -104,7 +105,7 @@ class PilihKategori extends Component {
       return (
         <FlatList
           data={this.state.categoriesInfra}
-          keyExtractor={(item , index) => "Infra"+item.id+index}
+          keyExtractor={(item, index) => "Infra" + item.id + index}
           numColumns={4}
           renderItem={({ item }) => {
             return <ItemCategory onPress={() => this.onSelect(item)} icon={item.ICON} catergoryName={item.CATEGORY_NAME} />
@@ -135,7 +136,7 @@ const TabCategory = (props) => {
       onPress={props.onPress}
       style={[styles.tab, { backgroundColor: props.activeIndex == props.valueIndex ? "#3CB301" : '#F7F7F7' }]}
       activeOpacity={0.8}>
-      <Text style={{ color: props.activeIndex == props.valueIndex ? Colors.colorWhite : 'black' }}>{props.text}</Text>
+      <Text style={{ color: props.activeIndex == props.valueIndex ? Colors.colorWhite : 'black', fontFamily: Fonts.medium }}>{props.text}</Text>
     </TouchableOpacity>
   );
 }
@@ -163,8 +164,10 @@ var styles = StyleSheet.create({
   },
   textCategory: {
     textAlign: 'center',
-    fontSize: 9,
-    color: "#333333"
+    fontSize: 10,
+    color: "#333333",
+    fontFamily: Fonts.book,
+    marginTop: 2
   },
   container: {
     flex: 1,

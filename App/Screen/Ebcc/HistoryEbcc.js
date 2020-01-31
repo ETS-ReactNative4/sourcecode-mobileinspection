@@ -8,6 +8,7 @@ import { dateDisplayMobile } from '../../Lib/Utils'
 import { getEstateName, getStatusBlok } from '../../Database/Resources';
 import moment from "moment";
 import RNFS from 'react-native-fs';
+import { Fonts } from '../../Themes';
 
 export default class HistoryEbcc extends Component {
 
@@ -154,10 +155,10 @@ export default class HistoryEbcc extends Component {
               <Image style={{ alignItems: 'stretch', width: 100, borderRadius: 10 }} source={{ uri: path }}></Image>
             </View>
             <View style={styles.sectionDesc} >
-              <Text style={{ fontSize: 14, fontWeight: 'bold' }}>{`${blockName}${statusBlok}${estName}`}</Text>
-              <Text style={{ fontSize: 12, marginTop: 8 }}>{`TPH ${data.NO_TPH}`}</Text>
-              <Text style={{ fontSize: 12, marginTop: 5 }}>{ebccDate}</Text>
-              <Text style={{ fontSize: 12, color: colorStatus, marginTop: 15, fontStyle: 'italic' }}>{status}</Text>
+              <Text style={{ fontSize: 14, fontWeight: 'bold', fontFamily: Fonts.demi }}>{`${blockName}${statusBlok}${estName}`}</Text>
+              <Text style={{ fontSize: 12, marginTop: 8, fontFamily: Fonts.book }}>{`TPH ${data.NO_TPH}`}</Text>
+              <Text style={{ fontSize: 12, marginTop: 5, fontFamily: Fonts.book }}>{ebccDate}</Text>
+              <Text style={{ fontSize: 12, color: colorStatus, marginTop: 15, fontFamily: Fonts.bookItalic }}>{status}</Text>
             </View>
           </View>
         </Card>

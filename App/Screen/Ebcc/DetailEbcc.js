@@ -3,6 +3,7 @@ import { Image, ScrollView, StatusBar, Text, TextInput, View } from 'react-nativ
 import Colors from '../../Constant/Colors'
 import R from 'ramda';
 import TaskServices from '../../Database/TaskServices'
+import { Fonts } from '../../Themes';
 
 class DetailEbcc extends Component {
 
@@ -233,8 +234,8 @@ class DetailEbcc extends Component {
                     <View style={{ flexDirection: 'row', height: 200 }} >
                         <Image style={{ width: '100%', height: '100%' }} source={{ uri: this.state.path }}></Image>
                     </View>
-                    <Text style={{ fontSize: 17, fontWeight: '500', marginTop: 10 }}>{`${this.state.blockName}/${this.getStatusBlok(this.state.werk_afd_blok_code)}${this.state.werk_afd_blok_code != '' ? '/' : ''}${this.getEstateName(this.state.werks)}`}</Text >
-                    <Text style={{ fontSize: 14, color: 'grey', fontWeight: '500', marginTop: 10 }}>TPH {this.state.data.NO_TPH}</Text>
+                    <Text style={{ fontSize: 17, fontFamily: Fonts.demi, marginTop: 10 }}>{`${this.state.blockName}/${this.getStatusBlok(this.state.werk_afd_blok_code)}${this.state.werk_afd_blok_code != '' ? '/' : ''}${this.getEstateName(this.state.werks)}`}</Text >
+                    <Text style={{ fontSize: 14, color: 'grey', fontFamily: Fonts.demi, marginTop: 10 }}>TPH {this.state.data.NO_TPH}</Text>
                 </View>
 
                 <View style={{ height: 10, backgroundColor: '#F5F5F5', marginTop: 10 }} />
@@ -260,12 +261,12 @@ class DetailEbcc extends Component {
 
                     <View style={{ height: 10, backgroundColor: '#F5F5F5', marginTop: 10 }} />
                     {/* kondisi buah */}
-                    <Text style={{ fontSize: 20, fontWeight: '500', paddingLeft: 20, marginTop: 10 }}>Kondisi Buah</Text>
+                    <Text style={{ fontSize: 20, fontFamily: Fonts.demi, paddingLeft: 20, marginTop: 10 }}>Kondisi Buah</Text>
                     {this.state.arrKondisiBuah.map((data, idx) => this.renderDynamicComp(data, idx))}
 
                     <View style={{ height: 10, backgroundColor: '#F5F5F5', marginTop: 10 }} />
                     {/* Penalty TPH */}
-                    <Text style={{ fontSize: 20, fontWeight: '500', paddingLeft: 20, marginTop: 10 }}>Penalti di TPH</Text>
+                    <Text style={{ fontSize: 20, fontFamily: Fonts.demi, paddingLeft: 20, marginTop: 10 }}>Penalti di TPH</Text>
                     {this.state.arrPenaltyTph.map((data, idx) => this.renderDynamicCompBtn(data, idx))}
 
                     <View style={{ padding: 10, alignItems: 'center', marginTop: 10, marginBottom: 10 }} />
@@ -293,7 +294,7 @@ const styles = {
         paddingRight: 20,
         marginTop: 10
     },
-    txtLabel: { flex: 2, color: 'grey', fontSize: 15, },
+    txtLabel: { flex: 2, color: 'grey', fontSize: 15, fontFamily: Fonts.book },
     containerInput: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', },
     btnMinus: {
         borderWidth: 3,
@@ -347,7 +348,8 @@ const styles = {
         borderRadius: 15,
         borderColor: '#989898',
         color: '#808080',
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: Fonts.book,
     },
     bubbleLeftOff: { backgroundColor: Colors.abuabu, borderTopLeftRadius: 20, borderBottomLeftRadius: 20, },
     bubbleRightOff: { backgroundColor: Colors.abuabu, borderTopRightRadius: 20, borderBottomRightRadius: 20, },

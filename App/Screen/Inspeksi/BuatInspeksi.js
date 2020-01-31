@@ -11,6 +11,7 @@ import R from 'ramda'
 import { NavigationActions, StackActions } from 'react-navigation';
 import ModalAlert from '../../Component/ModalAlert';
 import ModalAlertConfirmation from "../../Component/ModalAlertConfirmation";
+import Font from '../../Themes/Fonts'
 
 class BuatInspeksiRedesign extends Component {
 
@@ -503,7 +504,7 @@ class BuatInspeksiRedesign extends Component {
                         <View style={[styles.stepperNumber, { backgroundColor: Colors.brand }]}>
                             <Text style={styles.stepperNumberText}>1</Text>
                         </View>
-                        <Text style={[Fonts.style.caption, { paddingLeft: 3, color: Colors.brand }]}>Pilih Lokasi</Text>
+                        <Text style={[Fonts.style.caption, { paddingLeft: 3, color: Colors.brand, fontFamily: Font.book }]}>Pilih Lokasi</Text>
                         <View>
                             <Icon
                                 name="chevron-right"
@@ -517,7 +518,7 @@ class BuatInspeksiRedesign extends Component {
                         <View style={[styles.stepperNumber, { backgroundColor: Colors.buttonDisabled }]}>
                             <Text style={styles.stepperNumberText}>2</Text>
                         </View>
-                        <Text style={[Fonts.style.caption, { paddingLeft: 3, color: Colors.textSecondary }]}>Kondisi Baris</Text>
+                        <Text style={[Fonts.style.caption, { paddingLeft: 3, color: Colors.textSecondary, fontFamily: Font.book }]}>Kondisi Baris</Text>
                         <View>
                             <Icon
                                 name="chevron-right"
@@ -531,7 +532,7 @@ class BuatInspeksiRedesign extends Component {
                         <View style={[styles.stepperNumber, { backgroundColor: Colors.buttonDisabled }]}>
                             <Text style={styles.stepperNumberText}>3</Text>
                         </View>
-                        <Text style={[Fonts.style.caption, { paddingLeft: 3, color: Colors.textSecondary }]}>Summary</Text>
+                        <Text style={[Fonts.style.caption, { paddingLeft: 3, color: Colors.textSecondary, fontFamily: Font.book }]}>Summary</Text>
                     </View>
                 </View>
 
@@ -539,7 +540,7 @@ class BuatInspeksiRedesign extends Component {
                 <View style={{ height: 200, marginLeft: 20, marginRight: 20 }}>
                     <Card style={[styles.cardContainer]}>
                         <View style={{ flex: 1, margin: 10 }}>
-                            <Text style={{ color: '#696969' }}>Blok</Text>
+                            <Text style={{ color: '#696969', fontFamily: Font.demi }}>Blok</Text>
                             {/* <Autocomplete
                                 autoCapitalize="none"
                                 autoCorrect={false}
@@ -576,7 +577,7 @@ class BuatInspeksiRedesign extends Component {
                         </View>
                         {this.state.showBaris &&
                             <View style={{ flex: 1, margin: 10 }}>
-                                <Text style={{ color: '#696969' }}>Baris</Text>
+                                <Text style={{ color: '#696969', fontFamily: Font.demi }}>Baris</Text>
                                 <TextInput
                                     underlineColorAndroid={'transparent'}
                                     style={[styles.searchInput]}
@@ -658,7 +659,7 @@ const styles = {
         borderRadius: 12,
         justifyContent: 'center'
     },
-    stepperNumberText: [Fonts.style.caption, { textAlign: 'center', color: Colors.textDark }],
+    stepperNumberText: [Fonts.style.caption, { textAlign: 'center', color: Colors.textDark, fontFamily: Font.book }],
     stepperNext: { alignSelf: 'flex-end', paddingRight: 4 },
     cardContainer: {
         flex: 1,
@@ -676,6 +677,7 @@ const styles = {
         borderBottomWidth: 1,
         borderBottomColor: '#808080',
         color: '#808080',
+        fontFamily: Font.book
     },
     autocompleteContainer: {
         flex: 1,
@@ -686,7 +688,7 @@ const styles = {
         // zIndex: 1
     },
     textLabel:
-        [Fonts.style.caption, { color: Colors.brand, textAlign: 'center', fontSize: 16, marginTop: 10, marginRight: 20, marginLeft: 20 }]
+        [Fonts.style.caption, { color: Colors.brand, textAlign: 'center', fontSize: 16, marginTop: 10, marginRight: 20, marginLeft: 20, fontFamily: Font.book }]
     ,
     containerMap: {
         flex: 1,

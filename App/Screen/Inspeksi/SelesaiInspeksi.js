@@ -10,6 +10,7 @@ import { NavigationActions, StackActions } from 'react-navigation';
 import { getSticker } from '../../Lib/Utils'
 import ModalAlertBack from '../../Component/ModalAlert';
 import { retrieveData, storeData } from '../../Database/Resources';
+import { Fonts } from '../../Themes'
 
 class SelesaiInspeksi extends React.Component {
 
@@ -745,22 +746,25 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     textTitle: {
-        fontWeight: '400',
         fontSize: 14,
-        color: 'black'
+        color: 'black',
+        fontFamily: Fonts.book
     },
     textLokasi: {
         alignContent: 'center',
         textAlign: 'center',
         fontWeight: '400',
         fontSize: 14,
-        color: 'black'
+        color: 'black',
+        fontFamily: Fonts.book
     },
     textLabel: {
-        color: 'grey'
+        color: 'grey',
+        fontFamily: Fonts.book
     },
     textContent: {
-        color: 'black'
+        color: 'black',
+        fontFamily: Fonts.book
     },
     lineDivider: {
         alignItems: 'stretch',

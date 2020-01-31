@@ -1,12 +1,13 @@
 import React from 'react';
-import {Image, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import { Image, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import Icon from 'react-native-vector-icons/AntDesign'
 import Size from '../../Constant/sizes'
 import Colors from '../../Constant/Colors'
 import Taskservices from '../../Database/TaskServices'
 import R from 'ramda';
-import {getSticker} from '../../Lib/Utils'
+import { getSticker } from '../../Lib/Utils'
+import { Fonts } from '../../Themes'
 
 export default class HistoryInspectionDetail extends React.Component {
 
@@ -56,7 +57,7 @@ export default class HistoryInspectionDetail extends React.Component {
         this.loadData()
     }
 
-    getStatusBlok(werk_afd_blok_code){
+    getStatusBlok(werk_afd_blok_code) {
         try {
             let data = Taskservices.findBy2('TM_LAND_USE', 'WERKS_AFD_BLOCK_CODE', werk_afd_blok_code);
             return data.MATURITY_STATUS;
@@ -65,7 +66,7 @@ export default class HistoryInspectionDetail extends React.Component {
         }
     }
 
-    getBlokName(werk_afd_blok_code){
+    getBlokName(werk_afd_blok_code) {
         try {
             let data = Taskservices.findBy2('TM_LAND_USE', 'WERKS_AFD_BLOCK_CODE', werk_afd_blok_code);
             return data.BLOCK_NAME;
@@ -74,7 +75,7 @@ export default class HistoryInspectionDetail extends React.Component {
         }
     }
 
-    loadTemuan(){
+    loadTemuan() {
         let data = Taskservices.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', this.state.data.ID_INSPECTION)
         if (data !== undefined) {
             let tempInspeksiTemuan = [];
@@ -99,20 +100,20 @@ export default class HistoryInspectionDetail extends React.Component {
         let distance = 0
         for (var i = 0; i < barisPembagi; i++) {
             if (i === 0) {
-                if(dataBaris[i].inspectionType === "normal"){
+                if (dataBaris[i].inspectionType === "normal") {
                     this.state.arrBaris.push(this.renderBaris(dataBaris[i].AREAL, i, dataBaris[i].inspectionType, null));
                 }
-                else if(dataBaris[i].inspectionType === "genba"){
+                else if (dataBaris[i].inspectionType === "genba") {
                     this.state.arrGenbaBaris.push(this.renderBaris(dataBaris[i].AREAL, i, dataBaris[i].inspectionType, dataBaris[i].BLOCK_INSPECTION_CODE));
                 }
                 time = parseInt(dataBaris[i].TIME);
                 distance = parseInt(dataBaris[i].DISTANCE);
 
             } else if (i > 0) {
-                if(dataBaris[i].inspectionType === "normal"){
+                if (dataBaris[i].inspectionType === "normal") {
                     this.state.arrBaris.push(this.renderBaris(dataBaris[i].AREAL, i, dataBaris[i].inspectionType, null));
                 }
-                else if(dataBaris[i].inspectionType === "genba"){
+                else if (dataBaris[i].inspectionType === "genba") {
                     this.state.arrGenbaBaris.push(this.renderBaris(dataBaris[i].AREAL, i, dataBaris[i].inspectionType, dataBaris[i].BLOCK_INSPECTION_CODE));
                 }
                 time = time + parseInt(dataBaris[i].TIME);
@@ -208,7 +209,7 @@ export default class HistoryInspectionDetail extends React.Component {
             name: 'Pokok Panen',
             value: jmlNilaiPokokPanen
         }
-        if(jmlNilaiPokokPanen > 0){
+        if (jmlNilaiPokokPanen > 0) {
             listData.push(this.renderComponent(data));
         }
 
@@ -217,7 +218,7 @@ export default class HistoryInspectionDetail extends React.Component {
             name: 'Buah Tinggal',
             value: jmlNilaiBuahTgl
         }
-        if(jmlNilaiBuahTgl > 0){
+        if (jmlNilaiBuahTgl > 0) {
             listData.push(this.renderComponent(data));
         }
 
@@ -226,7 +227,7 @@ export default class HistoryInspectionDetail extends React.Component {
             name: 'Brondol Piringan',
             value: jmlNilaiBrondolPiring
         }
-        if(jmlNilaiBrondolPiring > 0){
+        if (jmlNilaiBrondolPiring > 0) {
             listData.push(this.renderComponent(data));
         }
 
@@ -235,7 +236,7 @@ export default class HistoryInspectionDetail extends React.Component {
             name: 'Brondol TPH',
             value: jmlNilaiBrondolTph
         }
-        if(jmlNilaiBrondolTph > 0){
+        if (jmlNilaiBrondolTph > 0) {
             listData.push(this.renderComponent(data));
         }
 
@@ -244,25 +245,25 @@ export default class HistoryInspectionDetail extends React.Component {
             name: 'Pokok Tidak dipupuk',
             value: jmlNilaiTdkPupuk
         }
-        if(jmlNilaiTdkPupuk > 0){
+        if (jmlNilaiTdkPupuk > 0) {
             listData.push(this.renderComponent(data));
         }
 
         data = {
             idx: 10,
-            name : 'Losses Brondolan',
-            value: ((jmlNilaiBrondolPiring+jmlNilaiBrondolTph)/jmlNilaiPokokPanen).toFixed(2)
+            name: 'Losses Brondolan',
+            value: ((jmlNilaiBrondolPiring + jmlNilaiBrondolTph) / jmlNilaiPokokPanen).toFixed(2)
         }
-        if(data.value !== 'NaN'){
+        if (data.value !== 'NaN') {
             listData.push(this.renderComponent(data));
         }
 
         data = {
             idx: 11,
-            name : 'Losses Janjang',
-            value: (jmlNilaiBuahTgl/jmlNilaiPokokPanen).toFixed(3)
+            name: 'Losses Janjang',
+            value: (jmlNilaiBuahTgl / jmlNilaiPokokPanen).toFixed(3)
         }
-        if(data.value !== 'NaN'){
+        if (data.value !== 'NaN') {
             listData.push(this.renderComponent(data));
         }
 
@@ -290,7 +291,7 @@ export default class HistoryInspectionDetail extends React.Component {
             data = {
                 idx: 6,
                 name: 'Sistem Penaburan',
-                value: avg_penabur == '-' ? '-' :  `${nilaiPenabur}/${avg_penabur}`
+                value: avg_penabur == '-' ? '-' : `${nilaiPenabur}/${avg_penabur}`
             }
             listData.push(this.renderComponent(data));
         }
@@ -428,7 +429,7 @@ export default class HistoryInspectionDetail extends React.Component {
     renderBaris = (data, index, type, BLOCK_INSPECTION_CODE) => {
         return (
             <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('DetailBaris', { baris: data, idInspection: this.state.data.ID_INSPECTION, detailType: type,  BLOCK_INSPECTION_CODE: BLOCK_INSPECTION_CODE})}
+                onPress={() => this.props.navigation.navigate('DetailBaris', { baris: data, idInspection: this.state.data.ID_INSPECTION, detailType: type, BLOCK_INSPECTION_CODE: BLOCK_INSPECTION_CODE })}
                 key={index}>
                 <View style={styles.sectionRow}>
                     <Text style={styles.textLabel}>Baris Ke - {data}</Text>
@@ -461,14 +462,14 @@ export default class HistoryInspectionDetail extends React.Component {
 
     getCategoryName = (categoryCode) => {
         try {
-          let data = Taskservices.findBy2('TR_CATEGORY', 'CATEGORY_CODE', categoryCode);
-          return data.CATEGORY_NAME;
+            let data = Taskservices.findBy2('TR_CATEGORY', 'CATEGORY_CODE', categoryCode);
+            return data.CATEGORY_NAME;
         } catch (error) {
-          return ''
+            return ''
         }
     }
 
-    getContactName(user_auth_code){
+    getContactName(user_auth_code) {
         try {
             let data = Taskservices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', user_auth_code);
             return data.FULLNAME;
@@ -479,13 +480,13 @@ export default class HistoryInspectionDetail extends React.Component {
 
     renderTemuan = (item, idx) => {
         let dataTemuan = Taskservices.findBy2('TR_FINDING', 'FINDING_CODE', item)
-        if(dataTemuan !== undefined){
+        if (dataTemuan !== undefined) {
             const image = Taskservices.findBy2('TR_IMAGE', 'TR_CODE', dataTemuan.FINDING_CODE);
             let showImage;
             if (image == undefined) {
-            showImage = <Image style={{ alignItems: 'stretch', width: 65, height: 65, borderRadius: 10 }} source={require('../../Images/ic-default-thumbnail.png')} />
+                showImage = <Image style={{ alignItems: 'stretch', width: 65, height: 65, borderRadius: 10 }} source={require('../../Images/ic-default-thumbnail.png')} />
             } else {
-            showImage = <Image style={{ alignItems: 'stretch', width: 65, height: 65, borderRadius: 10 }} source={{ uri: "file://" + image.IMAGE_PATH_LOCAL }} />
+                showImage = <Image style={{ alignItems: 'stretch', width: 65, height: 65, borderRadius: 10 }} source={{ uri: "file://" + image.IMAGE_PATH_LOCAL }} />
             }
             return (
                 <TouchableOpacity
@@ -558,10 +559,10 @@ export default class HistoryInspectionDetail extends React.Component {
                         </View>
 
                         {this.state.nilaiTph !== '-' &&
-                        <View style={styles.sectionRow}>
-                            <Text style={styles.textLabel}>TPH</Text>
-                            <Text style={styles.textContent}>{this.state.nilaiTph}</Text>
-                        </View>}
+                            <View style={styles.sectionRow}>
+                                <Text style={styles.textLabel}>TPH</Text>
+                                <Text style={styles.textContent}>{this.state.nilaiTph}</Text>
+                            </View>}
 
                         <View style={styles.sectionRow}>
                             <Text style={styles.textLabel}>Gawangan</Text>
@@ -569,10 +570,10 @@ export default class HistoryInspectionDetail extends React.Component {
                         </View>
 
                         {this.state.nilaiPrun !== '-' &&
-                        <View style={styles.sectionRow}>
-                            <Text style={styles.textLabel}>Prunning</Text>
-                            <Text style={styles.textContent}>{this.state.nilaiPrun}</Text>
-                        </View>}
+                            <View style={styles.sectionRow}>
+                                <Text style={styles.textLabel}>Prunning</Text>
+                                <Text style={styles.textContent}>{this.state.nilaiPrun}</Text>
+                            </View>}
 
                     </View>
 
@@ -641,7 +642,8 @@ const styles = StyleSheet.create({
     textTitle: {
         fontWeight: '400',
         fontSize: 14,
-        color: 'black'
+        color: 'black',
+        fontFamily: Fonts.medium
     },
     textLokasi: {
         alignContent: 'center',
@@ -651,10 +653,12 @@ const styles = StyleSheet.create({
         color: 'black'
     },
     textLabel: {
-        color: 'grey'
+        color: 'grey',
+        fontFamily: Fonts.book
     },
     textContent: {
-        color: 'black'
+        color: 'black',
+        fontFamily: Fonts.book
     },
     lineDivider: {
         alignItems: 'stretch',
@@ -709,7 +713,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     sectionDesc: {
-        flex:1,
+        flex: 1,
         flexDirection: 'column',
         justifyContent: 'space-between',
         height: 80,

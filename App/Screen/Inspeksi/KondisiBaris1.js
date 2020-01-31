@@ -1,14 +1,15 @@
-import React, {Component} from 'react';
-import {BackHandler, Image, ScrollView, StatusBar, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import React, { Component } from 'react';
+import { BackHandler, Image, ScrollView, StatusBar, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
 import R from 'ramda';
-import {getTodayDate} from '../../Lib/Utils'
+import { getTodayDate } from '../../Lib/Utils'
 import TaskService from "../../Database/TaskServices";
 import ModalAlert from "../../Component/ModalAlert";
+import Font from '../../Themes/Fonts'
 
 class KondisiBaris1 extends Component {
 
@@ -26,12 +27,14 @@ class KondisiBaris1 extends Component {
                 fontWeight: '400'
             },
             headerRight: (
-                <TouchableOpacity onPress={() => { navigation.navigate('Step1Finding', {
+                <TouchableOpacity onPress={() => {
+                    navigation.navigate('Step1Finding', {
                         data: params.getData,
                         dataInspeksi: params.getDataInspeksi,
                         updateTRBaris: params.updateTRBaris
                     }
-                )}}>
+                    )
+                }}>
                     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingRight: 16 }}>
                         <Entypo name='flashlight' size={24} color='white' />
                     </View>
@@ -97,7 +100,7 @@ class KondisiBaris1 extends Component {
     }
 
     updateTRBaris = data => {
-        let model =  {
+        let model = {
             ID_INSPECTION: data.ID_INSPECTION,
             BLOCK_INSPECTION_CODE: data.BLOCK_INSPECTION_CODE,
             EST_NAME: data.EST_NAME,
@@ -112,27 +115,27 @@ class KondisiBaris1 extends Component {
             FULFILL_BARIS: data.FULFILL_BARIS,
             TR_FINDING_CODES: data.TR_FINDING_CODES
         }
-        this.setState({dataInspeksi: model}, ()=>{
-            this.props.navigation.setParams({getDataInspeksi: this.state.dataInspeksi})
+        this.setState({ dataInspeksi: model }, () => {
+            this.props.navigation.setParams({ getDataInspeksi: this.state.dataInspeksi })
         })
     }
 
-    checkJarakBaris(inputBaris){
+    checkJarakBaris(inputBaris) {
         let idInspection = this.state.inspeksiHeader.ID_INSPECTION;
         let data = TaskService.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', idInspection)
         //cek baris inspection udh ada ato blom
-        if(data !== undefined){
+        if (data !== undefined) {
             let header = TaskService.findBy('TR_BLOCK_INSPECTION_H', 'ID_INSPECTION', idInspection)
             //cek di TR_BLOCK_INSPECTION_H udh ad apa belum
-            if(header !== undefined && header.length > 0){
-                let rangeMin = parseInt(inputBaris) <= 5 ? 1 : parseInt(inputBaris)-4;
-                let rangeMax = parseInt(inputBaris)+4;
+            if (header !== undefined && header.length > 0) {
+                let rangeMin = parseInt(inputBaris) <= 5 ? 1 : parseInt(inputBaris) - 4;
+                let rangeMax = parseInt(inputBaris) + 4;
                 let inputNo = [];
-                let validation = header.some((val)=>{
+                let validation = header.some((val) => {
                     inputNo.push(val.AREAL)
                     return (val.AREAL <= rangeMax && val.AREAL >= rangeMin)
                 });
-                console.log("VALIDATION:"+JSON.stringify(inputNo), rangeMin, rangeMax)
+                console.log("VALIDATION:" + JSON.stringify(inputNo), rangeMin, rangeMax)
                 return validation;
             }
         }
@@ -140,8 +143,8 @@ class KondisiBaris1 extends Component {
     }
 
     insertDB() {
-        if(this.state.inspeksiHeader.AREAL !== "" && this.state.inspeksiHeader.AREAL !== undefined){
-            if(!this.checkJarakBaris(this.state.inspeksiHeader.AREAL)){
+        if (this.state.inspeksiHeader.AREAL !== "" && this.state.inspeksiHeader.AREAL !== undefined) {
+            if (!this.checkJarakBaris(this.state.inspeksiHeader.AREAL)) {
                 var today = getTodayDate('YYYYMMDDHHmmss');
                 var kondisiBaris1 = []
                 var data = {
@@ -207,7 +210,7 @@ class KondisiBaris1 extends Component {
                     statusBlok: this.state.statusBlok,
                     intervalId: this.state.intervalId,
                     dataInspeksi: this.state.dataInspeksi,
-                    inspectionType  : this.state.inspectionType === 'genba' ? 'genba' : 'normal'
+                    inspectionType: this.state.inspectionType === 'genba' ? 'genba' : 'normal'
                 });
             }
             else {
@@ -309,95 +312,95 @@ class KondisiBaris1 extends Component {
         }
     }
 
-	_render_variable_input(){
-		console.log(this.state.statusBlok);
-		if(this.state.statusBlok=="TBM 0"||this.state.statusBlok=="TBM 1"||this.state.statusBlok=="TBM 2"){
-			return null;
-		}
-		else{
-			return ([<View style={styles.containerLabel}>
-                        <Text style={styles.txtLabel}>Pokok Panen</Text>
-                        <View style={[styles.containerInput, { flex: 5 }]}>
-                            <TouchableOpacity style={styles.btnMinus} onPress={() => { this.decreaseNumber('PP') }}>
-                                <Icon2 name={"minus"} size={20} color="white" />
-                            </TouchableOpacity>
-                            <TextInput
-                                underlineColorAndroid={'transparent'}
-                                style={[styles.searchInput]}
-                                maxLength={2}
-                                keyboardType={'numeric'}
-                                value={this.state.pokokPanen}
-                                onChangeText={(text) => { text = text.replace(/[^0-9 ]/g, ''); this.setState({ pokokPanen: text }) }} />
-                            <TouchableOpacity style={styles.btnAdd} onPress={() => { this.increaseNumber('PP') }}>
-                                <Icon name={"add"} size={20} color="white" />
-                            </TouchableOpacity>
-                        </View>
-                    </View>,
-                    <View style={styles.containerLabel}>
-                        <Text style={styles.txtLabel}>Buah Tinggal</Text>
-                        <View style={[styles.containerInput, { flex: 5 }]}>
-                            <TouchableOpacity
-                                style={styles.btnMinus}
-                                onPress={() => this.decreaseNumber('BT')} >
-                                <Icon2 name={"minus"} size={20} color="white" />
-                            </TouchableOpacity>
-                            <TextInput
-                                underlineColorAndroid={'transparent'}
-                                style={[styles.searchInput]}
-                                maxLength={2}
-                                keyboardType={'numeric'}
-                                value={this.state.buahTinggal}
-                                onChangeText={(text) => { text = text.replace(/[^0-9]/g, ''); this.setState({ buahTinggal: text }) }} />
-                            <TouchableOpacity
-                                style={styles.btnAdd}
-                                onPress={() => this.increaseNumber('BT')}>
-                                <Icon name={"add"} size={20} color="white" />
-                            </TouchableOpacity>
-                        </View>
-                    </View>,
-                    <View style={styles.containerLabel}>
-                        <Text style={styles.txtLabel}>Brondolan di Piringan</Text>
-                        <View style={[styles.containerInput, { flex: 5 }]}>
-                            <TouchableOpacity style={styles.btnMinus}
-                                onPress={() => { this.decreaseNumber('BP') }}>
-                                <Icon2 name={"minus"} size={20} color="white" />
-                            </TouchableOpacity>
-                            <TextInput
-                                underlineColorAndroid={'transparent'}
-                                style={[styles.searchInput]}
-                                maxLength={3}
-                                keyboardType={'numeric'}
-                                value={this.state.brondolPinggir}
-                                onChangeText={(text) => { text = text.replace(/[^0-9]/g, ''); this.setState({ brondolPinggir: text }) }} />
-                            <TouchableOpacity style={styles.btnAdd} onPress={() => { this.increaseNumber('BP') }}>
-                                <Icon name={"add"} size={20} color="white" />
-                            </TouchableOpacity>
-                        </View>
-                    </View>,
-                    <View style={styles.containerLabel}>
-                        <Text style={[styles.txtLabel, { fontWeight: '300' }]}>Brondolan di TPH</Text>
-                        <View style={[styles.containerInput, { flex: 5 }]}>
-                            <TouchableOpacity style={styles.btnMinus}
-                                onPress={() => { this.decreaseNumber('BTP') }}>
-                                <Icon2 name={"minus"} size={20} color="white" />
-                            </TouchableOpacity>
-                            <TextInput
-                                underlineColorAndroid={'transparent'}
-                                style={[styles.searchInput]}
-                                maxLength={3}
-                                keyboardType={'numeric'}
-                                value={this.state.brondolTPH}
-                                onChangeText={(text) => { text = text.replace(/[^0-9]/g, ''); this.setState({ brondolTPH: text }) }}
-                            />
-                            <TouchableOpacity style={styles.btnAdd} onPress={() => { this.increaseNumber('BTP') }}>
-                                <Icon name={"add"} size={20} color="white" />
-                            </TouchableOpacity>
-                        </View>
-                    </View>]);
-		}
+    _render_variable_input() {
+        console.log(this.state.statusBlok);
+        if (this.state.statusBlok == "TBM 0" || this.state.statusBlok == "TBM 1" || this.state.statusBlok == "TBM 2") {
+            return null;
+        }
+        else {
+            return ([<View style={styles.containerLabel}>
+                <Text style={styles.txtLabel}>Pokok Panen</Text>
+                <View style={[styles.containerInput, { flex: 5 }]}>
+                    <TouchableOpacity style={styles.btnMinus} onPress={() => { this.decreaseNumber('PP') }}>
+                        <Icon2 name={"minus"} size={20} color="white" />
+                    </TouchableOpacity>
+                    <TextInput
+                        underlineColorAndroid={'transparent'}
+                        style={[styles.searchInput]}
+                        maxLength={2}
+                        keyboardType={'numeric'}
+                        value={this.state.pokokPanen}
+                        onChangeText={(text) => { text = text.replace(/[^0-9 ]/g, ''); this.setState({ pokokPanen: text }) }} />
+                    <TouchableOpacity style={styles.btnAdd} onPress={() => { this.increaseNumber('PP') }}>
+                        <Icon name={"add"} size={20} color="white" />
+                    </TouchableOpacity>
+                </View>
+            </View>,
+            <View style={styles.containerLabel}>
+                <Text style={styles.txtLabel}>Buah Tinggal</Text>
+                <View style={[styles.containerInput, { flex: 5 }]}>
+                    <TouchableOpacity
+                        style={styles.btnMinus}
+                        onPress={() => this.decreaseNumber('BT')} >
+                        <Icon2 name={"minus"} size={20} color="white" />
+                    </TouchableOpacity>
+                    <TextInput
+                        underlineColorAndroid={'transparent'}
+                        style={[styles.searchInput]}
+                        maxLength={2}
+                        keyboardType={'numeric'}
+                        value={this.state.buahTinggal}
+                        onChangeText={(text) => { text = text.replace(/[^0-9]/g, ''); this.setState({ buahTinggal: text }) }} />
+                    <TouchableOpacity
+                        style={styles.btnAdd}
+                        onPress={() => this.increaseNumber('BT')}>
+                        <Icon name={"add"} size={20} color="white" />
+                    </TouchableOpacity>
+                </View>
+            </View>,
+            <View style={styles.containerLabel}>
+                <Text style={styles.txtLabel}>Brondolan di Piringan</Text>
+                <View style={[styles.containerInput, { flex: 5 }]}>
+                    <TouchableOpacity style={styles.btnMinus}
+                        onPress={() => { this.decreaseNumber('BP') }}>
+                        <Icon2 name={"minus"} size={20} color="white" />
+                    </TouchableOpacity>
+                    <TextInput
+                        underlineColorAndroid={'transparent'}
+                        style={[styles.searchInput]}
+                        maxLength={3}
+                        keyboardType={'numeric'}
+                        value={this.state.brondolPinggir}
+                        onChangeText={(text) => { text = text.replace(/[^0-9]/g, ''); this.setState({ brondolPinggir: text }) }} />
+                    <TouchableOpacity style={styles.btnAdd} onPress={() => { this.increaseNumber('BP') }}>
+                        <Icon name={"add"} size={20} color="white" />
+                    </TouchableOpacity>
+                </View>
+            </View>,
+            <View style={styles.containerLabel}>
+                <Text style={[styles.txtLabel, { fontWeight: '300' }]}>Brondolan di TPH</Text>
+                <View style={[styles.containerInput, { flex: 5 }]}>
+                    <TouchableOpacity style={styles.btnMinus}
+                        onPress={() => { this.decreaseNumber('BTP') }}>
+                        <Icon2 name={"minus"} size={20} color="white" />
+                    </TouchableOpacity>
+                    <TextInput
+                        underlineColorAndroid={'transparent'}
+                        style={[styles.searchInput]}
+                        maxLength={3}
+                        keyboardType={'numeric'}
+                        value={this.state.brondolTPH}
+                        onChangeText={(text) => { text = text.replace(/[^0-9]/g, ''); this.setState({ brondolTPH: text }) }}
+                    />
+                    <TouchableOpacity style={styles.btnAdd} onPress={() => { this.increaseNumber('BTP') }}>
+                        <Icon name={"add"} size={20} color="white" />
+                    </TouchableOpacity>
+                </View>
+            </View>]);
+        }
     }
 
-    cancelOrder(){
+    cancelOrder() {
         this.props.navigation.goBack(null)
         // const navigation = this.props.navigation;
         // let routeName = 'MainMenu';
@@ -438,7 +441,7 @@ class KondisiBaris1 extends Component {
                         <View style={[styles.stepperNumber, { backgroundColor: Colors.brand }]}>
                             <Text style={styles.stepperNumberText}>1</Text>
                         </View>
-                        <Text style={[Fonts.style.caption, { paddingLeft: 3, color: Colors.brand }]}>Pilih Lokasi</Text>
+                        <Text style={[Fonts.style.caption, { paddingLeft: 3, color: Colors.brand, fontFamily: Font.book }]}>Pilih Lokasi</Text>
                         <View>
                             <Icon
                                 name="chevron-right"
@@ -452,7 +455,7 @@ class KondisiBaris1 extends Component {
                         <View style={[styles.stepperNumber, { backgroundColor: Colors.brand }]}>
                             <Text style={styles.stepperNumberText}>2</Text>
                         </View>
-                        <Text style={[Fonts.style.caption, { paddingLeft: 3, color: Colors.brand }]}>Kondisi Baris</Text>
+                        <Text style={[Fonts.style.caption, { paddingLeft: 3, color: Colors.brand, fontFamily: Font.book }]}>Kondisi Baris</Text>
                         <View>
                             <Icon
                                 name="chevron-right"
@@ -466,7 +469,7 @@ class KondisiBaris1 extends Component {
                         <View style={[styles.stepperNumber, { backgroundColor: Colors.buttonDisabled }]}>
                             <Text style={styles.stepperNumberText}>3</Text>
                         </View>
-                        <Text style={[Fonts.style.caption, { paddingLeft: 3, color: Colors.textSecondary }]}>Summary</Text>
+                        <Text style={[Fonts.style.caption, { paddingLeft: 3, color: Colors.textSecondary, fontFamily: Font.book }]}>Summary</Text>
                     </View>
                 </View>
 
@@ -476,8 +479,8 @@ class KondisiBaris1 extends Component {
                         <Image source={require('../../Images/icon/ic_walking.png')} style={styles.icon} />
                     </View>
                     <View style={{ flex: 7 }}>
-                        <Text style={{ fontSize: 16, fontWeight: '500' }}>Sambil Jalan</Text>
-                        <Text style={{ fontSize: 12, color: 'grey' }}>Kamu bisa input ini ketika berjalan disepanjang baris.</Text>
+                        <Text style={{ fontSize: 16, fontFamily: Font.demi }}>Sambil Jalan</Text>
+                        <Text style={{ fontSize: 12, color: 'grey', fontFamily: Font.book }}>Kamu bisa input ini ketika berjalan disepanjang baris.</Text>
                     </View>
                 </View>
 
@@ -495,20 +498,20 @@ class KondisiBaris1 extends Component {
                                 value={this.state.inspeksiHeader.AREAL}
                                 onChangeText={(value) => {
                                     let text = value.replace(/[^0-9 ]/g, '');
-                                    if(text !== "0"){
+                                    if (text !== "0") {
                                         let oldHeader = R.clone(this.state.inspeksiHeader);
                                         let oldDataUsual = R.clone(this.state.dataUsual);
                                         oldHeader.AREAL = text;
                                         oldDataUsual.BARIS = text;
                                         this.setState({
                                             inspeksiHeader: oldHeader,
-                                            dataUsual:oldDataUsual
+                                            dataUsual: oldDataUsual
                                         });
                                     }
-                                } } />
+                                }} />
                         </View>
                     </View>
-				</View>
+                </View>
 
                 {/*INPUT*/}
                 <View style={{ backgroundColor: 'white' }}>
@@ -592,7 +595,7 @@ const styles = {
         flex: 3,
         color: 'grey',
         fontSize: 15,
-
+        fontFamily: Font.book
     },
     containerInput: {
         flexDirection: 'row',
@@ -652,7 +655,8 @@ const styles = {
         borderRadius: 15,
         borderColor: '#989898',
         color: '#808080',
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: Font.book
     },
     icon: {
         alignContent: 'flex-end',

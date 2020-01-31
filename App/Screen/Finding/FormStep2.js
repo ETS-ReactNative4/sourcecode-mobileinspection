@@ -19,6 +19,7 @@ import ModalAlertBack from '../../Component/ModalAlert';
 import ModalAlertConfirmation from '../../Component/ModalAlertConfirmation'
 import { AlertContent } from '../../Themes';
 import { removeEmojis } from '../../Constant/Functions/StringManipulator';
+import Font from '../../Themes/Fonts'
 
 var RNFS = require('react-native-fs');
 
@@ -436,7 +437,7 @@ class FormStep2 extends Component {
                                         <Text
                                             style={[
                                                 Fonts.style.caption,
-                                                { paddingLeft: 3, color: Colors.brand }
+                                                { paddingLeft: 3, color: Colors.brand, fontFamily: Font.book }
                                             ]}
                                         >
                                             {rowData.title}
@@ -459,9 +460,15 @@ class FormStep2 extends Component {
                     />
                     <View style={{ flex: 1, flexDirection: 'row' }}>
                         <View style={{ height: 80, flex: 1 }}>
-                            <Text style={{ fontSize: 14 }}>Keterangan <Text style={style.mandatory}>*</Text></Text>
+                            <Text style={{
+                                fontSize: 14,
+                                fontFamily: Font.book
+                            }}>Keterangan <Text style={style.mandatory}>*</Text></Text>
 
-                            <TextInput style={{ flex: 1, textAlignVertical: "top" }}
+                            <TextInput style={{
+                                flex: 1, textAlignVertical: "top",
+                                fontFamily: Font.book
+                            }}
                                 multiline
                                 placeholder="Tulis di sini..."
                                 keyboardType="email-address"
@@ -493,7 +500,10 @@ class FormStep2 extends Component {
                             {!isEmpty(this.state.blok) && (<Text style={{ fontSize: 14 }}> {this.state.blok} </Text>)}
                         </TouchableOpacity> */}
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('MapsFinding', { changeBlok: this.changeBlok })}>
-                            {isEmpty(this.state.blok) && (<Text style={{ fontSize: 14, color: '#999' }}> Set Location </Text>)}
+                            {isEmpty(this.state.blok) && (<Text style={{
+                                fontSize: 14, color: '#999',
+                                fontFamily: Font.book
+                            }}> Set Location </Text>)}
                             {!isEmpty(this.state.blok) && (<Text style={{ fontSize: 14 }}> {this.state.blok} </Text>)}
                         </TouchableOpacity>
                     </View>
@@ -502,7 +512,10 @@ class FormStep2 extends Component {
                     <View style={{ flex: 1, flexDirection: 'row' }}>
                         <Text style={style.label}>Kategori <Text style={style.mandatory}>*</Text></Text>
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('PilihKategori', { changeCategory: this.changeCategory })}>
-                            {isEmpty(this.state.category) && (<Text style={{ fontSize: 14, color: '#999' }}> Pilih Kategori </Text>)}
+                            {isEmpty(this.state.category) && (<Text style={{
+                                fontSize: 14, color: '#999',
+                                fontFamily: Font.book
+                            }}> Pilih Kategori </Text>)}
                             {!isEmpty(this.state.category) && (<Text style={{ fontSize: 14 }}> {this.state.category} </Text>)}
                         </TouchableOpacity>
 
@@ -529,7 +542,10 @@ class FormStep2 extends Component {
                         <Text style={style.label}> Ditugaskan Kepada<Text style={style.mandatory}>*</Text></Text>
                         <TouchableOpacity onPress={() => this.pilihKontak()}>
                             {isEmpty(this.state.tugasKepada) && (
-                                <Text style={{ fontSize: 14, color: '#999' }}> Pilih Karyawan </Text>)}
+                                <Text style={{
+                                    fontSize: 14, color: '#999',
+                                    fontFamily: Font.book
+                                }}> Pilih Karyawan </Text>)}
                             {!isEmpty(this.state.tugasKepada) && (
                                 <Text style={{ fontSize: 14 }}> {this.state.tugasKepada} </Text>)}
                         </TouchableOpacity>
@@ -614,7 +630,7 @@ const style = {
         borderRadius: 12,
         justifyContent: 'center'
     },
-    stepperNumberText: [Fonts.style.caption, { textAlign: 'center', color: Colors.textDark }],
+    stepperNumberText: [Fonts.style.caption, { textAlign: 'center', color: Colors.textDark, fontFamily: Font.demi }],
     stepperNext: { alignSelf: 'flex-end', paddingRight: 4 },
     sectionHeader: [
         Fonts.style.caption,
@@ -650,11 +666,13 @@ const style = {
     },
     label: {
         width: '40%',
-        fontSize: 14
+        fontSize: 14,
+        fontFamily: Font.book
     }, item: {
         width: '60%',
         color: "#999",
-        fontSize: 14
+        fontSize: 14,
+        fontFamily: Font.book
     }, line: {
         marginTop: 16,
         marginBottom: 16,
@@ -679,7 +697,8 @@ const style = {
     textCategory: {
         textAlign: 'center',
         fontSize: 9,
-        color: "#333333"
+        color: "#333333",
+        fontFamily: Font.bold
     },
     inputloc: {
         width: '60%',
@@ -695,6 +714,7 @@ const style = {
     mandatory: {
         fontSize: 12,
         color: 'red',
+        fontFamily: Font.bold
     },
     containerMap: {
         flex: 1,

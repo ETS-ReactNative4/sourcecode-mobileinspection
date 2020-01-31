@@ -4,6 +4,7 @@ import { Card } from 'native-base';
 import PropTypes from 'prop-types';
 import TaskServices from '../Database/TaskServices'
 import Colors from '../Constant/Colors';
+import { Fonts } from '../Themes'
 
 const WeeklyFeature = (props) => {
     return (
@@ -11,9 +12,9 @@ const WeeklyFeature = (props) => {
             <Card style={{ alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
                 <View style={{ paddingVertical: 10, alignItems: 'center', justifyContent: 'center' }}>
                     <Image style={{ height: 60, width: 60 }} source={props.img} />
-                    <Text style={{ marginTop: 5, fontSize: 12, fontWeight: '500' }}> {props.title}</Text>
-                    <Text style={{ marginTop: 2, fontSize: 14, fontWeight: '500', color: 'black' }}> {props.value}</Text>
-                    <Text style={{ marginTop: 6, fontSize: 14, fontWeight: '400' }}> {props.target}</Text>
+                    <Text style={{ marginTop: 5, fontSize: 12, fontFamily: Fonts.bold }}> {props.title}</Text>
+                    <Text style={{ marginTop: 2, fontSize: 14, fontFamily: Fonts.bold, color: 'black' }}> {props.value}</Text>
+                    <Text style={{ marginTop: 6, fontSize: 14, fontFamily: Fonts.book }}> {props.target}</Text>
                 </View>
             </Card>
         </View>
@@ -69,8 +70,8 @@ class WeeklySummary extends Component {
                             {/* TOP CONTENT */}
                             <View style={{ flex: 2, alignItems: 'center' }}>
                                 <Image style={{ height: 70, width: 130, resizeMode: 'stretch' }} source={require('../Images/summaryInspeksi/morning.png')} />
-                                <Text style={[styles.text, { color: 'black', marginTop: 16, fontWeight: 'bold' }]}>Semangat Pagi, {user.USERNAME}</Text>
-                                <Text style={[styles.text, { color: '#4f5154', marginTop: 3 }]}>Seminggu kemarin, kamu telah :</Text>
+                                <Text style={[styles.text, { color: 'black', marginTop: 16, fontFamily: Fonts.bold }]}>Semangat Pagi, {user.USERNAME}</Text>
+                                <Text style={[styles.text, { color: '#4f5154', marginTop: 3, fontFamily: Fonts.book }]}>Seminggu kemarin, kamu telah :</Text>
                             </View>
 
                             {/* FEATURE CONTENT */}
@@ -130,7 +131,7 @@ const styles = StyleSheet.create({
     text_white: {
         fontSize: 16,
         color: 'white',
-        fontWeight: '500'
+        fontFamily: Fonts.bold
     }
 
 });

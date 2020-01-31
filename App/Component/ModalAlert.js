@@ -1,8 +1,9 @@
-import React, {Component} from 'react';
-import {Image, Modal, TouchableOpacity} from 'react-native';
+import React, { Component } from 'react';
+import { Image, Modal, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
-import {Text, View} from 'native-base';
+import { Text, View } from 'native-base';
 import Colors from '../Constant/Colors';
+import { Fonts } from '../Themes'
 
 export default class ModalConfirmation extends Component {
 	// Prop type warnings
@@ -12,7 +13,7 @@ export default class ModalConfirmation extends Component {
 		title: PropTypes.string,
 		message: PropTypes.string,
 		visible: PropTypes.bool,
-        closeText: PropTypes.string
+		closeText: PropTypes.string
 	};
 
 	// Defaults for props
@@ -22,7 +23,7 @@ export default class ModalConfirmation extends Component {
 		title: 'Title',
 		message: 'Message',
 		visible: false,
-        closeText: 'TUTUP'
+		closeText: 'TUTUP'
 	};
 
 	render() {
@@ -42,7 +43,10 @@ export default class ModalConfirmation extends Component {
 						</View>
 						<TouchableOpacity style={style.bottomContainer} onPress={props.onPressCancel} >
 							<View onPress={props.onPressCancel}>
-								<Text style={{ fontSize: 16 }}> {props.closeText}</Text>
+								<Text style={{
+									fontSize: 16,
+									fontFamily: Fonts.book
+								}}> {props.closeText}</Text>
 							</View>
 						</TouchableOpacity>
 					</View>
@@ -71,14 +75,16 @@ const style = {
 		textAlign: 'center',
 		color: 'grey',
 		paddingLeft: 12,
-		paddingRight: 12
+		paddingRight: 12,
+		fontFamily: Fonts.book
 	},
 	textMessage: {
 		fontSize: 14,
 		textAlign: 'center',
 		color: '#c5c5c5',
 		paddingLeft: 12,
-		paddingRight: 12
+		paddingRight: 12,
+		fontFamily: Fonts.book
 	},
 	button: {
 		justifyContent: 'center',

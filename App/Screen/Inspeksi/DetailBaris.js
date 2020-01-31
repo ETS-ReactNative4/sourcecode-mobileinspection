@@ -3,6 +3,7 @@ import { Image, ScrollView, StatusBar, StyleSheet, Text, View, BackHandler } fro
 import Colors from '../../Constant/Colors'
 import Taskservices from '../../Database/TaskServices'
 import R from 'ramda';
+import { Fonts } from '../../Themes'
 
 class DetailBaris extends React.Component {
 
@@ -42,7 +43,7 @@ class DetailBaris extends React.Component {
             detailType: params.detailType
         };
 
-		this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
+        this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     }
 
     static navigationOptions = ({ navigation }) => {
@@ -328,14 +329,17 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontWeight: '400',
         fontSize: 14,
-        color: 'black'
+        color: 'black',
+        fontFamily: Fonts.book
     },
     textLabel: {
-        color: 'grey'
+        color: 'grey',
+        fontFamily: Fonts.book
     },
     textContent: {
         color: 'black',
-        fontSize: 14
+        fontSize: 14,
+        fontFamily: Fonts.book
     },
     lineDivider: {
         alignItems: 'stretch',

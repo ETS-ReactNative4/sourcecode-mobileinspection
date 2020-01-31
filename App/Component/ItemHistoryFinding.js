@@ -3,16 +3,16 @@ import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import moment from 'moment';
 import { getCategoryName, getBlokName, getStatusBlok, getEstateName } from '../Database/Resources';
 import TaskServices from '../Database/TaskServices';
-import { Images } from '../Themes';
+import { Images, Fonts } from '../Themes';
 import { dirPhotoTemuan } from '../Lib/dirStorage';
 import { dateDisplayMobile, changeFormatDate } from '../Lib/Utils';
 import Colors from '../Constant/Colors';
 
 const Field = (props) => {
     return (
-        <View style={{ flexDirection: 'row' }}>
-            <Text style={{ fontSize: 12, color: 'grey', width: 100 }}>{props.label} </Text>
-            <Text style={{ fontSize: 12, color: 'grey' }}>:  {props.content}</Text>
+        <View style={{ flexDirection: 'row', marginRight: 12 }}>
+            <Text style={{ fontSize: 12, color: 'grey', width: 92.5, fontFamily: Fonts.demi }}>{props.label} </Text>
+            <Text style={{ fontSize: 12, color: 'grey', fontFamily: Fonts.book }}>:  {props.content}</Text>
         </View>
     )
 }
@@ -62,7 +62,7 @@ const ItemHistoryFinding = (props) => {
             <Image style={{ alignItems: 'stretch', width: 90, height: 100, borderRadius: 10 }} source={sourceImage} />
             <View style={styles.sectionDesc} >
                 <View style={{ flexDirection: 'row' }}>
-                    <Text style={{ fontSize: 12, color: 'black', fontWeight: 'bold' }}>{lokasi}</Text>
+                    <Text style={{ fontSize: 12, color: 'black', fontFamily: Fonts.demi }}>{lokasi}</Text>
                 </View>
                 <Field label={'Dibuat'} content={createdTime} />
                 <Field label={'Kategori'} content={getCategoryName(props.item.FINDING_CATEGORY)} />
@@ -70,7 +70,7 @@ const ItemHistoryFinding = (props) => {
                 <Field label={'Status'} content={item.STATUS} />
 
                 <View style={{ flexDirection: 'row' }}>
-                    <Text style={{ fontSize: 12, color: colorStatus, fontWeight: 'bold', fontStyle: 'italic' }}>{status}</Text>
+                    <Text style={{ fontSize: 12, color: colorStatus, fontFamily: Fonts.demiItalic }}>{status}</Text>
                 </View>
 
             </View>
@@ -89,10 +89,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     sectionDesc: {
-        flexDirection: 'column',
         justifyContent: 'space-between',
         height: 130,
-        padding: 10
+        padding: 10,
     }
 });
 

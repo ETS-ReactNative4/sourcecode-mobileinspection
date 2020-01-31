@@ -4,7 +4,7 @@ import { Card, CardItem, } from 'native-base';
 import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import MapView, {Marker, Polygon, Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView, { Marker, Polygon, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import { RNSlidingButton, SlideDirection } from 'rn-sliding-button';
 import TaskService from '../../Database/TaskServices';
 import TaskServices from '../../Database/TaskServices';
@@ -17,7 +17,7 @@ import ModalAlert from '../../Component/ModalAlert';
 import ModalAlertConfirmation from '../../Component/ModalAlertConfirmation';
 import { retrieveData } from '../../Database/Resources';
 import ModalLoading from "../../Component/ModalLoading";
-import {AlertContent} from "../../Themes";
+import Font from "../../Themes/Fonts";
 
 const LATITUDE = -2.1890660;
 const LONGITUDE = 111.3609873;
@@ -96,7 +96,7 @@ class KondisiBarisAkhir extends Component {
             timer: 0,
             showAlertTimer: false,
 
-            modalLoading:{
+            modalLoading: {
                 showModal: false,
                 title: "Sabar Ya..",
                 message: "Memuat Map..."
@@ -118,7 +118,7 @@ class KondisiBarisAkhir extends Component {
 
         this.didFocus = this.props.navigation.addListener(
             'didFocus',
-            ()=>{
+            () => {
                 this.timerStart()
             }
         );
@@ -129,13 +129,13 @@ class KondisiBarisAkhir extends Component {
         this.didFocus.remove();
     }
 
-    timerStart(){
-        let timerInterval = setInterval(()=>{
+    timerStart() {
+        let timerInterval = setInterval(() => {
             let detik = parseInt(this.state.timer) + 1;
 
-            if(detik > 60){
+            if (detik > 60) {
                 Vibration.vibrate(500);
-                if(this.state.showAlertTimer === false && this.state.showModal === false){
+                if (this.state.showAlertTimer === false && this.state.showModal === false) {
                     this.setState({
                         showAlertTimer: true
                     })
@@ -180,11 +180,12 @@ class KondisiBarisAkhir extends Component {
         let totalDistance = 0;
         let getTrack = TaskServices.findBy("TM_INSPECTION_TRACK", "BLOCK_INSPECTION_CODE", this.state.inspeksiHeader.BLOCK_INSPECTION_CODE);
         if (getTrack.length > 0) {
-            if(getTrack.length >= 2){
+            if (getTrack.length >= 2) {
                 for (let count = 0; count < getTrack.length - 2; count++) {
                     let getTrackDistance = geolib.getDistance(
                         { latitude: parseFloat(getTrack[count].LAT_TRACK), longitude: parseFloat(getTrack[count].LONG_TRACK) },
-                        { latitude: parseFloat(getTrack[count + 1].LAT_TRACK), longitude: parseFloat(getTrack[count + 1].LONG_TRACK)
+                        {
+                            latitude: parseFloat(getTrack[count + 1].LAT_TRACK), longitude: parseFloat(getTrack[count + 1].LONG_TRACK)
                         });
                     // let getTrackDistance = geolib.getDistance({ latitude: parseFloat(getTrack[count].LAT_TRACK), longitude: parseFloat(getTrack[count].LONG_TRACK) }, { latitude: parseFloat(getTrack[count + 1].LAT_TRACK), longitude: parseFloat(getTrack[count + 1].LONG_TRACK) });
                     totalDistance = totalDistance + getTrackDistance;
@@ -365,7 +366,7 @@ class KondisiBarisAkhir extends Component {
         }
         else {
             if (!this.checkJarakBaris(this.state.txtBaris)) {
-                if(this.state.latitude === 0.0 || this.state.longitude === 0.0){
+                if (this.state.latitude === 0.0 || this.state.longitude === 0.0) {
                     let getTracking = TaskServices.getLastTracking(this.state.dataUsual.BLOCK_INSPECTION_CODE);
                     let latestLat = getTracking.LAT_TRACK;
                     let latestLon = getTracking.LONG_TRACK;
@@ -373,7 +374,7 @@ class KondisiBarisAkhir extends Component {
                     this.setState({
                         latitude: parseFloat(latestLat),
                         longitude: parseFloat(latestLon)
-                    },()=>{
+                    }, () => {
                         this.saveData(false)
                     });
                 }
@@ -533,7 +534,7 @@ class KondisiBarisAkhir extends Component {
     saveData(isFromAlert) {
         let insertTime = getTodayDate('YYYY-MM-DD HH:mm:ss');
 
-        if(this.state.from !== 'history'){
+        if (this.state.from !== 'history') {
             var modelInspeksiH = {
                 BLOCK_INSPECTION_CODE: this.state.inspeksiHeader.BLOCK_INSPECTION_CODE,
                 ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
@@ -769,7 +770,7 @@ class KondisiBarisAkhir extends Component {
                     submitText={"Selesai"}
                     message={"Kamu bisa selesaikan inspeksi atau lanjutkan inspeksi"}
                     title={"Sudah selesai inspeksi?"}
-                    onPressSubmit={()=>{
+                    onPressSubmit={() => {
                         if (DATA_LOGIN[0].USER_ROLE === 'ASISTEN_LAPANGAN') {
                             if (this.has2Row() >= 1) {
                                 this.saveData(true);
@@ -783,7 +784,7 @@ class KondisiBarisAkhir extends Component {
                                 });
                             }
                         }
-                        else{
+                        else {
                             this.saveData(true);
                         }
                     }}
@@ -800,7 +801,7 @@ class KondisiBarisAkhir extends Component {
                         <View style={[styles.stepperNumber, { backgroundColor: Colors.brand }]}>
                             <Text style={styles.stepperNumberText}>1</Text>
                         </View>
-                        <Text style={[Fonts.style.caption, { paddingLeft: 3, color: Colors.brand }]}>Pilih Lokasi</Text>
+                        <Text style={[Fonts.style.caption, { paddingLeft: 3, color: Colors.brand, fontFamily: Font.book }]}>Pilih Lokasi</Text>
                         <View>
                             <Icon
                                 name="chevron-right"
@@ -814,7 +815,7 @@ class KondisiBarisAkhir extends Component {
                         <View style={[styles.stepperNumber, { backgroundColor: Colors.buttonDisabled }]}>
                             <Text style={styles.stepperNumberText}>2</Text>
                         </View>
-                        <Text style={[Fonts.style.caption, { paddingLeft: 3, color: Colors.textSecondary }]}>Kondisi Baris</Text>
+                        <Text style={[Fonts.style.caption, { paddingLeft: 3, color: Colors.textSecondary, fontFamily: Font.book }]}>Kondisi Baris</Text>
                         <View>
                             <Icon
                                 name="chevron-right"
@@ -828,7 +829,7 @@ class KondisiBarisAkhir extends Component {
                         <View style={[styles.stepperNumber, { backgroundColor: Colors.buttonDisabled }]}>
                             <Text style={styles.stepperNumberText}>3</Text>
                         </View>
-                        <Text style={[Fonts.style.caption, { paddingLeft: 3, color: Colors.textSecondary }]}>Summary</Text>
+                        <Text style={[Fonts.style.caption, { paddingLeft: 3, color: Colors.textSecondary, fontFamily: Font.book }]}>Summary</Text>
                     </View>
                 </View>
 
@@ -896,10 +897,10 @@ class KondisiBarisAkhir extends Component {
                         <Card style={[styles.cardContainer]}>
                             <CardItem>
                                 <View style={{ flex: 1 }}>
-                                    <Text style={{ color: 'black' }}>Total Waktu dan Jarak:</Text>
-                                    <Text style={{ color: 'black' }}>{this.state.menit} Menit dan {this.state.jarak} m</Text>
+                                    <Text style={{ color: 'black', fontFamily: Font.book }}>Total Waktu dan Jarak:</Text>
+                                    <Text style={{ color: 'black', fontFamily: Font.book }}>{this.state.menit} Menit dan {this.state.jarak} m</Text>
                                     <View style={{ flexDirection: 'row', marginTop: 10 }}>
-                                        <Text style={{ color: 'grey' }}>Lanjut Baris Berikutnya ?</Text>
+                                        <Text style={{ color: 'grey', fontFamily: Font.book }}>Lanjut Baris Berikutnya ?</Text>
                                         <Switch
                                             thumbTintColor={this.state.switchLanjut ? Colors.brand : 'red'}
                                             onTintColor={'#5bc236'}
@@ -913,11 +914,11 @@ class KondisiBarisAkhir extends Component {
                                     </View>
                                     {this.state.switchLanjut &&
                                         <View style={{ flexDirection: 'row', marginTop: 15 }}>
-                                            <Text style={{ color: 'grey', marginTop: 15 }}>ke Baris Berapa ?</Text>
+                                            <Text style={{ color: 'grey', marginTop: 15, fontFamily: Font.book }}>ke Baris Berapa ?</Text>
                                             <TextInput
                                                 keyboardType={'numeric'}
                                                 underlineColorAndroid={'transparent'}
-                                                style={[styles.searchInput, { marginBottom: 10, position: 'absolute', right: 0 }]}
+                                                style={[styles.searchInput, { marginBottom: 10, position: 'absolute', right: 0, fontFamily: Font.book }]}
                                                 value={this.state.txtBaris}
                                                 maxLength={3}
                                                 onChangeText={(baris) => {
@@ -939,7 +940,7 @@ class KondisiBarisAkhir extends Component {
                                                 <TouchableOpacity style={[styles.bubble, this.state.tumbButtonSlide]} onPress={() => { }}>
                                                     <Icon name={"chevron-right"} size={20} color="white" />
                                                 </TouchableOpacity>
-                                                <Text numberOfLines={1} style={[styles.titleText, { alignItems: 'center' }]}>
+                                                <Text numberOfLines={1} style={[styles.titleText, { alignItems: 'center', fontFamily: Font.book }]}>
                                                     {this.state.switchLanjut ? 'Lanjut' : 'Selesai'}
                                                 </Text>
                                             </View>

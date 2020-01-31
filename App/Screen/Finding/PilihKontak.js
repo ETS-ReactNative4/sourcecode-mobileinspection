@@ -4,6 +4,7 @@
 import React, { Component } from 'react';
 import { BackHandler, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import TaskServices from '../../Database/TaskServices';
+import { Fonts } from '../../Themes';
 
 // var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
@@ -186,8 +187,8 @@ class PilihKontak extends Component {
                   <View
                     style={{ paddingVertical: 5, paddingHorizontal: 10 }}
                   >
-                    <Text style={{ fontSize: 15, color: 'black' }}>{item.fullName}</Text>
-                    <Text style={{ fontSize: 13, color: 'grey', marginTop: 3 }}>{item.userRole.replace(/_/g, " ")}</Text>
+                    <Text style={{ fontSize: 15, color: 'black', fontFamily: Fonts.book }}>{item.fullName}</Text>
+                    <Text style={{ fontSize: 13, color: 'grey', marginTop: 3, fontFamily: Fonts.book }}>{item.userRole.replace(/_/g, " ")}</Text>
                   </View>
                 </TouchableOpacity>
               )
@@ -218,12 +219,13 @@ var styles = StyleSheet.create({
   },
   textinput: {
     flex: 1,
-    paddingLeft: 5,
+    paddingLeft: 12,
     marginLeft: 5,
     marginRight: 5,
     height: 45,
     backgroundColor: '#f2f2f2',
-    ...border
+    ...border,
+    fontFamily: Fonts.medium
   }
 });
 const border = {

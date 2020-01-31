@@ -16,7 +16,7 @@ import Header from '../../Component/Header'
 import FeatureLainnya from '../../Component/FeatureLainnya'
 
 import { getPhoto, getThumnail, syncDays, notifInbox, isNotUserMill } from '../../Lib/Utils';
-import { Images } from '../../Themes'
+import { Images, Fonts } from '../../Themes'
 import {
   dirDatabase,
   dirSummary,
@@ -25,7 +25,7 @@ import {
 } from '../../Lib/dirStorage';
 import RNFS from 'react-native-fs';
 import { retrieveData } from '../../Database/Resources';
-import {HeaderWithButton} from "../../Component/Header/HeaderWithButton";
+import { HeaderWithButton } from "../../Component/Header/HeaderWithButton";
 
 export default class MoreScreen extends Component {
 
@@ -95,14 +95,14 @@ export default class MoreScreen extends Component {
       <View style={styles.container}>
 
         {/* HEADER */}
-          <HeaderWithButton
-              title={"Menu Lainnya"}
-              iconLeft={require("../../Images/icon/ic_arrow_left.png")}
-              rightVectorIcon={true}
-              iconRight={null}
-              onPressLeft={()=>{this.props.navigation.pop()}}
-              onPressRight={null}
-          />
+        <HeaderWithButton
+          title={"Menu Lainnya"}
+          iconLeft={require("../../Images/icon/ic_arrow_left.png")}
+          rightVectorIcon={true}
+          iconRight={null}
+          onPressLeft={() => { this.props.navigation.pop() }}
+          onPressRight={null}
+        />
 
         <ScrollView style={styles.container}>
           <ModalConfirmation
@@ -124,11 +124,10 @@ export default class MoreScreen extends Component {
             title={this.state.title}
             message={this.state.message} />
 
-          <View>
+          <View style={{ flex: 1, }}>
 
             {/* Menu Peta Lokasi  */}
             <FeatureLainnya
-              lineTop={true}
               sizeIcon={20}
               title={'Peta Lokasi'}
               icon={Images.ic_lainnya_peta}
@@ -136,7 +135,6 @@ export default class MoreScreen extends Component {
 
             {/* Menu Export Database */}
             <FeatureLainnya
-              lineTop={true}
               sizeIcon={20}
               title={'Export Database'}
               icon={Images.ic_lainnya_database}
@@ -149,12 +147,10 @@ export default class MoreScreen extends Component {
               onPressSignOut={() => this.setState({ showConfirm: true })} />
 
 
-            <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: 10 }}>
-              <Text>Versi: {DeviceInfo.getVersion()}</Text>
+            <View style={{ flex: 1, justifyContent: 'flex-end', alignItems: 'center', marginTop: 20 }}>
+              <Text style={{ fontFamily: Fonts.book }}>Versi: {DeviceInfo.getVersion()}</Text>
             </View>
           </View>
-
-
         </ScrollView>
       </View>
 

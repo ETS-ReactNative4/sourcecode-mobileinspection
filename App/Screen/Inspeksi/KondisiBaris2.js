@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
     AsyncStorage,
     BackHandler,
@@ -14,11 +14,12 @@ import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
 import BtnStyles from './Component/ButtonStyle'
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {RNSlidingButton, SlideDirection} from 'rn-sliding-button';
+import { RNSlidingButton, SlideDirection } from 'rn-sliding-button';
 import Entypo from 'react-native-vector-icons/Entypo'
-import {getTodayDate} from '../../Lib/Utils';
+import { getTodayDate } from '../../Lib/Utils';
 import R from 'ramda';
 import ModalAlert from '../../Component/ModalAlert'
+import Font from '../../Themes/Fonts'
 
 class KondisiBaris2 extends Component {
 
@@ -839,7 +840,7 @@ class KondisiBaris2 extends Component {
                         <View style={[styles.stepperNumber, { backgroundColor: Colors.brand }]}>
                             <Text style={styles.stepperNumberText}>1</Text>
                         </View>
-                        <Text style={[Fonts.style.caption, { paddingLeft: 3, color: Colors.brand }]}>Pilih Lokasi</Text>
+                        <Text style={[Fonts.style.caption, { paddingLeft: 3, color: Colors.brand, fontFamily: Font.book }]}>Pilih Lokasi</Text>
                         <View>
                             <Icon
                                 name="chevron-right"
@@ -853,7 +854,7 @@ class KondisiBaris2 extends Component {
                         <View style={[styles.stepperNumber, { backgroundColor: Colors.brand }]}>
                             <Text style={styles.stepperNumberText}>2</Text>
                         </View>
-                        <Text style={[Fonts.style.caption, { paddingLeft: 3, color: Colors.brand }]}>Kondisi Baris</Text>
+                        <Text style={[Fonts.style.caption, { paddingLeft: 3, color: Colors.brand, fontFamily: Font.book }]}>Kondisi Baris</Text>
                         <View>
                             <Icon
                                 name="chevron-right"
@@ -867,7 +868,7 @@ class KondisiBaris2 extends Component {
                         <View style={[styles.stepperNumber, { backgroundColor: Colors.buttonDisabled }]}>
                             <Text style={styles.stepperNumberText}>2</Text>
                         </View>
-                        <Text style={[Fonts.style.caption, { paddingLeft: 3, color: Colors.textSecondary }]}>Summary</Text>
+                        <Text style={[Fonts.style.caption, { paddingLeft: 3, color: Colors.textSecondary, fontFamily: Font.book }]}>Summary</Text>
                     </View>
                 </View>
 
@@ -877,8 +878,8 @@ class KondisiBaris2 extends Component {
                         <Image source={require('../../Images/icon/ic_finish_walking.png')} style={styles.icon} />
                     </View>
                     <View style={{ flex: 7 }}>
-                        <Text style={{ fontSize: 16, fontWeight: '500' }}>Diujung Baris</Text>
-                        <Text style={{ fontSize: 12, color: 'grey' }}>Ini untuk kamu input nilai baris.</Text>
+                        <Text style={{ fontSize: 16, fontFamily: Font.bold }}>Diujung Baris</Text>
+                        <Text style={{ fontSize: 12, color: 'grey', fontFamily: Font.book }}>Ini untuk kamu input nilai baris.</Text>
                     </View>
                 </View>
 
@@ -888,12 +889,12 @@ class KondisiBaris2 extends Component {
 
                 {/*INPUT*/}
                 <View style={{ backgroundColor: 'white', padding: 20 }}>
-                    <Text>Perawatan</Text>
+                    <Text style={{ fontFamily: Font.bold }}>Perawatan</Text>
                     <View style={{ height: 1, backgroundColor: '#989898', marginBottom: 5, marginTop: 5 }} />
 
                     {this.state.showPiringan &&
                         <View style={{ marginTop: 15 }}>
-                            <Text style={{ color: 'grey' }}>Piringan</Text>
+                            <Text style={{ color: 'grey', fontFamily: Font.book }}>Piringan</Text>
                             <View style={{ flexDirection: 'row', marginTop: 10 }}>
                                 <TouchableOpacity style={this.state.btnPiringanRehab}
                                     onPress={() => this.changeColor('PIRINGAN', 'REHAB')}>
@@ -916,7 +917,7 @@ class KondisiBaris2 extends Component {
 
                     {this.state.showSarkul &&
                         <View style={{ marginTop: 15 }}>
-                            <Text style={{ color: 'grey' }}>Pasar Pikul</Text>
+                            <Text style={{ color: 'grey', fontFamily: Font.book }}>Pasar Pikul</Text>
                             <View style={{ flexDirection: 'row', marginTop: 10 }}>
                                 <TouchableOpacity style={this.state.btnSarkulRehab}
                                     onPress={() => this.changeColor('SARKUL', 'REHAB')}>
@@ -942,7 +943,7 @@ class KondisiBaris2 extends Component {
                     {this.state.showTph &&
                         <View style={{ marginTop: 15 }}>
                             <View style={{ flex: 1, flexDirection: 'row' }}>
-                                <Text style={{ color: 'grey' }}>TPH</Text>
+                                <Text style={{ color: 'grey', fontFamily: Font.book }}>TPH</Text>
 
                                 <Switch
                                     thumbTintColor={this.state.switchTPH ? Colors.brand : 'red'}
@@ -985,7 +986,7 @@ class KondisiBaris2 extends Component {
 
                     {this.state.showGwg &&
                         <View style={{ marginTop: 15 }}>
-                            <Text style={{ color: 'grey' }}>Gawangan</Text>
+                            <Text style={{ color: 'grey', fontFamily: Font.book }}>Gawangan</Text>
                             <View style={{ flexDirection: 'row', marginTop: 10 }}>
                                 <TouchableOpacity style={this.state.btnGWGRehab}
                                     onPress={() => this.changeColor('GWG', 'REHAB')}>
@@ -1008,7 +1009,7 @@ class KondisiBaris2 extends Component {
 
                     {this.state.showPrun &&
                         <View style={{ marginTop: 15 }}>
-                            <Text style={{ color: 'grey' }}>Prunning</Text>
+                            <Text style={{ color: 'grey', fontFamily: Font.book }}>Prunning</Text>
                             <View style={{ flexDirection: 'row', marginTop: 10 }}>
                                 <TouchableOpacity style={this.state.btnPRUNRehab}
                                     onPress={() => this.changeColor('PRUN', 'REHAB')}>
@@ -1032,7 +1033,7 @@ class KondisiBaris2 extends Component {
                     {this.state.showTipa &&
                         <View style={{ marginTop: 15 }}>
                             <View style={{ flex: 1, flexDirection: 'row' }}>
-                                <Text style={{ color: 'grey' }}>Titi Panen</Text>
+                                <Text style={{ color: 'grey', fontFamily: Font.book }}>Titi Panen</Text>
                                 <Switch
                                     thumbTintColor={this.state.switchTIPA ? Colors.brand : 'red'}
                                     onTintColor={'#5bc236'}
@@ -1080,7 +1081,7 @@ class KondisiBaris2 extends Component {
 
                     {this.state.showKastrasi &&
                         <View style={{ marginTop: 15 }}>
-                            <Text style={{ color: 'grey' }}>Kastrasi</Text>
+                            <Text style={{ color: 'grey', fontFamily: Font.book }}>Kastrasi</Text>
                             <View style={{ flexDirection: 'row', marginTop: 10 }}>
                                 <TouchableOpacity style={this.state.btnKastrasiRehab}
                                     onPress={() => this.changeColor('KAS', 'REHAB')}>
@@ -1103,7 +1104,7 @@ class KondisiBaris2 extends Component {
 
                     {this.state.showSanitasi &&
                         <View style={{ marginTop: 15 }}>
-                            <Text style={{ color: 'grey' }}>Sanitasi</Text>
+                            <Text style={{ color: 'grey', fontFamily: Font.book }}>Sanitasi</Text>
                             <View style={{ flexDirection: 'row', marginTop: 10 }}>
                                 <TouchableOpacity style={this.state.btnSanitasiRehab}
                                     onPress={() => this.changeColor('SANIT', 'REHAB')}>
@@ -1130,11 +1131,11 @@ class KondisiBaris2 extends Component {
                 <View style={{ height: 10, backgroundColor: '#F5F5F5', marginTop: 10 }} />
 
                 <View style={{ backgroundColor: 'white', padding: 20 }}>
-                    <Text>Pemupukan</Text>
+                    <Text style={{ fontFamily: Font.demi }}>Pemupukan</Text>
                     <View style={{ height: 1, backgroundColor: '#989898', marginBottom: 5, marginTop: 5 }} />
 
                     <View style={{ marginTop: 15 }}>
-                        <Text style={{ color: 'grey' }}>Sistem Penaburan</Text>
+                        <Text style={{ color: 'grey', fontFamily: Font.book }}>Sistem Penaburan</Text>
                         <View style={{ flexDirection: 'row', marginTop: 10 }}>
                             <TouchableOpacity style={this.state.btnPENABURRehab}
                                 onPress={() => this.changeColor('PENABUR', 'REHAB')}>
@@ -1156,7 +1157,7 @@ class KondisiBaris2 extends Component {
                     </View>
 
                     <View style={{ marginTop: 15 }}>
-                        <Text style={{ color: 'grey' }}>Kondisi Pupuk</Text>
+                        <Text style={{ color: 'grey', fontFamily: Font.book }}>Kondisi Pupuk</Text>
                         <View style={{ flexDirection: 'row', marginTop: 10 }}>
                             <TouchableOpacity style={this.state.btnPUPUKRehab}
                                 onPress={() => this.changeColor('PUPUK', 'REHAB')}>
@@ -1308,12 +1309,14 @@ const styles = {
     buttonText: {
         fontSize: 13,
         color: '#ffffff',
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: Font.book
     },
     buttonText2: {
         fontSize: 13,
         color: '#000000',
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: Font.book
     },
     buttonSlide: {
         width: 250,
@@ -1340,7 +1343,7 @@ const styles = {
         color: '#A9A9A9',
         paddingHorizontal: 18,
         paddingVertical: 12,
-
+        fontFamily: Font.book
     },
     icon: {
         alignContent: 'flex-end',

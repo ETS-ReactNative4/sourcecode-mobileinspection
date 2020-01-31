@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View, BackHandler, NetInfo} from 'react-native'
+import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View, BackHandler, NetInfo } from 'react-native'
 import { Card, Container, Content } from 'native-base'
 import Colors from '../../Constant/Colors'
 import FastImage from 'react-native-fast-image'
@@ -13,10 +13,10 @@ import { changeFormatDate, dateDisplayMobile, dateDisplayMobileWithoutHours, get
 
 import ModalAlert from '../../Component/ModalAlert';
 import ModalAlertBack from '../../Component/ModalAlert';
-import { AlertContent, Images } from '../../Themes';
+import { AlertContent, Images, Fonts } from '../../Themes';
 import { getColor, getIconProgress, getRating, getStatusImage, getStatusTemuan } from '../../Themes/Resources';
 import { getBlokName, getContactName, getEstateName, getStatusBlok } from '../../Database/Resources';
-import {dirPhotoTemuan} from "../../Lib/dirStorage";
+import { dirPhotoTemuan } from "../../Lib/dirStorage";
 import { downloadProfileImage } from '../Sync/Download/Image/Profile';
 
 const IconRating = (props) => {
@@ -117,19 +117,19 @@ class DetailFindingScreenRedesign extends Component {
         return true;
     }
 
-    getProfileImage(){
+    getProfileImage() {
         let getComment = TaskServices.findBy("TR_FINDING_COMMENT", "FINDING_CODE", this.state.data.FINDING_CODE).sorted('INSERT_TIME', true);
         NetInfo.isConnected.fetch().then(isConnected => {
             if (isConnected) {
                 downloadProfileImage(this.state.data.INSERT_USER)
-                    .then(()=>{
+                    .then(() => {
                         //update value after fetch profile image
                         this.setState({
                             imageFilePath: TaskServices.getImagePath(this.state.data.INSERT_USER)
                         });
                     });
                 downloadProfileImage(getComment[0].USER_AUTH_CODE)
-                    .then(()=>{
+                    .then(() => {
                         //update value after fetch profile image
                         this.setState({
                             imageFilePathCommentator: TaskServices.getImagePath(getComment[0].USER_AUTH_CODE)
@@ -299,8 +299,8 @@ class DetailFindingScreenRedesign extends Component {
                             source={this.state.imageFilePath}
                         />
                         <View style={{ flex: 1 }} >
-                            <Text style={{ fontSize: 14, fontWeight: 'bold', color: 'black' }}>{this.state.fullName}</Text>
-                            <Text style={{ fontSize: 12, color: 'grey', marginTop: 3 }}>
+                            <Text style={{ fontSize: 14, fontFamily: Fonts.bold, color: 'black' }}>{this.state.fullName}</Text>
+                            <Text style={{ fontSize: 12, color: 'grey', marginTop: 3, fontFamily: Fonts.book }}>
                                 {this.state.insertTime}
                             </Text>
                         </View>
@@ -336,8 +336,8 @@ class DetailFindingScreenRedesign extends Component {
                                             {this.state.images[0] != "NO IMAGES" &&
                                                 <Image
                                                     style={{ alignItems: 'center', width: '100%', height: '100%' }}
-                                                    source={{uri: `file://${dirPhotoTemuan}/${item.IMAGE_NAME}`}}
-                                                    // source={{uri: 'file://' + item.IMAGE_PATH_LOCAL}}
+                                                    source={{ uri: `file://${dirPhotoTemuan}/${item.IMAGE_NAME}` }}
+                                                // source={{uri: 'file://' + item.IMAGE_PATH_LOCAL}}
                                                 />
                                                 // <FastImage style={{ alignItems: 'center', width: '100%', height: '100%' }}
                                                 //         source={{
@@ -354,7 +354,7 @@ class DetailFindingScreenRedesign extends Component {
                                                 paddingLeft: 15
                                             }}>
                                                 <Image style={{ marginTop: 2, height: 28, width: 28 }} source={sources}></Image>
-                                                <Text style={{ marginLeft: 10, color: 'white', fontSize: 14, marginTop: 8 }}>{this.state.data.STATUS}</Text>
+                                                <Text style={{ marginLeft: 10, color: 'white', fontSize: 14, marginTop: 8, fontFamily: Fonts.book }}>{this.state.data.STATUS}</Text>
                                             </View>
                                         </View>
                                     )}
@@ -399,7 +399,8 @@ class DetailFindingScreenRedesign extends Component {
                                 </Image>
                                 <Text
                                     style={{
-                                        paddingHorizontal: 5
+                                        paddingHorizontal: 5,
+                                        fontFamily: Fonts.medium
                                     }}>
                                     Lihat Lokasi
                                 </Text>
@@ -418,7 +419,8 @@ class DetailFindingScreenRedesign extends Component {
                                 </Image>
                                 <Text
                                     style={{
-                                        paddingHorizontal: 5
+                                        paddingHorizontal: 5,
+                                        fontFamily: Fonts.medium
                                     }}>
                                     Komentar
                                 </Text>
@@ -432,7 +434,7 @@ class DetailFindingScreenRedesign extends Component {
                         </Image> */}
 
                         <View style={{ flex: 2, marginLeft: 16 }}>
-                            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{this.state.lokasiBlok}</Text>
+                            <Text style={{ fontSize: 16, fontFamily: Fonts.demi }}>{this.state.lokasiBlok}</Text>
 
                             <View style={styles.column}>
                                 <Text style={styles.label}>Kategori </Text>
@@ -466,7 +468,7 @@ class DetailFindingScreenRedesign extends Component {
                     </View>
 
                     <Text style={[styles.title, { paddingLeft: 15, paddingRight: 15 }]}>Deskripsi:</Text>
-                    <Text style={{ fontSize: 14, paddingLeft: 15, paddingRight: 15 }}> {this.state.data.FINDING_DESC}</Text>
+                    <Text style={{ fontSize: 14, paddingLeft: 15, paddingRight: 15, fontFamily: Fonts.book }}> {this.state.data.FINDING_DESC}</Text>
 
                     <View style={{ flex: 1, paddingLeft: 15, paddingRight: 15 }}>
                         <Text style={[styles.title, { marginBottom: 5 }]}>Progress:</Text>
@@ -599,7 +601,7 @@ class DetailFindingScreenRedesign extends Component {
                                     </Image>
                                 </View>
                             </View>
-                            <Text style={{ fontWeight: 'bold' }}>Pesan untuk {contactAsign.FULLNAME}</Text>
+                            <Text style={{ fontWeight: 'bold', fontFamily: Fonts.book }}>Pesan untuk {contactAsign.FULLNAME}</Text>
                             <Text>{this.state.ratingMsg}</Text>
                         </View>
                     }
@@ -650,27 +652,30 @@ class DetailFindingScreenRedesign extends Component {
         if (commentCount > 0) {
             return <View style={{ marginVertical: 5, marginHorizontal: 15 }}>
                 <Text style={{
-                    fontWeight: 'bold',
+                    fontFamily: Fonts.demi,
                     fontSize: 15,
+
                 }}>
                     Komentar Terakhir ({commentCount})
                 </Text>
-                <View style={{flexDirection: 'row', marginTop: 10}}>
+                <View style={{ flexDirection: 'row', marginTop: 10 }}>
                     <Image
                         style={{ marginRight: 16, width: 40, height: 40, borderRadius: 20 }}
                         source={this.state.imageFilePathCommentator}
                     />
-                    <View>
+                    <View style={{ flex: 1 }}>
                         <Text>
                             <Text style={{
                                 fontSize: 14,
-                                fontWeight: 'bold'
+                                fontFamily: Fonts.bold
                             }}>
                                 {getComment[0].USERNAME}{" "}
                             </Text>
                             <Text
                                 style={{
-                                    fontSize: 14
+                                    fontSize: 14,
+                                    fontFamily: Fonts.book,
+                                    flex: 1
                                 }}
                                 onPress={() => {
                                     this.props.navigation.navigate("HomeScreenComment", { findingCode: this.state.data.FINDING_CODE })
@@ -685,7 +690,8 @@ class DetailFindingScreenRedesign extends Component {
                             <Text style={{
                                 fontSize: 12,
                                 paddingVertical: 5,
-                                color: "rgba(202,194,194, 1)"
+                                color: "rgba(202,194,194, 1)",
+                                fontFamily: Fonts.book
                             }}>
                                 Lihat {commentCount} Komentar
                             </Text>
@@ -743,7 +749,8 @@ const styles = StyleSheet.create({
     },
     label: {
         width: '40%',
-        fontSize: 14
+        fontSize: 14,
+        fontFamily: Fonts.medium
     },
     column: {
         flex: 1,
@@ -753,12 +760,13 @@ const styles = StyleSheet.create({
     item: {
         width: '60%',
         color: "#999",
-        fontSize: 14
+        fontSize: 14,
+        fontFamily: Fonts.book
     },
     title: {
-        fontWeight: 'bold',
         fontSize: 15,
-        marginTop: 16
+        marginTop: 16,
+        fontFamily: Fonts.demi
     },
     cardContainer: {
         borderRadius: 10,

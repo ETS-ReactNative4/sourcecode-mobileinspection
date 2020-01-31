@@ -5,7 +5,7 @@ import Colors from '../Constant/Colors';
 import TaskServices from '../Database/TaskServices';
 import moment from 'moment';
 import { dateDisplayMobile } from '../Lib/Utils'
-import { Images } from '../Themes';
+import { Images, Fonts } from '../Themes';
 
 export default class Inbox extends React.Component {
 
@@ -145,13 +145,13 @@ export default class Inbox extends React.Component {
 						source={sources}></Image>
 					<View style={{ width: '85%', paddingRight: 10 }} >
 						<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-							<Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}>{title}</Text>
-							<Text style={{ fontSize: 10, color: Colors.textSecondary, alignSelf: 'flex-end', fontWeight: 'bold' }}>
+							<Text style={{ fontSize: 16, color: 'black', fontFamily: Fonts.demi }}>{title}</Text>
+							<Text style={{ fontSize: 10, color: Colors.textSecondary, alignSelf: 'flex-end', fontFamily: Fonts.demi, }}>
 								{dateDisplayMobile(notifCreateDate)}
 							</Text>
 						</View>
 						<View style={{ flexDirection: 'row' }}>
-							<Text style={{ fontSize: 12, color: 'black' }}>{desc}</Text>
+							<Text style={{ fontSize: 12, color: 'black', fontFamily: Fonts.book, }}>{desc}</Text>
 						</View>
 					</View>
 				</TouchableOpacity>

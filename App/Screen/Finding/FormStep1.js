@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
     BackHandler,
     FlatList,
@@ -10,7 +10,7 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
-import {Card, Container, Content,} from 'native-base';
+import { Card, Container, Content, } from 'native-base';
 import ModalAlert from '../../Component/ModalAlert';
 import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
@@ -21,6 +21,7 @@ import TaskServices from '../../Database/TaskServices'
 import RNFS from 'react-native-fs';
 import MapView from 'react-native-maps';
 import ModalAlertConfirmation from "../../Component/ModalAlertConfirmation";
+import Font from '../../Themes/Fonts'
 
 const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
 const LATITUDE = -2.952421;
@@ -315,7 +316,7 @@ export default class FormStep1 extends Component {
                                         <Text
                                             style={[
                                                 Fonts.style.caption,
-                                                { paddingLeft: 3, color: rowData.step == initialPage ? Colors.brand : Colors.textSecondary }
+                                                { fontFamily: Font.book, paddingLeft: 3, color: rowData.step == initialPage ? Colors.brand : Colors.textSecondary }
                                             ]}
                                         >
                                             {rowData.title}
@@ -384,7 +385,7 @@ const style = {
         borderRadius: 12,
         justifyContent: 'center'
     },
-    stepperNumberText: [Fonts.style.caption, { textAlign: 'center', color: Colors.textDark }],
+    stepperNumberText: [Fonts.style.caption, { textAlign: 'center', color: Colors.textDark, fontFamily: Font.bold }],
     stepperNext: { alignSelf: 'flex-end', paddingRight: 4 },
     sectionHeader: [
         Fonts.style.caption,
@@ -428,10 +429,10 @@ const style = {
         justifyContent: 'center',
     },
     buttonText: {
-        fontSize: 14,
-        fontWeight: '600',
+        fontSize: 15,
         color: '#ffffff',
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: Font.bold
     },
     cardContainer: {
         flex: 1,

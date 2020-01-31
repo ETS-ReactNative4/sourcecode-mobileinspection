@@ -8,6 +8,7 @@ import TaskServices from '../../Database/TaskServices'
 import { getTodayDate, isNotUserMill } from '../../Lib/Utils'
 
 import ModalAlertConfirmation from '../../Component/ModalAlert';
+import { Fonts } from '../../Themes';
 
 class KriteriaBuah extends Component {
 
@@ -333,12 +334,12 @@ class KriteriaBuah extends Component {
                 <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', }}>
                     <View style={{ marginRight: 1 }}>
                         <TouchableOpacity style={[this.state.btnAda, styles.buttonSide]} onPress={() => { this.getValueAndChangeColor('ADA', index, arr) }}>
-                            <Text style={this.state.txtAda}>Ada</Text>
+                            <Text style={[this.state.txtAda, { fontFamily: Fonts.book }]}>Ada</Text>
                         </TouchableOpacity>
                     </View>
                     <View>
                         <TouchableOpacity style={[this.state.btnTdkAda, styles.buttonSide]} onPress={() => { this.getValueAndChangeColor('TIDAK ADA', index, arr) }}>
-                            <Text style={this.state.txtTdkAda}>Tidak Ada</Text>
+                            <Text style={[this.state.txtTdkAda, { fontFamily: Fonts.book }]}>Tidak Ada</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -492,8 +493,8 @@ class KriteriaBuah extends Component {
 
                 {/*LABEL*/}
                 <View style={styles.containerHeader}>
-                    <Text style={{ fontSize: 17, fontWeight: '500' }}>{`${this.state.blockName}${statusBlock}/${this.getEstateName(this.state.werks)}`}</Text>
-                    <Text style={{ fontSize: 14, color: 'grey', fontWeight: '500', marginTop: 10 }}>TPH {this.state.TPH}</Text>
+                    <Text style={{ fontSize: 17, fontFamily: Fonts.demi }}>{`${this.state.blockName}${statusBlock}/${this.getEstateName(this.state.werks)}`}</Text>
+                    <Text style={{ fontSize: 14, color: 'grey', fontFamily: Fonts.demi, marginTop: 10 }}>TPH {this.state.TPH}</Text>
                 </View>
 
                 <View style={{ height: 10, backgroundColor: '#F5F5F5', marginTop: 10 }} />
@@ -501,12 +502,12 @@ class KriteriaBuah extends Component {
                 {/*INPUT*/}
                 <View style={{ backgroundColor: 'white' }}>
 
-                    <Text style={{ fontSize: 20, fontWeight: '500', paddingLeft: 20, marginTop: 10 }}>Hasil Panen</Text>
+                    <Text style={{ fontSize: 20, fontFamily: Fonts.demi, paddingLeft: 20, marginTop: 10 }}>Hasil Panen</Text>
                     {/*dynamic render Hasil Panen*/}
                     {this.state.arrHasilPanen.map((data, idx) => this.renderDynamicComp(data, idx, this.state.valueHasilPanen))}
                     {/* total janjang */}
                     <View style={styles.containerLabel}>
-                        <Text style={{ fontSize: 16, color: 'grey', fontWeight: '500', flex: 2 }}>Total Janjang</Text>
+                        <Text style={{ fontSize: 16, color: 'grey', fontFamily: Fonts.demi, flex: 2 }}>Total Janjang</Text>
                         <View style={[styles.containerInput, { flex: 1 }]}>
                             <TextInput
                                 editable={false}
@@ -520,12 +521,12 @@ class KriteriaBuah extends Component {
 
                     <View style={{ height: 10, backgroundColor: '#F5F5F5', marginTop: 10 }} />
                     {/* kondisi buah */}
-                    <Text style={{ fontSize: 20, fontWeight: '500', paddingLeft: 20, marginTop: 10 }}>Kondisi Buah</Text>
+                    <Text style={{ fontSize: 20, fontFamily: Fonts.demi, paddingLeft: 20, marginTop: 10 }}>Kondisi Buah</Text>
                     {this.state.arrKondisiBuah.map((data, idx) => this.renderDynamicCompNotUpdate('kondisi', data, idx, this.state.valueKondisiBuah))}
 
                     <View style={{ height: 10, backgroundColor: '#F5F5F5', marginTop: 10 }} />
                     {/* Penalty TPH */}
-                    <Text style={{ fontSize: 20, fontWeight: '500', paddingLeft: 20, marginTop: 10 }}>Penalti di TPH</Text>
+                    <Text style={{ fontSize: 20, fontFamily: Fonts.demi, paddingLeft: 20, marginTop: 10 }}>Penalti di TPH</Text>
                     {this.state.arrPenaltyTph.map((data, idx) => this.renderDynamicCompBtn(data, idx, this.state.valuePenaltyTph))}
 
                     {/*SLIDER*/}
@@ -579,6 +580,7 @@ const styles = {
         flex: 2,
         color: 'grey',
         fontSize: 15,
+        fontFamily: Fonts.book
     },
     containerInput: {
         flexDirection: 'row',
@@ -638,7 +640,8 @@ const styles = {
         borderRadius: 15,
         borderColor: '#989898',
         color: '#808080',
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: Fonts.book
     },
     bubbleLeftOff: {
         backgroundColor: Colors.abuabu,
@@ -718,5 +721,6 @@ const styles = {
         color: '#A9A9A9',
         paddingHorizontal: 18,
         paddingVertical: 12,
+        fontFamily: Fonts.medium
     }
 }
