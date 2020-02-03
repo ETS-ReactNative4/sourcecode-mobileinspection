@@ -461,7 +461,7 @@ export default class PetaPanen extends Component {
                                 stroke: "rgba(105,198,59,1)",
                             },
                             labels: {
-                                fontSize: 11
+                                fontSize: 8
                             }
                         }}
                         data={this.state.chartData.area}
@@ -471,7 +471,7 @@ export default class PetaPanen extends Component {
                                 if(index == this.state.chartData.area.length-2){
                                     return `${this.state.chartData.dateLabel[index-1]}`;
                                 }
-                                return `${this.state.chartData.dateLabel[index-1]}\nTON`;
+                                return `${this.state.chartData.dateLabel[index-1]}\n ${this.state.chartData.area[index].y} Ton`;
                             }
                             return null;
                         } }
