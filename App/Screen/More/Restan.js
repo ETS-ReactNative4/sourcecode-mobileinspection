@@ -98,6 +98,7 @@ export default class Restan extends React.Component {
                     setTimeout(()=>{
                         this.fetchRestanCoordinate()
                             .then((response)=>{
+                                alert(response);
                                 this.searchLocation();
                                 this.getRestanSyncTime();
                             })
@@ -119,8 +120,8 @@ export default class Restan extends React.Component {
             if (isConnected) {
                 await getTitikRestan()
                     .then(async (response) => {
-                        fetchStatus = response.downloadStatus
-                        if(response.totalCount === 0){
+                        fetchStatus = response.downloadStatus;
+                        if(response.downloadCount === 0){
                             this.setState({
                                 modalAlert: {
                                     ...this.state.modalAlert,
@@ -136,7 +137,6 @@ export default class Restan extends React.Component {
                                 }
                             })
                         }
-                        console.log(JSON.stringify(response));
                     })
             }
             else {

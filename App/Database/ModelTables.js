@@ -556,21 +556,21 @@ const TR_TITIK_RESTAN = {
     name: 'TR_TITIK_RESTAN',
     primaryKey: 'BCC',
     properties: {
-        OPH: { type: 'string', optional: false },
-        BCC: { type: 'string', optional: false },
-        TPH_RESTANT_DAY: { type: 'string', optional: false },
-        LATITUDE: { type: 'string', optional: false },
-        LONGITUDE: { type: 'string', optional: false },
-        JML_JANJANG: { type: 'double', optional: false },
-        JML_BRONDOLAN: { type: 'double', optional: false },
-        KG_TAKSASI: { type: 'double', optional: false },
-        TGL_REPORT: { type: 'double', optional: false },
-        WERKS: { type: 'string', optional: false },
-        EST_NAME: { type: 'string', optional: false },
-        AFD_CODE: { type: 'string', optional: false },
-        BLOCK_CODE: { type: 'string', optional: false },
-        BLOCK_NAME: { type: 'string', optional: false },
-        SORT_SWIPE: { type: 'string', optional: false }
+        OPH: { type: 'string', optional: true },
+        BCC: { type: 'string', optional: true },
+        TPH_RESTANT_DAY: { type: 'double', optional: true },
+        LATITUDE: { type: 'double', optional: true },
+        LONGITUDE: { type: 'double', optional: true },
+        JML_JANJANG: { type: 'double', optional: true },
+        JML_BRONDOLAN: { type: 'double', optional: true },
+        KG_TAKSASI: { type: 'double', optional: true },
+        TGL_REPORT: { type: 'string', optional: true },
+        WERKS: { type: 'string', optional: true },
+        EST_NAME: { type: 'string', optional: true },
+        AFD_CODE: { type: 'string', optional: true },
+        BLOCK_CODE: { type: 'string', optional: true },
+        BLOCK_NAME: { type: 'string', optional: true },
+        SORT_SWIPE: { type: 'string', optional: true }
     }
 };
 
