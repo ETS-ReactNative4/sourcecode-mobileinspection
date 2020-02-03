@@ -235,7 +235,7 @@ export default class PetaPanen extends Component {
 
         let chartDate = [];
         for(let counter = 7; counter > 0; counter--) {
-            chartDate.push(moment(this.state.latestSyncTime).subtract(counter, "days").format("DD"));
+            chartDate.push(moment(this.state.latestSyncTime).subtract(counter, "days").format("DD MMM"));
         }
 
         if(panenHeaderData.length > 0){
@@ -321,10 +321,11 @@ export default class PetaPanen extends Component {
         return null;
     }
 
-    getPolygonColor(werks, afd, blockName){
+    getPolygonColor(compareWith, werks, afd, blockName){
         let petaPanenDetail = TaskServices.query("TR_PETAPANEN_DETAIL", `WERKS = "${werks}" AND AFD_CODE = "${afd}" AND BLOCK_NAME = "${blockName}"`);
         if(petaPanenDetail[0]){
-            switch (petaPanenDetail[0].COLOR) {
+            let petaPanenDetailColor = compareWith === "target" ? petaPanenDetail[0].ACT_TAR_COLOR : petaPanenDetail[0].ACT_BBC_COLOR;
+            switch (petaPanenDetailColor) {
                 case "RED":
                     return Colors.polygonRed;
                 case "YELLOW":
@@ -334,7 +335,7 @@ export default class PetaPanen extends Component {
                 case "WHITE":
                     return Colors.polygonWhite;
                 default:
-                    return Colors.abu1;
+                    return "transparent";
             }
         }
     }
@@ -355,7 +356,10 @@ export default class PetaPanen extends Component {
                             source={imgSrc.arrowLeft}
                         />
                     </TouchableOpacity>
-                    <Text style={{fontSize: 25, fontWeight: 'bold'}}>{PetaPanen.state.panenHeader.AFD_NAME}</Text>
+                    <View style={{alignItems:'center'}}>
+                        <Text style={{fontSize: 25, fontWeight: 'bold'}}>{PetaPanen.state.panenHeader.AFD_NAME}</Text>
+                        <Text style={{fontSize: 12, fontWeight: 'bold'}}>Panen terakhir tanggal : {PetaPanen.state.panenHeader.TGL_PANEN}</Text>
+                    </View>
                     <TouchableOpacity
                         onPress={()=>{PetaPanen.selectDifferentBlock("+")}}
                     >
@@ -376,7 +380,7 @@ export default class PetaPanen extends Component {
                     <View style={styles.HeaderCard}>
                         <Text>Produktivitas</Text>
                         <Text style={{fontSize: 26, color:"rgba(60,179,1,1)"}}>{`${PetaPanen.state.panenHeader.TON_PRODUKTIVITAS}`}</Text>
-                        <Text style={{fontSize: 11, color:"rgba(60,179,1,1)"}}>Ton/HK</Text>
+                        <Text style={{fontSize: 11, color:"rgba(60,179,1,1)"}}>TON/HK</Text>
                     </View>
                     <View style={{flex: 2}}>
                         <View style={{
@@ -398,11 +402,11 @@ export default class PetaPanen extends Component {
                         }}>
                             <View style={styles.HeaderCard}>
                                 <Text>BBC</Text>
-                                <Text style={{color:"rgba(255,179,0,1)"}}>{`${PetaPanen.state.panenHeader.BBC} TON`}</Text>
+                                <Text style={{color:"rgba(255,179,0,1)"}}>{`${PetaPanen.state.panenHeader.BBC_LAST} TON`}</Text>
                             </View>
                             <View style={styles.HeaderCard}>
                                 <Text>Target</Text>
-                                <Text style={{color:"rgba(255,179,0,1)"}}>{`${PetaPanen.state.panenHeader.TARGET} TON`}</Text>
+                                <Text style={{color:"rgba(255,179,0,1)"}}>{`${PetaPanen.state.panenHeader.TARGET_LAST} TON`}</Text>
                             </View>
                         </View>
                     </View>
@@ -451,14 +455,25 @@ export default class PetaPanen extends Component {
                         }}
                     />
                     <VictoryArea
-                        style={{ data: {
+                        style={{
+                            data: {
                                 fill: "url(#gradientStroke)",
                                 stroke: "rgba(105,198,59,1)",
-                            } }}
+                            },
+                            labels: {
+                                fontSize: 11
+                            }
+                        }}
                         data={this.state.chartData.area}
                         // labelComponent={<Text>Y</Text>}
                         labels={({ data, index }) => {
-                            return (index == 0) || (index == this.state.chartData.area.length-1) ? null : this.state.chartData.dateLabel[index-1]
+                            if(index != 0 && index != this.state.chartData.area.length-1){
+                                if(index == this.state.chartData.area.length-2){
+                                    return `${this.state.chartData.dateLabel[index-1]}`;
+                                }
+                                return `${this.state.chartData.dateLabel[index-1]}\nTON`;
+                            }
+                            return null;
                         } }
                     />
                     <VictoryScatter
@@ -502,7 +517,7 @@ export default class PetaPanen extends Component {
     renderCircleTarget(PetaPanen){
         return(
             <View>
-                <Text style={{textAlign:"center", paddingVertical: 10, fontSize: 20, color:Colors.BLACK, fontWeight:"bold"}}>Sampai Hari Ini</Text>
+                <Text style={{textAlign:"center", paddingVertical: 10, fontSize: 20, color:Colors.BLACK, fontWeight:"bold"}}>Bulan Ini</Text>
                 <View style={{
                     flexDirection: "row"
                 }}>
@@ -517,7 +532,7 @@ export default class PetaPanen extends Component {
                         />
                         <View style={{alignItems:'center', justifyContent:'center', marginTop: -25}}>
                             <Text style={styles.GaugeHeaderText}>BBC</Text>
-                            <Text style={styles.GaugeActualTonText}>{`${PetaPanen.state.panenHeader.BBC} TON`}</Text>
+                            <Text style={styles.GaugeActualTonText}>{`${PetaPanen.state.panenHeader.BBC_BI} TON`}</Text>
                             <Text style={styles.GaugeTargetTonText}>{`${PetaPanen.state.panenHeader.BBC_TON_LAGI} TON LAGI`}</Text>
                         </View>
                     </View>
@@ -557,7 +572,7 @@ export default class PetaPanen extends Component {
                         </Svg>
                         <View style={{marginTop: -25, backgroundColor:"white", alignItems:"center"}}>
                             <Text style={{fontSize: 12, color:Colors.greyText}}>AKTUAL</Text>
-                            <Text style={{fontSize: 14, color:"rgba(0,0,0,1)", fontWeight:"bold"}}>{`${462} TON`}</Text>
+                            <Text style={{fontSize: 14, color:"rgba(0,0,0,1)", fontWeight:"bold"}}>{`${PetaPanen.state.panenHeader.AKTUAL_TON} TON`}</Text>
                         </View>
                     </View>
                     <View style={{flex: 1, alignItems:'center'}}>
@@ -571,7 +586,7 @@ export default class PetaPanen extends Component {
                         />
                         <View style={{alignItems:'center', justifyContent:'center', marginTop: -25}}>
                             <Text style={styles.GaugeHeaderText}>TARGET</Text>
-                            <Text style={styles.GaugeActualTonText}>{`${PetaPanen.state.panenHeader.TARGET} TON`}</Text>
+                            <Text style={styles.GaugeActualTonText}>{`${PetaPanen.state.panenHeader.TARGET_BI} TON`}</Text>
                             <Text style={styles.GaugeTargetTonText}>{`${PetaPanen.state.panenHeader.TARGET_TON_LAGI} TON LAGI`}</Text>
                         </View>
                     </View>
@@ -756,14 +771,6 @@ export default class PetaPanen extends Component {
                     }}
                     onPressRight={null}
                 />
-                <View style={{
-                    padding: 10,
-                    backgroundColor: 'rgba(221,226,218,1)',
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                }}>
-                    <Text style={{ color: Colors.text, fontSize: 12 }}>{`Data per tanggal : ${this.state.latestSyncTime}`}</Text>
-                </View>
                 <ScrollView style={{flex: 1}} contentContainerStyle={{backgroundColor:"white"}}>
                     {this.renderHeader(this)}
                     {this.renderAreaChart()}
@@ -785,7 +792,7 @@ export default class PetaPanen extends Component {
                                         <View key={index}>
                                             <Polygon
                                                 coordinates={polygon.coords}
-                                                fillColor={this.getPolygonColor(polygon.WERKS, polygon.afd_code, polygon.blokname)}
+                                                fillColor={this.getPolygonColor(this.state.mapData.compareWith, polygon.WERKS, polygon.afd_code, polygon.blokname)}
                                                 strokeColor="rgba(255,255,255,1)"
                                                 strokeWidth={3}
                                                 tappable={true}

@@ -7,7 +7,7 @@
     "test": "jest",
     "windowsRebundle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle",
     "windowsClean": "cd android && gradlew clean",
-    "windowsAssembleRelease": "cd android && gradlew assembleRelease",
+    "windowsAssembleRelease": "cd android && gradlew assembleRelease"
   },
   "dependencies": {
     "@mapbox/polyline": "^1.0.0",

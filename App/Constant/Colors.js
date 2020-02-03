@@ -72,5 +72,5 @@ export default {
     polygonRed: "rgba(255,51,51,0.5)",
     polygonYellow: "rgba(250,189,45,0.5)",
     polygonGreen: "rgba(51,191,115,0.5)",
-    polygonWhite: "rgba(255,255,255,1)",
+    polygonWhite: "rgba(255,255,255,0.5)",
 };
