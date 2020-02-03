@@ -994,7 +994,7 @@ class HomeScreen extends React.Component {
 
   _renderData() {
     return (
-      <View style={{ marginBottom: 0, marginTop: 320 }}>
+      <View style={{ marginBottom: 0, marginTop: this.state.divDays > 0 ? 336 : 320 }}>
         {this.state.data.map((item, index) => this._renderItem(item, index))}
         {/* Aminju */}
         <View style={{ justifyContent: 'center', alignItems: 'center', padding: 16 }}>
@@ -1206,7 +1206,10 @@ class HomeScreen extends React.Component {
 
             style={[
               styles.header,
-              { transform: [{ translateY: headerTranslate }] },
+              {
+                transform: [{ translateY: headerTranslate }],
+                marginTop: this.state.divDays > 0 ? 75 : 54
+              },
             ]}
           >
 
@@ -1297,7 +1300,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     overflow: 'hidden',
     height: HEADER_MAX_HEIGHT,
-    marginTop: 54,
     borderColor: 'grey',
     borderBottomWidth: 0.5
   },
