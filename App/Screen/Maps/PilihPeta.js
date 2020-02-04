@@ -1,7 +1,7 @@
 'use strict';
-import React, {Component} from 'react'
-import {BackHandler, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import {Container, Content,} from 'native-base'
+import React, { Component } from 'react'
+import { BackHandler, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Container, Content, } from 'native-base'
 import Colors from '../../Constant/Colors'
 import Dash from 'react-native-dash'
 import TaskServices from '../../Database/TaskServices'
@@ -9,9 +9,10 @@ import ServerName from '../../Constant/ServerName'
 import Icon2 from 'react-native-vector-icons/AntDesign'
 import ModalLoading from '../../Component/ModalLoading'
 import ModalAlert from '../../Component/ModalAlert';
-import MapView, {Marker, Polygon, ProviderPropType} from 'react-native-maps';
+import MapView, { Marker, Polygon, ProviderPropType } from 'react-native-maps';
 
-import {fetchPost} from "../../Api/FetchingApi";
+import { fetchPost } from "../../Api/FetchingApi";
+import { Fonts } from '../../Themes';
 
 const LATITUDE = -2.952421;
 const LONGITUDE = 112.354931;
@@ -242,100 +243,100 @@ export default class PilihPeta extends Component {
 	// 	}
 	// }
 
-  async onClickItem(data) {
-    let user = TaskServices.getAllData('TR_LOGIN')[0];
-    if (!data.HAS_MAP) {
-      this.setState({
-        showLoading: true,
-        title: 'Tunggu sebentar',
-        message: 'Sedang download map ' + data.EST_NAME,
-        icon: require('../../Images/ic-progress.png')
-      });
-      let downloadServ = TaskServices.getAllData("TM_SERVICE")
-        .filtered('API_NAME="HECTARESTATEMENT-GEOJSON" AND MOBILE_VERSION="' + ServerName.verAPK + '"');
-      if (downloadServ && downloadServ.length > 0) {
-        downloadServ = downloadServ[0];
-      }
-      let pickedWerks = data.WERKS;
-      let pickedEst = data.EST_NAME;
-      let param = {};
-      let bodyService = JSON.parse(downloadServ.BODY);
-      for (let x in bodyService) {
-        if (typeof (data[x]) !== "undefined") {
-          param[x] = data[x]
-        }
-      }
-      fetchPost("HECTARESTATEMENT-GEOJSON", param)
-        .then((data)=>{
-          if (data.status) {
-            let result = data.data.polygons;
-            let tempPoly = {};
-            let tempCoords = [];
-            for (let x in result) {
-              tempCoords = [];
-              for (let y in result[x].coords) {
-                tempCoords.push({
-                  LATLONG: result[x].coords[y].latitude + "" + result[x].coords[y].longitude,
-                  longitude: result[x].coords[y].longitude,
-                  latitude: result[x].coords[y].latitude
-                })
-              }
-              tempPoly = {
-                WERKS: pickedWerks,
-                afd_code: result[x].afd_code,
-                werks_afd_block_code: result[x].werks_afd_block_code,
-                blokname: result[x].blokname,
-                coords: tempCoords
-              }
-              TaskServices.saveData('TR_POLYGON', tempPoly);
-            }
-            let currEst = this.state.est;
-            currEst.map(item => {
-              if (item.WERKS == pickedWerks) {
-                item.HAS_MAP = true;
-              }
-              return item;
-            });
-            this.setState({ est: currEst });
-            TaskServices.updateByPrimaryKey('TR_LOGIN', {
-              "USER_AUTH_CODE": user.USER_AUTH_CODE,
-              "CURR_WERKS": pickedWerks
-            });
-            this.setState({ estateName: pickedEst, currWerk: pickedWerks });
-          }
-          else {
-            this.setState({
-              showAlert: true,
-              title: 'Error',
-              message: "Peta belum tersedia. Mohon hubungi IT Site di wilayahmu.",
-              icon: require('../../Images/icon/icon_maps.png')
-            })
-          }
-          this.setState({ showLoading: false });
-        })
-        .catch((e) => {
-          this.setState({
-            showLoading: false,
-            showAlert: true,
-            title: 'Error',
-            message: e,
-            icon: require('../../Images/icon/icon_maps.png')
-          })
-        });
-    }
-    else {
-      TaskServices.updateByPrimaryKey('TR_LOGIN', {
-        "USER_AUTH_CODE": user.USER_AUTH_CODE,
-        "CURR_WERKS": data.WERKS
-      });
-      this.setState({ estateName: data.EST_NAME, currWerk: data.WERKS })
-    }
-  }
+	async onClickItem(data) {
+		let user = TaskServices.getAllData('TR_LOGIN')[0];
+		if (!data.HAS_MAP) {
+			this.setState({
+				showLoading: true,
+				title: 'Tunggu sebentar',
+				message: 'Sedang download map ' + data.EST_NAME,
+				icon: require('../../Images/ic-progress.png')
+			});
+			let downloadServ = TaskServices.getAllData("TM_SERVICE")
+				.filtered('API_NAME="HECTARESTATEMENT-GEOJSON" AND MOBILE_VERSION="' + ServerName.verAPK + '"');
+			if (downloadServ && downloadServ.length > 0) {
+				downloadServ = downloadServ[0];
+			}
+			let pickedWerks = data.WERKS;
+			let pickedEst = data.EST_NAME;
+			let param = {};
+			let bodyService = JSON.parse(downloadServ.BODY);
+			for (let x in bodyService) {
+				if (typeof (data[x]) !== "undefined") {
+					param[x] = data[x]
+				}
+			}
+			fetchPost("HECTARESTATEMENT-GEOJSON", param)
+				.then((data) => {
+					if (data.status) {
+						let result = data.data.polygons;
+						let tempPoly = {};
+						let tempCoords = [];
+						for (let x in result) {
+							tempCoords = [];
+							for (let y in result[x].coords) {
+								tempCoords.push({
+									LATLONG: result[x].coords[y].latitude + "" + result[x].coords[y].longitude,
+									longitude: result[x].coords[y].longitude,
+									latitude: result[x].coords[y].latitude
+								})
+							}
+							tempPoly = {
+								WERKS: pickedWerks,
+								afd_code: result[x].afd_code,
+								werks_afd_block_code: result[x].werks_afd_block_code,
+								blokname: result[x].blokname,
+								coords: tempCoords
+							}
+							TaskServices.saveData('TR_POLYGON', tempPoly);
+						}
+						let currEst = this.state.est;
+						currEst.map(item => {
+							if (item.WERKS == pickedWerks) {
+								item.HAS_MAP = true;
+							}
+							return item;
+						});
+						this.setState({ est: currEst });
+						TaskServices.updateByPrimaryKey('TR_LOGIN', {
+							"USER_AUTH_CODE": user.USER_AUTH_CODE,
+							"CURR_WERKS": pickedWerks
+						});
+						this.setState({ estateName: pickedEst, currWerk: pickedWerks });
+					}
+					else {
+						this.setState({
+							showAlert: true,
+							title: 'Error',
+							message: "Peta belum tersedia. Mohon hubungi IT Site di wilayahmu.",
+							icon: require('../../Images/icon/icon_maps.png')
+						})
+					}
+					this.setState({ showLoading: false });
+				})
+				.catch((e) => {
+					this.setState({
+						showLoading: false,
+						showAlert: true,
+						title: 'Error',
+						message: e,
+						icon: require('../../Images/icon/icon_maps.png')
+					})
+				});
+		}
+		else {
+			TaskServices.updateByPrimaryKey('TR_LOGIN', {
+				"USER_AUTH_CODE": user.USER_AUTH_CODE,
+				"CURR_WERKS": data.WERKS
+			});
+			this.setState({ estateName: data.EST_NAME, currWerk: data.WERKS })
+		}
+	}
 
 	renderMapsByRegion(item, index) {
 		return (
 			<View style={{ marginTop: 15 }} key={index}>
-				<Text style={{ fontSize: 14, paddingHorizontal: 16 }}>
+				<Text style={{ fontSize: 14, paddingHorizontal: 16, fontFamily: Fonts.book }}>
 					{item.REGION_NAME !== undefined ? item.REGION_NAME : ''}
 				</Text>
 				<View style={{ marginTop: 16 }}>
@@ -424,7 +425,7 @@ export default class PilihPeta extends Component {
 						ref={map => this.map = map}
 						provider={this.props.provider}
 						style={styles.map}
-                        mapType={"satellite"}
+						mapType={"satellite"}
 						showsUserLocation={true}
 						showsMyLocationButton={true}
 						showsCompass={true}
@@ -462,14 +463,14 @@ export default class PilihPeta extends Component {
 							<Image source={require('../../Images/icon/ic_my_location.png')} style={[styles.icon, { marginLeft: 10 }]} />
 						</View>
 						<View style={{ flex: 7 }}>
-							<Text style={{ fontSize: 18, fontWeight: '400' }}>{this.state.estateName}</Text>
-							<Text style={{ fontSize: 12, color: 'grey', marginTop: 5 }}>Lokasimu saat ini</Text>
+							<Text style={{ fontSize: 18, fontWeight: '400', fontFamily: Fonts.medium }}>{this.state.estateName}</Text>
+							<Text style={{ fontSize: 12, color: 'grey', marginTop: 5, fontFamily: Fonts.book }}>Lokasimu saat ini</Text>
 						</View>
 					</View>
 
 					<View style={{ height: 1, backgroundColor: '#989898', marginBottom: 5, marginTop: 5 }} />
 
-					<Text style={{ fontSize: 16, fontWeight: 'bold', paddingHorizontal: 16 }}>Peta</Text>
+					<Text style={{ fontSize: 16, fontFamily: Fonts.bold, paddingHorizontal: 16 }}>Peta</Text>
 
 					<Dash
 						dashColor={'#ccc'}

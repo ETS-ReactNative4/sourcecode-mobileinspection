@@ -63,6 +63,8 @@ import Header from '../../Component/Header'
 import { fetchPut } from "../../Api/FetchingApi";
 import { downloadProfileImage } from "../Sync/Download/Image/Profile";
 import images from '../../Themes/Images';
+import { getPoint } from '../Sync/Download/DownloadPoint';
+import { set } from 'ramda';
 
 
 const HEADER_MAX_HEIGHT = 260;
@@ -131,6 +133,7 @@ class HomeScreen extends React.Component {
         // iOS has negative initial scroll value because content inset...
         Platform.OS === 'ios' ? -HEADER_MAX_HEIGHT : 0,
       ),
+      point: 0
     }
   }
 
@@ -985,6 +988,14 @@ class HomeScreen extends React.Component {
           title={'Beranda'}
           isNotUserMill={isNotUserMill()} />
         <StatusBar hidden={false} backgroundColor={Colors.tintColor} barStyle="light-content" />
+        <View style={styles.sectionTimeline}>
+          <Text style={styles.textTimeline}>Temuan di Wilayahmu</Text>
+          <View style={styles.rightSection}>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('Filter', { _changeFilterList: this._changeFilterList })} >
+              <Image style={{ width: 22, height: 22, marginRight: 16, marginTop: 1 }} source={changeIconFilter(this.state.isFilter)} />
+            </TouchableOpacity>
+          </View>
+        </View>
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', alignContent: 'center' }}>
           <Image style={{ width: 400, height: 300 }} source={changeBgFilter(this.state.isFilter)} />
         </View>
@@ -1028,7 +1039,7 @@ class HomeScreen extends React.Component {
     }, 2000);
   }
 
-  getProfileImage() {
+  async getProfileImage() {
     NetInfo.isConnected.fetch().then(isConnected => {
       if (isConnected) {
         downloadProfileImage(this.state.currentUser.USER_AUTH_CODE)
@@ -1041,7 +1052,14 @@ class HomeScreen extends React.Component {
           });
       }
     });
+
+    /* DOWNLOAD ESTATE */
+    await getPoint().then((data) => {
+      console.log('Data Callback Point : ', data)
+      this.setState({ point: data.data })
+    })
   }
+
 
   renderMenuHeader() {
     let dataUser = TaskServices.findBy2('TR_CONTACT', 'USER_AUTH_CODE', this.state.currentUser.USER_AUTH_CODE);
@@ -1090,7 +1108,7 @@ class HomeScreen extends React.Component {
               <View>
                 <View style={{ flexDirection: "row", backgroundColor: "white", borderRadius: 15, alignSelf: 'baseline', alignItems: 'center', paddingHorizontal: 10, paddingVertical: 5 }}>
                   <Image style={{ width: 15, height: 15 }} source={require('../../Images/icon/HomeScreen/icon_points_black.png')} />
-                  <Text style={{ fontSize: 12, paddingHorizontal: 10 }}>{`${numberSeperator(100000, ",")} points`}</Text>
+                  <Text style={{ fontSize: 12, paddingHorizontal: 10 }}>{`${numberSeperator(this.state.point, ",")} points`}</Text>
                   <Image style={{ width: 15, height: 15 }} source={require('../../Images/icon/HomeScreen/icon_right.png')} />
                 </View>
               </View>
