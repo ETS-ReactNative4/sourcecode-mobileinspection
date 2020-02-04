@@ -114,6 +114,7 @@ class HomeScreen extends React.Component {
     };
 
     this.state = {
+        isSync: false,
       currentUser: currentUser[0],
       data: [],
       thumnailImage: '',
@@ -171,8 +172,7 @@ class HomeScreen extends React.Component {
       })
     }
     else {
-      const checkBlock = TaskServices.getAllData('TM_BLOCK');
-      if (checkBlock.length > 0) {
+      if (this.state.isSync) {
         this.setState({ isVisibleSummary: true });
       } else {
         this.props.navigation.navigate('Sync')
@@ -237,8 +237,15 @@ class HomeScreen extends React.Component {
     });
   }
 
-  async componentDidMount() {
+  syncChecker(){
+      let getBlock = TaskServices.getAllData('TM_BLOCK');
+      let syncStatus = getBlock.length > 0;
+      this.setState({ isSync: syncStatus });
+  }
 
+  async componentDidMount() {
+      alert("???");
+    this.syncChecker();
     /** NOTIFICATION LOCAL */
     await this.putFCMConfig();
     displayNotificationSync();
@@ -988,6 +995,7 @@ class HomeScreen extends React.Component {
           title={'Beranda'}
           isNotUserMill={isNotUserMill()} />
         <StatusBar hidden={false} backgroundColor={Colors.tintColor} barStyle="light-content" />
+          {this.renderMenuHeader()}
         <View style={styles.sectionTimeline}>
           <Text style={styles.textTimeline}>Temuan di Wilayahmu</Text>
           <View style={styles.rightSection}>
@@ -1114,42 +1122,66 @@ class HomeScreen extends React.Component {
               </View>
             </View>
           </View>
-          <View style={{ backgroundColor: "white", flexDirection: "row", justifyContent: 'space-between', padding: 15 }}>
-
-            <ItemMenuHome
-              onPress={() => this.props.navigation.navigate("PetaPanen")}
-              name={"Peta\nPanen"}
-              image={require('../../Images/icon/HomeScreen/icon_panen.png')}
-              backgroundColor={"rgba(53,184,113,1)"} />
-
-            <ItemMenuHome
-              onPress={() => this.props.navigation.navigate("Restan")}
-              name={"Peta\nRestan"}
-              image={require('../../Images/icon/HomeScreen/icon_titik_restan.png')}
-              backgroundColor={"rgba(217,52,72,1)"} />
-
-            <ItemMenuHome
-              onPress={() => this.showWeeklySummary(true)}
-              name={"Dashboard\nMingguan"}
-              image={require('../../Images/icon/HomeScreen/icon_dashboard_kebun.png')}
-              backgroundColor={"rgba(255,194,50,1)"} />
-
-            <ItemMenuHome
-              onPress={() => { this.props.navigation.navigate('Leaderboard') }}
-              name={"Peringkat\nAsisten"}
-              image={require('../../Images/icon/HomeScreen/icon_rank.png')}
-              backgroundColor={"rgba(52,162,188,1)"} />
-
-            <ItemMenuHome
-              onPress={() => { this.props.navigation.navigate('MoreScreen') }}
-              name={"Menu\nLainnya"}
-              image={require('../../Images/icon/HomeScreen/icon_lainnya.png')}
-              backgroundColor={"rgba(234,234,234,1)"} />
-          </View>
+            {this.renderMenu()}
         </View>
       )
     }
-    return null
+    else{
+        //ui belum sync
+        return(
+            <View>
+                {this.renderMenu()}
+            </View>
+        )
+    }
+  }
+
+  renderMenu(){
+      return(
+          <View style={{ backgroundColor: "white", flexDirection: "row", justifyContent: 'space-between', padding: 15 }}>
+              <ItemMenuHome
+                  onPress={() => {
+                      if (this.state.isSync) {
+                          this.props.navigation.navigate("PetaPanen")
+                      } else {
+                          this.props.navigation.navigate('Sync')
+                      }
+                  }}
+                  name={"Peta\nPanen"}
+                  image={require('../../Images/icon/HomeScreen/icon_panen.png')}
+                  backgroundColor={"rgba(53,184,113,1)"} />
+
+              <ItemMenuHome
+                  onPress={() => {
+                      if (this.state.isSync) {
+                          this.props.navigation.navigate("Restan")
+                      } else {
+                          this.props.navigation.navigate('Sync')
+                      }
+                  }}
+                  name={"Peta\nRestan"}
+                  image={require('../../Images/icon/HomeScreen/icon_titik_restan.png')}
+                  backgroundColor={"rgba(217,52,72,1)"} />
+
+              <ItemMenuHome
+                  onPress={() => this.showWeeklySummary(true)}
+                  name={"Dashboard\nMingguan"}
+                  image={require('../../Images/icon/HomeScreen/icon_dashboard_kebun.png')}
+                  backgroundColor={"rgba(255,194,50,1)"} />
+
+              <ItemMenuHome
+                  onPress={() => { this.props.navigation.navigate('Leaderboard') }}
+                  name={"Peringkat\nAsisten"}
+                  image={require('../../Images/icon/HomeScreen/icon_rank.png')}
+                  backgroundColor={"rgba(52,162,188,1)"} />
+
+              <ItemMenuHome
+                  onPress={() => { this.props.navigation.navigate('MoreScreen') }}
+                  name={"Menu\nLainnya"}
+                  image={require('../../Images/icon/HomeScreen/icon_lainnya.png')}
+                  backgroundColor={"rgba(234,234,234,1)"} />
+          </View>
+      )
   }
 
   render() {
