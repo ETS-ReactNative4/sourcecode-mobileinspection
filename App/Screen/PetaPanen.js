@@ -10,10 +10,13 @@ import GaugeChart from '../Component/SVG/GaugeBar';
 import ModalLoading from "../Component/ModalLoading";
 import Colors from "../Constant/Colors";
 import imgSrc from "../Images/Module/PetaPanen";
+import Fonts from "../Themes/Fonts";
 
 import TaskServices from "../Database/TaskServices";
 import {getPetaPanenDetail, getPetaPanenHeader} from "./Sync/Download/PetaPanen/PetaPanen";
 import VectorIcon from "../Component/VectorIcon";
+
+import {PetaPanenHeader, PetaPanenDetail} from "../Data/Default/DefaultModel";
 
 export default class PetaPanen extends Component {
     constructor(props) {
@@ -25,8 +28,11 @@ export default class PetaPanen extends Component {
                 listAvailableBlock: [],
                 selectedBlock: {}
             },
-            panenHeader: {},
-            panenDetail: {},
+            selectedPolygon: {
+
+            },
+            panenHeader: PetaPanenHeader,
+            panenDetail: PetaPanenDetail,
             mapData: {
                 selectedBlock: null,
                 initialRegion: {
@@ -257,6 +263,10 @@ export default class PetaPanen extends Component {
         let panenDetailData = TaskServices.query("TR_PETAPANEN_DETAIL", `WERKS = "${werksAfd.WERKS}" AND AFD_CODE = "${werksAfd.afd_code}" AND BLOCK_NAME = "${werksAfd.blokname}"`);
         if(panenDetailData.length > 0){
             this.setState({
+                selectedPolygon: {
+                    afdCode : panenDetailData[0].AFD_CODE,
+                    blockName: panenDetailData[0].BLOCK_NAME
+                },
                 panenDetail: panenDetailData[0]
             });
         }
@@ -321,7 +331,7 @@ export default class PetaPanen extends Component {
         return null;
     }
 
-    getPolygonColor(compareWith, werks, afd, blockName){
+    getPolygonFillColor(compareWith, werks, afd, blockName){
         let petaPanenDetail = TaskServices.query("TR_PETAPANEN_DETAIL", `WERKS = "${werks}" AND AFD_CODE = "${afd}" AND BLOCK_NAME = "${blockName}"`);
         if(petaPanenDetail[0]){
             let petaPanenDetailColor = compareWith === "target" ? petaPanenDetail[0].ACT_TAR_COLOR : petaPanenDetail[0].ACT_BBC_COLOR;
@@ -338,6 +348,12 @@ export default class PetaPanen extends Component {
                     return "transparent";
             }
         }
+    }
+    getPolygonStrokeColor(polygonAfdCode){
+        if(polygonAfdCode.afd_code === this.state.selectedPolygon.afdCode && polygonAfdCode.blokname === this.state.selectedPolygon.blockName){
+            return Colors.selectedPolygonStroke
+        }
+        return Colors.defaultPolygonStroke
     }
 
     //================ RENDER
@@ -357,8 +373,8 @@ export default class PetaPanen extends Component {
                         />
                     </TouchableOpacity>
                     <View style={{alignItems:'center'}}>
-                        <Text style={{fontSize: 25, fontWeight: 'bold'}}>{PetaPanen.state.panenHeader.AFD_NAME}</Text>
-                        <Text style={{fontSize: 12, fontWeight: 'bold'}}>Panen terakhir tanggal : {PetaPanen.state.panenHeader.TGL_PANEN}</Text>
+                        <Text style={{fontSize: 25, fontFamily: Fonts.bold}}>{PetaPanen.state.panenHeader.AFD_NAME}</Text>
+                        <Text style={{fontSize: 12, fontFamily: Fonts.bold}}>Panen terakhir tanggal : {PetaPanen.state.panenHeader.TGL_PANEN}</Text>
                     </View>
                     <TouchableOpacity
                         onPress={()=>{PetaPanen.selectDifferentBlock("+")}}
@@ -378,9 +394,9 @@ export default class PetaPanen extends Component {
             return(
                 <View style={{flexDirection:"row", margin: 10, height: 125}}>
                     <View style={styles.HeaderCard}>
-                        <Text>Produktivitas</Text>
-                        <Text style={{fontSize: 26, color:"rgba(60,179,1,1)"}}>{`${PetaPanen.state.panenHeader.TON_PRODUKTIVITAS}`}</Text>
-                        <Text style={{fontSize: 11, color:"rgba(60,179,1,1)"}}>TON/HK</Text>
+                        <Text style={{fontFamily: Fonts.medium}}>Produktivitas</Text>
+                        <Text style={{fontSize: 26, color:"rgba(60,179,1,1)", fontFamily: Fonts.medium}}>{`${PetaPanen.state.panenHeader.TON_PRODUKTIVITAS}`}</Text>
+                        <Text style={{fontSize: 11, color:"rgba(60,179,1,1)", fontFamily: Fonts.medium}}>TON/HK</Text>
                     </View>
                     <View style={{flex: 2}}>
                         <View style={{
@@ -389,11 +405,11 @@ export default class PetaPanen extends Component {
                         }}>
                             <View style={styles.HeaderCard}>
                                 <Text>Luas Panen</Text>
-                                <Text style={{color:"rgba(60,179,1,1)"}}>{`${PetaPanen.state.panenHeader.LUAS_PANEN} HA`}</Text>
+                                <Text style={{color:"rgba(60,179,1,1)", fontFamily: Fonts.medium}}>{`${PetaPanen.state.panenHeader.LUAS_PANEN} HA`}</Text>
                             </View>
                             <View style={styles.HeaderCard}>
-                                <Text>Pemanen</Text>
-                                <Text style={{color:"rgba(60,179,1,1)"}}>{`${PetaPanen.state.panenHeader.PEMANEN} HK`}</Text>
+                                <Text style={{fontFamily: Fonts.medium}}>Pemanen</Text>
+                                <Text style={{color:"rgba(60,179,1,1)", fontFamily: Fonts.medium}}>{`${PetaPanen.state.panenHeader.PEMANEN} HK`}</Text>
                             </View>
                         </View>
                         <View style={{
@@ -401,12 +417,12 @@ export default class PetaPanen extends Component {
                             flexDirection: "row"
                         }}>
                             <View style={styles.HeaderCard}>
-                                <Text>BBC</Text>
-                                <Text style={{color:"rgba(255,179,0,1)"}}>{`${PetaPanen.state.panenHeader.BBC_LAST} TON`}</Text>
+                                <Text style={{fontFamily: Fonts.medium}}>BBC</Text>
+                                <Text style={{color:"rgba(255,179,0,1)", fontFamily: Fonts.medium}}>{`${PetaPanen.state.panenHeader.BBC_LAST} TON`}</Text>
                             </View>
                             <View style={styles.HeaderCard}>
-                                <Text>Target</Text>
-                                <Text style={{color:"rgba(255,179,0,1)"}}>{`${PetaPanen.state.panenHeader.TARGET_LAST} TON`}</Text>
+                                <Text style={{fontFamily: Fonts.medium}}>Target</Text>
+                                <Text style={{color:"rgba(255,179,0,1)", fontFamily: Fonts.medium}}>{`${PetaPanen.state.panenHeader.TARGET_LAST} TON`}</Text>
                             </View>
                         </View>
                     </View>
@@ -506,7 +522,7 @@ export default class PetaPanen extends Component {
                     bottom: 10
                 }}>
                     <Text>
-                        <Text style={{fontSize: 25, color:"black", fontWeight: "bold"}}>{`${this.state.chartData.chartLastValue} `}</Text>
+                        <Text style={{fontSize: 25, color:"black", fontFamily: Fonts.bold}}>{`${this.state.chartData.chartLastValue} `}</Text>
                         <Text style={{fontSize: 12.5, color:"black"}}>TON</Text>
                     </Text>
                 </View>
@@ -517,7 +533,7 @@ export default class PetaPanen extends Component {
     renderCircleTarget(PetaPanen){
         return(
             <View>
-                <Text style={{textAlign:"center", paddingVertical: 10, fontSize: 20, color:Colors.BLACK, fontWeight:"bold"}}>Bulan Ini</Text>
+                <Text style={{textAlign:"center", paddingVertical: 10, fontSize: 20, color:Colors.BLACK, fontFamily: Fonts.bold}}>Bulan Ini</Text>
                 <View style={{
                     flexDirection: "row"
                 }}>
@@ -572,7 +588,7 @@ export default class PetaPanen extends Component {
                         </Svg>
                         <View style={{marginTop: -25, backgroundColor:"white", alignItems:"center"}}>
                             <Text style={{fontSize: 12, color:Colors.greyText}}>AKTUAL</Text>
-                            <Text style={{fontSize: 14, color:"rgba(0,0,0,1)", fontWeight:"bold"}}>{`${PetaPanen.state.panenHeader.AKTUAL_TON} TON`}</Text>
+                            <Text style={{fontSize: 14, color:"rgba(0,0,0,1)", fontFamily: Fonts.bold}}>{`${PetaPanen.state.panenHeader.AKTUAL_TON} TON`}</Text>
                         </View>
                     </View>
                     <View style={{flex: 1, alignItems:'center'}}>
@@ -604,7 +620,7 @@ export default class PetaPanen extends Component {
                             fontSize: 24,
                             paddingBottom: 5,
                             color:"rgba(0,0,0,1)",
-                            fontWeight: "bold"
+                            fontFamily: Fonts.bold
                         }}>
                         {`Block ${PetaPanen.state.panenDetail.BLOCK_NAME} / ${PetaPanen.state.panenDetail.BLOCK_CODE}`}
                     </Text>
@@ -633,14 +649,14 @@ export default class PetaPanen extends Component {
             <View style={{padding: 15}}>
                 {headerDetails(PetaPanen)}
                 <View style={{paddingVertical: 10}}>
-                    <Text style={{fontSize: 32, fontWeight:"bold", color:"rgba(60,179,1,1)"}}>
+                    <Text style={{fontSize: 32, fontFamily: Fonts.bold, color:"rgba(60,179,1,1)"}}>
                         {PetaPanen.state.panenDetail.TON}
                         <Text style={{fontSize: 11, color:"rgba(60,179,1,1)"}}>TON</Text>
                     </Text>
                     <Text style={{paddingLeft: 5}}>Produksi Sampai Hari Ini</Text>
                 </View>
                 <View style={{paddingVertical: 10}}>
-                    <Text style={{fontSize: 32, fontWeight:"bold", color:"rgba(60,179,1,1)"}}>
+                    <Text style={{fontSize: 32, fontFamily: Fonts.bold, color:"rgba(60,179,1,1)"}}>
                         {PetaPanen.state.panenDetail.LUASAN_PANEN}
                         <Text style={{fontSize: 11, color:"rgba(60,179,1,1)"}}>HA</Text>
                     </Text>
@@ -792,8 +808,8 @@ export default class PetaPanen extends Component {
                                         <View key={index}>
                                             <Polygon
                                                 coordinates={polygon.coords}
-                                                fillColor={this.getPolygonColor(this.state.mapData.compareWith, polygon.WERKS, polygon.afd_code, polygon.blokname)}
-                                                strokeColor="rgba(255,255,255,1)"
+                                                fillColor={this.getPolygonFillColor(this.state.mapData.compareWith, polygon.WERKS, polygon.afd_code, polygon.blokname)}
+                                                strokeColor= {this.getPolygonStrokeColor(polygon)}
                                                 strokeWidth={3}
                                                 tappable={true}
                                                 onPress={() => {this.getPanenDetail(polygon)}}
@@ -804,7 +820,7 @@ export default class PetaPanen extends Component {
                                                 onPress={() => {this.getPanenDetail(polygon)}}>
                                                 <View style={{ flexDirection: 'column', alignSelf: 'flex-start' }}>
                                                     <View style={styles.marker}>
-                                                        <Text style={{ color: 'rgba(255,255,255,1)', fontSize: 15, fontWeight:'bold'}}>{polygon.blokname}</Text>
+                                                        <Text style={{ color: this.getPolygonStrokeColor(polygon), fontSize: 15, fontWeight:'bold'}}>{polygon.blokname}</Text>
                                                     </View>
                                                 </View>
                                             </Marker>
@@ -909,7 +925,7 @@ export default class PetaPanen extends Component {
                                     <View
                                         style={{width: 20, height: 20, borderRadius:10, backgroundColor:Colors.polygonYellow, marginRight: 5}}
                                     />
-                                    <Text style={{paddingVertical: 5}}>{`85% - 95%`}</Text>
+                                    <Text style={{paddingVertical: 5, fontFamily: Fonts.medium}}>{`85% - 95%`}</Text>
                                 </View>
                                 <View style={{
                                     flexDirection:"row",
@@ -920,7 +936,7 @@ export default class PetaPanen extends Component {
                                     <View
                                         style={{width: 20, height: 20, borderRadius:10, backgroundColor:Colors.polygonRed, marginRight: 5}}
                                     />
-                                    <Text style={{paddingVertical: 5}}>{`1% - 75%`}</Text>
+                                    <Text style={{paddingVertical: 5, fontFamily: Fonts.medium}}>{`1% - 75%`}</Text>
                                 </View>
                                 <View style={{
                                     flexDirection:"row",
@@ -930,7 +946,7 @@ export default class PetaPanen extends Component {
                                     <View
                                         style={{width: 20, height: 20, borderRadius:10, backgroundColor:Colors.polygonWhite, marginRight: 5}}
                                     />
-                                    <Text style={{paddingVertical: 5}}>{`0%`}</Text>
+                                    <Text style={{paddingVertical: 5, fontFamily: Fonts.medium}}>{`0%`}</Text>
                                 </View>
                             </View>
                         </View>
@@ -956,18 +972,20 @@ const styles = StyleSheet.create({
     GaugeText:{
         color:"rgba(0,0,0,1)",
         fontSize: 20,
-        fontWeight: "bold"
+        fontFamily: Fonts.bold
     },
     GaugeHeaderText:{
         fontSize: 13,
-        color:Colors.greyText
+        color:Colors.greyText,
+        fontFamily: Fonts.medium
     },
     GaugeActualTonText:{
         fontSize: 15, color:"rgba(0,0,0,1)",
-        fontWeight:"bold"
+        fontFamily: Fonts.bold
     },
     GaugeTargetTonText:{
         fontSize: 13,
-        color:Colors.redishText
+        color:Colors.redishText,
+        fontFamily: Fonts.medium
     }
 });

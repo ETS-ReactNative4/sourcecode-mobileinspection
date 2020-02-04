@@ -24,7 +24,6 @@ export async function getTitikRestan() {
 
                 Promise.all(
                     restanModel.map(item => {
-                        console.log(JSON.stringify(item));
                         TaskServices.saveData('TR_TITIK_RESTAN', item);
                         downloadLabels = {
                             ...downloadLabels,
