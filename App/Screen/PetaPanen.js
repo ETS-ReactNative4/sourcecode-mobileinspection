@@ -16,6 +16,8 @@ import TaskServices from "../Database/TaskServices";
 import {getPetaPanenDetail, getPetaPanenHeader} from "./Sync/Download/PetaPanen/PetaPanen";
 import VectorIcon from "../Component/VectorIcon";
 
+import {PetaPanenHeader, PetaPanenDetail} from "../Data/Default/DefaultModel";
+
 export default class PetaPanen extends Component {
     constructor(props) {
         super(props);
@@ -29,8 +31,8 @@ export default class PetaPanen extends Component {
             selectedPolygon: {
 
             },
-            panenHeader: {},
-            panenDetail: {},
+            panenHeader: PetaPanenHeader,
+            panenDetail: PetaPanenDetail,
             mapData: {
                 selectedBlock: null,
                 initialRegion: {
