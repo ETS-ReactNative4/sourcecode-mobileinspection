@@ -339,16 +339,6 @@ export default class Restan extends React.Component {
                     }}
                 />
 
-                {/*{!this.state.internetExist &&*/}
-                {/*<View style={{*/}
-                {/*    padding: 10,*/}
-                {/*    backgroundColor: 'red',*/}
-                {/*    justifyContent: 'center',*/}
-                {/*    alignItems: 'center'*/}
-                {/*}}>*/}
-                {/*    <Text style={{ color: Colors.colorWhite, fontSize: 12 }}>Koneksi internet tidak di temukan!</Text>*/}
-                {/*</View>}*/}
-
                 <View style={{
                     padding: 10,
                     backgroundColor: 'rgba(221,226,218,1)',
@@ -457,7 +447,7 @@ export default class Restan extends React.Component {
                                                     <IonicIcon style={{ paddingHorizontal: 5 }} name={'ios-information-circle'} size={25} color={this.styleColorChooser(coordinate.TPH_RESTANT_DAY)} />
                                                     <Text style={{fontSize: 20, paddingHorizontal:10, color: this.styleColorChooser(coordinate.TPH_RESTANT_DAY)}}>{`${coordinate.KG_TAKSASI} `}<Text style={{fontSize: 15, alignItems:"center"}}>kg</Text></Text>
                                                 </View>
-                                                <IonicIcon style={{marginTop: -15, alignSelf:"center"}} name={'md-arrow-dropdown'} size={40} color={Colors.colorWhite} />
+                                                <IonicIcon style={{marginTop: -17.5, alignSelf:"center"}} name={'md-arrow-dropdown'} size={40} color={Colors.colorWhite} />
                                             </View>
                                             :
                                             <View>
@@ -473,7 +463,7 @@ export default class Restan extends React.Component {
                                                 >
                                                     <Text style={{fontSize: 11, color: Colors.colorWhite}}>{`${coordinate.KG_TAKSASI} `}<Text style={{fontSize: 9, alignItems:"center"}}>kg</Text></Text>
                                                 </View>
-                                                <IonicIcon style={{marginTop: -15, alignSelf:"center"}} name={'md-arrow-dropdown'} size={40} color={this.styleColorChooser(coordinate.TPH_RESTANT_DAY)} />
+                                                <IonicIcon style={{marginTop: -17.5, alignSelf:"center"}} name={'md-arrow-dropdown'} size={40} color={this.styleColorChooser(coordinate.TPH_RESTANT_DAY)} />
                                             </View>
                                     }
                                 </Marker>
@@ -527,7 +517,6 @@ export default class Restan extends React.Component {
                                 horizontal={true}
                                 onMomentumScrollEnd={event => {
                                     let index = this.scrollViewIndex(event.nativeEvent.contentOffset.x);
-                                    console.log(index);
                                     if(index !== null){
                                         let selectedCoordinateRestan = this.state.coordinateRestan[index];
                                         let region = {
@@ -600,8 +589,9 @@ export default class Restan extends React.Component {
     //used to determine which index selected
     scrollViewIndex(xPosition){
         let index = xPosition/(screenWidth*0.8 + screenWidth*0.05);
-        if(Number.isInteger(index)){
-            return index
+        let lastIndex = (Math.ceil(index))+1 === this.state.coordinateRestan.length;
+        if(Number.isInteger(index) || lastIndex){
+            return Math.ceil(index);
         }
         return null;
     }

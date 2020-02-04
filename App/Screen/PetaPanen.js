@@ -26,6 +26,9 @@ export default class PetaPanen extends Component {
                 listAvailableBlock: [],
                 selectedBlock: {}
             },
+            selectedPolygon: {
+
+            },
             panenHeader: {},
             panenDetail: {},
             mapData: {
@@ -258,6 +261,10 @@ export default class PetaPanen extends Component {
         let panenDetailData = TaskServices.query("TR_PETAPANEN_DETAIL", `WERKS = "${werksAfd.WERKS}" AND AFD_CODE = "${werksAfd.afd_code}" AND BLOCK_NAME = "${werksAfd.blokname}"`);
         if(panenDetailData.length > 0){
             this.setState({
+                selectedPolygon: {
+                    afdCode : panenDetailData[0].AFD_CODE,
+                    blockName: panenDetailData[0].BLOCK_NAME
+                },
                 panenDetail: panenDetailData[0]
             });
         }
@@ -322,7 +329,7 @@ export default class PetaPanen extends Component {
         return null;
     }
 
-    getPolygonColor(compareWith, werks, afd, blockName){
+    getPolygonFillColor(compareWith, werks, afd, blockName){
         let petaPanenDetail = TaskServices.query("TR_PETAPANEN_DETAIL", `WERKS = "${werks}" AND AFD_CODE = "${afd}" AND BLOCK_NAME = "${blockName}"`);
         if(petaPanenDetail[0]){
             let petaPanenDetailColor = compareWith === "target" ? petaPanenDetail[0].ACT_TAR_COLOR : petaPanenDetail[0].ACT_BBC_COLOR;
@@ -339,6 +346,12 @@ export default class PetaPanen extends Component {
                     return "transparent";
             }
         }
+    }
+    getPolygonStrokeColor(polygonAfdCode){
+        if(polygonAfdCode.afd_code === this.state.selectedPolygon.afdCode && polygonAfdCode.blokname === this.state.selectedPolygon.blockName){
+            return Colors.selectedPolygonStroke
+        }
+        return Colors.defaultPolygonStroke
     }
 
     //================ RENDER
@@ -793,8 +806,8 @@ export default class PetaPanen extends Component {
                                         <View key={index}>
                                             <Polygon
                                                 coordinates={polygon.coords}
-                                                fillColor={this.getPolygonColor(this.state.mapData.compareWith, polygon.WERKS, polygon.afd_code, polygon.blokname)}
-                                                strokeColor="rgba(255,255,255,1)"
+                                                fillColor={this.getPolygonFillColor(this.state.mapData.compareWith, polygon.WERKS, polygon.afd_code, polygon.blokname)}
+                                                strokeColor= {this.getPolygonStrokeColor(polygon)}
                                                 strokeWidth={3}
                                                 tappable={true}
                                                 onPress={() => {this.getPanenDetail(polygon)}}
@@ -805,7 +818,7 @@ export default class PetaPanen extends Component {
                                                 onPress={() => {this.getPanenDetail(polygon)}}>
                                                 <View style={{ flexDirection: 'column', alignSelf: 'flex-start' }}>
                                                     <View style={styles.marker}>
-                                                        <Text style={{ color: 'rgba(255,255,255,1)', fontSize: 15, fontWeight:'bold'}}>{polygon.blokname}</Text>
+                                                        <Text style={{ color: this.getPolygonStrokeColor(polygon), fontSize: 15, fontWeight:'bold'}}>{polygon.blokname}</Text>
                                                     </View>
                                                 </View>
                                             </Marker>
