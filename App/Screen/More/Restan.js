@@ -98,7 +98,6 @@ export default class Restan extends React.Component {
                     setTimeout(()=>{
                         this.fetchRestanCoordinate()
                             .then((response)=>{
-                                alert(response);
                                 this.searchLocation();
                                 this.getRestanSyncTime();
                             })
