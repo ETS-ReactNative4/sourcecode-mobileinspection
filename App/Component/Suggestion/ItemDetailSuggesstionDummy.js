@@ -71,8 +71,8 @@ const ItemDetailSuggestion = (props) => {
                 <View style={{ flex: 1 }}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                         <View>
-                            <Text style={{ color: Colors.colorPrimary, fontFamily: Fonts.demi , fontSize: 12 }}> {date}</Text>
-                            <Text style={{ color: Colors.black, fontFamily: Fonts.demi ,  fontSize: 12 }}> {desc}</Text>
+                            <Text style={{ color: Colors.colorPrimary, fontFamily: Fonts.demi, fontSize: 12 }}> {date}</Text>
+                            <Text style={{ color: Colors.black, fontFamily: Fonts.demi, fontSize: 12 }}> {desc}</Text>
                         </View>
 
                         {props.TYPE == 'inspeksi' && <Text style={{ color: Colors.darkgrey, marginTop: 15, fontWeight: '500', marginRight: 6, fontSize: 12 }}>{props.BARIS == null || props.BARIS == '' ? '-' : "(" + "baris" + " " + props.BARIS + ")"}</Text>}
@@ -93,15 +93,15 @@ const ItemDetailSuggestion = (props) => {
                         {props.TYPE == 'panen' && <View style={{ marginTop: 5 }}>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <Text style={styles.textLabelBold}>Total Janjang Panen</Text>
-                                <Text style={styles.textLabel}>{props.DATA.TOTAL_JANJANG_PANEN} Janjang</Text>
+                                <Text style={styles.textLabel}>{props.DATA[0].TOTAL_JANJANG_PANEN} Janjang</Text>
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 4 }}>
                                 <Text style={styles.textLabelBold}>BJR bulan lalu</Text>
-                                <Text style={styles.textLabel}>{props.DATA.BJR_BULAN_LALU} kg</Text>
+                                <Text style={styles.textLabel}>{props.DATA[0].BJR_BULAN_LALU} kg</Text>
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 4 }}>
                                 <Text style={styles.textLabelBold}>Total Restan TPH</Text>
-                                <Text style={styles.textLabel}>{props.DATA.TOTAL_RESTAN_TPH} Janjang</Text>
+                                <Text style={styles.textLabel}>{props.DATA[0].TOTAL_RESTAN_TPH} Janjang</Text>
                             </View>
                         </View>}
 
