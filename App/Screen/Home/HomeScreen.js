@@ -244,7 +244,6 @@ class HomeScreen extends React.Component {
   }
 
   async componentDidMount() {
-      alert("???");
     this.syncChecker();
     /** NOTIFICATION LOCAL */
     await this.putFCMConfig();
