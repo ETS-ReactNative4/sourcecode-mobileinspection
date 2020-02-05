@@ -1,80 +1,21 @@
 import React, { Component } from 'react';
-import { ScrollView, Text, View, TouchableOpacity, Image, ImageBackground } from 'react-native';
+import { ScrollView, Text, View, TouchableOpacity, Image, ImageBackground, ActivityIndicator, NetInfo } from 'react-native';
 import { HeaderWithButton } from "../Component/Header/HeaderWithButton";
 import Colors from "../Constant/Colors";
-import { clipString } from '../Constant/Functions/StringManipulator';
 import TaskServices from "../Database/TaskServices";
-import images from '../Themes/Images';
-
-
-const LeaderboardRank = (userData, index) => {
-    return (
-        <View style={{
-            justifyContent: 'center',
-            flexDirection: 'row',
-            flex: 1
-        }}>
-            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-
-                <View style={{ flex: 1, justifyContent: 'flex-end', marginBottom: 10 }}>
-                    <Text
-                        style={{
-                            fontSize: 18,
-                            fontWeight: 'bold',
-                            color: 'white',
-                            textAlign: "center",
-                            width: 72,
-                        }}>Rizki P.</Text>
-                    <Image source={images.ic_orang} style={{ marginTop: 5, height: 72, width: 72, borderRadius: 50, borderWidth: 2, borderColor: Colors.colorWhite }} />
-                </View>
-
-
-                <View style={{ height: 150, width: 72, justifyContent: 'flex-start' }}>
-                    <ImageBackground resizeMode={'stretch'} source={images.img_background_rank_2} style={{ height: 90, backgroundColor: 'orange', justifyContent: 'flex-end', paddingVertical: 12 }}>
-                        <Text style={{ fontSize: 48, fontWeight: '800', color: 'white', textAlign: "center", marginTop: 10 }}>2</Text>
-                        <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'white', textAlign: "center" }}>1,180</Text>
-                    </ImageBackground>
-                </View>
-            </View>
-
-
-            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                <View style={{ flex: 1, justifyContent: 'flex-end', marginBottom: 10 }}>
-                    <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'white', textAlign: "center", width: 90 }}>Mega B.</Text>
-                    <Image source={images.ic_orang} style={{ marginTop: 5, height: 90, width: 90, borderRadius: 50, borderWidth: 2, borderColor: Colors.colorWhite }} />
-                </View>
-
-                <View style={{ height: 170, width: 90, justifyContent: 'flex-start' }}>
-                    <View style={{ height: 110, backgroundColor: '#fb9214', justifyContent: 'flex-end', paddingVertical: 14 }}>
-                        <Text style={{ fontSize: 54, fontWeight: '900', color: 'white', textAlign: "center" }}>1</Text>
-                        <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'white', textAlign: "center" }}>1,401</Text>
-                    </View>
-                </View>
-            </View>
-
-            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                <View style={{ flex: 1, justifyContent: 'flex-end', marginBottom: 10 }}>
-                    <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'white', textAlign: "center", width: 67 }}>Sentot S.</Text>
-                    <Image source={images.ic_orang} style={{ marginTop: 5, height: 72, width: 72, borderRadius: 50, borderWidth: 2, borderColor: Colors.colorWhite }} />
-                </View>
-
-                <View style={{ height: 150, width: 72, justifyContent: 'flex-start' }}>
-                    <ImageBackground resizeMode={'stretch'} source={images.img_background_rank_3} style={{ height: 90, backgroundColor: 'orange', justifyContent: 'flex-end', paddingVertical: 12 }}>
-                        <Text style={{ fontSize: 48, fontWeight: '900', color: 'white', textAlign: "center", marginTop: 10 }}>3</Text>
-                        <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'white', textAlign: "center" }}>1,180</Text>
-                    </ImageBackground>
-                </View>
-            </View>
-        </View>
-
-    )
-}
+import { Fonts, Images } from '../Themes'
+import { getPointLeaderBoard } from './Sync/Download/DownloadLeaderboard';
 
 export default class Leaderboard extends Component {
     constructor(props) {
         super(props);
         let currentUser = TaskServices.getAllData('TR_LOGIN')[0];
         this.state = {
+            dataBA: [],
+            dataPT: [],
+            dataNational: [],
+            isLoading: true,
+            isDisconnect: false,
             currentUser: currentUser,
             rankData: [
                 {
@@ -114,7 +55,7 @@ export default class Leaderboard extends Component {
                     LOCATION_CODE: "123",
                     REF_ROLE: 'string',
                     JOB: 'string',
-                    FULLNAME: 'DONI ROMDONI',
+                    FULLNAME: 'Doni R.',
                     POINT: '503'
                 },
                 {
@@ -134,7 +75,7 @@ export default class Leaderboard extends Component {
                     LOCATION_CODE: "123",
                     REF_ROLE: 'string',
                     JOB: 'string',
-                    FULLNAME: 'ADAM RAHMAT',
+                    FULLNAME: 'Adam R.',
                     POINT: '102'
                 }
             ],
@@ -142,10 +83,44 @@ export default class Leaderboard extends Component {
         }
     }
 
-    renderRefRoleSelector() {
+    componentDidMount() {
+        this._initData();
+    }
+
+    _initData() {
+        NetInfo.isConnected.fetch().then(isConnected => {
+            if (isConnected) {
+                getPointLeaderBoard().then((data) => {
+                    data.data.map(result => {
+                        this.setState({
+                            dataBA: array_move(result.BA, 0, 1),
+                            dataPT: array_move(result.PT, 0, 1),
+                            dataNational: array_move(result.NATIONAL, 0, 1),
+                            isLoading: false
+                        })
+                    })
+                });
+            } else {
+                this.setState({ isDisconnect: true, isLoading: false })
+            }
+        });
+        function handleFirstConnectivityChange(isConnected) {
+            NetInfo.isConnected.removeEventListener(
+                'connectionChange',
+                handleFirstConnectivityChange
+            );
+        }
+        NetInfo.isConnected.addEventListener(
+            'connectionChange',
+            handleFirstConnectivityChange
+        );
+    }
+
+
+    renderRefRoleSelector(dataRank) {
         return (
-            <ImageBackground resizeMode={'stretch'} source={images.img_background_leaderboard_1} style={{ flex: 6 }}>
-                {/* <Image source={images.img_background_leaderboard} style={{ resizeMode: 'stretch', width: '100%', height: "100%", position: 'absolute', opacity: 1 }} /> */}
+            <ImageBackground resizeMode={'stretch'} source={Images.img_background_leaderboard_1} style={{ flex: 6 }}>
+                {/* <Image source={Images.img_background_leaderboard} style={{ resizeMode: 'stretch', width: '100%', height: "100%", position: 'absolute', opacity: 1 }} /> */}
 
                 <View style={{
                     flex: 6,
@@ -217,7 +192,7 @@ export default class Leaderboard extends Component {
                                         })
                                     }}>
                                     <Text style={{
-                                        fontWeight: 'bold',
+                                        fontFamily: Fonts.demi,
                                         paddingVertical: 5,
                                         color: this.state.refRole === "NATIONAL" ? "white" : "rgba(255,179,0,1)"
                                     }}>National</Text>
@@ -226,15 +201,92 @@ export default class Leaderboard extends Component {
                         </View>
                     </View>
 
+
                     <View style={{ flex: 9, alignItems: "center", justifyContent: "center" }}>
-                        <LeaderboardRank />
+                        <View style={{
+                            justifyContent: 'center',
+                            flexDirection: 'row',
+                            flex: 1
+                        }}>
+                            {dataRank.map((item, idx) => {
+                                if (item != null) {
+
+                                    let source;
+                                    if (item.IMAGE_URL != null) {
+                                        source = { uri: item.IMAGE_URL }
+                                    } else {
+                                        source = Images.ic_orang;
+                                    }
+                                    if (idx == 0) {
+                                        return (
+                                            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                                                <View style={{ flex: 1, justifyContent: 'flex-end', marginBottom: 10 }}>
+                                                    <Text
+                                                        style={{
+                                                            fontFamily: Fonts.bold,
+                                                            color: 'white',
+                                                            textAlign: "center",
+                                                            width: 72,
+                                                            fontSize: 20
+                                                        }}>{item.FULLNAME}</Text>
+                                                    <Image source={source} style={{ marginTop: 5, height: 72, width: 72, borderRadius: 50, borderWidth: 2, borderColor: Colors.colorWhite }} />
+                                                </View>
+
+                                                <View style={{ height: 150, width: 72, justifyContent: 'flex-start' }}>
+                                                    <ImageBackground resizeMode={'stretch'} source={Images.img_background_rank_2} style={{ height: 90, backgroundColor: 'orange', justifyContent: 'flex-end', paddingVertical: 12 }}>
+                                                        <Text style={{ fontSize: 48, fontFamily: Fonts.demi, color: 'white', textAlign: "center", marginTop: 10 }}>{item.RANK}</Text>
+                                                        <Text style={{ fontSize: 15, fontFamily: Fonts.demi, color: 'white', textAlign: "center" }}>{item.POINT}</Text>
+                                                    </ImageBackground>
+                                                </View>
+                                            </View>
+                                        )
+                                    } else if (idx == 1) {
+                                        return (
+                                            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                                                <View style={{ flex: 1, justifyContent: 'flex-end', marginBottom: 10 }}>
+                                                    <Text style={{
+                                                        fontSize: 20,
+                                                        fontFamily: Fonts.bold, color: 'white', textAlign: "center", width: 90
+                                                    }}>{item.FULLNAME}</Text>
+                                                    <Image source={source} style={{ marginTop: 5, height: 90, width: 90, borderRadius: 50, borderWidth: 2, borderColor: Colors.colorWhite }} />
+                                                </View>
+
+                                                <View style={{ height: 170, width: 90, justifyContent: 'flex-start' }}>
+                                                    <View style={{ height: 110, backgroundColor: '#fb9214', justifyContent: 'flex-end', paddingVertical: 14 }}>
+                                                        <Text style={{ fontSize: 60, fontFamily: Fonts.demi, color: 'white', textAlign: "center" }}>{item.RANK}</Text>
+                                                        <Text style={{ fontSize: 20, fontFamily: Fonts.demi, color: 'white', textAlign: "center" }}>{item.POINT}</Text>
+                                                    </View>
+                                                </View>
+                                            </View>
+                                        )
+                                    } else if (idx == 2) {
+                                        return (
+                                            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                                                <View style={{ flex: 1, justifyContent: 'flex-end', marginBottom: 10 }}>
+                                                    <Text style={{ fontSize: 20, fontFamily: Fonts.bold, color: 'white', textAlign: "center", width: 67 }}>{item.FULLNAME}</Text>
+                                                    <Image source={source} style={{ marginTop: 5, height: 72, width: 72, borderRadius: 50, borderWidth: 2, borderColor: Colors.colorWhite }} />
+                                                </View>
+
+                                                <View style={{ height: 150, width: 72, justifyContent: 'flex-start' }}>
+                                                    <ImageBackground resizeMode={'stretch'} source={Images.img_background_rank_3} style={{ height: 90, backgroundColor: 'orange', justifyContent: 'flex-end', paddingVertical: 12 }}>
+                                                        <Text style={{ fontSize: 48, fontFamily: Fonts.demi, color: 'white', textAlign: "center", marginTop: 10 }}>{item.RANK}</Text>
+                                                        <Text style={{ fontSize: 15, fontFamily: Fonts.demi, color: 'white', textAlign: "center" }}>{item.POINT}</Text>
+                                                    </ImageBackground>
+                                                </View>
+                                            </View>
+                                        )
+                                    }
+                                }
+                            })}
+                        </View>
                     </View>
                 </View >
             </ImageBackground>
 
         )
     }
-    renderRank() {
+
+    renderRank(dataRank) {
         let currentUserAuthCode = this.state.currentUser.USER_AUTH_CODE;
         function colorSelector(currentUserAuthCode, userAuthCode) {
             if (currentUserAuthCode.toString() === userAuthCode.toString()) {
@@ -260,46 +312,6 @@ export default class Leaderboard extends Component {
             }
         }
 
-        function firstRank(userData, index) {
-            return (
-                <View
-                    key={index}
-                    style={{
-                        borderBottomWidth: 1,
-                        borderColor: "rgba(195,187,187,1)",
-                        paddingVertical: 10,
-                        flexDirection: "row"
-                    }}>
-                    <View style={{
-                        flex: 1,
-                        flexDirection: "row"
-                    }}>
-                        <Image
-                            style={{ flex: 1, maxWidth: 36, maxHeight: 36, borderRadius: 36 / 2, marginTop: 36 / 2 }}
-                            resizeMode={"contain"}
-                            source={rankIcon(index)}
-                        />
-                    </View>
-                    <View
-                        style={{
-                            flex: 4,
-                            alignItems: "center"
-                        }}>
-                        <Image
-                            style={{ width: 72, height: 72, borderRadius: 72 / 2 }}
-                            resizeMode={"contain"}
-                            source={require('../Images/icon/ic-orang-1.png')}
-                        />
-                        <Text style={{ paddingVertical: 10, fontSize: 20, color: colorSelector(currentUserAuthCode, userData.USER_AUTH_CODE) }}>{userData.FULLNAME}</Text>
-                        <View style={{ flexDirection: "row", alignItems: 'center', alignSelf: "center", paddingHorizontal: 10, paddingVertical: 5 }}>
-                            <Image style={{ width: 15, height: 15 }} source={iconSelector(currentUserAuthCode, userData.USER_AUTH_CODE)} />
-                            <Text style={{ fontSize: 12, paddingHorizontal: 10, color: colorSelector(currentUserAuthCode, userData.USER_AUTH_CODE) }}>{userData.POINT} points</Text>
-                        </View>
-                    </View>
-                    <View style={{ flex: 1 }} />
-                </View>
-            )
-        }
         function otherRank(userData, index) {
 
             let user = "5" !== userData.USER_AUTH_CODE ? userData.FULLNAME : "Peringkat Kamu";
@@ -346,10 +358,10 @@ export default class Leaderboard extends Component {
                         style={{
                             flex: 3.5
                         }}>
-                        <Text style={{ paddingHorizontal: 10, paddingBottom: 5, fontSize: 18, color: color, fontWeight: '500' }}>{user}</Text>
+                        <Text style={{ fontFamily: Fonts.demi, paddingHorizontal: 10, paddingBottom: 5, fontSize: 18, color: color, }}>{user}</Text>
                         <View style={{ flexDirection: "row", backgroundColor: "white", borderRadius: 15, alignItems: 'center', alignSelf: "baseline", paddingHorizontal: 10, paddingVertical: 5, marginLeft: 5 }}>
                             <Image style={{ width: 15, height: 15 }} source={iconSelector(currentUserAuthCode, userData.USER_AUTH_CODE)} />
-                            <Text style={{ fontSize: 12, paddingHorizontal: 5, color: color, fontWeight: '500' }}>{userData.POINT} points</Text>
+                            <Text style={{ fontFamily: Fonts.medium, fontSize: 12, paddingHorizontal: 5, color: color, }}>{userData.POINT} points</Text>
                         </View>
                     </View>
                 </View>
@@ -357,14 +369,11 @@ export default class Leaderboard extends Component {
         }
 
         return (
-            this.state.rankData.map((userData, index) => {
-                userData.FULLNAME = clipString(userData.FULLNAME, 15);
-                if (index === 0) {
-                    // return firstRank(userData, index)
-                    return null
-                }
-                else {
-                    return otherRank(userData, index)
+            dataRank.map((userData, index) => {
+                if (userData != null) {
+                    if (index > 2) {
+                        return otherRank(userData, index)
+                    }
                 }
             })
         )
@@ -385,18 +394,79 @@ export default class Leaderboard extends Component {
                     }}
                     onPressRight={null}
                 />
-                {this.renderRefRoleSelector()}
-                <View style={{ flex: 4 }}>
-                    <ScrollView
-                        style={{
-                            paddingVertical: 15,
-                            paddingHorizontal: 15,
-                        }}>
-                        {this.renderRank()}
-                    </ScrollView>
-                </View>
+                {this.renderByType()}
+
             </View>
 
         )
     }
+
+    renderByType() {
+
+        const { isLoading } = this.state;
+
+        if (!isLoading) {
+            if (this.state.refRole == 'BA') {
+                return (
+                    <View style={{ flex: 1 }}>
+                        {this.renderRefRoleSelector(this.state.dataBA)}
+                        <View style={{ flex: 4 }}>
+                            <ScrollView
+                                style={{
+                                    paddingVertical: 15,
+                                    paddingHorizontal: 15,
+                                }}>
+                                {this.renderRank(this.state.dataBA)}
+                            </ScrollView>
+                        </View>
+                    </View>
+                )
+            } else if (this.state.refRole == 'PT') {
+                return (
+                    <View style={{ flex: 1 }}>
+                        {this.renderRefRoleSelector(this.state.dataPT)}
+                        <View style={{ flex: 4 }}>
+                            <ScrollView
+                                style={{
+                                    paddingVertical: 15,
+                                    paddingHorizontal: 15,
+                                }}>
+                                {this.renderRank(this.state.dataPT)}
+                            </ScrollView>
+                        </View>
+                    </View>
+                )
+            } else {
+                return (
+                    <View style={{ flex: 1 }}>
+                        {this.renderRefRoleSelector(this.state.dataNational)}
+                        <View style={{ flex: 4 }}>
+                            <ScrollView
+                                style={{
+                                    paddingVertical: 15,
+                                    paddingHorizontal: 15,
+                                }}>
+                                {this.renderRank(this.state.dataNational)}
+                            </ScrollView>
+                        </View>
+                    </View>)
+            }
+        } else {
+            return <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator color={Colors.tintColorPrimary} />
+            </View>
+        }
+    }
+
 }
+
+function array_move(arr, old_index, new_index) {
+    if (new_index >= arr.length) {
+        var k = new_index - arr.length + 1;
+        while (k--) {
+            arr.push(undefined);
+        }
+    }
+    arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+    return arr; // for testing
+};
