@@ -227,7 +227,7 @@ export default class Leaderboard extends Component {
                                                             color: 'white',
                                                             textAlign: "center",
                                                             width: 72,
-                                                            fontSize: 20
+                                                            fontSize: 16
                                                         }}>{item.FULLNAME}</Text>
                                                     <Image source={source} style={{ marginTop: 5, height: 72, width: 72, borderRadius: 50, borderWidth: 2, borderColor: Colors.colorWhite }} />
                                                 </View>
@@ -245,7 +245,7 @@ export default class Leaderboard extends Component {
                                             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                                                 <View style={{ flex: 1, justifyContent: 'flex-end', marginBottom: 10 }}>
                                                     <Text style={{
-                                                        fontSize: 20,
+                                                        fontSize: 18,
                                                         fontFamily: Fonts.bold, color: 'white', textAlign: "center", width: 90
                                                     }}>{item.FULLNAME}</Text>
                                                     <Image source={source} style={{ marginTop: 5, height: 90, width: 90, borderRadius: 50, borderWidth: 2, borderColor: Colors.colorWhite }} />
@@ -263,7 +263,7 @@ export default class Leaderboard extends Component {
                                         return (
                                             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                                                 <View style={{ flex: 1, justifyContent: 'flex-end', marginBottom: 10 }}>
-                                                    <Text style={{ fontSize: 20, fontFamily: Fonts.bold, color: 'white', textAlign: "center", width: 67 }}>{item.FULLNAME}</Text>
+                                                    <Text style={{ fontSize: 16, fontFamily: Fonts.bold, color: 'white', textAlign: "center", width: 72 }}>{item.FULLNAME}</Text>
                                                     <Image source={source} style={{ marginTop: 5, height: 72, width: 72, borderRadius: 50, borderWidth: 2, borderColor: Colors.colorWhite }} />
                                                 </View>
 
@@ -288,6 +288,7 @@ export default class Leaderboard extends Component {
 
     renderRank(dataRank) {
         let currentUserAuthCode = this.state.currentUser.USER_AUTH_CODE;
+
         function colorSelector(currentUserAuthCode, userAuthCode) {
             if (currentUserAuthCode.toString() === userAuthCode.toString()) {
                 return "rgba(255,179,0,1)"
@@ -297,7 +298,7 @@ export default class Leaderboard extends Component {
             }
         }
         function iconSelector(currentUserAuthCode, userAuthCode) {
-            if ('5' === userAuthCode.toString()) {
+            if (currentUserAuthCode.toString() === userAuthCode.toString()) {
                 return require('../Images/icon/Leaderboard/icon_points-orange.png')
             }
             else {
@@ -312,10 +313,18 @@ export default class Leaderboard extends Component {
             }
         }
 
+        function profileImage(image) {
+            if (image !== null) {
+                return { uri: image }
+            } else {
+                return Images.ic_orang;
+            }
+        }
+
         function otherRank(userData, index) {
 
-            let user = "5" !== userData.USER_AUTH_CODE ? userData.FULLNAME : "Peringkat Kamu";
-            let color = "5" !== userData.USER_AUTH_CODE ? "rgba(195,187,187,1)" : "rgba(255,179,0,1)"
+            let user = currentUserAuthCode !== userData.USER_AUTH_CODE ? userData.FULLNAME : "Peringkat Kamu";
+            let color = currentUserAuthCode !== userData.USER_AUTH_CODE ? "rgba(195,187,187,1)" : "rgba(255,179,0,1)"
 
             return (
                 index > 2 &&
@@ -351,7 +360,7 @@ export default class Leaderboard extends Component {
                         <Image
                             style={{ flex: 1, maxWidth: 50, maxHeight: 50, borderRadius: 50 / 2 }}
                             resizeMode={"contain"}
-                            source={require('../Images/icon/ic-orang-1.png')}
+                            source={profileImage(userData.IMAGE_URL)}
                         />
                     </View>
                     <View
@@ -403,53 +412,65 @@ export default class Leaderboard extends Component {
 
     renderByType() {
 
-        const { isLoading } = this.state;
+        const { isLoading, isDisconnect } = this.state;
 
         if (!isLoading) {
-            if (this.state.refRole == 'BA') {
-                return (
-                    <View style={{ flex: 1 }}>
-                        {this.renderRefRoleSelector(this.state.dataBA)}
-                        <View style={{ flex: 4 }}>
-                            <ScrollView
-                                style={{
-                                    paddingVertical: 15,
-                                    paddingHorizontal: 15,
-                                }}>
-                                {this.renderRank(this.state.dataBA)}
-                            </ScrollView>
+            if (!isDisconnect) {
+                if (this.state.refRole == 'BA') {
+                    return (
+                        <View style={{ flex: 1 }}>
+                            {this.renderRefRoleSelector(this.state.dataBA)}
+                            <View style={{ flex: 4 }}>
+                                <ScrollView
+                                    style={{
+                                        paddingVertical: 15,
+                                        paddingHorizontal: 15,
+                                    }}>
+                                    {this.renderRank(this.state.dataBA)}
+                                </ScrollView>
+                            </View>
                         </View>
-                    </View>
-                )
-            } else if (this.state.refRole == 'PT') {
-                return (
-                    <View style={{ flex: 1 }}>
-                        {this.renderRefRoleSelector(this.state.dataPT)}
-                        <View style={{ flex: 4 }}>
-                            <ScrollView
-                                style={{
-                                    paddingVertical: 15,
-                                    paddingHorizontal: 15,
-                                }}>
-                                {this.renderRank(this.state.dataPT)}
-                            </ScrollView>
+                    )
+                } else if (this.state.refRole == 'PT') {
+                    return (
+                        <View style={{ flex: 1 }}>
+                            {this.renderRefRoleSelector(this.state.dataPT)}
+                            <View style={{ flex: 4 }}>
+                                <ScrollView
+                                    style={{
+                                        paddingVertical: 15,
+                                        paddingHorizontal: 15,
+                                    }}>
+                                    {this.renderRank(this.state.dataPT)}
+                                </ScrollView>
+                            </View>
                         </View>
-                    </View>
-                )
+                    )
+                } else {
+                    return (
+                        <View style={{ flex: 1 }}>
+                            {this.renderRefRoleSelector(this.state.dataNational)}
+                            <View style={{ flex: 4 }}>
+                                <ScrollView
+                                    style={{
+                                        paddingVertical: 15,
+                                        paddingHorizontal: 15,
+                                    }}>
+                                    {this.renderRank(this.state.dataNational)}
+                                </ScrollView>
+                            </View>
+                        </View>)
+                }
             } else {
-                return (
-                    <View style={{ flex: 1 }}>
-                        {this.renderRefRoleSelector(this.state.dataNational)}
-                        <View style={{ flex: 4 }}>
-                            <ScrollView
-                                style={{
-                                    paddingVertical: 15,
-                                    paddingHorizontal: 15,
-                                }}>
-                                {this.renderRank(this.state.dataNational)}
-                            </ScrollView>
-                        </View>
-                    </View>)
+                return <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20 }}>
+                    <Image source={Images.ic_no_wifi} style={{
+                        height: 100,
+                        width: 100,
+                        opacity: 0.8
+                    }} />
+                    <Text style={{ fontFamily: Fonts.demi, marginTop: 16, fontSize: 16 }}>Tidak ada koneksi internet</Text>
+                    <Text style={{ fontFamily: Fonts.book, marginTop: 2, fontSize: 14, textAlign: "center" }}>Pastikan device terhubung WIFI/Paket Data untuk melihat Peringkat Asisten</Text>
+                </View>
             }
         } else {
             return <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
