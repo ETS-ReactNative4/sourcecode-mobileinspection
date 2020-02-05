@@ -365,10 +365,11 @@ export default class Leaderboard extends Component {
                     </View>
                     <View
                         style={{
-                            flex: 3.5
+                            flex: 3.5,
+                            justifyContent:"center"
                         }}>
-                        <Text style={{ fontFamily: Fonts.demi, paddingHorizontal: 10, paddingBottom: 5, fontSize: 18, color: color, }}>{user}</Text>
-                        <View style={{ flexDirection: "row", backgroundColor: "white", borderRadius: 15, alignItems: 'center', alignSelf: "baseline", paddingHorizontal: 10, paddingVertical: 5, marginLeft: 5 }}>
+                        <Text style={{ fontFamily: Fonts.demi, paddingHorizontal: 10, fontSize: 17, color: color, }}>{user}</Text>
+                        <View style={{ flexDirection: "row", backgroundColor: "white", borderRadius: 15, alignItems: 'center', alignSelf: "baseline", paddingHorizontal: 5, marginLeft: 5 }}>
                             <Image style={{ width: 15, height: 15 }} source={iconSelector(currentUserAuthCode, userData.USER_AUTH_CODE)} />
                             <Text style={{ fontFamily: Fonts.medium, fontSize: 12, paddingHorizontal: 5, color: color, }}>{userData.POINT} points</Text>
                         </View>
