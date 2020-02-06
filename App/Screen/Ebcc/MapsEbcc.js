@@ -1,7 +1,7 @@
 import React from 'react';
 import {Dimensions, StatusBar, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
-import MapView, {Marker, Polygon, ProviderPropType, PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView, {Marker, Polygon, ProviderPropType, PROVIDER_GOOGLE, Circle} from 'react-native-maps';
 import Colors from '../../Constant/Colors'
 import {NavigationActions, StackActions} from 'react-navigation';
 import IconLoc from 'react-native-vector-icons/FontAwesome5';
@@ -30,6 +30,7 @@ class MapsEbcc extends React.Component {
 
         this.loadMap();
         this.state = {
+            gpsAccuracy: 0,
             latitude: 0.0,
             longitude: 0.0,
             region: {
@@ -370,7 +371,10 @@ class MapsEbcc extends React.Component {
                         let lat = event.nativeEvent.coordinate.latitude;
                         let lon = event.nativeEvent.coordinate.longitude;
                         this.setState({
-                            latitude: lat, longitude: lon, region: {
+                            gpsAccuracy: Math.ceil(event.nativeEvent.coordinate.accuracy),
+                            latitude: lat,
+                            longitude: lon,
+                            region: {
                                 latitude: lat,
                                 longitude: lon,
                                 latitudeDelta: 0.0075,
@@ -380,6 +384,15 @@ class MapsEbcc extends React.Component {
                     }}
                     onMapReady={() => {this.onMapReady()}}
                 >
+                    <Circle
+                        center= {{
+                            latitude: this.state.region.latitude,
+                            longitude: this.state.region.longitude
+                        }}
+                        fillColor="rgba(255, 255, 255, 0.3)"
+                        strokeColor="rgba(255, 255, 255, 1)"
+                        radius= {this.state.gpsAccuracy}
+                    />
                     {this.state.poligons.length > 0 && this.state.poligons.map((poly, index) => (
                         <View key={index}>
                             <Polygon
@@ -404,12 +417,6 @@ class MapsEbcc extends React.Component {
                         </View>
                     ))}
 
-                    <Marker
-                        coordinate={{
-                            latitude: this.state.latitude,
-                            longitude: this.state.longitude,
-                        }}/>
-
                 </MapView>
                 <View style={{
                     width: "100%",
@@ -424,16 +431,18 @@ class MapsEbcc extends React.Component {
                         borderRadius: 5,
                         backgroundColor: "rgba(0,0,0,0.3)"
                     }}>
-                        <View style={{
-                            flexDirection: "row",
-                            alignItems:"center"
-                        }}>
-                            <Text style={{color:"white"}}>
+                        <View style={{alignSelf:"flex-end"}}>
+                            <Text style={{ color: "white" }}>
+                                Accuracy : {this.state.gpsAccuracy} meter
+                            </Text>
+                        </View>
+                        <View>
+                            <Text style={{ color: "white" }}>
                                 Latitude : {this.state.latitude}
                             </Text>
                         </View>
                         <View>
-                            <Text style={{color:"white"}}>
+                            <Text style={{ color: "white" }}>
                                 Longitude : {this.state.longitude}
                             </Text>
                         </View>

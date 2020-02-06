@@ -1,7 +1,7 @@
 import React from 'react';
 import { BackHandler, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import MapView, { Marker, Polygon, ProviderPropType, PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { Marker, Polygon, ProviderPropType, PROVIDER_GOOGLE, Circle } from 'react-native-maps';
 import Colors from '../../Constant/Colors'
 import IconLoc from 'react-native-vector-icons/FontAwesome5';
 import ModalLoading from '../../Component/ModalLoading'
@@ -21,8 +21,9 @@ class MapsInspeksi extends React.Component {
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     this.loadMap();
     this.state = {
-      latitude: 0.0,
-      longitude: 0.0,
+        gpsAccuracy: 0,
+        latitude: 0.0,
+        longitude: 0.0,
       region: {
         latitude: LATITUDE,
         longitude: LONGITUDE,
@@ -312,6 +313,7 @@ class MapsInspeksi extends React.Component {
             let lat = event.nativeEvent.coordinate.latitude;
             let lon = event.nativeEvent.coordinate.longitude;
             this.setState({
+                gpsAccuracy: Math.ceil(event.nativeEvent.coordinate.accuracy),
               latitude: lat,
               longitude: lon,
               region: {
@@ -324,6 +326,15 @@ class MapsInspeksi extends React.Component {
           }}
             onMapReady={() => {this.onMapReady()}}
         >
+            <Circle
+                center= {{
+                    latitude: this.state.region.latitude,
+                    longitude: this.state.region.longitude
+                }}
+                fillColor="rgba(255, 255, 255, 0.3)"
+                strokeColor="rgba(255, 255, 255, 1)"
+                radius= {this.state.gpsAccuracy}
+            />
           {this.state.poligons.length > 0 && this.state.poligons.map((poly, index) => (
             <View key={index}>
               <Polygon
@@ -348,16 +359,6 @@ class MapsInspeksi extends React.Component {
             </View>
           ))}
 
-          <Marker
-            coordinate={{
-              latitude: this.state.latitude,
-              longitude: this.state.longitude,
-            }}
-            centerOffset={{ x: -42, y: -60 }}
-            anchor={{ x: 0.84, y: 1 }}
-          >
-          </Marker>
-
         </MapView>
           <View style={{
               width: "100%",
@@ -372,16 +373,18 @@ class MapsInspeksi extends React.Component {
                   borderRadius: 5,
                   backgroundColor: "rgba(0,0,0,0.3)"
               }}>
-                  <View style={{
-                      flexDirection: "row",
-                      alignItems:"center"
-                  }}>
-                      <Text style={{color:"white"}}>
+                  <View style={{alignSelf:"flex-end"}}>
+                      <Text style={{ color: "white" }}>
+                          Accuracy : {this.state.gpsAccuracy} meter
+                      </Text>
+                  </View>
+                  <View>
+                      <Text style={{ color: "white" }}>
                           Latitude : {this.state.latitude}
                       </Text>
                   </View>
                   <View>
-                      <Text style={{color:"white"}}>
+                      <Text style={{ color: "white" }}>
                           Longitude : {this.state.longitude}
                       </Text>
                   </View>

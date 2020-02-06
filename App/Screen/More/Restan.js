@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import IonicIcon from 'react-native-vector-icons/Ionicons';
 
-import MapView, {Marker, Polygon, PROVIDER_GOOGLE, ProviderPropType} from 'react-native-maps';
+import MapView, {Marker, Polygon, PROVIDER_GOOGLE, ProviderPropType, Circle} from 'react-native-maps';
 import Colors from '../../Constant/Colors'
 import ModalLoading from '../../Component/ModalLoading'
 import ModalAlert from '../../Component/ModalAlert';
@@ -36,8 +36,11 @@ export default class Restan extends React.Component {
         this.state = {
             userData: user,
             internetExist: true,
-            latitude: 0.0,
-            longitude: 0.0,
+            currentGPS:{
+                latitude:0.0,
+                longitude: 0.0,
+                gpsAccuracy: 0
+            },
             region: {
                 latitude: LATITUDE,
                 longitude: LONGITUDE,
@@ -378,14 +381,15 @@ export default class Restan extends React.Component {
                     zoomEnabled={true}
                     scrollEnabled={true}
                     onUserLocationChange={event => {
-                        let lat = event.nativeEvent.coordinate.latitude;
-                        let lon = event.nativeEvent.coordinate.longitude;
                         this.setState({
-                            latitude: lat,
-                            longitude: lon,
+                            currentGPS:{
+                                latitude: event.nativeEvent.coordinate.latitude,
+                                longitude: event.nativeEvent.coordinate.longitude,
+                                gpsAccuracy: Math.ceil(event.nativeEvent.coordinate.accuracy),
+                            },
                             region: {
-                                latitude: lat,
-                                longitude: lon,
+                                latitude: event.nativeEvent.coordinate.latitude,
+                                longitude: event.nativeEvent.coordinate.longitude,
                                 latitudeDelta: 0.0075,
                                 longitudeDelta: 0.00721
                             }
@@ -393,6 +397,16 @@ export default class Restan extends React.Component {
                     }}
                     onMapReady={() => {this.onMapReady()}}
                 >
+                    <Circle
+                        center= {{
+                            latitude: this.state.currentGPS.latitude,
+                            longitude: this.state.currentGPS.longitude
+                        }}
+                        fillColor="rgba(255, 255, 255, 0.3)"
+                        strokeColor="rgba(255, 255, 255, 1)"
+                        radius= {this.state.currentGPS.gpsAccuracy}
+                    />
+
                     {this.state.poligons.length > 0 && this.state.poligons.map((poly, index) => (
                         <View key={index}>
                             <Polygon
@@ -486,16 +500,20 @@ export default class Restan extends React.Component {
                         backgroundColor: "rgba(0,0,0,0.3)"
                     }}>
                         <View style={{
-                            flexDirection: "row",
-                            alignItems: "center"
+                            alignItems: "flex-end"
                         }}>
                             <Text style={{ color: "white" }}>
-                                Latitude : {this.state.latitude}
+                                Accuracy : {this.state.currentGPS.gpsAccuracy} meter
                             </Text>
                         </View>
                         <View>
                             <Text style={{ color: "white" }}>
-                                Longitude : {this.state.longitude}
+                                Latitude : {this.state.currentGPS.latitude}
+                            </Text>
+                        </View>
+                        <View>
+                            <Text style={{ color: "white" }}>
+                                Longitude : {this.state.currentGPS.longitude}
                             </Text>
                         </View>
                     </View>
