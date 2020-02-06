@@ -189,6 +189,7 @@ class HomeScreen extends React.Component {
   willFocus = this.props.navigation.addListener(
     'willFocus',
     () => {
+        this.syncChecker();
       this.getProfileImage();
       this._createDataSuggestion();
       this._deleteDataSuggestion();
@@ -245,7 +246,6 @@ class HomeScreen extends React.Component {
   }
 
   async componentDidMount() {
-    this.syncChecker();
     /** NOTIFICATION LOCAL */
     await this.putFCMConfig();
     displayNotificationSync();
