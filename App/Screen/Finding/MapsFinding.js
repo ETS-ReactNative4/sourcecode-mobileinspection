@@ -378,14 +378,16 @@ class MapsInspeksi extends React.Component {
                           Accuracy : {this.state.gpsAccuracy} meter
                       </Text>
                   </View>
-                  <View>
+                  <View style={{alignSelf:"flex-end"}}>
                       <Text style={{ color: "white" }}>
-                          Latitude : {this.state.latitude}
+                          <Text>Latitude : </Text>
+                          <Text>{this.state.latitude.toFixed(6)}</Text>
                       </Text>
                   </View>
-                  <View>
+                  <View style={{alignSelf:"flex-end"}}>
                       <Text style={{ color: "white" }}>
-                          Longitude : {this.state.longitude}
+                          <Text>Longitude : </Text>
+                          <Text>{this.state.longitude.toFixed(6)}</Text>
                       </Text>
                   </View>
               </View>

@@ -463,7 +463,7 @@ export default class PilihPeta extends Component {
 							<Image source={require('../../Images/icon/ic_my_location.png')} style={[styles.icon, { marginLeft: 10 }]} />
 						</View>
 						<View>
-                            <Text style={{ fontSize: 12, color: 'grey', marginTop: 5, fontFamily: Fonts.book }}>Lokasimu saat ini</Text>
+                            <Text style={{ fontSize: 12, color: 'grey', marginTop: 5, fontFamily: Fonts.book }}>Peta lokasi yang digunakan saat ini</Text>
 							<Text style={{ fontSize: 18, fontWeight: '400', fontFamily: Fonts.medium }}>{this.state.estateName}</Text>
 						</View>
 					</View>
