@@ -4,6 +4,11 @@ import ServerName from "../Constant/ServerName";
 
 const TaskServices = {
 
+    //CURRENT USER RELATED
+    getCurrentUser(){
+        return(this.getAllData('TR_LOGIN')[0]);
+    },
+
     getPath: function () {
         return RealmSchemas.path;
     },
@@ -94,6 +99,15 @@ const TaskServices = {
 
     getTotalData: function (table) {
         return RealmSchemas.objects(table).length;
+    },
+
+    findOne: function (table, param, value) {
+        let list = RealmSchemas.objects(table);
+        return list.filtered(param + ' == \"' + value + '\" ')[0];
+    },
+    findAll: function (table, param, value) {
+        let list = RealmSchemas.objects(table);
+        return list.filtered(param + ' == \"' + value + '\" ');
     },
 
     findBy2: function (table, param, value) {

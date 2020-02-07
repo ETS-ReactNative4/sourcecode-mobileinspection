@@ -24,6 +24,7 @@ class MapsInspeksi extends React.Component {
 
         this.loadMap();
         this.state = {
+            currentUser: TaskServices.getCurrentUser(),
             gpsAccuracy: 0,
             latitude: 0.0,
             longitude: 0.0,
@@ -197,6 +198,14 @@ class MapsInspeksi extends React.Component {
         return arrPoli;
     }
 
+    polygonFilter(werksAfd){
+        if(this.state.currentUser.REFFERENCE_ROLE !== "AFD_CODE"){
+            return true
+        }
+        let userWerksAfd = this.state.currentUser.LOCATION_CODE;
+        return userWerksAfd.includes(werksAfd) && this.state.currentUser.REFFERENCE_ROLE === "AFD_CODE";
+    }
+
     getPolygons() {
         if (!polyMap) {
             this.setState({
@@ -208,25 +217,23 @@ class MapsInspeksi extends React.Component {
         let data = polyMap.data.polygons;
         let poligons = [];
 
-        let blockInAfd = TaskServices.getBlockInAFD();
-
         for (var i = 0; i < data.length; i++) {
             let coords = data[i];
-            if (
-                geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude + 0.006 }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude - 0.006 }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.latitude + 0.0025, longitude: this.state.longitude }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.latitude - 0.0025, longitude: this.state.longitude }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.latitude - 0.0025, longitude: this.state.longitude - 0.006 }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.latitude - 0.0025, longitude: this.state.longitude + 0.006 }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.latitude + 0.0025, longitude: this.state.longitude - 0.006 }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.latitude + 0.0025, longitude: this.state.longitude + 0.006 }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude }, coords.coords)
-            ) {
-                if (blockInAfd.includes(coords.blokname)) {
+            let werksAfdCode = coords.WERKS + coords.afd_code;
+            if(this.polygonFilter(werksAfdCode)){
+                if (
+                    geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude + 0.006 }, coords.coords) ||
+                    geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude - 0.006 }, coords.coords) ||
+                    geolib.isPointInPolygon({ latitude: this.state.latitude + 0.0025, longitude: this.state.longitude }, coords.coords) ||
+                    geolib.isPointInPolygon({ latitude: this.state.latitude - 0.0025, longitude: this.state.longitude }, coords.coords) ||
+                    geolib.isPointInPolygon({ latitude: this.state.latitude - 0.0025, longitude: this.state.longitude - 0.006 }, coords.coords) ||
+                    geolib.isPointInPolygon({ latitude: this.state.latitude - 0.0025, longitude: this.state.longitude + 0.006 }, coords.coords) ||
+                    geolib.isPointInPolygon({ latitude: this.state.latitude + 0.0025, longitude: this.state.longitude - 0.006 }, coords.coords) ||
+                    geolib.isPointInPolygon({ latitude: this.state.latitude + 0.0025, longitude: this.state.longitude + 0.006 }, coords.coords) ||
+                    geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude }, coords.coords)
+                ) {
                     poligons.push(coords);
                 }
-                // poligons.push(coords);
             }
         }
         return poligons;
