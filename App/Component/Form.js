@@ -17,6 +17,7 @@ import PropTypes from 'prop-types';
 import { AlertContent, Images, Colors, Fonts } from '../Themes'
 import { storeData } from '../Database/Resources';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import moment from 'moment';
 
 class Form extends Component {
 
@@ -32,7 +33,9 @@ class Form extends Component {
 
     constructor() {
         super();
+        let currentYear = moment().format("YYYY");
         this.state = {
+            currentYear,
             strEmail: '',
             strPassword: 'bluezonesquad',
             selectedServer: "1",
@@ -160,7 +163,7 @@ class Form extends Component {
 
 
                 <View style={styles.footerView}>
-                    <Text style={{ fontFamily: Fonts.demi }}>{'\u00A9'} 2018 Copyrights PT Triputra Agro Persada</Text>
+                    <Text style={{ fontFamily: Fonts.demi }}>{'\u00A9'} {this.state.currentYear} Copyrights PT Triputra Agro Persada</Text>
                 </View>
             </View>
             // </KeyboardAvoidingView>
@@ -241,7 +244,6 @@ const styles = StyleSheet.create({
     },
     footerView: {
         position: 'absolute',
-        right: 16,
         bottom: 20,
     }
 });
