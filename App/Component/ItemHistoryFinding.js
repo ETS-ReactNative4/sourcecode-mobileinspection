@@ -7,6 +7,7 @@ import { Images, Fonts } from '../Themes';
 import { dirPhotoTemuan } from '../Lib/dirStorage';
 import { dateDisplayMobile, changeFormatDate } from '../Lib/Utils';
 import Colors from '../Constant/Colors';
+import {clipString} from "../Constant/Functions/StringManipulator";
 
 const Field = (props) => {
     return (
@@ -65,8 +66,8 @@ const ItemHistoryFinding = (props) => {
                     <Text style={{ fontSize: 12, color: 'black', fontFamily: Fonts.demi }}>{lokasi}</Text>
                 </View>
                 <Field label={'Dibuat'} content={createdTime} />
-                <Field label={'Kategori'} content={getCategoryName(props.item.FINDING_CATEGORY)} />
-                <Field label={'Ditugaskan Ke'} content={assignTo} />
+                <Field label={'Kategori'} content={clipString(getCategoryName(props.item.FINDING_CATEGORY), 18)} />
+                <Field label={'Ditugaskan Ke'} content={clipString(assignTo, 18)} />
                 <Field label={'Status'} content={item.STATUS} />
 
                 <View style={{ flexDirection: 'row' }}>

@@ -88,7 +88,8 @@ export default class ListFinding extends Component {
         showImage = <Image style={{ alignItems: 'stretch', width: 120, height: 120, borderRadius: 10 }} source={{ uri: `file://${dirPhotoTemuan}/${image.IMAGE_NAME}` }} />
       }
     }
-    let showBlockDetail = `${getEstateName(item.WERKS)}-${getBlokName(item.BLOCK_CODE)}`
+    let werksAfdBlockCode = `${item.WERKS}${item.AFD_CODE}${item.BLOCK_CODE}`;
+    let showBlockDetail = `${getEstateName(item.WERKS)}-${getBlokName(werksAfdBlockCode)}`;
     return (
       < TouchableOpacity
         onPress={() => this.onClickItem(item.FINDING_CODE)}

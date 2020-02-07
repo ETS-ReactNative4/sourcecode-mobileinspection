@@ -379,8 +379,8 @@ export default class PilihPeta extends Component {
 						}
 						{item.HAS_MAP &&
 							<Text style={{
-								justifyContent: 'center', padding: 3, fontSize: 8, color: 'white', width: "100%", position: 'absolute', bottom: 0,
-								backgroundColor: 'rgba(0,0,0,0.8)', alignSelf: 'stretch'
+								justifyContent: 'center', padding: 5, fontSize: 8, color: 'white', width: "100%", position: 'absolute', bottom: 0,
+								backgroundColor: 'rgba(0,0,0,0.8)'
 							}}>
 								{item.EST_NAME}
 							</Text>
@@ -458,17 +458,17 @@ export default class PilihPeta extends Component {
 						</View>
 					))}
 
-					<View style={[styles.containerLabel, { marginTop: 15, marginBottom: 15 }]}>
-						<View style={{ flex: 2 }}>
+					<View style={[styles.containerLabel, { marginTop: 5, marginBottom: 15 }]}>
+						<View style={{marginRight: 10}}>
 							<Image source={require('../../Images/icon/ic_my_location.png')} style={[styles.icon, { marginLeft: 10 }]} />
 						</View>
-						<View style={{ flex: 7 }}>
+						<View>
+                            <Text style={{ fontSize: 12, color: 'grey', marginTop: 5, fontFamily: Fonts.book }}>Lokasimu saat ini</Text>
 							<Text style={{ fontSize: 18, fontWeight: '400', fontFamily: Fonts.medium }}>{this.state.estateName}</Text>
-							<Text style={{ fontSize: 12, color: 'grey', marginTop: 5, fontFamily: Fonts.book }}>Lokasimu saat ini</Text>
 						</View>
 					</View>
 
-					<View style={{ height: 1, backgroundColor: '#989898', marginBottom: 5, marginTop: 5 }} />
+					<View style={{ height: 1, backgroundColor: '#989898', marginBottom: 5 }} />
 
 					<Text style={{ fontSize: 16, fontFamily: Fonts.bold, paddingHorizontal: 16 }}>Peta</Text>
 
@@ -550,13 +550,12 @@ const styles = StyleSheet.create({
 	},
 	bgBelumDownload: {
 		flex: 1, position: 'absolute', top: 0,
-		width: 150, height: 100, padding: 5,
+		width: 150, height: 100,
 		justifyContent: 'center', alignItems: 'center'
 	},
 
 	containerLabel: {
 		flexDirection: 'row',
-		justifyContent: 'space-between',
 		alignItems: 'center'
 	},
 
