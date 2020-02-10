@@ -17,68 +17,6 @@ export default class Leaderboard extends Component {
             isLoading: true,
             isDisconnect: false,
             currentUser: currentUser,
-            rankData: [
-                {
-                    USER_AUTH_CODE: '1',
-                    EMPLOYEE_NIK: '123',
-                    USER_ROLE: 'haha',
-                    LOCATION_CODE: "123",
-                    REF_ROLE: 'string',
-                    JOB: 'string',
-                    FULLNAME: 'ERzxasd AJUzxasdUUzxasd.',
-                    POINT: '503'
-                },
-                {
-                    USER_AUTH_CODE: '2',
-                    EMPLOYEE_NIK: '234',
-                    USER_ROLE: 'haha',
-                    LOCATION_CODE: "123",
-                    REF_ROLE: 'string',
-                    JOB: 'string',
-                    FULLNAME: 'zxasd HUTAJULUUERVAN HUTAJULUU',
-                    POINT: '503'
-                },
-                {
-                    USER_AUTH_CODE: '3',
-                    EMPLOYEE_NIK: '345',
-                    USER_ROLE: 'haha',
-                    LOCATION_CODE: "123",
-                    REF_ROLE: 'string',
-                    JOB: 'string',
-                    FULLNAME: 'ERVAN HUTAJULUU...',
-                    POINT: '503'
-                },
-                {
-                    USER_AUTH_CODE: '4',
-                    EMPLOYEE_NIK: '345',
-                    USER_ROLE: 'haha',
-                    LOCATION_CODE: "123",
-                    REF_ROLE: 'string',
-                    JOB: 'string',
-                    FULLNAME: 'Doni R.',
-                    POINT: '503'
-                },
-                {
-                    USER_AUTH_CODE: '5',
-                    EMPLOYEE_NIK: '345',
-                    USER_ROLE: 'haha',
-                    LOCATION_CODE: "123",
-                    REF_ROLE: 'string',
-                    JOB: 'string',
-                    FULLNAME: 'RIZKY OCTARINA PUSPITASARI',
-                    POINT: '208'
-                },
-                {
-                    USER_AUTH_CODE: '6',
-                    EMPLOYEE_NIK: '345',
-                    USER_ROLE: 'haha',
-                    LOCATION_CODE: "123",
-                    REF_ROLE: 'string',
-                    JOB: 'string',
-                    FULLNAME: 'Adam R.',
-                    POINT: '102'
-                }
-            ],
             refRole: "BA"
         }
     }
@@ -91,6 +29,7 @@ export default class Leaderboard extends Component {
         NetInfo.isConnected.fetch().then(isConnected => {
             if (isConnected) {
                 getPointLeaderBoard().then((data) => {
+                    console.log(data)
                     data.data.map(result => {
                         this.setState({
                             dataBA: array_move(result.BA, 0, 1),
@@ -314,6 +253,9 @@ export default class Leaderboard extends Component {
         }
 
         function profileImage(image) {
+
+            console.log('Image Profile : ', image)
+
             if (image !== null) {
                 return { uri: image }
             } else {
@@ -354,7 +296,7 @@ export default class Leaderboard extends Component {
                                     fontWeight: '500',
                                     color: color
                                 }}
-                                    alignText={"center"}>{rankIcon(index)}</Text>
+                                    alignText={"center"}>{userData.RANK}</Text>
                             </View>
                         }
                         <Image
@@ -366,7 +308,7 @@ export default class Leaderboard extends Component {
                     <View
                         style={{
                             flex: 3.5,
-                            justifyContent:"center"
+                            justifyContent: "center"
                         }}>
                         <Text style={{ fontFamily: Fonts.demi, paddingHorizontal: 10, fontSize: 17, color: color, }}>{user}</Text>
                         <View style={{ flexDirection: "row", backgroundColor: "white", borderRadius: 15, alignItems: 'center', alignSelf: "baseline", paddingHorizontal: 5, marginLeft: 5 }}>
