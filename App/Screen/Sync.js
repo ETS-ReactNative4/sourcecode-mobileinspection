@@ -204,6 +204,7 @@ export default class SyncScreen extends React.Component {
     /** CREATE BY AMINJU SPRINT 16 ==> 02-06 SEPT 2019 */
     syncDownload = async () => {
 
+        /* Temuan */
         /* DOWNLOAD FINDING */
         /* INCLUDE NOTIFICATION FINDING */
         await getFinding().then((data) => {
@@ -215,6 +216,7 @@ export default class SyncScreen extends React.Component {
             })
         })
 
+        /* Temuan - Foto */
         /* DOWNLOAD FINDING IMAGE */
         await getFindingImage().then((data) => {
             console.log('Data Callback Finding Image: ', data)
@@ -225,6 +227,7 @@ export default class SyncScreen extends React.Component {
             })
         })
 
+        /* Temuan - Komentar */
         /* DOWNLOAD FINDING COMMENT */
         await getFindingComment().then((data) => {
             console.log('Data Callback Finding Comment: ', data)
@@ -235,6 +238,7 @@ export default class SyncScreen extends React.Component {
             })
         })
 
+        /* Master Block */
         /* DOWNLOAD BLOCK */
         await getBlock().then((data) => {
             console.log('Data Callback Block : ', data)
@@ -245,6 +249,7 @@ export default class SyncScreen extends React.Component {
             })
         })
 
+        /* Master Afdeling */
         /* DOWNLOAD AFDELING */
         await getAfd().then((data) => {
             console.log('Data Callback Afd : ', data)
@@ -255,16 +260,7 @@ export default class SyncScreen extends React.Component {
             })
         })
 
-        /* DOWNLOAD REGION */
-        await getRegion().then((data) => {
-            console.log('Data Callback Region : ', data)
-            this.setState({
-                progressRegion: 1,
-                valueRegionDownload: data.downloadCount,
-                totalRegionDownload: data.totalCount
-            })
-        })
-
+        /* Master Estate */
         /* DOWNLOAD ESTATE */
         await getEstate().then((data) => {
             console.log('Data Callback Estate : ', data)
@@ -275,16 +271,7 @@ export default class SyncScreen extends React.Component {
             })
         })
 
-        /* DOWNLOAD LANDUSE */
-        await getLandUse().then((data) => {
-            console.log('Data Callback LandUse : ', data)
-            this.setState({
-                progressLandUse: 1,
-                valueLandUseDownload: data.downloadCount,
-                totalLandUseDownload: data.totalCount
-            })
-        })
-
+        /* Master PT */
         /* DOWNLOAD COMP */
         await getComp().then((data) => {
             console.log('Data Callback Comp : ', data)
@@ -295,6 +282,40 @@ export default class SyncScreen extends React.Component {
             })
         })
 
+        /* Master Region */
+        /* DOWNLOAD REGION */
+        await getRegion().then((data) => {
+            console.log('Data Callback Region : ', data)
+            this.setState({
+                progressRegion: 1,
+                valueRegionDownload: data.downloadCount,
+                totalRegionDownload: data.totalCount
+            })
+        })
+
+        /* Master Status Blok */
+        /* DOWNLOAD LANDUSE */
+        await getLandUse().then((data) => {
+            console.log('Data Callback LandUse : ', data)
+            this.setState({
+                progressLandUse: 1,
+                valueLandUseDownload: data.downloadCount,
+                totalLandUseDownload: data.totalCount
+            })
+        })
+
+        /* Master Pengguna */
+        /* DOWNLOAD CONTACT */
+        await getContact().then((data) => {
+            console.log('Data Callback Contact : ', data)
+            this.setState({
+                progressContact: 1,
+                valueContactDownload: data.downloadCount,
+                totalContactDownload: data.totalCount
+            })
+        })
+
+        /* Parameter Penilaian Inspeksi */
         /* DOWNLOAD CONTENT */
         await getContent().then((data) => {
             console.log('Data Callback Content : ', data)
@@ -305,6 +326,7 @@ export default class SyncScreen extends React.Component {
             })
         })
 
+        /* Parameter Kriteria Inspeksi */
         /* DOWNLOAD KRITERIA */
         await getKriteria().then((data) => {
             console.log('Data Callback Kriteria : ', data)
@@ -315,26 +337,7 @@ export default class SyncScreen extends React.Component {
             })
         })
 
-        /* DOWNLOAD CATEGORY */
-        await getCategory().then((data) => {
-            console.log('Data Callback Category : ', data)
-            this.setState({
-                progressCategory: 1,
-                valueCategoryDownload: data.downloadCount,
-                totalCategoryDownload: data.totalCount
-            })
-        })
-
-        /* DOWNLOAD CATEGORY */
-        await getContact().then((data) => {
-            console.log('Data Callback Contact : ', data)
-            this.setState({
-                progressContact: 1,
-                valueContactDownload: data.downloadCount,
-                totalContactDownload: data.totalCount
-            })
-        })
-
+        /* Parameter Rute Inspeksi */
         /* DOWNLOAD PARAM TRACK INSPECTION */
         await getParamTrack().then((data) => {
             console.log('Data Callback Param Track  : ', data)
@@ -345,6 +348,18 @@ export default class SyncScreen extends React.Component {
             })
         })
 
+        /* Parameter Kategori Temuan */
+        /* DOWNLOAD CATEGORY */
+        await getCategory().then((data) => {
+            console.log('Data Callback Category : ', data)
+            this.setState({
+                progressCategory: 1,
+                valueCategoryDownload: data.downloadCount,
+                totalCategoryDownload: data.totalCount
+            })
+        })
+
+        /* Parameter Kualitas Buah*/
         /* DOWNLOAD PARAM KUALITAS */
         await getKualitas().then((data) => {
             console.log('Data Callback Kualitas : ', data)
@@ -355,6 +370,7 @@ export default class SyncScreen extends React.Component {
             })
         })
 
+        /* Peta Restan */
         /* DOWNLOAD TITIK RESTAN */
         await getTitikRestan().then((data) => {
             this.setState({
@@ -364,6 +380,7 @@ export default class SyncScreen extends React.Component {
             })
         })
 
+        /* Peta Panen Header */
         /* DOWNLOAD PETA PANEN HEADER */
         await getPetaPanenHeader().then((data) => {
             this.setState({
@@ -373,6 +390,7 @@ export default class SyncScreen extends React.Component {
             })
         })
 
+        /* Peta Panen Detail */
         /* DOWNLOAD PETA PANEN DETAIL */
         await getPetaPanenDetail().then((data) => {
             this.setState({
@@ -1210,190 +1228,192 @@ export default class SyncScreen extends React.Component {
                         <View style={{ backgroundColor: 'grey', height: 0.5, flex: 1, flexDirection: 'row', marginTop: 3 }} />
 
                         <ProgressSync
-                            title={'IMAGE'}
+                            title={'Foto'}
                             value={this.state.valueImageUpload}
                             total={this.state.totalImagelUpload}
                             progress={this.state.progressUploadImage} />
 
                         <ProgressSync
-                            title={'IMAGE USER'}
+                            title={'Foto Profil'}
                             value={this.state.valueImageUserUpload}
                             total={this.state.totalImageUserUpload}
                             progress={this.state.progressUploadImageUser} />
 
                         <ProgressSync
-                            title={'INSPEKSI TRACK'}
+                            title={'Inspeksi - Rute'}
                             value={this.state.valueInspectionTrack}
                             total={this.state.totalInspectionTrack}
                             progress={this.state.progressInspectionTrack} />
 
                         <ProgressSync
-                            title={'INSPEKSI HEADER'}
+                            title={'Inspeksi - Header'}
                             value={this.state.valueInspeksiHeaderUpload}
                             total={this.state.totalInspeksiHeaderUpload}
                             progress={this.state.progressInspeksiHeader} />
 
                         <ProgressSync
-                            title={'INSPEKSI DETAIL'}
+                            title={'Inspeksi - Detail'}
                             value={this.state.valueInspeksiDetailUpload}
                             total={this.state.totalInspeksiDetailUpload}
                             progress={this.state.progressInspeksiDetail} />
 
                         <ProgressSync
-                            title={'FINDING DATA'}
+                            title={'Inspeksi - Genba'}
+                            value={this.state.valueGenbaInspection}
+                            total={this.state.totalGenbaInspection}
+                            progress={this.state.progressGenbaInspection} />
+
+                        <ProgressSync
+                            title={'Temuan'}
                             value={this.state.valueFindingDataUpload}
                             total={this.state.totalFindingDataUpload}
                             progress={this.state.progressFindingData} />
 
                         <ProgressSync
-                            title={'FINDING COMMENT'}
+                            title={'Temuan - Komentar'}
                             value={this.state.valueFindingCommentDataUpload}
                             total={this.state.totalFindingCommentDataUpload}
                             progress={this.state.progressFindingCommentData} />
 
                         <ProgressSync
-                            title={'SAMPLING EBCC HEADER'}
+                            title={'Sampling - Header'}
                             value={this.state.valueEbcc}
                             total={this.state.totalEbcc}
                             progress={this.state.progressEbcc} />
 
                         <ProgressSync
-                            title={'SAMPLING EBCC DETAIL'}
+                            title={'Sampling - Detail'}
                             value={this.state.valueEbccDetail}
                             total={this.state.totalEbccDetail}
                             progress={this.state.progressEbccDetail} />
-
-                        <ProgressSync
-                            title={'GENBA INSPECTION'}
-                            value={this.state.valueGenbaInspection}
-                            total={this.state.totalGenbaInspection}
-                            progress={this.state.progressGenbaInspection} />
 
                         {/* Section Download by Aminju */}
                         <Text style={{ fontSize: 14, color: Colors.tintColor, marginTop: 16, fontFamily: Fonts.demi }}>DOWNLOAD</Text>
                         <View style={{ backgroundColor: 'grey', height: 0.5, flex: 1, flexDirection: 'row', marginTop: 3 }} />
 
                         <ProgressSync
-                            title={'FINDING'}
+                            title={'Temuan'}
                             color={Colors.brand}
                             value={this.state.valueFindingDownload}
                             total={this.state.totalFindingDownload}
                             progress={this.state.progressFinding} />
 
                         <ProgressSync
-                            title={'FINDING IMAGE'}
+                            title={'Temuan - Foto'}
                             color={Colors.brand}
                             value={this.state.valueFindingImageDownload}
                             total={this.state.totalFindingImageDownload}
                             progress={this.state.progressFindingImage} />
 
                         <ProgressSync
-                            title={'FINDING COMMENT'}
+                            title={'Temuan - Komentar'}
                             color={Colors.brand}
                             value={this.state.valueFindingCommentDownload}
                             total={this.state.totalFindingCommentDownload}
                             progress={this.state.progressFindingCommentDownload} />
 
                         <ProgressSync
-                            title={'BLOCK'}
+                            title={'Master Blok'}
                             color={Colors.brand}
                             value={this.state.valueDownload}
                             total={this.state.totalDownload}
                             progress={this.state.progress} />
 
                         <ProgressSync
-                            title={'AFD'}
+                            title={'Master Afdeling'}
                             color={Colors.brand}
                             value={this.state.valueAfdDownload}
                             total={this.state.totalAfdDownload}
                             progress={this.state.progressAfd} />
 
                         <ProgressSync
-                            title={'REGION'}
-                            color={Colors.brand}
-                            value={this.state.valueRegionDownload}
-                            total={this.state.totalRegionDownload}
-                            progress={this.state.progressRegion} />
-
-                        <ProgressSync
-                            title={'ESTATE'}
+                            title={'Master Estate'}
                             color={Colors.brand}
                             value={this.state.valueEstDownload}
                             total={this.state.totalEstDownload}
                             progress={this.state.progressEst} />
 
                         <ProgressSync
-                            title={'LAND USE'}
-                            color={Colors.brand}
-                            value={this.state.valueLandUseDownload}
-                            total={this.state.totalLandUseDownload}
-                            progress={this.state.progressLandUse} />
-
-                        <ProgressSync
-                            title={'COMP'}
+                            title={'Master PT'}
                             color={Colors.brand}
                             value={this.state.valueCompDownload}
                             total={this.state.totalCompDownload}
                             progress={this.state.progressComp} />
 
                         <ProgressSync
-                            title={'CONTENT'}
+                            title={'Master Region'}
                             color={Colors.brand}
-                            value={this.state.valueContentDownload}
-                            total={this.state.totalContentDownload}
-                            progress={this.state.progressContent} />
+                            value={this.state.valueRegionDownload}
+                            total={this.state.totalRegionDownload}
+                            progress={this.state.progressRegion} />
+
 
                         <ProgressSync
-                            title={'KRITERIA'}
+                            title={'Master Status Blok'}
                             color={Colors.brand}
-                            value={this.state.valueKriteriaDownload}
-                            total={this.state.totalKriteriaDownload}
-                            progress={this.state.progressKriteria} />
+                            value={this.state.valueLandUseDownload}
+                            total={this.state.totalLandUseDownload}
+                            progress={this.state.progressLandUse} />
 
                         <ProgressSync
-                            title={'CATEGORY'}
-                            color={Colors.brand}
-                            value={this.state.valueCategoryDownload}
-                            total={this.state.totalCategoryDownload}
-                            progress={this.state.progressCategory} />
-
-                        <ProgressSync
-                            title={'CONTACT'}
+                            title={'Master Pengguna'}
                             color={Colors.brand}
                             value={this.state.valueContactDownload}
                             total={this.state.totalContactDownload}
                             progress={this.state.progressContact} />
 
                         <ProgressSync
-                            title={'PARAMATER TRACK INSPECTION'}
+                            title={'Parameter Penilaian Inspeksi'}
+                            color={Colors.brand}
+                            value={this.state.valueContentDownload}
+                            total={this.state.totalContentDownload}
+                            progress={this.state.progressContent} />
+
+                        <ProgressSync
+                            title={'Parameter Kriteria Inspeksi'}
+                            color={Colors.brand}
+                            value={this.state.valueKriteriaDownload}
+                            total={this.state.totalKriteriaDownload}
+                            progress={this.state.progressKriteria} />
+
+                        <ProgressSync
+                            title={'Parameter Rute Inspeksi'}
                             color={Colors.brand}
                             value={this.state.valueParamInspection}
                             total={this.state.totalParamInspection}
                             progress={this.state.progressParamInspection} />
 
                         <ProgressSync
-                            title={'TM KUALITAS'}
+                            title={'Parameter Kategori Temuan'}
+                            color={Colors.brand}
+                            value={this.state.valueCategoryDownload}
+                            total={this.state.totalCategoryDownload}
+                            progress={this.state.progressCategory} />
+
+
+                        <ProgressSync
+                            title={'Parameter Kualitas Buah'}
                             color={Colors.brand}
                             value={this.state.valueKualitas}
                             total={this.state.totalKualitas}
                             progress={this.state.progressKualitas} />
 
                         <ProgressSync
-                            title={'TITIK RESTAN'}
+                            title={'Peta Restan'}
                             color={Colors.brand}
                             value={this.state.valueTitikRestan}
                             total={this.state.totalTitikRestan}
                             progress={this.state.progressTitikRestan} />
 
                         <ProgressSync
-                            title={'PETA PANEN HEADER'}
+                            title={'Peta Panen - Header'}
                             color={Colors.brand}
                             value={this.state.valuePetaPanenHeader}
                             total={this.state.totalPetaPanenHeader}
                             progress={this.state.progressPetaPanenHeader} />
 
                         <ProgressSync
-                            title={'PETA PANEN DETAIL'}
+                            title={'Peta Panen - Detail'}
                             color={Colors.brand}
                             value={this.state.valuePetaPanenDetail}
                             total={this.state.totalPetaPanenDetail}

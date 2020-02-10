@@ -8,6 +8,7 @@ import { dirPhotoTemuan } from '../Lib/dirStorage';
 import { dateDisplayMobile, changeFormatDate } from '../Lib/Utils';
 import Colors from '../Constant/Colors';
 import {clipString} from "../Constant/Functions/StringManipulator";
+import {Card} from "native-base";
 
 const Field = (props) => {
     return (
@@ -57,24 +58,38 @@ const ItemHistoryFinding = (props) => {
 
     return (
         <TouchableOpacity
-            style={styles.sectionCardView}
             onPress={props.onPress}
             key={idx} >
-            <Image style={{ alignItems: 'stretch', width: 90, height: 100, borderRadius: 10 }} source={sourceImage} />
-            <View style={styles.sectionDesc} >
-                <View style={{ flexDirection: 'row' }}>
-                    <Text style={{ fontSize: 12, color: 'black', fontFamily: Fonts.demi }}>{lokasi}</Text>
-                </View>
-                <Field label={'Dibuat'} content={createdTime} />
-                <Field label={'Kategori'} content={clipString(getCategoryName(props.item.FINDING_CATEGORY), 18)} />
-                <Field label={'Ditugaskan Ke'} content={clipString(assignTo, 18)} />
-                <Field label={'Status'} content={item.STATUS} />
+            <Card style={{
+                flex: 1,
+                padding: 5,
+                borderRadius: 10,
+                borderWidth: 1,
+                borderColor: '#fff'
+            }}>
+                <View style={{
+                    backgroundColor: 'white',
+                    flexDirection: 'row',
+                    alignItems:'center',
+                    justifyContent: 'space-between'
+                }}>
+                    <Image resizeMode={"stretch"} style={{ width: 100, height: 100, borderRadius: 10 }} source={sourceImage} />
+                    <View style={{paddingLeft: 10}}>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={{ fontSize: 12, color: 'black', fontFamily: Fonts.demi }}>{lokasi}</Text>
+                        </View>
+                        <Field label={'Dibuat'} content={createdTime} />
+                        <Field label={'Kategori'} content={clipString(getCategoryName(props.item.FINDING_CATEGORY), 13)} />
+                        <Field label={'Ditugaskan Ke'} content={clipString(assignTo, 13)} />
+                        <Field label={'Status'} content={item.STATUS} />
 
-                <View style={{ flexDirection: 'row' }}>
-                    <Text style={{ fontSize: 12, color: colorStatus, fontFamily: Fonts.demiItalic }}>{status}</Text>
-                </View>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={{ fontSize: 12, color: colorStatus, fontFamily: Fonts.demiItalic }}>{status}</Text>
+                        </View>
 
-            </View>
+                    </View>
+                </View>
+            </Card>
         </TouchableOpacity>
     )
 }
@@ -91,8 +106,6 @@ const styles = StyleSheet.create({
     },
     sectionDesc: {
         justifyContent: 'space-between',
-        height: 130,
-        padding: 10,
     }
 });
 
