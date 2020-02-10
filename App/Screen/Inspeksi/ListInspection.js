@@ -18,6 +18,7 @@ import { dirPhotoInspeksiSuggestion } from '../../Lib/dirStorage'
 import { retrieveData, storeData } from '../../Database/Resources';
 import { dateDisplayMobileWithoutHours } from '../../Lib/Utils';
 import ActionButton from 'react-native-action-button';
+import { getPointSuggestion } from '../Sync/Download/DownloadSuggestion';
 
 const checkBlock = TaskServices.getAllData('TM_BLOCK');
 
@@ -133,26 +134,8 @@ export default class ListInspection extends Component {
   }
 
   _getApiSuggestionFromAsync() {
-
-    let user = TaskServices.getAllData('TR_LOGIN')[0];
-
-    let headers = {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + user.ACCESS_TOKEN
-    }
-
-    fetch('http://msadev.tap-agri.com:4015/api/v1.0/suggestion', {
-      method: 'GET',
-      headers: headers
-    }).then((response) => {
-      console.log('Response', response);
-      if (response.status) {
-        return response.json();
-      }
-    }).then((data) => {
-      console.log('Response Data : ', data)
-      if (data.status) {
+    getPointSuggestion().then((data) => {
+      if (data !== null) {
         this.setState({
           dataSuggestions: data.data,
           isLoading: false
@@ -160,10 +143,7 @@ export default class ListInspection extends Component {
         storeData('SUGGESTION_TEMP', data.data);
         storeData('isFirstHit', true)
       }
-    })
-      .catch((err) => {
-        console.error(err);
-      });
+    });
   }
 
   // REDIRECT TO GENBA/INSPEKSI PAGE
