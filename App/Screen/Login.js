@@ -6,7 +6,9 @@ import {
     Keyboard,
     KeyboardAvoidingView,
     StatusBar,
-    StyleSheet
+    StyleSheet,
+    NativeModules,
+    Text
 } from 'react-native';
 
 import HandleBack from '../Component/Back'
@@ -57,7 +59,8 @@ class Login extends Component {
                 showModal: false,
                 title: "Loading",
                 message: "Cek Status Login..."
-            }
+            },
+            satellites: null
         }
     }
 
@@ -128,8 +131,17 @@ class Login extends Component {
         TaskServices.saveData('TR_LOGIN', data);
     }
 
+    findNumberOfSatellites(context){
+        NativeModules.ToastExample.show("It's Starting to find satellites!", 1);
+        var count = "searching...";
+        NativeModules.ToastExample.getCoors();
+        context.setState({satellites : count});
+
+    }
+
     componentDidMount() {
-        removeData('typeApp')
+        removeData('typeApp');
+        setTimeout(this.findNumberOfSatellites,500,this);
     }
 
     async clearData() {
@@ -386,7 +398,9 @@ class Login extends Component {
                         <StatusBar
                             hidden={true}
                             barStyle="light-content" />
-
+                        <Text>
+                            {this.state.satellites}
+                        </Text>
                         <Form
                             onBtnClick={data => { this.onLogin(data.strEmail, data.strPassword, data.selectedServer) }} />
 
