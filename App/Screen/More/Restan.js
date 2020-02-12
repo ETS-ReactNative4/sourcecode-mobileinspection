@@ -508,12 +508,12 @@ export default class Restan extends React.Component {
                         </View>
                         <View>
                             <Text style={{ color: "white" }}>
-                                Latitude : {this.state.currentGPS.latitude}
+                                Latitude : {this.state.currentGPS.latitude.toFixed(6)}
                             </Text>
                         </View>
                         <View>
                             <Text style={{ color: "white" }}>
-                                Longitude : {this.state.currentGPS.longitude}
+                                Longitude : {this.state.currentGPS.longitude.toFixed(6)}
                             </Text>
                         </View>
                     </View>
