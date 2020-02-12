@@ -1,4 +1,4 @@
-package com.bluezoneinspection.app.satellite;
+package com.bluezoneinspection.app;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
@@ -21,7 +21,7 @@ public class SatellitePackage implements ReactPackage {
             ReactApplicationContext reactContext) {
         List<NativeModule> modules = new ArrayList<>();
 
-        modules.add(new Satellite(reactContext));
+        modules.add(new SatelliteModule(reactContext));
 
         return modules;
     }

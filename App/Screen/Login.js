@@ -7,8 +7,9 @@ import {
     KeyboardAvoidingView,
     StatusBar,
     StyleSheet,
-    NativeModules,
-    Text
+    Text,
+    NativeEventEmitter,
+    NativeModules
 } from 'react-native';
 
 import HandleBack from '../Component/Back'
@@ -60,7 +61,7 @@ class Login extends Component {
                 title: "Loading",
                 message: "Cek Status Login..."
             },
-            satellites: null
+            satellites: "Hello"
         }
     }
 
@@ -131,12 +132,15 @@ class Login extends Component {
         TaskServices.saveData('TR_LOGIN', data);
     }
 
-    findNumberOfSatellites(context){
-        NativeModules.ToastExample.show("It's Starting to find satellites!", 1);
-        var count = "searching...";
-        NativeModules.ToastExample.getCoors();
-        context.setState({satellites : count});
-
+    findNumberOfSatellites(){
+        const eventEmitter = new NativeEventEmitter(NativeModules.Satellite);
+        eventEmitter.addListener('getSatellite', (event) => {
+            alert(JSON.stringify(event));
+            // this.setState({
+            //     satellites: JSON.stringify(event)
+            // })
+        })
+        NativeModules.Satellite.getCoors();
     }
 
     componentDidMount() {
@@ -402,7 +406,8 @@ class Login extends Component {
                             {this.state.satellites}
                         </Text>
                         <Form
-                            onBtnClick={data => { this.onLogin(data.strEmail, data.strPassword, data.selectedServer) }} />
+                            onBtnClick={data => { NativeModules.Satellite.getSatellite(); }} />
+                            {/*onBtnClick={data => { this.onLogin(data.strEmail, data.strPassword, data.selectedServer) }} />*/}
 
                         <ProgressDialog
                             visible={this.state.fetching}

@@ -1,5 +1,6 @@
 package com.bluezoneinspection.app;
 
+import com.bluezoneinspection.app.SatellitePackage;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
