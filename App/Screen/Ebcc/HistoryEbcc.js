@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Image, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import { Card } from 'native-base';
 import Colors from '../../Constant/Colors';
 import Taskservice from '../../Database/TaskServices'
@@ -16,7 +16,9 @@ export default class HistoryEbcc extends Component {
     super(props);
     this.state = {
       dataLogin: TaskServices.getAllData('TR_LOGIN'),
-      data: []
+      data: [],
+      page: 0,
+      isLoading: false,
     }
   }
 
@@ -53,7 +55,14 @@ export default class HistoryEbcc extends Component {
         data.push(item)
       });
     }
-    this.setState({ data })
+    this.setState({
+      data: [],
+      page: 0,
+      dataSet: data
+    }, function () {
+      // call the function to pull initial 12 records
+      this._addRecords(0);
+    });
   }
 
   /** 
@@ -87,7 +96,6 @@ export default class HistoryEbcc extends Component {
       })
     }
   }
-
 
   /** 
    * DELETE IMAGE EBCC MELEBIHI 7 HARI DAN STATUS SYCNC = 'Y'
@@ -146,7 +154,7 @@ export default class HistoryEbcc extends Component {
 
     return (
       <TouchableOpacity
-        style={{ marginTop: 12 }}
+        style={{ marginTop: 3 }}
         onPress={() => this.actionButtonClick(data)}
         key={index}>
         <Card style={[styles.cardContainer]}>
@@ -178,10 +186,18 @@ export default class HistoryEbcc extends Component {
 
   _renderData() {
     return (
-      <ScrollView style={styles.container}>
-        <View>
+      <ScrollView
+        onScroll={({ nativeEvent }) => {
+          if (this._isCloseToBottom(nativeEvent)) {
+            console.log("Reached end of page");
+            this._onScrollHandler();
+          }
+        }}
+        style={styles.container}>
+        <View style={{ paddingBottom: 16 }}>
           {this.state.data.map((data, idx) => this.renderList(data, idx))}
         </View>
+        {this.state.isLoading && <ActivityIndicator size={20} style={{ marginBottom: 16 }} color={Colors.tintColorPrimary} />}
       </ScrollView >
     )
   }
@@ -203,6 +219,33 @@ export default class HistoryEbcc extends Component {
         {show}
       </View>
     )
+  }
+
+  _isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
+    return layoutMeasurement.height + contentOffset.y >= contentSize.height - 1;
+  };
+
+  _onScrollHandler = () => {
+    this.setState({ isLoading: true })
+    setTimeout(() => {
+      this.setState({
+        page: this.state.page + 1
+      }, () => {
+        this._addRecords(this.state.page);
+      });
+    }, 2000);
+  }
+
+  _addRecords = (page) => {
+    const newRecords = []
+    for (let i = page * 10, il = i + 10; i < il && i <
+      this.state.dataSet.length; i++) {
+      newRecords.push(this.state.dataSet[i]);
+    }
+    this.setState({
+      data: [...this.state.data, ...newRecords],
+      isLoading: false,
+    });
   }
 }
 
