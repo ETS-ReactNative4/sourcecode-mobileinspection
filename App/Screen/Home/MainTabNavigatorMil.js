@@ -7,7 +7,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const MoreStack = createStackNavigator({
-  More: MoreScreen,
+    More: { screen: MoreScreen, navigationOptions: { header: null } },
 });
 
 MoreStack.navigationOptions = {
