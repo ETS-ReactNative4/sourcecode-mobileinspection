@@ -6,7 +6,7 @@ import {
     View,
     NetInfo,
     ScrollView,
-    Dimensions, AsyncStorage
+    Dimensions, AsyncStorage, NativeEventEmitter, NativeModules
 } from 'react-native';
 import IonicIcon from 'react-native-vector-icons/Ionicons';
 
@@ -40,6 +40,12 @@ export default class Restan extends React.Component {
                 latitude:0.0,
                 longitude: 0.0,
                 gpsAccuracy: 0
+            },
+            nativeGPS:{
+                latitude: 0,
+                longitude: 0,
+                accuracy: 0,
+                satelliteCount: 0,
             },
             region: {
                 latitude: LATITUDE,
@@ -79,6 +85,22 @@ export default class Restan extends React.Component {
 
     componentDidMount() {
         this.loadMap();
+        this.nativeGps();
+    }
+
+    nativeGps(){
+        const eventEmitter = new NativeEventEmitter(NativeModules.Satellite);
+        eventEmitter.addListener('getSatellite', (event) => {
+            this.setState({
+                nativeGPS:{
+                    longitude: event.longitude,
+                    latitude: event.latitude,
+                    accuracy: event.accuracy,
+                    satelliteCount: Math.floor(event.satelliteCount)
+                }
+            })
+        });
+        NativeModules.Satellite.getCoors();
     }
 
     getRestanSyncTime(){
@@ -385,7 +407,7 @@ export default class Restan extends React.Component {
                             currentGPS:{
                                 latitude: event.nativeEvent.coordinate.latitude,
                                 longitude: event.nativeEvent.coordinate.longitude,
-                                gpsAccuracy: Math.ceil(event.nativeEvent.coordinate.accuracy),
+                                gpsAccuracy: Math.floor(event.nativeEvent.coordinate.accuracy),
                             },
                             region: {
                                 latitude: event.nativeEvent.coordinate.latitude,
@@ -503,15 +525,47 @@ export default class Restan extends React.Component {
                             alignItems: "flex-end"
                         }}>
                             <Text style={{ color: "white" }}>
+                                satelliteCount : {this.state.nativeGPS.satelliteCount}
+                            </Text>
+                        </View>
+                        <View style={{
+                            alignItems: "flex-end"
+                        }}>
+                            <Text style={{ color: "white" }}>
+                                Accuracy : {this.state.nativeGPS.accuracy} meter
+                            </Text>
+                        </View>
+                        <View style={{
+                            alignItems: "flex-end"
+                        }}>
+                            <Text style={{ color: "white" }}>
+                                latitude : {this.state.nativeGPS.latitude}
+                            </Text>
+                        </View>
+                        <View style={{
+                            alignItems: "flex-end"
+                        }}>
+                            <Text style={{ color: "white" }}>
+                                longitude : {this.state.nativeGPS.longitude}
+                            </Text>
+                        </View>
+                        <View style={{
+                            alignItems: "flex-end"
+                        }}>
+                            <Text style={{ color: "white" }}>
                                 Accuracy : {this.state.currentGPS.gpsAccuracy} meter
                             </Text>
                         </View>
-                        <View>
+                        <View style={{
+                            alignItems: "flex-end"
+                        }}>
                             <Text style={{ color: "white" }}>
                                 Latitude : {this.state.currentGPS.latitude}
                             </Text>
                         </View>
-                        <View>
+                        <View style={{
+                            alignItems: "flex-end"
+                        }}>
                             <Text style={{ color: "white" }}>
                                 Longitude : {this.state.currentGPS.longitude}
                             </Text>

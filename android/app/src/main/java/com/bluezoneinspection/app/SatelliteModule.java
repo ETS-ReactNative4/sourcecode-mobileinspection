@@ -58,11 +58,13 @@ public class SatelliteModule extends ReactContextBaseJavaModule {
                 if(location.getExtras() != null){
                     double latitude = location.getLatitude();
                     double longitude = location.getLongitude();
+                    float accuracy = location.getAccuracy();
                     int satelliteCount = location.getExtras().getInt("satellites");
 
                     WritableMap satelliteParams = Arguments.createMap();
                     satelliteParams.putDouble("latitude", latitude);
                     satelliteParams.putDouble("longitude", longitude);
+                    satelliteParams.putDouble("accuracy", accuracy);
                     satelliteParams.putInt("satelliteCount", satelliteCount);
 
                     sendEvent(getReactApplicationContext(), "getSatellite", satelliteParams);
@@ -78,9 +80,13 @@ public class SatelliteModule extends ReactContextBaseJavaModule {
         };
 
 // Register the listener with the Location Manager to receive location updates
+//        if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+//            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+//        }
+//        else {
+//            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+//        }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-//        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
-
     }
 
     private void sendEvent(ReactContext reactContext,

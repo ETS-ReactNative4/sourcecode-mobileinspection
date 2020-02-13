@@ -60,8 +60,7 @@ class Login extends Component {
                 showModal: false,
                 title: "Loading",
                 message: "Cek Status Login..."
-            },
-            satellites: "Hello"
+            }
         }
     }
 
@@ -132,20 +131,8 @@ class Login extends Component {
         TaskServices.saveData('TR_LOGIN', data);
     }
 
-    findNumberOfSatellites(){
-        const eventEmitter = new NativeEventEmitter(NativeModules.Satellite);
-        eventEmitter.addListener('getSatellite', (event) => {
-            alert(JSON.stringify(event));
-            // this.setState({
-            //     satellites: JSON.stringify(event)
-            // })
-        })
-        NativeModules.Satellite.getCoors();
-    }
-
     componentDidMount() {
         removeData('typeApp');
-        setTimeout(this.findNumberOfSatellites,500,this);
     }
 
     async clearData() {
@@ -402,12 +389,8 @@ class Login extends Component {
                         <StatusBar
                             hidden={true}
                             barStyle="light-content" />
-                        <Text>
-                            {this.state.satellites}
-                        </Text>
                         <Form
-                            onBtnClick={data => { NativeModules.Satellite.getSatellite(); }} />
-                            {/*onBtnClick={data => { this.onLogin(data.strEmail, data.strPassword, data.selectedServer) }} />*/}
+                            onBtnClick={data => { this.onLogin(data.strEmail, data.strPassword, data.selectedServer) }} />
 
                         <ProgressDialog
                             visible={this.state.fetching}

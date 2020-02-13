@@ -1,5 +1,14 @@
 import React from 'react';
-import {Dimensions, StatusBar, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+    Dimensions,
+    NativeEventEmitter,
+    NativeModules,
+    StatusBar,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
+} from 'react-native';
 
 import MapView, {Marker, Polygon, ProviderPropType, PROVIDER_GOOGLE, Circle} from 'react-native-maps';
 import Colors from '../../Constant/Colors'
@@ -31,6 +40,12 @@ class MapsEbcc extends React.Component {
         this.loadMap();
         this.state = {
             currentUser: TaskServices.getCurrentUser(),
+            nativeGPS:{
+                latitude: 0,
+                longitude: 0,
+                accuracy: 0,
+                satelliteCount: 0,
+            },
             gpsAccuracy: 0,
             latitude: 0.0,
             longitude: 0.0,
@@ -87,6 +102,22 @@ class MapsEbcc extends React.Component {
 
     componentDidMount() {
         this.props.navigation.setParams({ searchLocation: this.searchLocation })
+        this.nativeGps();
+    }
+
+    nativeGps(){
+        const eventEmitter = new NativeEventEmitter(NativeModules.Satellite);
+        eventEmitter.addListener('getSatellite', (event) => {
+            this.setState({
+                nativeGPS:{
+                    longitude: event.longitude,
+                    latitude: event.latitude,
+                    accuracy: event.accuracy,
+                    satelliteCount: Math.floor(event.satelliteCount)
+                }
+            })
+        });
+        NativeModules.Satellite.getCoors();
     }
 
     searchLocation = () => {
@@ -443,6 +474,36 @@ class MapsEbcc extends React.Component {
                         borderRadius: 5,
                         backgroundColor: "rgba(0,0,0,0.3)"
                     }}>
+                        <View style={{alignSelf:"flex-end"}}>
+                            <Text style={{ color: "white" }}>
+                                Native GPS
+                            </Text>
+                        </View>
+                        <View style={{alignSelf:"flex-end"}}>
+                            <Text style={{ color: "white" }}>
+                                Satellite : {this.state.nativeGPS.satelliteCount}
+                            </Text>
+                        </View>
+                        <View style={{alignSelf:"flex-end"}}>
+                            <Text style={{ color: "white" }}>
+                                Accuracy : {this.state.nativeGPS.accuracy} meter
+                            </Text>
+                        </View>
+                        <View style={{alignSelf:"flex-end"}}>
+                            <Text style={{ color: "white" }}>
+                                latitude : {this.state.nativeGPS.latitude}
+                            </Text>
+                        </View>
+                        <View style={{alignSelf:"flex-end"}}>
+                            <Text style={{ color: "white" }}>
+                                longitude : {this.state.nativeGPS.longitude}
+                            </Text>
+                        </View>
+                        <View style={{alignSelf:"flex-end"}}>
+                            <Text style={{ color: "white" }}>
+                                React Native Maps GPS
+                            </Text>
+                        </View>
                         <View style={{alignSelf:"flex-end"}}>
                             <Text style={{ color: "white" }}>
                                 Accuracy : {this.state.gpsAccuracy} meter
