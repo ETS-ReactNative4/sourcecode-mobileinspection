@@ -97,7 +97,7 @@ const ItemDetailSuggestion = (props) => {
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 4 }}>
                                 <Text style={styles.textLabelBold}>BJR bulan lalu</Text>
-                                <Text style={styles.textLabel}>{props.DATA[0].BJR_BULAN_LALU} kg</Text>
+                                <Text style={styles.textLabel}>{props.DATA[0].BJR_BULAN_LALU.toFixed(2)} kg</Text>
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 4 }}>
                                 <Text style={styles.textLabelBold}>Total Restan TPH</Text>
