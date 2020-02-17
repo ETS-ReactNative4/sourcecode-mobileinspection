@@ -344,7 +344,7 @@ export default class Restan extends React.Component {
                     flex: 1
                 }}>
                 <HeaderWithButton
-                    title={"Titik Restan"}
+                    title={"Peta Restan"}
                     iconLeft={require("../../Images/icon/ic_arrow_left.png")}
                     rightVectorIcon={true}
                     iconRight={"location-arrow"}
