@@ -69,21 +69,21 @@ async function postFinding(paramFindingModel) {
         END_TIME: paramFindingModel.END_TIME.includes('-') ? parseInt(paramFindingModel.END_TIME.replace(/-/g, '').replace(/ /g, '').replace(/:/g, '')) : paramFindingModel.END_TIME == "" ? "" : parseInt(paramFindingModel.END_TIME)
     };
 
-    await syncFetchPost("FINDING-INSERT", findingModel, null)
-        .then(((response) => {
-            if (response !== null) {
-                //check if image finding is sync
-                let getImage = TaskServices.findBy("TR_IMAGE", "TR_CODE", findingModel.FINDING_CODE).filtered('STATUS_SYNC = "N"');
-                if (getImage === undefined) {
+    let getImage = TaskServices.findBy("TR_IMAGE", "TR_CODE", findingModel.FINDING_CODE).filtered('STATUS_SYNC = "N"');
+    if (getImage === undefined) {
+        await syncFetchPost("FINDING-INSERT", findingModel, null)
+            .then(((response) => {
+                if (response !== null) {
+                    //check if image finding is sync
                     TaskServices.updateByPrimaryKey('TR_FINDING', {
                         "FINDING_CODE": paramFindingModel.FINDING_CODE,
                         "STATUS_SYNC": "Y"
                     });
+                    fetchStatus = true;
                 }
-                fetchStatus = true;
-            }
-        }));
-    return fetchStatus;
+            }));
+        return fetchStatus;
+    }
 }
 
 function dueDateFinding(paramDueDate) {
