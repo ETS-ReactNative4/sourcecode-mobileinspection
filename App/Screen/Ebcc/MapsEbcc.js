@@ -102,7 +102,6 @@ class MapsEbcc extends React.Component {
 
     componentDidMount() {
         this.props.navigation.setParams({ searchLocation: this.searchLocation })
-        this.nativeGps();
     }
 
     nativeGps(){
@@ -154,6 +153,7 @@ class MapsEbcc extends React.Component {
     }
 
     onMapReady(){
+        this.nativeGps();
         this.setState({
             modalLoading:{
                 ...this.state.modalLoading,
@@ -476,32 +476,7 @@ class MapsEbcc extends React.Component {
                     }}>
                         <View style={{alignSelf:"flex-end"}}>
                             <Text style={{ color: "white" }}>
-                                Native GPS
-                            </Text>
-                        </View>
-                        <View style={{alignSelf:"flex-end"}}>
-                            <Text style={{ color: "white" }}>
                                 Satellite : {this.state.nativeGPS.satelliteCount}
-                            </Text>
-                        </View>
-                        <View style={{alignSelf:"flex-end"}}>
-                            <Text style={{ color: "white" }}>
-                                Accuracy : {this.state.nativeGPS.accuracy} meter
-                            </Text>
-                        </View>
-                        <View style={{alignSelf:"flex-end"}}>
-                            <Text style={{ color: "white" }}>
-                                latitude : {this.state.nativeGPS.latitude}
-                            </Text>
-                        </View>
-                        <View style={{alignSelf:"flex-end"}}>
-                            <Text style={{ color: "white" }}>
-                                longitude : {this.state.nativeGPS.longitude}
-                            </Text>
-                        </View>
-                        <View style={{alignSelf:"flex-end"}}>
-                            <Text style={{ color: "white" }}>
-                                React Native Maps GPS
                             </Text>
                         </View>
                         <View style={{alignSelf:"flex-end"}}>

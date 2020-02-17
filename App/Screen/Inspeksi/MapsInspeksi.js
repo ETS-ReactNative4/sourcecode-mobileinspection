@@ -62,13 +62,6 @@ class MapsInspeksi extends React.Component {
                 icon: require('../../Images/ic-no-gps.png')
             }
         };
-
-        this.willBlurSubscription = props.navigation.addListener(
-            'willBlur',
-            payload => {
-                this.trackStop();
-            }
-        );
     }
 
     static navigationOptions = ({ navigation }) => {
@@ -96,41 +89,6 @@ class MapsInspeksi extends React.Component {
     componentDidMount() {
         removeData('PoligonsInspeksi');
         this.props.navigation.setParams({ searchLocation: this.searchLocation })
-        this.nativeGps();
-    }
-
-    componentWillUnmount() {
-        this.willBlurSubscription.remove();
-    }
-
-    trackStart(){
-        let trackInterval = setInterval(()=>{
-            let trackGpsModel = {
-                "session": moment().format("YY-MM-DD-HH:mm:ss").toString(),
-                "user": this.state.currentUser.USERNAME.toString(),
-                "latitudeNative":  this.state.nativeGPS.latitude.toString(),
-                "longitudeNative":  this.state.nativeGPS.longitude.toString(),
-                "latitudeRNMaps":  this.state.latitude.toString(),
-                "longitudeRNMaps":  this.state.longitude.toString()
-            };
-            TaskServices.saveData("TRACK_GPS", trackGpsModel);
-        }, 5000);
-
-        this.setState({
-            trackInterval
-        },()=>{
-            ToastAndroid.showWithGravityAndOffset(
-                'Track Start!',
-                ToastAndroid.LONG,
-                ToastAndroid.BOTTOM,
-                25,
-                50,
-            );
-        });
-    }
-
-    trackStop(){
-        clearInterval(this.state.trackInterval);
     }
 
     nativeGps(){
@@ -166,6 +124,7 @@ class MapsInspeksi extends React.Component {
     }
 
     onMapReady() {
+        this.nativeGps();
         this.setState({
             modalLoading: {
                 ...this.state.modalLoading,
@@ -507,47 +466,9 @@ class MapsInspeksi extends React.Component {
                         borderRadius: 5,
                         backgroundColor: "rgba(0,0,0,0.3)"
                     }}>
-                        <TouchableOpacity
-                            onPress={()=>{
-                                if(this.state.nativeGPS.latitude !== 0 && this.state.latitude !== 0){
-                                    this.trackStart();
-                                }
-                                else {
-                                    alert("signal gps tidak ditemukan")
-                                }
-                            }}
-                            style={{backgroundColor:"white", alignItems:"center"}}
-                        >
-                            <Text>Track</Text>
-                        </TouchableOpacity>
-                        <View style={{alignSelf:"flex-end"}}>
-                            <Text style={{ color: "white" }}>
-                                Native GPS
-                            </Text>
-                        </View>
                         <View style={{alignSelf:"flex-end"}}>
                             <Text style={{ color: "white" }}>
                                 Satellite : {this.state.nativeGPS.satelliteCount}
-                            </Text>
-                        </View>
-                        <View style={{alignSelf:"flex-end"}}>
-                            <Text style={{ color: "white" }}>
-                                Accuracy : {this.state.nativeGPS.accuracy} meter
-                            </Text>
-                        </View>
-                        <View style={{alignSelf:"flex-end"}}>
-                            <Text style={{ color: "white" }}>
-                                latitude : {this.state.nativeGPS.latitude}
-                            </Text>
-                        </View>
-                        <View style={{alignSelf:"flex-end"}}>
-                            <Text style={{ color: "white" }}>
-                                longitude : {this.state.nativeGPS.longitude}
-                            </Text>
-                        </View>
-                        <View style={{alignSelf:"flex-end"}}>
-                            <Text style={{ color: "white" }}>
-                                React Native Maps GPS
                             </Text>
                         </View>
                         <View style={{alignSelf:"flex-end"}}>
