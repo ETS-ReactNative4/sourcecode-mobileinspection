@@ -6,7 +6,10 @@ import {
     Keyboard,
     KeyboardAvoidingView,
     StatusBar,
-    StyleSheet
+    StyleSheet,
+    Text,
+    NativeEventEmitter,
+    NativeModules
 } from 'react-native';
 
 import HandleBack from '../Component/Back'
@@ -129,7 +132,7 @@ class Login extends Component {
     }
 
     componentDidMount() {
-        removeData('typeApp')
+        removeData('typeApp');
     }
 
     async clearData() {
@@ -386,7 +389,6 @@ class Login extends Component {
                         <StatusBar
                             hidden={true}
                             barStyle="light-content" />
-
                         <Form
                             onBtnClick={data => { this.onLogin(data.strEmail, data.strPassword, data.selectedServer) }} />
 

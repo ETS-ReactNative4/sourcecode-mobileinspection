@@ -731,6 +731,19 @@ const TR_PETAPANEN_DETAIL = {
     }
 };
 
+
+const TRACK_GPS = {
+    name: 'TRACK_GPS',
+    properties: {
+        "session": { type: 'string', default: null, optional: true },
+        "user": { type: 'string', default: null, optional: true },
+        "latitudeNative":  { type: 'string', default: null, optional: true },
+        "longitudeNative":  { type: 'string', default: null, optional: true },
+        "latitudeRNMaps":  { type: 'string', default: null, optional: true },
+        "longitudeRNMaps":  { type: 'string', default: null, optional: true }
+    }
+};
+
 export default {
     TR_LOGIN,
     TR_CONFIG,
@@ -775,6 +788,7 @@ export default {
     TR_LOG,
     TR_PETAPANEN_HEADER,
     TR_PETAPANEN_DETAIL,
+    TRACK_GPS,
 
 
     SCHEMA_VERSION
