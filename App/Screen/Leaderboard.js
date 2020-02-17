@@ -152,7 +152,7 @@ export default class Leaderboard extends Component {
 
                                     let source;
                                     if (item.IMAGE_URL != null) {
-                                        source = { uri: item.IMAGE_URL }
+                                        source = { uri: `${item.IMAGE_URL}?random=${Math.random().toString(36).substring(7)}` }
                                     } else {
                                         source = Images.ic_orang;
                                     }
