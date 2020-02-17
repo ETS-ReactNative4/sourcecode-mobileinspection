@@ -169,6 +169,8 @@ export default class SyncScreen extends React.Component {
             totalPetaPanenHeader: 0,
             valuePetaPanenDetail: 0,
             totalPetaPanenDetail: 0,
+            valueServiceList: 0,
+            totalServiceList: 0,
 
 
             indeterminate: false,
@@ -430,6 +432,8 @@ export default class SyncScreen extends React.Component {
     }
 
     insertLink() {
+        let serviceList = TaskServices.getAllData("TM_SERVICE");
+
         fetch(ServerName[this.state.user.SERVER_NAME_INDEX].service, {
             method: 'GET',
             headers: {
@@ -445,7 +449,7 @@ export default class SyncScreen extends React.Component {
             .then((data) => {
                 if (data.status) {
                     TaskServices.deleteAllData('TM_SERVICE');
-                    let index = 0;
+                    let totalDownload = 0;
                     for (let i in data.data) {
                         let newService = {
                             SERVICE_ID: parseInt(i),
@@ -457,8 +461,14 @@ export default class SyncScreen extends React.Component {
                             API_URL: data.data[i].API_URL
                         };
                         TaskServices.saveData('TM_SERVICE', newService);
-                        index++;
+                        totalDownload++;
                     }
+
+                    this.setState({
+                        progressServiceList: 1,
+                        valueServiceList: totalDownload,
+                        totalServiceList: serviceList.length
+                    })
                 }
 
                 // this.downloadWeeklySummary();
@@ -753,85 +763,6 @@ export default class SyncScreen extends React.Component {
         // this.deleteEbccDetail();
         // this.deleteGenbaSelected();
         // this.deleteGenbaInspection();
-
-        this.setState({
-
-            //upload
-            progressInspeksiHeader: 0,
-            progressInspeksiDetail: 0,
-            progressUploadImage: 0,
-            progressFindingData: 0,
-            progressFindingUploadData: 0,
-            progressInspectionTrack: 0,
-
-            //labelUpload
-            valueInspeksiHeaderUpload: '0',
-            totalInspeksiHeaderUpload: '0',
-            valueInspeksiDetailUpload: '0',
-            totalInspeksiDetailUpload: '0',
-            valueFindingDataUpload: '0',
-            totalFindingDataUpload: '0',
-            valueFindingCommentDataUpload: '0',
-            totalFindingCommentDataUpload: '0',
-            valueImageUpload: '0',
-            totalImagelUpload: '0',
-            valueInspectionTrack: '0',
-            totalInspectionTrack: '0',
-
-            //download
-            progressFinding: 0,
-            progressFindingImage: 0,
-            progress: 0,
-            progressAfd: 0,
-            progressRegion: 0,
-            progressEst: 0,
-            progressLandUse: 0,
-            progressComp: 0,
-            progressContent: 0,
-            progressContentLabel: 0,
-            progressKriteria: 0,
-            progressCategory: 0,
-            progressContact: 0,
-            progressParamInspection: 0,
-            progressKualitas: 0,
-
-            //labelDownload
-            valueDownload: '0',
-            valueAfdDownload: '0',
-            valueRegionDownload: '0',
-            valueEstDownload: '0',
-            valueCompDownload: '0',
-            valueLandUseDownload: '0',
-            valueContentDownload: '0',
-            valueContentLabelDownload: '0',
-            valueKriteriaDownload: '0',
-            valueFindingDownload: '0',
-            valueCategoryDownload: '0',
-            valueContactDownload: '0',
-            valueFindingImageDownload: '0',
-            valueParamInspection: '0',
-            valueKualitas: '0',
-
-            totalDownload: '0',
-            totalAfdDownload: '0',
-            totalRegionDownload: '0',
-            totalEstDownload: '0',
-            totalCompDownload: '0',
-            totalLandUseDownload: '0',
-            totalContentDownload: '0',
-            totalContentLabelDownload: '0',
-            totalKriteriaDownload: '0',
-            totalFindingDownload: '0',
-            totalCategoryDownload: '0',
-            totalContactDownload: '0',
-            totalFindingImageDownload: '0',
-            totalParamInspection: '0',
-            totalKualitas: '0',
-
-            fetchLocation: false,
-            isBtnEnable: false,
-            uploadErrorFlag: false,
-        });
 
         //Upload Image
         await uploadImage()
@@ -1182,7 +1113,84 @@ export default class SyncScreen extends React.Component {
                                 onPress={() => {
                                     this.setState(
                                         {
-                                            showButton: false
+                                            showButton: false,
+
+                                            //reset sync count
+                                            //upload
+                                            progressInspeksiHeader: 0,
+                                            progressInspeksiDetail: 0,
+                                            progressUploadImage: 0,
+                                            progressFindingData: 0,
+                                            progressFindingUploadData: 0,
+                                            progressInspectionTrack: 0,
+
+                                            //labelUpload
+                                            valueInspeksiHeaderUpload: '0',
+                                            totalInspeksiHeaderUpload: '0',
+                                            valueInspeksiDetailUpload: '0',
+                                            totalInspeksiDetailUpload: '0',
+                                            valueFindingDataUpload: '0',
+                                            totalFindingDataUpload: '0',
+                                            valueFindingCommentDataUpload: '0',
+                                            totalFindingCommentDataUpload: '0',
+                                            valueImageUpload: '0',
+                                            totalImagelUpload: '0',
+                                            valueInspectionTrack: '0',
+                                            totalInspectionTrack: '0',
+
+                                            //download
+                                            progressFinding: 0,
+                                            progressFindingImage: 0,
+                                            progress: 0,
+                                            progressAfd: 0,
+                                            progressRegion: 0,
+                                            progressEst: 0,
+                                            progressLandUse: 0,
+                                            progressComp: 0,
+                                            progressContent: 0,
+                                            progressContentLabel: 0,
+                                            progressKriteria: 0,
+                                            progressCategory: 0,
+                                            progressContact: 0,
+                                            progressParamInspection: 0,
+                                            progressKualitas: 0,
+
+                                            //labelDownload
+                                            valueDownload: '0',
+                                            valueAfdDownload: '0',
+                                            valueRegionDownload: '0',
+                                            valueEstDownload: '0',
+                                            valueCompDownload: '0',
+                                            valueLandUseDownload: '0',
+                                            valueContentDownload: '0',
+                                            valueContentLabelDownload: '0',
+                                            valueKriteriaDownload: '0',
+                                            valueFindingDownload: '0',
+                                            valueCategoryDownload: '0',
+                                            valueContactDownload: '0',
+                                            valueFindingImageDownload: '0',
+                                            valueParamInspection: '0',
+                                            valueKualitas: '0',
+
+                                            totalDownload: '0',
+                                            totalAfdDownload: '0',
+                                            totalRegionDownload: '0',
+                                            totalEstDownload: '0',
+                                            totalCompDownload: '0',
+                                            totalLandUseDownload: '0',
+                                            totalContentDownload: '0',
+                                            totalContentLabelDownload: '0',
+                                            totalKriteriaDownload: '0',
+                                            totalFindingDownload: '0',
+                                            totalCategoryDownload: '0',
+                                            totalContactDownload: '0',
+                                            totalFindingImageDownload: '0',
+                                            totalParamInspection: '0',
+                                            totalKualitas: '0',
+
+                                            fetchLocation: false,
+                                            isBtnEnable: false,
+                                            uploadErrorFlag: false,
                                         },
                                         () => {
 
@@ -1290,6 +1298,13 @@ export default class SyncScreen extends React.Component {
                         {/* Section Download by Aminju */}
                         <Text style={{ fontSize: 14, color: Colors.tintColor, marginTop: 16, fontFamily: Fonts.demi }}>DOWNLOAD</Text>
                         <View style={{ backgroundColor: 'grey', height: 0.5, flex: 1, flexDirection: 'row', marginTop: 3 }} />
+
+                        <ProgressSync
+                            title={'Service List'}
+                            color={Colors.brand}
+                            value={this.state.valueServiceList}
+                            total={this.state.totalServiceList}
+                            progress={this.state.progressServiceList} />
 
                         <ProgressSync
                             title={'Temuan'}
