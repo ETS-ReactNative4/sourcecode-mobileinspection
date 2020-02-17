@@ -46,6 +46,7 @@ let realmSchema = new Realm({
         ModelTables.TM_SUGGESTION_INSPECTION,
         ModelTables.TR_PETAPANEN_HEADER,
         ModelTables.TR_PETAPANEN_DETAIL,
+        ModelTables.TRACK_GPS
     ],
 	schemaVersion: ModelTables.SCHEMA_VERSION
 });

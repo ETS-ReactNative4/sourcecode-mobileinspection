@@ -258,6 +258,7 @@ export default class MoreScreen extends Component {
     let TR_FINDING = TaskServices.getAllData("TR_FINDING");
     let TR_IMAGE = TaskServices.getAllData("TR_IMAGE");
     let TR_LOG = TaskServices.getAllData("TR_LOG");
+    let TRACK_GPS = TaskServices.getAllData("TRACK_GPS");
 
     let finalString = [
       { "TABLE_NAME": "TR_H_EBCC_VALIDATION", "DATA": TR_H_EBCC_VALIDATION },
@@ -269,6 +270,7 @@ export default class MoreScreen extends Component {
       { "TABLE_NAME": "TR_FINDING", "DATA": TR_FINDING },
       { "TABLE_NAME": "TR_IMAGE", "DATA": TR_IMAGE },
       { "TABLE_NAME": "TR_LOG", "DATA": TR_LOG },
+      { "TABLE_NAME": "trackGps", "DATA:": TRACK_GPS}
     ];
     let path = dirDatabase + "/realmdatabase.json";
     await RNFS.writeFile(path, JSON.stringify(finalString), 'utf8')
