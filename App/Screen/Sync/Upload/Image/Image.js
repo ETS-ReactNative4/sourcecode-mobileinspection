@@ -20,35 +20,29 @@ export async function uploadImage() {
                 let imagePath = 'file://' + imageModel.IMAGE_PATH_LOCAL;
                 await RNFS.exists(imagePath)
                     .then(async (isExist) => {
-                        if (isExist) {
-                            await postImage(imageModel)
-                                .then((response) => {
-                                    if (response) {
-                                        uploadLabels = {
-                                            ...uploadLabels,
-                                            uploadCount: uploadLabels.uploadCount + 1
-                                        };
-                                        TaskServices.updateByPrimaryKey('TR_IMAGE', {
-                                            "IMAGE_CODE": imageModel.IMAGE_CODE,
-                                            "STATUS_SYNC": "Y"
-                                        });
-                                    }
-                                    else {
-                                        uploadLabels = {
-                                            ...uploadLabels,
-                                            syncStatus: false
-                                        }
-                                    }
-                                });
+                        if (!isExist) {
+                            await RNFS.copyFileAssets('img_not_found.png', imagePath);
                         }
-                        else {
-                            console.log("IMAGE PATH DOESNT EXIST, DELETING TR_IMAGE");
-                            TaskServices.deleteRecordByPK('TR_IMAGE', 'IMAGE_CODE', imageModel.IMAGE_CODE);
-                            uploadLabels = {
-                                ...uploadLabels,
-                                totalCount: uploadLabels.totalCount - 1
-                            }
-                        }
+
+                        await postImage(imageModel)
+                            .then((response) => {
+                                if (response) {
+                                    uploadLabels = {
+                                        ...uploadLabels,
+                                        uploadCount: uploadLabels.uploadCount + 1
+                                    };
+                                    TaskServices.updateByPrimaryKey('TR_IMAGE', {
+                                        "IMAGE_CODE": imageModel.IMAGE_CODE,
+                                        "STATUS_SYNC": "Y"
+                                    });
+                                }
+                                else {
+                                    uploadLabels = {
+                                        ...uploadLabels,
+                                        syncStatus: false
+                                    }
+                                }
+                            });
                     })
             })
         );
