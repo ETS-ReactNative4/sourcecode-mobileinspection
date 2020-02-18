@@ -15,9 +15,6 @@ export async function postWeeklySummary(type) {
         .then(((response) => {
             try {
                 if (response !== undefined) {
-
-                    console.log(`Success Download ${type}`)
-
                     if (type == 'INSPECTION-SUMMARY') {
                         storeData('InspectionSummary', response.data)
                     } else if (type == 'FINDING-SUMMARY') {

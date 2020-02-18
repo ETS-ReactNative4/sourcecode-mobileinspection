@@ -210,7 +210,7 @@ export default class SyncScreen extends React.Component {
         /* DOWNLOAD FINDING */
         /* INCLUDE NOTIFICATION FINDING */
         await getFinding().then((data) => {
-            console.log('Data Callback Finding : ', data)
+            // console.log('Data Callback Finding : ', data)
             this.setState({
                 progressFinding: 1,
                 valueFindingDownload: data.downloadCount,
@@ -221,7 +221,7 @@ export default class SyncScreen extends React.Component {
         /* Temuan - Foto */
         /* DOWNLOAD FINDING IMAGE */
         await getFindingImage().then((data) => {
-            console.log('Data Callback Finding Image: ', data)
+            // console.log('Data Callback Finding Image: ', data)
             this.setState({
                 progressFindingImage: 1,
                 valueFindingImageDownload: data.downloadCount,
@@ -232,7 +232,7 @@ export default class SyncScreen extends React.Component {
         /* Temuan - Komentar */
         /* DOWNLOAD FINDING COMMENT */
         await getFindingComment().then((data) => {
-            console.log('Data Callback Finding Comment: ', data)
+            // console.log('Data Callback Finding Comment: ', data)
             this.setState({
                 progressFindingCommentDownload: 1,
                 valueFindingCommentDownload: data.downloadCount,
@@ -243,7 +243,7 @@ export default class SyncScreen extends React.Component {
         /* Master Block */
         /* DOWNLOAD BLOCK */
         await getBlock().then((data) => {
-            console.log('Data Callback Block : ', data)
+            // console.log('Data Callback Block : ', data)
             this.setState({
                 progress: 1,
                 valueDownload: data.downloadCount,
@@ -254,7 +254,7 @@ export default class SyncScreen extends React.Component {
         /* Master Afdeling */
         /* DOWNLOAD AFDELING */
         await getAfd().then((data) => {
-            console.log('Data Callback Afd : ', data)
+            // console.log('Data Callback Afd : ', data)
             this.setState({
                 progressAfd: 1,
                 valueAfdDownload: data.downloadCount,
@@ -265,7 +265,7 @@ export default class SyncScreen extends React.Component {
         /* Master Estate */
         /* DOWNLOAD ESTATE */
         await getEstate().then((data) => {
-            console.log('Data Callback Estate : ', data)
+            // console.log('Data Callback Estate : ', data)
             this.setState({
                 progressEst: 1,
                 valueEstDownload: data.downloadCount,
@@ -276,7 +276,7 @@ export default class SyncScreen extends React.Component {
         /* Master PT */
         /* DOWNLOAD COMP */
         await getComp().then((data) => {
-            console.log('Data Callback Comp : ', data)
+            // console.log('Data Callback Comp : ', data)
             this.setState({
                 progressComp: 1,
                 valueCompDownload: data.downloadCount,
@@ -287,7 +287,7 @@ export default class SyncScreen extends React.Component {
         /* Master Region */
         /* DOWNLOAD REGION */
         await getRegion().then((data) => {
-            console.log('Data Callback Region : ', data)
+            // console.log('Data Callback Region : ', data)
             this.setState({
                 progressRegion: 1,
                 valueRegionDownload: data.downloadCount,
@@ -298,7 +298,7 @@ export default class SyncScreen extends React.Component {
         /* Master Status Blok */
         /* DOWNLOAD LANDUSE */
         await getLandUse().then((data) => {
-            console.log('Data Callback LandUse : ', data)
+            // console.log('Data Callback LandUse : ', data)
             this.setState({
                 progressLandUse: 1,
                 valueLandUseDownload: data.downloadCount,
@@ -309,7 +309,7 @@ export default class SyncScreen extends React.Component {
         /* Master Pengguna */
         /* DOWNLOAD CONTACT */
         await getContact().then((data) => {
-            console.log('Data Callback Contact : ', data)
+            // console.log('Data Callback Contact : ', data)
             this.setState({
                 progressContact: 1,
                 valueContactDownload: data.downloadCount,
@@ -320,7 +320,7 @@ export default class SyncScreen extends React.Component {
         /* Parameter Penilaian Inspeksi */
         /* DOWNLOAD CONTENT */
         await getContent().then((data) => {
-            console.log('Data Callback Content : ', data)
+            // console.log('Data Callback Content : ', data)
             this.setState({
                 progressContent: 1,
                 valueContentDownload: data.downloadCount,
@@ -331,7 +331,7 @@ export default class SyncScreen extends React.Component {
         /* Parameter Kriteria Inspeksi */
         /* DOWNLOAD KRITERIA */
         await getKriteria().then((data) => {
-            console.log('Data Callback Kriteria : ', data)
+            // console.log('Data Callback Kriteria : ', data)
             this.setState({
                 progressKriteria: 1,
                 valueKriteriaDownload: data.downloadCount,
@@ -342,7 +342,7 @@ export default class SyncScreen extends React.Component {
         /* Parameter Rute Inspeksi */
         /* DOWNLOAD PARAM TRACK INSPECTION */
         await getParamTrack().then((data) => {
-            console.log('Data Callback Param Track  : ', data)
+            // console.log('Data Callback Param Track  : ', data)
             this.setState({
                 progressParamInspection: 1,
                 valueParamInspection: data.downloadCount,
@@ -353,7 +353,7 @@ export default class SyncScreen extends React.Component {
         /* Parameter Kategori Temuan */
         /* DOWNLOAD CATEGORY */
         await getCategory().then((data) => {
-            console.log('Data Callback Category : ', data)
+            // console.log('Data Callback Category : ', data)
             this.setState({
                 progressCategory: 1,
                 valueCategoryDownload: data.downloadCount,
@@ -364,7 +364,7 @@ export default class SyncScreen extends React.Component {
         /* Parameter Kualitas Buah*/
         /* DOWNLOAD PARAM KUALITAS */
         await getKualitas().then((data) => {
-            console.log('Data Callback Kualitas : ', data)
+            // console.log('Data Callback Kualitas : ', data)
             this.setState({
                 progressKualitas: 1,
                 valueKualitas: data.downloadCount,

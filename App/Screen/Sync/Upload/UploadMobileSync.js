@@ -6,7 +6,7 @@ export async function postMobileSync(param, type) {
             if (response !== undefined) {
                 // console.log(`Response Status MobileSync ${type} : `, response.status)
                 if (response.status) {
-                    console.log(`Mobile Sync ${type} Success`)
+                    // console.log(`Mobile Sync ${type} Success`)
                 } else {
                     console.log(`Mobile Sync ${type} Failed`);
                 }

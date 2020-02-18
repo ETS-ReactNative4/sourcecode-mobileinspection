@@ -70,7 +70,8 @@ async function postFinding(paramFindingModel) {
     };
 
     let getImage = TaskServices.findBy("TR_IMAGE", "TR_CODE", findingModel.FINDING_CODE).filtered('STATUS_SYNC = "N"');
-    if (getImage === undefined) {
+    if (getImage.length === 0) {
+        //upload finding (all image uploaded)
         await syncFetchPost("FINDING-INSERT", findingModel, null)
             .then(((response) => {
                 if (response !== null) {
@@ -82,8 +83,8 @@ async function postFinding(paramFindingModel) {
                     fetchStatus = true;
                 }
             }));
-        return fetchStatus;
     }
+    return fetchStatus;
 }
 
 function dueDateFinding(paramDueDate) {

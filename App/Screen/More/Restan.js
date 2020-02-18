@@ -525,7 +525,7 @@ export default class Restan extends React.Component {
                             alignItems: "flex-end"
                         }}>
                             <Text style={{ color: "white" }}>
-                                satelliteCount : {this.state.nativeGPS.satelliteCount}
+                                Satellite : {this.state.nativeGPS.satelliteCount}
                             </Text>
                         </View>
                         <View style={{
