@@ -21,7 +21,7 @@ export async function uploadImage() {
                 await RNFS.exists(imagePath)
                     .then(async (isExist) => {
                         if (!isExist) {
-                            await RNFS.copyFileAssets('img_not_found.png', imagePath);
+                            await RNFS.copyFileAssets('MissingImagePlaceholder.png', imagePath);
                         }
 
                         await postImage(imageModel)

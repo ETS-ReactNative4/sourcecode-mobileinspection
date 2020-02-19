@@ -61,7 +61,7 @@ const AddInspection = (props) => {
         onPress={props.onPressInspeksi}>
         <Icon
           size={20}
-          name="find-replace"
+          name="search"
           style={{ fontSize: 20, height: 22, color: 'white' }} />
       </ActionButton.Item>
     </ActionButton>

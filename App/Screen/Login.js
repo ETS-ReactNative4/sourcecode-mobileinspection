@@ -262,7 +262,7 @@ class Login extends Component {
     postLogin(username, password, choosenServer, imei) {
         let header = {
             'Cache-Control': 'no-cache',
-            Accept: 'application/json',
+            'Accept': 'application/json',
             'Content-Type': 'application/json'
         };
 
