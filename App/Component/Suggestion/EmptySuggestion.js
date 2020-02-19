@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
         padding: 16
     },
     image: {
-        marginTop: 20,
+        marginTop: 25,
         height: 100,
         width: 100,
         opacity: 0.4
