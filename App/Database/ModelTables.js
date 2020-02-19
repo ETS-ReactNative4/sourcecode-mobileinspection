@@ -554,10 +554,11 @@ const TR_POLYGON = {
 
 const TR_TITIK_RESTAN = {
     name: 'TR_TITIK_RESTAN',
-    primaryKey: 'BCC',
+    primaryKey: 'UNIK_ID',
     properties: {
         OPH: { type: 'string', optional: true },
         BCC: { type: 'string', optional: true },
+        UNIK_ID: { type: 'string', optional: true },
         TPH_RESTANT_DAY: { type: 'double', optional: true },
         LATITUDE: { type: 'double', optional: true },
         LONGITUDE: { type: 'double', optional: true },
