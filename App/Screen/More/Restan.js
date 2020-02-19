@@ -532,27 +532,6 @@ export default class Restan extends React.Component {
                             alignItems: "flex-end"
                         }}>
                             <Text style={{ color: "white" }}>
-                                Accuracy : {this.state.nativeGPS.accuracy} meter
-                            </Text>
-                        </View>
-                        <View style={{
-                            alignItems: "flex-end"
-                        }}>
-                            <Text style={{ color: "white" }}>
-                                latitude : {this.state.nativeGPS.latitude}
-                            </Text>
-                        </View>
-                        <View style={{
-                            alignItems: "flex-end"
-                        }}>
-                            <Text style={{ color: "white" }}>
-                                longitude : {this.state.nativeGPS.longitude}
-                            </Text>
-                        </View>
-                        <View style={{
-                            alignItems: "flex-end"
-                        }}>
-                            <Text style={{ color: "white" }}>
                                 Accuracy : {this.state.currentGPS.gpsAccuracy} meter
                             </Text>
                         </View>
