@@ -137,9 +137,9 @@ export default class ListInspection extends Component {
     getPointSuggestion().then((data) => {
       if (data !== null) {
         this.setState({
-          dataSuggestions: data.data,
+          dataSuggestions: data.data === null ? [] : data.data,
           isLoading: false
-        })
+        });
         storeData('SUGGESTION_TEMP', data.data);
         storeData('isFirstHit', true)
       }
