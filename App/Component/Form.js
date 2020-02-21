@@ -37,7 +37,7 @@ class Form extends Component {
         this.state = {
             currentYear,
             strEmail: '',
-            strPassword: 'bluezonesquad',
+            strPassword: '',
             selectedServer: "1",
             title: 'Title',
             message: 'Message',
