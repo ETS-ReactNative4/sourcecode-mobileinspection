@@ -29,6 +29,7 @@ export function fetchPostWithUrl(URL, fetchBody, fetchHeaders) {
             let momentTime = moment().format("YYYYMMDDHHmmss").toString();
             let LogModel = {
                 ID_LOG: `fetchPostWithUrl${momentTime}`,
+                PARAM: JSON.stringify(fetchBody),
                 INSERT_TIME: momentTime,
                 MESSAGE: data.message,
                 DEV_NOTE: `response status false`,
@@ -41,6 +42,7 @@ export function fetchPostWithUrl(URL, fetchBody, fetchHeaders) {
         let momentTime = moment().format("YYYYMMDDHHmmss").toString();
         let LogModel = {
             ID_LOG: `fetchPostWithUrl${momentTime}`,
+            PARAM: JSON.stringify(fetchBody),
             INSERT_TIME: momentTime,
             MESSAGE: JSON.stringify(err),
             DEV_NOTE: `fetch error catch`,
@@ -99,6 +101,7 @@ export function fetchPut(serviceName, fetchBody, fetchHeaders){
                 let momentTime = moment().format("YYYYMMDDHHmmss").toString();
                 let LogModel = {
                     ID_LOG: `fetchPut${momentTime}`,
+                    PARAM: JSON.stringify(fetchBody),
                     INSERT_TIME: momentTime,
                     MESSAGE: data.message,
                     DEV_NOTE: `response status false`,
@@ -111,6 +114,7 @@ export function fetchPut(serviceName, fetchBody, fetchHeaders){
             let momentTime = moment().format("YYYYMMDDHHmmss").toString();
             let LogModel = {
                 ID_LOG: `fetchPut${momentTime}`,
+                PARAM: JSON.stringify(fetchBody),
                 INSERT_TIME: momentTime,
                 MESSAGE: JSON.stringify(err),
                 DEV_NOTE: `fetch error catch`,
@@ -171,6 +175,7 @@ export function fetchPost(serviceName, fetchBody, fetchHeaders) {
                 let momentTime = moment().format("YYYYMMDDHHmmss").toString();
                 let LogModel = {
                     ID_LOG: `fetchPost${momentTime}`,
+                    PARAM: JSON.stringify(fetchBody),
                     INSERT_TIME: momentTime,
                     MESSAGE: data.message,
                     DEV_NOTE: `response status false`,
@@ -183,6 +188,7 @@ export function fetchPost(serviceName, fetchBody, fetchHeaders) {
             let momentTime = moment().format("YYYYMMDDHHmmss").toString();
             let LogModel = {
                 ID_LOG: `fetchPost${momentTime}`,
+                PARAM: JSON.stringify(fetchBody),
                 INSERT_TIME: momentTime,
                 MESSAGE: JSON.stringify(err),
                 DEV_NOTE: `fetch error catch`,
@@ -244,6 +250,7 @@ export function fetchPostForm(serviceName, fetchBody, fetchHeaders) {
                 let momentTime = moment().format("YYYYMMDDHHmmss").toString();
                 let LogModel = {
                     ID_LOG: `fetchPostForm${momentTime}`,
+                    PARAM: JSON.stringify(fetchBody),
                     INSERT_TIME: momentTime,
                     MESSAGE: data.message,
                     DEV_NOTE: `response status false`,
@@ -256,6 +263,7 @@ export function fetchPostForm(serviceName, fetchBody, fetchHeaders) {
             let momentTime = moment().format("YYYYMMDDHHmmss").toString();
             let LogModel = {
                 ID_LOG: `fetchPostForm${momentTime}`,
+                PARAM: JSON.stringify(fetchBody),
                 INSERT_TIME: momentTime,
                 MESSAGE: JSON.stringify(err),
                 DEV_NOTE: `fetch error catch`,

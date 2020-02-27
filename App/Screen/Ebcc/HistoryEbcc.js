@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Image, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import { Card } from 'native-base';
 import Colors from '../../Constant/Colors';
-import Taskservice from '../../Database/TaskServices'
 import TaskServices from '../../Database/TaskServices'
 import { dateDisplayMobile } from '../../Lib/Utils'
 import { getEstateName, getStatusBlok } from '../../Database/Resources';
@@ -137,7 +136,7 @@ export default class HistoryEbcc extends Component {
     } catch (error) {
       path = '';
     }
-    let dataBlock = Taskservice.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', `${data.WERKS}${data.AFD_CODE}${data.BLOCK_CODE}`);
+    let dataBlock = TaskServices.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', `${data.WERKS}${data.AFD_CODE}${data.BLOCK_CODE}`);
     let statusBlok = ''
     let blockName = ''
     if (dataBlock != undefined) {
