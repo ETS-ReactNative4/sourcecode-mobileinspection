@@ -1028,10 +1028,11 @@ export default class SyncScreen extends React.Component {
 
     async checkUpdate() {
         let deviceVersion = DeviceInfo.getVersion();
+        let imei = await IMEI.getImei();
         let model = {
             INSERT_USER: this.state.user.USER_AUTH_CODE.toString(),
             APK_VERSION: deviceVersion,
-            IMEI: IMEI.getImei().toString(),
+            IMEI: imei,
             INSERT_TIME: moment().format('YYYYMMDDHHmmss').toString()
         };
         let TM_SERVICE = await TaskServices.findBy2("TM_SERVICE", 'API_NAME', 'AUTH-SERVER-APK-VERSION');

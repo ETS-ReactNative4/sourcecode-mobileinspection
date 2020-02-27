@@ -30,7 +30,7 @@ import {
 import ModalAlert from '../Component/ModalAlert'
 import ModalLoading from '../Component/ModalLoading';
 import ServerName from '../Constant/ServerName'
-import IMEI from 'react-native-device-info'
+import IMEI from 'react-native-imei'
 import { AlertContent } from '../Themes';
 import { storeData, removeData } from '../Database/Resources';
 import moment from 'moment'
@@ -255,7 +255,12 @@ class Login extends Component {
                 showModal: true
             }},()=>{
             Keyboard.dismiss();
-            this.postLogin(username, password, choosenServer, IMEI.getUniqueID);
+            IMEI.getImei()
+                .then((imei)=>{
+                    if(imei){
+                        this.postLogin(username, password, choosenServer, imei);
+                    }
+                });
         });
     }
 
