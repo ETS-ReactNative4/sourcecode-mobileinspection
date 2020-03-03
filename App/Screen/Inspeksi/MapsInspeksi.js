@@ -262,7 +262,7 @@ class MapsInspeksi extends React.Component {
         return poligons;
     }
 
-    getLocation() {
+    getLocation(){
         if (this.state.latitude && this.state.longitude) {
             let poligons = this.getPolygons();
             if (poligons.length > 0) {
@@ -471,32 +471,7 @@ class MapsInspeksi extends React.Component {
                     }}>
                         <View style={{alignSelf:"flex-end"}}>
                             <Text style={{ color: "yellow" }}>
-                                Native Gps
-                            </Text>
-                        </View>
-                        <View style={{alignSelf:"flex-end"}}>
-                            <Text style={{ color: "yellow" }}>
                                 Satellite : {this.state.nativeGPS.satelliteCount}
-                            </Text>
-                        </View>
-                        <View style={{alignSelf:"flex-end"}}>
-                            <Text style={{ color: "yellow" }}>
-                                Accuracy : {Math.ceil(this.state.nativeGPS.accuracy)} meter
-                            </Text>
-                        </View>
-                        <View style={{alignSelf:"flex-end"}}>
-                            <Text style={{ color: "yellow" }}>
-                                Latitude : {this.state.nativeGPS.latitude}
-                            </Text>
-                        </View>
-                        <View style={{alignSelf:"flex-end"}}>
-                            <Text style={{ color: "yellow" }}>
-                                Longitude : {this.state.nativeGPS.longitude}
-                            </Text>
-                        </View>
-                        <View style={{alignSelf:"flex-end"}}>
-                            <Text style={{ color: "white" }}>
-                                React Native Maps
                             </Text>
                         </View>
                         <View style={{alignSelf:"flex-end"}}>
