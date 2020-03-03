@@ -240,15 +240,16 @@ class MapsEbcc extends React.Component {
     }
 
     getPolygons() {
+        let poligons = [];
+
         if (!polyMap) {
             this.setState({
                 modalLoading: {...this.state.modalLoading, showModal: false},
                 modalAlert: {...AlertContent.no_data_map}
             });
-            return;
+            return poligons;
         }
         let data = polyMap.data.polygons;
-        let poligons = [];
 
         for (var i = 0; i < data.length; i++) {
             let coords = data[i];
@@ -276,10 +277,12 @@ class MapsEbcc extends React.Component {
         if (this.state.latitude && this.state.longitude) {
             let poligons = this.getPolygons();
             if(poligons.length > 0){
-                this.setState({modalLoading: {...this.state.modalLoading, showModal: false}},()=>{
-                    this.setState({
-                        poligons
-                    });
+                this.setState({
+                    modalLoading: {
+                        ...this.state.modalLoading,
+                        showModal: false
+                    },
+                    poligons
                 });
             }
             else {

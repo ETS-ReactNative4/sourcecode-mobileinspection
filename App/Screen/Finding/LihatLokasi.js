@@ -1,14 +1,18 @@
 import React from 'react';
-import {StatusBar, StyleSheet, Text, View} from 'react-native';
+import {StatusBar, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
-import MapView, {Marker, Polygon, ProviderPropType} from 'react-native-maps';
+import MapView, {Marker, Polygon, PROVIDER_GOOGLE, ProviderPropType} from 'react-native-maps';
 import Colors from '../../Constant/Colors'
 import ModalAlert from '../../Component/ModalLoading'
 import ModalGps from '../../Component/ModalAlert';
 import TaskServices from '../../Database/TaskServices';
-import geolib from 'geolib';
+import * as geolib from 'geolib';
 import {retrieveData, storeData} from '../../Database/Resources';
+import {AlertContent} from "../../Themes";
+import IconLoc from "react-native-vector-icons/FontAwesome5";
 
+let LATITUDE = -2.1890660;
+let LONGITUDE = 111.3609873;
 let polyMap = false;
 
 class LihatLokasi extends React.Component {
@@ -16,20 +20,15 @@ class LihatLokasi extends React.Component {
     constructor(props) {
         super(props);
 
-        const data = this.props.navigation.getParam('data');
-        const latitude = parseFloat(data.latitude);
-        const longitude = parseFloat(data.longitude);
-        const finding_code = data.finding_code;
+        const data = this.props.navigation.getParam('findingData');
 
-        console.log('FINDING CODE : ', finding_code)
-
-        this.loadMap();
         this.state = {
-            latitude: latitude,
-            longitude: longitude,
+            findingData: data,
+            currentLatitude: LATITUDE,
+            currentLongitude: LONGITUDE,
             region: {
-                latitude: latitude,
-                longitude: longitude,
+                latitude: LATITUDE,
+                longitude: LONGITUDE,
                 latitudeDelta: 0.0050,
                 longitudeDelta: 0.00500
             },
@@ -39,7 +38,6 @@ class LihatLokasi extends React.Component {
             title: 'Sabar Ya..',
             message: 'Sedang mencari lokasi kamu nih.',
             icon: '',
-            finding_code: finding_code
         };
     }
 
@@ -59,40 +57,17 @@ class LihatLokasi extends React.Component {
         };
     }
 
-    componentDidMount() {
-        this.getLocation()
-    }
-
-    searchLocation = () => {
-        this.setState({ fetchLocation: true });
-        setTimeout(() => {
-            this.setState({ fetchLocation: false });
-        }, 5000);
-        this.getLocation();
-    }
-
-    totalPolygons() {
-        if (!polyMap) {
-            this.setState({
-                fetchLocation: false,
-                showModal: true,
-                title: 'Tidak ada data',
-                message: "Kamu belum download data map",
-                icon: require('../../Images/ic-blm-input-lokasi.png')
-            });
-            return 0;
-        }
-        return polyMap.data.polygons.length;
-    }
     loadMap() {
         let user = TaskServices.getAllData('TR_LOGIN')[0];
-        if (user.CURR_WERKS) {
-            let est = TaskServices.findBy('TM_EST', 'WERKS', user.CURR_WERKS);
+        if (this.state.findingData.WERKS) {
+            // let est = TaskServices.findBy('TM_EST', 'WERKS', user.CURR_WERKS);
+            let est = TaskServices.findBy('TM_EST', 'WERKS', this.state.findingData.WERKS);
             if (est && est.length > 0 && est[0].LONGITUDE != 0 && est[0].LATITUDE != 0) {
                 LATITUDE = est[0].LATITUDE;
                 LONGITUDE = est[0].LONGITUDE;
             }
-            let polygons = TaskServices.findBy('TR_POLYGON', 'WERKS', user.CURR_WERKS);
+            // let polygons = TaskServices.findBy('TR_POLYGON', 'WERKS', user.CURR_WERKS);
+            let polygons = TaskServices.findBy('TR_POLYGON', 'WERKS', this.state.findingData.WERKS);
             polygons = this.convertGeoJson(polygons);
             if (polygons && polygons.length > 0) {
                 let mapData = {
@@ -133,109 +108,65 @@ class LihatLokasi extends React.Component {
             for (let y in tempItem.coords) {
                 tempArrCoords.push(tempItem.coords[y]);
             }
-            tempItem = { ...tempItem, coords: tempArrCoords };
+            tempItem = {
+                ...tempItem,
+                coords: tempArrCoords
+            };
             arrPoli.push(tempItem);
         }
         return arrPoli;
     }
 
-    getPolygons(position) {
+    getPolygons() {
+        let poligons = [];
         if (!polyMap) {
             this.setState({
-                fetchLocation: false,
-                showModal: true,
-                title: 'Tidak ada data',
-                message: "Kamu belum download data map",
-                icon: require('../../Images/ic-blm-input-lokasi.png')
-            });
-            return;
+                modalLoading: {...this.state.modalLoading, showModal: false},
+                modalAlert: {...AlertContent.no_data_map}
+            })
+            return poligons;
         }
         let data = polyMap.data.polygons;
-        let poligons = [];
-        let index = 0;
         for (var i = 0; i < data.length; i++) {
             let coords = data[i];
-            if (geolib.isPointInside(position, coords.coords)) {
-                this.state.poligons.push(coords)
-                poligons.push(coords)
-                index = i;
-                break;
+            if(
+                geolib.isPointInPolygon({ latitude: this.state.findingData.LAT_FINDING, longitude: this.state.findingData.LONG_FINDING+0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.findingData.LAT_FINDING, longitude: this.state.findingData.LONG_FINDING-0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.findingData.LAT_FINDING+0.0025, longitude: this.state.findingData.LONG_FINDING }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.findingData.LAT_FINDING-0.0025, longitude: this.state.findingData.LONG_FINDING }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.findingData.LAT_FINDING-0.0025, longitude: this.state.findingData.LONG_FINDING-0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.findingData.LAT_FINDING-0.0025, longitude: this.state.findingData.LONG_FINDING+0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.findingData.LAT_FINDING+0.0025, longitude: this.state.findingData.LONG_FINDING-0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.findingData.LAT_FINDING+0.0025, longitude: this.state.findingData.LONG_FINDING+0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.findingData.LAT_FINDING, longitude: this.state.findingData.LONG_FINDING }, coords.coords)
+            ){
+                poligons.push(coords);
             }
-        }
-        //ambil map jika posisi index kurang dari 4
-        if (index < 2) {
-            for (var j = 0; j < index; j++) {
-                let coords = data[j];
-                this.state.poligons.push(coords)
-                poligons.push(coords)
-            }
-        }
-
-        if (index > 0) {
-            //ambil map setelah index
-            let lebih = this.totalPolygons() - index
-            if (lebih > 2) {
-                for (var j = 1; j < 2; j++) {
-                    let coords = data[index + j];
-                    this.state.poligons.push(coords)
-                    poligons.push(coords)
-                }
-                for (var j = 1; j < 2; j++) {
-                    let coords = data[index - j];
-                    this.state.poligons.push(coords)
-                    poligons.push(coords)
-                }
-            } else if (lebih > 0 && lebih < 2) {
-                for (var j = 0; j < lebih; j++) {
-                    let coords = data[j];
-                    this.state.poligons.push(coords)
-                    poligons.push(coords)
-                }
-            }
+            // poligons.push(coords);
         }
         return poligons;
     }
 
-    getLocation() {
-        retrieveData(this.state.finding_code).then(data => {
-            var lat = this.state.latitude;
-            var lon = this.state.longitude;
-            region = {
-                latitude: lat,
-                longitude: lon,
-                latitudeDelta: 0.0075,
-                longitudeDelta: 0.00721
+    getLocation(){
+        if (this.state.currentLatitude && this.state.currentLongitude) {
+            let poligons = this.getPolygons();
+            if(poligons.length > 0){
+                this.setState({
+                    modalLoading: {
+                        ...this.state.modalLoading
+                        , showModal: false
+                    },
+                    poligons
+                },()=> {
+                    this.map.animateToRegion({
+                        latitude: parseFloat(this.state.findingData.LAT_FINDING),
+                        longitude: parseFloat(this.state.findingData.LONG_FINDING),
+                        latitudeDelta: 0.0050,
+                        longitudeDelta: 0.0050
+                    }, 1);
+                });
             }
-            position = {
-                latitude: lat, longitude: lon
-            }
-            if (data != null) {
-                this.setState({ latitude: lat, longitude: lon, fetchLocation: false, region, poligons: data });
-                if (this.map !== undefined) {
-                    this.map.animateToCoordinate(region, 1);
-                }
-            } else {
-                let poligons = this.getPolygons(position);
-                if (poligons != undefined) {
-                    console.log("Poligons : ", poligons)
-                    storeData(this.state.finding_code, poligons)
-                    if (this.map !== undefined) {
-                        this.map.animateToCoordinate(region, 1);
-                    }
-                    this.setState({ latitude: lat, longitude: lon, fetchLocation: false, region, poligons });
-                } else {
-                    this.setState({
-                        fetchLocation: false,
-                        showModal: true,
-                        title: 'Tidak ada data',
-                        message: "Kamu belum download data map",
-                        icon: require('../../Images/ic-blm-input-lokasi.png')
-                    });
-                }
-
-            }
-        })
-
+        }
     }
 
     centerCoordinate(coordinates) {
@@ -254,18 +185,16 @@ class LihatLokasi extends React.Component {
         }
     }
 
-    randomHex = () => {
-        let letters = '0123456789ABCDEF';
-        let color = '#';
-        for (let i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-    }
-
     onMapReady() {
-        //lakukan aoa yg mau dilakukan disini setelah map selesai
+        this.map.animateToRegion({
+            latitude: parseFloat(this.state.findingData.LAT_FINDING),
+            longitude: parseFloat(this.state.findingData.LONG_FINDING),
+            latitudeDelta: 0.0050,
+            longitudeDelta: 0.0050
+        }, 1);
         this.setState({ fetchLocation: false })
+        this.loadMap();
+        this.getLocation()
     }
 
     render() {
@@ -290,29 +219,27 @@ class LihatLokasi extends React.Component {
 
                 <MapView
                     ref={map => this.map = map}
-                    provider={this.props.provider}
                     style={styles.map}
+                    provider={PROVIDER_GOOGLE}
+                    mapType={"satellite"}
                     showsUserLocation={true}
-                    showsMyLocationButton={true}
-                    showsCompass={true}
-                    showScale={true}
-                    showsIndoors={true}
                     initialRegion={this.state.region}
-                    followsUserLocation={false}
                     zoomEnabled={true}
-                    scrollEnabled={false}
-                    // onUserLocationChange={event => {
-                    //     let lat = event.nativeEvent.coordinate.latitude;
-                    //     let lon = event.nativeEvent.coordinate.longitude;
-                    //     this.setState({
-                    //         latitude: lat, longitude: lon, region: {
-                    //             latitude: lat,
-                    //             longitude: lon,
-                    //             latitudeDelta: 0.0075,
-                    //             longitudeDelta: 0.00721
-                    //         }
-                    //     });
-                    // }}
+                    scrollEnabled={true}
+                    onUserLocationChange={event => {
+                        let lat = event.nativeEvent.coordinate.latitude;
+                        let lon = event.nativeEvent.coordinate.longitude;
+                        this.setState({
+                            currentLatitude: lat,
+                            currentLongitude: lon,
+                            region: {
+                                latitude: lat,
+                                longitude: lon,
+                                latitudeDelta: 0.0075,
+                                longitudeDelta: 0.00721
+                            }
+                        });
+                    }}
                     onMapReady={() => this.onMapReady()}
                 >
                     {this.state.poligons.length > 0 && this.state.poligons.map((poly, index) => (
@@ -320,16 +247,17 @@ class LihatLokasi extends React.Component {
                             <Polygon
                                 coordinates={poly.coords}
                                 fillColor="rgba(0, 200, 0, 0.5)"
-                                strokeColor="rgba(0,0,0,0.5)"
-                                strokeWidth={2}
-                                tappable={false}
+                                strokeColor="rgba(255,255,255,1)"
+                                strokeWidth={3}
+                                tappable={true}
                             />
                             <Marker
                                 ref={ref => poly.marker = ref}
-                                coordinate={this.centerCoordinate(poly.coords)}>
+                                coordinate={this.centerCoordinate(poly.coords)}
+                            >
                                 <View style={{ flexDirection: 'column', alignSelf: 'flex-start' }}>
                                     <View style={styles.marker}>
-                                        <Text style={{ color: '#000000', fontSize: 20 }}>{poly.blokname}</Text>
+                                        <Text style={{ color: 'rgba(255,255,255,1)', fontSize: 25, fontWeight:'900'}}>{poly.blokname}</Text>
                                     </View>
                                 </View>
                             </Marker>
@@ -338,8 +266,8 @@ class LihatLokasi extends React.Component {
 
                     <Marker
                         coordinate={{
-                            latitude: this.state.latitude,
-                            longitude: this.state.longitude,
+                            latitude: parseFloat(this.state.findingData.LAT_FINDING),
+                            longitude: parseFloat(this.state.findingData.LONG_FINDING),
                         }}
                         centerOffset={{ x: -42, y: -60 }}
                         anchor={{ x: 0.84, y: 1 }}

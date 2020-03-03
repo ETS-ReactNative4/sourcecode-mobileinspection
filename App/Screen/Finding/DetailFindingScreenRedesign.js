@@ -382,11 +382,7 @@ class DetailFindingScreenRedesign extends Component {
                     >
                         <TouchableOpacity style={{ flex: 1 }} onPress={() => {
                             this.props.navigation.navigate("LihatLokasi", {
-                                data: {
-                                    latitude: this.state.data.LAT_FINDING,
-                                    longitude: this.state.data.LONG_FINDING,
-                                    finding_code: this.state.data.FINDING_CODE
-                                }
+                                findingData: this.state.data,
                             })
                         }}>
                             <View style={{
