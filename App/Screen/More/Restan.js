@@ -84,7 +84,6 @@ export default class Restan extends React.Component {
     }
 
     componentDidMount() {
-        this.loadMap();
         this.nativeGps();
     }
 
@@ -120,13 +119,15 @@ export default class Restan extends React.Component {
                     showModal: true
                 }},()=>{
                     //set timeout untuk ngasih waktu cari signal gps
-                    setTimeout(()=>{
-                        this.fetchRestanCoordinate()
-                            .then((response)=>{
-                                this.searchLocation();
-                                this.getRestanSyncTime();
-                            })
-                    }, 2000)
+                    if(this.loadMap()){
+                        setTimeout(()=>{
+                            this.fetchRestanCoordinate()
+                                .then((response)=>{
+                                    this.searchLocation();
+                                    this.getRestanSyncTime();
+                                })
+                        }, 2000)
+                    }
             }
         );
     }
@@ -206,6 +207,7 @@ export default class Restan extends React.Component {
                     }
                 };
                 polyMap = mapData;
+                return true;
             }
             else {
                 //belum download map
@@ -227,6 +229,7 @@ export default class Restan extends React.Component {
                 fetchLocation: false
             });
         }
+        return false
     }
 
     convertGeoJson(raw) {

@@ -203,6 +203,38 @@ export default class SyncScreen extends React.Component {
         }
     }
 
+    async downloadReport(){
+        /* Peta Restan */
+        /* DOWNLOAD TITIK RESTAN */
+        await getTitikRestan().then((data) => {
+            this.setState({
+                progressTitikRestan: 1,
+                valueTitikRestan: data.downloadCount,
+                totalTitikRestan: data.totalCount
+            })
+        })
+
+        /* Peta Panen Header */
+        /* DOWNLOAD PETA PANEN HEADER */
+        await getPetaPanenHeader().then((data) => {
+            this.setState({
+                progressPetaPanenHeader: 1,
+                valuePetaPanenHeader: data.downloadCount,
+                totalPetaPanenHeader: data.totalCount
+            })
+        })
+
+        /* Peta Panen Detail */
+        /* DOWNLOAD PETA PANEN DETAIL */
+        await getPetaPanenDetail().then((data) => {
+            this.setState({
+                progressPetaPanenDetail: 1,
+                valuePetaPanenDetail: data.downloadCount,
+                totalPetaPanenDetail: data.totalCount
+            })
+        })
+    }
+
     /** CREATE BY AMINJU SPRINT 16 ==> 02-06 SEPT 2019 */
     syncDownload = async () => {
 
@@ -369,36 +401,6 @@ export default class SyncScreen extends React.Component {
                 progressKualitas: 1,
                 valueKualitas: data.downloadCount,
                 totalKualitas: data.totalCount
-            })
-        })
-
-        /* Peta Restan */
-        /* DOWNLOAD TITIK RESTAN */
-        await getTitikRestan().then((data) => {
-            this.setState({
-                progressTitikRestan: 1,
-                valueTitikRestan: data.downloadCount,
-                totalTitikRestan: data.totalCount
-            })
-        })
-
-        /* Peta Panen Header */
-        /* DOWNLOAD PETA PANEN HEADER */
-        await getPetaPanenHeader().then((data) => {
-            this.setState({
-                progressPetaPanenHeader: 1,
-                valuePetaPanenHeader: data.downloadCount,
-                totalPetaPanenHeader: data.totalCount
-            })
-        })
-
-        /* Peta Panen Detail */
-        /* DOWNLOAD PETA PANEN DETAIL */
-        await getPetaPanenDetail().then((data) => {
-            this.setState({
-                progressPetaPanenDetail: 1,
-                valuePetaPanenDetail: data.downloadCount,
-                totalPetaPanenDetail: data.totalCount
             })
         })
 
@@ -813,6 +815,7 @@ export default class SyncScreen extends React.Component {
             });
 
         this.downloadWeeklySummary();
+        this.downloadReport();
 
         this.checkUpdate()
             .then((callback) => {
@@ -1299,6 +1302,30 @@ export default class SyncScreen extends React.Component {
                             total={this.state.totalEbccDetail}
                             progress={this.state.progressEbccDetail} />
 
+                        <Text style={{ fontSize: 14, color: Colors.tintColor, marginTop: 16, fontFamily: Fonts.demi }}>REPORT</Text>
+                        <View style={{ backgroundColor: 'grey', height: 0.5, flex: 1, flexDirection: 'row', marginTop: 3 }} />
+
+                        <ProgressSync
+                            title={'Peta Restan'}
+                            color={Colors.brand}
+                            value={this.state.valueTitikRestan}
+                            total={this.state.totalTitikRestan}
+                            progress={this.state.progressTitikRestan} />
+
+                        <ProgressSync
+                            title={'Peta Panen - Header'}
+                            color={Colors.brand}
+                            value={this.state.valuePetaPanenHeader}
+                            total={this.state.totalPetaPanenHeader}
+                            progress={this.state.progressPetaPanenHeader} />
+
+                        <ProgressSync
+                            title={'Peta Panen - Detail'}
+                            color={Colors.brand}
+                            value={this.state.valuePetaPanenDetail}
+                            total={this.state.totalPetaPanenDetail}
+                            progress={this.state.progressPetaPanenDetail} />
+
                         {/* Section Download by Aminju */}
                         <Text style={{ fontSize: 14, color: Colors.tintColor, marginTop: 16, fontFamily: Fonts.demi }}>DOWNLOAD</Text>
                         <View style={{ backgroundColor: 'grey', height: 0.5, flex: 1, flexDirection: 'row', marginTop: 3 }} />
@@ -1416,27 +1443,6 @@ export default class SyncScreen extends React.Component {
                             value={this.state.valueKualitas}
                             total={this.state.totalKualitas}
                             progress={this.state.progressKualitas} />
-
-                        <ProgressSync
-                            title={'Peta Restan'}
-                            color={Colors.brand}
-                            value={this.state.valueTitikRestan}
-                            total={this.state.totalTitikRestan}
-                            progress={this.state.progressTitikRestan} />
-
-                        <ProgressSync
-                            title={'Peta Panen - Header'}
-                            color={Colors.brand}
-                            value={this.state.valuePetaPanenHeader}
-                            total={this.state.totalPetaPanenHeader}
-                            progress={this.state.progressPetaPanenHeader} />
-
-                        <ProgressSync
-                            title={'Peta Panen - Detail'}
-                            color={Colors.brand}
-                            value={this.state.valuePetaPanenDetail}
-                            total={this.state.totalPetaPanenDetail}
-                            progress={this.state.progressPetaPanenDetail} />
 
                         <ProgressDialog
                             visible={this.state.fetchLocation}

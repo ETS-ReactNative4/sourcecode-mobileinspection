@@ -445,6 +445,7 @@ class MapsInspeksi extends React.Component {
                                 ref={ref => poly.marker = ref}
                                 coordinate={this.centerCoordinate(poly.coords)}
                                 onPress={() => this.navigateScreen('BuatInspeksi', poly.werks_afd_block_code)}
+                                tracksViewChanges={false}
                             >
                                 <View style={{ flexDirection: 'column', alignSelf: 'flex-start' }}>
                                     <View style={styles.marker}>

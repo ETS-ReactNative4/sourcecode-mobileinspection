@@ -8,6 +8,7 @@ import moment from 'moment';
 import {HeaderWithButton} from "../Component/Header/HeaderWithButton";
 import GaugeChart from '../Component/SVG/GaugeBar';
 import ModalLoading from "../Component/ModalLoading";
+import ModalAlert from '../Component/ModalAlert';
 import Colors from "../Constant/Colors";
 import imgSrc from "../Images/Module/PetaPanen";
 import Fonts from "../Themes/Fonts";
@@ -63,6 +64,12 @@ export default class PetaPanen extends Component {
                 showModal: true,
                 title: "Sabar Ya..",
                 message: "Sedang Melakukan sync data!"
+            },
+            modalAlert: {
+                showModal: false,
+                title: "",
+                message: "",
+                icon: null
             }
         }
     }
@@ -320,12 +327,16 @@ export default class PetaPanen extends Component {
             });
         }
         else {
-            alert("belum pilih lokasi");
             // belum pilih lokasi
-            // this.setState({
-            //     modalLoading: {...this.state.modalLoading, showModal: false},
-            //     modalAlert: {...AlertContent.no_location}
-            // })
+            this.setState({
+                modalLoading: {...this.state.modalLoading, showModal: false},
+                modalAlert: {
+                    showModal: true,
+                    title: 'Tidak ada data',
+                    message: "Kamu belum download data map",
+                    icon: require('../Images/ic-blm-input-lokasi.png')
+                }
+            })
         }
 
         return null;
@@ -777,6 +788,12 @@ export default class PetaPanen extends Component {
                     visible={this.state.modalLoading.showModal}
                     title={this.state.modalLoading.title}
                     message={this.state.modalLoading.message} />
+                <ModalAlert
+                    icon={this.state.modalAlert.icon}
+                    visible={this.state.modalAlert.showModal}
+                    onPressCancel={() => this.setState({ modalAlert: { ...this.state.modalAlert, showModal: false } })}
+                    title={this.state.modalAlert.title}
+                    message={this.state.modalAlert.message} />
                 <HeaderWithButton
                     title={"Peta Panen"}
                     iconLeft={require("../Images/icon/ic_arrow_left.png")}

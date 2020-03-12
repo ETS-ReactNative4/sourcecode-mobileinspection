@@ -1142,11 +1142,12 @@ class HomeScreen extends React.Component {
               <View style={{ backgroundColor: "white", flexDirection: "row", justifyContent: 'space-between', padding: 15 }}>
                   <ItemMenuHome
                       onPress={() => {
-                          if (this.state.isSync) {
-                              this.props.navigation.navigate("PetaPanen")
-                          } else {
-                              this.props.navigation.navigate('Sync')
-                          }
+                          // if (this.state.isSync) {
+                          //     this.props.navigation.navigate("PetaPanen")
+                          // } else {
+                          //     this.props.navigation.navigate('Sync')
+                          // }
+                        this.props.navigation.navigate("PetaPanen")
                       }}
                       name={"Peta\nPanen"}
                       image={require('../../Images/icon/HomeScreen/icon_panen.png')}
@@ -1154,11 +1155,12 @@ class HomeScreen extends React.Component {
 
                     <ItemMenuHome
                       onPress={() => {
-                        if (this.state.isSync) {
-                          this.props.navigation.navigate("Restan")
-                        } else {
-                          this.props.navigation.navigate('Sync')
-                        }
+                        // if (this.state.isSync) {
+                        //   this.props.navigation.navigate("Restan")
+                        // } else {
+                        //   this.props.navigation.navigate('Sync')
+                        // }
+                        this.props.navigation.navigate("Restan")
                       }}
                       name={"Peta\nRestan"}
                       image={require('../../Images/icon/HomeScreen/icon_titik_restan.png')}
