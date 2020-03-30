@@ -284,7 +284,7 @@ class Login extends Component {
                     let routeName = response.data.USER_ROLE !== "FFB_GRADING_MILL" ? 'MainMenu' : 'MainMenuMil';
                     if (getCurrentUser() !== undefined) {
                         if (response.data.USER_AUTH_CODE === getCurrentUser().USER_AUTH_CODE) {
-                            this._resetMobileSync(routeName, getCurrentUser().ACCESS_TOKEN);
+                            this._resetMobileSync(routeName, response.data.ACCESS_TOKEN);
                         } else {
                             this.clearData()
                                 .then(()=>{
@@ -350,6 +350,7 @@ class Login extends Component {
                     return response.json();
                 })
                 .then((data) => {
+                    console.log(JSON.stringify(data))
                     if (data.status) {
                         this.setState({
                             modalLoading: { ...this.state.modalLoading, showModal: false }
