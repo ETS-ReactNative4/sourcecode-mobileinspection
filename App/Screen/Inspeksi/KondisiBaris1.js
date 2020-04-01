@@ -330,7 +330,9 @@ class KondisiBaris1 extends Component {
                         maxLength={2}
                         keyboardType={'numeric'}
                         value={this.state.pokokPanen}
-                        onChangeText={(text) => { text = text.replace(/[^0-9 ]/g, ''); this.setState({ pokokPanen: text }) }} />
+                        onChangeText={(text) => {
+                            this.setState({ pokokPanen: this.inputValueValidator(text) }) 
+                        }} />
                     <TouchableOpacity style={styles.btnAdd} onPress={() => { this.increaseNumber('PP') }}>
                         <Icon name={"add"} size={20} color="white" />
                     </TouchableOpacity>
@@ -350,7 +352,10 @@ class KondisiBaris1 extends Component {
                         maxLength={2}
                         keyboardType={'numeric'}
                         value={this.state.buahTinggal}
-                        onChangeText={(text) => { text = text.replace(/[^0-9]/g, ''); this.setState({ buahTinggal: text }) }} />
+                        onChangeText={(text) => { 
+                            this.setState({ 
+                                buahTinggal: this.inputValueValidator(text)
+                            }) }} />
                     <TouchableOpacity
                         style={styles.btnAdd}
                         onPress={() => this.increaseNumber('BT')}>
@@ -371,7 +376,9 @@ class KondisiBaris1 extends Component {
                         maxLength={3}
                         keyboardType={'numeric'}
                         value={this.state.brondolPinggir}
-                        onChangeText={(text) => { text = text.replace(/[^0-9]/g, ''); this.setState({ brondolPinggir: text }) }} />
+                        onChangeText={(text) => {
+                            this.setState({ brondolPinggir: this.inputValueValidator(text) }) 
+                        }} />
                     <TouchableOpacity style={styles.btnAdd} onPress={() => { this.increaseNumber('BP') }}>
                         <Icon name={"add"} size={20} color="white" />
                     </TouchableOpacity>
@@ -390,7 +397,9 @@ class KondisiBaris1 extends Component {
                         maxLength={3}
                         keyboardType={'numeric'}
                         value={this.state.brondolTPH}
-                        onChangeText={(text) => { text = text.replace(/[^0-9]/g, ''); this.setState({ brondolTPH: text }) }}
+                        onChangeText={(text) => {
+                            this.setState({ brondolTPH: this.inputValueValidator(text) })
+                        }}
                     />
                     <TouchableOpacity style={styles.btnAdd} onPress={() => { this.increaseNumber('BTP') }}>
                         <Icon name={"add"} size={20} color="white" />
@@ -398,6 +407,17 @@ class KondisiBaris1 extends Component {
                 </View>
             </View>]);
         }
+    }
+
+    inputValueValidator(text){
+        text = text.replace(/[^0-9 ]/g, '');
+        if(text.length <= 0){
+            text = "0";
+        }
+        if(text.length === 2 && text[0] === "0"){
+            text = text[1];
+        }
+        return text
     }
 
     cancelOrder() {
@@ -529,8 +549,9 @@ class KondisiBaris1 extends Component {
                                 maxLength={2}
                                 keyboardType={'numeric'}
                                 value={this.state.pokokTdkPupuk}
-                                onChangeText={(text) => { text = text.replace(/[^0-9]/g, ''); this.setState({ pokokTdkPupuk: text }) }
-                                } />
+                                onChangeText={(text) => { 
+                                    this.setState({ pokokTdkPupuk: this.inputValueValidator(text) }) 
+                                }} />
                             <TouchableOpacity style={styles.btnAdd} onPress={() => { this.increaseNumber('PTP') }}>
                                 <Icon name={"add"} size={20} color="white" />
                             </TouchableOpacity>
