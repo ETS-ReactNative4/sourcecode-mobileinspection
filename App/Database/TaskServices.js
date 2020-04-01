@@ -169,10 +169,11 @@ const TaskServices = {
         });
     },
 
-    updateLogin: function (type) {
+    updateLogin: function (type, token) {
         let data = RealmSchemas.objects('TR_LOGIN')[0];
         RealmSchemas.write(() => {
             data.STATUS = type;
+            data.ACCESS_TOKEN = token;
         });
     },
 

@@ -73,7 +73,7 @@ export default class MoreScreen extends Component {
   logout() {
     NetInfo.isConnected.fetch().then(isConnected => {
       if (isConnected) {
-        TaskServices.updateLogin('LOGOUT');
+        TaskServices.updateLogin('LOGOUT', "NONE");
         this.setState({ showConfirm: false });
         this.props.navigation.navigate('Login', { exit: 'true' });
       } else {

@@ -350,12 +350,11 @@ class Login extends Component {
                     return response.json();
                 })
                 .then((data) => {
-                    console.log(JSON.stringify(data))
                     if (data.status) {
                         this.setState({
                             modalLoading: { ...this.state.modalLoading, showModal: false }
                         }, ()=>{
-                            TaskServices.updateLogin('LOGIN');
+                            TaskServices.updateLogin('LOGIN', token);
                             this.navigateScreen(routeName);
                         });
                     }
