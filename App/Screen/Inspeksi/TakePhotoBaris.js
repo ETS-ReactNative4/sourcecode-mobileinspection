@@ -148,22 +148,18 @@ class TakePhotoBaris extends Component {
   };
 
   resize(data) {
-
-    console.log('Cropped : ', data)
-
     ImageResizer.createResizedImage(data, 640, 480, 'JPEG', 80, 0, dirPhotoInspeksiBaris).then((response) => {
-
-
-      console.log('Response Cropped : ', response);
       // response.uri is the URI of the new image that can now be displayed, uploaded...
       // response.path is the path of the new image
       // response.name is the name of the new image with the extension
       // response.size is the size of the new image
-      RNFS.copyFile(response.path, this.state.path);
-      this.setState({
-        path: response.uri,
-        pathCache: response.path
-      });
+      RNFS.unlink(this.state.path).then((unlink) => {
+        RNFS.copyFile(response.path, this.state.path);
+        this.setState({
+          path: response.uri,
+          pathCache: response.path
+        });
+      })
     }).catch((err) => {
       console.log(err)
     });

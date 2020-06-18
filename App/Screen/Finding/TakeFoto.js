@@ -1,15 +1,15 @@
-import React, {Component} from 'react';
-import {BackHandler, Dimensions, Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import React, { Component } from 'react';
+import { BackHandler, Dimensions, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Colors from '../../Constant/Colors';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {RNCamera as Camera} from 'react-native-camera';
+import { RNCamera as Camera } from 'react-native-camera';
 import TaskServices from '../../Database/TaskServices';
 import ImageResizer from 'react-native-image-resizer';
-import {dirPhotoTemuan} from '../../Lib/dirStorage';
+import { dirPhotoTemuan } from '../../Lib/dirStorage';
 import R from 'ramda';
-import {getTodayDate} from '../../Lib/Utils';
+import { getTodayDate } from '../../Lib/Utils';
 import ModalAlert from '../../Component/ModalAlert';
-import {AlertContent, Images} from '../../Themes';
+import { AlertContent, Images } from '../../Themes';
 
 var RNFS = require('react-native-fs');
 
@@ -99,6 +99,7 @@ class TakeFoto extends Component {
 
         RNFS.copyFile(data.uri, imgPath);
         this.setState({ path: imgPath, pathCacheInternal: data.uri, hasPhoto: true });
+
         this.resize(imgPath);
       }
 
@@ -110,10 +111,12 @@ class TakeFoto extends Component {
 
   resize(data) {
     ImageResizer.createResizedImage(data, 640, 480, 'JPEG', 80, 0, dirPhotoTemuan).then((response) => {
-      RNFS.copyFile(response.path, this.state.path);
-      this.setState({
-        pathView: response.uri,
-        pathCacheResize: response.path
+      RNFS.unlink(this.state.path).then((unlink) => {
+        RNFS.copyFile(response.path, this.state.path);
+        this.setState({
+          pathView: response.uri,
+          pathCacheResize: response.path
+        });
       });
     }).catch((err) => {
       console.log(err)
@@ -127,6 +130,7 @@ class TakeFoto extends Component {
         ref={(cam) => {
           this.camera = cam;
         }}
+        captureAudio={false}
         style={styles.preview}
         flashMode={Camera.Constants.FlashMode.auto}
         permissionDialogTitle={'Permission to use camera'}

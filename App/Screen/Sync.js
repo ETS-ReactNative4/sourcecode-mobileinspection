@@ -4,7 +4,6 @@ import { Container, Content } from 'native-base'
 import Colors from '../Constant/Colors';
 import moment from 'moment';
 import DeviceInfo from 'react-native-device-info';
-import IMEI from 'react-native-imei'
 
 import { ProgressDialog } from 'react-native-simple-dialogs';
 import { dirPhotoKategori, dirPhotoTemuan } from '../Lib/dirStorage';
@@ -1031,11 +1030,12 @@ export default class SyncScreen extends React.Component {
 
     async checkUpdate() {
         let deviceVersion = DeviceInfo.getVersion();
-        let imei = await IMEI.getImei();
+        let imei = await DeviceInfo.getDeviceId();
+
         let model = {
             INSERT_USER: this.state.user.USER_AUTH_CODE.toString(),
             APK_VERSION: deviceVersion,
-            IMEI: imei,
+            DEVICE_ID: imei,
             INSERT_TIME: moment().format('YYYYMMDDHHmmss').toString()
         };
         let TM_SERVICE = await TaskServices.findBy2("TM_SERVICE", 'API_NAME', 'AUTH-SERVER-APK-VERSION');

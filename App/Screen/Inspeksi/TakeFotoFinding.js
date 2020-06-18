@@ -1,15 +1,15 @@
-import React, {Component} from 'react';
-import {BackHandler, Dimensions, Image, StatusBar, StyleSheet, TouchableOpacity, View} from 'react-native';
+import React, { Component } from 'react';
+import { BackHandler, Dimensions, Image, StatusBar, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Colors from '../../Constant/Colors';
 import Icon from 'react-native-vector-icons/Ionicons';
 import imgTakePhoto from '../../Images/icon/ic_take_photo.png';
 import imgNextPhoto from '../../Images/icon/ic_next_photo.png';
-import {RNCamera as Camera} from 'react-native-camera';
+import { RNCamera as Camera } from 'react-native-camera';
 import TaskServices from '../../Database/TaskServices';
 import ImageResizer from 'react-native-image-resizer';
-import {dirPhotoTemuan} from '../../Lib/dirStorage'
+import { dirPhotoTemuan } from '../../Lib/dirStorage'
 import R from 'ramda';
-import {getTodayDate} from '../../Lib/Utils';
+import { getTodayDate } from '../../Lib/Utils';
 import ModalAlert from '../../Component/ModalAlert';
 
 var RNFS = require('react-native-fs');
@@ -111,11 +111,13 @@ class TakeFoto extends Component {
 
   resize(data) {
     ImageResizer.createResizedImage(data, 640, 480, 'JPEG', 80, 0, dirPhotoTemuan).then((response) => {
-      RNFS.copyFile(response.path, this.state.path);
-      this.setState({
-        pathView: response.uri,
-        pathCacheResize: response.path
-      });
+      RNFS.unlink(this.state.path).then((unlink) => {
+        RNFS.copyFile(response.path, this.state.path);
+        this.setState({
+          pathView: response.uri,
+          pathCacheResize: response.path
+        });
+      })
     }).catch((err) => {
       console.log(err)
       this.validatePhotoExists();

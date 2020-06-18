@@ -30,14 +30,14 @@ import {
 import ModalAlert from '../Component/ModalAlert'
 import ModalLoading from '../Component/ModalLoading';
 import ServerName from '../Constant/ServerName'
-import IMEI from 'react-native-imei'
 import { AlertContent } from '../Themes';
 import { storeData, removeData } from '../Database/Resources';
 import moment from 'moment'
 import { getCurrentUser } from '../Database/DatabaseServices';
 
-import {fetchPostWithUrl} from '../Api/FetchingApi';
+import { fetchPostWithUrl } from '../Api/FetchingApi';
 import RNFS from 'react-native-fs';
+import DeviceInfo from 'react-native-device-info';
 
 class Login extends Component {
 
@@ -140,7 +140,7 @@ class Login extends Component {
         await this.deleteFolders()
     }
 
-    async clearRealm(){
+    async clearRealm() {
         await TaskServices.deleteAllData('TR_LOGIN');
         await TaskServices.deleteAllData('TR_BLOCK_INSPECTION_H');
         await TaskServices.deleteAllData('TR_BLOCK_INSPECTION_D');
@@ -168,72 +168,72 @@ class Login extends Component {
         await TaskServices.deleteAllData('TR_GENBA_INSPECTION');
     }
 
-    async deleteFolders(){
+    async deleteFolders() {
         let dirs = RNFetchBlob.fs.dirs;
         await RNFetchBlob.fs.exists(dirs.SDCardDir + "/" + "MobileInspection")
             .then((exist) => {
-                if(exist){
+                if (exist) {
                     RNFetchBlob.fs.unlink(dirs.SDCardDir + "/" + "MobileInspection");
                 }
             });
 
         await RNFS.exists(dirDatabase)
-            .then((exist)=>{
-                if(exist){
+            .then((exist) => {
+                if (exist) {
                     RNFS.unlink(dirDatabase);
                 }
             });
         await RNFS.exists(dirSummary)
-            .then((exist)=>{
-                if(exist){
+            .then((exist) => {
+                if (exist) {
                     RNFS.unlink(dirSummary);
                 }
             });
         await RNFS.exists(dirPhotoInspeksiBaris)
-            .then((exist)=>{
-                if(exist){
+            .then((exist) => {
+                if (exist) {
                     RNFS.unlink(dirPhotoInspeksiBaris);
                 }
             });
         await RNFS.exists(dirPhotoInspeksiSelfie)
-            .then((exist)=>{
-                if(exist){
+            .then((exist) => {
+                if (exist) {
                     RNFS.unlink(dirPhotoInspeksiSelfie);
                 }
             });
         await RNFS.exists(dirPhotoTemuan)
-            .then((exist)=>{
-                if(exist){
+            .then((exist) => {
+                if (exist) {
                     RNFS.unlink(dirPhotoTemuan);
                 }
             });
         await RNFS.exists(dirPhotoKategori)
-            .then((exist)=>{
-                if(exist){
+            .then((exist) => {
+                if (exist) {
                     RNFS.unlink(dirPhotoKategori);
                 }
             });
         await RNFS.exists(dirPhotoEbccJanjang)
-            .then((exist)=>{
-                if(exist){
+            .then((exist) => {
+                if (exist) {
                     RNFS.unlink(dirPhotoEbccJanjang);
                 }
             });
         await RNFS.exists(dirPhotoEbccSelfie)
-            .then((exist)=>{
-                if(exist){
+            .then((exist) => {
+                if (exist) {
                     RNFS.unlink(dirPhotoEbccSelfie);
                 }
             });
         await RNFS.exists(dirPhotoUser)
-            .then((exist)=>{
-                if(exist){
+            .then((exist) => {
+                if (exist) {
                     RNFS.unlink(dirPhotoUser);
                 }
             });
         await RNFS.exists(dirMaps)
-            .then((exist)=>{
-                if(exist){
+            .then((exist) => {
+                if (exist) {
                     RNFS.unlink(dirMaps);
                 }
             });
@@ -249,22 +249,22 @@ class Login extends Component {
     }
 
     onLogin(username, password, choosenServer) {
+
+        const idDevice = DeviceInfo.getDeviceId();
+
         this.setState({
             modalLoading: {
                 ...this.state.modalLoading,
                 showModal: true
-            }},()=>{
+            }
+        }, () => {
             Keyboard.dismiss();
-            IMEI.getImei()
-                .then((imei)=>{
-                    if(imei){
-                        this.postLogin(username, password, choosenServer, imei);
-                    }
-                });
+
+            this.postLogin(username, password, choosenServer, idDevice);
         });
     }
 
-    postLogin(username, password, choosenServer, imei) {
+    postLogin(username, password, choosenServer, device_id) {
         let header = {
             'Cache-Control': 'no-cache',
             'Accept': 'application/json',
@@ -274,34 +274,34 @@ class Login extends Component {
         let request = {
             username,
             password,
-            imei
+            device_id
         };
 
         this.serverNameIndex = choosenServer;
         fetchPostWithUrl(ServerName[this.serverNameIndex].data + 'auth/login', request, header)
-            .then((response)=>{
-                if(response.status){
+            .then((response) => {
+                if (response.status) {
                     let routeName = response.data.USER_ROLE !== "FFB_GRADING_MILL" ? 'MainMenu' : 'MainMenuMil';
                     if (getCurrentUser() !== undefined) {
                         if (response.data.USER_AUTH_CODE === getCurrentUser().USER_AUTH_CODE) {
                             this._resetMobileSync(routeName, response.data.ACCESS_TOKEN);
                         } else {
                             this.clearData()
-                                .then(()=>{
+                                .then(() => {
                                     this.insertLink(routeName, response.data);
                                 });
                         }
                     }
                     else {
                         this.clearData()
-                            .then(()=>{
+                            .then(() => {
                                 this.insertLink(routeName, response.data);
                             });
                     }
                 }
-                else{
-                    if(response.status === false){
-                        if(response.message === "Request Timeout"){
+                else {
+                    if (response.status === false) {
+                        if (response.message === "Request Timeout") {
                             this.setState({
                                 modalLoading: { ...this.state.modalLoading, showModal: false },
                                 ...AlertContent.proses_lambat
@@ -322,7 +322,7 @@ class Login extends Component {
                     }
                 }
             })
-            .catch((err)=>{
+            .catch((err) => {
                 this.setState({
                     modalLoading: { ...this.state.modalLoading, showModal: false },
                     ...AlertContent.server_no_response
@@ -353,7 +353,7 @@ class Login extends Component {
                     if (data.status) {
                         this.setState({
                             modalLoading: { ...this.state.modalLoading, showModal: false }
-                        }, ()=>{
+                        }, () => {
                             TaskServices.updateLogin('LOGIN', token);
                             this.navigateScreen(routeName);
                         });
