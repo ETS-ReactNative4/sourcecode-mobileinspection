@@ -147,7 +147,7 @@ class FormStep2 extends Component {
     clearFoto() {
         if (this.state.foto.length > 0) {
             this.state.foto.map(item => {
-                RNFS.unlink(`file://${dirPhotoTemuan}/${item}`)
+                RNFS.unlink(item.uri)
             })
         }
         this.props.navigation.goBack(null);
@@ -270,11 +270,15 @@ class FormStep2 extends Component {
 
         if (this.state.foto.length > 0) {
             this.state.foto.map((image, i) => {
+
+                let da = image.uri.split('/');
+                let imgName = da[da.length - 1];
+
                 var imagetr = {
                     TR_CODE: this.state.TRANS_CODE,
-                    IMAGE_CODE: image.replace(".jpg", ""),
-                    IMAGE_NAME: image,
-                    IMAGE_PATH_LOCAL: dirPhotoTemuan + "/" + image,
+                    IMAGE_CODE: imgName.replace(".jpg", ""),
+                    IMAGE_NAME: imgName,
+                    IMAGE_PATH_LOCAL: image.uri,
                     IMAGE_URL: '',
                     STATUS_IMAGE: 'SEBELUM',
                     STATUS_SYNC: 'N',
@@ -337,7 +341,13 @@ class FormStep2 extends Component {
     }
 
     loadDataBlock(werkAfdBlockCode) {
+
+        console.log('Data  werkAfdBlockCode : ', werkAfdBlockCode)
+
         let data = TaskServices.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', werkAfdBlockCode);
+
+        console.log('Data : ', data)
+
         if (data !== undefined) {
             let statusBlok = this.getStatusBlok(data.WERKS_AFD_BLOCK_CODE);
             let estateName = this.getEstateName(data.WERKS);
@@ -483,7 +493,7 @@ class FormStep2 extends Component {
                             <TouchableOpacity onPress={() => { this.setState({ isImageFullVisible: true }) }}>
                                 <Image resizeMode={'cover'}
                                     style={{ height: 80, width: 80, borderRadius: 5 }}
-                                    source={{ uri: "file://" + dirPhotoTemuan + "/" + this.state.foto[0] }}
+                                    source={{ uri: this.state.foto[0].uri }}
                                 />
                             </TouchableOpacity>
 
@@ -598,7 +608,7 @@ class FormStep2 extends Component {
                             {this.state.foto.map((image, i) => (
                                 <View style={{ flex: 1, backgroundColor: 'black' }}>
                                     <Image resizeMode={"contain"} style={{ flex: 1 }}
-                                        source={{ uri: "file://" + dirPhotoTemuan + "/" + image }} />
+                                        source={{ uri: image.uri }} />
                                 </View>
                             ))}
                         </Carousel>

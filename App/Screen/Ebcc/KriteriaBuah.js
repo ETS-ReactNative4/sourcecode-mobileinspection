@@ -71,9 +71,7 @@ class KriteriaBuah extends Component {
 
     componentWillMount() {
         this.loadData()
-    }
 
-    componentDidMount() {
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
     }
 
@@ -82,7 +80,7 @@ class KriteriaBuah extends Component {
     }
 
     handleBackButtonClick() {
-        this.props.navigation.goBack(null)
+        this.props.navigation.goBack()
         return true;
     }
 

@@ -10,6 +10,7 @@ import { dirPhotoInspeksiBaris } from '../../Lib/dirStorage'
 import R from 'ramda';
 import MapView from 'react-native-maps';
 import TaskService from '../../Database/TaskServices';
+import HeaderDefault from '../../Component/Header/HeaderDefault';
 
 const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
 var RNFS = require('react-native-fs');
@@ -19,16 +20,7 @@ const LONGITUDE = 112.354931;
 class TakePhotoBaris extends Component {
 
   static navigationOptions = {
-    headerStyle: {
-      backgroundColor: Colors.tintColorPrimary
-    },
-    title: 'Ambil Foto Baris',
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      flex: 1,
-      fontSize: 18,
-      fontWeight: '400'
-    },
+    header: null
   };
 
   constructor(props) {
@@ -84,8 +76,9 @@ class TakePhotoBaris extends Component {
   handleBackButtonClick() {
     if (this.state.hasPhoto) {
       this.deleteFoto()
+      return true;
     }
-    this.props.navigation.goBack(null);
+    this.props.navigation.goBack();
     return true;
   }
 
@@ -96,6 +89,7 @@ class TakePhotoBaris extends Component {
       });
     RNFS.unlink(this.state.path)
     this.setState({ path: null, hasPhoto: false });
+    this.props.navigation.goBack();
   }
 
   setParameter() {
@@ -124,21 +118,25 @@ class TakePhotoBaris extends Component {
         this.insertDB();
       } else {
         const takeCameraOptions = {
-          // quality : 0.5,  //just in case want to reduce the quality too
+          width: 640,
+          quality: 0.5,
+          base64: true,
+          fixOrientation: true,
           skipProcessing: false,
-          fixOrientation: true
         };
         const data = await this.camera.takePictureAsync(takeCameraOptions);
         var imgPath = `${dirPhotoInspeksiBaris}/${this.state.dataModel.IMAGE_NAME}`;
 
-        RNFS.copyFile(data.uri, imgPath);
+        console.log(data)
+
         this.setState(
           {
+            pathView: data.uri,
             path: imgPath,
             pathImg: dirPhotoInspeksiBaris,
-            hasPhoto: true
+            hasPhoto: true,
           }, () => {
-            this.resize(imgPath)
+            RNFS.copyFile(data.uri, imgPath);
           });
       }
 
@@ -149,16 +147,8 @@ class TakePhotoBaris extends Component {
 
   resize(data) {
     ImageResizer.createResizedImage(data, 640, 480, 'JPEG', 80, 0, dirPhotoInspeksiBaris).then((response) => {
-      // response.uri is the URI of the new image that can now be displayed, uploaded...
-      // response.path is the path of the new image
-      // response.name is the name of the new image with the extension
-      // response.size is the size of the new image
       RNFS.unlink(this.state.path).then((unlink) => {
         RNFS.copyFile(response.path, this.state.path);
-        this.setState({
-          path: response.uri,
-          pathCache: response.path
-        });
       })
     }).catch((err) => {
       console.log(err)
@@ -204,9 +194,10 @@ class TakePhotoBaris extends Component {
   }
 
   async insertDB() {
-    RNFS.unlink(this.state.pathCache);
+    // RNFS.unlink(this.state.pathCache);
     let isImageContain = await RNFS.exists(`file://${dirPhotoInspeksiBaris}/${this.state.dataModel.IMAGE_NAME}`);
     if (isImageContain) {
+      this.resize(this.state.path)
       this.props.navigation.navigate('KondisiBaris1',
         {
           fotoBaris: this.state.dataModel,
@@ -224,9 +215,9 @@ class TakePhotoBaris extends Component {
 
   renderImage() {
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         <Image
-          source={{ uri: this.state.path }}
+          source={{ uri: this.state.pathView }}
           style={styles.preview}
         />
       </View>
@@ -250,6 +241,10 @@ class TakePhotoBaris extends Component {
           hidden={false}
           barStyle="light-content"
           backgroundColor={Colors.tintColorPrimary}
+        />
+        <HeaderDefault
+          onPress={() => this.handleBackButtonClick()}
+          title={'Ambil Foto Baris'}
         />
         <MapView
           ref={ref => this.map = ref}
@@ -320,8 +315,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: 'white',
   },
   preview: {

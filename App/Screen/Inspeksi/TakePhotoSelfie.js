@@ -8,6 +8,7 @@ import R from 'ramda';
 import { getTodayDate } from '../../Lib/Utils'
 import { dirPhotoInspeksiSelfie } from '../../Lib/dirStorage'
 import ImageResizer from 'react-native-image-resizer';
+import HeaderDefault from '../../Component/Header/HeaderDefault';
 
 const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
 var RNFS = require('react-native-fs');
@@ -15,16 +16,7 @@ var RNFS = require('react-native-fs');
 class TakePhotoSelfie extends Component {
 
   static navigationOptions = {
-    headerStyle: {
-      backgroundColor: Colors.tintColorPrimary
-    },
-    title: 'Ambil Foto Diri',
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      flex: 1,
-      fontSize: 18,
-      fontWeight: '400'
-    },
+    header: null
   };
 
   constructor(props) {
@@ -127,11 +119,12 @@ class TakePhotoSelfie extends Component {
         RNFS.copyFile(data.uri, imgPath);
         this.setState(
           {
+            pathView: data.uri,
             path: imgPath,
             pathImg: dirPhotoInspeksiSelfie,
             hasPhoto: true
           }, () => {
-            this.resize(imgPath)
+            RNFS.copyFile(data.uri, imgPath);
           });
       }
 
@@ -142,16 +135,8 @@ class TakePhotoSelfie extends Component {
 
   resize(data) {
     ImageResizer.createResizedImage(data, 640, 480, 'JPEG', 80, 0, dirPhotoInspeksiSelfie).then((response) => {
-      // response.uri is the URI of the new image that can now be displayed, uploaded...
-      // response.path is the path of the new image
-      // response.name is the name of the new image with the extension
-      // response.size is the size of the new image
       RNFS.unlink(this.state.path).then((unlink) => {
         RNFS.copyFile(response.path, this.state.path);
-        this.setState({
-          path: response.uri,
-          pathCache: response.path
-        });
       })
 
     }).catch((err) => {
@@ -163,6 +148,7 @@ class TakePhotoSelfie extends Component {
     RNFS.unlink(this.state.pathCache);
     let isImageContain = await RNFS.exists(`file://${dirPhotoInspeksiSelfie}/${this.state.dataModel.IMAGE_NAME}`);
     if (isImageContain) {
+      this.resize(this.state.path)
       this.props.navigation.navigate('KondisiBarisAkhir', {
         fotoSelfie: this.state.dataModel,
         inspeksiHeader: this.state.inspeksiHeader,
@@ -200,9 +186,9 @@ class TakePhotoSelfie extends Component {
 
   renderImage() {
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         <Image
-          source={{ uri: this.state.path }}
+          source={{ uri: this.state.pathView }}
           style={styles.preview}
         />
       </View>
@@ -227,6 +213,10 @@ class TakePhotoSelfie extends Component {
           barStyle="light-content"
           backgroundColor={Colors.tintColorPrimary}
         />
+        <HeaderDefault
+          title={'Ambil Foto Diri'}
+          onPress={() => this.handleBackButtonClick()}
+        />
         <View style={{ flex: 2 }}>
           {this.state.path ? this.renderImage() : this.renderCamera()}
         </View>
@@ -245,7 +235,6 @@ export default TakePhotoSelfie;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'white',
   },

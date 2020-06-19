@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
     BackHandler,
     FlatList,
@@ -10,7 +10,7 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
-import {Card, Container, Content,} from 'native-base';
+import { Card, Container, Content, } from 'native-base';
 import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
 import Icon from 'react-native-vector-icons/MaterialIcons'
@@ -19,30 +19,15 @@ import R from 'ramda'
 import TaskServices from '../../Database/TaskServices'
 import RNFS from 'react-native-fs';
 import ModalAlert from '../../Component/ModalAlert';
+import HeaderDefault from '../../Component/Header/HeaderDefault';
 
 const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
 
 export default class Step1Finding extends Component {
 
-    static navigationOptions = ({ navigation }) => {
-        return {
-            headerStyle: {
-                backgroundColor: Colors.tintColorPrimary
-            },
-            title: 'Buat Laporan Temuan',
-            headerTintColor: '#fff',
-            headerTitleStyle: {
-                flex: 1,
-                fontSize: 18,
-                fontWeight: '400'
-            },
-            headerLeft: (
-                <TouchableOpacity onPress={() => { navigation.goBack(null) }}>
-                    <Icon2 style={{ marginLeft: 12 }} name={'ios-arrow-round-back'} size={40} color={'white'} />
-                </TouchableOpacity>
-            )
-        };
-    }
+    static navigationOptions = {
+        header: null
+    };
 
     constructor(props) {
         super(props);
@@ -80,25 +65,38 @@ export default class Step1Finding extends Component {
     clearFoto() {
         if (this.state.photos.length > 0) {
             this.state.photos.map(item => {
-                RNFS.unlink(item.uri)
+                RNFS.unlink(item.uri).then(unlink => {
+                    console.log('File deleted : ', item.uri)
+                })
             })
-        }
-        this.props.navigation.goBack(null);
+            this.props.navigation.goBack()
+        };
     }
 
     componentDidMount() {
         this.getLocation();
         this.props.navigation.setParams({ clearFoto: this.clearFoto })
-        BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+        this.focusListener = this.props.navigation.addListener("didFocus", () => {
+            BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
+        });
+        this.blurListener = this.props.navigation.addListener("didBlur", () => {
+            BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+        })
     }
 
     componentWillUnmount() {
-        BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+        this.focusListener.remove();
+        this.blurListener.remove();
     }
 
     handleBackButtonClick() {
-        this.clearFoto()
-        return false;
+        if (this.state.photos.length > 0) {
+            this.clearFoto()
+            return true
+        } else {
+            this.props.navigation.goBack();
+            return true;
+        }
     }
 
     getLocation() {
@@ -124,23 +122,19 @@ export default class Step1Finding extends Component {
 
         if (this.state.photos.length == 0) {
             this.setState({ showModal: true, title: "Ambil Foto", message: 'Opps kamu belum ambil Foto Temuan yaaa', icon: require('../../Images/ic-no-pic.png') });
-        } else if (this.state.selectedPhotos.length == 0) {
-            this.setState({ showModal: true, title: 'Foto Temuan', message: 'Kamu harus ambil min. 1 foto yoo.', icon: require('../../Images/ic-no-pic.png') });
-        } else {
-            let images = [];
-            this.state.selectedPhotos.map((item) => {
-                let da = item.split('/')
-                let imgName = da[da.length - 1];
-                images.push(imgName);
-                this.props.navigation.navigate('Step2Finding', {
-                    image: images,
-                    lat: this.state.latitude,
-                    lon: this.state.longitude,
-                    data: this.state.inspeksiHeader,
-                    dataInspeksi: this.state.dataInspeksi,
-                    finish: this.finish
-                });
-
+        }
+        // else if (this.state.selectedPhotos.length == 0) {
+        //     this.setState({ showModal: true, title: 'Foto Temuan', message: 'Kamu harus ambil min. 1 foto yoo.', icon: require('../../Images/ic-no-pic.png') });
+        // } 
+        else {
+            const photos = R.clone(this.state.photos);
+            this.props.navigation.navigate('Step2Finding', {
+                image: photos,
+                lat: this.state.latitude,
+                lon: this.state.longitude,
+                data: this.state.inspeksiHeader,
+                dataInspeksi: this.state.dataInspeksi,
+                finish: this.finish
             });
         }
     }
@@ -166,21 +160,13 @@ export default class Step1Finding extends Component {
     }
 
     _onSelectedPhoto = foto => {
-        const selectedPhotos = R.clone(this.state.selectedPhotos)
-        if (selectedPhotos.includes(foto)) {
-            var index = selectedPhotos.indexOf(foto);
-            selectedPhotos.splice(index, 1);
-        } else {
-            if (selectedPhotos.length > 2) {
-                this.setState({ showModal: true, title: 'Pilih Foto', message: 'Kamu cuma bisa pilih 3 foto aja yaa..', icon: require('../../Images/ic-no-pic.png') });
-            } else {
-                selectedPhotos.push(foto);
-            }
-        }
+        const photos = R.clone(this.state.photos);
+        var arrRemove = arrayRemove(photos, foto);
+        RNFS.unlink(foto);
 
         this.setState({
-            selectedPhotos,
-        });
+            photos: arrRemove
+        })
     }
 
     _renderFoto = (foto) => {
@@ -193,7 +179,7 @@ export default class Step1Finding extends Component {
 
         return (
             <TouchableOpacity
-                onPress={() => { this._onSelectedPhoto(foto.uri) }}
+                activeOpacity={0}
                 style={{ height: 100, width: 100, marginLeft: 10 }}
                 key={foto.index}>
                 <Image style={[
@@ -205,7 +191,23 @@ export default class Step1Finding extends Component {
                     },
                     border
                 ]}
-                       source={foto} />
+                    source={foto} />
+
+                <TouchableOpacity
+                    onPress={() => { this._onSelectedPhoto(foto.uri) }}
+                    style={{
+                        position: 'absolute',
+                        backgroundColor: 'white',
+                        height: 30,
+                        width: 30,
+                        alignItems: 'center',
+                        padding: 3,
+                        right: 0,
+                        borderTopRightRadius: 10,
+                        borderBottomLeftRadius: 10
+                    }}>
+                    <Icon color={'red'} name={'close'} size={25} />
+                </TouchableOpacity>
             </TouchableOpacity>
         )
     }
@@ -216,10 +218,16 @@ export default class Step1Finding extends Component {
             <Container style={{ flex: 1, backgroundColor: 'white' }}>
                 <Content style={{ flex: 1 }}>
                     {/* STEPPER */}
+
                     <StatusBar
                         hidden={false}
                         barStyle="light-content"
                         backgroundColor={Colors.tintColorPrimary}
+                    />
+
+                    <HeaderDefault
+                        title={'Buat Laporan Temuan'}
+                        onPress={() => this.handleBackButtonClick()}
                     />
                     <ModalAlert
                         icon={this.state.icon}
@@ -290,7 +298,8 @@ export default class Step1Finding extends Component {
                                 alignSelf: 'center',
                                 alignItems: 'stretch',
                                 width: 55,
-                                height: 55}}
+                                height: 55
+                            }}
                                 source={require('../../Images/icon/ic_camera_big.png')}
                             />
                         </TouchableOpacity>
@@ -384,3 +393,10 @@ const style = {
         borderColor: '#ddd'
     }
 };
+
+
+export function arrayRemove(arr, value) {
+    return arr.filter(function (ele) {
+        return ele.uri != value;
+    });
+}

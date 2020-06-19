@@ -264,7 +264,7 @@ class Login extends Component {
         });
     }
 
-    postLogin(username, password, choosenServer, device_id) {
+    postLogin(username, password, choosenServer, imei) {
         let header = {
             'Cache-Control': 'no-cache',
             'Accept': 'application/json',
@@ -274,7 +274,7 @@ class Login extends Component {
         let request = {
             username,
             password,
-            device_id
+            imei
         };
 
         this.serverNameIndex = choosenServer;

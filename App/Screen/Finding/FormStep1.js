@@ -18,7 +18,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import Icon2 from 'react-native-vector-icons/Ionicons';
 import R from 'ramda'
 import TaskServices from '../../Database/TaskServices'
-import RNFS from 'react-native-fs';
+import RNFS, { unlink } from 'react-native-fs';
 import MapView from 'react-native-maps';
 import ModalAlertConfirmation from "../../Component/ModalAlertConfirmation";
 import Font from '../../Themes/Fonts'
@@ -43,7 +43,7 @@ export default class FormStep1 extends Component {
                 fontWeight: '400'
             },
             headerLeft: (
-                <TouchableOpacity onPress={() => { navigation.goBack(null) }}>
+                <TouchableOpacity onPress={() => params.handleBackButtonClick()}>
                     <Icon2 style={{ marginLeft: 12 }} name={'ios-arrow-round-back'} size={45} color={'white'} />
                 </TouchableOpacity>
             )
@@ -97,7 +97,7 @@ export default class FormStep1 extends Component {
 
     componentDidMount() {
         this.getLocation();
-        this.props.navigation.setParams({ clearFoto: this.clearFoto });
+        this.props.navigation.setParams({ handleBackButtonClick: this.handleBackButtonClick });
         this.focusListener = this.props.navigation.addListener("didFocus", () => {
             BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
         });
@@ -120,8 +120,10 @@ export default class FormStep1 extends Component {
                 icon: require('../../Images/ic-not-save.png')
             });
             return true
+        } else {
+            this.props.navigation.pop();
+            return false;
         }
-        return false;
     }
 
     getLocation() {
@@ -148,16 +150,13 @@ export default class FormStep1 extends Component {
     onBtnClick() {
         if (this.state.photos.length == 0) {
             this.setState({ showModal: true, title: "Ambil Foto", message: 'Opps kamu belum ambil Foto Temuan yaaa', icon: require('../../Images/ic-no-pic.png') });
-        } else if (this.state.selectedPhotos.length == 0) {
-            this.setState({ showModal: true, title: 'Foto Temuan', message: 'Kamu harus ambil min. 1 foto yoo.', icon: require('../../Images/ic-no-pic.png') });
-        } else {
-            let images = [];
-            this.state.selectedPhotos.map((item) => {
-                let da = item.split('/');
-                let imgName = da[da.length - 1];
-                images.push(imgName);
-                this.props.navigation.navigate('Step2', { image: images, lat: this.state.latitude, lon: this.state.longitude });
-            });
+        }
+        //  else if (this.state.selectedPhotos.length == 0) {
+        //     this.setState({ showModal: true, title: 'Foto Temuan', message: 'Kamu harus ambil min. 1 foto yoo.', icon: require('../../Images/ic-no-pic.png') });
+        // } 
+        else {
+            const photos = R.clone(this.state.photos);
+            this.props.navigation.navigate('Step2', { image: photos, lat: this.state.latitude, lon: this.state.longitude });
         }
     }
 
@@ -173,26 +172,40 @@ export default class FormStep1 extends Component {
     }
 
     takePicture() {
-        this.props.navigation.navigate('TakeFoto', { onRefresh: this.onRefresh, authCode: this.state.user.USER_AUTH_CODE })
+        const photos = R.clone(this.state.photos);
+        if (photos.length == 3) {
+            this.setState({ showModal: true, title: 'Pilih Foto', message: 'Kamu cuma bisa 3 foto aja yaa..', icon: require('../../Images/ic-no-pic.png') });
+        } else {
+            this.props.navigation.navigate('TakeFoto', { onRefresh: this.onRefresh, authCode: this.state.user.USER_AUTH_CODE })
+        }
     }
 
     _onSelectedPhoto = foto => {
-        const selectedPhotos = R.clone(this.state.selectedPhotos)
-        if (selectedPhotos.includes(foto)) {
-            var index = selectedPhotos.indexOf(foto);
-            selectedPhotos.splice(index, 1);
-        } else {
-            if (selectedPhotos.length > 2) {
-                // alert("Hanya 3 foto yang bisa dipilih")
-                this.setState({ showModal: true, title: 'Pilih Foto', message: 'Kamu cuma bisa pilih 3 foto aja yaa..', icon: require('../../Images/ic-no-pic.png') });
-            } else {
-                selectedPhotos.push(foto);
-            }
-        }
+
+        const photos = R.clone(this.state.photos);
+        var arrRemove = arrayRemove(photos, foto);
+        RNFS.unlink(foto);
 
         this.setState({
-            selectedPhotos,
-        });
+            photos: arrRemove
+        })
+
+        // const selectedPhotos = R.clone(this.state.selectedPhotos)
+        // if (selectedPhotos.includes(foto)) {
+        //     var index = selectedPhotos.indexOf(foto);
+        //     selectedPhotos.splice(index, 1);
+        // } else {
+        //     if (selectedPhotos.length > 2) {
+        //         // alert("Hanya 3 foto yang bisa dipilih")
+        //         this.setState({ showModal: true, title: 'Pilih Foto', message: 'Kamu cuma bisa pilih 3 foto aja yaa..', icon: require('../../Images/ic-no-pic.png') });
+        //     } else {
+        //         selectedPhotos.push(foto);
+        //     }
+        // }
+
+        // this.setState({
+        //     selectedPhotos,
+        // });
     }
 
     _renderFoto = (foto) => {
@@ -205,13 +218,30 @@ export default class FormStep1 extends Component {
 
         return (
             <TouchableOpacity
-                onPress={() => { this._onSelectedPhoto(foto.uri) }}
-                style={{ height: 100, width: 100, marginLeft: 10 }}
+                activeOpacity={0}
+                style={{ height: 110, width: 110, marginLeft: 10 }}
                 key={foto.index}>
+
                 <Image style={[{
-                    alignItems: 'stretch', width: 100, height: 100,
+                    alignItems: 'stretch', width: 110, height: 110,
                     borderRadius: 10
                 }, border]} source={foto} />
+
+                <TouchableOpacity
+                    onPress={() => { this._onSelectedPhoto(foto.uri) }}
+                    style={{
+                        position: 'absolute',
+                        backgroundColor: 'white',
+                        height: 30,
+                        width: 30,
+                        alignItems: 'center',
+                        padding: 3,
+                        right: 0,
+                        borderTopRightRadius: 10,
+                        borderBottomLeftRadius: 10
+                    }}>
+                    <Icon color={'red'} name={'close'} size={25} />
+                </TouchableOpacity>
             </TouchableOpacity>
         )
     }
@@ -444,3 +474,10 @@ const style = {
         borderColor: '#ddd'
     }
 };
+
+
+export function arrayRemove(arr, value) {
+    return arr.filter(function (ele) {
+        return ele.uri != value;
+    });
+}

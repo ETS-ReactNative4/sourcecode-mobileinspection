@@ -163,10 +163,11 @@ export default class Step2Finding extends Component {
     }
 
     handleBackButtonClick() {
-        this.setState({
-            showModalConfirmation: true, title: 'Data Hilang', message: 'Temuan mu belum tersimpan loh. Yakin nih mau dilanjutin?',
-            icon: require('../../Images/ic-not-save.png')
-        });
+        // this.setState({
+        //     showModalConfirmation: true, title: 'Data Hilang', message: 'Temuan mu belum tersimpan loh. Yakin nih mau dilanjutin?',
+        //     icon: require('../../Images/ic-not-save.png')
+        // });
+        this.props.navigation.goBack()
 
         return true;
     }
@@ -298,11 +299,17 @@ export default class Step2Finding extends Component {
             TaskServices.saveData('TR_FINDING', data);
 
             this.state.foto.map((image, i) => {
+
+                let da = image.uri.split('/');
+                let imgName = da[da.length - 1];
+
+                console.log('Img Name : ', imgName)
+
                 var imagetr = {
                     TR_CODE: this.state.TRANS_CODE,
-                    IMAGE_CODE: image.replace(".jpg", ""),
-                    IMAGE_NAME: image,
-                    IMAGE_PATH_LOCAL: dirPhotoTemuan + "/" + image,
+                    IMAGE_CODE: imgName.replace(".jpg", ""),
+                    IMAGE_NAME: imgName,
+                    IMAGE_PATH_LOCAL: image.uri,
                     IMAGE_URL: '',
                     STATUS_IMAGE: 'SEBELUM',
                     STATUS_SYNC: 'N',
@@ -549,7 +556,7 @@ export default class Step2Finding extends Component {
                             <TouchableOpacity onPress={() => { this.setState({ isImageFullVisible: true }) }}>
                                 <Image resizeMode={'cover'}
                                     style={{ height: 80, width: 80, borderRadius: 5 }}
-                                    source={{ uri: "file://" + dirPhotoTemuan + "/" + this.state.foto[0] }}
+                                    source={{ uri: this.state.foto[0].uri }}
                                 />
                             </TouchableOpacity>
 
@@ -645,12 +652,12 @@ export default class Step2Finding extends Component {
                             style={{ flex: 1 }}
                             bullets
                             autoplay={false}
-                            currentPage={this.state.foto.length - 1}
+                            currentPage={0}
                             onAnimateNextPage={p => console.log(p)}>
                             {this.state.foto.map((image, i) => (
                                 <View style={{ flex: 1, backgroundColor: 'black' }}>
                                     <Image resizeMode={"contain"} style={{ flex: 1 }}
-                                        source={{ uri: "file://" + dirPhotoTemuan + "/" + image }} />
+                                        source={{ uri: image.uri }} />
                                 </View>
                             ))}
                         </Carousel>

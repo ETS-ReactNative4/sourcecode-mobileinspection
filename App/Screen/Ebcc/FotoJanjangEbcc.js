@@ -94,13 +94,20 @@ class FotoJanjang extends Component {
     BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
   }
 
+  clearPhoto() {
+    RNFS.unlink(`${FILE_PREFIX}${dirPhotoEbccJanjang}/${this.state.dataModel.IMAGE_NAME}`)
+      .then(() => {
+        console.log(`FILE ${this.state.dataModel.IMAGE_NAME} DELETED`);
+      });
+    this.props.navigation.pop();
+  }
+
   handleBackButtonClick() {
-    this.setState({
-      showModal: true, title: 'Data Hilang',
-      message: 'Datamu belum tersimpan loh. Yakin mau dilanjutin?',
-      icon: require('../../Images/ic-not-save.png')
-    });
-    return true;
+    if (this.state.hasPhoto) {
+      this.clearPhoto();
+      return true
+    }
+    return false;
   }
 
   backAndDeletePhoto() {
@@ -239,22 +246,26 @@ class FotoJanjang extends Component {
         this.insertDB();
       } else {
         const takeCameraOptions = {
-          // quality : 0.5,  //just in case want to reduce the quality too
+          width: 640,
+          quality: 0.5,
+          base64: true,
+          fixOrientation: true,
           skipProcessing: false,
-          fixOrientation: true
         };
 
         const data = await this.camera.takePictureAsync(takeCameraOptions);
         var imgPath = `${dirPhotoEbccJanjang}/${this.state.dataModel.IMAGE_NAME}`;
 
-        RNFS.copyFile(data.uri, imgPath);
+        console.log(data)
+
         this.setState(
           {
+            pathView: data.uri,
             path: imgPath,
             pathImg: dirPhotoEbccSelfie,
             hasPhoto: true
           }, () => {
-            this.resize(imgPath)
+            RNFS.copyFile(data.uri, imgPath);
           });
       }
 
@@ -265,16 +276,8 @@ class FotoJanjang extends Component {
 
   resize(data) {
     ImageResizer.createResizedImage(data, 640, 480, 'JPEG', 80, 0, dirPhotoEbccJanjang).then((response) => {
-      // response.uri is the URI of the new image that can now be displayed, uploaded...
-      // response.path is the path of the new image
-      // response.name is the name of the new image with the extension
-      // response.size is the size of the new image
       RNFS.unlink(this.state.path).then((unlink) => {
         RNFS.copyFile(response.path, this.state.path);
-        this.setState({
-          path: response.uri,
-          pathCache: response.path
-        });
       })
     }).catch((err) => {
       console.log(err)
@@ -302,9 +305,12 @@ class FotoJanjang extends Component {
 
     if (this.state.dataHeader !== null && this.state.dataHeader.LAT_TPH != 0 && this.state.dataHeader.LON_TPH != 0) {
       RNFS.unlink(this.state.pathCache);
-      let isImageContain = await RNFS.exists(`file://${dirPhotoEbccJanjang}/${this.state.dataModel.IMAGE_NAME}`);
+      let isImageContain = await RNFS.exists(this.state.path);
       console.log('isImageContain : ', isImageContain)
       if (isImageContain) {
+
+        this.resize(this.state.path);
+
         this.props.navigation.navigate('KriteriaBuah',
           {
             fotoJanjang: this.state.dataModel,
@@ -333,7 +339,7 @@ class FotoJanjang extends Component {
     return (
       <View>
         <Image
-          source={{ uri: this.state.path }}
+          source={{ uri: this.state.pathView }}
           style={styles.preview}
         />
       </View>

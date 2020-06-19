@@ -576,7 +576,7 @@ class SelesaiInspeksi extends React.Component {
             if (image == undefined) {
                 showImage = <Image style={{ alignItems: 'stretch', width: 65, height: 65, borderRadius: 10 }} source={require('../../Images/ic-default-thumbnail.png')} />
             } else {
-                showImage = <Image style={{ alignItems: 'stretch', width: 65, height: 65, borderRadius: 10 }} source={{ uri: "file://" + image.IMAGE_PATH_LOCAL }} />
+                showImage = <Image style={{ alignItems: 'stretch', width: 65, height: 65, borderRadius: 10 }} source={{ uri: image.IMAGE_PATH_LOCAL }} />
             }
             return (
                 <TouchableOpacity

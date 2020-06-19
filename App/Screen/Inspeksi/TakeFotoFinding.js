@@ -98,9 +98,14 @@ class TakeFoto extends Component {
         var pname = `P${this.state.user.USER_AUTH_CODE}${today}.jpg`//'F' + this.state.user.USER_AUTH_CODE + random({ length: 3 }).toUpperCase() + ".jpg";
         var imgPath = dirPhotoTemuan + '/' + pname;
 
-        RNFS.copyFile(data.uri, imgPath);
-        this.setState({ path: imgPath, pathCacheInternal: data.uri, hasPhoto: true });
-        this.resize(imgPath);
+        this.setState({
+          pathView: data.uri,
+          path: imgPath,
+          pathCacheInternal: data.uri,
+          hasPhoto: true
+        }, async () => {
+          await RNFS.copyFile(data.uri, imgPath);
+        });
       }
 
     } catch (err) {
@@ -113,10 +118,6 @@ class TakeFoto extends Component {
     ImageResizer.createResizedImage(data, 640, 480, 'JPEG', 80, 0, dirPhotoTemuan).then((response) => {
       RNFS.unlink(this.state.path).then((unlink) => {
         RNFS.copyFile(response.path, this.state.path);
-        this.setState({
-          pathView: response.uri,
-          pathCacheResize: response.path
-        });
       })
     }).catch((err) => {
       console.log(err)
@@ -152,6 +153,7 @@ class TakeFoto extends Component {
     RNFS.exists(this.state.path)
       .then((exists) => {
         if (exists) {
+          this.resize(this.state.path);
           if (this.state.from == 'BuktiKerja') {
             this.props.navigation.state.params.addImage(this.state.path);
           } else {
@@ -162,7 +164,8 @@ class TakeFoto extends Component {
           RNFS.unlink(this.state.pathCacheResize);
           this.props.navigation.goBack();
         } else {
-          this.validatePhotoExists();
+          // this.validatePhotoExists();
+          console.log('Foto Terhapus')
         }
       });
 

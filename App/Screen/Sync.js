@@ -1035,7 +1035,7 @@ export default class SyncScreen extends React.Component {
         let model = {
             INSERT_USER: this.state.user.USER_AUTH_CODE.toString(),
             APK_VERSION: deviceVersion,
-            DEVICE_ID: imei,
+            IMEI: imei,
             INSERT_TIME: moment().format('YYYYMMDDHHmmss').toString()
         };
         let TM_SERVICE = await TaskServices.findBy2("TM_SERVICE", 'API_NAME', 'AUTH-SERVER-APK-VERSION');
