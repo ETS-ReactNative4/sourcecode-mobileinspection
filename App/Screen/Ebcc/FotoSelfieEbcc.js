@@ -12,6 +12,7 @@ import moment from 'moment'
 import ModalAlertBack from '../../Component/ModalAlert';
 import { NavigationActions, StackActions } from 'react-navigation';
 import TaskServices from '../../Database/TaskServices';
+import HeaderDefault from '../../Component/Header/HeaderDefault';
 
 var RNFS = require('react-native-fs');
 const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
@@ -19,16 +20,7 @@ const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
 class FotoSelfieEbcc extends Component {
 
   static navigationOptions = {
-    headerStyle: {
-      backgroundColor: Colors.tintColorPrimary
-    },
-    title: 'Ambil Foto Selfie',
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      flex: 1,
-      fontSize: 18,
-      fontWeight: '400'
-    },
+    header: null
   };
 
   constructor(props) {
@@ -77,6 +69,7 @@ class FotoSelfieEbcc extends Component {
   handleBackButtonClick() {
     if (this.state.hasPhoto) {
       this.deleteFoto()
+      return true;
     }
     this.props.navigation.goBack(null);
     return true;
@@ -110,7 +103,7 @@ class FotoSelfieEbcc extends Component {
         console.log(`FILE ${this.state.dataModel.IMAGE_NAME} DELETED`);
       });
     RNFS.unlink(this.state.path)
-    this.setState({ path: null, hasPhoto: false });
+    this.setState({ pathView: '', path: null, hasPhoto: false });
   }
 
   setParameter() {
@@ -149,11 +142,12 @@ class FotoSelfieEbcc extends Component {
         RNFS.copyFile(data.uri, imgPath);
         this.setState(
           {
+            pathView: data.uri,
             path: imgPath,
             pathImg: dirPhotoEbccSelfie,
             hasPhoto: true
           }, () => {
-            this.resize(imgPath)
+            RNFS.copyFile(data.uri, imgPath);
           });
       }
 
@@ -164,16 +158,8 @@ class FotoSelfieEbcc extends Component {
 
   resize(data) {
     ImageResizer.createResizedImage(data, 640, 480, 'JPEG', 80, 0, dirPhotoEbccSelfie).then((response) => {
-      // response.uri is the URI of the new image that can now be displayed, uploaded...
-      // response.path is the path of the new image
-      // response.name is the name of the new image with the extension
-      // response.size is the size of the new image
       RNFS.unlink(this.state.path).then((unlink) => {
-        RNFS.copyFile(response.path, this.state.path);
-        this.setState({
-          path: response.uri,
-          pathCache: response.path
-        });
+        RNFS.moveFile(response.path, this.state.path);
       })
     }).catch((err) => {
       console.log(err)
@@ -201,6 +187,9 @@ class FotoSelfieEbcc extends Component {
     RNFS.unlink(this.state.pathCache);
     let isImageContain = await RNFS.exists(`file://${dirPhotoEbccSelfie}/${this.state.dataModel.IMAGE_NAME}`);
     if (isImageContain) {
+
+      this.resize(this.state.path);
+
       let tempHeader = this.state.dataHeader;
       tempHeader = {
         ...tempHeader,
@@ -260,9 +249,9 @@ class FotoSelfieEbcc extends Component {
 
   renderImage() {
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         <Image
-          source={{ uri: this.state.path }}
+          source={{ uri: this.state.pathView }}
           style={styles.preview}
         />
       </View>
@@ -282,6 +271,10 @@ class FotoSelfieEbcc extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <HeaderDefault
+          title={'Ambile Foto Selfie'}
+          onPress={() => this.handleBackButtonClick()}
+        />
         <StatusBar
           hidden={false}
           barStyle="light-content"
@@ -311,7 +304,6 @@ export default FotoSelfieEbcc;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'white',
   },

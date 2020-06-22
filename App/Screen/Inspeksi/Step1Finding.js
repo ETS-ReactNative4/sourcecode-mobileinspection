@@ -156,7 +156,13 @@ export default class Step1Finding extends Component {
     }
 
     takePicture() {
-        this.props.navigation.navigate('TakeFotoFinding', { onRefresh: this.onRefresh, authCode: this.state.user.USER_AUTH_CODE })
+        const photos = R.clone(this.state.photos);
+        if (photos.length == 3) {
+            this.setState({ showModal: true, title: 'Pilih Foto', message: 'Kamu cuma bisa 3 foto aja yaa..', icon: require('../../Images/ic-no-pic.png') });
+        } else {
+            this.props.navigation.navigate('TakeFotoFinding', { onRefresh: this.onRefresh, authCode: this.state.user.USER_AUTH_CODE })
+        }
+
     }
 
     _onSelectedPhoto = foto => {
@@ -189,7 +195,6 @@ export default class Step1Finding extends Component {
                         height: 100,
                         borderRadius: 10
                     },
-                    border
                 ]}
                     source={foto} />
 

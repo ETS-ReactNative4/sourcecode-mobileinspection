@@ -55,13 +55,11 @@ class TakePhotoSelfie extends Component {
 
   componentDidMount() {
     this.setParameter();
-    // BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
     console.log("takePhotoSelfie:" + this.state.inspectionType)
   }
 
   componentWillUnmount() {
-    // BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
     BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
   }
 
@@ -85,11 +83,12 @@ class TakePhotoSelfie extends Component {
     this.setState({ dataModel: image });
   }
 
-  handleBackButtonClick = () => {
+  handleBackButtonClick() {
     if (this.state.hasPhoto) {
       this.deleteFoto()
+      return true;
     }
-    this.props.navigation.goBack(null);
+    this.props.navigation.pop();
     return true;
   }
 
@@ -99,7 +98,7 @@ class TakePhotoSelfie extends Component {
         console.log(`FILE ${this.state.dataModel.IMAGE_NAME} DELETED`);
       });
     RNFS.unlink(this.state.path)
-    this.setState({ path: null, hasPhoto: false });
+    this.setState({ pathView: '', path: null, hasPhoto: false });
   }
 
   takePicture = async () => {
@@ -136,7 +135,7 @@ class TakePhotoSelfie extends Component {
   resize(data) {
     ImageResizer.createResizedImage(data, 640, 480, 'JPEG', 80, 0, dirPhotoInspeksiSelfie).then((response) => {
       RNFS.unlink(this.state.path).then((unlink) => {
-        RNFS.copyFile(response.path, this.state.path);
+        RNFS.moveFile(response.path, this.state.path);
       })
 
     }).catch((err) => {

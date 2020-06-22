@@ -64,12 +64,10 @@ class TakePhotoBaris extends Component {
 
   componentDidMount() {
     this.setParameter();
-    // BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
   }
 
   componentWillUnmount() {
-    // BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
     BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
   }
 
@@ -88,8 +86,7 @@ class TakePhotoBaris extends Component {
         console.log(`FILE ${this.state.dataModel.IMAGE_NAME} DELETED`);
       });
     RNFS.unlink(this.state.path)
-    this.setState({ path: null, hasPhoto: false });
-    this.props.navigation.goBack();
+    this.setState({ pathView: '', path: null, hasPhoto: false });
   }
 
   setParameter() {
@@ -127,8 +124,6 @@ class TakePhotoBaris extends Component {
         const data = await this.camera.takePictureAsync(takeCameraOptions);
         var imgPath = `${dirPhotoInspeksiBaris}/${this.state.dataModel.IMAGE_NAME}`;
 
-        console.log(data)
-
         this.setState(
           {
             pathView: data.uri,
@@ -148,7 +143,7 @@ class TakePhotoBaris extends Component {
   resize(data) {
     ImageResizer.createResizedImage(data, 640, 480, 'JPEG', 80, 0, dirPhotoInspeksiBaris).then((response) => {
       RNFS.unlink(this.state.path).then((unlink) => {
-        RNFS.copyFile(response.path, this.state.path);
+        RNFS.moveFile(response.path, this.state.path);
       })
     }).catch((err) => {
       console.log(err)

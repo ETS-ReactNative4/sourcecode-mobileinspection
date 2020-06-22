@@ -15,6 +15,7 @@ import { NavigationActions, StackActions } from 'react-navigation';
 
 import ModalAlertConfirmation from '../../Component/ModalAlertConfirmation';
 import ModalAlert from '../../Component/ModalAlert';
+import HeaderDefault from '../../Component/Header/HeaderDefault';
 
 var RNFS = require('react-native-fs');
 const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
@@ -23,25 +24,8 @@ const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
 
 class FotoJanjang extends Component {
 
-  static navigationOptions = ({ navigation }) => {
-    const { params = {} } = navigation.state;
-    return {
-      headerStyle: {
-        backgroundColor: Colors.tintColorPrimary
-      },
-      title: 'Ambil Foto Janjang',
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        flex: 1,
-        fontSize: 18,
-        fontWeight: '400'
-      },
-      headerLeft: (
-        <TouchableOpacity onPress={() => { params.handleBackButtonClick() }}>
-          <Icon2 style={{ marginLeft: 12 }} name={'ios-arrow-round-back'} size={45} color={'white'} />
-        </TouchableOpacity>
-      )
-    };
+  static navigationOptions = {
+    header: null
   }
 
   constructor(props) {
@@ -79,8 +63,6 @@ class FotoJanjang extends Component {
   componentDidMount() {
     this.setParamImage()
     this.getLocation()
-    this.props.navigation.setParams({ handleBackButtonClick: this.handleBackButtonClick })
-    // BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
 
     RNFS.copyFile(TaskService.getPath(), 'file:///storage/emulated/0/MobileInspection/data.realm');
@@ -90,7 +72,6 @@ class FotoJanjang extends Component {
   }
 
   componentWillUnmount() {
-    // BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
     BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
   }
 
@@ -99,7 +80,7 @@ class FotoJanjang extends Component {
       .then(() => {
         console.log(`FILE ${this.state.dataModel.IMAGE_NAME} DELETED`);
       });
-    this.props.navigation.pop();
+    this.setState({ path: '', pathView: '', hasPhoto: false });
   }
 
   handleBackButtonClick() {
@@ -107,7 +88,8 @@ class FotoJanjang extends Component {
       this.clearPhoto();
       return true
     }
-    return false;
+    this.props.navigation.pop();
+    return true;
   }
 
   backAndDeletePhoto() {
@@ -256,13 +238,11 @@ class FotoJanjang extends Component {
         const data = await this.camera.takePictureAsync(takeCameraOptions);
         var imgPath = `${dirPhotoEbccJanjang}/${this.state.dataModel.IMAGE_NAME}`;
 
-        console.log(data)
-
         this.setState(
           {
             pathView: data.uri,
             path: imgPath,
-            pathImg: dirPhotoEbccSelfie,
+            pathImg: dirPhotoEbccJanjang,
             hasPhoto: true
           }, () => {
             RNFS.copyFile(data.uri, imgPath);
@@ -276,9 +256,11 @@ class FotoJanjang extends Component {
 
   resize(data) {
     ImageResizer.createResizedImage(data, 640, 480, 'JPEG', 80, 0, dirPhotoEbccJanjang).then((response) => {
+      console.log('Response Path : ', response)
       RNFS.unlink(this.state.path).then((unlink) => {
-        RNFS.copyFile(response.path, this.state.path);
+        RNFS.moveFile(response.path, this.state.path);
       })
+      RNFS.rena
     }).catch((err) => {
       console.log(err)
     });
@@ -337,7 +319,7 @@ class FotoJanjang extends Component {
 
   renderImage() {
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         <Image
           source={{ uri: this.state.pathView }}
           style={styles.preview}
@@ -359,6 +341,9 @@ class FotoJanjang extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <HeaderDefault
+          onPress={() => this.handleBackButtonClick()}
+          title={'Ambil Foto Janjang'} />
         <StatusBar
           hidden={false}
           barStyle="light-content"
@@ -450,7 +435,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'white',
   },

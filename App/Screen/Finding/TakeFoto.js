@@ -10,31 +10,15 @@ import R from 'ramda';
 import { getTodayDate } from '../../Lib/Utils';
 import ModalAlert from '../../Component/ModalAlert';
 import { AlertContent, Images } from '../../Themes';
+import HeaderDefault from '../../Component/Header/HeaderDefault';
 
 var RNFS = require('react-native-fs');
 
 class TakeFoto extends Component {
 
-  static navigationOptions = ({ navigation }) => {
-    const { params = {} } = navigation.state;
-    return {
-      headerStyle: {
-        backgroundColor: Colors.tintColorPrimary
-      },
-      title: 'Ambil Foto',
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        flex: 1,
-        fontSize: 18,
-        fontWeight: '400'
-      },
-      headerLeft: (
-        <TouchableOpacity onPress={() => { params.clearFoto() }}>
-          <Icon style={{ marginLeft: 12 }} name={'ios-arrow-round-back'} size={45} color={'white'} />
-        </TouchableOpacity>
-      )
-    };
-  }
+  static navigationOptions = {
+    header: null
+  };
 
   constructor(props) {
     super(props);
@@ -63,13 +47,11 @@ class TakeFoto extends Component {
       RNFS.unlink(this.state.path);
       RNFS.unlink(this.state.pathCacheInternal);
       RNFS.unlink(this.state.pathCacheResize);
-      this.setState({ pathView: '', hasPhoto: false });
+      this.setState({ path: '', pathView: '', hasPhoto: false });
     }
-    this.props.navigation.goBack();
   }
 
   componentDidMount() {
-    this.props.navigation.setParams({ clearFoto: this.clearFoto })
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
   }
 
@@ -78,8 +60,12 @@ class TakeFoto extends Component {
   }
 
   handleBackButtonClick() {
-    this.clearFoto();
-    return true;
+    if (this.state.hasPhoto) {
+      this.clearFoto();
+      return true
+    }
+    this.props.navigation.goBack();
+    return true
   }
 
   takePicture = async () => {
@@ -117,7 +103,7 @@ class TakeFoto extends Component {
   resize(data) {
     ImageResizer.createResizedImage(data, 640, 480, 'JPEG', 80, 0, dirPhotoTemuan).then((response) => {
       RNFS.unlink(this.state.path).then((unlink) => {
-        RNFS.copyFile(response.path, this.state.path);
+        RNFS.moveFile(response.path, this.state.path);
       });
     }).catch((err) => {
       console.log('Error Resize : ', err);
@@ -165,7 +151,7 @@ class TakeFoto extends Component {
 
   renderImage() {
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         <Image
           source={{ uri: this.state.pathView }}
           style={styles.preview}
@@ -187,6 +173,9 @@ class TakeFoto extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <HeaderDefault
+          onPress={() => this.handleBackButtonClick()}
+          title={'Ambil Foto'} />
         <ModalAlert
           icon={this.state.icon}
           visible={this.state.showModal}
@@ -211,7 +200,6 @@ export default TakeFoto;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'white',
   },

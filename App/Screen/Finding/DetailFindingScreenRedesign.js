@@ -175,9 +175,13 @@ class DetailFindingScreenRedesign extends Component {
     }
 
     onLoadImage = data => {
-        data.map(item => {
-            this.state.images.push(item);
-            this.state.imgBukti.push(item);
+        const arrState = this.state.images;
+        const arrNew = data;
+        const arrCombine = [...arrState, ...arrNew];
+
+        this.setState({
+            images: arrCombine,
+            imgBukti: arrCombine
         })
     }
 
