@@ -800,7 +800,7 @@ export default class PetaPanen extends Component {
                     rightVectorIcon={true}
                     iconRight={null}
                     onPressLeft={() => {
-                        this.props.navigation.pop()
+                        this.props.navigation.goBack()
                     }}
                     onPressRight={null}
                 />

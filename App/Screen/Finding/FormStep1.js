@@ -92,7 +92,7 @@ export default class FormStep1 extends Component {
                 RNFS.unlink(item.uri)
             })
         }
-        this.props.navigation.pop();
+        this.props.navigation.goBack();
     }
 
     componentDidMount() {
@@ -121,7 +121,7 @@ export default class FormStep1 extends Component {
             });
             return true
         } else {
-            this.props.navigation.pop();
+            this.props.navigation.goBack();
             return false;
         }
     }

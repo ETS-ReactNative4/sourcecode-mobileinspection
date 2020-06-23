@@ -100,7 +100,7 @@ export default class MoreScreen extends Component {
           iconLeft={require("../../Images/icon/ic_arrow_left.png")}
           rightVectorIcon={true}
           iconRight={null}
-          onPressLeft={() => { this.props.navigation.pop() }}
+          onPressLeft={() => { this.props.navigation.goBack() }}
           onPressRight={null}
         />
 

@@ -259,7 +259,7 @@ export default class FotoUser extends Component {
                 <ModalAlertBack
                     onPressCancel={() => this.setState({ showModalBack: false }, () => {
                         this.props.navigation.state.params.setPhoto(this.state.photoDirectory);
-                        this.props.navigation.pop()
+                        this.props.navigation.goBack()
                     })}
                     visible={this.state.showModalBack}
                     icon={this.state.icon}

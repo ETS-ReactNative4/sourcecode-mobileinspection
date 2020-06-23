@@ -157,7 +157,7 @@ export default class Restan extends React.Component {
                                     action: ()=>{
                                         this.setState({
                                             modalAlert: { ...this.state.modalAlert, showModal: false }
-                                        }, ()=>{this.props.navigation.pop()})
+                                        }, ()=>{this.props.navigation.goBack()})
                                     }
                                 }
                             })
@@ -351,7 +351,7 @@ export default class Restan extends React.Component {
                     iconLeft={require("../../Images/icon/ic_arrow_left.png")}
                     rightVectorIcon={true}
                     iconRight={"location-arrow"}
-                    onPressLeft={()=>{this.props.navigation.pop()}}
+                    onPressLeft={()=>{this.props.navigation.goBack()}}
                     onPressRight={()=>{
                         this.setState({
                             modalLoading: {

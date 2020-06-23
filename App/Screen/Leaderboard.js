@@ -342,7 +342,7 @@ export default class Leaderboard extends Component {
                     rightVectorIcon={true}
                     iconRight={null}
                     onPressLeft={() => {
-                        this.props.navigation.pop()
+                        this.props.navigation.goBack(null);
                     }}
                     onPressRight={null}
                 />

@@ -88,7 +88,7 @@ class FotoJanjang extends Component {
       this.clearPhoto();
       return true
     }
-    this.props.navigation.pop();
+    this.props.navigation.goBack(null);
     return true;
   }
 

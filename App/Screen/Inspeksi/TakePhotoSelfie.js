@@ -88,7 +88,7 @@ class TakePhotoSelfie extends Component {
       this.deleteFoto()
       return true;
     }
-    this.props.navigation.pop();
+    this.props.navigation.goBack();
     return true;
   }
 
