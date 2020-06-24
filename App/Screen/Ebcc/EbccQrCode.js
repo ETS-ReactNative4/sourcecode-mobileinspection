@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Image, StyleSheet, View } from "react-native"
+import { Image, StyleSheet, View, BackHandler } from "react-native"
 import { RNCamera } from "react-native-camera"
 import Colors from '../../Constant/Colors'
 import base64 from 'react-native-base64'
@@ -9,6 +9,7 @@ import { getTodayDate, isNotUserMill } from '../../Lib/Utils'
 import { NavigationActions, StackActions } from 'react-navigation';
 import TaskServices from "../../Database/TaskServices";
 import ModalAlert from "../../Component/ModalAlert";
+import HeaderDefault from "../../Component/Header/HeaderDefault";
 
 class Scanner extends Component {
   constructor(props) {
@@ -24,20 +25,35 @@ class Scanner extends Component {
       icon: null,
       qrDecode: null
     };
+
+
+    this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
   }
 
   static navigationOptions = {
-    headerStyle: {
-      backgroundColor: Colors.tintColorPrimary
-    },
-    title: 'Scan TPH',
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      flex: 1,
-      fontSize: 18,
-      fontWeight: '400'
-    },
+    header: null
   };
+
+  componentDidMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+  }
+
+  handleBackButtonClick() {
+    const navigation = this.props.navigation;
+    let routeName = 'MainMenu';
+    Promise.all([
+        navigation.dispatch(
+            StackActions.reset({
+                index: 0,
+                actions: [NavigationActions.navigate({ routeName: routeName })]
+            })
+        )]).then(() => navigation.navigate('EbccValidation')).then(() => navigation.navigate('DaftarEbcc'))
+    return true;
+  }
 
   onBarCodeRead = e => {
     //tph-afd-werks-blockcode
@@ -172,13 +188,22 @@ class Scanner extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <HeaderDefault title={'Scan TPH'} onPress={() => this.handleBackButtonClick()} />
         <ModalAlert
           icon={this.state.icon}
           visible={this.state.showModal}
           closeText={this.state.qrDecode !== null ? "LANJUT" : "TUTUP"}
           onPressCancel={() => {
             if (this.state.qrDecode !== null) {
-              this.navigateScreen('FotoJanjang', this.state.qrDecode);
+              this.props.navigation.navigate('FotoJanjang', {
+                statusScan: 'AUTOMATIC',
+                tphAfdWerksBlockCode: this.state.qrDecode,
+                reason: ''
+              })
+              this.setState({
+                showModal: false,
+                qrDecode: ''
+              })
             }
             this.setState({
               showModal: false,
@@ -218,7 +243,6 @@ class Scanner extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "row"
   },
   preview: {
     flex: 1,

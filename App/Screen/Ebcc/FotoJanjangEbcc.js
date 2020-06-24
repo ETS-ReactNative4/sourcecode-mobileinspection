@@ -83,13 +83,30 @@ class FotoJanjang extends Component {
     this.setState({ path: '', pathView: '', hasPhoto: false });
   }
 
+  navigateScreen(screenName) {
+    const navigation = this.props.navigation;
+    const resetAction = StackActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({
+        routeName: screenName
+      })]
+    });
+    navigation.dispatch(resetAction);
+  }
+
   handleBackButtonClick() {
     if (this.state.hasPhoto) {
       this.clearPhoto();
       return true
     }
-    this.props.navigation.goBack(null);
-    return true;
+    let statusScan = R.clone(this.props.navigation.state.params.statusScan)
+    if (statusScan == 'AUTOMATIC') {
+      this.navigateScreen('EbccQrCode')
+      return true
+    } else {
+      this.props.navigation.goBack();
+      return true;
+    }
   }
 
   backAndDeletePhoto() {
