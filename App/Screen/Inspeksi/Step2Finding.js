@@ -309,7 +309,7 @@ export default class Step2Finding extends Component {
                     TR_CODE: this.state.TRANS_CODE,
                     IMAGE_CODE: imgName.replace(".jpg", ""),
                     IMAGE_NAME: imgName,
-                    IMAGE_PATH_LOCAL: image.uri,
+                    IMAGE_PATH_LOCAL: image.uri.substring(7, image.uri.length),
                     IMAGE_URL: '',
                     STATUS_IMAGE: 'SEBELUM',
                     STATUS_SYNC: 'N',

@@ -43,15 +43,27 @@ class Scanner extends Component {
   }
 
   handleBackButtonClick() {
-    const navigation = this.props.navigation;
-    let routeName = 'MainMenu';
-    Promise.all([
-        navigation.dispatch(
+    const data = TaskServices.getAllData('TR_LOGIN')
+    const { navigation } = this.props;
+    if (data != undefined) {
+      if (data[0].USER_ROLE == 'FFB_GRADING_MILL') {
+        Promise.all([
+          navigation.dispatch(
             StackActions.reset({
-                index: 0,
-                actions: [NavigationActions.navigate({ routeName: routeName })]
+              index: 0,
+              actions: [NavigationActions.navigate({ routeName: 'MainMenuMil' })]
             })
-        )]).then(() => navigation.navigate('EbccValidation')).then(() => navigation.navigate('DaftarEbcc'))
+          )]).then(() => navigation.navigate('EbccValidation')).then(() => navigation.navigate('DaftarEbcc'))
+      } else {
+        Promise.all([
+          navigation.dispatch(
+            StackActions.reset({
+              index: 0,
+              actions: [NavigationActions.navigate({ routeName: 'MainMenu' })]
+            })
+          )]).then(() => navigation.navigate('EbccValidation')).then(() => navigation.navigate('DaftarEbcc'))
+      }
+    }
     return true;
   }
 

@@ -83,14 +83,14 @@ class FormStep1 extends Component {
         } else {
             let images = [];
             this.state.photos.map((item) => {
-                console.log('Item : ', item);
+                
                 let da = item.uri.split('/')
                 let imgName = da[da.length - 1];
                 var img = {
                     TR_CODE: this.state.TRANS_CODE,
                     IMAGE_CODE: imgName.replace(".jpg", ""),
                     IMAGE_NAME: imgName,
-                    IMAGE_PATH_LOCAL: item.uri,
+                    IMAGE_PATH_LOCAL: item.uri.substring(7, item.uri.length),
                     IMAGE_URL: '',
                     STATUS_IMAGE: 'SESUDAH',
                     STATUS_SYNC: 'N',
