@@ -195,11 +195,7 @@ class Scanner extends Component {
           closeText={this.state.qrDecode !== null ? "LANJUT" : "TUTUP"}
           onPressCancel={() => {
             if (this.state.qrDecode !== null) {
-              this.props.navigation.navigate('FotoJanjang', {
-                statusScan: 'AUTOMATIC',
-                tphAfdWerksBlockCode: this.state.qrDecode,
-                reason: ''
-              })
+              this.navigateScreen('FotoJanjang', this.state.qrDecode);
               this.setState({
                 showModal: false,
                 qrDecode: ''
