@@ -6,20 +6,20 @@ import {
     View,
     NetInfo,
     ScrollView,
-    Dimensions, AsyncStorage, NativeEventEmitter, NativeModules, TouchableOpacity
+    Dimensions, AsyncStorage, NativeEventEmitter, NativeModules
 } from 'react-native';
 import IonicIcon from 'react-native-vector-icons/Ionicons';
 
-import MapView, { Marker, Polygon, PROVIDER_GOOGLE, ProviderPropType, Circle } from 'react-native-maps';
+import MapView, {Marker, Polygon, PROVIDER_GOOGLE, ProviderPropType, Circle} from 'react-native-maps';
 import Colors from '../../Constant/Colors'
 import ModalLoading from '../../Component/ModalLoading'
 import ModalAlert from '../../Component/ModalAlert';
 import TaskServices from '../../Database/TaskServices';
-import { AlertContent } from '../../Themes';
+import {AlertContent} from '../../Themes';
 import { HeaderWithButton } from "../../Component/Header/HeaderWithButton";
 import { getTitikRestan } from '../Sync/Download/Restan/TitikRestan';
-import { numberSeperator } from "../../Constant/Functions/StringManipulator";
-import { getSpecificSticker } from "../../Lib/Utils";
+import {numberSeperator} from "../../Constant/Functions/StringManipulator";
+import {getSpecificSticker} from "../../Lib/Utils";
 
 let polyMap = null;
 let LATITUDE = -2.1890660;
@@ -36,12 +36,12 @@ export default class Restan extends React.Component {
         this.state = {
             userData: user,
             internetExist: true,
-            currentGPS: {
-                latitude: 0.0,
+            currentGPS:{
+                latitude:0.0,
                 longitude: 0.0,
                 gpsAccuracy: 0
             },
-            nativeGPS: {
+            nativeGPS:{
                 latitude: 0,
                 longitude: 0,
                 accuracy: 0,
@@ -83,16 +83,15 @@ export default class Restan extends React.Component {
         };
     }
 
-    async componentDidMount() {
+    componentDidMount() {
         this.nativeGps();
-        this.onMapReady()
     }
 
-    nativeGps() {
+    nativeGps(){
         const eventEmitter = new NativeEventEmitter(NativeModules.Satellite);
         eventEmitter.addListener('getSatellite', (event) => {
             this.setState({
-                nativeGPS: {
+                nativeGPS:{
                     longitude: event.longitude,
                     latitude: event.latitude,
                     accuracy: event.accuracy,
@@ -103,9 +102,9 @@ export default class Restan extends React.Component {
         NativeModules.Satellite.getCoors();
     }
 
-    getRestanSyncTime() {
+    getRestanSyncTime(){
         AsyncStorage.getItem('SYNCTIME-titikRestan')
-            .then((restanSyncTime) => {
+            .then((restanSyncTime)=>{
                 let data = JSON.parse(restanSyncTime);
                 this.setState({
                     latestSyncTime: data.latestSyncTime !== null ? data.latestSyncTime.toString() : "Belum Sync"
@@ -113,74 +112,73 @@ export default class Restan extends React.Component {
             })
     };
 
-    onMapReady() {
+    onMapReady(){
         this.setState({
-            modalLoading: {
-                ...this.state.modalLoading,
-                showModal: true
+                modalLoading: {
+                    ...this.state.modalLoading,
+                    showModal: true
+                }},()=>{
+                    //set timeout untuk ngasih waktu cari signal gps
+                    if(this.loadMap()){
+                        setTimeout(()=>{
+                            this.fetchRestanCoordinate()
+                                .then((response)=>{
+                                    this.searchLocation();
+                                    this.getRestanSyncTime();
+                                })
+                        }, 2000)
+                    }
             }
-        }, () => {
-            //set timeout untuk ngasih waktu cari signal gps
-            if (this.loadMap()) {
-                setTimeout(() => {
-                    this.fetchRestanCoordinate()
-                        .then((response) => {
-                            this.searchLocation();
-                            this.getRestanSyncTime();
-                        })
-                }, 2000)
-            }
-        }
         );
     }
 
-    getSticker() {
+    getSticker(){
         let image = getSpecificSticker("good");
         return image
     }
 
-    async fetchRestanCoordinate() {
+    async fetchRestanCoordinate(){
         let fetchStatus = false;
 
         await NetInfo.isConnected.fetch()
             .then(async (isConnected) => {
-                if (isConnected) {
-                    await getTitikRestan()
-                        .then(async (response) => {
-                            fetchStatus = response.downloadStatus;
-                            if (response.downloadCount === 0) {
-                                this.setState({
-                                    modalAlert: {
-                                        ...this.state.modalAlert,
-                                        showModal: true,
-                                        title: "Tidak ada restan",
-                                        message: `Yeaayy!! \nGak ada restan per hari ini..`,
-                                        icon: this.getSticker(),
-                                        action: () => {
-                                            this.setState({
-                                                modalAlert: { ...this.state.modalAlert, showModal: false }
-                                            }, () => { this.props.navigation.goBack() })
-                                        }
+            if (isConnected) {
+                await getTitikRestan()
+                    .then(async (response) => {
+                        fetchStatus = response.downloadStatus;
+                        if(response.downloadCount === 0){
+                            this.setState({
+                                modalAlert: {
+                                    ...this.state.modalAlert,
+                                    showModal: true,
+                                    title: "Tidak ada restan",
+                                    message: `Yeaayy!! \nGak ada restan per hari ini..`,
+                                    icon: this.getSticker(),
+                                    action: ()=>{
+                                        this.setState({
+                                            modalAlert: { ...this.state.modalAlert, showModal: false }
+                                        }, ()=>{this.props.navigation.goBack()})
                                     }
-                                })
-                            }
-                        })
-                }
-                else {
-                    fetchStatus = false;
-                    this.setState({
-                        internetExist: false
-                    });
-                }
-            });
+                                }
+                            })
+                        }
+                    })
+            }
+            else {
+                fetchStatus = false;
+                this.setState({
+                    internetExist: false
+                });
+            }
+        });
 
         return fetchStatus;
     }
 
-    searchLocation() {
+    searchLocation(){
         this.getLocation()
-            .then((response) => {
-                if (response) {
+            .then((response)=>{
+                if(response){
                     this.getTitikRestan();
                 }
             })
@@ -192,12 +190,12 @@ export default class Restan extends React.Component {
             // let queryString = `afd_code='O' OR afd_code='P'`;
             let queryString = ``;
             let userLocationCode = user.LOCATION_CODE.split(",");
-            for (let afdCounter = 0; afdCounter < userLocationCode.length; afdCounter++) {
-                if (afdCounter === 0) {
-                    queryString = queryString + `afd_code='${userLocationCode[afdCounter].charAt(userLocationCode[afdCounter].length - 1)}'`;
+            for(let afdCounter = 0; afdCounter < userLocationCode.length; afdCounter++){
+                if(afdCounter === 0){
+                    queryString = queryString + `afd_code='${userLocationCode[afdCounter].charAt(userLocationCode[afdCounter].length-1)}'`;
                 }
                 else {
-                    queryString = queryString + `OR afd_code='${userLocationCode[afdCounter].charAt(userLocationCode[afdCounter].length - 1)}'`;
+                    queryString = queryString + `OR afd_code='${userLocationCode[afdCounter].charAt(userLocationCode[afdCounter].length-1)}'`;
                 }
             }
             let polygons = TaskServices.query('TR_POLYGON', queryString);
@@ -284,19 +282,19 @@ export default class Restan extends React.Component {
         }
     }
 
-    getTitikRestan() {
+    getTitikRestan(){
         let titikRestan = TaskServices.getSortedData('TR_TITIK_RESTAN', 'SORT_SWIPE', false);
-        if (titikRestan !== undefined && titikRestan.length > 0) {
+        if(titikRestan !== undefined && titikRestan.length > 0){
             let tempCoordinateRestan = [];
             let tempHighlightBlock = [];
-            for (let counter = 0; counter < titikRestan.length; counter++) {
-                if (!tempHighlightBlock.includes(titikRestan[counter].BLOCK_NAME)) {
+            for (let counter = 0; counter < titikRestan.length; counter++){
+                if(!tempHighlightBlock.includes(titikRestan[counter].BLOCK_NAME)){
                     tempHighlightBlock.push(titikRestan[counter].BLOCK_NAME);
                 }
                 let tempModelRestan = {
                     ...titikRestan[counter],
-                    LATITUDE: parseFloat(titikRestan[counter].LATITUDE),
-                    LONGITUDE: parseFloat(titikRestan[counter].LONGITUDE)
+                    LATITUDE:parseFloat(titikRestan[counter].LATITUDE),
+                    LONGITUDE:parseFloat(titikRestan[counter].LONGITUDE)
                 };
                 tempCoordinateRestan.push(tempModelRestan);
             }
@@ -331,7 +329,7 @@ export default class Restan extends React.Component {
         }
     }
 
-    styleColorChooser(TPH_RESTANT_DAY) {
+    styleColorChooser(TPH_RESTANT_DAY){
         switch (parseFloat(TPH_RESTANT_DAY)) {
             case 1:
                 return "rgba(208,2,27,1)";
@@ -343,7 +341,6 @@ export default class Restan extends React.Component {
     }
 
     render() {
-
         return (
             <View
                 style={{
@@ -354,19 +351,18 @@ export default class Restan extends React.Component {
                     iconLeft={require("../../Images/icon/ic_arrow_left.png")}
                     rightVectorIcon={true}
                     iconRight={"location-arrow"}
-                    onPressLeft={() => { this.props.navigation.goBack() }}
-                    onPressRight={() => {
+                    onPressLeft={()=>{this.props.navigation.goBack()}}
+                    onPressRight={()=>{
                         this.setState({
                             modalLoading: {
                                 ...this.state.modalLoading,
                                 showModal: true
+                            }},()=>{
+                                this.fetchRestanCoordinate()
+                                    .then((response)=>{
+                                        this.searchLocation()
+                                    })
                             }
-                        }, () => {
-                            this.fetchRestanCoordinate()
-                                .then((response) => {
-                                    this.searchLocation()
-                                })
-                        }
                         );
                     }}
                 />
@@ -405,15 +401,36 @@ export default class Restan extends React.Component {
                     }}
                     provider={PROVIDER_GOOGLE}
                     mapType={"satellite"}
-                    initialRegion={this.state.region}>
-                    {/* <Circle
-                        center={{
+                    showsUserLocation={true}
+                    initialRegion={this.state.region}
+                    zoomEnabled={true}
+                    scrollEnabled={true}
+                    onUserLocationChange={event => {
+                        this.setState({
+                            currentGPS:{
+                                latitude: event.nativeEvent.coordinate.latitude,
+                                longitude: event.nativeEvent.coordinate.longitude,
+                                gpsAccuracy: Math.floor(event.nativeEvent.coordinate.accuracy),
+                            },
+                            region: {
+                                latitude: event.nativeEvent.coordinate.latitude,
+                                longitude: event.nativeEvent.coordinate.longitude,
+                                latitudeDelta: 0.0075,
+                                longitudeDelta: 0.00721
+                            }
+                        });
+                    }}
+                    onMapReady={() => {this.onMapReady()}}
+                >
+                    <Circle
+                        center= {{
                             latitude: this.state.currentGPS.latitude,
                             longitude: this.state.currentGPS.longitude
                         }}
                         fillColor="rgba(255, 255, 255, 0.3)"
                         strokeColor="rgba(255, 255, 255, 1)"
-                        radius={this.state.currentGPS.gpsAccuracy} /> */}
+                        radius= {this.state.currentGPS.gpsAccuracy}
+                    />
 
                     {this.state.poligons.length > 0 && this.state.poligons.map((poly, index) => (
                         <View key={index}>
@@ -424,7 +441,6 @@ export default class Restan extends React.Component {
                                 strokeWidth={2}
                             />
                             <Marker
-                                tracksViewChanges={false}
                                 ref={ref => poly.marker = ref}
                                 coordinate={this.centerCoordinate(poly.coords)}>
                                 <Text style={{ color: 'rgba(255,255,255,1)', fontSize: 11, fontWeight: '900' }}>{poly.blokname}</Text>
@@ -433,21 +449,22 @@ export default class Restan extends React.Component {
                     ))}
 
                     {
-                        this.state.coordinateRestan.map((coordinate, index) => {
-                            return (
+                        this.state.coordinateRestan.map((coordinate, index)=>{
+                            return(
                                 <Marker
-                                    style={{ zIndex: this.state.currentRestanIndex === index ? 5 : 0 }}
+                                    style={{zIndex: this.state.currentRestanIndex === index ? 5 : 0}}
                                     key={index}
-                                    onPress={() => {
+                                    onPress={()=>{
                                         this.setState({
                                             currentRestanIndex: index
+                                        },()=>{
+                                            if(index !== 0){
+                                                this.restanScrollView.scrollTo({ x: (index*(screenWidth*0.8 + screenWidth*0.05)), animated: true });
+                                            }
+                                            else {
+                                                this.restanScrollView.scrollTo({ x: screenWidth, animated: true });
+                                            }
                                         })
-                                        if (index !== 0) {
-                                            this.restanScrollView.scrollTo({ x: (index * (screenWidth * 0.8 + screenWidth * 0.05)), animated: true });
-                                        }
-                                        else {
-                                            this.restanScrollView.scrollTo({ x: screenWidth, animated: true });
-                                        }
                                     }}
                                     coordinate={{
                                         latitude: coordinate.LATITUDE,
@@ -467,9 +484,9 @@ export default class Restan extends React.Component {
                                                         borderRadius: 5
                                                     }}>
                                                     <IonicIcon style={{ paddingHorizontal: 5 }} name={'ios-information-circle'} size={25} color={this.styleColorChooser(coordinate.TPH_RESTANT_DAY)} />
-                                                    <Text style={{ fontSize: 20, paddingHorizontal: 10, color: this.styleColorChooser(coordinate.TPH_RESTANT_DAY) }}>{`${coordinate.KG_TAKSASI} `}<Text style={{ fontSize: 15, alignItems: "center" }}>kg</Text></Text>
+                                                    <Text style={{fontSize: 20, paddingHorizontal:10, color: this.styleColorChooser(coordinate.TPH_RESTANT_DAY)}}>{`${coordinate.KG_TAKSASI} `}<Text style={{fontSize: 15, alignItems:"center"}}>kg</Text></Text>
                                                 </View>
-                                                <IonicIcon style={{ marginTop: -17.5, alignSelf: "center" }} name={'md-arrow-dropdown'} size={40} color={Colors.colorWhite} />
+                                                <IonicIcon style={{marginTop: -17.5, alignSelf:"center"}} name={'md-arrow-dropdown'} size={40} color={Colors.colorWhite} />
                                             </View>
                                             :
                                             <View>
@@ -478,14 +495,14 @@ export default class Restan extends React.Component {
                                                         paddingHorizontal: 10,
                                                         paddingVertical: 5,
                                                         borderRadius: 5,
-                                                        alignItems: "center",
-                                                        justifyContent: "center",
+                                                        alignItems:"center",
+                                                        justifyContent:"center",
                                                         backgroundColor: this.styleColorChooser(coordinate.TPH_RESTANT_DAY)
                                                     }}
                                                 >
-                                                    <Text style={{ fontSize: 11, color: Colors.colorWhite }}>{`${coordinate.KG_TAKSASI} `}<Text style={{ fontSize: 9, alignItems: "center" }}>kg</Text></Text>
+                                                    <Text style={{fontSize: 11, color: Colors.colorWhite}}>{`${coordinate.KG_TAKSASI} `}<Text style={{fontSize: 9, alignItems:"center"}}>kg</Text></Text>
                                                 </View>
-                                                <IonicIcon style={{ marginTop: -17.5, alignSelf: "center" }} name={'md-arrow-dropdown'} size={40} color={this.styleColorChooser(coordinate.TPH_RESTANT_DAY)} />
+                                                <IonicIcon style={{marginTop: -17.5, alignSelf:"center"}} name={'md-arrow-dropdown'} size={40} color={this.styleColorChooser(coordinate.TPH_RESTANT_DAY)} />
                                             </View>
                                     }
                                 </Marker>
@@ -496,87 +513,126 @@ export default class Restan extends React.Component {
 
                 <View style={{
                     width: "100%",
+                    height: "100%",
                     position: "absolute",
-                    bottom: 0,
-                    right: 0,
-                    left: 0,
+                    alignItems: "flex-end",
+                    justifyContent: "flex-end"
                 }}>
+                    <View style={{
+                        padding: 10,
+                        margin: 5,
+                        borderRadius: 5,
+                        backgroundColor: "rgba(0,0,0,0.3)"
+                    }}>
+                        <View style={{
+                            alignItems: "flex-end"
+                        }}>
+                            <Text style={{ color: "white" }}>
+                                Satellite : {this.state.nativeGPS.satelliteCount}
+                            </Text>
+                        </View>
+                        <View style={{
+                            alignItems: "flex-end"
+                        }}>
+                            <Text style={{ color: "white" }}>
+                                Accuracy : {this.state.currentGPS.gpsAccuracy} meter
+                            </Text>
+                        </View>
+                        <View style={{
+                            alignItems: "flex-end"
+                        }}>
+                            <Text style={{ color: "white" }}>
+                                Latitude : {this.state.currentGPS.latitude.toFixed(6)}
+                            </Text>
+                        </View>
+                        <View style={{
+                            alignItems: "flex-end"
+                        }}>
+                            <Text style={{ color: "white" }}>
+                                Longitude : {this.state.currentGPS.longitude.toFixed(6)}
+                            </Text>
+                        </View>
+                    </View>
                     {
                         this.state.coordinateRestan.length > 0 &&
-                        <ScrollView
-                            ref={(restanScrollView) => { this.restanScrollView = restanScrollView }}
-                            decelerationRate={0}
-                            snapToInterval={screenWidth * 0.8 + screenWidth * 0.05} //your element width
-                            snapToAlignment={"center"}
-                            contentContainerStyle={{ paddingRight: 16 }}
-                            horizontal={true}
-                            showsHorizontalScrollIndicator={false}
-                            onMomentumScrollEnd={(event) => {
-                                let index = this.scrollViewIndex(event.nativeEvent.contentOffset.x);
-                                if (index !== null) {
-                                    let selectedCoordinateRestan = this.state.coordinateRestan[index];
-                                    let region = {
-                                        latitude: selectedCoordinateRestan.LATITUDE,
-                                        longitude: selectedCoordinateRestan.LONGITUDE,
-                                        latitudeDelta: 0.00500,
-                                        longitudeDelta: 0.00500
-                                    };
-                                    this.map.animateToRegion(region, 1);
-                                    this.setState({
-                                        currentRestanIndex: index
-                                    })
-                                }
-                            }}
-                        >
-                            {
-                                this.state.coordinateRestan.map((coordinateRestanData, index) => {
-                                    return (
-                                        <View
-                                            key={index}
-                                            style={{
-                                                flexDirection: "row",
-                                                backgroundColor: "white",
-                                                borderRadius: 5,
-                                                height: 120,
-                                                width: screenWidth * 0.8,
-                                                margin: screenWidth * 0.025,
-                                            }}
-                                        >
-                                            <TouchableOpacity
-                                                onPress={() => alert('WOWO')}
+                        <View style={{
+                            height: "18.5%"
+                        }}>
+                            <ScrollView
+                                ref={(restanScrollView)=>{this.restanScrollView = restanScrollView}}
+                                contentContainerStyle={{
+                                    // paddingHorizontal: screenWidth*0.025,
+                                    backgroundColor:"transparent"
+                                }}
+                                decelerationRate={0}
+                                // snapToInterval={this.state.currentRestanIndex % 2 === 0 ? (screenWidth*0.8 + screenWidth*0.05) - (screenWidth*0.8 + screenWidth*0.05)*0.05 : screenWidth*0.8 + screenWidth*0.05} //your element width
+                                snapToInterval={screenWidth*0.8 + screenWidth*0.05} //your element width
+                                snapToAlignment={"center"}
+                                horizontal={true}
+                                onMomentumScrollEnd={event => {
+                                    let index = this.scrollViewIndex(event.nativeEvent.contentOffset.x);
+                                    if(index !== null){
+                                        let selectedCoordinateRestan = this.state.coordinateRestan[index];
+                                        let region = {
+                                            latitude: selectedCoordinateRestan.LATITUDE,
+                                            longitude: selectedCoordinateRestan.LONGITUDE,
+                                            latitudeDelta: 0.00500,
+                                            longitudeDelta: 0.00500
+                                        };
+                                        this.map.animateToRegion(region, 1);
+                                        this.setState({
+                                            currentRestanIndex: index
+                                        })
+                                    }
+                                }}>
+                                {
+                                    this.state.coordinateRestan.map((coordinateRestanData, index)=>{
+                                        return(
+                                            <View
+                                                key={index}
                                                 style={{
+                                                    flexDirection: "row",
+                                                    backgroundColor: "white",
+                                                    borderRadius: 5,
+                                                    width: screenWidth * 0.8,
+                                                    margin: screenWidth * 0.025,
+                                                    justifyContent:'center'
+                                                }}
+                                            >
+                                                <View style={{
                                                     flex: 1,
                                                     marginRight: 15,
                                                     paddingVertical: 5,
-                                                    backgroundColor: this.styleColorChooser(coordinateRestanData.TPH_RESTANT_DAY),
+                                                    backgroundColor:this.styleColorChooser(coordinateRestanData.TPH_RESTANT_DAY),
                                                     borderTopLeftRadius: 5,
                                                     borderBottomLeftRadius: 5,
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center'
+                                                    alignItems:'center',
+                                                    justifyContent:'center'
                                                 }}>
-                                                <Text style={{ color: Colors.colorWhite }}>Restan</Text>
-                                                <Text style={{
-                                                    fontSize: 30,
-                                                    color: Colors.colorWhite
-                                                }}>
-                                                    {coordinateRestanData.TPH_RESTANT_DAY}
-                                                </Text>
-                                                <Text style={{ color: Colors.colorWhite }}>Hari</Text>
-                                            </TouchableOpacity>
-                                            <View
-                                                style={{
-                                                    flex: 2,
-                                                    justifyContent: 'center'
-                                                }}>
-                                                <Text style={{ fontSize: 20, fontWeight: 'bold', color: this.styleColorChooser(coordinateRestanData.TPH_RESTANT_DAY) }}>{`${numberSeperator(coordinateRestanData.KG_TAKSASI, ",")} kg`}</Text>
-                                                <Text style={{ paddingVertical: 5 }}>{`${coordinateRestanData.JML_JANJANG} Janjang / ${coordinateRestanData.JML_BRONDOLAN} kg Brondolan`}</Text>
-                                                <Text style={{ fontWeight: 'bold' }}>{`${coordinateRestanData.BLOCK_NAME} / TPH ${coordinateRestanData.OPH}`}</Text>
+                                                    <Text style={{color: Colors.colorWhite}}>Restan</Text>
+                                                    <Text style={{
+                                                        fontSize: 30,
+                                                        color: Colors.colorWhite
+                                                    }}>
+                                                        {coordinateRestanData.TPH_RESTANT_DAY}
+                                                    </Text>
+                                                    <Text style={{color: Colors.colorWhite}}>Hari</Text>
+                                                </View>
+                                                <View
+                                                    style={{
+                                                        flex: 2,
+                                                        justifyContent:'center'
+                                                    }}>
+                                                    <Text style={{fontSize: 20, fontWeight: 'bold', color: this.styleColorChooser(coordinateRestanData.TPH_RESTANT_DAY)}}>{`${numberSeperator(coordinateRestanData.KG_TAKSASI, ",")} kg`}</Text>
+                                                    <Text style={{paddingVertical: 5}}>{`${coordinateRestanData.JML_JANJANG} Janjang / ${coordinateRestanData.JML_BRONDOLAN} kg Brondolan`}</Text>
+                                                    <Text style={{fontWeight: 'bold'}}>{`${coordinateRestanData.BLOCK_NAME} / TPH ${coordinateRestanData.OPH}`}</Text>
+                                                </View>
                                             </View>
-                                        </View>
-                                    )
-                                })
-                            }
-                        </ScrollView>
+                                        )
+                                    })
+                                }
+                            </ScrollView>
+                        </View>
                     }
                 </View>
                 {/*{this.showRestanDetail()}*/}
@@ -585,13 +641,13 @@ export default class Restan extends React.Component {
     }
 
     //used to determine which index selected
-    scrollViewIndex(xPosition) {
-        if (xPosition > 0) {
-            const xOffset = xPosition / (screenWidth * 0.8 + screenWidth * 0.05)
-            const index = Math.floor(xOffset);
-            return index + 1;
+    scrollViewIndex(xPosition){
+        let index = xPosition/(screenWidth*0.8 + screenWidth*0.05);
+        let lastIndex = (Math.ceil(index))+1 === this.state.coordinateRestan.length;
+        if(Number.isInteger(index) || lastIndex){
+            return Math.ceil(index);
         }
-        return xPosition;
+        return null;
     }
 }
 
