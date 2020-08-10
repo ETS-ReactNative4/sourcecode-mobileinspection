@@ -121,7 +121,7 @@ class TakePhotoSelfie extends Component {
             path: imgPath,
             pathImg: dirPhotoInspeksiSelfie,
             hasPhoto: true
-          }, () => {
+          }, async () => {
             await RNFS.copyFile(data.uri, imgPath);
           });
       }

@@ -138,14 +138,14 @@ class FotoSelfieEbcc extends Component {
 
         const data = await this.camera.takePictureAsync(takeCameraOptions);
         var imgPath = `${dirPhotoEbccSelfie}/${this.state.dataModel.IMAGE_NAME}`;
-        
+
         this.setState(
           {
             pathView: data.uri,
             path: imgPath,
             pathImg: dirPhotoEbccSelfie,
             hasPhoto: true
-          }, () => {
+          }, async () => {
             await RNFS.copyFile(data.uri, imgPath);
           });
       }
