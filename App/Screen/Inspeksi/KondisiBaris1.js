@@ -142,79 +142,97 @@ class KondisiBaris1 extends Component {
         return false
     }
 
+    getStatusHilly(werk_afd_blok_code) {
+        try {
+            let data = TaskService.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', werk_afd_blok_code);
+            return data.TOPOGRAPHY;
+        } catch (error) {
+            return ''
+        }
+    }
+
+    dataToNextPage() {
+        var today = getTodayDate('YYYYMMDDHHmmss');
+        var kondisiBaris1 = []
+        var data = {
+            BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}2`,
+            BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
+            ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
+            CONTENT_INSPECTION_CODE: 'CC0002',
+            VALUE: this.state.pokokPanen,
+            AREAL: this.state.dataUsual.BARIS,
+            STATUS_SYNC: 'N',
+        }
+        kondisiBaris1.push(data);
+
+        data = {
+            BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}3`,
+            BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
+            ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
+            CONTENT_INSPECTION_CODE: 'CC0003',
+            VALUE: this.state.buahTinggal,
+            AREAL: this.state.dataUsual.BARIS,
+            STATUS_SYNC: 'N'
+        }
+        kondisiBaris1.push(data);
+
+        data = {
+            BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}4`,
+            BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
+            ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
+            CONTENT_INSPECTION_CODE: 'CC0004',
+            VALUE: this.state.brondolPinggir,
+            AREAL: this.state.dataUsual.BARIS,
+            STATUS_SYNC: 'N'
+        }
+        kondisiBaris1.push(data);
+
+        data = {
+            BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}5`,
+            BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
+            ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
+            CONTENT_INSPECTION_CODE: 'CC0005',
+            VALUE: this.state.brondolTPH,
+            AREAL: this.state.dataUsual.BARIS,
+            STATUS_SYNC: 'N'
+        }
+        kondisiBaris1.push(data);
+
+        data = {
+            BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}6`,
+            BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
+            ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
+            CONTENT_INSPECTION_CODE: 'CC0006',
+            VALUE: this.state.pokokTdkPupuk,
+            AREAL: this.state.dataUsual.BARIS,
+            STATUS_SYNC: 'N'
+        }
+        kondisiBaris1.push(data);
+
+        this.props.navigation.navigate('KondisiBaris2', {
+            fotoBaris: this.state.fotoBaris,
+            inspeksiHeader: this.state.inspeksiHeader,
+            kondisiBaris1: kondisiBaris1,
+            dataUsual: this.state.dataUsual,
+            statusBlok: this.state.statusBlok,
+            intervalId: this.state.intervalId,
+            dataInspeksi: this.state.dataInspeksi,
+            inspectionType: this.state.inspectionType === 'genba' ? 'genba' : 'normal'
+        });
+    }
+
     insertDB() {
+        let statusHilly = this.getStatusHilly(this.state.dataInspeksi.WERKS_AFD_BLOCK_CODE)
+
         if (this.state.inspeksiHeader.AREAL !== "" && this.state.inspeksiHeader.AREAL !== undefined) {
-            if (!this.checkJarakBaris(this.state.inspeksiHeader.AREAL)) {
-                var today = getTodayDate('YYYYMMDDHHmmss');
-                var kondisiBaris1 = []
-                var data = {
-                    BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}2`,
-                    BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
-                    ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
-                    CONTENT_INSPECTION_CODE: 'CC0002',
-                    VALUE: this.state.pokokPanen,
-                    AREAL: this.state.dataUsual.BARIS,
-                    STATUS_SYNC: 'N',
+            if (statusHilly !== 'HILLY') {
+                if (!this.checkJarakBaris(this.state.inspeksiHeader.AREAL)) {
+                    this.dataToNextPage()
+                } else {
+                    this.setState({ showModalAlert: true, title: 'Baris terlalu dekat', message: 'Opps, minimum jarak barisnya lebih dari 5 dari baris terakhir ya !', icon: require('../../Images/ic-blm-input-lokasi.png') });
                 }
-                kondisiBaris1.push(data);
-
-                data = {
-                    BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}3`,
-                    BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
-                    ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
-                    CONTENT_INSPECTION_CODE: 'CC0003',
-                    VALUE: this.state.buahTinggal,
-                    AREAL: this.state.dataUsual.BARIS,
-                    STATUS_SYNC: 'N'
-                }
-                kondisiBaris1.push(data);
-
-                data = {
-                    BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}4`,
-                    BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
-                    ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
-                    CONTENT_INSPECTION_CODE: 'CC0004',
-                    VALUE: this.state.brondolPinggir,
-                    AREAL: this.state.dataUsual.BARIS,
-                    STATUS_SYNC: 'N'
-                }
-                kondisiBaris1.push(data);
-
-                data = {
-                    BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}5`,
-                    BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
-                    ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
-                    CONTENT_INSPECTION_CODE: 'CC0005',
-                    VALUE: this.state.brondolTPH,
-                    AREAL: this.state.dataUsual.BARIS,
-                    STATUS_SYNC: 'N'
-                }
-                kondisiBaris1.push(data);
-
-                data = {
-                    BLOCK_INSPECTION_CODE_D: `ID${this.state.dataUsual.USER_AUTH}${today}6`,
-                    BLOCK_INSPECTION_CODE: this.state.dataUsual.BLOCK_INSPECTION_CODE,
-                    ID_INSPECTION: this.state.dataInspeksi.ID_INSPECTION,
-                    CONTENT_INSPECTION_CODE: 'CC0006',
-                    VALUE: this.state.pokokTdkPupuk,
-                    AREAL: this.state.dataUsual.BARIS,
-                    STATUS_SYNC: 'N'
-                }
-                kondisiBaris1.push(data);
-
-                this.props.navigation.navigate('KondisiBaris2', {
-                    fotoBaris: this.state.fotoBaris,
-                    inspeksiHeader: this.state.inspeksiHeader,
-                    kondisiBaris1: kondisiBaris1,
-                    dataUsual: this.state.dataUsual,
-                    statusBlok: this.state.statusBlok,
-                    intervalId: this.state.intervalId,
-                    dataInspeksi: this.state.dataInspeksi,
-                    inspectionType: this.state.inspectionType === 'genba' ? 'genba' : 'normal'
-                });
-            }
-            else {
-                this.setState({ showModalAlert: true, title: 'Baris terlalu dekat', message: 'Opps, minimum jarak barisnya lebih dari 5 dari baris terakhir ya !', icon: require('../../Images/ic-blm-input-lokasi.png') });
+            } else {
+                this.dataToNextPage()
             }
         }
         else {
@@ -331,7 +349,7 @@ class KondisiBaris1 extends Component {
                         keyboardType={'numeric'}
                         value={this.state.pokokPanen}
                         onChangeText={(text) => {
-                            this.setState({ pokokPanen: this.inputValueValidator(text) }) 
+                            this.setState({ pokokPanen: this.inputValueValidator(text) })
                         }} />
                     <TouchableOpacity style={styles.btnAdd} onPress={() => { this.increaseNumber('PP') }}>
                         <Icon name={"add"} size={20} color="white" />
@@ -352,10 +370,11 @@ class KondisiBaris1 extends Component {
                         maxLength={2}
                         keyboardType={'numeric'}
                         value={this.state.buahTinggal}
-                        onChangeText={(text) => { 
-                            this.setState({ 
+                        onChangeText={(text) => {
+                            this.setState({
                                 buahTinggal: this.inputValueValidator(text)
-                            }) }} />
+                            })
+                        }} />
                     <TouchableOpacity
                         style={styles.btnAdd}
                         onPress={() => this.increaseNumber('BT')}>
@@ -377,7 +396,7 @@ class KondisiBaris1 extends Component {
                         keyboardType={'numeric'}
                         value={this.state.brondolPinggir}
                         onChangeText={(text) => {
-                            this.setState({ brondolPinggir: this.inputValueValidator(text) }) 
+                            this.setState({ brondolPinggir: this.inputValueValidator(text) })
                         }} />
                     <TouchableOpacity style={styles.btnAdd} onPress={() => { this.increaseNumber('BP') }}>
                         <Icon name={"add"} size={20} color="white" />
@@ -409,12 +428,12 @@ class KondisiBaris1 extends Component {
         }
     }
 
-    inputValueValidator(text){
+    inputValueValidator(text) {
         text = text.replace(/[^0-9 ]/g, '');
-        if(text.length <= 0){
+        if (text.length <= 0) {
             text = "0";
         }
-        if(text.length === 2 && text[0] === "0"){
+        if (text.length === 2 && text[0] === "0") {
             text = text[1];
         }
         return text
@@ -549,8 +568,8 @@ class KondisiBaris1 extends Component {
                                 maxLength={2}
                                 keyboardType={'numeric'}
                                 value={this.state.pokokTdkPupuk}
-                                onChangeText={(text) => { 
-                                    this.setState({ pokokTdkPupuk: this.inputValueValidator(text) }) 
+                                onChangeText={(text) => {
+                                    this.setState({ pokokTdkPupuk: this.inputValueValidator(text) })
                                 }} />
                             <TouchableOpacity style={styles.btnAdd} onPress={() => { this.increaseNumber('PTP') }}>
                                 <Icon name={"add"} size={20} color="white" />

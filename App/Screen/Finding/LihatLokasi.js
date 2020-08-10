@@ -1,15 +1,13 @@
 import React from 'react';
-import {StatusBar, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import { StatusBar, StyleSheet, Text, View } from 'react-native';
 
-import MapView, {Marker, Polygon, PROVIDER_GOOGLE, ProviderPropType} from 'react-native-maps';
+import MapView, { Marker, Polygon, PROVIDER_GOOGLE, ProviderPropType } from 'react-native-maps';
 import Colors from '../../Constant/Colors'
 import ModalAlert from '../../Component/ModalLoading'
 import ModalGps from '../../Component/ModalAlert';
 import TaskServices from '../../Database/TaskServices';
 import * as geolib from 'geolib';
-import {retrieveData, storeData} from '../../Database/Resources';
-import {AlertContent} from "../../Themes";
-import IconLoc from "react-native-vector-icons/FontAwesome5";
+import { AlertContent } from "../../Themes";
 
 let LATITUDE = -2.1890660;
 let LONGITUDE = 111.3609873;
@@ -21,6 +19,8 @@ class LihatLokasi extends React.Component {
         super(props);
 
         const data = this.props.navigation.getParam('findingData');
+
+        console.log('data FInding : ', data)
 
         this.state = {
             findingData: data,
@@ -58,7 +58,6 @@ class LihatLokasi extends React.Component {
     }
 
     loadMap() {
-        let user = TaskServices.getAllData('TR_LOGIN')[0];
         if (this.state.findingData.WERKS) {
             // let est = TaskServices.findBy('TM_EST', 'WERKS', user.CURR_WERKS);
             let est = TaskServices.findBy('TM_EST', 'WERKS', this.state.findingData.WERKS);
@@ -66,16 +65,16 @@ class LihatLokasi extends React.Component {
                 LATITUDE = est[0].LATITUDE;
                 LONGITUDE = est[0].LONGITUDE;
             }
-            // let polygons = TaskServices.findBy('TR_POLYGON', 'WERKS', user.CURR_WERKS);
-            let polygons = TaskServices.findBy('TR_POLYGON', 'WERKS', this.state.findingData.WERKS);
-            polygons = this.convertGeoJson(polygons);
+
+            const werks_afd_block_code = this.state.findingData.WERKS + this.state.findingData.AFD_CODE + this.state.findingData.BLOCK_CODE
+            let polygons = TaskServices.findBy('TR_POLYGON', 'werks_afd_block_code', werks_afd_block_code);
+
+            const poligons = this.convertGeoJson(polygons);
+
             if (polygons && polygons.length > 0) {
-                let mapData = {
-                    "data": {
-                        "polygons": polygons
-                    }
-                }
-                polyMap = mapData;
+                this.setState({
+                    poligons
+                })
             }
             else {
                 //belum download map
@@ -121,43 +120,43 @@ class LihatLokasi extends React.Component {
         let poligons = [];
         if (!polyMap) {
             this.setState({
-                modalLoading: {...this.state.modalLoading, showModal: false},
-                modalAlert: {...AlertContent.no_data_map}
+                modalLoading: { ...this.state.modalLoading, showModal: false },
+                modalAlert: { ...AlertContent.no_data_map }
             })
             return poligons;
         }
         let data = polyMap.data.polygons;
         for (var i = 0; i < data.length; i++) {
             let coords = data[i];
-            if(
-                geolib.isPointInPolygon({ latitude: this.state.findingData.LAT_FINDING, longitude: this.state.findingData.LONG_FINDING+0.006 }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.findingData.LAT_FINDING, longitude: this.state.findingData.LONG_FINDING-0.006 }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.findingData.LAT_FINDING+0.0025, longitude: this.state.findingData.LONG_FINDING }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.findingData.LAT_FINDING-0.0025, longitude: this.state.findingData.LONG_FINDING }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.findingData.LAT_FINDING-0.0025, longitude: this.state.findingData.LONG_FINDING-0.006 }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.findingData.LAT_FINDING-0.0025, longitude: this.state.findingData.LONG_FINDING+0.006 }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.findingData.LAT_FINDING+0.0025, longitude: this.state.findingData.LONG_FINDING-0.006 }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.findingData.LAT_FINDING+0.0025, longitude: this.state.findingData.LONG_FINDING+0.006 }, coords.coords) ||
+            if (
+                geolib.isPointInPolygon({ latitude: this.state.findingData.LAT_FINDING, longitude: this.state.findingData.LONG_FINDING + 0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.findingData.LAT_FINDING, longitude: this.state.findingData.LONG_FINDING - 0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.findingData.LAT_FINDING + 0.0027, longitude: this.state.findingData.LONG_FINDING }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.findingData.LAT_FINDING - 0.0027, longitude: this.state.findingData.LONG_FINDING }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.findingData.LAT_FINDING - 0.0027, longitude: this.state.findingData.LONG_FINDING - 0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.findingData.LAT_FINDING - 0.0027, longitude: this.state.findingData.LONG_FINDING + 0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.findingData.LAT_FINDING + 0.0027, longitude: this.state.findingData.LONG_FINDING - 0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.findingData.LAT_FINDING + 0.0027, longitude: this.state.findingData.LONG_FINDING + 0.006 }, coords.coords) ||
                 geolib.isPointInPolygon({ latitude: this.state.findingData.LAT_FINDING, longitude: this.state.findingData.LONG_FINDING }, coords.coords)
-            ){
+            ) {
                 poligons.push(coords);
             }
-            // poligons.push(coords);
+            poligons.push(coords);
         }
         return poligons;
     }
 
-    getLocation(){
+    getLocation() {
         if (this.state.currentLatitude && this.state.currentLongitude) {
-            let poligons = this.getPolygons();
-            if(poligons.length > 0){
+            // let poligons = this.getPolygons();
+            if (poligons.length > 0) {
                 this.setState({
                     modalLoading: {
                         ...this.state.modalLoading
                         , showModal: false
                     },
                     poligons
-                },()=> {
+                }, () => {
                     this.map.animateToRegion({
                         latitude: parseFloat(this.state.findingData.LAT_FINDING),
                         longitude: parseFloat(this.state.findingData.LONG_FINDING),
@@ -194,7 +193,7 @@ class LihatLokasi extends React.Component {
         }, 1);
         this.setState({ fetchLocation: false })
         this.loadMap();
-        this.getLocation()
+        // this.getLocation()
     }
 
     render() {
@@ -257,7 +256,7 @@ class LihatLokasi extends React.Component {
                             >
                                 <View style={{ flexDirection: 'column', alignSelf: 'flex-start' }}>
                                     <View style={styles.marker}>
-                                        <Text style={{ color: 'rgba(255,255,255,1)', fontSize: 25, fontWeight:'900'}}>{poly.blokname}</Text>
+                                        <Text style={{ color: 'rgba(255,255,255,1)', fontSize: 25, fontWeight: '900' }}>{poly.blokname}</Text>
                                     </View>
                                 </View>
                             </Marker>
@@ -265,6 +264,7 @@ class LihatLokasi extends React.Component {
                     ))}
 
                     <Marker
+                        title={'Titik Temuan'}
                         coordinate={{
                             latitude: parseFloat(this.state.findingData.LAT_FINDING),
                             longitude: parseFloat(this.state.findingData.LONG_FINDING),

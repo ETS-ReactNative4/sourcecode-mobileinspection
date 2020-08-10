@@ -17,7 +17,7 @@ import Font from '../../Themes/Fonts'
 class BuatInspeksiRedesign extends Component {
 
     static navigationOptions = {
-       header: null
+        header: null
     };
 
     // static navigationOptions = ({ navigation }) => {
@@ -254,6 +254,8 @@ class BuatInspeksiRedesign extends Component {
 
     async validation() {
         let statusBlok = this.getStatusBlok(this.state.werksAfdBlokCode);
+        let hillyBlok = this.getStatusHilly(this.state.werksAfdBlokCode);
+
         var message = 'Kamu harus pilih lokasi dan isi baris dulu yaa :D'
         if (statusBlok === '') {
             this.setState({ showModal: true, title: 'Pilih Lokasi', message: message, icon: require('../../Images/ic-blm-input-lokasi.png') });
@@ -265,8 +267,10 @@ class BuatInspeksiRedesign extends Component {
             this.setState({ showModal: true, title: 'Pilih Lokasi', message: message, icon: require('../../Images/ic-blm-input-lokasi.png') });
         } else if (this.checkSameBaris()) {
             this.setState({ showModal: true, title: 'Baris sama', message: 'Opps, baris tidak boleh sama dengan sebelumnya ya', icon: require('../../Images/ic-blm-input-lokasi.png') });
-        } else if (this.checkJarakBaris()) {
-            this.setState({ showModal: true, title: 'Baris terlalu dekat', message: 'Opps, minimum jarak barisnya lebih dari 5 dari baris terakhir ya !', icon: require('../../Images/ic-blm-input-lokasi.png') });
+        } else if (hillyBlok !== "HILLY") {
+            if (this.checkJarakBaris()) {
+                this.setState({ showModal: true, title: 'Baris terlalu dekat', message: 'Opps, minimum jarak barisnya lebih dari 5 dari baris terakhir ya !', icon: require('../../Images/ic-blm-input-lokasi.png') });
+            }
         }
         // else if(this.state.latitude === 0.0 && this.state.longitude === 0.0){
         //     this.setState({ showModal: true, title: 'Lokasi', message: 'Titik lokasi kamu belum ada, coba refresh lokasi lagi yaa', icon: require('../../Images/ic-no-gps.png') });
@@ -326,6 +330,15 @@ class BuatInspeksiRedesign extends Component {
     //     }
     //
     // }
+
+    getStatusHilly(werk_afd_blok_code) {
+        try {
+            let data = TaskService.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', werk_afd_blok_code);
+            return data.TOPOGRAPHY;
+        } catch (error) {
+            return ''
+        }
+    }
 
     getStatusBlok(werk_afd_blok_code) {
         try {
@@ -461,7 +474,7 @@ class BuatInspeksiRedesign extends Component {
         // const comp = (a, b) => a.toLowerCase().trim() === b.toLowerCase().trim();
         return (
             <View style={styles.mainContainer}>
-                <HeaderDefault title={'Buat Inspeksi'} onPress={() => this.handleBackButtonClick()}/>
+                <HeaderDefault title={'Buat Inspeksi'} onPress={() => this.handleBackButtonClick()} />
                 <StatusBar
                     hidden={false}
                     barStyle="light-content"

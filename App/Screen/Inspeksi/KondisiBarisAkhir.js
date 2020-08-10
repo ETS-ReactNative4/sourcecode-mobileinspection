@@ -129,17 +129,41 @@ class KondisiBarisAkhir extends Component {
         this.didFocus.remove();
     }
 
+    getStatusHilly(werk_afd_blok_code) {
+        try {
+            let data = TaskService.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', werk_afd_blok_code);
+            return data.TOPOGRAPHY;
+        } catch (error) {
+            return ''
+        }
+    }
+
     timerStart() {
+
+        let statusHilly = this.getStatusHilly(this.state.dataInspeksi.WERKS_AFD_BLOCK_CODE);
+
         let timerInterval = setInterval(() => {
             let detik = parseInt(this.state.timer) + 1;
 
-            if (detik > 60) {
-                Vibration.vibrate(500);
-                if (this.state.showAlertTimer === false && this.state.showModal === false) {
-                    this.setState({
-                        showAlertTimer: true
-                    })
+            if (statusHilly == 'HILLY') {
+                if (detik > (60 * 30)) {
+                    Vibration.vibrate(500);
+                    if (this.state.showAlertTimer === false && this.state.showModal === false) {
+                        this.setState({
+                            showAlertTimer: true
+                        })
+                    }
                 }
+            } else {
+                if (detik > 60) {
+                    Vibration.vibrate(500);
+                    if (this.state.showAlertTimer === false && this.state.showModal === false) {
+                        this.setState({
+                            showAlertTimer: true
+                        })
+                    }
+                }
+
             }
 
             this.setState({
@@ -365,7 +389,32 @@ class KondisiBarisAkhir extends Component {
             });
         }
         else {
-            if (!this.checkJarakBaris(this.state.txtBaris)) {
+            let statusHilly = this.getStatusHilly(this.state.dataInspeksi.WERKS_AFD_BLOCK_CODE);
+            if (statusHilly !== 'HILLY') {
+                if (!this.checkJarakBaris(this.state.txtBaris)) {
+                    if (this.state.latitude === 0.0 || this.state.longitude === 0.0) {
+                        let getTracking = TaskServices.getLastTracking(this.state.dataUsual.BLOCK_INSPECTION_CODE);
+                        let latestLat = getTracking.LAT_TRACK;
+                        let latestLon = getTracking.LONG_TRACK;
+
+                        this.setState({
+                            latitude: parseFloat(latestLat),
+                            longitude: parseFloat(latestLon)
+                        }, () => {
+                            this.saveData(false)
+                        });
+                    }
+                    else {
+                        this.saveData(false)
+                    }
+                }
+                else {
+                    this.setState({
+                        showModal: true, title: 'Baris terlalu dekat', message: 'Opps, minimum jarak barisnya lebih dari 5 ya ! ',
+                        icon: require('../../Images/ic-blm-input-lokasi.png')
+                    });
+                }
+            } else {
                 if (this.state.latitude === 0.0 || this.state.longitude === 0.0) {
                     let getTracking = TaskServices.getLastTracking(this.state.dataUsual.BLOCK_INSPECTION_CODE);
                     let latestLat = getTracking.LAT_TRACK;
@@ -381,12 +430,6 @@ class KondisiBarisAkhir extends Component {
                 else {
                     this.saveData(false)
                 }
-            }
-            else {
-                this.setState({
-                    showModal: true, title: 'Baris terlalu dekat', message: 'Opps, minimum jarak barisnya lebih dari 5 ya ! ',
-                    icon: require('../../Images/ic-blm-input-lokasi.png')
-                });
             }
         }
     }

@@ -62,6 +62,8 @@ class FormStep2 extends Component {
         let latitude = R.clone(params.lat);
         let longitude = R.clone(params.lon);
 
+        console.log('Latlong Param : ', latitude + "||" + longitude);
+
         var user = TaskServices.getAllData('TR_LOGIN')[0];
         let today = getTodayDate('YYMMDDHHmmss');
         let TRANS_CODE = `F${user.USER_AUTH_CODE}${today}`;
@@ -333,8 +335,13 @@ class FormStep2 extends Component {
     }
 
     changeBlok = data => {
+
         if (data !== null) {
-            this.loadDataBlock(data);
+            this.loadDataBlock(data.werkAfdBlockCode);
+            this.setState({
+                latitude: data.polyCoords.latitude,
+                longitude: data.polyCoords.longitude,
+            })
             // this.setState({ blok: data.allShow, blockCode: data.blokCode, werks: data.werks, afdCode: data.afdCode });
         }
 
@@ -342,11 +349,11 @@ class FormStep2 extends Component {
 
     loadDataBlock(werkAfdBlockCode) {
 
-        console.log('Data  werkAfdBlockCode : ', werkAfdBlockCode)
+        // console.log('Data  werkAfdBlockCode : ', werkAfdBlockCode)
 
         let data = TaskServices.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', werkAfdBlockCode);
 
-        console.log('Data : ', data)
+        // console.log('Data : ', data)
 
         if (data !== undefined) {
             let statusBlok = this.getStatusBlok(data.WERKS_AFD_BLOCK_CODE);

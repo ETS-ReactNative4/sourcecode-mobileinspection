@@ -247,12 +247,12 @@ class MapsInspeksi extends React.Component {
                 if (
                     geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude + 0.006 }, coords.coords) ||
                     geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude - 0.006 }, coords.coords) ||
-                    geolib.isPointInPolygon({ latitude: this.state.latitude + 0.0025, longitude: this.state.longitude }, coords.coords) ||
-                    geolib.isPointInPolygon({ latitude: this.state.latitude - 0.0025, longitude: this.state.longitude }, coords.coords) ||
-                    geolib.isPointInPolygon({ latitude: this.state.latitude - 0.0025, longitude: this.state.longitude - 0.006 }, coords.coords) ||
-                    geolib.isPointInPolygon({ latitude: this.state.latitude - 0.0025, longitude: this.state.longitude + 0.006 }, coords.coords) ||
-                    geolib.isPointInPolygon({ latitude: this.state.latitude + 0.0025, longitude: this.state.longitude - 0.006 }, coords.coords) ||
-                    geolib.isPointInPolygon({ latitude: this.state.latitude + 0.0025, longitude: this.state.longitude + 0.006 }, coords.coords) ||
+                    geolib.isPointInPolygon({ latitude: this.state.latitude + 0.0027, longitude: this.state.longitude }, coords.coords) ||
+                    geolib.isPointInPolygon({ latitude: this.state.latitude - 0.0027, longitude: this.state.longitude }, coords.coords) ||
+                    geolib.isPointInPolygon({ latitude: this.state.latitude - 0.0027, longitude: this.state.longitude - 0.006 }, coords.coords) ||
+                    geolib.isPointInPolygon({ latitude: this.state.latitude - 0.0027, longitude: this.state.longitude + 0.006 }, coords.coords) ||
+                    geolib.isPointInPolygon({ latitude: this.state.latitude + 0.0027, longitude: this.state.longitude - 0.006 }, coords.coords) ||
+                    geolib.isPointInPolygon({ latitude: this.state.latitude + 0.0027, longitude: this.state.longitude + 0.006 }, coords.coords) ||
                     geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude }, coords.coords)
                 ) {
                     poligons.push(coords);
@@ -265,6 +265,8 @@ class MapsInspeksi extends React.Component {
     getLocation(){
         if (this.state.latitude && this.state.longitude) {
             let poligons = this.getPolygons();
+
+            console.log('Polygons Length: ', poligons.length)
             if (poligons.length > 0) {
                 this.setState({
                     modalLoading: {

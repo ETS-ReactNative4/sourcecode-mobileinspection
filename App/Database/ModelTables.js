@@ -241,7 +241,8 @@ const TM_BLOCK = {
         WERKS_AFD_CODE: 'string',
         WERKS_AFD_BLOCK_CODE: 'string',
         LATITUDE_BLOCK: 'string',
-        LONGITUDE_BLOCK: 'string'
+        LONGITUDE_BLOCK: 'string',
+        TOPOGRAPHY: 'string',
     }
 }
 

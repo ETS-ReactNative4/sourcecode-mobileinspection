@@ -115,7 +115,6 @@ class TakePhotoSelfie extends Component {
         const data = await this.camera.takePictureAsync(takeCameraOptions);
         var imgPath = `${dirPhotoInspeksiSelfie}/${this.state.dataModel.IMAGE_NAME}`;
 
-        RNFS.copyFile(data.uri, imgPath);
         this.setState(
           {
             pathView: data.uri,
@@ -123,7 +122,7 @@ class TakePhotoSelfie extends Component {
             pathImg: dirPhotoInspeksiSelfie,
             hasPhoto: true
           }, () => {
-            RNFS.copyFile(data.uri, imgPath);
+            await RNFS.copyFile(data.uri, imgPath);
           });
       }
 
