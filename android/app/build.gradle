@@ -108,7 +108,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 29
-        versionName "4.04"
+        versionName "4.05"
         multiDexEnabled true
         missingDimensionStrategy 'react-native-camera', 'general'
     }
