@@ -270,6 +270,8 @@ class BuatInspeksiRedesign extends Component {
         } else if (hillyBlok !== "HILLY") {
             if (this.checkJarakBaris()) {
                 this.setState({ showModal: true, title: 'Baris terlalu dekat', message: 'Opps, minimum jarak barisnya lebih dari 5 dari baris terakhir ya !', icon: require('../../Images/ic-blm-input-lokasi.png') });
+            } else {
+                await this.insertDB(statusBlok);
             }
         }
         // else if(this.state.latitude === 0.0 && this.state.longitude === 0.0){
