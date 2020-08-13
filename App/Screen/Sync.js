@@ -50,6 +50,7 @@ import { getTitikRestan } from './Sync/Download/Restan/TitikRestan';
 import { getFCMToken } from "../Notification/NotificationListener";
 import { fetchGet, fetchPost, fetchPut } from "../Api/FetchingApi";
 import { getPetaPanenDetail, getPetaPanenHeader } from "./Sync/Download/PetaPanen/PetaPanen";
+import { getNotificationInbox } from './Sync/Download/DownloadNotificationInbox';
 
 export default class SyncScreen extends React.Component {
 
@@ -127,6 +128,7 @@ export default class SyncScreen extends React.Component {
             progressTitikRestan: 0,
             progressPetaPanenHeader: 0,
             progressPetaPanenDetail: 0,
+            progressNotification: 0,
 
             //labelDownload
             downloadApa: 'Download sedang dalam proses',
@@ -170,6 +172,8 @@ export default class SyncScreen extends React.Component {
             totalPetaPanenDetail: 0,
             valueServiceList: 0,
             totalServiceList: 0,
+            totalNotification: 0,
+            valueNotification: 0,
 
 
             indeterminate: false,
@@ -202,7 +206,7 @@ export default class SyncScreen extends React.Component {
         }
     }
 
-    async downloadReport(){
+    async downloadReport() {
         /* Peta Restan */
         /* DOWNLOAD TITIK RESTAN */
         await getTitikRestan().then((data) => {
@@ -400,6 +404,17 @@ export default class SyncScreen extends React.Component {
                 progressKualitas: 1,
                 valueKualitas: data.downloadCount,
                 totalKualitas: data.totalCount
+            })
+        })
+
+        /* Parameter Notification Inbox */
+        /* DOWNLOAD NOTIFICATION INBOX */
+        await getNotificationInbox().then((data) => {
+            // console.log('Data Callback Notification : ', data)
+            this.setState({
+                progressNotification: 1,
+                valueNotification: data.downloadCount,
+                totalNotification: data.totalCount
             })
         })
 
@@ -1158,7 +1173,8 @@ export default class SyncScreen extends React.Component {
                                             progressContact: 0,
                                             progressParamInspection: 0,
                                             progressKualitas: 0,
-                                            progressServiceList:0,
+                                            progressServiceList: 0,
+                                            progressNotification: 0,
 
                                             //labelDownload
                                             valueDownload: '0',
@@ -1177,6 +1193,7 @@ export default class SyncScreen extends React.Component {
                                             valueParamInspection: '0',
                                             valueKualitas: '0',
                                             valueServiceList: '0',
+                                            valueNotification: '0',
 
                                             totalDownload: '0',
                                             totalAfdDownload: '0',
@@ -1194,6 +1211,7 @@ export default class SyncScreen extends React.Component {
                                             totalParamInspection: '0',
                                             totalKualitas: '0',
                                             totalServiceList: '0',
+                                            totalNotification: '0',
 
                                             fetchLocation: false,
                                             isBtnEnable: false,
@@ -1443,6 +1461,13 @@ export default class SyncScreen extends React.Component {
                             value={this.state.valueKualitas}
                             total={this.state.totalKualitas}
                             progress={this.state.progressKualitas} />
+
+                        <ProgressSync
+                            title={'Notification'}
+                            color={Colors.brand}
+                            value={this.state.valueNotification}
+                            total={this.state.totalNotification}
+                            progress={this.state.progressNotification} />
 
                         <ProgressDialog
                             visible={this.state.fetchLocation}

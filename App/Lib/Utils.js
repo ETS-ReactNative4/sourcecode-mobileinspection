@@ -523,7 +523,7 @@ export function syncDays() {
 }
 
 export function notifInbox() {
-	let notifCount = TaskServices.getAllData('TR_NOTIFICATION').filtered('NOTIFICATION_STATUS = 0').length;
+	let notifCount = TaskServices.getAllData('TR_NOTIFICATION_1').filtered('NOTIFICATION_STATUS = 0').length;
 
 	if (notifCount > 99) {
 		notifCount = 99

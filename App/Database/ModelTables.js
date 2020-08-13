@@ -509,6 +509,7 @@ const TR_NOTIFICATION = {
         FINDING_CODE: { type: 'string' },
     }
 }
+
 const TR_SYNC_LOG = {
     name: 'TR_SYNC_LOG',
     primaryKey: 'SYNC_TIME_ID',
@@ -733,6 +734,20 @@ const TR_PETAPANEN_DETAIL = {
     }
 };
 
+const TR_NOTIFICATION_1 = {
+    name: 'TR_NOTIFICATION_1',
+    primaryKey: 'NOTIFICATION_ID',
+    properties: {
+        NOTIFICATION_ID: 'string',
+        NOTIFICATION_STATUS: { type: 'int', default: 0 },
+        FINDING_CODE: 'string',
+        CATEGORY: 'string',
+        NOTIFICATION_TO: 'string',
+        MESSAGE: 'string',
+        INSERT_TIME: 'string'
+    }
+}
+
 export default {
     TR_LOGIN,
     TR_CONFIG,
@@ -778,6 +793,7 @@ export default {
     TR_PETAPANEN_HEADER,
     TR_PETAPANEN_DETAIL,
 
+    TR_NOTIFICATION_1,
 
     SCHEMA_VERSION
 }
