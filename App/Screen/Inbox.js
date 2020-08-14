@@ -8,6 +8,8 @@ import { dateDisplayMobile, changeFormatDate } from '../Lib/Utils'
 import { Images, Fonts } from '../Themes';
 import Swipeout from 'react-native-swipeout';
 
+import ModalConfirmation from '../Component/ModalAlertConfirmation'
+
 export default class Inbox extends React.Component {
 
 	constructor(props) {
@@ -22,7 +24,8 @@ export default class Inbox extends React.Component {
 			message: 'Message',
 			showModal: false,
 			icon: '',
-			isFilter: false
+			isFilter: false,
+			showConfirm: false
 		}
 	}
 	static navigationOptions = ({ navigation }) => ({
@@ -143,9 +146,23 @@ export default class Inbox extends React.Component {
 		})
 	}
 
+	_deleteAllNotif() {
+
+		const getAllData = TaskServices.getAllData("TR_NOTIFICATION_1");
+
+		getAllData.map(item => {
+			TaskServices.deleteRecordByPK('TR_NOTIFICATION_1', 'NOTIFICATION_ID', item.NOTIFICATION_ID);
+		})
+
+		this.setState({
+			data: this.getNotif(),
+			showConfirm: false,
+		})
+	}
+
 	_renderData() {
 		return (
-			<View>
+			<View style={{ flex: 1 }}>
 				<ScrollView
 					showsHorizontalScrollIndicator={false}
 					showsVerticalScrollIndicator={false}>
@@ -153,6 +170,31 @@ export default class Inbox extends React.Component {
 						{this.state.data.map((item, index) => this._renderItem(item, index))}
 					</View>
 				</ScrollView>
+				<View style={{
+					position: 'absolute',
+					bottom: 0,
+					justifyContent: 'center',
+					alignItems: 'center',
+					width: "100%",
+					padding: 20
+				}}>
+					<TouchableOpacity
+						onPress={() => this.setState({
+							showConfirm: true
+						})}
+						activeOpacity={0.6}
+						style={{
+							height: 48,
+							width: 200,
+							backgroundColor: Colors.tintColorPrimary,
+							justifyContent: 'center',
+							alignItems: 'center',
+							borderRadius: 30,
+							elevation: 3
+						}}>
+						<Text style={{ color: 'white', fontSize: 16, fontFamily: Fonts.book }}>Hapus Semua</Text>
+					</TouchableOpacity>
+				</View>
 			</View>
 		)
 	}
@@ -164,9 +206,18 @@ export default class Inbox extends React.Component {
 		}
 		return (
 			<Container>
-				<Content>
-					{show}
-				</Content>
+				<ModalConfirmation
+					icon={null}
+					visible={this.state.showConfirm}
+					onPressCancel={() =>
+						this.setState({ showConfirm: false })}
+					onPressSubmit={() => {
+						this._deleteAllNotif();
+					}}
+					title={'Hapus Semua'}
+					message={`Yakin mau menghapus semua notification inbox?`}
+				/>
+				{show}
 			</Container>
 		);
 	}

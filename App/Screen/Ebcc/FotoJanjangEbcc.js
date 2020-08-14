@@ -33,6 +33,8 @@ class FotoJanjang extends Component {
 
     let params = props.navigation.state.params;
     let tphAfdWerksBlockCode = R.clone(params.tphAfdWerksBlockCode)
+    console.log(tphAfdWerksBlockCode);
+    let deliveryTicket = R.clone(params.deliveryTicket)
     let statusScan = R.clone(params.statusScan)
     let reason = R.clone(params.reason)
 
@@ -43,6 +45,7 @@ class FotoJanjang extends Component {
       pathImg: null,
       dataModel: null,
       tphAfdWerksBlockCode,
+      deliveryTicket,
       reason,
       pathCache: '',
       timestamp: getTodayDate('YYYYMMDDkkmmss'),
@@ -101,7 +104,7 @@ class FotoJanjang extends Component {
     }
     let statusScan = R.clone(this.props.navigation.state.params.statusScan)
     if (statusScan == 'AUTOMATIC') {
-      this.navigateScreen('EbccQrCode')
+      this.navigateScreen('DeliveryTicketQrCode')
       return true
     } else {
       this.props.navigation.goBack();
@@ -131,9 +134,6 @@ class FotoJanjang extends Component {
           actions: [NavigationActions.navigate({ routeName: routeName })]
         })
       )]).then(() => navigation.navigate('EbccValidation')).then(() => navigation.navigate('DaftarEbcc'))
-
-    // Promise.all([navigation.dispatch(NavigationActions.navigate({ routeName : routeName}))]).
-    //   then(() => navigation.navigate('EbccValidation')).then(() => navigation.navigate('DaftarEbcc'));
   }
 
   getLocation() {
@@ -227,7 +227,7 @@ class FotoJanjang extends Component {
       ALASAN_MANUAL: alasan,//1 rusak, 2 hilang
       LAT_TPH: this.state.latitude.toString(),
       LON_TPH: this.state.longitude.toString(),
-      DELIVERY_CODE: '',
+      DELIVERY_CODE: this.state.deliveryTicket,
       STATUS_DELIVERY_CODE: '',
       TOTAL_JANJANG: '0',
       STATUS_SYNC: 'N',

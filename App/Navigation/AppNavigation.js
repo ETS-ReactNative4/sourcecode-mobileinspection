@@ -36,6 +36,7 @@ import MapsInspeksi from '../Screen/Inspeksi/MapsInspeksi'
 import DetailSuggestion from '../Screen/Inspeksi/DetailSuggestion'
 //ebcc
 import EbccQrCode from '../Screen/Ebcc/EbccQrCode'
+import DeliveryTicketQrCode from '../Screen/Ebcc/DeliveryTicketQrCode'
 import FotoJanjang from '../Screen/Ebcc/FotoJanjangEbcc'
 import FotoSelfieEbcc from '../Screen/Ebcc/FotoSelfieEbcc'
 import KriteriaBuah from '../Screen/Ebcc/KriteriaBuah'
@@ -141,6 +142,7 @@ const main = createStackNavigator({
 
     //ebccValidation
     EbccQrCode: { screen: EbccQrCode },
+    DeliveryTicketQrCode: { screen: DeliveryTicketQrCode },
     FotoJanjang: { screen: FotoJanjang },
     FotoSelfieEbcc: { screen: FotoSelfieEbcc },
     KriteriaBuah: { screen: KriteriaBuah },

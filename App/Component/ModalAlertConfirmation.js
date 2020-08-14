@@ -43,8 +43,10 @@ export default class ModalConfirmation extends Component {
 					<View style={style.modalInnerContainer}>
 						{/* <Icon size={24} name={'close'} /> */}
 						<View style={{ justifyContent: 'center', width: '100%', alignItems: 'center' }}>
-							<Image style={{ width: 150, height: 150, marginTop: 12 }} source={props.icon} />
-							<Text style={style.textTitle}> {props.title}</Text>
+							{
+								props.icon !== null ? <Image style={{ width: 150, height: 150, marginTop: 12 }} source={props.icon} /> : null
+							}
+							<Text style={[style.textTitle, { marginTop: props.icon !== null ? 0 : 16 }]}> {props.title}</Text>
 							<Text style={style.textMessage}>{props.message}</Text>
 						</View>
 						<View style={style.bottomContainer} >
@@ -99,8 +101,7 @@ const style = {
 		fontSize: 14,
 		textAlign: 'center',
 		color: '#c5c5c5',
-		paddingLeft: 12,
-		paddingRight: 12,
+		paddingHorizontal: 20,
 		fontFamily: Fonts.book
 	},
 	button: {
