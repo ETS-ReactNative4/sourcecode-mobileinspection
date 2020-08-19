@@ -1,5 +1,5 @@
 import React from 'react';
-import {StatusBar, StyleSheet, Text, TouchableOpacity, View, ToastAndroid, NativeEventEmitter, NativeModules} from 'react-native';
+import { StatusBar, StyleSheet, Text, TouchableOpacity, View, ToastAndroid, NativeEventEmitter, NativeModules } from 'react-native';
 
 import MapView, { Marker, Polygon, ProviderPropType, PROVIDER_GOOGLE, Circle } from 'react-native-maps';
 import Colors from '../../Constant/Colors'
@@ -9,10 +9,10 @@ import ModalLoading from '../../Component/ModalLoading'
 import ModalAlert from '../../Component/ModalAlert';
 import TaskServices from '../../Database/TaskServices';
 import { removeData, retrieveData, storeData } from '../../Database/Resources';
-import { AlertContent, Images } from '../../Themes';
+import { AlertContent} from '../../Themes';
 
 import * as geolib from 'geolib';
-import moment from "moment";
+import ModalPilihAfdeling from '../../Component/ModalPilihAfdeling';
 
 let polyMap = false;
 let LATITUDE = -2.1890660;
@@ -23,10 +23,9 @@ class MapsInspeksi extends React.Component {
     constructor(props) {
         super(props);
 
-        this.loadMap();
         this.state = {
             currentUser: TaskServices.getCurrentUser(),
-            nativeGPS:{
+            nativeGPS: {
                 latitude: 0,
                 longitude: 0,
                 accuracy: 0,
@@ -60,7 +59,10 @@ class MapsInspeksi extends React.Component {
                 title: 'Gps tidak di temukan',
                 message: 'Signal gps tidak di temukan, coba lagi!',
                 icon: require('../../Images/ic-no-gps.png')
-            }
+            },
+            dataAfdeling: [],
+            selectedValue: '',
+            showPilihAfdeling: false
         };
     }
 
@@ -87,15 +89,33 @@ class MapsInspeksi extends React.Component {
     }
 
     componentDidMount() {
+
+        let user = TaskServices.getAllData('TR_LOGIN')[0];
+
+        if (user.REFFERENCE_ROLE !== "AFD_CODE") {
+            let afdeling = TaskServices.findAll('TM_AFD', 'WERKS', user.CURR_WERKS);
+
+            this.setState({
+                showPilihAfdeling: true,
+                dataAfdeling: afdeling
+            })
+        } else {
+            this.loadMap();
+        }
         removeData('PoligonsInspeksi');
-        this.props.navigation.setParams({ searchLocation: this.searchLocation })
+        this.props.navigation.setParams({ searchLocation: () => this._location() })
     }
 
-    nativeGps(){
+    _location() {
+        this.searchLocation();
+    }
+
+
+    nativeGps() {
         const eventEmitter = new NativeEventEmitter(NativeModules.Satellite);
         eventEmitter.addListener('getSatellite', (event) => {
             this.setState({
-                nativeGPS:{
+                nativeGPS: {
                     longitude: event.longitude,
                     latitude: event.latitude,
                     accuracy: event.accuracy,
@@ -151,6 +171,8 @@ class MapsInspeksi extends React.Component {
     }
 
     searchLocation = () => {
+
+        console.log(this.state.selectedValue);
         if (this.state.longitude !== 0.0 || this.state.latitude !== 0.0) {
             this.setState({ modalLoading: { ...this.state.modalLoading, showModal: true } });
             this.map.animateToRegion(this.state.region, 1);
@@ -176,8 +198,21 @@ class MapsInspeksi extends React.Component {
                 LATITUDE = est[0].LATITUDE;
                 LONGITUDE = est[0].LONGITUDE;
             }
-            let polygons = TaskServices.findBy('TR_POLYGON', 'WERKS', user.CURR_WERKS);
-            polygons = this.convertGeoJson(polygons);
+
+            let polygonsMap = [];
+            if (user.REFFERENCE_ROLE !== "AFD_CODE") {
+                const item = user.CURR_WERKS + this.state.afdelingCode;
+                polygonsMap = TaskServices.query('TR_POLYGON', `werks_afd_block_code CONTAINS[c] "${item}"`);
+            } else {
+                const location_code = user.LOCATION_CODE.split(",");
+                location_code.map(item => {
+                    let temp = TaskServices.query('TR_POLYGON', `werks_afd_block_code CONTAINS[c] "${item}"`);
+                    polygonsMap.push(...temp);
+                });
+            }
+
+            let polygons = this.convertGeoJson(polygonsMap);
+
             if (polygons && polygons.length > 0) {
                 let mapData = {
                     "data": {
@@ -220,8 +255,8 @@ class MapsInspeksi extends React.Component {
         return arrPoli;
     }
 
-    polygonFilter(werksAfd){
-        if(this.state.currentUser.REFFERENCE_ROLE !== "AFD_CODE"){
+    polygonFilter(werksAfd) {
+        if (this.state.currentUser.REFFERENCE_ROLE !== "AFD_CODE") {
             return true
         }
         let userWerksAfd = this.state.currentUser.LOCATION_CODE;
@@ -230,43 +265,36 @@ class MapsInspeksi extends React.Component {
 
     getPolygons() {
         let poligons = [];
-
         if (!polyMap) {
             this.setState({
                 modalLoading: { ...this.state.modalLoading, showModal: false },
                 modalAlert: { ...AlertContent.no_data_map }
-            });
+            })
             return poligons;
         }
         let data = polyMap.data.polygons;
-
         for (var i = 0; i < data.length; i++) {
             let coords = data[i];
-            let werksAfdCode = coords.WERKS + coords.afd_code;
-            if(this.polygonFilter(werksAfdCode)){
-                if (
-                    geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude + 0.006 }, coords.coords) ||
-                    geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude - 0.006 }, coords.coords) ||
-                    geolib.isPointInPolygon({ latitude: this.state.latitude + 0.0027, longitude: this.state.longitude }, coords.coords) ||
-                    geolib.isPointInPolygon({ latitude: this.state.latitude - 0.0027, longitude: this.state.longitude }, coords.coords) ||
-                    geolib.isPointInPolygon({ latitude: this.state.latitude - 0.0027, longitude: this.state.longitude - 0.006 }, coords.coords) ||
-                    geolib.isPointInPolygon({ latitude: this.state.latitude - 0.0027, longitude: this.state.longitude + 0.006 }, coords.coords) ||
-                    geolib.isPointInPolygon({ latitude: this.state.latitude + 0.0027, longitude: this.state.longitude - 0.006 }, coords.coords) ||
-                    geolib.isPointInPolygon({ latitude: this.state.latitude + 0.0027, longitude: this.state.longitude + 0.006 }, coords.coords) ||
-                    geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude }, coords.coords)
-                ) {
-                    poligons.push(coords);
-                }
+            if (
+                geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude + 0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude - 0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude + 0.0027, longitude: this.state.longitude }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude - 0.0027, longitude: this.state.longitude }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude - 0.0027, longitude: this.state.longitude - 0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude - 0.0027, longitude: this.state.longitude + 0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude + 0.0027, longitude: this.state.longitude - 0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude + 0.0027, longitude: this.state.longitude + 0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude }, coords.coords)
+            ) {
+                poligons.push(coords);
             }
         }
         return poligons;
     }
 
-    getLocation(){
+    getLocation() {
         if (this.state.latitude && this.state.longitude) {
             let poligons = this.getPolygons();
-
-            console.log('Polygons Length: ', poligons.length)
             if (poligons.length > 0) {
                 this.setState({
                     modalLoading: {
@@ -370,6 +398,14 @@ class MapsInspeksi extends React.Component {
         }
     }
 
+    onValueChange(value) {
+        console.log(value)
+        this.setState({
+            selectedValue: value,
+            afdelingCode: value
+        });
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -378,6 +414,23 @@ class MapsInspeksi extends React.Component {
                     barStyle="light-content"
                     backgroundColor={Colors.tintColorPrimary}
                 />
+
+                <ModalPilihAfdeling
+                    onPressLanjut={() => {
+                        this.setState({
+                            showPilihAfdeling: false,
+                        }, () => this.loadMap())
+                    }}
+                    data={this.state.dataAfdeling}
+                    onValueChange={this.onValueChange.bind(this)}
+                    selectedValue={this.state.selectedValue}
+                    visible={this.state.showPilihAfdeling}
+                    onPressCancel={() =>
+                        this.setState({
+                            showPilihAfdeling: false
+                        }, () => {
+                            this.props.navigation.goBack()
+                        })} />
 
                 <ModalLoading
                     visible={this.state.modalLoading.showModal}
@@ -425,13 +478,13 @@ class MapsInspeksi extends React.Component {
                     onMapReady={() => { this.onMapReady() }}
                 >
                     <Circle
-                        center= {{
+                        center={{
                             latitude: this.state.region.latitude,
                             longitude: this.state.region.longitude
                         }}
                         fillColor="rgba(255, 255, 255, 0.3)"
                         strokeColor="rgba(255, 255, 255, 1)"
-                        radius= {this.state.gpsAccuracy}
+                        radius={this.state.gpsAccuracy}
                     />
                     {this.state.poligons.length > 0 && this.state.poligons.map((poly, index) => (
                         <View key={index}>
@@ -472,23 +525,23 @@ class MapsInspeksi extends React.Component {
                         borderRadius: 5,
                         backgroundColor: "rgba(0,0,0,0.3)"
                     }}>
-                        <View style={{alignSelf:"flex-end"}}>
+                        <View style={{ alignSelf: "flex-end" }}>
                             <Text style={{ color: "yellow" }}>
                                 Satellite : {this.state.nativeGPS.satelliteCount}
                             </Text>
                         </View>
-                        <View style={{alignSelf:"flex-end"}}>
+                        <View style={{ alignSelf: "flex-end" }}>
                             <Text style={{ color: "white" }}>
                                 Accuracy : {this.state.gpsAccuracy} meter
                             </Text>
                         </View>
-                        <View style={{alignSelf:"flex-end"}}>
+                        <View style={{ alignSelf: "flex-end" }}>
                             <Text style={{ color: "white" }}>
                                 <Text>Latitude : </Text>
                                 <Text>{this.state.latitude.toFixed(6)}</Text>
                             </Text>
                         </View>
-                        <View style={{alignSelf:"flex-end"}}>
+                        <View style={{ alignSelf: "flex-end" }}>
                             <Text style={{ color: "white" }}>
                                 <Text>Longitude : </Text>
                                 <Text>{this.state.longitude.toFixed(6)}</Text>

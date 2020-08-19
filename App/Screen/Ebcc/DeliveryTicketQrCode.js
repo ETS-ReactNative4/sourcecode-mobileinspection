@@ -6,10 +6,12 @@ import moment from 'moment'
 import { getTodayDate } from '../../Lib/Utils'
 import { NavigationActions, StackActions } from 'react-navigation';
 import TaskServices from "../../Database/TaskServices";
-import ModalAlert from "../../Component/ModalAlert";
+import ModalAlertQrCode from "../../Component/ModalAlertQrCode";
 import HeaderDefault from "../../Component/Header/HeaderDefault";
 import Colors from "../../Constant/Colors";
 import R from 'ramda';
+
+const defaultBarcodeTypes = [RNCamera.Constants.BarCodeType.qr];
 
 class Scanner extends Component {
   constructor(props) {
@@ -29,7 +31,13 @@ class Scanner extends Component {
       title: null,
       message: null,
       icon: null,
-      qrDecode: null
+      qrDecode: null,
+
+      barcodeType: '',
+      barcodeValue: '',
+      isBarcodeRead: false,
+      buttonText: 'Tutup',
+      isFocused: true
     };
 
 
@@ -41,35 +49,20 @@ class Scanner extends Component {
   };
 
   componentDidMount() {
+    this.focusListener = this.props.navigation.addListener('didFocus', () => {
+      this.setState({ isBarcodeRead: false, isFocused: true })
+    });
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
   }
 
   componentWillUnmount() {
+    this.focusListener.remove();
     BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
   }
 
   handleBackButtonClick() {
-    const data = TaskServices.getAllData('TR_LOGIN')
     const { navigation } = this.props;
-    if (data != undefined) {
-      if (data[0].USER_ROLE == 'FFB_GRADING_MILL') {
-        Promise.all([
-          navigation.dispatch(
-            StackActions.reset({
-              index: 0,
-              actions: [NavigationActions.navigate({ routeName: 'MainMenuMil' })]
-            })
-          )]).then(() => navigation.navigate('EbccQrCode'))
-      } else {
-        Promise.all([
-          navigation.dispatch(
-            StackActions.reset({
-              index: 0,
-              actions: [NavigationActions.navigate({ routeName: 'MainMenu' })]
-            })
-          )]).then(() => navigation.navigate('EbccQrCode'))
-      }
-    }
+    navigation.goBack(null);
     return true;
   }
 
@@ -78,30 +71,47 @@ class Scanner extends Component {
     //002-1-4122-235
     if (!this.state.showModal) {
       let decode = e.data;
-      this.setState({
-        showModal: true,
-        title: "Scan Delivery Ticket Berhasil",
-        message: "Kamu bisa lanjutkan untuk foto janjang",
-        icon: require('../../Images/icon/ic_scan_qrcode.png'),
-        qrDecode: decode
-      });
+      if (decode.length > 5) {
+        this.setState({
+          buttonText: 'TUTUP',
+          isBarcodeRead: false,
+          showModal: true,
+          title: "Scan Delivery Ticket Gagal",
+          message: "QR Code tidak sesuai",
+          icon: require('../../Images/icon/ic_scan_qrcode.png'),
+          qrDecode: decode
+        });
+      } else {
+        this.setState({
+          buttonText: 'LANJUT',
+          isBarcodeRead: true,
+          showModal: true,
+          title: "Scan Delivery Ticket Berhasil",
+          message: "Kamu bisa lanjutkan untuk foto janjang",
+          icon: require('../../Images/icon/ic_scan_qrcode.png'),
+          qrDecode: decode
+        });
+      }
+
     }
   };
 
   navigateScreen(screenName, decode) {
+
+    this.setState({
+      isFocused: false
+    })
+
     const navigation = this.props.navigation;
-    const resetAction = StackActions.reset({
-      index: 0,
-      actions: [NavigationActions.navigate({
-        routeName: screenName, params: {
-          statusScan: this.state.statusScan,
-          tphAfdWerksBlockCode: this.state.tphAfdWerksBlockCode,
-          deliveryTicket: decode,
-          reason: this.state.reason
-        }
-      })]
+
+    navigation.navigate(screenName, {
+      params: {
+        statusScan: this.state.statusScan,
+        tphAfdWerksBlockCode: this.state.tphAfdWerksBlockCode,
+        deliveryTicket: decode,
+        reason: this.state.reason
+      }
     });
-    navigation.dispatch(resetAction);
   }
 
   getLocation() {
@@ -141,37 +151,47 @@ class Scanner extends Component {
   };
 
   render() {
+
+    const { isFocused } = this.state;
+
     return (
       <View style={styles.container}>
         <StatusBar backgroundColor={Colors.tintColorPrimary} />
         <HeaderDefault title={'Scan Delivery Ticket'} onPress={() => this.handleBackButtonClick()} />
-        <ModalAlert
+        <ModalAlertQrCode
           icon={this.state.icon}
           visible={this.state.showModal}
-          closeText={this.state.qrDecode !== null ? "LANJUT" : "TUTUP"}
+          closeText={this.state.buttonText}
           onPressCancel={() => {
-            if (this.state.qrDecode !== null) {
-              this.navigateScreen('FotoJanjang', this.state.qrDecode);
-              this.setState({
-                showModal: false,
-                qrDecode: ''
-              })
-            }
             this.setState({
+              isBarcodeRead: false,
               showModal: false,
               qrDecode: null
             })
           }}
+          onPressButton={() => {
+            if (this.state.qrDecode !== null) {
+              if (this.state.buttonText == 'LANJUT') {
+                this.navigateScreen('FotoJanjang', this.state.qrDecode);
+                this.setState({
+                  showModal: false
+                })
+              } else {
+                console.log('Masuk Sini')
+                this.setState({ showModal: false, qrDecode: null })
+              }
+            }
+          }}
           title={this.state.title}
           message={this.state.message} />
 
-        <RNCamera
-          barCodeTypes={[RNCamera.Constants.BarCodeType.qr]}
+        {isFocused && <RNCamera
+          barCodeTypes={this.state.isBarcodeRead ? [] : defaultBarcodeTypes}
           flashMode={RNCamera.Constants.FlashMode.on}
           style={styles.preview}
           onBarCodeRead={this.onBarCodeRead}
           ref={cam => (this.camera = cam)}>
-        </RNCamera>
+        </RNCamera>}
       </View>
     );
   }

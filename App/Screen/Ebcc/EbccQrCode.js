@@ -8,8 +8,11 @@ import moment from 'moment'
 import { getTodayDate, isNotUserMill } from '../../Lib/Utils'
 import { NavigationActions, StackActions } from 'react-navigation';
 import TaskServices from "../../Database/TaskServices";
-import ModalAlert from "../../Component/ModalAlert";
+import ModalAlertQrCode from "../../Component/ModalAlertQrCode";
 import HeaderDefault from "../../Component/Header/HeaderDefault";
+
+const defaultBarcodeTypes = [RNCamera.Constants.BarCodeType.qr];
+
 
 class Scanner extends Component {
   constructor(props) {
@@ -23,7 +26,13 @@ class Scanner extends Component {
       title: null,
       message: null,
       icon: null,
-      qrDecode: null
+      qrDecode: null,
+
+      // your other states
+      barcodeType: '',
+      barcodeValue: null,
+      isBarcodeRead: false, //
+      isFocused: true
     };
 
 
@@ -35,10 +44,16 @@ class Scanner extends Component {
   };
 
   componentDidMount() {
+    this.focusListener = this.props.navigation.addListener('didFocus', () => {
+      console.log('Masuk Did Focus')
+      this.camera;
+      this.setState({ isFocused: true, isBarcodeRead: false, barcodeType: '', qrDecode: null })
+    });
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
   }
 
   componentWillUnmount() {
+    this.focusListener.remove();
     BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
   }
 
@@ -67,13 +82,14 @@ class Scanner extends Component {
     return true;
   }
 
-  onBarCodeRead = e => {
-    //tph-afd-werks-blockcode
-    //002-1-4122-235
+  onBarCodeRead = event => {
+    // //tph-afd-werks-blockcode
+    // //002-1-4122-235
     if (!this.state.showModal) {
-      let decode = base64.decode(e.data)
+      let decode = base64.decode(event.data)
       if (this.refRoleAuth(decode)) {
         this.setState({
+          isBarcodeRead: true,
           showModal: true,
           title: "Scan QR CODE TPH Berhasil",
           message: "Kamu bisa lanjutkan untuk scan delivery ticket",
@@ -83,6 +99,7 @@ class Scanner extends Component {
       }
       else {
         this.setState({
+          isBarcodeRead: true,
           showModal: true,
           title: "Bukan Wilayah Otorisasimu",
           message: "Kamu tidak bisa sampling EBCC di wilayah ini",
@@ -90,7 +107,9 @@ class Scanner extends Component {
         });
       }
     }
+
   };
+
 
   refRoleAuth(qrCode) {
     let qrCodeValue = qrCode.split("-");
@@ -140,18 +159,8 @@ class Scanner extends Component {
   }
 
   navigateScreen(screenName, decode) {
-    const navigation = this.props.navigation;
-    // const resetAction = StackActions.reset({
-    //   index: 0,
-    //   actions: [NavigationActions.navigate({
-    //     routeName: screenName, params: {
-    //       statusScan: 'AUTOMATIC',
-    //       tphAfdWerksBlockCode: decode,
-    //       reason: ''
-    //     }
-    //   })]
-    // });
-    navigation.navigate(screenName, {
+    this.setState({ isFocused: false })
+    this.props.navigation.navigate(screenName, {
       params: {
         statusScan: 'AUTOMATIC',
         tphAfdWerksBlockCode: decode,
@@ -203,52 +212,44 @@ class Scanner extends Component {
   }
 
   render() {
+
+    const { isBarcodeRead, isFocused } = this.state;
     return (
       <View style={styles.container}>
         <HeaderDefault title={'Scan TPH'} onPress={() => this.handleBackButtonClick()} />
-        <ModalAlert
+        <ModalAlertQrCode
           icon={this.state.icon}
           visible={this.state.showModal}
           closeText={this.state.qrDecode !== null ? "LANJUT" : "TUTUP"}
           onPressCancel={() => {
-            if (this.state.qrDecode !== null) {
-              this.navigateScreen('DeliveryTicketQrCode', this.state.qrDecode);
-
-              this.setState({
-                showModal: false,
-                qrDecode: ''
-              })
-            }
             this.setState({
+              isBarcodeRead: false,
               showModal: false,
               qrDecode: null
             })
           }}
+          onPressButton={() => {
+            if (this.state.qrDecode !== null) {
+              this.setState({
+                showModal: false,
+                isBarcodeRead: false,
+              })
+              this.navigateScreen('DeliveryTicketQrCode', this.state.qrDecode);
+            }
+          }
+          }
           title={this.state.title}
           message={this.state.message} />
 
-        <RNCamera
-          barCodeTypes={[RNCamera.Constants.BarCodeType.qr]}
+        {isFocused && <RNCamera
+          barCodeTypes={isBarcodeRead ? [] : defaultBarcodeTypes}
           flashMode={RNCamera.Constants.FlashMode.on}
           style={styles.preview}
           onBarCodeRead={this.onBarCodeRead}
-          ref={cam => (this.camera = cam)}
-        >
-          {/* <Text
-            style={{
-              backgroundColor: "white"
-            }}
-          >
-            {this.state.qrcode}
-          </Text> */}
+          ref={cam => (this.camera = cam)}>
+        </RNCamera>}
 
-          {/* {isNotUserMill() && <ActionButton style={{ marginEnd: -10, marginBottom: -10 }}
-            buttonColor={'transparent'}
-            onPress={() => { this.goingManual() }}
-            icon={<Image source={require('../../Images/icon-tdk-bs-scan.png')} style={{ height: 45, width: 45 }} />}>
-          </ActionButton>} */}
 
-        </RNCamera>
       </View>
     );
   }

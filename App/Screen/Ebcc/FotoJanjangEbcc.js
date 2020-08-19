@@ -31,12 +31,12 @@ class FotoJanjang extends Component {
   constructor(props) {
     super(props);
 
-    let params = props.navigation.state.params;
-    let tphAfdWerksBlockCode = R.clone(params.tphAfdWerksBlockCode)
-    console.log(tphAfdWerksBlockCode);
-    let deliveryTicket = R.clone(params.deliveryTicket)
-    let statusScan = R.clone(params.statusScan)
-    let reason = R.clone(params.reason)
+    const params = props.navigation.getParam('params');
+    
+    let tphAfdWerksBlockCode = params.tphAfdWerksBlockCode
+    let deliveryTicket = params.deliveryTicket
+    let statusScan = params.statusScan
+    let reason = params.reason
 
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     this.state = {
