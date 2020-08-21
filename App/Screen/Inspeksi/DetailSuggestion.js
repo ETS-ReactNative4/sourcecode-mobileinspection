@@ -8,6 +8,9 @@ import ButtonInspeksi from '../../Component/Suggestion/ButtonInspeksi';
 import { getImageBaseOnFindingCode, downloadImageSuggestion } from '../Sync/Download/DownloadImage';
 import { getTodayDate } from '../../Lib/Utils';
 import { retrieveData, storeData } from '../../Database/Resources';
+import * as geolib from 'geolib';
+
+import ModalAlert from '../../Component/ModalAlert';
 
 // NAVIGATION
 import { NavigationActions } from 'react-navigation';
@@ -24,7 +27,15 @@ export default class DetailSuggestion extends Component {
             dataTemuan: [],
             dataDetail: this.arrData,
             locationCode: '',
-            isFav: false
+            isFav: false,
+            latitude: 0.0,
+            longitude: 0.0,
+            modalAlert: {
+                showModal: false,
+                title: "",
+                message: "",
+                icon: null
+            },
         }
 
         this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
@@ -50,6 +61,31 @@ export default class DetailSuggestion extends Component {
             this._initData();
         }
     )
+
+    componentDidMount() {
+        this.getCurrentPosition();
+    }
+
+    getCurrentPosition() {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                var lat = parseFloat(position.coords.latitude);
+                var lon = parseFloat(position.coords.longitude);
+                this.setState({ latitude: lat, longitude: lon, fetchLocation: false });
+            },
+            (error) => {
+                // this.setState({ error: error.message, fetchingLocation: false })
+                let message = error && error.message ? error.message : 'Terjadi kesalahan ketika mencari lokasi anda !';
+                if (error && error.message == "No location provider available.") {
+                    message = "Mohon nyalakan GPS anda terlebih dahulu.";
+                }
+                this.setState({ fetchLocation: false })
+                // alert('Informasi', message);
+                // console.log(message);
+            }, // go here if error while fetch location
+            { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }, //enableHighAccuracy : aktif highaccuration , timeout : max time to getCurrentLocation, maximumAge : using last cache if not get real position
+        );
+    }
 
     componentWillUnmount() {
         this.willFocus.remove();
@@ -90,6 +126,14 @@ export default class DetailSuggestion extends Component {
         return (
 
             <View style={{ flex: 1 }}>
+
+                <ModalAlert
+                    icon={this.state.modalAlert.icon}
+                    visible={this.state.modalAlert.showModal}
+                    onPressCancel={() => this.setState({ modalAlert: { ...this.state.modalAlert, showModal: false } })}
+                    title={this.state.modalAlert.title}
+                    message={this.state.modalAlert.message} />
+
                 <ScrollView
                     showsVerticalScrollIndicator={false}
                     contentContainerStyle={{ paddingVertical: 16 }}
@@ -221,26 +265,50 @@ export default class DetailSuggestion extends Component {
 
     // REDIRECT TO GENBA/INSPEKSI PAGE
     redirectNextScreen(routeName) {
-
         const { dataDetail } = this.state;
-
-        if (routeName == 'genba') {
-            this.props.navigation.dispatch(NavigationActions.navigate({
-                routeName: 'Genba',
-                params: {
-                    inspectionType: 'genba',
-                    werksAfdBlock: dataDetail.WERKS + dataDetail.AFD_CODE + dataDetail.BLOCK_CODE,
-                    blockName: dataDetail.BLOCK_NAME
+        const werksAfdBlock = dataDetail.WERKS + dataDetail.AFD_CODE + dataDetail.BLOCK_CODE;
+        const polygon = TaskServices.findBy2('TR_POLYGON', 'werks_afd_block_code', werksAfdBlock);
+        if (polygon !== undefined) {
+            if (geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude }, polygon.coords)) {
+                if (routeName == 'genba') {
+                    this.props.navigation.dispatch(NavigationActions.navigate({
+                        routeName: 'Genba',
+                        params: {
+                            inspectionType: 'genba',
+                            werksAfdBlock: werksAfdBlock,
+                            blockName: dataDetail.BLOCK_NAME
+                        }
+                    }));
+                } else if (routeName == 'inspeksi') {
+                    this.props.navigation.dispatch(NavigationActions.navigate({
+                        routeName: 'BuatInspeksi',
+                        params: {
+                            werkAfdBlockCode: werksAfdBlock,
+                            latitude: this.state.latitude,
+                            longitude: this.state.longitude,
+                            inspectionType: 'normal'
+                        }
+                    }))
                 }
-            }));
-        } else if (routeName == 'inspeksi') {
-            this.props.navigation.dispatch(NavigationActions.navigate({
-                routeName: 'MapsInspeksi',
-                params: {
-                    werksAfdBlock: dataDetail.WERKS + dataDetail.AFD_CODE + dataDetail.BLOCK_CODE,
-                    blockName: dataDetail.BLOCK_NAME
+            } else {
+                this.setState({
+                    modalAlert: {
+                        showModal: true,
+                        title: 'Blok tidak match',
+                        message: "Kamu tidak berada di Blok " + dataDetail.BLOCK_NAME,
+                        icon: require('../../Images/ic-blm-input-lokasi.png')
+                    }
+                });
+            }
+        } else {
+            this.setState({
+                modalAlert: {
+                    showModal: true,
+                    title: 'Download Peta',
+                    message: "Kamu belum download Peta untuk blok ini",
+                    icon: require('../../Images/ic-blm-input-lokasi.png')
                 }
-            }))
+            });
         }
     }
 }
