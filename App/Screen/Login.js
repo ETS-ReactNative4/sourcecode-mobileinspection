@@ -30,7 +30,7 @@ import {
 import ModalAlert from '../Component/ModalAlert'
 import ModalLoading from '../Component/ModalLoading';
 import ServerName from '../Constant/ServerName'
-import { AlertContent } from '../Themes';
+import { AlertContent, Images } from '../Themes';
 import { storeData, removeData } from '../Database/Resources';
 import moment from 'moment'
 import { getCurrentUser } from '../Database/DatabaseServices';
@@ -41,7 +41,10 @@ import DeviceInfo from 'react-native-device-info';
 
 class Login extends Component {
 
+
+
     constructor(props) {
+
         super(props);
         this.serverNameIndex = 1;
         this.state = {
@@ -55,12 +58,14 @@ class Login extends Component {
             showModal: false,
             icon: '',
             logOut: props.navigation.getParam('exit'),
+            disableUsername: props.navigation.getParam('disableUsername'),
+            type: props.navigation.getParam('type'),
 
             modalLoading: {
                 showModal: false,
                 title: "Loading",
                 message: "Cek Status Login..."
-            }
+            },
         }
     }
 
@@ -133,6 +138,17 @@ class Login extends Component {
 
     componentDidMount() {
         removeData('typeApp');
+
+        console.log(this.state.type)
+
+        if (this.state.type == "expired") {
+            this.setState({
+                showModal: true,
+                message: "Ooops token expired, silahkan lakukan ",
+                title: "Token Expired",
+                icon: Images.ic_data_not_match
+            })   
+        }
     }
 
     async clearData() {
@@ -395,6 +411,7 @@ class Login extends Component {
                             hidden={true}
                             barStyle="light-content" />
                         <Form
+                            type={this.state.disableUsername}
                             onBtnClick={data => { this.onLogin(data.strEmail, data.strPassword, data.selectedServer) }} />
 
                         <ProgressDialog

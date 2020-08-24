@@ -1,11 +1,11 @@
-import React, {Component} from 'react';
-import {Image, StyleSheet, View} from 'react-native';
+import React, { Component } from 'react';
+import { Image, StyleSheet, View } from 'react-native';
 import ActionButton from 'react-native-action-button'
 import Icon2 from 'react-native-vector-icons/MaterialIcons'
 import Colors from '../../Constant/Colors'
-import {NavigationActions} from 'react-navigation';
+import { NavigationActions } from 'react-navigation';
 import TaskServices from '../../Database/TaskServices'
-import {Images} from '../../Themes';
+import { Images } from '../../Themes';
 
 export default class FindingScreen extends Component {
 
@@ -23,7 +23,7 @@ export default class FindingScreen extends Component {
     return (
       <View style={styles.container}>
         {/*<View style={{ height: 48, backgroundColor: 'grey' }} />*/}
-        <Image style={{ width: 300, height: 220 }} source={Images.img_no_data} />
+        <Image style={{ width: 300, height: 220, resizeMode: 'center' }} source={Images.img_no_data} />
 
         <ActionButton style={{ marginEnd: -10, marginBottom: -10 }}
           buttonColor={Colors.tintColor}

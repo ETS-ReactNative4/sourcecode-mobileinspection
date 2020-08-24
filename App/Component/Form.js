@@ -18,25 +18,28 @@ import { AlertContent, Images, Colors, Fonts } from '../Themes'
 import { storeData } from '../Database/Resources';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import moment from 'moment';
+import { getCurrentUser } from '../Database/DatabaseServices';
 
 class Form extends Component {
 
     // Prop type warnings
     static propTypes = {
         onBtnClick: PropTypes.func,
+        type: PropTypes.bool
     };
 
     // Defaults for props
     static defaultProps = {
         onBtnClick: () => { },
+        type: false
     };
 
-    constructor() {
+    constructor(props) {
         super();
         let currentYear = moment().format("YYYY");
         this.state = {
             currentYear,
-            strEmail: '',
+            strEmail: props.type ? getCurrentUser().USERNAME : '',
             strPassword: '',
             selectedServer: "1",
             title: 'Title',
@@ -113,9 +116,10 @@ class Form extends Component {
                     <Image source={Images.logo_pic} style={{ width: 250, height: 80, resizeMode: 'stretch', marginBottom: 30 }} />
                 </View>
 
-                <View style={styles.sectionInput}>
+                <View style={[styles.sectionInput, { backgroundColor: props.type ? "#D5D5F5" : "white" }]}>
                     <Image source={Images.ic_user} style={styles.iconInput} />
                     <TextInput
+                        editable={props.type ? false : true}
                         style={styles.inputBox}
                         underlineColorAndroid='rgba(0,0,0,0)'
                         placeholder="Email"

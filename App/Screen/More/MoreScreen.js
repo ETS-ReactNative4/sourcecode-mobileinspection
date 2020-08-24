@@ -73,9 +73,21 @@ export default class MoreScreen extends Component {
   logout() {
     NetInfo.isConnected.fetch().then(isConnected => {
       if (isConnected) {
+        if (this.checkStatusSync() > 0) {
+          this.props.navigation.navigate('Login', {
+            exit: 'true',
+            disableUsername: true,
+            type: 'notSync'
+          });
+        } else {
+          this.props.navigation.navigate('Login', {
+            exit: 'true',
+            disableUsername: false,
+            type: 'notSync'
+          });
+        }
         TaskServices.updateLogin('LOGOUT', "NONE");
         this.setState({ showConfirm: false });
-        this.props.navigation.navigate('Login', { exit: 'true' });
       } else {
         // alert('Tidak Ada Koneksi Internet');
         this.setState({
@@ -87,6 +99,33 @@ export default class MoreScreen extends Component {
         })
       }
     });
+  }
+
+  checkStatusSync() {
+
+    let TR_H_EBCC_VALIDATION = TaskServices.findAll("TR_H_EBCC_VALIDATION", "STATUS_SYNC", "N").length;
+    console.log("TR_H_EBCC_VALIDATION", TR_H_EBCC_VALIDATION)
+    let TR_D_EBCC_VALIDATION = TaskServices.findAll("TR_D_EBCC_VALIDATION", "STATUS_SYNC", "N").length;
+    console.log("TR_D_EBCC_VALIDATION", TR_D_EBCC_VALIDATION)
+
+    let TR_BLOCK_INSPECTION_H = TaskServices.findAll("TR_BLOCK_INSPECTION_H", "STATUS_SYNC", "N").length;
+    console.log("TR_BLOCK_INSPECTION_H", TR_BLOCK_INSPECTION_H)
+    let TR_BLOCK_INSPECTION_D = TaskServices.findAll("TR_BLOCK_INSPECTION_D", "STATUS_SYNC", "N").length;
+    console.log("TR_BLOCK_INSPECTION_D", TR_BLOCK_INSPECTION_D)
+    let TM_INSPECTION_TRACK = TaskServices.findAll("TM_INSPECTION_TRACK", "STATUS_SYNC", "N").length;
+    console.log("TM_INSPECTION_TRACK", TM_INSPECTION_TRACK)
+    let TR_GENBA_INSPECTION = TaskServices.findAll("TR_GENBA_INSPECTION", "STATUS_SYNC", "N").length;
+    console.log("TR_GENBA_INSPECTION", TR_GENBA_INSPECTION)
+
+    let TR_FINDING = TaskServices.findAll("TR_FINDING", "STATUS_SYNC", "N").length;
+    console.log("TR_FINDING", TR_FINDING)
+
+    let TR_IMAGE = TaskServices.findAll("TR_IMAGE", "STATUS_SYNC", "N").length;
+    console.log("TR_IMAGE", TR_IMAGE)
+
+    let count = (parseInt(TR_H_EBCC_VALIDATION) + parseInt(TR_D_EBCC_VALIDATION) + parseInt(TR_BLOCK_INSPECTION_H) + parseInt(TR_BLOCK_INSPECTION_D) + parseInt(TM_INSPECTION_TRACK) + parseInt(TR_GENBA_INSPECTION) + parseInt(TR_FINDING) + parseInt(TR_IMAGE));
+
+    return count;
   }
 
   render() {

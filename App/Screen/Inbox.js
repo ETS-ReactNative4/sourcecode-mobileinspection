@@ -93,6 +93,8 @@ export default class Inbox extends React.Component {
 			sources = Images.ic_get_rating;
 		} else if (item.CATEGORY == "KOMENTAR BARU") {
 			sources = Images.ic_get_comment;
+		} else if (item.CATEGORY == "MENTION BARU") {
+			sources = Images.ic_get_comment;
 		}
 
 

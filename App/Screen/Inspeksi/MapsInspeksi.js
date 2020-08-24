@@ -13,6 +13,7 @@ import { AlertContent} from '../../Themes';
 
 import * as geolib from 'geolib';
 import ModalPilihAfdeling from '../../Component/ModalPilihAfdeling';
+import TabRouter from 'react-navigation/src/routers/TabRouter';
 
 let polyMap = false;
 let LATITUDE = -2.1890660;
@@ -93,7 +94,7 @@ class MapsInspeksi extends React.Component {
         let user = TaskServices.getAllData('TR_LOGIN')[0];
 
         if (user.REFFERENCE_ROLE !== "AFD_CODE") {
-            let afdeling = TaskServices.findAll('TM_AFD', 'WERKS', user.CURR_WERKS);
+            let afdeling = TaskServices.findAll('TM_AFD', 'WERKS', user.CURR_WERKS).sorted('AFD_NAME', false);
 
             this.setState({
                 showPilihAfdeling: true,
