@@ -5,6 +5,88 @@ import Colors from "../Constant/Colors";
 import TaskServices from "../Database/TaskServices";
 import { Fonts, Images } from '../Themes'
 import { getPointLeaderBoard } from './Sync/Download/DownloadLeaderboard';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+
+const dataBA =
+    [
+        {
+            EST_NAME: 'GAWI INTI-1',
+            USERS:
+                [
+                    {
+                        USER_AUTH_CODE: '0111',
+                        MONTH: 20200831,
+                        LOCATION_CODE: '4122',
+                        POINT: 33,
+                        LAST_INSPECTION_DATE: 20200825090703,
+                        USER_ROLE: 'ASISTEN_LAPANGAN',
+                        RANK: 1,
+                        FULLNAME: 'BAMBANG S.',
+                        EMPLOYEE_NIK: '00001877',
+                        REF_ROLE: 'AFD_CODE',
+                        JOB: 'ASISTEN LAPANGAN',
+                        IMAGE_URL: 'http://image.tap-agri.com:5012/files/images-profile/0111/FP0111.jpg'
+                    },
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                ]
+        },
+        {
+            EST_NAME: 'GAWI INTI-2',
+            USERS:
+                [
+                    {
+                        USER_AUTH_CODE: '0111',
+                        MONTH: 20200831,
+                        LOCATION_CODE: '4122',
+                        POINT: 200,
+                        LAST_INSPECTION_DATE: 20200825090703,
+                        USER_ROLE: 'ASISTEN_LAPANGAN',
+                        RANK: 1,
+                        FULLNAME: 'BAMBANG.',
+                        EMPLOYEE_NIK: '00001877',
+                        REF_ROLE: 'AFD_CODE',
+                        JOB: 'ASISTEN LAPANGAN',
+                        IMAGE_URL: 'http://image.tap-agri.com:5012/files/images-profile/0111/FP0111.jpg'
+                    },
+                    {
+                        USER_AUTH_CODE: '0111',
+                        MONTH: 20200831,
+                        LOCATION_CODE: '4122',
+                        POINT: 100,
+                        LAST_INSPECTION_DATE: 20200825090703,
+                        USER_ROLE: 'ASISTEN_LAPANGAN',
+                        RANK: 2,
+                        FULLNAME: 'YUDA.',
+                        EMPLOYEE_NIK: '00001877',
+                        REF_ROLE: 'AFD_CODE',
+                        JOB: 'ASISTEN LAPANGAN',
+                        IMAGE_URL: 'http://image.tap-agri.com:5012/files/images-profile/0111/FP0111.jpg'
+                    },
+                    {
+                        USER_AUTH_CODE: '0111',
+                        MONTH: 20200831,
+                        LOCATION_CODE: '4122',
+                        POINT: 300,
+                        LAST_INSPECTION_DATE: 20200825090703,
+                        USER_ROLE: 'ASISTEN_LAPANGAN',
+                        RANK: 2,
+                        FULLNAME: 'DINA .',
+                        EMPLOYEE_NIK: '00001877',
+                        REF_ROLE: 'AFD_CODE',
+                        JOB: 'ASISTEN LAPANGAN',
+                        IMAGE_URL: 'http://image.tap-agri.com:5012/files/images-profile/0111/FP0111.jpg'
+                    },
+                    null,
+                    null,
+                    null
+                ]
+        }
+    ];
+
 
 export default class Leaderboard extends Component {
     constructor(props) {
@@ -12,6 +94,7 @@ export default class Leaderboard extends Component {
         let currentUser = TaskServices.getAllData('TR_LOGIN')[0];
         this.state = {
             dataBA: [],
+            indexBA: 0,
             dataPT: [],
             dataNational: [],
             isLoading: true,
@@ -29,10 +112,10 @@ export default class Leaderboard extends Component {
         NetInfo.isConnected.fetch().then(isConnected => {
             if (isConnected) {
                 getPointLeaderBoard().then((data) => {
-                    console.log(data)
+                    // console.log(data)
                     data.data.map(result => {
                         this.setState({
-                            dataBA: array_move(result.BA, 0, 1),
+                            dataBA: result.BA,
                             dataPT: array_move(result.PT, 0, 1),
                             dataNational: array_move(result.NATIONAL, 0, 1),
                             isLoading: false
@@ -56,7 +139,16 @@ export default class Leaderboard extends Component {
     }
 
 
-    renderRefRoleSelector(dataRank) {
+    renderRefRoleSelector(data) {
+
+        let dataRank;
+
+        if (this.state.refRole == 'BA') {
+            dataRank = data.USERS
+        } else {
+            dataRank = data
+        }
+
         return (
             <ImageBackground resizeMode={'stretch'} source={Images.img_background_leaderboard_1} style={{ flex: 6 }}>
                 {/* <Image source={Images.img_background_leaderboard} style={{ resizeMode: 'stretch', width: '100%', height: "100%", position: 'absolute', opacity: 1 }} /> */}
@@ -140,8 +232,31 @@ export default class Leaderboard extends Component {
                         </View>
                     </View>
 
-
                     <View style={{ flex: 9, alignItems: "center", justifyContent: "center" }}>
+
+                        {this.state.refRole == 'BA' && <View style={{ justifyContent: 'space-around', flexDirection: 'row', width: '100%', marginTop: 10 }}>
+                            <TouchableOpacity onPress={() => {
+                                if (this.state.indexBA !== 0) {
+                                    this.setState({
+                                        indexBA: this.state.indexBA - 1
+                                    })
+                                }
+                            }} style={{ height: 30, width: 30, backgroundColor: 'black', justifyContent: 'center', alignItems: 'center', borderRadius: 20 }}>
+                                <Icon size={24} color={'white'} name={'chevron-left'} />
+                            </TouchableOpacity>
+                            <Text style={{ fontFamily: Fonts.demi, fontSize: 22, marginHorizontal: 20, color: 'white' }}>{data.EST_NAME}</Text>
+                            <TouchableOpacity onPress={() => {
+                                if (this.state.dataBA.length - 1 > this.state.indexBA) {
+                                    this.setState({
+                                        indexBA: this.state.indexBA + 1
+                                    })
+                                }
+                            }}
+                                style={{ height: 30, width: 30, backgroundColor: 'black', justifyContent: 'center', alignItems: 'center', borderRadius: 20 }}>
+                                <Icon size={24} color={'white'} name={'chevron-right'} />
+                            </TouchableOpacity>
+                        </View>}
+
                         <View style={{
                             justifyContent: 'center',
                             flexDirection: 'row',
@@ -187,7 +302,7 @@ export default class Leaderboard extends Component {
                                                         fontSize: 18,
                                                         fontFamily: Fonts.bold, color: 'white', textAlign: "center", width: 90
                                                     }}>{item.FULLNAME}</Text>
-                                                    <Image source={source} style={{ marginTop: 5, height: 90, width: 90, borderRadius: 50, borderWidth: 2, borderColor: Colors.colorWhite }} />
+                                                    <Image source={source} style={{ marginTop: 5, height: 72, width: 72, borderRadius: 50, borderWidth: 2, borderColor: Colors.colorWhite }} />
                                                 </View>
 
                                                 <View style={{ height: 170, width: 90, justifyContent: 'flex-start' }}>
@@ -220,7 +335,7 @@ export default class Leaderboard extends Component {
                         </View>
                     </View>
                 </View >
-            </ImageBackground>
+            </ImageBackground >
 
         )
     }
@@ -362,7 +477,7 @@ export default class Leaderboard extends Component {
                 if (this.state.refRole == 'BA') {
                     return (
                         <View style={{ flex: 1 }}>
-                            {this.renderRefRoleSelector(this.state.dataBA)}
+                            {this.renderRefRoleSelector(this.state.dataBA[this.state.indexBA])}
                             <View style={{ flex: 4 }}>
                                 <ScrollView
                                     style={{
