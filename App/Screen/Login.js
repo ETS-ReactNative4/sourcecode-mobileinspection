@@ -140,6 +140,7 @@ class Login extends Component {
         removeData('typeApp');
 
         console.log(this.state.type)
+        console.log(this.state.disableUsername)
 
         if (this.state.type == "expired") {
             this.setState({

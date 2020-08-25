@@ -85,7 +85,7 @@ export default class Inbox extends React.Component {
 			sources = Images.ic_task_new;
 		} else if (item.CATEGORY == 'UPDATE PROGRESS') {
 			sources = Images.ic_task_wip;
-		} else if (item.CATEGORY == 'BELUM ADA RESPON') {
+		} else if (item.CATEGORY == 'BELUM ADA BATAS WAKTU') {
 			sources = Images.ic_task_no_response;
 		} else if (item.CATEGORY == "TUGAS SELESAI") {
 			sources = Images.ic_wait_rating;
@@ -111,6 +111,7 @@ export default class Inbox extends React.Component {
 		return (
 			// Swipeout component
 			<Swipeout
+				autoClose={true}
 				right={swipeoutBtns}>
 				<TouchableOpacity
 					style={{
@@ -148,13 +149,9 @@ export default class Inbox extends React.Component {
 		})
 	}
 
-	_deleteAllNotif() {
+	async _deleteAllNotif() {
 
-		const getAllData = TaskServices.getAllData("TR_NOTIFICATION_1");
-
-		getAllData.map(item => {
-			TaskServices.deleteRecordByPK('TR_NOTIFICATION_1', 'NOTIFICATION_ID', item.NOTIFICATION_ID);
-		})
+		await TaskServices.deleteAllData("TR_NOTIFICATION_1");
 
 		this.setState({
 			data: this.getNotif(),

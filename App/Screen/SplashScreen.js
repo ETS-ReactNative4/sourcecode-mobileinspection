@@ -47,14 +47,14 @@ class SplashScreen extends Component {
         header: null
     }
 
-    navigateScreen(screenName, disableUsername) {
+    navigateScreen(screenName, disableUsername, type) {
         const navigation = this.props.navigation;
         const resetAction = StackActions.reset({
             index: 0,
             actions: [NavigationActions.navigate({
                 routeName: screenName, params: {
                     disableUsername: disableUsername,
-                    type: 'expired'
+                    type: type
                 }
             })],
         });
@@ -69,7 +69,7 @@ class SplashScreen extends Component {
                 let data = TaskServices.getAllData('TR_LOGIN')
 
                 if (dateToday > dateExpired) {
-                    this.navigateScreen('Login', true);
+                    this.navigateScreen('Login', true, 'expired');
                 } else {
                     if (data !== undefined && data.length > 0) {
                         if (data[0].STATUS == 'LOGIN') {
@@ -79,14 +79,14 @@ class SplashScreen extends Component {
                                 this.navigateScreen('MainMenu');
                             }
                         } else {
-                            this.navigateScreen('Login', false);
+                            this.navigateScreen('Login', false, '');
                         }
                     } else {
-                        this.navigateScreen('Login', false);
+                        this.navigateScreen('Login', false, '');
                     }
                 }
             } else {
-                this.navigateScreen('Login', false);
+                this.navigateScreen('Login', false, '');
             }
         })
 

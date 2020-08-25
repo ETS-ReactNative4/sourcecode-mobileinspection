@@ -71,8 +71,12 @@ class Scanner extends Component {
     //002-1-4122-235
     if (!this.state.showModal) {
       let decode = e.data;
-      console.log(decode);
-      if (decode.length > 5) {
+      // console.log(decode);
+      
+      let isnum = /^\d+$/.test(decode);
+      console.log(isnum);
+
+      if (decode.length > 5 || !isnum) {
         this.setState({
           buttonText: 'TUTUP',
           isBarcodeRead: false,
