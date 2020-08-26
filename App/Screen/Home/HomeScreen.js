@@ -77,8 +77,8 @@ const ItemMenuHome = (props) => {
     <TouchableOpacity
       onPress={props.onPress}>
       <View style={[props.styles, {
-          alignItems: "center",
-          justifyContent: "center"
+        alignItems: "center",
+        justifyContent: "center"
       }]}>
         <View style={{ width: 48, height: 48, borderRadius: 25, padding: 10, backgroundColor: props.backgroundColor }}>
           <Image style={{ flex: 1, width: undefined, height: undefined }}
@@ -181,6 +181,8 @@ class HomeScreen extends React.Component {
     }
   }
 
+
+
   componentWillUnmount() {
     this.willFocus.remove();
   }
@@ -189,7 +191,7 @@ class HomeScreen extends React.Component {
   willFocus = this.props.navigation.addListener(
     'willFocus',
     () => {
-        this.syncChecker();
+      this.syncChecker();
       this.getProfileImage();
       this._createDataSuggestion();
       this._deleteDataSuggestion();
@@ -267,6 +269,7 @@ class HomeScreen extends React.Component {
     RNFS.mkdir(dirMaps);
 
     RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
+
   }
 
   async putFCMConfig() {
@@ -1137,76 +1140,106 @@ class HomeScreen extends React.Component {
   }
 
   renderMenu() {
-      if(this.state.currentUser.USER_ROLE.includes("ASISTEN")){
-          return (
-              <View style={{ backgroundColor: "white", flexDirection: "row", justifyContent: 'space-between', padding: 15 }}>
-                  <ItemMenuHome
-                      onPress={() => {
-                          // if (this.state.isSync) {
-                          //     this.props.navigation.navigate("PetaPanen")
-                          // } else {
-                          //     this.props.navigation.navigate('Sync')
-                          // }
-                        this.props.navigation.navigate("PetaPanen")
-                      }}
-                      name={"Peta\nPanen"}
-                      image={require('../../Images/icon/HomeScreen/icon_panen.png')}
-                      backgroundColor={"rgba(53,184,113,1)"} />
+    if (this.state.currentUser.USER_ROLE.includes("ASISTEN")) {
+      return (
+        <View style={{ backgroundColor: "white", flexDirection: "row", justifyContent: 'space-between', padding: 15 }}>
+          <ItemMenuHome
+            onPress={() => {
+              // if (this.state.isSync) {
+              //     this.props.navigation.navigate("PetaPanen")
+              // } else {
+              //     this.props.navigation.navigate('Sync')
+              // }
+              this.props.navigation.navigate("PetaPanen")
+            }}
+            name={"Peta\nPanen"}
+            image={require('../../Images/icon/HomeScreen/icon_panen.png')}
+            backgroundColor={"rgba(53,184,113,1)"} />
 
-                    <ItemMenuHome
-                      onPress={() => {
-                        // if (this.state.isSync) {
-                        //   this.props.navigation.navigate("Restan")
-                        // } else {
-                        //   this.props.navigation.navigate('Sync')
-                        // }
-                        this.props.navigation.navigate("Restan")
-                      }}
-                      name={"Peta\nRestan"}
-                      image={require('../../Images/icon/HomeScreen/icon_titik_restan.png')}
-                      backgroundColor={"rgba(217,52,72,1)"} />
+          <ItemMenuHome
+            onPress={() => {
+              // if (this.state.isSync) {
+              //   this.props.navigation.navigate("Restan")
+              // } else {
+              //   this.props.navigation.navigate('Sync')
+              // }
+              this.props.navigation.navigate("Restan")
+            }}
+            name={"Peta\nRestan"}
+            image={require('../../Images/icon/HomeScreen/icon_titik_restan.png')}
+            backgroundColor={"rgba(217,52,72,1)"} />
 
-                    <ItemMenuHome
-                      onPress={() => this.showWeeklySummary(true)}
-                      name={"Dashboard\nMingguan"}
-                      image={require('../../Images/icon/HomeScreen/icon_dashboard_kebun.png')}
-                      backgroundColor={"rgba(255,194,50,1)"} />
+          <ItemMenuHome
+            onPress={() => this.showWeeklySummary(true)}
+            name={"Dashboard\nMingguan"}
+            image={require('../../Images/icon/HomeScreen/icon_dashboard_kebun.png')}
+            backgroundColor={"rgba(255,194,50,1)"} />
 
-                    <ItemMenuHome
-                      onPress={() => { this.props.navigation.navigate('Leaderboard') }}
-                      name={"Peringkat\nAsisten"}
-                      image={require('../../Images/icon/HomeScreen/icon_rank.png')}
-                      backgroundColor={"rgba(52,162,188,1)"} />
+          <ItemMenuHome
+            onPress={() => { this.props.navigation.navigate('Leaderboard') }}
+            name={"Peringkat\nAsisten"}
+            image={require('../../Images/icon/HomeScreen/icon_rank.png')}
+            backgroundColor={"rgba(52,162,188,1)"} />
 
-                    <ItemMenuHome
-                      onPress={() => { this.props.navigation.navigate('MoreScreen') }}
-                      name={"Menu\nLainnya"}
-                      image={require('../../Images/icon/HomeScreen/icon_lainnya.png')}
-                      backgroundColor={"#ACACAC"}/>
-              </View>
-          )}
-
-      return(
-          <View style={{ backgroundColor: "white", flexDirection: "row", padding: 15 }}>
-              <ItemMenuHome
-                  onPress={() => this.showWeeklySummary(true)}
-                  name={"Dashboard\nMingguan"}
-                  image={require('../../Images/icon/HomeScreen/icon_dashboard_kebun.png')}
-                  backgroundColor={"rgba(255,194,50,1)"} />
-
-              <ItemMenuHome
-                  styles={{paddingLeft: 10}}
-                  onPress={() => { this.props.navigation.navigate('MoreScreen') }}
-                  name={"Menu\nLainnya"}
-                  image={require('../../Images/icon/HomeScreen/icon_lainnya.png')}
-                  backgroundColor={"#ACACAC"}/>
-          </View>
+          <ItemMenuHome
+            onPress={() => { this.props.navigation.navigate('MoreScreen') }}
+            name={"Menu\nLainnya"}
+            image={require('../../Images/icon/HomeScreen/icon_lainnya.png')}
+            backgroundColor={"#ACACAC"} />
+        </View>
       )
+    }
+
+    if (this.state.currentUser.USER_ROLE.includes("EM") || this.state.currentUser.USER_ROLE.includes("SEM_GM")) {
+      return (
+        <View style={{ backgroundColor: "white", flexDirection: "row", padding: 15 }}>
+
+          <ItemMenuHome
+            onPress={() => this.showWeeklySummary(true)}
+            name={"Dashboard\nMingguan"}
+            image={require('../../Images/icon/HomeScreen/icon_dashboard_kebun.png')}
+            backgroundColor={"rgba(255,194,50,1)"} />
+
+          <ItemMenuHome
+            styles={{ paddingLeft: 10 }}
+            onPress={() => { this.props.navigation.navigate('Leaderboard') }}
+            name={"Peringkat\nAsisten"}
+            image={require('../../Images/icon/HomeScreen/icon_rank.png')}
+            backgroundColor={"rgba(52,162,188,1)"} />
+
+          <ItemMenuHome
+            styles={{ paddingLeft: 10 }}
+            onPress={() => { this.props.navigation.navigate('MoreScreen') }}
+            name={"Menu\nLainnya"}
+            image={require('../../Images/icon/HomeScreen/icon_lainnya.png')}
+            backgroundColor={"#ACACAC"} />
+        </View>
+      )
+    }
+
+    return (
+      <View style={{ backgroundColor: "white", flexDirection: "row", padding: 15 }}>
+
+        <ItemMenuHome
+          onPress={() => this.showWeeklySummary(true)}
+          name={"Dashboard\nMingguan"}
+          image={require('../../Images/icon/HomeScreen/icon_dashboard_kebun.png')}
+          backgroundColor={"rgba(255,194,50,1)"} />
+
+        <ItemMenuHome
+          styles={{ paddingLeft: 10 }}
+          onPress={() => { this.props.navigation.navigate('MoreScreen') }}
+          name={"Menu\nLainnya"}
+          image={require('../../Images/icon/HomeScreen/icon_lainnya.png')}
+          backgroundColor={"#ACACAC"} />
+      </View>
+    )
+
 
 
   }
 
-  render(){
+  render() {
     // Because of content inset the scroll value will be negative on iOS so bring
     // it back to 0.
     const scrollY = Animated.add(

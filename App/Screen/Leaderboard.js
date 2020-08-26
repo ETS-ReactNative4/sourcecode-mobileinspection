@@ -7,85 +7,85 @@ import { Fonts, Images } from '../Themes'
 import { getPointLeaderBoard } from './Sync/Download/DownloadLeaderboard';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
-const dataBA =
-    [
-        {
-            EST_NAME: 'GAWI INTI-1',
-            USERS:
-                [
-                    {
-                        USER_AUTH_CODE: '0111',
-                        MONTH: 20200831,
-                        LOCATION_CODE: '4122',
-                        POINT: 33,
-                        LAST_INSPECTION_DATE: 20200825090703,
-                        USER_ROLE: 'ASISTEN_LAPANGAN',
-                        RANK: 1,
-                        FULLNAME: 'BAMBANG S.',
-                        EMPLOYEE_NIK: '00001877',
-                        REF_ROLE: 'AFD_CODE',
-                        JOB: 'ASISTEN LAPANGAN',
-                        IMAGE_URL: 'http://image.tap-agri.com:5012/files/images-profile/0111/FP0111.jpg'
-                    },
-                    null,
-                    null,
-                    null,
-                    null,
-                    null
-                ]
-        },
-        {
-            EST_NAME: 'GAWI INTI-2',
-            USERS:
-                [
-                    {
-                        USER_AUTH_CODE: '0111',
-                        MONTH: 20200831,
-                        LOCATION_CODE: '4122',
-                        POINT: 200,
-                        LAST_INSPECTION_DATE: 20200825090703,
-                        USER_ROLE: 'ASISTEN_LAPANGAN',
-                        RANK: 1,
-                        FULLNAME: 'BAMBANG.',
-                        EMPLOYEE_NIK: '00001877',
-                        REF_ROLE: 'AFD_CODE',
-                        JOB: 'ASISTEN LAPANGAN',
-                        IMAGE_URL: 'http://image.tap-agri.com:5012/files/images-profile/0111/FP0111.jpg'
-                    },
-                    {
-                        USER_AUTH_CODE: '0111',
-                        MONTH: 20200831,
-                        LOCATION_CODE: '4122',
-                        POINT: 100,
-                        LAST_INSPECTION_DATE: 20200825090703,
-                        USER_ROLE: 'ASISTEN_LAPANGAN',
-                        RANK: 2,
-                        FULLNAME: 'YUDA.',
-                        EMPLOYEE_NIK: '00001877',
-                        REF_ROLE: 'AFD_CODE',
-                        JOB: 'ASISTEN LAPANGAN',
-                        IMAGE_URL: 'http://image.tap-agri.com:5012/files/images-profile/0111/FP0111.jpg'
-                    },
-                    {
-                        USER_AUTH_CODE: '0111',
-                        MONTH: 20200831,
-                        LOCATION_CODE: '4122',
-                        POINT: 300,
-                        LAST_INSPECTION_DATE: 20200825090703,
-                        USER_ROLE: 'ASISTEN_LAPANGAN',
-                        RANK: 2,
-                        FULLNAME: 'DINA .',
-                        EMPLOYEE_NIK: '00001877',
-                        REF_ROLE: 'AFD_CODE',
-                        JOB: 'ASISTEN LAPANGAN',
-                        IMAGE_URL: 'http://image.tap-agri.com:5012/files/images-profile/0111/FP0111.jpg'
-                    },
-                    null,
-                    null,
-                    null
-                ]
-        }
-    ];
+// const dataBA =
+//     [
+//         {
+//             EST_NAME: 'GAWI INTI-1',
+//             USERS:
+//                 [
+//                     {
+//                         USER_AUTH_CODE: '0111',
+//                         MONTH: 20200831,
+//                         LOCATION_CODE: '4122',
+//                         POINT: 33,
+//                         LAST_INSPECTION_DATE: 20200825090703,
+//                         USER_ROLE: 'ASISTEN_LAPANGAN',
+//                         RANK: 1,
+//                         FULLNAME: 'BAMBANG S.',
+//                         EMPLOYEE_NIK: '00001877',
+//                         REF_ROLE: 'AFD_CODE',
+//                         JOB: 'ASISTEN LAPANGAN',
+//                         IMAGE_URL: 'http://image.tap-agri.com:5012/files/images-profile/0111/FP0111.jpg'
+//                     },
+//                     null,
+//                     null,
+//                     null,
+//                     null,
+//                     null
+//                 ]
+//         },
+//         {
+//             EST_NAME: 'GAWI INTI-2',
+//             USERS:
+//                 [
+//                     {
+//                         USER_AUTH_CODE: '0111',
+//                         MONTH: 20200831,
+//                         LOCATION_CODE: '4122',
+//                         POINT: 200,
+//                         LAST_INSPECTION_DATE: 20200825090703,
+//                         USER_ROLE: 'ASISTEN_LAPANGAN',
+//                         RANK: 1,
+//                         FULLNAME: 'BAMBANG.',
+//                         EMPLOYEE_NIK: '00001877',
+//                         REF_ROLE: 'AFD_CODE',
+//                         JOB: 'ASISTEN LAPANGAN',
+//                         IMAGE_URL: 'http://image.tap-agri.com:5012/files/images-profile/0111/FP0111.jpg'
+//                     },
+//                     {
+//                         USER_AUTH_CODE: '0111',
+//                         MONTH: 20200831,
+//                         LOCATION_CODE: '4122',
+//                         POINT: 100,
+//                         LAST_INSPECTION_DATE: 20200825090703,
+//                         USER_ROLE: 'ASISTEN_LAPANGAN',
+//                         RANK: 2,
+//                         FULLNAME: 'YUDA.',
+//                         EMPLOYEE_NIK: '00001877',
+//                         REF_ROLE: 'AFD_CODE',
+//                         JOB: 'ASISTEN LAPANGAN',
+//                         IMAGE_URL: 'http://image.tap-agri.com:5012/files/images-profile/0111/FP0111.jpg'
+//                     },
+//                     {
+//                         USER_AUTH_CODE: '0111',
+//                         MONTH: 20200831,
+//                         LOCATION_CODE: '4122',
+//                         POINT: 300,
+//                         LAST_INSPECTION_DATE: 20200825090703,
+//                         USER_ROLE: 'ASISTEN_LAPANGAN',
+//                         RANK: 2,
+//                         FULLNAME: 'DINA .',
+//                         EMPLOYEE_NIK: '00001877',
+//                         REF_ROLE: 'AFD_CODE',
+//                         JOB: 'ASISTEN LAPANGAN',
+//                         IMAGE_URL: 'http://image.tap-agri.com:5012/files/images-profile/0111/FP0111.jpg'
+//                     },
+//                     null,
+//                     null,
+//                     null
+//                 ]
+//         }
+//     ];
 
 
 export default class Leaderboard extends Component {
@@ -112,7 +112,7 @@ export default class Leaderboard extends Component {
         NetInfo.isConnected.fetch().then(isConnected => {
             if (isConnected) {
                 getPointLeaderBoard().then((data) => {
-                    // console.log(data)
+                    console.log("Result : ", data)
                     data.data.map(result => {
                         this.setState({
                             dataBA: result.BA,

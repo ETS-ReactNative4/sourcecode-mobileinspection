@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, ImageBackground, Linking, StatusBar, BackHandler } from 'react-native';
 import RNFetchBlob from 'rn-fetch-blob';
 import { NavigationActions, StackActions } from 'react-navigation';
-import { getPermission } from '../Lib/Utils'
+import { getPermission, checkStatusSync } from '../Lib/Utils'
 import TaskServices from '../Database/TaskServices'
 import {
     dirSummary,
@@ -79,7 +79,11 @@ class SplashScreen extends Component {
                                 this.navigateScreen('MainMenu');
                             }
                         } else {
-                            this.navigateScreen('Login', false, '');
+                            if (checkStatusSync() > 0) {
+                                this.navigateScreen('Login', true, 'notSync');
+                            } else {
+                                this.navigateScreen('Login', false, '');
+                            }
                         }
                     } else {
                         this.navigateScreen('Login', false, '');

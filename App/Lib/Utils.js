@@ -67,15 +67,15 @@ export function kirimImage(URL, Formdata) {
 		});
 }
 
-export function getSpecificSticker(status){
-    let imageGood = [require('../Images/stiker-A-1.png'), require('../Images/stiker-A-2.png'), require('../Images/stiker-A-3.png')];
+export function getSpecificSticker(status) {
+	let imageGood = [require('../Images/stiker-A-1.png'), require('../Images/stiker-A-2.png'), require('../Images/stiker-A-3.png')];
 
-    switch (status) {
-        case "good":
-            return imageGood[Math.floor(Math.random() * imageGood.length)];
-        default:
-            return null;
-    }
+	switch (status) {
+		case "good":
+			return imageGood[Math.floor(Math.random() * imageGood.length)];
+		default:
+			return null;
+	}
 }
 
 export function getSticker(score) {
@@ -541,4 +541,21 @@ export function isNotUserMill() {
 			return true
 		}
 	}
+}
+
+export function checkStatusSync() {
+
+	let TR_H_EBCC_VALIDATION = TaskServices.findAll("TR_H_EBCC_VALIDATION", "STATUS_SYNC", "N").length;
+	let TR_D_EBCC_VALIDATION = TaskServices.findAll("TR_D_EBCC_VALIDATION", "STATUS_SYNC", "N").length;
+
+	let TR_BLOCK_INSPECTION_H = TaskServices.findAll("TR_BLOCK_INSPECTION_H", "STATUS_SYNC", "N").length;
+	let TR_BLOCK_INSPECTION_D = TaskServices.findAll("TR_BLOCK_INSPECTION_D", "STATUS_SYNC", "N").length;
+	let TM_INSPECTION_TRACK = TaskServices.findAll("TM_INSPECTION_TRACK", "STATUS_SYNC", "N").length;
+	let TR_GENBA_INSPECTION = TaskServices.findAll("TR_GENBA_INSPECTION", "STATUS_SYNC", "N").length;
+	let TR_FINDING = TaskServices.findAll("TR_FINDING", "STATUS_SYNC", "N").length;
+	let TR_IMAGE = TaskServices.findAll("TR_IMAGE", "STATUS_SYNC", "N").length;
+
+	let count = (parseInt(TR_H_EBCC_VALIDATION) + parseInt(TR_D_EBCC_VALIDATION) + parseInt(TR_BLOCK_INSPECTION_H) + parseInt(TR_BLOCK_INSPECTION_D) + parseInt(TM_INSPECTION_TRACK) + parseInt(TR_GENBA_INSPECTION) + parseInt(TR_FINDING) + parseInt(TR_IMAGE));
+
+	return count;
 }
