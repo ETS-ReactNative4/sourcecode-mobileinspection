@@ -7,87 +7,6 @@ import { Fonts, Images } from '../Themes'
 import { getPointLeaderBoard } from './Sync/Download/DownloadLeaderboard';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
-// const dataBA =
-//     [
-//         {
-//             EST_NAME: 'GAWI INTI-1',
-//             USERS:
-//                 [
-//                     {
-//                         USER_AUTH_CODE: '0111',
-//                         MONTH: 20200831,
-//                         LOCATION_CODE: '4122',
-//                         POINT: 33,
-//                         LAST_INSPECTION_DATE: 20200825090703,
-//                         USER_ROLE: 'ASISTEN_LAPANGAN',
-//                         RANK: 1,
-//                         FULLNAME: 'BAMBANG S.',
-//                         EMPLOYEE_NIK: '00001877',
-//                         REF_ROLE: 'AFD_CODE',
-//                         JOB: 'ASISTEN LAPANGAN',
-//                         IMAGE_URL: 'http://image.tap-agri.com:5012/files/images-profile/0111/FP0111.jpg'
-//                     },
-//                     null,
-//                     null,
-//                     null,
-//                     null,
-//                     null
-//                 ]
-//         },
-//         {
-//             EST_NAME: 'GAWI INTI-2',
-//             USERS:
-//                 [
-//                     {
-//                         USER_AUTH_CODE: '0111',
-//                         MONTH: 20200831,
-//                         LOCATION_CODE: '4122',
-//                         POINT: 200,
-//                         LAST_INSPECTION_DATE: 20200825090703,
-//                         USER_ROLE: 'ASISTEN_LAPANGAN',
-//                         RANK: 1,
-//                         FULLNAME: 'BAMBANG.',
-//                         EMPLOYEE_NIK: '00001877',
-//                         REF_ROLE: 'AFD_CODE',
-//                         JOB: 'ASISTEN LAPANGAN',
-//                         IMAGE_URL: 'http://image.tap-agri.com:5012/files/images-profile/0111/FP0111.jpg'
-//                     },
-//                     {
-//                         USER_AUTH_CODE: '0111',
-//                         MONTH: 20200831,
-//                         LOCATION_CODE: '4122',
-//                         POINT: 100,
-//                         LAST_INSPECTION_DATE: 20200825090703,
-//                         USER_ROLE: 'ASISTEN_LAPANGAN',
-//                         RANK: 2,
-//                         FULLNAME: 'YUDA.',
-//                         EMPLOYEE_NIK: '00001877',
-//                         REF_ROLE: 'AFD_CODE',
-//                         JOB: 'ASISTEN LAPANGAN',
-//                         IMAGE_URL: 'http://image.tap-agri.com:5012/files/images-profile/0111/FP0111.jpg'
-//                     },
-//                     {
-//                         USER_AUTH_CODE: '0111',
-//                         MONTH: 20200831,
-//                         LOCATION_CODE: '4122',
-//                         POINT: 300,
-//                         LAST_INSPECTION_DATE: 20200825090703,
-//                         USER_ROLE: 'ASISTEN_LAPANGAN',
-//                         RANK: 2,
-//                         FULLNAME: 'DINA .',
-//                         EMPLOYEE_NIK: '00001877',
-//                         REF_ROLE: 'AFD_CODE',
-//                         JOB: 'ASISTEN LAPANGAN',
-//                         IMAGE_URL: 'http://image.tap-agri.com:5012/files/images-profile/0111/FP0111.jpg'
-//                     },
-//                     null,
-//                     null,
-//                     null
-//                 ]
-//         }
-//     ];
-
-
 export default class Leaderboard extends Component {
     constructor(props) {
         super(props);
@@ -144,7 +63,7 @@ export default class Leaderboard extends Component {
         let dataRank;
 
         if (this.state.refRole == 'BA') {
-            dataRank = data.USERS
+            dataRank = data.USERS[0].RANK == 1 ? array_move(data.USERS, 0, 1) : data.USERS
         } else {
             dataRank = data
         }
@@ -179,7 +98,8 @@ export default class Leaderboard extends Component {
                                     }}
                                     onPress={() => {
                                         this.setState({
-                                            refRole: "BA"
+                                            refRole: "BA",
+                                            indexBA: 0
                                         })
                                     }}>
                                     <Text style={{
@@ -271,7 +191,7 @@ export default class Leaderboard extends Component {
                                     } else {
                                         source = Images.ic_orang;
                                     }
-                                    if (idx == 0) {
+                                    if (item.RANK == 2) {
                                         return (
                                             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                                                 <View style={{ flex: 1, justifyContent: 'flex-end', marginBottom: 10 }}>
@@ -294,7 +214,7 @@ export default class Leaderboard extends Component {
                                                 </View>
                                             </View>
                                         )
-                                    } else if (idx == 1) {
+                                    } else if (item.RANK == 1) {
                                         return (
                                             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                                                 <View style={{ flex: 1, justifyContent: 'flex-end', marginBottom: 10 }}>
@@ -313,7 +233,7 @@ export default class Leaderboard extends Component {
                                                 </View>
                                             </View>
                                         )
-                                    } else if (idx == 2) {
+                                    } else if (item.RANK == 3) {
                                         return (
                                             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                                                 <View style={{ flex: 1, justifyContent: 'flex-end', marginBottom: 10 }}>

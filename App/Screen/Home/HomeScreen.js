@@ -105,6 +105,9 @@ class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
 
+
+    console.log("Param Back : ", props.navigation.getParam('class'));
+
     let currentUser = TaskServices.getAllData('TR_LOGIN');
 
     this.extraFilter = "";
@@ -177,11 +180,12 @@ class HomeScreen extends React.Component {
         this.setState({ isVisibleSummary: true });
       } else {
         this.props.navigation.navigate('Sync')
+        this.setState({
+          loadAll: true
+        })
       }
     }
   }
-
-
 
   componentWillUnmount() {
     this.willFocus.remove();
@@ -270,6 +274,15 @@ class HomeScreen extends React.Component {
 
     RNFS.copyFile(TaskServices.getPath(), `${dirDatabase}/${'data.realm'}`);
 
+  }
+
+  _backFromDetail = data => {
+    console.log('Data : ', data)
+    if (data != undefined) {
+      if (data) {
+        this.setState({ loadAll: false });
+      }
+    }
   }
 
   async putFCMConfig() {
@@ -549,7 +562,7 @@ class HomeScreen extends React.Component {
           data: [],
           page: 0,
           dataSet: data,
-          isFilter: true
+          isFilter: false
         }, function () {
           // call the function to pull initial 12 records
           this.addRecords(0);
@@ -912,11 +925,11 @@ class HomeScreen extends React.Component {
   onClickItem(id) {
     let images = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', id);
     if (images !== undefined) {
-      this.props.navigation.navigate('DetailFinding', { ID: id })
+      this.props.navigation.navigate('DetailFinding', { _backFromDetail: this._backFromDetail, ID: id })
     } else {
       this.getImageBaseOnFindingCode(id)
       setTimeout(() => {
-        this.props.navigation.navigate('DetailFinding', { ID: id })
+        this.props.navigation.navigate('DetailFinding', { _backFromDetail: this._backFromDetail, ID: id })
       }, 3000);
     }
   }
@@ -993,7 +1006,12 @@ class HomeScreen extends React.Component {
         <Header
           notif={this.state.notifCount}
           divDays={this.state.divDays}
-          onPressLeft={() => this.props.navigation.navigate('Sync')}
+          onPressLeft={() => {
+            this.props.navigation.navigate('Sync')
+            this.setState({
+              loadAll: true
+            })
+          }}
           onPressRight={() => this.props.navigation.navigate('Inbox')}
           title={'Beranda'}
           isNotUserMill={isNotUserMill()} />
@@ -1002,7 +1020,12 @@ class HomeScreen extends React.Component {
         <View style={styles.sectionTimeline}>
           <Text style={styles.textTimeline}>Temuan di Wilayahmu</Text>
           <View style={styles.rightSection}>
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('Filter', { _changeFilterList: this._changeFilterList })} >
+            <TouchableOpacity onPress={() => {
+              this.setState({
+                loadAll: true
+              })
+              this.props.navigation.navigate('Filter', { _changeFilterList: this._changeFilterList })
+            }} >
               <Image style={{ width: 22, height: 22, marginRight: 16, marginTop: 1 }} source={changeIconFilter(this.state.isFilter)} />
             </TouchableOpacity>
           </View>
@@ -1334,7 +1357,13 @@ class HomeScreen extends React.Component {
             <Header
               notif={this.state.notifCount}
               divDays={this.state.divDays}
-              onPressLeft={() => this.props.navigation.navigate('Sync')}
+              onPressLeft={() => {
+                this.props.navigation.navigate('Sync')
+                this.setState({
+                  loadAll: true
+                })
+              }
+              }
               onPressRight={() => this.props.navigation.navigate('Inbox')}
               title={'Beranda'}
               isNotUserMill={isNotUserMill()} />

@@ -113,6 +113,8 @@ class DetailFindingScreenRedesign extends Component {
 
     //Fumc Handle Back Press (Aminju)
     handleBackButtonClick() {
+        const isBack = true;
+        this.props.navigation.state.params._backFromDetail(isBack);
         this.props.navigation.goBack();
         return true;
     }
