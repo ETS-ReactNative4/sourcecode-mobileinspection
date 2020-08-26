@@ -85,7 +85,7 @@ export default class Inbox extends React.Component {
 			sources = Images.ic_task_new;
 		} else if (item.CATEGORY == 'UPDATE PROGRESS') {
 			sources = Images.ic_task_wip;
-		} else if (item.CATEGORY == 'BELUM ADA BATAS WAKTU') {
+		} else if (item.CATEGORY == 'LEWAT BATAS WAKTU') {
 			sources = Images.ic_task_no_response;
 		} else if (item.CATEGORY == 'BELUM ADA RESPON') {
 			sources = Images.ic_task_no_response;
