@@ -23,7 +23,7 @@ export default class FindingScreen extends Component {
     return (
       <View style={styles.container}>
         {/*<View style={{ height: 48, backgroundColor: 'grey' }} />*/}
-        <Image style={{ width: 300, height: 220, resizeMode: 'center' }} source={Images.img_no_data} />
+        <Image style={{ width: 300, height: 220 }} source={Images.img_no_data} />
 
         <ActionButton style={{ marginEnd: -10, marginBottom: -10 }}
           buttonColor={Colors.tintColor}
