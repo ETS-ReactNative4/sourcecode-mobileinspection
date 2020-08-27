@@ -1,11 +1,11 @@
-import React, {Component} from 'react';
-import {FlatList, Image, Keyboard, NetInfo, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import React, { Component } from 'react';
+import { FlatList, Image, Keyboard, NetInfo, Text, TextInput, TouchableOpacity, View, BackHandler } from 'react-native';
 import Colors from "../../Constant/Colors";
 import Icon from "react-native-vector-icons/Ionicons";
 import Icon1 from '../../Component/VectorIcon'
 import TaskServices from "../../Database/TaskServices";
 import moment from 'moment'
-import {downloadProfileImage} from "../Sync/Download/Image/Profile";
+import { downloadProfileImage } from "../Sync/Download/Image/Profile";
 
 let ic_org_placeholder = require('../../Images/ic-orang.png');
 
@@ -47,6 +47,8 @@ export default class HomeScreenComment extends Component {
 
             taggedUser: [],
         }
+
+        this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     }
 
     componentDidMount() {
@@ -55,9 +57,22 @@ export default class HomeScreenComment extends Component {
         this.getProfileImage();
     }
 
-    getProfileImage(){
+    componentWillMount() {
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+    }
+
+    componentWillUnmount() {
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+    }
+
+    handleBackButtonClick() {
+        this.props.navigation.goBack(null);
+        return true;
+    }
+
+    getProfileImage() {
         let commentData = TaskServices.findBy("TR_FINDING_COMMENT", "FINDING_CODE", this.state.FINDING_CODE);
-        commentData.map((commentModel)=>{
+        commentData.map((commentModel) => {
             NetInfo.isConnected.fetch().then(isConnected => {
                 if (isConnected) {
                     downloadProfileImage(commentModel.USER_AUTH_CODE);
@@ -181,7 +196,7 @@ export default class HomeScreenComment extends Component {
                                     </View>
                                     <View style={{ flex: 1, justifyContent: 'center' }}>
                                         <Text style={{ fontSize: 14, fontWeight: '600', color: 'black' }}>{item.FULLNAME}</Text>
-                                        <Text style={{ fontSize: 11, color: '#bdbdbd', marginTop: 4 }}>{item.USER_ROLE.replace(/_/g," ")}</Text>
+                                        <Text style={{ fontSize: 11, color: '#bdbdbd', marginTop: 4 }}>{item.USER_ROLE.replace(/_/g, " ")}</Text>
                                     </View>
                                 </View>
                             </TouchableOpacity>
@@ -199,26 +214,26 @@ export default class HomeScreenComment extends Component {
                 tempComment.map((comment, index) => {
                     if (comment.includes("@" + userTagged.FULLNAME)) {
                         let tempSplit = comment.split("@" + userTagged.FULLNAME);
-                        tempSplit.splice(1,0, "@"+userTagged.FULLNAME);
-                        if(tempComment.length === 1){
+                        tempSplit.splice(1, 0, "@" + userTagged.FULLNAME);
+                        if (tempComment.length === 1) {
                             tempComment = tempSplit;
                         }
                         else {
-                            tempComment.splice(index,1,...tempSplit);
+                            tempComment.splice(index, 1, ...tempSplit);
                         }
                     }
                 });
             });
             let finalText = <Text>{
-                tempComment.map((data)=>{
-                    if(data.charAt(0) === "@"){
-                        return <Text style={{color:Colors.taggedUser}}>{data}</Text>
+                tempComment.map((data) => {
+                    if (data.charAt(0) === "@") {
+                        return <Text style={{ color: Colors.taggedUser }}>{data}</Text>
                     }
                     else {
                         return <Text>{data}</Text>
                     }
                 })
-                }</Text>
+            }</Text>
 
             return finalText
         }
@@ -318,12 +333,12 @@ export default class HomeScreenComment extends Component {
                         </TextInput>
                     </View>
                     <TouchableOpacity onPress={() => {
-                        if(this.state.commentValue.length > 0){
+                        if (this.state.commentValue.length > 0) {
                             this.insertComment()
                         }
                     }}>
                         <Image
-                            style={{width: 25, height: 25}}
+                            style={{ width: 25, height: 25 }}
                             source={require('../../Images/icon/Comment/Icon_Comment_Send.png')}
                         />
                     </TouchableOpacity>

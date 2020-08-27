@@ -1,5 +1,5 @@
 import React from 'react';
-import { StatusBar, StyleSheet, Text, View } from 'react-native';
+import { StatusBar, StyleSheet, Text, View, BackHandler } from 'react-native';
 
 import MapView, { Marker, Polygon, PROVIDER_GOOGLE, ProviderPropType } from 'react-native-maps';
 import Colors from '../../Constant/Colors'
@@ -20,8 +20,6 @@ class LihatLokasi extends React.Component {
 
         const data = this.props.navigation.getParam('findingData');
 
-        console.log('data FInding : ', data)
-
         this.state = {
             findingData: data,
             currentLatitude: LATITUDE,
@@ -39,6 +37,21 @@ class LihatLokasi extends React.Component {
             message: 'Sedang mencari lokasi kamu nih.',
             icon: '',
         };
+
+        this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
+    }
+
+    componentWillMount() {
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+    }
+
+    componentWillUnmount() {
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+    }
+
+    handleBackButtonClick() {
+        this.props.navigation.goBack(null);
+        return true;
     }
 
     static navigationOptions = ({ navigation }) => {
