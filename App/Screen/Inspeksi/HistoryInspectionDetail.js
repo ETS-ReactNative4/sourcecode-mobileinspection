@@ -478,6 +478,10 @@ export default class HistoryInspectionDetail extends React.Component {
         }
     }
 
+    _backFromDetail = data => {
+        console.log('Data : ', data)
+    }
+
     renderTemuan = (item, idx) => {
         let dataTemuan = Taskservices.findBy2('TR_FINDING', 'FINDING_CODE', item)
         if (dataTemuan !== undefined) {
@@ -491,7 +495,7 @@ export default class HistoryInspectionDetail extends React.Component {
             return (
                 <TouchableOpacity
                     key={idx}
-                    onPress={() => this.props.navigation.navigate('DetailFinding', { ID: dataTemuan.FINDING_CODE })}
+                    onPress={() => this.props.navigation.navigate('DetailFinding', { _backFromDetail: this._backFromDetail, ID: dataTemuan.FINDING_CODE })}
                     style={styles.sectionCardView}>
                     {showImage}
                     <View style={styles.sectionDesc} >
