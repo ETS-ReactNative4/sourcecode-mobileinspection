@@ -65,14 +65,18 @@ export default class ListFinding extends Component {
     }
   }
 
+  _backFromDetail = data => {
+    console.log('Data : ', data)
+  }
+
   onClickItem = (id) => {
     var images = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', id);
     if (images !== undefined) {
-      this.props.navigation.navigate('DetailFinding', { ID: id })
+      this.props.navigation.navigate('DetailFinding', { _backFromDetail: this._backFromDetail, ID: id })
     } else {
       getImageBaseOnFindingCode(id);
       setTimeout(() => {
-        this.props.navigation.navigate('DetailFinding', { ID: id })
+        this.props.navigation.navigate('DetailFinding', { _backFromDetail: this._backFromDetail, ID: id })
       }, 3000);
     }
   }

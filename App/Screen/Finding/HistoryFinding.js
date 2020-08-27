@@ -112,6 +112,11 @@ export default class HistoryFinding extends Component {
       });
   }
 
+
+  _backFromDetail = data => {
+    console.log('Data : ', data)
+  }
+
   /** 
    * EVENT CLICK ITEM
    * ADD BY AMINJU 2019/12/18
@@ -119,11 +124,11 @@ export default class HistoryFinding extends Component {
   onPressItem(id) {
     var images = TaskServices.findBy2('TR_IMAGE', 'TR_CODE', id);
     if (images !== undefined) {
-      this.props.navigation.navigate('DetailFinding', { ID: id })
+      this.props.navigation.navigate('DetailFinding', { _backFromDetail: this._backFromDetail, ID: id })
     } else {
       getImageBaseOnFindingCode(id);
       setTimeout(() => {
-        this.props.navigation.navigate('DetailFinding', { ID: id })
+        this.props.navigation.navigate('DetailFinding', { _backFromDetail: this._backFromDetail, ID: id })
       }, 3000);
     }
   }
