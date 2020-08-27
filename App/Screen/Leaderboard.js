@@ -63,7 +63,11 @@ export default class Leaderboard extends Component {
         let dataRank;
 
         if (this.state.refRole == 'BA') {
-            dataRank = data.USERS[0].RANK == 1 ? array_move(data.USERS, 0, 1) : data.USERS
+            if (data.USERS.length > 0) {
+                dataRank = data.USERS[0].RANK == 1 ? array_move(data.USERS, 0, 1) : data.USERS
+            } else {
+                dataRank = data.USERS
+            }
         } else {
             dataRank = data
         }
@@ -98,8 +102,7 @@ export default class Leaderboard extends Component {
                                     }}
                                     onPress={() => {
                                         this.setState({
-                                            refRole: "BA",
-                                            indexBA: 0
+                                            refRole: "BA"
                                         })
                                     }}>
                                     <Text style={{

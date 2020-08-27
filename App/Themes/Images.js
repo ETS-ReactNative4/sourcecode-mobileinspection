@@ -39,6 +39,7 @@ const images = {
   ic_wait_rating: require('../Images/icon/icon_menunggu_rating.png'),
   ic_task_new: require('../Images/icon/ic_task_new.png'),
   ic_task_no_response: require('../Images/icon/ic_task_no_response.png'),
+  ic_task_overdue: require('../Images/icon/ic_task_overdue.png'),
   ic_task_wip: require('../Images/icon/ic_task_wip.png'),
   ic_get_rating: require('../Images/icon/icon_rating.png'),
   ic_get_comment: require('../Images/ic_inbox_getcomment.png'),

@@ -179,7 +179,9 @@ export default class HistoryEbcc extends Component {
 
   _renderNoData() {
     return (
-      <Image style={{ justifyContent: 'center', alignSelf: 'center', marginTop: 120, width: 300, height: 220 }} source={require('../../Images/img-no-data.png')} />
+      <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+        <Image style={{ width: 300, height: 220 }} source={require('../../Images/img-no-data.png')} />
+      </View>
     )
   }
 

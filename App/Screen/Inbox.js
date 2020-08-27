@@ -61,12 +61,12 @@ export default class Inbox extends React.Component {
 		notifCount = (notifCount >= 100) ? "99+" : notifCount + "";
 		this.setState({ data: this.getNotif() });
 		this.props.navigation.setParams({ notifCount: notifCount })
-		this.props.navigation.navigate('DetailFinding', { ID: notifData.FINDING_CODE })
+		this.props.navigation.navigate('DetailFinding', { _backFromDetail: this._backFromDetail, ID: notifData.FINDING_CODE })
 
 		if (notifData.CATEGORY == "KOMENTAR BARU") {
-			this.props.navigation.navigate("DetailFinding", { findingCode: notifData.FINDING_CODE })
+			this.props.navigation.navigate("DetailFinding", { _backFromDetail: this._backFromDetail, findingCode: notifData.FINDING_CODE })
 		} else {
-			this.props.navigation.navigate('DetailFinding', { ID: notifData.FINDING_CODE })
+			this.props.navigation.navigate('DetailFinding', { _backFromDetail: this._backFromDetail, ID: notifData.FINDING_CODE })
 		}
 	}
 
@@ -86,7 +86,7 @@ export default class Inbox extends React.Component {
 		} else if (item.CATEGORY == 'UPDATE PROGRESS') {
 			sources = Images.ic_task_wip;
 		} else if (item.CATEGORY == 'LEWAT BATAS WAKTU') {
-			sources = Images.ic_task_no_response;
+			sources = Images.ic_task_overdue;
 		} else if (item.CATEGORY == 'BELUM ADA RESPON') {
 			sources = Images.ic_task_no_response;
 		} else if (item.CATEGORY == "TUGAS SELESAI") {
@@ -98,7 +98,6 @@ export default class Inbox extends React.Component {
 		} else if (item.CATEGORY == "MENTION BARU") {
 			sources = Images.ic_get_comment;
 		}
-
 
 		// Buttons
 		var swipeoutBtns = [
@@ -141,6 +140,10 @@ export default class Inbox extends React.Component {
 				</TouchableOpacity>
 			</Swipeout>
 		)
+	}
+
+	_backFromDetail = data => {
+		console.log('Data : ', data)
 	}
 
 	_deleteNotif(notifID) {
