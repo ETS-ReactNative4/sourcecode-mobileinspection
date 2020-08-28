@@ -14,6 +14,7 @@ export default class Leaderboard extends Component {
         this.state = {
             dataBA: [],
             indexBA: 0,
+            indexPT: 0,
             dataPT: [],
             dataNational: [],
             isLoading: true,
@@ -31,13 +32,12 @@ export default class Leaderboard extends Component {
         NetInfo.isConnected.fetch().then(isConnected => {
             if (isConnected) {
                 getPointLeaderBoard().then((data) => {
+                    console.log('Data Peringkat : ', data)
                     data.data.map(result => {
-
-                        console.log("Result : ", result.BA.length)
                         this.setState({
                             dataBA: result.BA,
-                            dataPT: array_move(result.PT, 0, 1),
-                            dataNational: array_move(result.NATIONAL, 0, 1),
+                            dataPT: result.PT,
+                            dataNational: result.NATIONAL,
                             isLoading: false
                         })
                     })
@@ -61,12 +61,9 @@ export default class Leaderboard extends Component {
 
     renderRefRoleSelector(data) {
 
-        console.log(data);
-
         let dataRank;
 
-        if (this.state.refRole == 'BA') {
-            console.log(data.USERS.length);
+        if (this.state.refRole == 'BA' || this.state.refRole == 'PT') {
             if (data.USERS.length > 0) {
                 dataRank = data.USERS
             } else {
@@ -180,6 +177,34 @@ export default class Leaderboard extends Component {
                                 if (finalIndex !== null) {
                                     this.setState({
                                         indexBA: finalIndex
+                                    })
+                                }
+
+                            }}
+                                style={{ height: 30, width: 30, backgroundColor: 'black', justifyContent: 'center', alignItems: 'center', borderRadius: 20 }}>
+                                <Icon size={24} color={'white'} name={'chevron-right'} />
+                            </TouchableOpacity>
+                        </View>}
+
+                        {this.state.refRole == 'PT' && <View style={{ justifyContent: 'space-around', flexDirection: 'row', width: '100%', marginTop: 10 }}>
+                            <TouchableOpacity onPress={() => {
+                                let finalIndex = null;
+                                finalIndex = this.decreaseIndex(this.state.indexPT)
+                                if (finalIndex !== null) {
+                                    this.setState({
+                                        indexPT: finalIndex
+                                    })
+                                }
+                            }} style={{ height: 30, width: 30, backgroundColor: 'black', justifyContent: 'center', alignItems: 'center', borderRadius: 20 }}>
+                                <Icon size={24} color={'white'} name={'chevron-left'} />
+                            </TouchableOpacity>
+                            <Text style={{ fontFamily: Fonts.demi, fontSize: 18, marginHorizontal: 10, color: 'white', alignSelf: 'center', textAlign: 'center' }}>{data.COMP_NAME}</Text>
+                            <TouchableOpacity onPress={() => {
+                                let finalIndex = null;
+                                finalIndex = this.increaseIndex(this.state.indexPT, this.state.dataPT.length - 1);
+                                if (finalIndex !== null) {
+                                    this.setState({
+                                        indexPT: finalIndex
                                     })
                                 }
 
@@ -391,15 +416,16 @@ export default class Leaderboard extends Component {
                 } else if (this.state.refRole == 'PT') {
                     return (
                         <View style={{ flex: 1 }}>
-                            {this.renderRefRoleSelector(this.state.dataPT)}
+                            {this.renderRefRoleSelector(this.state.dataPT[this.state.indexPT])}
                             <View style={{ flex: 4 }}>
-                                <ScrollView
+                                {this.state.dataPT[this.state.indexPT].USERS.length > 0 && <ScrollView
                                     style={{
                                         paddingVertical: 15,
                                         paddingHorizontal: 15,
                                     }}>
-                                    {this.renderRank(this.state.dataPT)}
+                                    {this.renderRank(this.state.dataPT[this.state.indexPT].USERS)}
                                 </ScrollView>
+                                }
                             </View>
                         </View>
                     )
