@@ -401,7 +401,7 @@ export default class Leaderboard extends Component {
                     return (
                         <View style={{ flex: 1 }}>
                             {this.renderRefRoleSelector(this.state.dataBA[this.state.indexBA])}
-                            <View style={{ flex: 4 }}>
+                            <View style={{ flex: 2.5 }}>
                                 {this.state.dataBA[this.state.indexBA].USERS.length > 0 && <ScrollView
                                     style={{
                                         paddingVertical: 15,
@@ -417,7 +417,7 @@ export default class Leaderboard extends Component {
                     return (
                         <View style={{ flex: 1 }}>
                             {this.renderRefRoleSelector(this.state.dataPT[this.state.indexPT])}
-                            <View style={{ flex: 4 }}>
+                            <View style={{ flex: 2.5 }}>
                                 {this.state.dataPT[this.state.indexPT].USERS.length > 0 && <ScrollView
                                     style={{
                                         paddingVertical: 15,
@@ -433,7 +433,7 @@ export default class Leaderboard extends Component {
                     return (
                         <View style={{ flex: 1 }}>
                             {this.renderRefRoleSelector(this.state.dataNational)}
-                            <View style={{ flex: 4 }}>
+                            <View style={{ flex: 2.5 }}>
                                 <ScrollView
                                     style={{
                                         paddingVertical: 15,
