@@ -9,7 +9,7 @@ import ModalLoading from '../../Component/ModalLoading'
 import ModalAlert from '../../Component/ModalAlert';
 import TaskServices from '../../Database/TaskServices';
 import { removeData, retrieveData, storeData } from '../../Database/Resources';
-import { AlertContent} from '../../Themes';
+import { AlertContent } from '../../Themes';
 
 import * as geolib from 'geolib';
 import ModalPilihAfdeling from '../../Component/ModalPilihAfdeling';
@@ -21,9 +21,14 @@ let LONGITUDE = 111.3609873;
 
 class MapsInspeksi extends React.Component {
 
+
+
     constructor(props) {
         super(props);
 
+        const radLat = TaskServices.findBy2('TM_TIME_TRACK', 'PARAMETER_GROUP', 'MAPSLATITUDE')
+        const radlng = TaskServices.findBy2('TM_TIME_TRACK', 'PARAMETER_GROUP', 'MAPSLONGITUDE')
+        
         this.state = {
             currentUser: TaskServices.getCurrentUser(),
             nativeGPS: {
@@ -36,6 +41,8 @@ class MapsInspeksi extends React.Component {
             latitude: 0.0,
             longitude: 0.0,
             trackInterval: null,
+            radiusLatitude: radLat !== undefined ? parseFloat(radLat.DESC) : 0.0027,
+            radiusLongitude: radlng !== undefined ? parseFloat(radlng.DESC) : 0.006,
             region: {
                 latitude: LATITUDE,
                 longitude: LONGITUDE,
@@ -92,6 +99,8 @@ class MapsInspeksi extends React.Component {
     componentDidMount() {
 
         let user = TaskServices.getAllData('TR_LOGIN')[0];
+
+
 
         if (user.REFFERENCE_ROLE !== "AFD_CODE") {
             let afdeling = TaskServices.findAll('TM_AFD', 'WERKS', user.CURR_WERKS).sorted('AFD_NAME', false);
@@ -277,14 +286,14 @@ class MapsInspeksi extends React.Component {
         for (var i = 0; i < data.length; i++) {
             let coords = data[i];
             if (
-                geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude + 0.006 }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude - 0.006 }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.latitude + 0.0027, longitude: this.state.longitude }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.latitude - 0.0027, longitude: this.state.longitude }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.latitude - 0.0027, longitude: this.state.longitude - 0.006 }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.latitude - 0.0027, longitude: this.state.longitude + 0.006 }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.latitude + 0.0027, longitude: this.state.longitude - 0.006 }, coords.coords) ||
-                geolib.isPointInPolygon({ latitude: this.state.latitude + 0.0027, longitude: this.state.longitude + 0.006 }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude + this.state.radiusLongitude }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude - this.state.radiusLongitude }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude + this.state.radiusLatitude, longitude: this.state.longitude }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude - this.state.radiusLatitude, longitude: this.state.longitude }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude - this.state.radiusLatitude, longitude: this.state.longitude - this.state.radiusLongitude }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude - this.state.radiusLatitude, longitude: this.state.longitude + this.state.radiusLongitude }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude + this.state.radiusLatitude, longitude: this.state.longitude - this.state.radiusLongitude }, coords.coords) ||
+                geolib.isPointInPolygon({ latitude: this.state.latitude + this.state.radiusLatitude, longitude: this.state.longitude + this.state.radiusLongitude }, coords.coords) ||
                 geolib.isPointInPolygon({ latitude: this.state.latitude, longitude: this.state.longitude }, coords.coords)
             ) {
                 poligons.push(coords);

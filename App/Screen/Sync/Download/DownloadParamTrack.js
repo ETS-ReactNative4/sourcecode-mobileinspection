@@ -11,11 +11,12 @@ export async function getParamTrack() {
     };
 
     await getAPIFunction('AUTH-PARAMETER-TRACK').then((data) => {
-
         try {
             /* INSERT DATA PARAM TRACK INSPECTION */
             if (data != null) {
-                TaskServices.saveData('TM_TIME_TRACK', data);
+                data.map((item) => {
+                    TaskServices.saveData('TM_TIME_TRACK', item);
+                })
                 downloadLabels = {
                     ...downloadLabels,
                     downloadCount: downloadLabels.downloadCount + 1
