@@ -108,7 +108,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 30
-        versionName "4.05"
+        versionName "4.06"
         multiDexEnabled true
         missingDimensionStrategy 'react-native-camera', 'general'
     }
@@ -156,6 +156,7 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-permissions')
     implementation project(':rn-fetch-blob')
     implementation project(':react-native-svg')
     implementation project(':react-native-imei')

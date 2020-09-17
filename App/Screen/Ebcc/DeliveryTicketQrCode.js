@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, View, BackHandler, StatusBar } from "react-native"
+import { StyleSheet, View, BackHandler, StatusBar, Text } from "react-native"
 import { RNCamera } from "react-native-camera"
 import base64 from 'react-native-base64'
 import moment from 'moment'
@@ -10,6 +10,7 @@ import ModalAlertQrCode from "../../Component/ModalAlertQrCode";
 import HeaderDefault from "../../Component/Header/HeaderDefault";
 import Colors from "../../Constant/Colors";
 import R from 'ramda';
+import QRCodeScanner from 'react-native-qrcode-scanner';
 
 const defaultBarcodeTypes = [RNCamera.Constants.BarCodeType.qr];
 
@@ -72,7 +73,7 @@ class Scanner extends Component {
     if (!this.state.showModal) {
       let decode = e.data;
       // console.log(decode);
-      
+
       let isnum = /^\d+$/.test(decode);
       console.log(isnum);
 
@@ -80,6 +81,7 @@ class Scanner extends Component {
         this.setState({
           buttonText: 'TUTUP',
           isBarcodeRead: false,
+          isFocused: false,
           showModal: true,
           title: "Scan Delivery Ticket Gagal",
           message: "QR Code tidak sesuai",
@@ -90,6 +92,7 @@ class Scanner extends Component {
         this.setState({
           buttonText: 'LANJUT',
           isBarcodeRead: true,
+          isFocused: false,
           showModal: true,
           title: "Scan Delivery Ticket Berhasil",
           message: "Kamu bisa lanjutkan untuk foto janjang",
@@ -171,7 +174,8 @@ class Scanner extends Component {
             this.setState({
               isBarcodeRead: false,
               showModal: false,
-              qrDecode: null
+              qrDecode: null,
+              isFocused: true
             })
           }}
           onPressButton={() => {
@@ -182,21 +186,21 @@ class Scanner extends Component {
                   showModal: false
                 })
               } else {
-                console.log('Masuk Sini')
-                this.setState({ showModal: false, qrDecode: null })
+                this.setState({ showModal: false, qrDecode: null, isFocused: true })
               }
             }
           }}
           title={this.state.title}
           message={this.state.message} />
 
-        {isFocused && <RNCamera
-          barCodeTypes={this.state.isBarcodeRead ? [] : defaultBarcodeTypes}
-          flashMode={RNCamera.Constants.FlashMode.on}
-          style={styles.preview}
-          onBarCodeRead={this.onBarCodeRead}
-          ref={cam => (this.camera = cam)}>
-        </RNCamera>}
+        <Text style={{ paddingHorizontal: 16, textAlign: "center", alignSelf: 'center', paddingTop: 40 }}>
+          Tips : Pastikan menggunakan QR Code dengan benar dan sesuai.
+          </Text>
+
+        {isFocused && <QRCodeScanner
+          flashMode={RNCamera.Constants.FlashMode.off}
+          onRead={this.onBarCodeRead}>
+        </QRCodeScanner>}
       </View>
     );
   }

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Image, StyleSheet, View, BackHandler } from "react-native"
+import { Image, StyleSheet, View, BackHandler, Text } from "react-native"
 import { RNCamera } from "react-native-camera"
 import Colors from '../../Constant/Colors'
 import base64 from 'react-native-base64'
@@ -10,6 +10,7 @@ import { NavigationActions, StackActions } from 'react-navigation';
 import TaskServices from "../../Database/TaskServices";
 import ModalAlertQrCode from "../../Component/ModalAlertQrCode";
 import HeaderDefault from "../../Component/Header/HeaderDefault";
+import QRCodeScanner from 'react-native-qrcode-scanner';
 
 const defaultBarcodeTypes = [RNCamera.Constants.BarCodeType.qr];
 
@@ -87,27 +88,40 @@ class Scanner extends Component {
     // //002-1-4122-235
     if (!this.state.showModal) {
       let decode = base64.decode(event.data)
-      if (this.refRoleAuth(decode)) {
+
+      if (decode.length == 14) {
+        if (this.refRoleAuth(decode)) {
+          this.setState({
+            isBarcodeRead: true,
+            showModal: true,
+            isFocused: false,
+            title: "Scan QR CODE TPH Berhasil",
+            message: "Kamu bisa lanjutkan untuk scan delivery ticket",
+            icon: require('../../Images/icon/ic_scan_qrcode.png'),
+            qrDecode: decode
+          });
+        }
+        else {
+          this.setState({
+            isBarcodeRead: true,
+            showModal: true,
+            isFocused: false,
+            title: "Bukan Wilayah Otorisasimu",
+            message: "Kamu tidak bisa sampling EBCC di wilayah ini",
+            icon: require('../../Images/ic-blm-input-lokasi.png')
+          });
+        }
+      } else {
         this.setState({
-          isBarcodeRead: true,
+          isBarcodeRead: false,
+          isFocused: false,
           showModal: true,
-          title: "Scan QR CODE TPH Berhasil",
-          message: "Kamu bisa lanjutkan untuk scan delivery ticket",
-          icon: require('../../Images/icon/ic_scan_qrcode.png'),
-          qrDecode: decode
-        });
-      }
-      else {
-        this.setState({
-          isBarcodeRead: true,
-          showModal: true,
-          title: "Bukan Wilayah Otorisasimu",
-          message: "Kamu tidak bisa sampling EBCC di wilayah ini",
-          icon: require('../../Images/ic-blm-input-lokasi.png')
+          title: "Scan TPH Gagal",
+          message: "QR Code tidak sesuai",
+          icon: require('../../Images/icon/ic_scan_qrcode.png')
         });
       }
     }
-
   };
 
 
@@ -225,7 +239,8 @@ class Scanner extends Component {
             this.setState({
               isBarcodeRead: false,
               showModal: false,
-              qrDecode: null
+              qrDecode: null,
+              isFocused: true
             })
           }}
           onPressButton={() => {
@@ -233,21 +248,33 @@ class Scanner extends Component {
               this.setState({
                 showModal: false,
                 isBarcodeRead: false,
+                isFocused: true
               })
               this.navigateScreen('DeliveryTicketQrCode', this.state.qrDecode);
+            } else {
+              this.setState({ showModal: false, qrDecode: null, isFocused: true })
             }
           }
           }
           title={this.state.title}
           message={this.state.message} />
 
-        {isFocused && <RNCamera
+        {/* {isFocused && <RNCamera
           barCodeTypes={isBarcodeRead ? [] : defaultBarcodeTypes}
           flashMode={RNCamera.Constants.FlashMode.on}
           style={styles.preview}
           onBarCodeRead={this.onBarCodeRead}
           ref={cam => (this.camera = cam)}>
-        </RNCamera>}
+        </RNCamera>} */}
+
+        <Text style={{ paddingHorizontal: 16, textAlign: "center", alignSelf: 'center', paddingTop: 40 }}>
+          Tips : Pastikan menggunakan QR Code dengan benar dan sesuai.
+          </Text>
+
+        {isFocused && <QRCodeScanner
+          flashMode={RNCamera.Constants.FlashMode.off}
+          onRead={this.onBarCodeRead}>
+        </QRCodeScanner>}
 
 
       </View>

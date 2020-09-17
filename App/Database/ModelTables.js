@@ -434,7 +434,8 @@ const TM_TIME_TRACK = {
         PARAMETER_GROUP: 'string',
         PARAMETER_NAME: 'string',
         DESC: 'string',
-        NO_URUT: { type: 'int', default: 0 }
+        NO_URUT: { type: 'int', default: 0 },
+        PARAMETER_FOR: 'string',
     }
 }
 

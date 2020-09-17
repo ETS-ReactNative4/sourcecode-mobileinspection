@@ -4,6 +4,7 @@ import com.bluezoneinspection.app.SatellitePackage;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.reactnativecommunity.rnpermissions.RNPermissionsPackage;
 import com.horcrux.svg.SvgPackage;
 import codes.simen.IMEI.IMEI;
 import com.dylanvann.fastimage.FastImageViewPackage;
@@ -47,6 +48,7 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(
                     new MainReactPackage(),
+            new RNPermissionsPackage(),
                     new SatellitePackage(),
                     new SvgPackage(),
                     new FastImageViewPackage(),
