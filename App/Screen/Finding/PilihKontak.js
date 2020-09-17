@@ -59,6 +59,8 @@ class PilihKontak extends Component {
       contactInfra = TaskServices.getAllData('TR_CONTACT').filtered(`REF_ROLE = "COMP_CODE" AND LOCATION_CODE CONTAINS[c] "${compCode.COMP_CODE}" AND USER_ROLE CONTAINS[c] "ASISTEN" AND USER_AUTH_CODE != "${login[0].USER_AUTH_CODE}"`);
     }
 
+    console.log("contactInfra : ", contactInfra)
+
     let currentUser = null;
     let arr = [];
     for (var i = 0; i < dataUser.length; i++) {
@@ -97,11 +99,11 @@ class PilihKontak extends Component {
     }
 
     for (let loopEST = 0; loopEST < contactInfra.length; loopEST++) {
-      if (contactInfra[k].USER_AUTH_CODE !== undefined && contactInfra[k].FULLNAME !== undefined && contactInfra[k].USER_ROLE !== undefined) {
+      if (contactInfra[loopEST].USER_AUTH_CODE !== undefined && contactInfra[loopEST].FULLNAME !== undefined && contactInfra[loopEST].USER_ROLE !== undefined) {
         arr.push({
-          userAuth: contactInfra[k].USER_AUTH_CODE,
-          fullName: contactInfra[k].FULLNAME,
-          userRole: contactInfra[k].USER_ROLE
+          userAuth: contactInfra[loopEST].USER_AUTH_CODE,
+          fullName: contactInfra[loopEST].FULLNAME,
+          userRole: contactInfra[loopEST].USER_ROLE
         })
       }
     }
