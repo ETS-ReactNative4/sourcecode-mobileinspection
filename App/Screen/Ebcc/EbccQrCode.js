@@ -11,6 +11,7 @@ import TaskServices from "../../Database/TaskServices";
 import ModalAlertQrCode from "../../Component/ModalAlertQrCode";
 import HeaderDefault from "../../Component/Header/HeaderDefault";
 import QRCodeScanner from 'react-native-qrcode-scanner';
+import { Fonts } from "../../Themes";
 
 const defaultBarcodeTypes = [RNCamera.Constants.BarCodeType.qr];
 
@@ -267,8 +268,9 @@ class Scanner extends Component {
           ref={cam => (this.camera = cam)}>
         </RNCamera>} */}
 
-        <Text style={{ paddingHorizontal: 16, textAlign: "center", alignSelf: 'center', paddingTop: 40 }}>
-          Tips : Pastikan menggunakan QR Code dengan benar dan sesuai.
+        <Text style={{ fontFamily: Fonts.book, paddingHorizontal: 16, textAlign: "center", alignSelf: 'center', paddingTop: 40 }}>
+          Tips : Scan QR Code TPH dengan benar.{"\n"}
+          Pastikan TPH bersih {"&"} arahkan kamera ponsel ke QR code sehingga berada dalam kotak yang terlihat di layar.
           </Text>
 
         {isFocused && <QRCodeScanner

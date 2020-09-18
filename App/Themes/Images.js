@@ -43,6 +43,8 @@ const images = {
   ic_task_wip: require('../Images/icon/ic_task_wip.png'),
   ic_get_rating: require('../Images/icon/icon_rating.png'),
   ic_get_comment: require('../Images/ic_inbox_getcomment.png'),
+  ic_get_point: require('../Images/icon/icon_get_point.png'),
+  ic_total_point: require('../Images/icon/icon_total_point.png'),
 
   //Icon Lainnya
   ic_lainnya_peta: require('../Images/icon/icon_lainnya_maps.png'),

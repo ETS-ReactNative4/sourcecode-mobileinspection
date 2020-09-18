@@ -1,4 +1,4 @@
-const SCHEMA_VERSION = 30;
+const SCHEMA_VERSION = 31;
 
 const TR_CONFIG = {
     name: 'TR_CONFIG',

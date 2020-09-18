@@ -61,13 +61,16 @@ export default class Inbox extends React.Component {
 		notifCount = (notifCount >= 100) ? "99+" : notifCount + "";
 		this.setState({ data: this.getNotif() });
 		this.props.navigation.setParams({ notifCount: notifCount })
-		this.props.navigation.navigate('DetailFinding', { _backFromDetail: this._backFromDetail, ID: notifData.FINDING_CODE })
 
 		if (notifData.CATEGORY == "KOMENTAR BARU") {
 			this.props.navigation.navigate("DetailFinding", { _backFromDetail: this._backFromDetail, findingCode: notifData.FINDING_CODE })
+		} else if (notifData.CATEGORY == "DAPAT POINT" || notifData.CATEGORY == "TOTAL POINT") {
+			console.log('GAK KEMANA2')
 		} else {
 			this.props.navigation.navigate('DetailFinding', { _backFromDetail: this._backFromDetail, ID: notifData.FINDING_CODE })
 		}
+
+		this.props.navigation.navigate('DetailFinding', { _backFromDetail: this._backFromDetail, ID: notifData.FINDING_CODE })
 	}
 
 	_renderItem = (item, index) => {
@@ -97,6 +100,10 @@ export default class Inbox extends React.Component {
 			sources = Images.ic_get_comment;
 		} else if (item.CATEGORY == "MENTION BARU") {
 			sources = Images.ic_get_comment;
+		} else if (item.CATEGORY == "DAPAT POINT") {
+			sources = Images.ic_get_point;
+		} else if (item.CATEGORY == "TOTAL POINT") {
+			sources = Images.ic_total_point;
 		}
 
 		// Buttons
