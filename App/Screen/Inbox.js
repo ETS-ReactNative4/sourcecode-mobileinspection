@@ -10,6 +10,8 @@ import Swipeout from 'react-native-swipeout';
 
 import ModalConfirmation from '../Component/ModalAlertConfirmation'
 
+import ModalAlert from '../Component/ModalAlert';
+
 export default class Inbox extends React.Component {
 
 	constructor(props) {
@@ -20,8 +22,8 @@ export default class Inbox extends React.Component {
 			data,
 
 			//Add Modal Alert by Aminju
-			title: 'Title',
-			message: 'Message',
+			title: 'Data Finding Tidak Ada',
+			message: 'Finding tidak di temukan pada Handphone ini',
 			showModal: false,
 			icon: '',
 			isFilter: false,
@@ -62,15 +64,20 @@ export default class Inbox extends React.Component {
 		this.setState({ data: this.getNotif() });
 		this.props.navigation.setParams({ notifCount: notifCount })
 
-		if (notifData.CATEGORY == "KOMENTAR BARU") {
-			this.props.navigation.navigate("DetailFinding", { _backFromDetail: this._backFromDetail, findingCode: notifData.FINDING_CODE })
-		} else if (notifData.CATEGORY == "DAPAT POINT" || notifData.CATEGORY == "TOTAL POINT") {
-			console.log('GAK KEMANA2')
+		var data = TaskServices.findBy2('TR_FINDING', 'FINDING_CODE', notifData.FINDING_CODE);
+
+		if (data !== undefined) {
+			if (notifData.CATEGORY == "DAPAT POINT" || notifData.CATEGORY == "TOTAL POINT") {
+				console.log('GAK KEMANA2')
+			} else {
+				this.props.navigation.navigate('DetailFinding', { _backFromDetail: this._backFromDetail, ID: notifData.FINDING_CODE })
+			}
 		} else {
-			this.props.navigation.navigate('DetailFinding', { _backFromDetail: this._backFromDetail, ID: notifData.FINDING_CODE })
+			this.setState({
+				showModal: true
+			})
 		}
 
-		this.props.navigation.navigate('DetailFinding', { _backFromDetail: this._backFromDetail, ID: notifData.FINDING_CODE })
 	}
 
 	_renderItem = (item, index) => {
@@ -78,8 +85,6 @@ export default class Inbox extends React.Component {
 		const title = item.CATEGORY;
 		const desc = item.MESSAGE;
 		const notifCreateDate = dateDisplayMobile(changeFormatDate(item.INSERT_TIME.toString(), "YYYY-MM-DD hh-mm-ss"));
-
-		console.log(notifCreateDate)
 
 		let notifColor = item.NOTIFICATION_STATUS == 1 ? "white" : "#AFAFAF"
 		let sources;
@@ -228,6 +233,13 @@ export default class Inbox extends React.Component {
 					title={'Hapus Semua'}
 					message={`Yakin mau menghapus semua notification inbox?`}
 				/>
+
+				<ModalAlert
+					visible={this.state.showModal}
+					icon={Images.ic_data_not_match}
+					onPressCancel={() => this.setState({ showModal: false })}
+					title={this.state.title}
+					message={this.state.message} />
 				{show}
 			</Container>
 		);
