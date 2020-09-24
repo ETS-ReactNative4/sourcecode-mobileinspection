@@ -50,7 +50,7 @@ const ItemDetailSuggestion = (props) => {
                             height: 35,
                             borderRadius: 36,
                             borderWidth: 1,
-                            borderColor: Colors.colorPrimary
+                            borderColor: Colors.colorGreen
                         }} />
                     <View style={{
                         flex: 1,

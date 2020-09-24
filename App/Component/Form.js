@@ -123,8 +123,8 @@ class Form extends Component {
                         style={styles.inputBox}
                         underlineColorAndroid='rgba(0,0,0,0)'
                         placeholder="Email"
-                        placeholderTextColor="#51a977"
-                        selectionColor="#51a977"
+                        placeholderTextColor="#0F5CBF"
+                        selectionColor="#0F5CBF"
                         keyboardType="email-address"
                         onChangeText={(strEmail) => { this.setState({ strEmail: strEmail }) }}
                         value={this.state.strEmail}
@@ -137,7 +137,7 @@ class Form extends Component {
                         underlineColorAndroid='rgba(0,0,0,0)'
                         placeholder="Password"
                         secureTextEntry={this.state.secure}
-                        placeholderTextColor="#51a977"
+                        placeholderTextColor="#0F5CBF"
                         onChangeText={(strPassword) => { this.setState({ strPassword: strPassword }) }}
                         value={this.state.strPassword}
                         ref={(input) => this.password = input} />
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         marginVertical: 10,
         paddingHorizontal: 12,
-        borderColor: '#51a977',
+        borderColor: '#0F5CBF',
         borderWidth: 1
     },
     iconInput: {
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
         width: 200,
         height: 42,
         fontSize: 16,
-        color: '#51a977',
+        color: '#0F5CBF',
         textAlign: "left",
         paddingVertical: 10,
         fontFamily: Fonts.book
@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         height: 42,
         fontSize: 16,
-        color: '#51a977',
+        color: '#0F5CBF',
         textAlign: "left",
         fontFamily: Fonts.thin
     },
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         flexDirection: 1,
         flexDirection: 'row',
-        backgroundColor: '#068D0D',
+        backgroundColor: '#0F5CBF',
         borderRadius: 25,
         marginVertical: 10,
         paddingVertical: 10

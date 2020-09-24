@@ -53,7 +53,7 @@ const ItemHistoryFinding = (props) => {
         colorStatus = 'red';
     } else {
         status = 'Data Sudah Terkirim'
-        colorStatus = Colors.brand;
+        colorStatus = Colors.colorGreen;
     }
 
     return (

@@ -43,7 +43,7 @@ export default (
         },
       }),
       tabBarOptions: {
-        activeTintColor: '#36A100'
+        activeTintColor: '#0F5CBF'
       }
     }
   ));

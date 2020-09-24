@@ -104,7 +104,7 @@ export default class HistoryInspection extends Component {
       colorStatus = 'red';
     } else {
       status = 'Data Sudah Terkirim'
-      colorStatus = Colors.brand
+      colorStatus = Colors.colorGreen
     }
     let color = this.getColor(data.INSPECTION_RESULT);
     let imgBaris = Taskservice.findByWithList('TR_IMAGE', ['TR_CODE', 'STATUS_IMAGE'], [data.BLOCK_INSPECTION_CODE, 'BARIS']);

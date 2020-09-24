@@ -25,7 +25,7 @@ export default class Inbox extends React.Component {
 			title: 'Data Finding Tidak Ada',
 			message: 'Finding tidak di temukan pada Handphone ini',
 			showModal: false,
-			icon: '',
+			icon: Images.ic_data_not_match,
 			isFilter: false,
 			showConfirm: false
 		}
@@ -66,16 +66,21 @@ export default class Inbox extends React.Component {
 
 		var data = TaskServices.findBy2('TR_FINDING', 'FINDING_CODE', notifData.FINDING_CODE);
 
-		if (data !== undefined) {
-			if (notifData.CATEGORY == "DAPAT POINT" || notifData.CATEGORY == "TOTAL POINT") {
-				console.log('GAK KEMANA2')
-			} else {
-				this.props.navigation.navigate('DetailFinding', { _backFromDetail: this._backFromDetail, ID: notifData.FINDING_CODE })
-			}
-		} else {
+		if (notifData.CATEGORY == "DAPAT POINT" || notifData.CATEGORY == "TOTAL POINT") {
 			this.setState({
-				showModal: true
+				showModal: true,
+				title: notifData.CATEGORY,
+				message: notifData.MESSAGE,
+				icon: notifData.CATEGORY == "DAPAT POINT" ? Images.ic_get_point : Images.ic_total_point
 			})
+		} else {
+			if (data !== undefined) {
+				this.props.navigation.navigate('DetailFinding', { _backFromDetail: this._backFromDetail, ID: notifData.FINDING_CODE })
+			} else {
+				this.setState({
+					showModal: true
+				})
+			}
 		}
 
 	}
@@ -236,7 +241,7 @@ export default class Inbox extends React.Component {
 
 				<ModalAlert
 					visible={this.state.showModal}
-					icon={Images.ic_data_not_match}
+					icon={this.state.icon}
 					onPressCancel={() => this.setState({ showModal: false })}
 					title={this.state.title}
 					message={this.state.message} />

@@ -1,10 +1,12 @@
 import color from 'color';
 
-const tintColor = '#36A100';
+const tintColor = '#0F5CBF';
+
+// 0F5CBF
 
 export default {
   tintColor,
-  tintColorPrimary: '#3cb300',
+  tintColorPrimary: '#0F5CBF',
   tabIconDefault: '#ccc',
   tabIconSelected: tintColor,
   tabBar: '#fefefe',
@@ -17,7 +19,7 @@ export default {
   abuabu: '#D8D8D8',
   abu1: '#e6e6e6',
 
-  brand: '#239023',
+  brand: '#0F5CBF',
   brandSecondary: '#EDAE49',
   success: '#44AF69',
   warning: '#D1495B',
@@ -33,12 +35,12 @@ export default {
   buttonDisabled: 'rgba(0,0,0,0.38)',
   statusBar: color('#1995AD').darken(0.12).hex(),
   statusBarLight: color('white').darken(0.12).hex(),
-  header: '#239023',
+  header: '#0F5CBF',
   headerButton: 'rgba(255,255,255,1)',
   headerTransparent: 'rgba(25,149,173,0.87)',
   footer: 'white',
   footerButton: 'rgba(0,0,0,0.54)',
-  footerButtonActive: '#239023',
+  footerButtonActive: '#0F5CBF',
   logo: 'white',
   background: 'white',
   border: '#EEEEEE',
@@ -55,6 +57,7 @@ export default {
   //Aminju
   //Color Component
   colorProgress: '#D5D5D5',
+  colorGreen: '#36A100',
 
   //Color Default
   colorWhite: '#FFF',

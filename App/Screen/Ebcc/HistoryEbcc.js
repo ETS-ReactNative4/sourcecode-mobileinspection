@@ -126,7 +126,7 @@ export default class HistoryEbcc extends Component {
       colorStatus = 'red';
     } else {
       status = 'Data Sudah Terkirim';
-      colorStatus = Colors.brand;//'#999'
+      colorStatus = Colors.colorGreen;//'#999'
     }
     let imgBaris = TaskServices.findByWithList('TR_IMAGE', ['TR_CODE', 'STATUS_IMAGE'], [data.EBCC_VALIDATION_CODE, 'JANJANG']);
     let estName = getEstateName(data.WERKS);

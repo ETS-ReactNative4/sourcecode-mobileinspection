@@ -22,7 +22,7 @@ export default createMaterialTopTabNavigator({
   order: ['DaftarInspeksi', 'Riwayat'],
   swipeEnabled: true,
   tabBarOptions: {
-    activeTintColor: '#51A977',
+    activeTintColor: '#0F5CBF',
     inactiveTintColor: 'grey',
     style: {
       backgroundColor: 'white',
@@ -31,7 +31,7 @@ export default createMaterialTopTabNavigator({
       marginTop: -20
     },
     indicatorStyle: {
-      backgroundColor: '#2db92d',
+      backgroundColor: '#0F5CBF',
       width: 15,
       maxWidth: 15,
       marginStart: '23%'

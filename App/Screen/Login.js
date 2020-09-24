@@ -466,7 +466,7 @@ const styles = StyleSheet.create({
     },
 
     footerText: {
-        color: '#51a977',
+        color: '#0F5CBF',
         fontSize: 12,
         textAlign: 'center'
     },

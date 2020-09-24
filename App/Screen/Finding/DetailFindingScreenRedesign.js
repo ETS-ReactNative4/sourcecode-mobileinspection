@@ -573,7 +573,7 @@ class DetailFindingScreenRedesign extends Component {
                                 underlineColorAndroid='rgba(0,0,0,0)'
                                 placeholder="Ketik di sini..."
                                 placeholderTextColor="rgba(0,0,0,0.3)"
-                                selectionColor="#51a977"
+                                selectionColor="#0F5CBF"
                                 keyboardType="email-address"
                                 onChangeText={(str) => { this.setState({ ratingMsg: str }) }}
                                 value={this.state.ratingMsg} />
