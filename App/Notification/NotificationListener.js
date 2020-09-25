@@ -165,8 +165,8 @@ export function displayNotificationSync() {
             sound: 'default',
             show_in_foreground: true,
             show_in_background: true,
-            largeIcon: "ic_launcher_v2",
-            smallIcon: "ic_launcher_v2",
+            largeIcon: "ic_launcher_notification_blue",
+            smallIcon: "ic_launcher_notification_blue",
         })
             .setNotificationId(getTodayDate('YYYYMMDDHHmmss'))
             .setTitle('Belum Sync')

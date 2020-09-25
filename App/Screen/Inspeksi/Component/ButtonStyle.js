@@ -26,7 +26,7 @@ const btnBiasa2 = {
 
 const btnBaik = {
     width:'22%',
-    backgroundColor: Colors.brand,
+    backgroundColor: Colors.colorGreen,
     borderRadius: 25,
     margin:5,
     padding:10 ,

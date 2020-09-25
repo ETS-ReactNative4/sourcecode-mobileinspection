@@ -1257,7 +1257,7 @@ export default class SyncScreen extends React.Component {
                         </View>}
 
                         {/* Section Upload by Aminju */}
-                        <Text style={{ fontSize: 15, color: 'blue', marginTop: 24, fontFamily: Fonts.demi }}>UPLOAD</Text>
+                        <Text style={{ fontSize: 15, color: Colors.tintColorPrimary, marginTop: 24, fontFamily: Fonts.demi }}>UPLOAD</Text>
                         <View style={{ backgroundColor: 'grey', height: 0.5, flex: 1, flexDirection: 'row', marginTop: 3 }} />
 
                         <ProgressSync

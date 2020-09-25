@@ -656,12 +656,12 @@ const styles = {
     },
     btnAdd: {
         borderWidth: 3,
-        borderColor: '#00e639',
+        borderColor: Colors.brand,
         alignItems: 'center',
         justifyContent: 'center',
         width: 35,
         height: 35,
-        backgroundColor: Colors.brand,
+        backgroundColor: "#2868bd",
         borderRadius: 100,
     },
     cicle: {
