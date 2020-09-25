@@ -134,7 +134,7 @@ const TabCategory = (props) => {
   return (
     <TouchableOpacity
       onPress={props.onPress}
-      style={[styles.tab, { backgroundColor: props.activeIndex == props.valueIndex ? "#3CB301" : '#F7F7F7' }]}
+      style={[styles.tab, { backgroundColor: props.activeIndex == props.valueIndex ? Colors.tintColor : '#F7F7F7' }]}
       activeOpacity={0.8}>
       <Text style={{ color: props.activeIndex == props.valueIndex ? Colors.colorWhite : 'black', fontFamily: Fonts.medium }}>{props.text}</Text>
     </TouchableOpacity>
