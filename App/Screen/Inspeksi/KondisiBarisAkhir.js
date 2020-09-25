@@ -946,7 +946,7 @@ class KondisiBarisAkhir extends Component {
                                         <Text style={{ color: 'grey', fontFamily: Font.book }}>Lanjut Baris Berikutnya ?</Text>
                                         <Switch
                                             thumbTintColor={this.state.switchLanjut ? Colors.brand : 'red'}
-                                            onTintColor={'#5bc236'}
+                                            onTintColor={'#638ec7'}
                                             tintColor={'#ff8080'}
                                             onValueChange={(value) => {
                                                 this.setState({ switchLanjut: value });
