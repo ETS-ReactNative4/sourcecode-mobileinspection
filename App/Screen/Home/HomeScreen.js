@@ -1163,7 +1163,7 @@ class HomeScreen extends React.Component {
   }
 
   renderMenu() {
-    if (this.state.currentUser.USER_ROLE.includes("ASISTEN")) {
+    if (this.state.currentUser.USER_ROLE.includes("ASISTEN") || this.state.currentUser.USER_ROLE.includes("KEPALA_KEBUN")) {
       return (
         <View style={{ backgroundColor: "white", flexDirection: "row", justifyContent: 'space-between', padding: 15 }}>
           <ItemMenuHome
@@ -1213,7 +1213,7 @@ class HomeScreen extends React.Component {
       )
     }
 
-    if (this.state.currentUser.USER_ROLE.includes("EM") || this.state.currentUser.USER_ROLE.includes("SEM_GM") || this.state.currentUser.USER_ROLE.includes("KEPALA_KEBUN")) {
+    if (this.state.currentUser.USER_ROLE.includes("EM") || this.state.currentUser.USER_ROLE.includes("SEM_GM")) {
       return (
         <View style={{ backgroundColor: "white", flexDirection: "row", padding: 15 }}>
 
