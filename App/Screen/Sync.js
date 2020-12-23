@@ -51,6 +51,7 @@ import { getFCMToken } from "../Notification/NotificationListener";
 import { fetchGet, fetchPost, fetchPut } from "../Api/FetchingApi";
 import { getPetaPanenDetail, getPetaPanenHeader } from "./Sync/Download/PetaPanen/PetaPanen";
 import { getNotificationInbox } from './Sync/Download/DownloadNotificationInbox';
+import { uploadTPH } from './Sync/Upload/EBCC/UploadTPH';
 
 export default class SyncScreen extends React.Component {
 
@@ -85,6 +86,7 @@ export default class SyncScreen extends React.Component {
             progressEbcc: 0,
             progressEbccDetail: 0,
             progressGenbaInspection: 0,
+            progressRegistrasiTPH: 0,
 
             //labelUpload
             valueInspeksiHeaderUpload: '0',
@@ -107,6 +109,8 @@ export default class SyncScreen extends React.Component {
             totalEbccDetail: '0',
             valueGenbaInspection: '0',
             totalGenbaInspection: '0',
+            valueRegistrasiTPH: '0',
+            totalRegistrasiTPH: '0',
 
             //download
             progress: 0,
@@ -828,6 +832,8 @@ export default class SyncScreen extends React.Component {
                 }
             });
 
+        this.SyncRegisterTPH().then(() => { });
+
         this.downloadWeeklySummary();
         this.downloadReport();
 
@@ -996,6 +1002,33 @@ export default class SyncScreen extends React.Component {
                 }
             });
 
+    }
+
+    //Upload Register TPH
+    async SyncRegisterTPH() {
+
+        console.log('Masuk Upload TPH')
+
+        await uploadTPH()
+            .then((response) => {
+                console.log('Response SYnc : ', response)
+                if (response.syncStatus) {
+                    this.setState({
+                        progressRegistrasiTPH: 1,
+                        valueRegistrasiTPH: response.uploadCount,
+                        totalRegistrasiTPH: response.totalCount
+                    });
+                }
+                else {
+                    //error
+                    this.setState({
+                        uploadErrorFlag: "upload-tph",
+                        progressRegistrasiTPH: 1,
+                        valueRegistrasiTPH: 0,
+                        totalRegistrasiTPH: 0
+                    });
+                }
+            });
     }
 
     async SyncUploadEBCC() {
@@ -1319,6 +1352,12 @@ export default class SyncScreen extends React.Component {
                             value={this.state.valueEbccDetail}
                             total={this.state.totalEbccDetail}
                             progress={this.state.progressEbccDetail} />
+
+                        <ProgressSync
+                            title={'Registrasi - TPH'}
+                            value={this.state.valueRegistrasiTPH}
+                            total={this.state.totalRegistrasiTPH}
+                            progress={this.state.progressRegistrasiTPH} />
 
                         <Text style={{ fontSize: 14, color: Colors.tintColor, marginTop: 16, fontFamily: Fonts.demi }}>REPORT</Text>
                         <View style={{ backgroundColor: 'grey', height: 0.5, flex: 1, flexDirection: 'row', marginTop: 3 }} />

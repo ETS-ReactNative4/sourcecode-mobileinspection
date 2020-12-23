@@ -13,6 +13,8 @@ export async function getPetaPanenHeader() {
     };
 
     await getAPIFunction('INTERNAL-PETA-PANEN-HEADER').then((petapanenHeaderModel) => {
+
+        console.log('Response Peta Panen : ', petapanenHeaderModel);
         try {
             if (petapanenHeaderModel !== null) {
                 AsyncStorage.setItem('SYNCTIME-PetaPanenHeader', JSON.stringify({

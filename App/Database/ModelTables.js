@@ -749,6 +749,23 @@ const TR_NOTIFICATION_1 = {
     }
 }
 
+const TR_REGISTER_TPH = {
+    name: 'TR_REGISTER_TPH',
+    properties: {
+        QRCODE_TPH: 'string',
+        WERKS: 'string',
+        AFD_CODE: 'string',
+        BLOCK_CODE: 'string',
+        NO_TPH: 'string',
+        LAT_TPH: 'string',
+        LON_TPH: 'string',
+        STATUS_SYNC: 'string',
+        SYNC_TIME: 'string',
+        INSERT_USER: 'string',
+        INSERT_TIME: 'string'
+    }
+}
+
 export default {
     TR_LOGIN,
     TR_CONFIG,
@@ -795,6 +812,9 @@ export default {
     TR_PETAPANEN_DETAIL,
 
     TR_NOTIFICATION_1,
+
+    //Add by Aminju 21/12/20
+    TR_REGISTER_TPH,
 
     SCHEMA_VERSION
 }

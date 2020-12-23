@@ -1168,12 +1168,26 @@ class HomeScreen extends React.Component {
         <View style={{ backgroundColor: "white", flexDirection: "row", justifyContent: 'space-between', padding: 15 }}>
           <ItemMenuHome
             onPress={() => {
-              // if (this.state.isSync) {
-              //     this.props.navigation.navigate("PetaPanen")
-              // } else {
-              //     this.props.navigation.navigate('Sync')
-              // }
-              this.props.navigation.navigate("PetaPanen")
+
+              const checkBlock = TaskServices.getAllData('TM_BLOCK');
+              if (checkBlock.length > 0) {
+                this.props.navigation.navigate("MapRegisterTPH")
+              } else {
+                this.props.navigation.navigate('Sync')
+              }
+
+            }}
+            name={"Register\nTPH"}
+            image={require('../../Images/icon/HomeScreen/icon_marker.png')}
+            backgroundColor={"orange"} />
+
+          <ItemMenuHome
+            onPress={() => {
+              if (this.state.isSync) {
+                  this.props.navigation.navigate("PetaPanen")
+              } else {
+                  this.props.navigation.navigate('Sync')
+              }
             }}
             name={"Peta\nPanen"}
             image={require('../../Images/icon/HomeScreen/icon_panen.png')}
@@ -1181,12 +1195,11 @@ class HomeScreen extends React.Component {
 
           <ItemMenuHome
             onPress={() => {
-              // if (this.state.isSync) {
-              //   this.props.navigation.navigate("Restan")
-              // } else {
-              //   this.props.navigation.navigate('Sync')
-              // }
-              this.props.navigation.navigate("Restan")
+              if (this.state.isSync) {
+                this.props.navigation.navigate("Restan")
+              } else {
+                this.props.navigation.navigate('Sync')
+              }
             }}
             name={"Peta\nRestan"}
             image={require('../../Images/icon/HomeScreen/icon_titik_restan.png')}
@@ -1216,6 +1229,18 @@ class HomeScreen extends React.Component {
     if (this.state.currentUser.USER_ROLE.includes("EM") || this.state.currentUser.USER_ROLE.includes("SEM_GM")) {
       return (
         <View style={{ backgroundColor: "white", flexDirection: "row", padding: 15 }}>
+          <ItemMenuHome
+            onPress={() => {
+              const checkBlock = TaskServices.getAllData('TM_BLOCK');
+              if (checkBlock.length > 0) {
+                this.props.navigation.navigate("MapRegisterTPH")
+              } else {
+                this.props.navigation.navigate('Sync')
+              }
+            }}
+            name={"Register\nTPH"}
+            image={require('../../Images/icon/HomeScreen/icon_marker.png')}
+            backgroundColor={"orange"} />
 
           <ItemMenuHome
             onPress={() => this.showWeeklySummary(true)}
@@ -1242,6 +1267,19 @@ class HomeScreen extends React.Component {
 
     return (
       <View style={{ backgroundColor: "white", flexDirection: "row", padding: 15 }}>
+
+        <ItemMenuHome
+          onPress={() => {
+            const checkBlock = TaskServices.getAllData('TM_BLOCK');
+            if (checkBlock.length > 0) {
+              this.props.navigation.navigate("MapRegisterTPH")
+            } else {
+              this.props.navigation.navigate('Sync')
+            }
+          }}
+          name={"Register\nTPH"}
+          image={require('../../Images/icon/HomeScreen/icon_marker.png')}
+          backgroundColor={"orange"} />
 
         <ItemMenuHome
           onPress={() => this.showWeeklySummary(true)}

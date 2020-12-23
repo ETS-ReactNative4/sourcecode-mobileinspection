@@ -64,6 +64,13 @@ import MoreScreen from '../Screen/More/MoreScreen';
 import Leaderboard from '../Screen/Leaderboard';
 import PetaPanen from '../Screen/PetaPanen';
 
+//RegisterTPH
+import MapRegisterTPH from '../Screen/RegisterTPH/MapsRegisterTPH'
+import SearchBlok from '../Screen/RegisterTPH/SearchBlok'
+import RegisterTPH from '../Screen/RegisterTPH/RegisterTPH'
+import ScanTPH from '../Screen/RegisterTPH/ScanTPH'
+import ListTPH from '../Screen/RegisterTPH/ListTPH'
+
 import Colors from '../Constant/Colors'
 // import FormInspectionNavigator from '../Screen/Inspeksi/Navigation/FormInspectionNavigator';
 
@@ -110,6 +117,7 @@ const main = createStackNavigator({
     PilihKontak: { screen: PilihKontak },
     PilihKategori: { screen: PilihKategori },
     PilihBlok: { screen: PilihBlok },
+    SearchBlok: { screen: SearchBlok },
     // FormInspection: {
     //     screen: FormInspectionNavigator,
     //     navigationOptions: {
@@ -171,28 +179,40 @@ const main = createStackNavigator({
     DashboardKebun: { screen: DashboardKebun },
     Restan: {
         screen: Restan,
-        navigationOptions:{
+        navigationOptions: {
             header: null
         }
     },
     MoreScreen: {
         screen: MoreScreen,
-        navigationOptions:{
+        navigationOptions: {
             header: null
         }
     },
 
     Leaderboard: {
         screen: Leaderboard,
-        navigationOptions:{
+        navigationOptions: {
             header: null
         }
     },
     PetaPanen: {
         screen: PetaPanen,
-        navigationOptions:{
+        navigationOptions: {
             header: null
         }
+    },
+    MapRegisterTPH: {
+        screen: MapRegisterTPH
+    },
+    RegisterTPH: {
+        screen: RegisterTPH
+    },
+    ScanTPH: {
+        screen: ScanTPH
+    },
+    ListTPH: {
+        screen: ListTPH
     }
 }, {
     headerMode: 'screen',

@@ -46,7 +46,8 @@ let realmSchema = new Realm({
         ModelTables.TM_SUGGESTION_INSPECTION,
         ModelTables.TR_PETAPANEN_HEADER,
         ModelTables.TR_PETAPANEN_DETAIL,
-        ModelTables.TR_NOTIFICATION_1
+        ModelTables.TR_NOTIFICATION_1,
+        ModelTables.TR_REGISTER_TPH
     ],
     schemaVersion: ModelTables.SCHEMA_VERSION
 });

@@ -5,8 +5,8 @@ import ServerName from "../Constant/ServerName";
 const TaskServices = {
 
     //CURRENT USER RELATED
-    getCurrentUser(){
-        return(this.getAllData('TR_LOGIN')[0]);
+    getCurrentUser() {
+        return (this.getAllData('TR_LOGIN')[0]);
     },
 
     getPath: function () {
@@ -132,7 +132,7 @@ const TaskServices = {
         })
     },
 
-    deleteAll: function(){
+    deleteAll: function () {
         RealmSchemas.deleteAll();
     },
 
@@ -163,6 +163,14 @@ const TaskServices = {
             RealmSchemas.delete(result);
         });
     },
+
+    updateTPH: function (index) {
+        let update = RealmSchemas.objects('TR_REGISTER_TPH');
+        RealmSchemas.write(() => {
+            update[index].STATUS_SYNC = "Y";
+        });
+    },
+
     updateByPrimaryKey: function (table, param) {
         RealmSchemas.write(() => {
             RealmSchemas.create(table, param, true)

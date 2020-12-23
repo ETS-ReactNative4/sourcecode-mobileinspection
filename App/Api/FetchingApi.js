@@ -25,7 +25,7 @@ export function fetchPostWithUrl(URL, fetchBody, fetchHeaders) {
             return undefined;
         }
     }).then((data) => {
-        if(data.status === false){
+        if (data.status === false) {
             let momentTime = moment().format("YYYYMMDDHHmmss").toString();
             let LogModel = {
                 ID_LOG: `fetchPostWithUrl${momentTime}`,
@@ -54,7 +54,7 @@ export function fetchPostWithUrl(URL, fetchBody, fetchHeaders) {
 }
 
 //fetch PUT
-export function fetchPut(serviceName, fetchBody, fetchHeaders){
+export function fetchPut(serviceName, fetchBody, fetchHeaders) {
     let serviceDetail = TaskServices.getService(serviceName);
     let user = TaskServices.getAllData('TR_LOGIN')[0];
 
@@ -74,7 +74,7 @@ export function fetchPut(serviceName, fetchBody, fetchHeaders){
         }
     }
 
-    if(fetchBody !== null && fetchBody !== undefined){
+    if (fetchBody !== null && fetchBody !== undefined) {
         return fetch(serviceDetail.API_URL, {
             method: 'PUT',
             headers: headers,
@@ -97,7 +97,7 @@ export function fetchPut(serviceName, fetchBody, fetchHeaders){
                 return undefined;
             }
         }).then((data) => {
-            if(data.status === false){
+            if (data.status === false) {
                 let momentTime = moment().format("YYYYMMDDHHmmss").toString();
                 let LogModel = {
                     ID_LOG: `fetchPut${momentTime}`,
@@ -148,7 +148,7 @@ export function fetchPost(serviceName, fetchBody, fetchHeaders) {
         }
     }
 
-    if(fetchBody !== null && fetchBody !== undefined){
+    if (fetchBody !== null && fetchBody !== undefined) {
         return fetch(serviceDetail.API_URL, {
             method: 'POST',
             headers: headers,
@@ -171,7 +171,7 @@ export function fetchPost(serviceName, fetchBody, fetchHeaders) {
                 return undefined;
             }
         }).then((data) => {
-            if(data.status === false){
+            if (data.status === false) {
                 let momentTime = moment().format("YYYYMMDDHHmmss").toString();
                 let LogModel = {
                     ID_LOG: `fetchPost${momentTime}`,
@@ -223,7 +223,7 @@ export function fetchPostForm(serviceName, fetchBody, fetchHeaders) {
         }
     }
 
-    if(fetchBody !== null && fetchBody !== undefined){
+    if (fetchBody !== null && fetchBody !== undefined) {
         return fetch(serviceDetail.API_URL, {
             method: 'POST',
             headers: headers,
@@ -246,7 +246,7 @@ export function fetchPostForm(serviceName, fetchBody, fetchHeaders) {
                 return undefined;
             }
         }).then((data) => {
-            if(data.status === false){
+            if (data.status === false) {
                 let momentTime = moment().format("YYYYMMDDHHmmss").toString();
                 let LogModel = {
                     ID_LOG: `fetchPostForm${momentTime}`,
@@ -280,6 +280,11 @@ export function fetchPostForm(serviceName, fetchBody, fetchHeaders) {
 //fetch GET
 export function fetchGet(serviceName, fetchHeaders) {
     let serviceDetail = TaskServices.getService(serviceName);
+
+    if (serviceDetail.API_NAME == "INTERNAL-PETA-PANEN-HEADER") {
+        console.log("API URL : ", serviceDetail.API_URL);
+    }
+
     let user = TaskServices.getAllData('TR_LOGIN')[0];
 
     let headers = null;
@@ -332,7 +337,7 @@ export function fetchGet(serviceName, fetchHeaders) {
             return undefined;
         }
     }).then((data) => {
-        if(data.status === false){
+        if (data.status === false) {
             let momentTime = moment().format("YYYYMMDDHHmmss").toString();
             let LogModel = {
                 ID_LOG: `fetchGet${momentTime}`,

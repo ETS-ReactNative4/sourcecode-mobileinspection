@@ -160,24 +160,45 @@ export default class PetaPanen extends Component {
     }
 
     async getAvailableBlock() {
-        let listUserLocation = this.state.currentUser.LOCATION_CODE.split(",");
-        let locationArray = [];
-        await Promise.all(
-            listUserLocation.map((location) => {
-                locationArray.push({
-                    WERKS: location.slice(0, 4),
-                    AFD_CODE: location.slice(4)
+        if (this.state.currentUser.REFFERENCE_ROLE == "AFD_CODE") {
+            let listUserLocation = this.state.currentUser.LOCATION_CODE.split(",");
+            let locationArray = [];
+            await Promise.all(
+                listUserLocation.map((location) => {
+                    locationArray.push({
+                        WERKS: location.slice(0, 4),
+                        AFD_CODE: location.slice(4)
+                    })
                 })
-            })
-        );
-        await this.setState({
-            blockSelection: {
-                ...this.state.blockSelection,
-                listAvailableBlock: locationArray,
-                selectedBlock: locationArray[0],
-                index: 0
-            }
-        });
+            );
+            await this.setState({
+                blockSelection: {
+                    ...this.state.blockSelection,
+                    listAvailableBlock: locationArray,
+                    selectedBlock: locationArray[0],
+                    index: 0
+                }
+            });
+        } else {
+            const queryAfd = TaskServices.query('TM_AFD', `WERKS == "${this.state.currentUser.LOCATION_CODE}"`).sorted("AFD_CODE")
+            let locationArray = [];
+            await Promise.all(
+                queryAfd.map((location) => {
+                    locationArray.push({
+                        WERKS: location.WERKS,
+                        AFD_CODE: location.AFD_CODE
+                    })
+                })
+            );
+            await this.setState({
+                blockSelection: {
+                    ...this.state.blockSelection,
+                    listAvailableBlock: locationArray,
+                    selectedBlock: locationArray[0],
+                    index: 0
+                }
+            });
+        }
     }
 
     //param ("+") OR ("-") according to which button arrow pressed.
