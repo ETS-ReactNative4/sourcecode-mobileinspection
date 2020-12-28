@@ -63,7 +63,6 @@ async function postDataTPH(dataModel) {
     await syncFetchPost("TPH-INSERT", modelData, null)
         .then(((response) => {
             if (response !== null) {
-                console.log('Response : ', response)
                 let getData = TaskServices.getAllData('TR_REGISTER_TPH');
                 getData.map((item, index) => {
                     if (item.STATUS_SYNC == "N") {

@@ -73,7 +73,10 @@ class Scanner extends Component {
             // let decode = event.data;
 
             if (decode.length == 14) {
-                if (this.refRoleAuth(decode)) {
+                const splitBlockCodeTPH = decode.split("-");
+                let queryBlock = TaskServices.findBy2("TM_BLOCK", "BLOCK_CODE", splitBlockCodeTPH[3].toString())
+                
+                if (this.state.location.block_code == splitBlockCodeTPH[3].toString()) {
                     this.setState({
                         isBarcodeRead: true,
                         showModal: true,
@@ -87,12 +90,12 @@ class Scanner extends Component {
                 }
                 else {
                     this.setState({
-                        isBarcodeRead: true,
-                        showModal: true,
+                        isBarcodeRead: false,
                         isFocused: false,
-                        title: "Bukan Wilayah Otorisasimu",
-                        message: "Kamu tidak bisa sampling EBCC di wilayah ini",
-                        icon: require('../../Images/ic-blm-input-lokasi.png')
+                        showModal: true,
+                        title: "QR Code TPH Salah",
+                        message: `Kamu memilih blok ${this.state.location.block_name} tapi scan QR Code TPH blok ${queryBlock.BLOCK_NAME} `,
+                        icon: require('../../Images/icon/ic_scan_qrcode.png')
                     });
                 }
             } else {

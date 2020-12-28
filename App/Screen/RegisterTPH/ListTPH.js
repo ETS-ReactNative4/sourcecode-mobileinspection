@@ -5,6 +5,7 @@ import TaskServices from '../../Database/TaskServices';
 import Icons from 'react-native-vector-icons/MaterialIcons'
 import { Fonts, Colors } from '../../Themes';
 import { convertTimestampToDate, dateDisplayMobile, dateDisplayMobileWithoutHours, getTodayDate } from '../../Lib/Utils';
+import moment from "moment"
 
 import { NavigationActions, StackActions } from 'react-navigation';
 var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
@@ -61,9 +62,32 @@ export default class ListTPH extends React.Component {
         return true;
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        await this._deleteDataTPH();
         this._queryDataTPH(this.state.date);
     }
+
+    /** 
+   * DELETE DATA TPH MELEBIHI 7 HARI DAN STATUS SYCNC = 'Y'
+   * ADD BY AMINJU 2019/12/18
+   */
+    async _deleteDataTPH() {
+        let getData = TaskServices.getAllData('TR_REGISTER_TPH');
+        var now = moment(new Date());
+        getData.map((item, index) => {
+            if (item.STATUS_SYNC == "Y" && item.BLOCK_CODE == this.state.block_code) {
+                let endTime = item.SYNC_TIME.substring(0, 10);
+                var diff = moment(new Date(endTime)).diff(now, 'day');
+
+                if (diff < -7) {
+                    TaskServices.deleteRecord('TR_REGISTER_TPH', index);
+                } else {
+                    console.log('Diff Range Hari : ', diff)
+                }
+            }
+        })
+    }
+
 
     _queryDataTPH(date) {
         const format = convertTimestampToDate(date, "YYYY-MM-DD");
@@ -76,7 +100,10 @@ export default class ListTPH extends React.Component {
             for (var i = 0; i < data.length; i++) {
                 arr.push({
                     no_tph: data[i].NO_TPH,
-                    qrcode_tph: data[i].QRCODE_TPH
+                    werks: data[i].WERKS,
+                    afd_code: data[i].AFD_CODE,
+                    block_code: data[i].BLOCK_CODE,
+                    status_sync: data[i].STATUS_SYNC,
                 });
                 this.setState({ bisnisArea: arr })
             }
@@ -94,11 +121,14 @@ export default class ListTPH extends React.Component {
     };
 
     renderBisnisArea = (user) => {
+
+        const list = user.werks + "-" + user.afd_code + "-" + user.block_code + "-" + user.no_tph;
+
         return (
             <View style={{ flex: 1, padding: 5 }}>
                 <TouchableOpacity activeOpacity={1} onPress={() => { this.onSelectBa(user) }}>
                     <Text style={{ fontFamily: Fonts.demi, fontSize: 16, color: 'black' }}>{"TPH " + user.no_tph}</Text>
-                    <Text style={{ fontFamily: Fonts.demi, fontSize: 12, color: 'grey', marginTop: 3 }}>{user.qrcode_tph}</Text>
+                    <Text style={{ fontFamily: Fonts.demi, fontSize: 12, color: 'grey', marginTop: 3 }}>{list}</Text>
                 </TouchableOpacity>
             </View>
         );
@@ -111,6 +141,7 @@ export default class ListTPH extends React.Component {
     _handleDatePicked = (date) => {
         this.setState({ date: dateDisplayMobileWithoutHours(date) })
         this._hideDateTimePicker();
+        this._deleteDataTPH()
         this._queryDataTPH(date)
     };
 

@@ -37,37 +37,40 @@ export default class SearchBlok extends React.Component {
 
     componentDidMount() {
 
-        let loginData = TaskServices.getAllData('TR_LOGIN')[0];
-        let query;
-        if (loginData.REFFERENCE_ROLE == "AFD_CODE") {
+        // let loginData = TaskServices.getAllData('TR_LOGIN')[0];
+        // let query;
+        // if (loginData.REFFERENCE_ROLE == "AFD_CODE") {
 
-            const filters = loginData.LOCATION_CODE.split(',');
-            //Filter By Afdeling
-            query = 'WERKS_AFD_CODE == ';
-            for (var i = 0; i < filters.length; i++) {
-                query += `'${filters[i]}'`;
-                if (i + 1 < filters.length) {
-                    query += ` OR WERKS_AFD_CODE == `
-                }
-            }
+        //     const filters = loginData.LOCATION_CODE.split(',');
+        //     //Filter By Afdeling
+        //     query = 'WERKS_AFD_CODE == ';
+        //     for (var i = 0; i < filters.length; i++) {
+        //         query += `'${filters[i]}'`;
+        //         if (i + 1 < filters.length) {
+        //             query += ` OR WERKS_AFD_CODE == `
+        //         }
+        //     }
 
-            let result = TaskServices.getAllData('TM_BLOCK').sorted('BLOCK_NAME');
-            var data = result.filtered(query);
+        //     let result = TaskServices.getAllData('TM_BLOCK').sorted('BLOCK_NAME');
+        //     var data = result.filtered(query);
 
-            let arr = [];
-            for (var i = 0; i < data.length; i++) {
-                arr.push({
-                    block_name: data[i].BLOCK_NAME,
-                    block_code: data[i].BLOCK_CODE,
-                    afd_code: data[i].AFD_CODE,
-                    werks: data[i].WERKS,
-                });
-                this.setState({ bisnisArea: arr, searchedBisnisArea: arr })
-            }
-        } else {
-            let data = TaskServices.getAllData('TM_BLOCK').sorted('BLOCK_NAME');
-            let arr = [];
-            for (var i = 0; i < data.length; i++) {
+        //     let arr = [];
+        //     for (var i = 0; i < data.length; i++) {
+        //         arr.push({
+        //             block_name: data[i].BLOCK_NAME,
+        //             block_code: data[i].BLOCK_CODE,
+        //             afd_code: data[i].AFD_CODE,
+        //             werks: data[i].WERKS,
+        //         });
+        //         this.setState({ bisnisArea: arr, searchedBisnisArea: arr })
+        //     }
+        // } else {
+        let data = TaskServices.getAllData('TM_BLOCK').sorted('BLOCK_NAME');
+        let arr = [];
+        var format = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+
+        for (var i = 0; i < data.length; i++) {
+            if (!format.test(data[i].BLOCK_CODE)) {
                 arr.push({
                     block_name: data[i].BLOCK_NAME,
                     block_code: data[i].BLOCK_CODE,
@@ -77,6 +80,7 @@ export default class SearchBlok extends React.Component {
                 this.setState({ bisnisArea: arr, searchedBisnisArea: arr })
             }
         }
+        // }
 
 
     }
