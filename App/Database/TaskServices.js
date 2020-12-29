@@ -1,6 +1,7 @@
 import RealmSchemas from './RealmSchema'
 import { getThumnail } from "../Lib/Utils";
 import ServerName from "../Constant/ServerName";
+import moment from 'moment'
 
 const TaskServices = {
 
@@ -168,6 +169,7 @@ const TaskServices = {
         let update = RealmSchemas.objects('TR_REGISTER_TPH');
         RealmSchemas.write(() => {
             update[index].STATUS_SYNC = "Y";
+            update[index].SYNC_TIME = moment().format("YYYY-MM-DD HH:mm:ss");
         });
     },
 
