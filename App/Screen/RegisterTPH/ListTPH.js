@@ -75,7 +75,7 @@ export default class ListTPH extends React.Component {
         let getData = TaskServices.getAllData('TR_REGISTER_TPH');
         var now = moment(new Date());
         getData.map((item, index) => {
-            if (item.STATUS_SYNC == "Y" && item.BLOCK_CODE == this.state.block_code) {
+            if (item.STATUS_SYNC == "Y") {
                 let endTime = item.SYNC_TIME.substring(0, 10);
                 var diff = moment(new Date(endTime)).diff(now, 'day');
 
