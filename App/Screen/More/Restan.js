@@ -188,7 +188,7 @@ export default class Restan extends React.Component {
 
     loadMap() {
         let user = TaskServices.getAllData('TR_LOGIN')[0];
-        if (user.USER_ROLE === "ASISTEN_LAPANGAN") {
+        if (user.USER_ROLE === "ASISTEN_LAPANGAN" || user.USER_ROLE === "KEPALA_KEBUN") {
             // let queryString = `afd_code='O' OR afd_code='P'`;
             let queryString = ``;
             let userLocationCode = user.LOCATION_CODE.split(",");
