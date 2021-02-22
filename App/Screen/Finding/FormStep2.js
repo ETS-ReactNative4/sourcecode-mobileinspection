@@ -78,6 +78,8 @@ class FormStep2 extends Component {
             category: "",
             categoryCode: "",
             blok: "",
+            roadCode: "",
+            roadName: "",
             blockCode: '',
             werks: '',
             afdCode: '',
@@ -110,7 +112,8 @@ class FormStep2 extends Component {
             showModal: false,
             showModalConfirmation: false,
             showModalBack: false,
-            icon: ''
+            icon: '',
+            categoryType: 0
         }
     }
     static navigationOptions = {
@@ -136,12 +139,6 @@ class FormStep2 extends Component {
     }
 
     handleBackButtonClick() {
-        // this.setState({
-        //     showModalConfirmation: true,
-        //     title: 'Data Hilang',
-        //     message: 'Temuan mu belum tersimpan loh. Yakin nih mau dilanjutin?',
-        //     icon: require('../../Images/ic-not-save.png')
-        // });
         this.props.navigation.goBack();
         return true;
     }
@@ -259,6 +256,8 @@ class FormStep2 extends Component {
             UPDATE_TIME: '',
             STATUS_SYNC: "N",
             END_TIME: "",
+            ROAD_CODE: this.state.roadCode,
+            ROAD_NAME: this.state.roadName,
             syncImage: "N"
         }
 
@@ -322,16 +321,10 @@ class FormStep2 extends Component {
         }
     }
 
-    changeContact = data => {
-        let isSameUser = data.userAuth == this.state.user.USER_AUTH_CODE ? true : false;
-        if (isSameUser) {
-            this.setState({ disableCalendar: false })
-        }
-        this.setState({ tugasKepada: data.fullName, assignto: data.userAuth })
-    }
+   
 
     changeCategory = data => {
-        this.setState({ category: data.CATEGORY_NAME, categoryCode: data.CATEGORY_CODE })
+        this.setState({ category: data.CATEGORY_NAME, categoryCode: data.CATEGORY_CODE, categoryType: data.CATEGORY_TYPE })
     }
 
     changeBlok = data => {
@@ -342,18 +335,12 @@ class FormStep2 extends Component {
                 latitude: data.polyCoords.latitude,
                 longitude: data.polyCoords.longitude,
             })
-            // this.setState({ blok: data.allShow, blockCode: data.blokCode, werks: data.werks, afdCode: data.afdCode });
         }
 
     }
 
     loadDataBlock(werkAfdBlockCode) {
-
-        // console.log('Data  werkAfdBlockCode : ', werkAfdBlockCode)
-
         let data = TaskServices.findBy2('TM_BLOCK', 'WERKS_AFD_BLOCK_CODE', werkAfdBlockCode);
-
-        // console.log('Data : ', data)
 
         if (data !== undefined) {
             let statusBlok = this.getStatusBlok(data.WERKS_AFD_BLOCK_CODE);
@@ -376,11 +363,30 @@ class FormStep2 extends Component {
 
     pilihKontak() {
         if (isEmpty(this.state.blok)) {
-            // alert('kamu harus pilih lokasi dulu')
             this.setState({ showModal: true, title: 'Pilih Lokasi', message: 'Kamu harus pilih lokasi dulu yaaa', icon: require('../../Images/ic-inputan-tidak-lengkap.png') });
         } else {
             this.props.navigation.navigate('PilihKontak', { changeContact: this.changeContact, afdCode: this.state.afdCode, werks: this.state.werks })
         }
+    }
+
+    changeContact = data => {
+        let isSameUser = data.userAuth == this.state.user.USER_AUTH_CODE ? true : false;
+        if (isSameUser) {
+            this.setState({ disableCalendar: false })
+        }
+        this.setState({ tugasKepada: data.fullName, assignto: data.userAuth })
+    }
+
+    pilihJalan() {
+        if (isEmpty(this.state.blok)) {
+            this.setState({ showModal: true, title: 'Pilih Lokasi', message: 'Kamu harus pilih lokasi dulu yaaa', icon: require('../../Images/ic-inputan-tidak-lengkap.png') });
+        } else {
+            this.props.navigation.navigate('PilihRoad', { changeRoad: this.changeRoad })
+        }
+    }
+
+    changeRoad = data => {
+        this.setState({ roadCode: data.ROAD_CODE, roadName: data.ROAD_NAME })
     }
 
     selesai() {
@@ -511,22 +517,6 @@ class FormStep2 extends Component {
 
 
                     <View style={{ flex: 1, flexDirection: 'row' }}>
-                        <Text style={style.label}>Lokasi <Text style={style.mandatory}>*</Text></Text>
-                        {/* <TouchableOpacity onPress={() => this.props.navigation.navigate('PilihBlok', { changeBlok: this.changeBlok })}>
-                            {isEmpty(this.state.blok) && (<Text style={{ fontSize: 14, color: '#999' }}> Set Location </Text>)}
-                            {!isEmpty(this.state.blok) && (<Text style={{ fontSize: 14 }}> {this.state.blok} </Text>)}
-                        </TouchableOpacity> */}
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('MapsFinding', { changeBlok: this.changeBlok })}>
-                            {isEmpty(this.state.blok) && (<Text style={{
-                                fontSize: 14, color: '#999',
-                                fontFamily: Font.book
-                            }}> Set Location </Text>)}
-                            {!isEmpty(this.state.blok) && (<Text style={{ fontSize: 14 }}> {this.state.blok} </Text>)}
-                        </TouchableOpacity>
-                    </View>
-
-                    <View style={style.line} />
-                    <View style={{ flex: 1, flexDirection: 'row' }}>
                         <Text style={style.label}>Kategori <Text style={style.mandatory}>*</Text></Text>
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('PilihKategori', { changeCategory: this.changeCategory })}>
                             {isEmpty(this.state.category) && (<Text style={{
@@ -537,7 +527,6 @@ class FormStep2 extends Component {
                         </TouchableOpacity>
 
                     </View>
-
 
                     <View style={[style.line]} />
                     <View style={{ flex: 1, flexDirection: 'row' }}>
@@ -552,6 +541,38 @@ class FormStep2 extends Component {
                             buttonContainerInactiveStyle={{ backgroundColor: "#ddd", borderColor: "#CCC", borderWidth: 0.5, }}
                             radioGroupList={radioGroupList} />
                     </View>
+
+                    <View style={style.line} />
+
+                    <View style={{ flex: 1, flexDirection: 'row' }}>
+                        <Text style={style.label}>Lokasi <Text style={style.mandatory}>*</Text></Text>
+                        {/* <TouchableOpacity onPress={() => this.props.navigation.navigate('PilihBlok', { changeBlok: this.changeBlok })}>
+                            {isEmpty(this.state.blok) && (<Text style={{ fontSize: 14, color: '#999' }}> Set Location </Text>)}
+                            {!isEmpty(this.state.blok) && (<Text style={{ fontSize: 14 }}> {this.state.blok} </Text>)}
+                        </TouchableOpacity> */}
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('MapsFinding', { changeBlok: this.changeBlok })}>
+                            {isEmpty(this.state.blok) && (<Text style={{
+                                fontSize: 14, color: '#999',
+                                fontFamily: Font.book
+                            }}> Set Location </Text>)}
+                            {!isEmpty(this.state.blok) && (<Text style={{ fontSize: 14 }}> {this.state.blok} </Text>)}
+                        </TouchableOpacity>
+                    </View>
+
+                    {this.state.categoryType == 1 && <View style={{ flex: 1 }}>
+                        <View style={style.line} />
+                        <View style={{ flex: 1, flexDirection: 'row' }}>
+                            <Text style={style.label}>Nama Jalan <Text style={style.mandatory}>*</Text></Text>
+                            <TouchableOpacity onPress={() => this.pilihJalan()}>
+                                {isEmpty(this.state.roadName) && (<Text style={{
+                                    fontSize: 14, color: '#999',
+                                    fontFamily: Font.book
+                                }}> Set Jalan </Text>)}
+                                {!isEmpty(this.state.roadName) && (<Text style={{ fontSize: 14 }}> {this.state.roadName} </Text>)}
+                            </TouchableOpacity>
+                        </View>
+                    </View>}
+
 
                     <View style={style.line} />
 

@@ -20,8 +20,10 @@ export default {
 		// service: "http://app.tap-agri.com/mobileinspectionqa/ins-msa-qa-auth/api/" + verAPI + "/server/service-list?v=" + verAPK
 	},
 	3: {
-		data: "http://apisdev.tap-agri.com/mobileinspectiondev/ins-msa-dev-auth/api/" + verAPI + "/",
-		service: "http://apisdev.tap-agri.com/mobileinspectiondev/ins-msa-dev-auth/api/" + verAPI + "/server/service-list?v=" + verAPK
+		// data: "http://apisdev.tap-agri.com/mobileinspectiondev/ins-msa-dev-auth/api/" + verAPI + "/",
+		// service: "http://apisdev.tap-agri.com/mobileinspectiondev/ins-msa-dev-auth/api/" + verAPI + "/server/service-list?v=" + verAPK
+		data: "http://apistest.tap-agri.com/mobileinspectiondev/ins-msa-dev-auth/api/" + verAPI + "/",
+		service: "http://apistest.tap-agri.com/mobileinspectiondev/ins-msa-dev-auth/api/" + verAPI + "/server/service-list?v=" + verAPK
 	},
 	10000: {
 		data: "http://app.tap-agri.com/mobileinspectiondev/ins-msa-dev-auth/api/v1.0/",

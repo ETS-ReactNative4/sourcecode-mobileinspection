@@ -35,6 +35,7 @@ let realmSchema = new Realm({
         ModelTables.TR_D_EBCC_VALIDATION,
         ModelTables.TR_NOTIFICATION,
         ModelTables.TM_SERVICE,
+        ModelTables.TM_ROAD,
         ModelTables.TR_COORD,
         ModelTables.TR_TITIK_RESTAN,
         ModelTables.TR_POLYGON,

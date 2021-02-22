@@ -44,6 +44,7 @@ import { getFindingComment } from './Sync/Download/DownloadFindingComment';
 import { getFindingImage } from './Sync/Download/DownloadFindingImage';
 import { getTimeServer } from './Sync/Download/DownloadTimeServer';
 import { getResetToken } from './Sync/Download/DownloadResetToken';
+import { getRoad } from './Sync/Download/DownloadRoad';
 import { AlertContent, Fonts } from '../Themes';
 import { postWeeklySummary } from './Sync/Upload/UploadWeeklySummary';
 import { getTitikRestan } from './Sync/Download/Restan/TitikRestan';
@@ -87,6 +88,7 @@ export default class SyncScreen extends React.Component {
             progressEbccDetail: 0,
             progressGenbaInspection: 0,
             progressRegistrasiTPH: 0,
+            progressRoad: 0,
 
             //labelUpload
             valueInspeksiHeaderUpload: '0',
@@ -164,6 +166,8 @@ export default class SyncScreen extends React.Component {
             totalContactDownload: '0',
             valueFindingImageDownload: '0',
             totalFindingImageDownload: '0',
+            totalRoadDownload: '0',
+            valueRoadDownload: '0',
             valueParamInspection: '0',
             totalParamInspection: '0',
             valueKualitas: '0',
@@ -353,6 +357,17 @@ export default class SyncScreen extends React.Component {
                 progressContact: 1,
                 valueContactDownload: data.downloadCount,
                 totalContactDownload: data.totalCount
+            })
+        })
+
+        /* Master Road */
+        /* DOWNLOAD ROAD */
+        await getRoad().then((data) => {
+            // console.log('Data Callback Road : ', data)
+            this.setState({
+                progressRoad: 1,
+                valueRoadDownload: data.downloadCount,
+                totalRoadDownload: data.totalCount
             })
         })
 
@@ -1464,6 +1479,13 @@ export default class SyncScreen extends React.Component {
                             value={this.state.valueContactDownload}
                             total={this.state.totalContactDownload}
                             progress={this.state.progressContact} />
+
+                        <ProgressSync
+                            title={'Master Road'}
+                            color={Colors.brand}
+                            value={this.state.valueRoadDownload}
+                            total={this.state.totalRoadDownload}
+                            progress={this.state.progressRoad} />
 
                         <ProgressSync
                             title={'Parameter Penilaian Inspeksi'}

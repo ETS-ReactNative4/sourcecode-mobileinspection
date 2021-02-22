@@ -15,6 +15,7 @@ import TakeFotoBukti from '../Screen/Finding/TakeFoto'
 import DetailFindingScreen from '../Screen/Finding/DetailFindingScreenRedesign'
 import BuktiKerja from '../Screen/Finding/BuktiKerja'
 import PilihKontak from '../Screen/Finding/PilihKontak'
+import PilihRoad from '../Screen/Finding/PilihRoad'
 import PilihKategori from '../Screen/Finding/PilihKategori'
 import PilihBlok from '../Screen/Finding/PilihBlok'
 import MapsFinding from '../Screen/Finding/MapsFinding'
@@ -115,6 +116,7 @@ const main = createStackNavigator({
     BuktiKerja: { screen: BuktiKerja },
     TakeFotoBukti: { screen: TakeFotoBukti },
     PilihKontak: { screen: PilihKontak },
+    PilihRoad: { screen: PilihRoad },
     PilihKategori: { screen: PilihKategori },
     PilihBlok: { screen: PilihBlok },
     SearchBlok: { screen: SearchBlok },

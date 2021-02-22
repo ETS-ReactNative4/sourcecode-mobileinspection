@@ -1,4 +1,4 @@
-const SCHEMA_VERSION = 32;
+const SCHEMA_VERSION = 33;
 
 const TR_CONFIG = {
     name: 'TR_CONFIG',
@@ -297,6 +297,8 @@ const TR_FINDING = {
         RATING_VALUE: { type: 'int', default: 0 },
         RATING_MESSAGE: { type: 'string', optional: true },
         END_TIME: { type: 'string', optional: true },
+        ROAD_NAME: { type: 'string', optional: true },
+        ROAD_CODE:  { type: 'string', optional: true },
 
         //LOCAL
         syncImage: 'string'
@@ -766,6 +768,19 @@ const TR_REGISTER_TPH = {
     }
 }
 
+const TM_ROAD = {
+    name: 'TM_ROAD',
+    primaryKey: 'ROAD_CODE',
+    properties: {
+        ROAD_CODE: 'string',
+        ROAD_NAME: 'string',
+        STATUS_PEKERASAN: 'int',
+        STATUS_AKTIF: 'int'
+    }
+}
+
+
+
 export default {
     TR_LOGIN,
     TR_CONFIG,
@@ -795,6 +810,7 @@ export default {
     TM_SUGGESTION_INSPECTION,
     TM_SERVICE,
     TM_KUALITAS,
+    TM_ROAD,
 
     TR_H_EBCC_VALIDATION,
     TR_D_EBCC_VALIDATION,

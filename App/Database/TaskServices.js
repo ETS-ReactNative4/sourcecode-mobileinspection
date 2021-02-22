@@ -27,7 +27,7 @@ const TaskServices = {
 
     saveData: async function (table, obj) {
         try {
-            if (table == 'TM_SUGGESTION_INSPECTION') {
+            if (table == 'TM_ROAD') {
                 console.log('Save Data : ' + table + ' ' + JSON.stringify(obj));
             }
 

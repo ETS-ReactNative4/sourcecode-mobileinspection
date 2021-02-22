@@ -36,6 +36,7 @@ export async function getFinding() {
 
                             let newItem = {
                                 ...item,
+                                STREET_NAME: 'NAMA JALAN',
                                 RATING: newRating,
                                 syncImage: 'Y'
                             };

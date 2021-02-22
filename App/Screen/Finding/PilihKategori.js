@@ -41,8 +41,17 @@ class PilihKategori extends Component {
     return true;
   }
 
-  onSelect(user) {
-    this.props.navigation.state.params.changeCategory(user);
+  onSelect(params) {
+
+    const category = {
+      CATEGORY_TYPE: this.state.activeIndex,
+      CATEGORY_NAME: params.CATEGORY_NAME,
+      CATEGORY_CODE: params.CATEGORY_CODE,
+    }
+
+    console.log('Pilih Category : ', category)
+
+    this.props.navigation.state.params.changeCategory(category);
     this.props.navigation.goBack();
   };
 

@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
-import {NavigationActions, StackActions} from 'react-navigation';
-import {BackHandler, FlatList, Image, Modal, StatusBar, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import {Container, Content} from 'native-base'
-import R, {isEmpty} from 'ramda'
+import React, { Component } from 'react';
+import { NavigationActions, StackActions } from 'react-navigation';
+import { BackHandler, FlatList, Image, Modal, StatusBar, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Container, Content } from 'native-base'
+import R, { isEmpty } from 'ramda'
 import Colors from '../../Constant/Colors'
 import Fonts from '../../Constant/Fonts'
 import Icon from 'react-native-vector-icons/MaterialIcons'
@@ -10,10 +10,10 @@ import RadioGroup from 'react-native-custom-radio-group'
 import DateTimePicker from 'react-native-modal-datetime-picker'
 import moment from 'moment'
 import TaskServices from '../../Database/TaskServices'
-import {dateDisplayMobileWithoutHours, getTodayDate} from '../../Lib/Utils'
+import { dateDisplayMobileWithoutHours, getTodayDate } from '../../Lib/Utils'
 import IIcon from 'react-native-vector-icons/Ionicons'
 import Carousel from 'react-native-looped-carousel'
-import {dirPhotoTemuan} from '../../Lib/dirStorage'
+import { dirPhotoTemuan } from '../../Lib/dirStorage'
 
 import ModalAlert from '../../Component/ModalAlert';
 import ModalAlertBack from '../../Component/ModalAlert';
@@ -74,6 +74,7 @@ export default class Step2Finding extends Component {
             category: "",
             categoryCode: "",
             blok: "",
+            jalan: "",
             blockCode: '',
             werks: '',
             afdCode: '',
@@ -108,7 +109,8 @@ export default class Step2Finding extends Component {
             showModal: false,
             showModalBack: false,
             showModalConfirmation: false,
-            icon: ''
+            icon: '',
+            categoryType: 0
         }
     }
 
@@ -163,12 +165,7 @@ export default class Step2Finding extends Component {
     }
 
     handleBackButtonClick() {
-        // this.setState({
-        //     showModalConfirmation: true, title: 'Data Hilang', message: 'Temuan mu belum tersimpan loh. Yakin nih mau dilanjutin?',
-        //     icon: require('../../Images/ic-not-save.png')
-        // });
         this.props.navigation.goBack()
-
         return true;
     }
 
@@ -223,7 +220,7 @@ export default class Step2Finding extends Component {
         navigation.dispatch(resetAction);
     }
 
-    validation(){
+    validation() {
         let isSameUser = this.state.assignto === this.state.user.USER_AUTH_CODE ? true : false;
         let title = 'Inputan Tidak Lengkap';
         if (isEmpty(this.state.keterangan)) {
@@ -258,7 +255,7 @@ export default class Step2Finding extends Component {
             });
         } else {
             let listFinding = this.saveData();
-            if(listFinding.length > 0){
+            if (listFinding.length > 0) {
                 this.setState({
                     tr_finding_codes: listFinding
                 }, () => {
@@ -294,6 +291,7 @@ export default class Step2Finding extends Component {
                 UPDATE_TIME: insertTime,
                 STATUS_SYNC: "N",
                 END_TIME: "",
+                STREET_NAME: this.state.jalan,
                 syncImage: "N"
             }
             TaskServices.saveData('TR_FINDING', data);
@@ -335,68 +333,6 @@ export default class Step2Finding extends Component {
             alert("Error inserting finding, please check again!", e);
             return null;
         }
-
-        // let insertTime = getTodayDate('YYYY-MM-DD HH:mm:ss');
-        // var data = {
-        //     FINDING_CODE: this.state.TRANS_CODE,
-        //     WERKS: this.state.werks,
-        //     AFD_CODE: this.state.afdCode,
-        //     BLOCK_CODE: this.state.blockCode,
-        //     FINDING_CATEGORY: this.state.categoryCode,
-        //     FINDING_DESC: this.state.keterangan,
-        //     FINDING_PRIORITY: this.state.priority,
-        //     DUE_DATE: this.state.batasWaktu == "" ? "" : moment(this.state.batasWaktu).format("YYYY-MM-DD"),
-        //     STATUS: 'BARU',
-        //     ASSIGN_TO: this.state.assignto,
-        //     PROGRESS: 0,
-        //     LAT_FINDING: this.state.latitude.toString(),
-        //     LONG_FINDING: this.state.longitude.toString(),
-        //     REFFERENCE_INS_CODE: "",
-        //     INSERT_USER: this.state.user.USER_AUTH_CODE,
-        //     INSERT_TIME: insertTime,
-        //     UPDATE_USER: this.state.user.USER_AUTH_CODE,
-        //     UPDATE_TIME: insertTime,
-        //     STATUS_SYNC: "N",
-        //     END_TIME: "",
-        //     syncImage: "N"
-        // }
-        // TaskServices.saveData('TR_FINDING', data);
-        //
-        // this.state.foto.map((image, i) => {
-        //     var imagetr = {
-        //         TR_CODE: this.state.TRANS_CODE,
-        //         IMAGE_CODE: image.replace(".jpg", ""),
-        //         IMAGE_NAME: image,
-        //         IMAGE_PATH_LOCAL: dirPhotoTemuan + "/" + image,
-        //         IMAGE_URL: '',
-        //         STATUS_IMAGE: 'SEBELUM',
-        //         STATUS_SYNC: 'N',
-        //         INSERT_USER: this.state.user.USER_AUTH_CODE,
-        //         INSERT_TIME: moment(new Date()).format("YYYY-MM-DD HH:mm:ss")
-        //     }
-        //
-        //     TaskServices.saveData('TR_IMAGE', imagetr);
-        // });
-        //
-        // //ambil existing tr_finding_code
-        // let barisInspectionData = TaskServices.findBy2('TR_BARIS_INSPECTION', 'ID_INSPECTION', this.state.dataInspeksi.ID_INSPECTION);
-        // let tempFindingID = [];
-        // if (barisInspectionData !== "" && barisInspectionData !== null && barisInspectionData !== undefined) {
-        //     barisInspectionData.TR_FINDING_CODES.map((data) => {
-        //         tempFindingID.push(data)
-        //     })
-        // }
-        // tempFindingID = [...tempFindingID, ...this.state.tr_finding_codes, this.state.TRANS_CODE];
-        // console.log(JSON.stringify(tempFindingID));
-        // console.log(JSON.stringify(this.state.tr_finding_codes));
-        // console.log(JSON.stringify(this.state.TRANS_CODE));
-        // this.setState({
-        //     tr_finding_codes: tempFindingID
-        // }, () => {
-        //     setTimeout(() => {
-        //         this.setState({ showModalBack: true, title: 'Berhasil Disimpan', message: 'Yeaay! Data kamu berhasil disimpan', icon: require('../../Images/ic-save-berhasil.png') });
-        //     }, 1000);
-        // })
     }
 
     _showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
@@ -433,19 +369,17 @@ export default class Step2Finding extends Component {
     }
 
     changeCategory = data => {
-        this.setState({ category: data.CATEGORY_NAME, categoryCode: data.CATEGORY_CODE })
+        this.setState({ category: data.CATEGORY_NAME, categoryCode: data.CATEGORY_CODE, categoryType: data.CATEGORY_TYPE })
     }
 
     changeBlok = data => {
         if (data !== null) {
             this.setState({ blok: data.allShow, blockCode: data.blokCode, werks: data.werks, afdCode: data.afdCode });
         }
-
     }
 
     pilihKontak() {
         if (isEmpty(this.state.blok)) {
-            // alert('kamu harus pilih lokasi dulu')
             this.setState({ showModal: true, title: title, message: 'Kamu harus pilih lokasi dulu yaaa' });
         } else {
             this.props.navigation.navigate('PilihKontak', { changeContact: this.changeContact, afdCode: this.state.afdCode, werks: this.state.werks })
@@ -564,26 +498,18 @@ export default class Step2Finding extends Component {
                     </View>
 
                     <View style={style.line} />
-                    <View style={{ flex: 1, flexDirection: 'row' }}>
-                        <Text style={style.label}>Lokasi <Text style={style.mandatory}>*</Text></Text>
-                        <TouchableOpacity disabled={disableLoc}
-                            onPress={() => this.props.navigation.navigate('PilihBlok',
-                                { changeBlok: this.changeBlok, inspeksiHeader: this.state.inspeksiHeader, from: 'inspeksi' })}>
-                            {isEmpty(this.state.blok) && (<Text style={{ fontSize: 14, color: '#999' }}> Set Location </Text>)}
-                            {!isEmpty(this.state.blok) && (<Text style={{ fontSize: 14 }}> {this.state.blok} </Text>)}
-                        </TouchableOpacity>
-                    </View>
 
-                    <View style={style.line} />
                     <View style={{ flex: 1, flexDirection: 'row' }}>
                         <Text style={style.label}>Kategori <Text style={style.mandatory}>*</Text></Text>
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('PilihKategori', { changeCategory: this.changeCategory })}>
-                            {isEmpty(this.state.category) && (<Text style={{ fontSize: 14, color: '#999' }}> Pilih Kategori </Text>)}
+                            {isEmpty(this.state.category) && (<Text style={{
+                                fontSize: 14, color: '#999',
+                                fontFamily: Font.book
+                            }}> Pilih Kategori </Text>)}
                             {!isEmpty(this.state.category) && (<Text style={{ fontSize: 14 }}> {this.state.category} </Text>)}
                         </TouchableOpacity>
 
                     </View>
-
 
                     <View style={[style.line]} />
                     <View style={{ flex: 1, flexDirection: 'row' }}>
@@ -598,6 +524,34 @@ export default class Step2Finding extends Component {
                             buttonContainerInactiveStyle={{ backgroundColor: "#ddd", borderColor: "#CCC", borderWidth: 0.5, }}
                             radioGroupList={radioGroupList} />
                     </View>
+
+                    <View style={style.line} />
+
+                    <View style={{ flex: 1, flexDirection: 'row' }}>
+                        <Text style={style.label}>Lokasi <Text style={style.mandatory}>*</Text></Text>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('MapsFinding', { changeBlok: this.changeBlok })}>
+                            {isEmpty(this.state.blok) && (<Text style={{
+                                fontSize: 14, color: '#999',
+                                fontFamily: Font.book
+                            }}> Set Location </Text>)}
+                            {!isEmpty(this.state.blok) && (<Text style={{ fontSize: 14 }}> {this.state.blok} </Text>)}
+                        </TouchableOpacity>
+                    </View>
+
+                    {this.state.categoryType == 1 && <View>
+                        <View style={style.line} />
+                        <View style={{ flex: 1, flexDirection: 'row' }}>
+                            <Text style={style.label}>Nama Jalan <Text style={style.mandatory}>*</Text></Text>
+                            <TouchableOpacity onPress={() => this.props.navigation.navigate('MapsFinding', { changeBlok: this.changeBlok })}>
+                                {isEmpty(this.state.jalan) && (<Text style={{
+                                    fontSize: 14, color: '#999',
+                                    fontFamily: Font.book
+                                }}> Set Jalan </Text>)}
+                                {!isEmpty(this.state.jalan) && (<Text style={{ fontSize: 14 }}> {this.state.jalan} </Text>)}
+                            </TouchableOpacity>
+                        </View>
+                    </View>}
+
 
                     <View style={style.line} />
 

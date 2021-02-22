@@ -66,7 +66,9 @@ async function postFinding(paramFindingModel) {
         UPDATE_TIME: paramFindingModel.UPDATE_TIME === '' ? parseInt(getTodayDate('YYYYMMDDkkmmss')) : parseInt(paramFindingModel.UPDATE_TIME.replace(/-/g, '').replace(/ /g, '').replace(/:/g, '')),
         RATING_VALUE: paramFindingModel.RATING_VALUE,
         RATING_MESSAGE: paramFindingModel.RATING_MESSAGE,
-        END_TIME: paramFindingModel.END_TIME.includes('-') ? parseInt(paramFindingModel.END_TIME.replace(/-/g, '').replace(/ /g, '').replace(/:/g, '')) : paramFindingModel.END_TIME == "" ? "" : parseInt(paramFindingModel.END_TIME)
+        END_TIME: paramFindingModel.END_TIME.includes('-') ? parseInt(paramFindingModel.END_TIME.replace(/-/g, '').replace(/ /g, '').replace(/:/g, '')) : paramFindingModel.END_TIME == "" ? "" : parseInt(paramFindingModel.END_TIME),
+        ROAD_NAME: paramFindingModel.ROAD_NAME,
+        ROAD_CODE: paramFindingModel.ROAD_CODE
     };
 
     let getImage = TaskServices.findBy("TR_IMAGE", "TR_CODE", findingModel.FINDING_CODE).filtered('STATUS_SYNC = "N"');
