@@ -18,6 +18,7 @@ import ModalAlertConfirmation from '../../Component/ModalAlertConfirmation';
 import { retrieveData } from '../../Database/Resources';
 import ModalLoading from "../../Component/ModalLoading";
 import Font from "../../Themes/Fonts";
+import moment from 'moment';
 
 const LATITUDE = -2.1890660;
 const LONGITUDE = 111.3609873;
@@ -185,12 +186,21 @@ class KondisiBarisAkhir extends Component {
 
 
     totalWaktu() {
-        let now = new Date();
         let startTime = this.state.inspeksiHeader.START_INSPECTION;
+
         startTime = startTime.replace(' ', 'T');
-        startTime = new Date(startTime);
-        let time = getCalculateTime(startTime, now);
-        return time;
+        var from = startTime;
+        var a = moment();
+        var b = moment(from);
+
+        const timeInMinutes = a.diff(b, 'minutes');
+        
+        // console.log(a.diff(b, 'minutes') + " Minutes"); //60
+        // console.log(a.diff(b, 'hours')); //1
+        // console.log(a.diff(b, 'days')); //0 
+        // console.log(a.diff(b, 'weeks')); //0
+
+        return timeInMinutes;
     }
 
     // totalJarak(coord) {
