@@ -217,12 +217,19 @@ class FormStep2 extends Component {
                 showModal: true, title: title, message: 'Eh Prioritas belum diisi loh',
                 icon: require('../../Images/ic-inputan-tidak-lengkap.png')
             });
-        } else if (isEmpty(this.state.tugasKepada)) {
+        } else if (isEmpty(this.state.roadName)) {
+            this.setState({
+                showModal: true, title: title, message: 'Eh Nama jalan belum diisi loh',
+                icon: require('../../Images/ic-inputan-tidak-lengkap.png')
+            });
+        }
+        else if (isEmpty(this.state.tugasKepada)) {
             this.setState({
                 showModal: true, title: title, message: 'Eh Ditugaskan kepada belum diisi loh',
                 icon: require('../../Images/ic-inputan-tidak-lengkap.png')
             });
-        } else if (isSameUser && isEmpty(this.state.batasWaktu)) {
+        }
+        else if (isSameUser && isEmpty(this.state.batasWaktu)) {
             this.setState({
                 showModal: true, title: title, message: 'Eh Batas waktu belum diisi loh',
                 icon: require('../../Images/ic-batas-waktu.png')
