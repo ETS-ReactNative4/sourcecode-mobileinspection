@@ -321,7 +321,7 @@ class FormStep2 extends Component {
         }
     }
 
-   
+
 
     changeCategory = data => {
         this.setState({ category: data.CATEGORY_NAME, categoryCode: data.CATEGORY_CODE, categoryType: data.CATEGORY_TYPE })
@@ -378,10 +378,18 @@ class FormStep2 extends Component {
     }
 
     pilihJalan() {
+
+
+
         if (isEmpty(this.state.blok)) {
             this.setState({ showModal: true, title: 'Pilih Lokasi', message: 'Kamu harus pilih lokasi dulu yaaa', icon: require('../../Images/ic-inputan-tidak-lengkap.png') });
         } else {
-            this.props.navigation.navigate('PilihRoad', { changeRoad: this.changeRoad })
+            this.props.navigation.navigate('PilihRoad', {
+                changeRoad: this.changeRoad,
+                werks: this.state.werks,
+                afdCode: this.state.afdCode,
+                blockCode: this.state.blockCode
+            })
         }
     }
 

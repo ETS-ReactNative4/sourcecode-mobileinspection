@@ -772,14 +772,16 @@ const TM_ROAD = {
     name: 'TM_ROAD',
     primaryKey: 'ROAD_CODE',
     properties: {
+        COMP_CODE: 'string',
+        WERKS: 'string',
+        AFD_CODE: 'string',
+        BLOCK_CODE: 'string',
         ROAD_CODE: 'string',
         ROAD_NAME: 'string',
         STATUS_PEKERASAN: 'int',
         STATUS_AKTIF: 'int'
     }
 }
-
-
 
 export default {
     TR_LOGIN,

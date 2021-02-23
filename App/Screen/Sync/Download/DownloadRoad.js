@@ -30,7 +30,15 @@ export async function getRoad() {
                 if (data.simpan.length > 0) {
                     Promise.all(
                         data.simpan.map(item => {
-                            TaskServices.saveData('TM_ROAD', item);
+
+                            let strWerks = item.WERKS.toString();
+
+                            let newItem = {
+                                ...item,
+                                WERKS: strWerks
+                            };
+
+                            TaskServices.saveData('TM_ROAD', newItem);
                             downloadLabels = {
                                 ...downloadLabels,
                                 downloadCount: downloadLabels.downloadCount + 1

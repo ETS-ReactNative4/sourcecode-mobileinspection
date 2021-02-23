@@ -37,7 +37,11 @@ class PilihRoad extends Component {
   componentDidMount() {
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
 
-    const dataRoad = TaskServices.getAllData('TM_ROAD');
+    const { navigation } = this.props;
+    const werks = navigation.getParam('werks');
+    const afdCode = navigation.getParam('afdCode');
+    const blockCode = navigation.getParam('blockCode')
+    const dataRoad = TaskServices.query('TM_ROAD', `WERKS = "${werks}" AND AFD_CODE = "${afdCode}" AND BLOCK_CODE = "${blockCode}"`);
 
     this.setState({ adresses: dataRoad, dataList: dataRoad })
   }
