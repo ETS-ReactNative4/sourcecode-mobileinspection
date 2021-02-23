@@ -217,7 +217,7 @@ class FormStep2 extends Component {
                 showModal: true, title: title, message: 'Eh Prioritas belum diisi loh',
                 icon: require('../../Images/ic-inputan-tidak-lengkap.png')
             });
-        } else if (isEmpty(this.state.roadName)) {
+        } else if (isEmpty(this.state.roadName) && this.state.categoryType == 1) {
             this.setState({
                 showModal: true, title: title, message: 'Eh Nama jalan belum diisi loh',
                 icon: require('../../Images/ic-inputan-tidak-lengkap.png')
@@ -533,7 +533,14 @@ class FormStep2 extends Component {
 
                     <View style={{ flex: 1, flexDirection: 'row' }}>
                         <Text style={style.label}>Kategori <Text style={style.mandatory}>*</Text></Text>
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('PilihKategori', { changeCategory: this.changeCategory })}>
+                        <TouchableOpacity onPress={() => {
+                            this.setState({
+                                roadName: '',
+                                roadCode: ''
+                            })
+                            this.props.navigation.navigate('PilihKategori', { changeCategory: this.changeCategory })
+                        }
+                        }>
                             {isEmpty(this.state.category) && (<Text style={{
                                 fontSize: 14, color: '#999',
                                 fontFamily: Font.book
