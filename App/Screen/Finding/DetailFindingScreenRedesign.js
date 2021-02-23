@@ -438,6 +438,13 @@ class DetailFindingScreenRedesign extends Component {
                         <View style={{ flex: 2, marginLeft: 16 }}>
                             <Text style={{ fontSize: 16, fontFamily: Fonts.demi }}>{this.state.lokasiBlok}</Text>
 
+                            {this.state.data.ROAD_NAME !== "" &&
+                                <View style={styles.column}>
+                                    <Text style={styles.label}>Nama Jalan </Text>
+                                    <Text style={styles.item}>: {this.state.data.ROAD_NAME} </Text>
+                                </View>
+                            }
+
                             <View style={styles.column}>
                                 <Text style={styles.label}>Kategori </Text>
                                 <Text style={styles.item}>: {category ? category.CATEGORY_NAME : 'not defined'} </Text>

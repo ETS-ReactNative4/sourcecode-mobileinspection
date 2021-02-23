@@ -385,9 +385,6 @@ class FormStep2 extends Component {
     }
 
     pilihJalan() {
-
-
-
         if (isEmpty(this.state.blok)) {
             this.setState({ showModal: true, title: 'Pilih Lokasi', message: 'Kamu harus pilih lokasi dulu yaaa', icon: require('../../Images/ic-inputan-tidak-lengkap.png') });
         } else {
@@ -529,7 +526,6 @@ class FormStep2 extends Component {
                     </View>
 
                     <View style={style.line} />
-
 
                     <View style={{ flex: 1, flexDirection: 'row' }}>
                         <Text style={style.label}>Kategori <Text style={style.mandatory}>*</Text></Text>

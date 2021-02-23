@@ -74,7 +74,8 @@ export default class Step2Finding extends Component {
             category: "",
             categoryCode: "",
             blok: "",
-            jalan: "",
+            roadCode: "",
+            roadName: "",
             blockCode: '',
             werks: '',
             afdCode: '',
@@ -243,7 +244,14 @@ export default class Step2Finding extends Component {
                 showModal: true, title: title, message: 'Eh Prioritas belum diisi loh',
                 icon: require('../../Images/ic-inputan-tidak-lengkap.png')
             });
-        } else if (isEmpty(this.state.tugasKepada)) {
+        }
+        else if (isEmpty(this.state.roadName) && this.state.categoryType == 1) {
+            this.setState({
+                showModal: true, title: title, message: 'Eh Nama jalan belum diisi loh',
+                icon: require('../../Images/ic-inputan-tidak-lengkap.png')
+            });
+        }
+        else if (isEmpty(this.state.tugasKepada)) {
             this.setState({
                 showModal: true, title: title, message: 'Eh Ditugaskan kepada belum diisi loh',
                 icon: require('../../Images/ic-inputan-tidak-lengkap.png')
@@ -291,7 +299,8 @@ export default class Step2Finding extends Component {
                 UPDATE_TIME: insertTime,
                 STATUS_SYNC: "N",
                 END_TIME: "",
-                STREET_NAME: this.state.jalan,
+                ROAD_CODE: this.state.roadCode,
+                ROAD_NAME: this.state.roadName,
                 syncImage: "N"
             }
             TaskServices.saveData('TR_FINDING', data);
@@ -386,8 +395,24 @@ export default class Step2Finding extends Component {
         }
     }
 
+    pilihJalan() {
+        if (isEmpty(this.state.blok)) {
+            this.setState({ showModal: true, title: 'Pilih Lokasi', message: 'Kamu harus pilih lokasi dulu yaaa', icon: require('../../Images/ic-inputan-tidak-lengkap.png') });
+        } else {
+            this.props.navigation.navigate('PilihRoad', {
+                changeRoad: this.changeRoad,
+                werks: this.state.werks,
+                afdCode: this.state.afdCode,
+                blockCode: this.state.blockCode
+            })
+        }
+    }
+
+    changeRoad = data => {
+        this.setState({ roadCode: data.ROAD_CODE, roadName: data.ROAD_NAME })
+    }
+
     render() {
-        let disableLoc = this.state.inspeksiHeader !== undefined ? true : false
 
         return (
             <Container style={{ flex: 1, backgroundColor: 'white' }}>
@@ -501,10 +526,17 @@ export default class Step2Finding extends Component {
 
                     <View style={{ flex: 1, flexDirection: 'row' }}>
                         <Text style={style.label}>Kategori <Text style={style.mandatory}>*</Text></Text>
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('PilihKategori', { changeCategory: this.changeCategory })}>
+                        <TouchableOpacity onPress={() => {
+                            this.setState({
+                                roadName: '',
+                                roadCode: ''
+                            })
+                            this.props.navigation.navigate('PilihKategori', { changeCategory: this.changeCategory })
+                        }
+                        }>
                             {isEmpty(this.state.category) && (<Text style={{
                                 fontSize: 14, color: '#999',
-                                fontFamily: Font.book
+                                fontFamily: Fonts.book
                             }}> Pilih Kategori </Text>)}
                             {!isEmpty(this.state.category) && (<Text style={{ fontSize: 14 }}> {this.state.category} </Text>)}
                         </TouchableOpacity>
@@ -532,26 +564,25 @@ export default class Step2Finding extends Component {
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('MapsFinding', { changeBlok: this.changeBlok })}>
                             {isEmpty(this.state.blok) && (<Text style={{
                                 fontSize: 14, color: '#999',
-                                fontFamily: Font.book
+                                fontFamily: Fonts.book
                             }}> Set Location </Text>)}
                             {!isEmpty(this.state.blok) && (<Text style={{ fontSize: 14 }}> {this.state.blok} </Text>)}
                         </TouchableOpacity>
                     </View>
 
-                    {this.state.categoryType == 1 && <View>
+                    {this.state.categoryType == 1 && <View style={{ flex: 1 }}>
                         <View style={style.line} />
                         <View style={{ flex: 1, flexDirection: 'row' }}>
                             <Text style={style.label}>Nama Jalan <Text style={style.mandatory}>*</Text></Text>
-                            <TouchableOpacity onPress={() => this.props.navigation.navigate('MapsFinding', { changeBlok: this.changeBlok })}>
-                                {isEmpty(this.state.jalan) && (<Text style={{
+                            <TouchableOpacity onPress={() => this.pilihJalan()}>
+                                {isEmpty(this.state.roadName) && (<Text style={{
                                     fontSize: 14, color: '#999',
-                                    fontFamily: Font.book
+                                    fontFamily: Fonts.book
                                 }}> Set Jalan </Text>)}
-                                {!isEmpty(this.state.jalan) && (<Text style={{ fontSize: 14 }}> {this.state.jalan} </Text>)}
+                                {!isEmpty(this.state.roadName) && (<Text style={{ fontSize: 14 }}> {this.state.roadName} </Text>)}
                             </TouchableOpacity>
                         </View>
                     </View>}
-
 
                     <View style={style.line} />
 
