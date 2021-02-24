@@ -117,7 +117,7 @@ export async function displayNotificationTemuan() {
                         notification.android.setPriority(firebase.notifications.Android.Priority.High);
                         notification.android.setBadgeIconType(firebase.notifications.Android.BadgeIconType.Small);
                         notification.android.setAutoCancel(true);
-                        notification.android.setSmallIcon('notification_image');
+                        notification.android.setSmallIcon('ic_launcher_notification');
                     }
 
                     var duedate = item.DUE_DATE.substring(0, 10);
@@ -165,8 +165,8 @@ export function displayNotificationSync() {
             sound: 'default',
             show_in_foreground: true,
             show_in_background: true,
-            largeIcon: "ic_launcher_notification_blue",
-            smallIcon: "ic_launcher_notification_blue",
+            largeIcon: "ic_launcher_notification",
+            smallIcon: "ic_launcher_notification",
         })
             .setNotificationId(getTodayDate('YYYYMMDDHHmmss'))
             .setTitle('Belum Sync')
@@ -178,7 +178,7 @@ export function displayNotificationSync() {
         if (Platform.OS === "android") {
             notification.android.setChannelId('mobile-inspection-channel');
             notification.android.setBigText(body);
-            notification.android.setSmallIcon('notification_image')
+            notification.android.setSmallIcon('ic_launcher_notification')
         }
 
         // Display the notification

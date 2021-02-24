@@ -6,10 +6,10 @@
         android:usesCleartextTraffic="true"
         android:name=".MainApplication"
         android:allowBackup="false"
-        android:icon="@mipmap/ic_launcher_notification_blue"
+        android:icon="@mipmap/ic_launcher_notification"
         android:label="@string/app_name"
         android:networkSecurityConfig="@xml/new_security_config"
-        android:roundIcon="@mipmap/ic_launcher_notification_blue"
+        android:roundIcon="@mipmap/ic_launcher_notification"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         tools:targetApi="m">
