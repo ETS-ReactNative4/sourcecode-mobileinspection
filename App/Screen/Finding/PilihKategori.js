@@ -17,8 +17,8 @@ class PilihKategori extends Component {
     this.state = {
       adresses: [],
       user: null,
-      categoriesBlock: TaskService.getAllData('TR_CATEGORY').filtered('CATEGORY_CODE CONTAINS[c] "CA"'),
-      categoriesInfra: TaskService.getAllData('TR_CATEGORY').filtered('CATEGORY_CODE CONTAINS[c] "IF"'),
+      categoriesBlock: TaskService.getAllData('TR_CATEGORY').filtered('CATEGORY_CODE CONTAINS[c] "CA"').sorted('CATEGORY_NAME'),
+      categoriesInfra: TaskService.getAllData('TR_CATEGORY').filtered('CATEGORY_CODE CONTAINS[c] "IF"').sorted('CATEGORY_NAME'),
       active: true,
       activeIndex: 0
     };
