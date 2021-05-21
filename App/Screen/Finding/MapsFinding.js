@@ -25,7 +25,7 @@ let LONGITUDE = 111.3609873;
 let polyMap = false;
 
 class MapsInspeksi extends React.Component {
-  constructor(props) {
+  constructor(props) { 
     super(props);
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     this.loadMap();
@@ -69,7 +69,9 @@ class MapsInspeksi extends React.Component {
       },
       markerLatlong: null
     };
+    console.log('ini modal loading ==========> ',this.state.modalLoading)
   }
+  
 
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
@@ -92,7 +94,7 @@ class MapsInspeksi extends React.Component {
     };
   }
 
-  componentDidMount() {
+  componentDidMount() { 
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
     this.props.navigation.setParams({ searchLocation: this.searchLocation });
   }
@@ -120,6 +122,7 @@ class MapsInspeksi extends React.Component {
     this.props.navigation.goBack();
     return true;
   }
+;
 
   searchLocation = () => {
     if (this.state.longitude !== 0.0 || this.state.latitude !== 0.0) {
@@ -503,5 +506,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
 });
+
 
 export default MapsInspeksi;

@@ -574,6 +574,7 @@ class FormStep2 extends Component {
                                 fontFamily: Font.book
                             }}> Set Location </Text>)}
                             {!isEmpty(this.state.blok) && (<Text style={{ fontSize: 14 }}> {this.state.blok} </Text>)}
+                            {console.log('coba doang')}
                         </TouchableOpacity>
                     </View>
 
