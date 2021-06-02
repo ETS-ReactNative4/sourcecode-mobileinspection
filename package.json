@@ -8,7 +8,9 @@
     "windowsRebundle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle",
     "windowsClean": "cd android && gradlew clean",
     "windowsAssembleRelease": "cd android && gradlew assembleRelease",
-    "windowsAndroidLog": "adb logcat *:S ReactNative:V "
+    "windowsAndroidLog": "adb logcat *:S ReactNative:V ",
+    "apk_release": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle && cd android && ./gradlew assembleRelease",
+    "bundle_release": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle && cd android && ./gradlew bundleRelease"
   },
   "dependencies": {
     "@mapbox/polyline": "^1.0.0",

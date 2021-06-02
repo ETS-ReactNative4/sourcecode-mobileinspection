@@ -123,7 +123,7 @@ class KriteriaBuah extends Component {
             KONDISI PANEN 
         */
         /* GET DATA BUAT RENDER DYNAMIC FORM (GRUP KUALITAS = HASIL PANEN UOM = JJG) */
-        let hasilPanen = TaskServices.findByWithList('TM_KUALITAS', ['GROUP_KUALITAS', 'UOM'], ['HASIL PANEN', 'JJG'])
+        let hasilPanen = TaskServices.findByWithList('TM_KUALITAS', ['GROUP_KUALITAS', 'UOM'], ['HASIL PANEN', 'JJG']).sorted('NAMA_KUALITAS')
         if (hasilPanen !== undefined) {
             hasilPanen.map((item, index) => {
                 //ini data yg bakal di map buat renderan
@@ -147,7 +147,7 @@ class KriteriaBuah extends Component {
         }
 
         //kondisi panen janjang
-        let hasilPanen2 = TaskServices.findByWithList('TM_KUALITAS', ['GROUP_KUALITAS', 'UOM'], ['HASIL PANEN', 'KG'])
+        let hasilPanen2 = TaskServices.findByWithList('TM_KUALITAS', ['GROUP_KUALITAS', 'UOM'], ['HASIL PANEN', 'KG']).sorted('NAMA_KUALITAS')
         if (hasilPanen2 !== undefined) {
             hasilPanen2.map((item, index) => {
                 this.state.arrJjg.push(item)
@@ -169,7 +169,7 @@ class KriteriaBuah extends Component {
         }
 
         //kondisi buah
-        let kondisiBuah = TaskServices.findByWithList('TM_KUALITAS', ['GROUP_KUALITAS', 'UOM'], ['KONDISI BUAH', 'JJG'])
+        let kondisiBuah = TaskServices.findByWithList('TM_KUALITAS', ['GROUP_KUALITAS', 'UOM'], ['KONDISI BUAH', 'JJG']).sorted('NAMA_KUALITAS')
         if (kondisiBuah !== undefined) {
             kondisiBuah.map((item, index) => {
                 this.state.arrKondisiBuah.push(item)
@@ -191,7 +191,7 @@ class KriteriaBuah extends Component {
         }
 
         //penalty tph
-        let penaltyTph = TaskServices.findByWithList('TM_KUALITAS', ['GROUP_KUALITAS', 'UOM'], ['PENALTY DI TPH', 'TPH'])
+        let penaltyTph = TaskServices.findByWithList('TM_KUALITAS', ['GROUP_KUALITAS', 'UOM'], ['PENALTY DI TPH', 'TPH']).sorted('NAMA_KUALITAS')
         if (penaltyTph !== undefined) {
             penaltyTph.map((item, index) => {
                 this.state.arrPenaltyTph.push(item)
@@ -217,8 +217,6 @@ class KriteriaBuah extends Component {
         //kriteriabuah semua data dari loadData() di gabung
         let kriteriaBuah = this.state.valueHasilPanen.concat(this.state.valueJjg).concat(this.state.valueKondisiBuah).concat(this.state.valuePenaltyTph);
         let CheckItemVal = this.validationJumlah(this.state.valuePenaltyTph)
-        console.log("kriteriaBuah:" + JSON.stringify(kriteriaBuah))
-        console.log("checkitemval:" + JSON.stringify(CheckItemVal))
         if (this.state.totalJanjang == '0') {
             this.setState({
                 showModal: true, title: 'Validasi',
