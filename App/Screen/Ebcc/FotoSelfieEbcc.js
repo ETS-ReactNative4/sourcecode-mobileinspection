@@ -128,7 +128,17 @@ class FotoSelfieEbcc extends Component {
   takePicture = async () => {
     try {
       if (this.state.hasPhoto) {
-        this.insertDB();
+        const params = this.props.navigation.state.params
+        // this.insertDB();
+        this.props.navigation.navigate('PrevEbcc', {
+                fotoJanjang: params.fotoJanjang,
+                tphAfdWerksBlockCode: params.tphAfdWerksBlockCode,
+                ebccValCode: params.ebccValCode,
+                totalJanjang: params.totalJanjang,
+                kriteriaBuah: params.kriteriaBuah,
+                dataHeader: params.dataHeader
+        });
+     
       } else {
         const takeCameraOptions = {
           // quality : 0.5,  //just in case want to reduce the quality too

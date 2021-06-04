@@ -31,7 +31,7 @@ const InspectionStack = createStackNavigator({
 });
 
 InspectionStack.navigationOptions = {
-  tabBarLabel: 'Inspeksi',
+  tabBarLabel: 'Inspeksiii',
 };
 
 const EbccValidationStack = createStackNavigator({

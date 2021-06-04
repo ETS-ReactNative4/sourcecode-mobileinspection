@@ -45,6 +45,8 @@ import ReasonManualTPH from '../Screen/Ebcc/ReasonManualTPH'
 import ManualInputTPH from '../Screen/Ebcc/ManualInputTPH'
 import DetailEbcc from '../Screen/Ebcc/DetailEbcc'
 import MapsEbcc from '../Screen/Ebcc/MapsEbcc'
+import PrevEbcc from '../Screen/Ebcc/PreviewEbcc';
+
 
 import SyncScreen from '../Screen/Sync';
 import InboxScreen from '../Screen/Inbox';
@@ -89,16 +91,16 @@ const main = createStackNavigator({
         screen: FindingFormNavigator,
         navigationOptions: {
             header: null
-            // headerStyle: {
-            //     backgroundColor: Colors.tintColor
-            // },
-            // title: 'Buat Laporan Penemuan',
-            // headerTintColor: '#fff',
-            // headerTitleStyle: {
-            //     flex: 1,
-            //     fontSize: 18,
-            //     fontWeight: '400'
-            // },
+                // headerStyle: {
+                //     backgroundColor: Colors.tintColor
+                // },
+                // title: 'Buat Laporan Penemuan',
+                // headerTintColor: '#fff',
+                // headerTitleStyle: {
+                //     flex: 1,
+                //     fontSize: 18,
+                //     fontWeight: '400'
+                // },
         }
     },
 
@@ -160,6 +162,14 @@ const main = createStackNavigator({
     ManualInputTPH: { screen: ManualInputTPH },
     DetailEbcc: { screen: DetailEbcc },
     MapsEbcc: { screen: MapsEbcc },
+    PrevEbcc: {
+        screen: PrevEbcc,
+        navigationOptions: {
+            title: "Konfirmasi",
+            headerTintColor: '#fff',
+            headerTitleStyle: { alignSelf: 'center' }
+        }
+    },
     // EbccNavigator: { screen: ({ navigation }) => <EbccNavigator screenProps={{ rootNavigation: navigation }} />, navigationOptions: {
     //     header: null
     // }},
