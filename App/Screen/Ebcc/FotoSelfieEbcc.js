@@ -33,6 +33,8 @@ class FotoSelfieEbcc extends Component {
     let totalJanjang = R.clone(params.totalJanjang);
     let kriteriaBuah = R.clone(params.kriteriaBuah);
     let dataHeader = R.clone(params.dataHeader);
+    let statusBlock = R.clone(params.statusBlock)
+    let werks = R.clone(params.werks)
 
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     this.state = {
@@ -129,6 +131,8 @@ class FotoSelfieEbcc extends Component {
     try {
       if (this.state.hasPhoto) {
         const params = this.props.navigation.state.params
+        RNFS.unlink(this.state.pathCache);
+        this.resize(this.state.path);
         // this.insertDB();
         this.props.navigation.navigate('PrevEbcc', {
                 fotoJanjang: params.fotoJanjang,
@@ -136,7 +140,11 @@ class FotoSelfieEbcc extends Component {
                 ebccValCode: params.ebccValCode,
                 totalJanjang: params.totalJanjang,
                 kriteriaBuah: params.kriteriaBuah,
-                dataHeader: params.dataHeader
+                dataHeader: params.dataHeader,
+                statusBlock: params.statusBlock,
+                dataModel: this.state.dataModel,
+                brondolTPH: params.brondolTPH,
+                werks: params.werks,
         });
      
       } else {
@@ -192,69 +200,69 @@ class FotoSelfieEbcc extends Component {
     );
   }
 
-  async insertDB() {
-    RNFS.unlink(this.state.pathCache);
-    let isImageContain = await RNFS.exists(`file://${dirPhotoEbccSelfie}/${this.state.dataModel.IMAGE_NAME}`);
-    if (isImageContain) {
+  // async insertDB() {
+  //   RNFS.unlink(this.state.pathCache);
+  //   let isImageContain = await RNFS.exists(`file://${dirPhotoEbccSelfie}/${this.state.dataModel.IMAGE_NAME}`);
+  //   if (isImageContain) {
 
-      this.resize(this.state.path);
+  //     this.resize(this.state.path);
 
-      let tempHeader = this.state.dataHeader;
-      tempHeader = {
-        ...tempHeader,
-        syncImage: 'N',
-        syncDetail: 'N'
-      }
-      //insert TR_H_EBCC_VALIDATION
-      TaskServices.saveData('TR_H_EBCC_VALIDATION', tempHeader);
+  //     let tempHeader = this.state.dataHeader;
+  //     tempHeader = {
+  //       ...tempHeader,
+  //       syncImage: 'N',
+  //       syncDetail: 'N'
+  //     }
+  //     //insert TR_H_EBCC_VALIDATION
+  //     TaskServices.saveData('TR_H_EBCC_VALIDATION', tempHeader);
 
-      // insert TR_D_EBCC_VALIDATION
-      if (this.state.kriteriaBuah !== null) {
-        this.state.kriteriaBuah.map(item => {
+  //     // insert TR_D_EBCC_VALIDATION
+  //     if (this.state.kriteriaBuah !== null) {
+  //       this.state.kriteriaBuah.map(item => {
 
-          /* CONDITION IF JUMLAH STRING KOSONG / NULL */
-          if (item.JUMLAH == '' || item.JUMLAH == null) {
-            itemJumlah = 0
-          } else {
-            itemJumlah = parseInt(item.JUMLAH)
-          }
+  //         /* CONDITION IF JUMLAH STRING KOSONG / NULL */
+  //         if (item.JUMLAH == '' || item.JUMLAH == null) {
+  //           itemJumlah = 0
+  //         } else {
+  //           itemJumlah = parseInt(item.JUMLAH)
+  //         }
 
-          let newItem = { ...item, JUMLAH: itemJumlah }
+  //         let newItem = { ...item, JUMLAH: itemJumlah }
 
-          TaskServices.saveData('TR_D_EBCC_VALIDATION', newItem);
-        })
-      }
+  //         TaskServices.saveData('TR_D_EBCC_VALIDATION', newItem);
+  //       })
+  //     }
 
-      //insert TR_IMAGE
-      TaskServices.saveData('TR_IMAGE', this.state.fotoJanjang);
-      TaskServices.saveData('TR_IMAGE', this.state.dataModel);
+  //     //insert TR_IMAGE
+  //     TaskServices.saveData('TR_IMAGE', this.state.fotoJanjang);
+  //     TaskServices.saveData('TR_IMAGE', this.state.dataModel);
 
-      this.setState({ showModalBack: true, title: 'Berhasil Disimpan', message: 'Yeaay! Data kamu berhasil disimpan', icon: require('../../Images/ic-save-berhasil.png') });
-    } else {
-      alert('Ada kesalahan, Ulangi ambil gambar baris')
-    }
-  }
+  //     this.setState({ showModalBack: true, title: 'Berhasil Disimpan', message: 'Yeaay! Data kamu berhasil disimpan', icon: require('../../Images/ic-save-berhasil.png') });
+  //   } else {
+  //     alert('Ada kesalahan, Ulangi ambil gambar baris')
+  //   }
+  // }
 
-  selesai = () => {
-    const navigation = this.props.navigation;
-    let data = TaskServices.getAllData('TR_LOGIN')
-    if (data != undefined) {
-      let routeName = ''
-      if (data[0].USER_ROLE == 'FFB_GRADING_MILL') {
-        routeName = 'MainMenuMil'
-      } else {
-        routeName = 'MainMenu';
-      }
-      Promise.all([
-        navigation.dispatch(
-          StackActions.reset({
-            index: 0,
-            actions: [NavigationActions.navigate({ routeName: routeName })]
-          })
-        )]).then(() => navigation.navigate('EbccValidation')).then(() => navigation.navigate('Riwayat'))
-      this.setState({ showModalBack: false })
-    }
-  }
+  // selesai = () => {
+  //   const navigation = this.props.navigation;
+  //   let data = TaskServices.getAllData('TR_LOGIN')
+  //   if (data != undefined) {
+  //     let routeName = ''
+  //     if (data[0].USER_ROLE == 'FFB_GRADING_MILL') {
+  //       routeName = 'MainMenuMil'
+  //     } else {
+  //       routeName = 'MainMenu';
+  //     }
+  //     Promise.all([
+  //       navigation.dispatch(
+  //         StackActions.reset({
+  //           index: 0,
+  //           actions: [NavigationActions.navigate({ routeName: routeName })]
+  //         })
+  //       )]).then(() => navigation.navigate('EbccValidation')).then(() => navigation.navigate('Riwayat'))
+  //     this.setState({ showModalBack: false })
+  //   }
+  // }
 
   renderImage() {
     return (

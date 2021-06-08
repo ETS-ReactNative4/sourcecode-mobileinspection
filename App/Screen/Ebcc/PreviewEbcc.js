@@ -1,13 +1,19 @@
 import React, { Component } from 'react';
-import { Image, Text, View, StyleSheet, ScrollView, TextInput, TouchableOpacity } from 'react-native';
+import { Image, Text, View, StyleSheet, ScrollView, TextInput, TouchableOpacity, Platform } from 'react-native';
 import Colors from '../../Constant/Colors'
 // import R from 'ramda';
-// import TaskServices from '../../Database/TaskServices'
+import TaskServices from '../../Database/TaskServices'
 import { Fonts } from '../../Themes';
-import { scale } from 'react-native-size-matters'
-import ModalEbccConfirm from '../../Component/ModalEbccConfirm'
+import { scale } from 'react-native-size-matters';
+import { NavigationActions, StackActions } from 'react-navigation';
+
+import { dirPhotoEbccSelfie } from '../../Lib/dirStorage'
+import { getTodayDate } from '../../Lib/Utils'
+import ModalAlertBack from '../../Component/ModalAlert';
+import ModalConfirmation from '../../Component/ModalEbccConfirm';
 
 
+var RNFS = require('react-native-fs');
 
 class PreviewEbcc extends Component {
     state = {
@@ -16,7 +22,18 @@ class PreviewEbcc extends Component {
         ebccValCode: this.props.navigation.state.params.ebccValCode,
         totalJanjang: this.props.navigation.state.params.totalJanjang,
         kriteriaBuah: this.props.navigation.state.params.kriteriaBuah,
-        dataHeader: this.props.navigation.state.params.dataHeader
+        dataHeader: this.props.navigation.state.params.dataHeader,
+        statusBlock: this.props.navigation.state.params.statusBlock,
+        dataModel: this.props.navigation.state.params.dataModel,
+        brondolTPH: this.props.navigation.state.params.brondolTPH,
+        werks: this.props.navigation.state.params.werks,
+
+        timestamp: getTodayDate('YYMMDDkkmmss'),
+        title: 'Title',
+        message: 'Message',
+        showModalBack: false,
+        showModalConfirm: false,
+        icon: ''
     }
 
 
@@ -57,14 +74,14 @@ class PreviewEbcc extends Component {
         return (
             <View style={{ flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', height: scale(100) }}>
                 <Text style={{ color: Colors.tintColorPrimary, fontSize: scale(13), fontFamily: Fonts.demi }}>Pastikan seluruh data yang kamu input sudah benar</Text>
-                <TouchableOpacity style={{
+                <TouchableOpacity onPress={() => this.setState({ showModalConfirm: true })} style={{
                     justifyContent: 'center',
                     backgroundColor: Colors.tintColorPrimary,
                     width: '100%',
                     height: scale(50),
                     borderRadius: scale(10)
                 }}>
-                    <Text style={{ textAlign: 'center', color: 'white' }}>Selesai</Text>
+                    <Text style={{ textAlign: 'center', color: 'white' }}>Simpan</Text>
                 </TouchableOpacity>
             </View>
         )
@@ -80,10 +97,10 @@ class PreviewEbcc extends Component {
                     justifyContent: 'space-between',
                     marginTop: 10, marginBottom: 10
                 }}>
-                    <View style={style.brondolAda}>
+                    <View style={this.state.brondolTPH? style.brondolAda: style.brondolTidakAda}>
                         <Text style={{ textAlign: 'center', color: 'black' }} >ADA</Text>
                     </View>
-                    <View style={style.brondolTidakAda}>
+                    <View style={!this.state.brondolTPH? style.brondolAda: style.brondolTidakAda}>
                         <Text style={{ textAlign: 'center', color: 'black' }}>TIDAK ADA</Text>
                     </View>
                 </View>
@@ -91,35 +108,114 @@ class PreviewEbcc extends Component {
         )
     }
 
+    async insertDB() {
+        // RNFS.unlink(this.state.pathCache);
+        let isImageContain = await RNFS.exists(`file://${dirPhotoEbccSelfie}/${this.state.dataModel.IMAGE_NAME}`);
+        if (isImageContain) {
+
+            // this.resize(this.state.path);
+
+            let tempHeader = this.state.dataHeader;
+            tempHeader = {
+                ...tempHeader,
+                syncImage: 'N',
+                syncDetail: 'N'
+            }
+            //insert TR_H_EBCC_VALIDATION
+            TaskServices.saveData('TR_H_EBCC_VALIDATION', tempHeader);
+
+            // insert TR_D_EBCC_VALIDATION
+            if (this.state.kriteriaBuah !== null) {
+                this.state.kriteriaBuah.map(item => {
+
+                    /* CONDITION IF JUMLAH STRING KOSONG / NULL */
+                    if (item.JUMLAH == '' || item.JUMLAH == null) {
+                        itemJumlah = 0
+                    } else {
+                        itemJumlah = parseInt(item.JUMLAH)
+                    }
+
+                    let newItem = { ...item, JUMLAH: itemJumlah }
+
+                    TaskServices.saveData('TR_D_EBCC_VALIDATION', newItem);
+                })
+            }
+
+            //insert TR_IMAGE
+            TaskServices.saveData('TR_IMAGE', this.state.fotoJanjang);
+            TaskServices.saveData('TR_IMAGE', this.state.dataModel);
+
+            this.setState({ showModalBack: true, title: 'Berhasil Disimpan', message: 'Yeaay! Data kamu berhasil disimpan', icon: require('../../Images/ic-save-berhasil.png') });
+        } else {
+            alert('Ada kesalahan, Ulangi ambil gambar baris')
+        }
+    }
+
+    selesai = () => {
+        const navigation = this.props.navigation;
+        let data = TaskServices.getAllData('TR_LOGIN')
+        if (data != undefined) {
+            let routeName = ''
+            if (data[0].USER_ROLE == 'FFB_GRADING_MILL') {
+                routeName = 'MainMenuMil'
+            } else {
+                routeName = 'MainMenu';
+            }
+            Promise.all([
+                navigation.dispatch(
+                    StackActions.reset({
+                        index: 0,
+                        actions: [NavigationActions.navigate({ routeName: routeName })]
+                    })
+                )]).then(() => navigation.navigate('EbccValidation')).then(() => navigation.navigate('Riwayat'))
+            this.setState({ showModalBack: false })
+        }
+    }
+
+    getEstateName(werks) {
+        try {
+            let data = TaskServices.findBy2('TM_EST', 'WERKS', werks);
+            return data.EST_NAME;
+        } catch (error) {
+            return '';
+        }
+    }
+
+
+
+
+
     render() {
-        console.log(this.props.navigation.state.params);
+        console.log(this.props.navigation.state.params.brondolTPH, '===> brondolTPH');
         const { IMAGE_PATH_LOCAL } = this.state.fotoJanjang;
         const { WERKS, AFD_CODE, BLOCK_CODE, NO_TPH, DELIVERY_CODE } = this.state.dataHeader
         return (
             <>
-                <ModalEbccConfirm />
+                <ModalAlertBack
+                    visible={this.state.showModalBack}
+                    icon={this.state.icon}
+                    onPressCancel={() => this.selesai()}
+                    title={this.state.title}
+                    message={this.state.message} />
+                <ModalConfirmation
+                    visible={this.state.showModalConfirm}
+                    onPressCancel={() => this.setState({ showModalConfirm: false})}
+                    onPressSubmit={() => {this.insertDB()}}
+                    btnSubmitText={'Simpan'}
+                    btnCancelText={'Tidak'}
+                    title={'Konfirmasi'}
+                    message={'Apakah Anda yakin akan menyimpan data ini?'} />
                 <ScrollView>
                     <View style={style.janjang}>
                         <Image style={style.janjangImg} source={{ uri: `file:///${IMAGE_PATH_LOCAL}` }}></Image>
                     </View>
                     <View style={style.main}>
                         <View style={style.blok}>
-                            <Image style={style.round} source={require('../../Images/ic-orang.png')}></Image>
                             <View>
-                                <Text style={{ fontFamily: Fonts.black, fontSize: 17, color: 'black' }}>{`Blok ${BLOCK_CODE}/${WERKS} - TPH ${NO_TPH}`}</Text>
-                                <Text style={{ fontFamily: Fonts.demi, fontSize: 14 }}>{`EBL ESTATE - AFDELING ${AFD_CODE}`}</Text>
-                            </View>
-                        </View>
-                        <View style={style.hr}></View>
-                        <View style={style.user}>
-                            <View>
-                                <Text style={{ fontFamily: Fonts.black, fontSize: 17 }}>Nama Pemanen</Text>
-                                <Text style={{ fontFamily: Fonts.demi, fontSize: 14, fontWeight: 'bold', color: 'black' }}>SLAMET RIYADI</Text>
-                                <Text style={{ fontFamily: Fonts.demi, fontSize: 14 }}>51/5121/0510/112</Text>
-                            </View>
-                            <View style={style.detic}>
-                                <Text style={style.deticTitle}>Delivery Ticket</Text>
-                                <Text style={style.deticVal}>{`${DELIVERY_CODE}`}</Text>
+                                <Text style={{ fontFamily: Fonts.black, fontSize: 17, color: 'black' }}>{`${BLOCK_CODE}/${this.state.statusBlock}/${this.getEstateName(WERKS)}`}</Text>
+                                <Text style={{ fontFamily: Fonts.demi, fontSize: 14 }}>{`TPH - ${NO_TPH}`}</Text>
+                                <Text style={{ fontFamily: Fonts.demi, fontSize: 14 }}>{`Delivery Ticket - ${DELIVERY_CODE}`}</Text>
+                                {/* <Text style={{ fontFamily: Fonts.demi, fontSize: 14, color: 'black' }}>{`${DELIVERY_CODE}`}</Text> */}
                             </View>
                         </View>
                         <View style={style.hr}></View>
@@ -243,7 +339,7 @@ const style = StyleSheet.create({
         height: scale(50),
         borderRadius: scale(15),
         justifyContent: 'center',
-        borderWidth: 1.5,
+        borderWidth: 1.8,
         borderColor: Colors.tintColorPrimary,
         shadowColor: "#000",
         shadowOffset: {

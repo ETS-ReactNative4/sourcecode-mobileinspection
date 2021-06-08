@@ -60,6 +60,9 @@ class KriteriaBuah extends Component {
             blockName: '',
             werks: '',
             werk_afd_blok_code: '',
+            status_block: '',
+            brondolTPH: false,
+            showWarning: false,
 
 
             title: 'Title',
@@ -73,6 +76,12 @@ class KriteriaBuah extends Component {
         this.loadData()
 
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick)
+    }
+
+    componentDidMount() {
+        const dataWerks = this.getStatusBlok(this.state.werk_afd_blok_code);
+        this.setState({ status_block: dataWerks })
+        this.cekKondisiBuah()
     }
 
     componentWillUnmount() {
@@ -214,6 +223,11 @@ class KriteriaBuah extends Component {
     }
 
     validation() {
+        let wrongKondisiBuah = this.state.valueKondisiBuah.filter((itm) => {
+            return  Number(itm.JUMLAH ) > this.state.totalJanjang
+        })
+
+            console.log(wrongKondisiBuah);
         //kriteriabuah semua data dari loadData() di gabung
         let kriteriaBuah = this.state.valueHasilPanen.concat(this.state.valueJjg).concat(this.state.valueKondisiBuah).concat(this.state.valuePenaltyTph);
         let CheckItemVal = this.validationJumlah(this.state.valuePenaltyTph)
@@ -231,6 +245,13 @@ class KriteriaBuah extends Component {
                 icon: require('../../Images/ic-not-save.png')
             });
         }
+        else if (wrongKondisiBuah.length){
+            this.setState({
+                showModal: true, title: 'Validasi',
+                message: `Kondisi buah tidak boleh melebihi total janjang !`,
+                icon: require('../../Images/ic-not-save.png')
+            });
+        }
         else {
             this.props.navigation.navigate('FotoSelfieEbcc', {
                 fotoJanjang: this.state.fotoJanjang,
@@ -238,7 +259,10 @@ class KriteriaBuah extends Component {
                 ebccValCode: this.state.ebccValCode,
                 totalJanjang: this.state.totalJanjang,
                 kriteriaBuah: kriteriaBuah,
-                dataHeader: this.state.dataHeader
+                dataHeader: this.state.dataHeader,
+                statusBlock: this.state.status_block,
+                brondolTPH: this.state.brondolTPH,
+                werks: this.state.werks
             });
         }
 
@@ -317,8 +341,10 @@ class KriteriaBuah extends Component {
                             text = text.replace(/[^0-9 ]/g, '');
                             text = this.remove0(text);
                             param == 'total' ? this.updateArr(index, text, arr, 'jjg') : this.updateArr(index, text, arr, 'buah')
-                        }} />
-                </View>
+                            this.cekKondisiBuah(Number(text))
+                        }} 
+                        />
+                </View>            
             </View>
         )
     }
@@ -329,12 +355,18 @@ class KriteriaBuah extends Component {
                 <Text style={[styles.txtLabel, { flex: 1 }]}>{data.NAMA_KUALITAS}</Text>
                 <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', }}>
                     <View style={{ marginRight: 1 }}>
-                        <TouchableOpacity style={[this.state.btnAda, styles.buttonSide]} onPress={() => { this.getValueAndChangeColor('ADA', index, arr) }}>
+                        <TouchableOpacity style={[this.state.btnAda, styles.buttonSide]} onPress={() => {
+                            this.getValueAndChangeColor('ADA', index, arr);
+                            this.setState({ brondolTPH: true })
+                        }}>
                             <Text style={[this.state.txtAda, { fontFamily: Fonts.book }]}>Ada</Text>
                         </TouchableOpacity>
                     </View>
                     <View>
-                        <TouchableOpacity style={[this.state.btnTdkAda, styles.buttonSide]} onPress={() => { this.getValueAndChangeColor('TIDAK ADA', index, arr) }}>
+                        <TouchableOpacity style={[this.state.btnTdkAda, styles.buttonSide]} onPress={() => {
+                            this.getValueAndChangeColor('TIDAK ADA', index, arr);
+                            this.setState({ brondolTPH: false })
+                        }}>
                             <Text style={[this.state.txtTdkAda, { fontFamily: Fonts.book }]}>Tidak Ada</Text>
                         </TouchableOpacity>
                     </View>
@@ -452,13 +484,27 @@ class KriteriaBuah extends Component {
         }
     }
 
-    render() {
+    cekKondisiBuah(e){
+        if (e > this.state.totalJanjang){
+            this.setState({
+                showWarning: true
+              });
+            console.log('wrongKondisiBuah');
+        }else{
+            this.setState({
+                showWarning: false
+              });
+        }
+    }
 
+    render() {
+       
         const dataWerks = this.getStatusBlok(this.state.werk_afd_blok_code);
         let statusBlock
 
         if (dataWerks != '') {
             statusBlock = '/' + dataWerks;
+
         } else {
             statusBlock = ''
         }
@@ -519,7 +565,7 @@ class KriteriaBuah extends Component {
                     {/* kondisi buah */}
                     <Text style={{ fontSize: 20, fontFamily: Fonts.demi, paddingLeft: 20, marginTop: 10 }}>Kondisi Buah</Text>
                     {this.state.arrKondisiBuah.map((data, idx) => this.renderDynamicCompNotUpdate('kondisi', data, idx, this.state.valueKondisiBuah))}
-
+                    <Text style={ this.state.showWarning? styles.warning: styles.warningHidden}>Ooops, kondisi buah tidak boleh melebihi total janjang ya ..</Text>  
                     <View style={{ height: 10, backgroundColor: '#F5F5F5', marginTop: 10 }} />
                     {/* Penalty TPH */}
                     <Text style={{ fontSize: 20, fontFamily: Fonts.demi, paddingLeft: 20, marginTop: 10 }}>Penalti di TPH</Text>
@@ -718,5 +764,16 @@ const styles = {
         paddingHorizontal: 18,
         paddingVertical: 12,
         fontFamily: Fonts.medium
+    },
+    warning: {
+        color: 'red',
+        paddingLeft: 20,
+        marginTop: 10,
+        fontSize: 12
+    },
+    warningHidden: {
+        color: 'transparent',
+        fontSize: 12,
+        
     }
 }
