@@ -10,7 +10,9 @@ import { NavigationActions, StackActions } from 'react-navigation';
 import { dirPhotoEbccSelfie } from '../../Lib/dirStorage'
 import { getTodayDate } from '../../Lib/Utils'
 import ModalAlertBack from '../../Component/ModalAlert';
-import ModalConfirmation from '../../Component/ModalEbccConfirm';
+import ModalAlertConf from '../../Component/ModalAlertConfirmation'
+
+import saveIcon from '../../Images/ic-save-berhasil.png'
 
 
 var RNFS = require('react-native-fs');
@@ -73,7 +75,7 @@ class PreviewEbcc extends Component {
     renderButton() {
         return (
             <View style={{ flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', height: scale(100) }}>
-                <Text style={{ color: Colors.tintColorPrimary, fontSize: scale(13), fontFamily: Fonts.demi }}>Pastikan seluruh data yang kamu input sudah benar</Text>
+                <Text style={{ color: Colors.tintColorPrimary, fontSize: scale(13.5), fontFamily: Fonts.demi }}>Pastikan seluruh data yang kamu input sudah benar</Text>
                 <TouchableOpacity onPress={() => this.setState({ showModalConfirm: true })} style={{
                     justifyContent: 'center',
                     backgroundColor: Colors.tintColorPrimary,
@@ -91,16 +93,16 @@ class PreviewEbcc extends Component {
     renderAlasBrondolan() {
         return (
             <View style={{ padding: scale(10) }}>
-                <Text style={{ fontSize: 14, color: 'black' }}>Alas Brondolan (TPH)</Text>
+                <Text style={{ fontSize: 15, color: 'grey', fontFamily: Fonts.book}}>Alas Brondolan (TPH)</Text>
                 <View style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                     marginTop: 10, marginBottom: 10
                 }}>
-                    <View style={this.state.brondolTPH? style.brondolAda: style.brondolTidakAda}>
+                    <View style={this.state.brondolTPH ? style.brondolAda : style.brondolTidakAda}>
                         <Text style={{ textAlign: 'center', color: 'black' }} >ADA</Text>
                     </View>
-                    <View style={!this.state.brondolTPH? style.brondolAda: style.brondolTidakAda}>
+                    <View style={!this.state.brondolTPH ? style.brondolAda : style.brondolTidakAda}>
                         <Text style={{ textAlign: 'center', color: 'black' }}>TIDAK ADA</Text>
                     </View>
                 </View>
@@ -197,14 +199,16 @@ class PreviewEbcc extends Component {
                     onPressCancel={() => this.selesai()}
                     title={this.state.title}
                     message={this.state.message} />
-                <ModalConfirmation
+            
+                <ModalAlertConf
                     visible={this.state.showModalConfirm}
-                    onPressCancel={() => this.setState({ showModalConfirm: false})}
-                    onPressSubmit={() => {this.insertDB()}}
+                    onPressCancel={() => this.setState({ showModalConfirm: false })}
+                    onPressSubmit={() => { this.insertDB() }}
                     btnSubmitText={'Simpan'}
                     btnCancelText={'Tidak'}
                     title={'Konfirmasi'}
-                    message={'Apakah Anda yakin akan menyimpan data ini?'} />
+                    message={'Apakah Anda yakin akan menyimpan data ini?'}
+                    icon ={saveIcon} />
                 <ScrollView>
                     <View style={style.janjang}>
                         <Image style={style.janjangImg} source={{ uri: `file:///${IMAGE_PATH_LOCAL}` }}></Image>
@@ -212,7 +216,7 @@ class PreviewEbcc extends Component {
                     <View style={style.main}>
                         <View style={style.blok}>
                             <View>
-                                <Text style={{ fontFamily: Fonts.black, fontSize: 17, color: 'black' }}>{`${BLOCK_CODE}/${this.state.statusBlock}/${this.getEstateName(WERKS)}`}</Text>
+                                <Text style={{ fontFamily: Fonts.demi, fontSize: 17}}>{`${BLOCK_CODE}/${this.state.statusBlock}/${this.getEstateName(WERKS)}`}</Text>
                                 <Text style={{ fontFamily: Fonts.demi, fontSize: 14 }}>{`TPH - ${NO_TPH}`}</Text>
                                 <Text style={{ fontFamily: Fonts.demi, fontSize: 14 }}>{`Delivery Ticket - ${DELIVERY_CODE}`}</Text>
                                 {/* <Text style={{ fontFamily: Fonts.demi, fontSize: 14, color: 'black' }}>{`${DELIVERY_CODE}`}</Text> */}
@@ -303,12 +307,11 @@ const style = StyleSheet.create({
     listEbbc: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        padding: scale(10)
+        padding: scale(7)
     },
     ebccTitle: {
-        fontSize: 17,
+        fontSize: 20,
         fontWeight: 'bold',
-        color: 'black',
         fontFamily: Fonts.demi,
         marginTop: 10,
         marginBottom: 10
@@ -331,8 +334,9 @@ const style = StyleSheet.create({
         elevation: 5
     },
     ebccName: {
-        color: 'black',
-        fontSize: 14
+        color: 'grey',
+        fontSize: 15,
+        fontFamily: Fonts.book
     },
     brondolAda: {
         width: '47%',
