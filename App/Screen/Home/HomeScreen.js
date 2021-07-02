@@ -77,8 +77,11 @@ const ItemMenuHome = (props) => {
     <TouchableOpacity
       onPress={props.onPress}>
       <View style={[props.styles, {
+        paddingRight: 10,
+        paddingVertical: 15,
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+        marginRight: props.name === 'Menu\nLainnya' ? 10 : 0
       }]}>
         <View style={{ width: 48, height: 48, borderRadius: 25, padding: 10, backgroundColor: props.backgroundColor }}>
           <Image style={{ flex: 1, width: undefined, height: undefined }}
@@ -796,7 +799,7 @@ class HomeScreen extends React.Component {
                     }}
                   >
                     {" "}Selengkapnya
-                    </Text>
+                  </Text>
                 }
               </Text>
             </View>
@@ -1163,9 +1166,43 @@ class HomeScreen extends React.Component {
   }
 
   renderMenu() {
+
+    if (this.state.currentUser.USER_ROLE.includes("PEKERJA_RAWAT")) {
+      return (
+        <ScrollView
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          style={{
+            paddingHorizontal: 15,
+            backgroundColor: "white",
+            flexDirection: "row"
+          }}>
+
+          <ItemMenuHome
+            onPress={() => { this.props.navigation.navigate('Leaderboard') }}
+            name={"BBC\n4 Bulanan"}
+            image={require('../../Images/icon/HomeScreen/icon_rank.png')}
+            backgroundColor={"rgba(52,168,235,1)"} />
+
+          <ItemMenuHome
+            onPress={() => { this.props.navigation.navigate('MoreScreen') }}
+            name={"Menu\nLainnya"}
+            image={require('../../Images/icon/HomeScreen/icon_lainnya.png')}
+            backgroundColor={"#ACACAC"} />
+        </ScrollView>
+      )
+    }
+
     if (this.state.currentUser.USER_ROLE.includes("ASISTEN") || this.state.currentUser.USER_ROLE.includes("KEPALA_KEBUN")) {
       return (
-        <View style={{ backgroundColor: "white", flexDirection: "row", justifyContent: 'space-between', padding: 15 }}>
+        <ScrollView
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          style={{
+            paddingHorizontal: 15,
+            backgroundColor: "white",
+            flexDirection: "row"
+          }}>
           <ItemMenuHome
             onPress={() => {
 
@@ -1184,9 +1221,9 @@ class HomeScreen extends React.Component {
           <ItemMenuHome
             onPress={() => {
               if (this.state.isSync) {
-                  this.props.navigation.navigate("PetaPanen")
+                this.props.navigation.navigate("PetaPanen")
               } else {
-                  this.props.navigation.navigate('Sync')
+                this.props.navigation.navigate('Sync')
               }
             }}
             name={"Peta\nPanen"}
@@ -1218,11 +1255,23 @@ class HomeScreen extends React.Component {
             backgroundColor={"rgba(52,162,188,1)"} />
 
           <ItemMenuHome
+            onPress={() => this.showWeeklySummary(true)}
+            name={"BBC\nBulanan"}
+            image={require('../../Images/icon/HomeScreen/icon_dashboard_kebun.png')}
+            backgroundColor={"#cf3cac"} />
+
+          <ItemMenuHome
+            onPress={() => { this.props.navigation.navigate('Leaderboard') }}
+            name={"BBC\n4 Bulanan"}
+            image={require('../../Images/icon/HomeScreen/icon_rank.png')}
+            backgroundColor={"rgba(52,168,235,1)"} />
+
+          <ItemMenuHome
             onPress={() => { this.props.navigation.navigate('MoreScreen') }}
             name={"Menu\nLainnya"}
             image={require('../../Images/icon/HomeScreen/icon_lainnya.png')}
             backgroundColor={"#ACACAC"} />
-        </View>
+        </ScrollView>
       )
     }
 
@@ -1254,6 +1303,12 @@ class HomeScreen extends React.Component {
             name={"Peringkat\nAsisten"}
             image={require('../../Images/icon/HomeScreen/icon_rank.png')}
             backgroundColor={"rgba(52,162,188,1)"} />
+
+          <ItemMenuHome
+            onPress={() => { this.props.navigation.navigate('Leaderboard') }}
+            name={"BBC\n4 Bulanan"}
+            image={require('../../Images/icon/HomeScreen/icon_rank.png')}
+            backgroundColor={"rgba(52,168,235,1)"} />
 
           <ItemMenuHome
             styles={{ paddingLeft: 10 }}

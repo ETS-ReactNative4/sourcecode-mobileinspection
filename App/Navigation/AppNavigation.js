@@ -2,8 +2,10 @@ import React from 'react';
 import { createStackNavigator } from 'react-navigation'
 import SplashScreen from '../Screen/SplashScreen'
 import Login from '../Screen/Login'
+import HomeScreen from '../Screen/Home/HomeScreen';
 import MainMenu from '../Screen/Home/MainTabNavigator'
 import MainMenuMil from '../Screen/Home/MainTabNavigatorMil'
+import MainMenuBBC from '../Screen/Home/MainTabNavigatorBBC'
 import Genba from '../Screen/Inspeksi/Genba';
 import HomeScreenComment from '../Screen/Home/HomeScreenComment';
 //finding
@@ -81,9 +83,10 @@ import Colors from '../Constant/Colors'
 const main = createStackNavigator({
     MainMenu: { screen: MainMenu, navigationOptions: { header: null } },
     MainMenuMil: { screen: MainMenuMil, navigationOptions: { header: null } },
+    MainMenuBBC: { screen: MainMenuBBC, navigationOptions: { header: null } },
     SplashScreen: { screen: SplashScreen },
     Login: { screen: Login },
-
+    HomeScreen: { screen: HomeScreen },
     HomeScreenComment: { screen: HomeScreenComment },
     FotoUser: { screen: FotoUser },
 

@@ -148,7 +148,7 @@ class Login extends Component {
                 message: "Ooops token expired, silahkan lakukan ",
                 title: "Token Expired",
                 icon: Images.ic_data_not_match
-            })   
+            })
         }
     }
 
@@ -295,10 +295,23 @@ class Login extends Component {
         };
 
         this.serverNameIndex = choosenServer;
+        console.log(ServerName[this.serverNameIndex].data)
         fetchPostWithUrl(ServerName[this.serverNameIndex].data + 'auth/login', request, header)
             .then((response) => {
+                console.log('Response Login : ', response);
                 if (response.status) {
-                    let routeName = response.data.USER_ROLE !== "FFB_GRADING_MILL" ? 'MainMenu' : 'MainMenuMil';
+                    let routeName = 'MainMenu'
+
+                    if (response.data.USER_ROLE === "FFB_GRADING_MILL") {
+                        routeName = 'MainMenuMil';
+                    } else if (response.data.USER_ROLE === "PEKERJA_RAWAT") {
+                        routeName = 'MainMenuBBC'
+                    } else {
+                        routeName = 'MainMenu'
+                    }
+
+                    console.log('Route Name : ', routeName);
+
                     if (getCurrentUser() !== undefined) {
                         if (response.data.USER_AUTH_CODE === getCurrentUser().USER_AUTH_CODE) {
                             this._resetMobileSync(routeName, response.data.ACCESS_TOKEN);
@@ -340,6 +353,7 @@ class Login extends Component {
                 }
             })
             .catch((err) => {
+                console.log('Error  ', err)
                 this.setState({
                     modalLoading: { ...this.state.modalLoading, showModal: false },
                     ...AlertContent.server_no_response
@@ -367,6 +381,7 @@ class Login extends Component {
                     return response.json();
                 })
                 .then((data) => {
+                    console.log('Data TM Service : ', data)
                     if (data.status) {
                         this.setState({
                             modalLoading: { ...this.state.modalLoading, showModal: false }
