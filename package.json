@@ -19,7 +19,7 @@
     "apisauce": "^1.0.0",
     "buffer": "^5.2.1",
     "geolib": "^3.0.4",
-    "moment": "^2.22.2",
+    "moment": "^2.29.2",
     "moment-timezone": "^0.5.23",
     "native-base": "^2.12.1",
     "prop-types": "^15.6.2",
